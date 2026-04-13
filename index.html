@@ -386,12 +386,11 @@ function renderFullStats(data) {
     const currentChampion = players.find(p => p.champion === true);
     html += '<div class="table-container"><h3>👑 Текущий Чемпион</h3>';
     if (currentChampion) {
-        html += `<div class="champion-card">`;
-        html += `<div class="champion-emoji">${currentChampion.emoji}</div>`;
-        html += `<div class="champion-name">${currentChampion.display}</div>`;
-        html += `<div class="champion-class">${currentChampion.name}</div>`;
-        html += `<div class="champion-wins">🏆 ${currentChampion.tournamentWins} чемпионств</div>`;
-        html += `<div style="margin-top: 10px;">${currentChampion.faction === 'Орден Света' ? '🌝' : '🌚'} ${currentChampion.faction}</div>`;
+        html += `<div style="padding: 20px; text-align: center; background: #21262d; border-radius: 10px;">`;
+        html += `<span style="font-size: 48px;">${currentChampion.emoji}</span><br>`;
+        html += `<span style="font-size: 24px; color: #ffd700;">${currentChampion.display}</span><br>`;
+        html += `<span style="color: #8b949e;">${currentChampion.name}</span><br>`;
+        html += `<span style="color: #ffd700;">🏆 ${currentChampion.tournamentWins} чемпионств</span>`;
         html += `</div>`;
     } else {
         html += '<p style="color: #8b949e; padding: 20px; text-align: center;">Нет текущего чемпиона</p>';
