@@ -749,19 +749,50 @@ function renderFullStats(data) {
             const crit = (max,def) => Math.ceil(max*2*(1-def*0.05));
             const c1c = crit(s1.max,s2.def), c2c = crit(s2.max,s1.def);
             const win1 = (d1/(d1+d2))*100, win2 = 100-win1;
-            const winner = win1 > win2 ? sel.p1 : sel.p2;
-            const reasons = [];
-            if (Math.abs(d1-d2)>0.01) reasons.push(d1>d2 ? `${sel.p1.display} наносит больше урона (${d1.toFixed(2)} vs ${d2.toFixed(2)})` : `${sel.p2.display} наносит больше урона (${d2.toFixed(2)} vs ${d1.toFixed(2)})`);
-            else reasons.push(`Одинаковый урон (${d1.toFixed(2)})`);
-            if (Math.abs(h1-h2)>0.001) reasons.push(h1>h2 ? `${sel.p1.display} чаще попадает (${(h1*100).toFixed(0)}% vs ${(h2*100).toFixed(0)}%)` : `${sel.p2.display} чаще попадает (${(h2*100).toFixed(0)}% vs ${(h1*100).toFixed(0)}%)`);
-            else reasons.push(`Одинаковый шанс попадания (${(h1*100).toFixed(0)}%)`);
-            if (Math.abs(t1-t2)>0.01) reasons.push(t1<t2 ? `${sel.p1.display} убивает быстрее (${t1.toFixed(1)} ходов vs ${t2.toFixed(1)})` : `${sel.p2.display} убивает быстрее (${t2.toFixed(1)} ходов vs ${t1.toFixed(1)})`);
-            if (c1c!==c2c) reasons.push(c1c>c2c ? `${sel.p1.display} наносит больше урона критом (${c1c} vs ${c2c})` : `${sel.p2.display} наносит больше урона критом (${c2c} vs ${c1c})`);
-            if (s1.hp!==s2.hp) reasons.push(s1.hp>s2.hp ? `${sel.p1.display} живучее (${s1.hp} HP vs ${s2.hp})` : `${sel.p2.display} живучее (${s2.hp} HP vs ${s1.hp})`);
-            if (s1.def!==s2.def) reasons.push(s1.def>s2.def ? `${sel.p1.display} лучше защищен (${s1.def} Def vs ${s2.def})` : `${sel.p2.display} лучше защищен (${s2.def} Def vs ${s1.def})`);
-            const spread1 = s1.max-s1.min, spread2 = s2.max-s2.min;
-            if (spread1!==spread2) reasons.push(spread1<spread2 ? `${sel.p1.display} стабильнее (разброс ${spread1} vs ${spread2})` : `${sel.p2.display} стабильнее (разброс ${spread2} vs ${spread1})`);
-            return { s1, s2, h1, h2, d1, d2, t1, t2, c1c, c2c, win1, win2, winner, reasons, spread1, spread2 };
+            const isEqual = Math.abs(win1 - win2) < 0.01;
+            const winner = isEqual ? null : (win1 > win2 ? sel.p1 : sel.p2);
+const reasons = [];
+if (Math.abs(d1-d2) > 0.01) {
+    reasons.push(d1>d2 ? `${sel.p1.display} наносит больше урона (${d1.toFixed(2)} vs ${d2.toFixed(2)})` : `${sel.p2.display} наносит больше урона (${d2.toFixed(2)} vs ${d1.toFixed(2)})`);
+} else {
+    reasons.push(`Одинаковый урон (${d1.toFixed(2)})`);
+}
+
+if (Math.abs(h1-h2) > 0.001) {
+    reasons.push(h1>h2 ? `${sel.p1.display} чаще попадает (${(h1*100).toFixed(0)}% vs ${(h2*100).toFixed(0)}%)` : `${sel.p2.display} чаще попадает (${(h2*100).toFixed(0)}% vs ${(h1*100).toFixed(0)}%)`);
+} else {
+    reasons.push(`Одинаковый шанс попадания (${(h1*100).toFixed(0)}%)`);
+}
+
+if (Math.abs(t1-t2) > 0.01) {
+    reasons.push(t1<t2 ? `${sel.p1.display} убивает быстрее (${t1.toFixed(1)} ходов vs ${t2.toFixed(1)})` : `${sel.p2.display} убивает быстрее (${t2.toFixed(1)} ходов vs ${t1.toFixed(1)})`);
+} else {
+    reasons.push(`Одинаковая скорость убийства (${t1.toFixed(1)} ходов)`);
+}
+
+if (c1c !== c2c) {
+    reasons.push(c1c>c2c ? `${sel.p1.display} наносит больше урона критом (${c1c} vs ${c2c})` : `${sel.p2.display} наносит больше урона критом (${c2c} vs ${c1c})`);
+} else {
+    reasons.push(`Одинаковый крит урон (${c1c})`);
+}
+
+if (s1.hp !== s2.hp) {
+    reasons.push(s1.hp>s2.hp ? `${sel.p1.display} живучее (${s1.hp} HP vs ${s2.hp})` : `${sel.p2.display} живучее (${s2.hp} HP vs ${s1.hp})`);
+} else {
+    reasons.push(`Одинаковая живучесть (${s1.hp} HP)`);
+}
+
+if (s1.def !== s2.def) {
+    reasons.push(s1.def>s2.def ? `${sel.p1.display} лучше защищен (${s1.def} Def vs ${s2.def})` : `${sel.p2.display} лучше защищен (${s2.def} Def vs ${s1.def})`);
+} else {
+    reasons.push(`Одинаковая защита (${s1.def} Def)`);
+}
+
+if (spread1 !== spread2) {
+    reasons.push(spread1<spread2 ? `${sel.p1.display} стабильнее (разброс ${spread1} vs ${spread2})` : `${sel.p2.display} стабильнее (разброс ${spread2} vs ${spread1})`);
+} else {
+    reasons.push(`Одинаковая стабильность (разброс ${spread1})`);
+}
         }
         
         function updateCalc() {
@@ -785,13 +816,13 @@ function renderFullStats(data) {
                     <tr><td>Ходов до победы</td><td class="number">${r.t1.toFixed(2)}</td><td class="number">${r.t2.toFixed(2)}</td></tr>
                     <tr><td>Крит-урон</td><td class="number">${r.c1c}</td><td class="number">${r.c2c}</td></tr>
                     <tr><td style="color:#ffd700;">Вероятность победы</td><td class="number" style="color:#ffd700;font-weight:bold;">${r.win1.toFixed(2)}%</td><td class="number" style="color:#ffd700;font-weight:bold;">${r.win2.toFixed(2)}%</td></tr>
-                    <tr><td>Опаснее</td><td colspan="2" style="text-align:center;">💥 ${r.winner.display}</td></tr>
+                    <tr><td>Опаснее</td><td colspan="2" style="text-align:center;">${r.winner ? `💥 ${r.winner.display}` : '⚖️ Никто не опаснее — равны'}</td></tr>
                     <tr><td>Стабильность</td><td class="number">${r.spread1}</td><td class="number">${r.spread2}</td></tr>
                 </table>
-                <div style="margin-top:15px;padding:15px;background:#161b22;border-radius:8px;">
-                    <strong style="color:#ffd700;">✅ Причина победы:</strong> ${r.winner.display} сильнее
+                    <div style="margin-top:15px;padding:15px;background:#161b22;border-radius:8px;">
+                    <strong style="color:#ffd700;">✅ Причина победы:</strong> ${r.winner ? `${r.winner.display} сильнее` : '⚖️ Полное равновесие'}
                     <ul class="reasons-list">${r.reasons.map(x => `<li>${x}</li>`).join('')}</ul>
-                </div>
+                    </div>
             `;
         }
         
