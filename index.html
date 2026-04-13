@@ -379,43 +379,36 @@ function renderFullStats(data) {
     html += `<div class="record-item"><div class="record-value">${maxTournament.tournamentWins}</div><div class="record-label">👑 Чемпионств — ${maxTournament.display}</div></div>`;
     html += '</div></div>';
 
-// ЧЕМПИОНЫ
-html += '<div id="tab-champions" class="tab-content">';
-
-// Топ по чемпионствам
-const topChampions = players.filter(p => p.tournamentWins > 0).sort((a, b) => b.tournamentWins - a.tournamentWins);
-html += '<div class="table-container"><h3>🏆 Топ по чемпионствам</h3><table>';
-html += '<tr><th>#</th><th>Игрок</th><th>Класс</th><th>Чемпионств</th><th>Фракция</th></tr>';
-topChampions.forEach((p, i) => {
-    const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
-    html += `<tr><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.tournamentWins}</td><td>${fi}</td></tr>`;
-});
-html += '</table></div>';
-
-// Текущий чемпион
-const currentChampion = players.find(p => p.champion === true);
-html += '<div class="table-container"><h3>👑 Текущий Чемпион</h3>';
-if (currentChampion) {
-    html += `<div style="padding: 20px; text-align: center; background: #21262d; border-radius: 10px;">`;
-    html += `<span style="font-size: 48px;">${currentChampion.emoji}</span><br>`;
-    html += `<span style="font-size: 24px; color: #ffd700;">${currentChampion.display}</span><br>`;
-    html += `<span style="color: #8b949e;">${currentChampion.name}</span><br>`;
-    html += `<span style="color: #ffd700;">🏆 ${currentChampion.tournamentWins} чемпионств</span>`;
-    html += `</div>`;
-} else {
-    html += '<p style="color: #8b949e; padding: 20px; text-align: center;">Нет текущего чемпиона</p>';
-}
-html += '</div>';
-
-// История чемпионов (если есть в данных)
-html += '<div class="table-container"><h3>📜 Все чемпионы</h3><table>';
-html += '<tr><th>Игрок</th><th>Класс</th><th>Чемпионств</th></tr>';
-topChampions.forEach(p => {
-    html += `<tr><td>${p.display}</td><td>${p.name}</td><td class="number">${p.tournamentWins}</td></tr>`;
-});
-html += '</table></div>';
-
-html += '</div>';
+    // ЧЕМПИОНЫ
+    html += '<div id="tab-champions" class="tab-content">';
+    
+    // Текущий чемпион
+    const currentChampion = players.find(p => p.champion === true);
+    html += '<div class="table-container"><h3>👑 Текущий Чемпион</h3>';
+    if (currentChampion) {
+        html += `<div class="champion-card">`;
+        html += `<div class="champion-emoji">${currentChampion.emoji}</div>`;
+        html += `<div class="champion-name">${currentChampion.display}</div>`;
+        html += `<div class="champion-class">${currentChampion.name}</div>`;
+        html += `<div class="champion-wins">🏆 ${currentChampion.tournamentWins} чемпионств</div>`;
+        html += `<div style="margin-top: 10px;">${currentChampion.faction === 'Орден Света' ? '🌝' : '🌚'} ${currentChampion.faction}</div>`;
+        html += `</div>`;
+    } else {
+        html += '<p style="color: #8b949e; padding: 20px; text-align: center;">Нет текущего чемпиона</p>';
+    }
+    html += '</div>';
+    
+    // Все чемпионы (единая таблица)
+    const topChampions = players.filter(p => p.tournamentWins > 0).sort((a, b) => b.tournamentWins - a.tournamentWins);
+    html += '<div class="table-container"><h3>🏆 Все чемпионы (' + topChampions.length + ')</h3><table>';
+    html += '<tr><th>#</th><th>Игрок</th><th>Класс</th><th>Чемпионств</th><th>Фракция</th></tr>';
+    topChampions.forEach((p, i) => {
+        const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
+        html += `<tr><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.tournamentWins}</td><td>${fi}</td></tr>`;
+    });
+    html += '</table></div>';
+    
+    html += '</div>';
     
     // ВСЕ ИГРОКИ
     html += '<div id="tab-allplayers" class="tab-content">';
