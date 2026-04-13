@@ -303,6 +303,8 @@ function renderFullStats(data) {
     html += '<button class="tab-btn" onclick="switchTab(\'classes\')">⚔️ Классы</button>';
     html += '<button class="tab-btn" onclick="switchTab(\'races\')">🌍 Расы</button>';
     html += '<button class="tab-btn" onclick="switchTab(\'combos\')">🔄 Комбинации</button>';
+    html += '<button class="tab-btn" onclick="switchTab(\'rating\')">🏆 Рейтинг</button>';
+    html += '<button class="tab-btn" onclick="switchTab(\'shards\')">💎 Осколки</button>';
     html += '<button class="tab-btn" onclick="switchTab(\'records\')">🏅 Рекорды</button>';
     html += '<button class="tab-btn" onclick="switchTab(\'champions\')">👑 Чемпионы</button>';
     html += '<button class="tab-btn" onclick="switchTab(\'titles\')">🏅 Титулы</button>';
@@ -661,6 +663,68 @@ html += '</select></div></div></div></div>';
 html += '<div id="calc-table" style="padding:20px;background:#21262d;border-radius:10px;margin:20px 0;">';
 html += '<div style="text-align:center;color:#8b949e;">Выбери игроков или классы</div>';
 html += '</div></div></div>';
+
+// РЕЙТИНГ (SEASON TOP)
+html += '<div id="tab-rating" class="tab-content">';
+html += '<div class="table-container"><h3>🏆 Сезонный рейтинг</h3>';
+html += '<table id="rating-table">';
+html += '<thead><tr>';
+html += '<th class="sortable-header" data-sort="rank">#</th>';
+html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+html += '<th class="sortable-header" data-sort="class">Класс</th>';
+html += '<th class="sortable-header" data-sort="skill">Рейтинг</th>';
+html += '<th class="sortable-header" data-sort="wl">W/L</th>';
+html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+html += '</tr></thead>';
+html += '<tbody id="rating-tbody">';
+
+const seasonTop = data.seasonTop || [];
+if (seasonTop.length > 0) {
+    seasonTop.forEach((p, i) => {
+        const player = players.find(pl => pl.display === p.display) || {};
+        const total = p.wins + p.losses;
+        const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
+        html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${player.name || ''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
+        html += `<td>${i+1}</td>`;
+        html += `<td>${p.emoji || '🏆'} ${p.display}</td>`;
+        html += `<td>${player.name || '—'}</td>`;
+        html += `<td class="number">${p.skill}</td>`;
+        html += `<td class="number">${p.wins}-${p.losses}</td>`;
+        html += `<td class="number">${wr}%</td>`;
+        html += `</tr>`;
+    });
+} else {
+    html += '<tr><td colspan="6" style="text-align:center;padding:20px;color:#8b949e;">Нет данных рейтинга</td></tr>';
+}
+html += '</tbody></table></div></div>';
+
+// ОСКОЛКИ (Топ коллекционеров)
+html += '<div id="tab-shards" class="tab-content">';
+html += '<div class="table-container"><h3>💎 Топ коллекционеров осколков</h3>';
+html += '<table id="shards-table">';
+html += '<thead><tr>';
+html += '<th class="sortable-header" data-sort="rank">#</th>';
+html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+html += '<th class="sortable-header" data-sort="class">Класс</th>';
+html += '<th class="sortable-header" data-sort="shards">Осколки</th>';
+html += '<th class="sortable-header" data-sort="level">Уровень</th>';
+html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
+html += '</tr></thead>';
+html += '<tbody id="shards-tbody">';
+
+const topShardsAll = [...players].sort((a,b) => b.shards - a.shards);
+topShardsAll.forEach((p, i) => {
+    const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
+    html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}">`;
+    html += `<td>${i+1}</td>`;
+    html += `<td>${p.emoji} ${p.display}</td>`;
+    html += `<td>${p.name}</td>`;
+    html += `<td class="number">${p.shards}</td>`;
+    html += `<td class="number">${p.level}</td>`;
+    html += `<td>${fi}</td>`;
+    html += `</tr>`;
+});
+html += '</tbody></table></div></div>';
     
     // ВСЕ ИГРОКИ
     html += '<div id="tab-allplayers" class="tab-content">';
@@ -699,6 +763,8 @@ html += '</div></div></div>';
     initSortableTable('classes-table', 'total', 'desc');
     initSortableTable('races-table', 'total', 'desc');
     initSortableTable('combos-table', 'winrate', 'desc');
+initSortableTable('rating-table', 'skill', 'desc');
+initSortableTable('shards-table', 'shards', 'desc');
     initPlayersTable();
     
 // Калькулятор
