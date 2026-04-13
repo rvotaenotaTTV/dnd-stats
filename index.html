@@ -750,6 +750,10 @@ setTimeout(() => {
         const c1c = crit(s1.max,s2.def), c2c = crit(s2.max,s1.def);
         const win1 = (d1/(d1+d2))*100, win2 = 100-win1;
         const isEqual = Math.abs(win1 - win2) < 0.01;
+        const p1Quick = Math.ceil(s2.hp / c1c);
+        const p2Quick = Math.ceil(s1.hp / c2c);
+        const p1CritKill = c1c >= s2.hp;
+        const p2CritKill = c2c >= s1.hp;
         const winner = isEqual ? null : (win1 > win2 ? sel.p1 : sel.p2);
         const reasons = [];
         
@@ -790,39 +794,41 @@ setTimeout(() => {
             reasons.push(`Одинаковая стабильность (разброс ${spread1})`);
         }
         
-        return { s1, s2, h1, h2, d1, d2, t1, t2, c1c, c2c, win1, win2, winner, reasons, spread1, spread2, isEqual };
+        return { s1, s2, h1, h2, d1, d2, t1, t2, c1c, c2c, win1, win2, winner, reasons, spread1, spread2, isEqual, p1Quick, p2Quick, p1CritKill, p2CritKill };
     }
     
-    function updateCalc() {
-        const sel = getSelectedStats();
-        if (!sel) return;
-        const r = calculateFight(sel);
-        const div = document.getElementById('calc-table');
-        div.innerHTML = `
-            <table style="width:100%;">
-                <tr><th style="width:25%;"></th><th style="width:35%;">${sel.p1.emoji} ${sel.p1.display}</th><th style="width:35%;">${sel.p2.emoji} ${sel.p2.display}</th></tr>
-                <tr><td>Класс</td><td>${sel.p1.class}</td><td>${sel.p2.class}</td></tr>
-                <tr><td>Раса</td><td>${sel.p1.race}</td><td>${sel.p2.race}</td></tr>
-                <tr><td>Atk</td><td class="number">${r.s1.atk}</td><td class="number">${r.s2.atk}</td></tr>
-                <tr><td>Min</td><td class="number">${r.s1.min}</td><td class="number">${r.s2.min}</td></tr>
-                <tr><td>Max</td><td class="number">${r.s1.max}</td><td class="number">${r.s2.max}</td></tr>
-                <tr><td>Def</td><td class="number">${r.s1.def}</td><td class="number">${r.s2.def}</td></tr>
-                <tr><td>HP</td><td class="number">${r.s1.hp}</td><td class="number">${r.s2.hp}</td></tr>
-                <tr><td colspan="3" style="background:#30363d;"></td></tr>
-                <tr><td>Шанс попадания</td><td class="number">${(r.h1*100).toFixed(1)}%</td><td class="number">${(r.h2*100).toFixed(1)}%</td></tr>
-                <tr><td>Урон за ход</td><td class="number">${r.d1.toFixed(2)}</td><td class="number">${r.d2.toFixed(2)}</td></tr>
-                <tr><td>Ходов до победы</td><td class="number">${r.t1.toFixed(2)}</td><td class="number">${r.t2.toFixed(2)}</td></tr>
-                <tr><td>Крит-урон</td><td class="number">${r.c1c}</td><td class="number">${r.c2c}</td></tr>
-                <tr><td style="color:#ffd700;">Вероятность победы</td><td class="number" style="color:#ffd700;font-weight:bold;">${r.win1.toFixed(2)}%</td><td class="number" style="color:#ffd700;font-weight:bold;">${r.win2.toFixed(2)}%</td></tr>
-                <tr><td>Опаснее</td><td colspan="2" style="text-align:center;">${r.winner ? `💥 ${r.winner.display}` : '⚖️ Никто не опаснее — равны'}</td></tr>
-                <tr><td>Стабильность</td><td class="number">${r.spread1}</td><td class="number">${r.spread2}</td></tr>
-            </table>
-            <div style="margin-top:15px;padding:15px;background:#161b22;border-radius:8px;">
-                <strong style="color:#ffd700;">✅ Причина победы:</strong> ${r.winner ? `${r.winner.display} сильнее` : '⚖️ Полное равновесие'}
-                <ul class="reasons-list">${r.reasons.map(x => `<li>${x}</li>`).join('')}</ul>
-            </div>
-        `;
-    }
+function updateCalc() {
+    const sel = getSelectedStats();
+    if (!sel) return;
+    const r = calculateFight(sel);
+    const div = document.getElementById('calc-table');
+    div.innerHTML = `
+        <table style="width:100%;">
+            <tr><th style="width:25%;"></th><th style="width:35%;">${sel.p1.emoji} ${sel.p1.display}</th><th style="width:35%;">${sel.p2.emoji} ${sel.p2.display}</th></tr>
+            <tr><td>Класс</td><td>${sel.p1.class}</td><td>${sel.p2.class}</td></tr>
+            <tr><td>Раса</td><td>${sel.p1.race}</td><td>${sel.p2.race}</td></tr>
+            <tr><td>Atk</td><td class="number">${r.s1.atk}</td><td class="number">${r.s2.atk}</td></tr>
+            <tr><td>Min</td><td class="number">${r.s1.min}</td><td class="number">${r.s2.min}</td></tr>
+            <tr><td>Max</td><td class="number">${r.s1.max}</td><td class="number">${r.s2.max}</td></tr>
+            <tr><td>Def</td><td class="number">${r.s1.def}</td><td class="number">${r.s2.def}</td></tr>
+            <tr><td>HP</td><td class="number">${r.s1.hp}</td><td class="number">${r.s2.hp}</td></tr>
+            <tr><td colspan="3" style="background:#30363d;"></td></tr>
+            <tr><td>Шанс попадания</td><td class="number">${(r.h1*100).toFixed(1)}%</td><td class="number">${(r.h2*100).toFixed(1)}%</td></tr>
+            <tr><td>Урон за ход</td><td class="number">${r.d1.toFixed(2)}</td><td class="number">${r.d2.toFixed(2)}</td></tr>
+            <tr><td>Ходов до победы</td><td class="number">${r.t1.toFixed(2)}</td><td class="number">${r.t2.toFixed(2)}</td></tr>
+            <tr><td>Крит-урон</td><td class="number">${r.c1c}</td><td class="number">${r.c2c}</td></tr>
+            <tr><td>Быстрая победа</td><td class="number">${r.p1Quick}</td><td class="number">${r.p2Quick}</td></tr>
+            <tr><td>Крит убивает?</td><td class="number">${r.p1CritKill ? '✅' : '❌'}</td><td class="number">${r.p2CritKill ? '✅' : '❌'}</td></tr>
+            <tr><td style="color:#ffd700;">Вероятность победы</td><td class="number" style="color:#ffd700;font-weight:bold;">${r.win1.toFixed(2)}%</td><td class="number" style="color:#ffd700;font-weight:bold;">${r.win2.toFixed(2)}%</td></tr>
+            <tr><td>Опаснее</td><td colspan="2" style="text-align:center;">${r.winner ? `💥 ${r.winner.display}` : '⚖️ Никто не опаснее — равны'}</td></tr>
+            <tr><td>Стабильность</td><td class="number">${r.spread1}</td><td class="number">${r.spread2}</td></tr>
+        </table>
+        <div style="margin-top:15px;padding:15px;background:#161b22;border-radius:8px;">
+            <strong style="color:#ffd700;">✅ Причина победы:</strong> ${r.winner ? `${r.winner.display} сильнее` : '⚖️ Полное равновесие'}
+            <ul class="reasons-list">${r.reasons.map(x => `<li>${x}</li>`).join('')}</ul>
+        </div>
+    `;
+}
     
     ['calc-p1','calc-p2','calc-class1','calc-race1','calc-class2','calc-race2'].forEach(id => {
         const el = document.getElementById(id);
