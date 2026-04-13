@@ -277,6 +277,7 @@ function renderFullStats(data) {
     html += '<button class="tab-btn" onclick="switchTab(\'records\')">🏅 Рекорды</button>';
     html += '<button class="tab-btn" onclick="switchTab(\'allplayers\')">👥 Игроки</button>';
     html += '<button class="tab-btn" onclick="switchTab(\'champions\')">👑 Чемпионы</button>';
+    html += '<button class="tab-btn" onclick="switchTab(\'titles\')">🏅 Титулы</button>';
     html += '</div>';
     
     // ТОПЫ
@@ -397,13 +398,114 @@ function renderFullStats(data) {
     }
     html += '</div>';
     
-    // Все чемпионы (единая таблица)
+    // Все чемпионы
     const topChampions = players.filter(p => p.tournamentWins > 0).sort((a, b) => b.tournamentWins - a.tournamentWins);
     html += '<div class="table-container"><h3>🏆 Все чемпионы (' + topChampions.length + ')</h3><table>';
     html += '<tr><th>#</th><th>Игрок</th><th>Класс</th><th>Чемпионств</th><th>Фракция</th></tr>';
     topChampions.forEach((p, i) => {
         const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
         html += `<tr><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.tournamentWins}</td><td>${fi}</td></tr>`;
+    });
+    html += '</table></div>';
+    
+    html += '</div>';
+
+    // ТИТУЛЫ
+    html += '<div id="tab-titles" class="tab-content">';
+    
+    const achievements = [
+        { emoji: "👑", name: "Бессмертный", type: "level", value: 50, priority: 1000 },
+        { emoji: "✨", name: "Мифический", type: "level", value: 40, priority: 900 },
+        { emoji: "⚡", name: "Живая легенда", type: "level", value: 30, priority: 800 },
+        { emoji: "🗡️", name: "Мастер клинка", type: "level", value: 20, priority: 700 },
+        { emoji: "🛡️", name: "Хранитель", type: "level", value: 15, priority: 600 },
+        { emoji: "📿", name: "Собиратель", type: "level", value: 10, priority: 500 },
+        { emoji: "👑", name: "Властелин Раскола", type: "tournament", value: 5, priority: 1100 },
+        { emoji: "🏆", name: "Хранитель Вечности", type: "tournament", value: 1, priority: 400 },
+        { emoji: "⚜️", name: "Аэлион", type: "faction", value: 100, faction: "Орден Света", priority: 380 },
+        { emoji: "🌑", name: "Повествователь", type: "faction", value: 100, faction: "Культ Тьмы", priority: 380 },
+        { emoji: "🛡️", name: "Рыцарь Света", type: "faction", value: 50, faction: "Орден Света", priority: 340 },
+        { emoji: "🗡️", name: "Теневой клинок", type: "faction", value: 50, faction: "Культ Тьмы", priority: 340 },
+        { emoji: "☠️", name: "Бог войны", type: "best", value: 20, priority: 290 },
+        { emoji: "👑", name: "Легенда", type: "wins", value: 100, priority: 280 },
+        { emoji: "🤪", name: "Безумный", type: "fights", value: 1000, priority: 270 },
+        { emoji: "🤖", name: "Читер", type: "winrate", value: 90, minFights: 30, priority: 260 },
+        { emoji: "⚡", name: "Непобедимый", type: "best", value: 10, priority: 250 },
+        { emoji: "💎", name: "Элита", type: "winrate", value: 80, minFights: 30, priority: 240 },
+        { emoji: "⚔️", name: "Ветеран", type: "fights", value: 500, priority: 230 },
+        { emoji: "🛡️", name: "Воитель", type: "wins", value: 50, priority: 220 },
+        { emoji: "🛡️", name: "Гладиатор", type: "losses", value: 200, priority: 210 },
+        { emoji: "🔥", name: "Неудержимый", type: "best", value: 5, priority: 200 },
+        { emoji: "🏹", name: "Мастер", type: "winrate", value: 70, minFights: 30, priority: 190 },
+        { emoji: "🎯", name: "Профессионал", type: "winrate", value: 60, minFights: 30, priority: 180 },
+        { emoji: "⚔️", name: "Опытный", type: "wins", value: 10, priority: 170 },
+        { emoji: "⚙️", name: "Трудяга", type: "fights", value: 100, priority: 160 },
+        { emoji: "🔥", name: "Задира", type: "best", value: 3, priority: 150 },
+        { emoji: "⚖️", name: "Ровный", type: "winrate", value: 50, minFights: 10, priority: 140 },
+        { emoji: "☯️", name: "Инь-Янь", type: "balance", priority: 130 },
+        { emoji: "🌱", name: "Новичок", type: "wins", value: 1, priority: 120 },
+        { emoji: "👀", name: "Любопытный", type: "fights", value: 50, priority: 110 },
+        { emoji: "😐", name: "Середнячок", type: "winrate", value: 40, minFights: 10, priority: 100 },
+        { emoji: "🦸", name: "Герой с нуля", type: "zero_hero", priority: 80 },
+        { emoji: "👿", name: "Злодей", type: "zero_villain", priority: 70 },
+        { emoji: "⚙️", name: "Железный", type: "losses", value: 100, priority: 60 },
+        { emoji: "🪀", name: "Груша для битья", type: "losses", value: 50, priority: 50 },
+        { emoji: "🥊", name: "Мешок с песком", type: "losses", value: 10, priority: 40 }
+    ];
+    
+    function checkAchievement(ach, p) {
+        const total = p.wins + p.losses;
+        if (ach.minFights && total < ach.minFights) return false;
+        switch (ach.type) {
+            case "level": return p.level >= ach.value;
+            case "wins": return p.wins >= ach.value;
+            case "losses": return p.losses >= ach.value;
+            case "best": return p.best >= ach.value;
+            case "fights": return total >= ach.value;
+            case "tournament": return p.tournamentWins >= ach.value;
+            case "faction": return p.faction === ach.faction && p.factionWins >= ach.value;
+            case "winrate": return total > 0 && (p.wins * 100 / total) >= ach.value;
+            case "balance": return p.wins === p.losses && p.wins >= 10;
+            case "zero_hero": return p.wins === 0 && p.losses > 0;
+            case "zero_villain": return p.losses === 0 && p.wins > 0;
+            default: return false;
+        }
+    }
+    
+    const playerTitles = {};
+    players.forEach(p => {
+        let bestPriority = -1, bestTitle = "";
+        achievements.forEach(ach => {
+            if (checkAchievement(ach, p) && ach.priority > bestPriority) {
+                bestPriority = ach.priority;
+                bestTitle = ach.emoji + " " + ach.name;
+            }
+        });
+        if (bestTitle) playerTitles[p.display] = bestTitle;
+    });
+    
+    const titleCounts = {};
+    Object.values(playerTitles).forEach(t => titleCounts[t] = (titleCounts[t] || 0) + 1);
+    
+    html += '<div class="table-container"><h3>💎 Самые редкие титулы</h3><table>';
+    html += '<tr><th>Титул</th><th>Обладателей</th></tr>';
+    Object.entries(titleCounts).sort((a,b) => a[1] - b[1]).slice(0, 10).forEach(([t, c]) => {
+        html += `<tr><td>${t}</td><td class="number">${c}</td></tr>`;
+    });
+    html += '</table></div>';
+    
+    html += '<div class="table-container"><h3>🌟 Самые популярные титулы</h3><table>';
+    html += '<tr><th>Титул</th><th>Обладателей</th></tr>';
+    Object.entries(titleCounts).sort((a,b) => b[1] - a[1]).slice(0, 10).forEach(([t, c]) => {
+        html += `<tr><td>${t}</td><td class="number">${c}</td></tr>`;
+    });
+    html += '</table></div>';
+    
+    html += '<div class="table-container"><h3>👑 Титулованные игроки (' + Object.keys(playerTitles).length + ')</h3><table>';
+    html += '<tr><th>Игрок</th><th>Титул</th><th>Класс</th></tr>';
+    Object.entries(playerTitles).sort((a,b) => a[0].localeCompare(b[0])).forEach(([name, title]) => {
+        const p = players.find(pl => pl.display === name);
+        html += `<tr><td>${name}</td><td>${title}</td><td>${p?.name || ''}</td></tr>`;
     });
     html += '</table></div>';
     
