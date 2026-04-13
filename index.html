@@ -98,7 +98,7 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 function renderFullStats(data) {
     const players = data.players.filter(p => p.name && p.name !== 'Unknown');
     const totalPlayers = players.length;
-    const totalFights = players.reduce((sum, p) => sum + p.wins + p.losses, 0) / 2;
+    const totalFights = Math.floor(players.reduce((sum, p) => sum + p.wins + p.losses, 0) / 2);
     const lightCount = players.filter(p => p.faction === 'Орден Света').length;
     const darkCount = players.filter(p => p.faction === 'Культ Тьмы').length;
     
