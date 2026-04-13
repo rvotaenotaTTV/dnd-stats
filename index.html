@@ -20,6 +20,7 @@
             font-size: 2.5em;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
             letter-spacing: 2px;
+            padding-right: 120px;
         }
         h2 { 
             color: #ffd700; 
@@ -32,6 +33,7 @@
             margin: 20px 0 10px; 
         }
         
+        /* Фиксированные кнопки */
         .fixed-buttons {
             position: fixed;
             top: 15px;
@@ -40,28 +42,10 @@
             flex-direction: row;
             gap: 8px;
             z-index: 1000;
-            opacity: 0.9;
+            opacity: 0.7;
             transition: opacity 0.2s;
         }
-        .fixed-buttons:hover {
-            opacity: 1;
-        }
-
-.calc-mode-btn {
-    background: #21262d;
-    border: 1px solid #30363d;
-    color: #8b949e;
-    padding: 8px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-}
-.calc-mode-btn.active {
-    background: #ffd700;
-    color: #0d1117;
-    border-color: #ffd700;
-}
+        .fixed-buttons:hover { opacity: 1; }
         .action-btn {
             background: #21262d;
             color: #c9d1d9;
@@ -91,10 +75,6 @@
         .beer-btn:hover {
             background: #ffd700;
             color: #0d1117;
-        }
-        
-        h1 {
-            padding-right: 120px;
         }
         
         #fileInput { display: none; }
@@ -213,18 +193,48 @@
             font-size: 18px;
         }
         select {
-            padding: 10px;
+            padding: 8px 12px;
             background: #21262d;
             color: white;
             border: 1px solid #30363d;
-            border-radius: 8px;
+            border-radius: 6px;
             width: 100%;
             cursor: pointer;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        select:hover { border-color: #ffd700; }
+        .calc-mode-btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #8b949e;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .calc-mode-btn.active {
+            background: #ffd700;
+            color: #0d1117;
+            border-color: #ffd700;
+        }
+        .calc-mode-btn:hover:not(.active) {
+            background: #30363d;
+            color: #c9d1d9;
         }
         .reasons-list {
             padding-left: 25px;
             margin-top: 10px;
             color: #8b949e;
+        }
+        .reasons-list li {
+            margin: 5px 0;
+        }
+        .class-option, .race-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         @media (max-width: 768px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -235,7 +245,7 @@
 </head>
 <body>
 
-<h1>D&D 1 Сезон: РАСКОЛ — СТАТИСТИКА</h1>
+<h1>📊 DnD РАСКОЛ — СТАТИСТИКА</h1>
 
 <input type="file" id="fileInput" accept=".json,application/json">
 
@@ -244,7 +254,7 @@
         🔄 Обновить данные
     </button>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="action-btn beer-btn">
-        🍺 Админу на пиво
+        🍺 На пиво
     </a>
 </div>
 
@@ -255,31 +265,35 @@
 <script>
 const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 
-// Таблицы баланса
+// Таблицы баланса (вшиты)
 const classesData = [
-    { Name: "Воин", Hp: 29, Atk: 5, Def: 2, Min: 3, Max: 9 },
-    { Name: "Паладин", Hp: 34, Atk: 4, Def: 3, Min: 3, Max: 7 },
-    { Name: "Плут", Hp: 21, Atk: 9, Def: 1, Min: 4, Max: 10 },
-    { Name: "Монах", Hp: 24, Atk: 6, Def: 2, Min: 4, Max: 9 },
-    { Name: "Следопыт", Hp: 26, Atk: 6, Def: 1, Min: 4, Max: 10 },
-    { Name: "Чародей", Hp: 20, Atk: 8, Def: 0, Min: 4, Max: 13 },
-    { Name: "Бард", Hp: 25, Atk: 6, Def: 1, Min: 4, Max: 10 },
-    { Name: "Друид", Hp: 28, Atk: 6, Def: 1, Min: 4, Max: 8 },
-    { Name: "Изобретатель", Hp: 22, Atk: 5, Def: 1, Min: 4, Max: 12 },
-    { Name: "Варвар", Hp: 33, Atk: 4, Def: 2, Min: 4, Max: 8 },
-    { Name: "Волшебница", Hp: 22, Atk: 7, Def: 0, Min: 5, Max: 11 },
-    { Name: "Некромант", Hp: 23, Atk: 7, Def: 0, Min: 5, Max: 10 },
-    { Name: "Жрец", Hp: 25, Atk: 5, Def: 1, Min: 5, Max: 9 },
-    { Name: "Колдун", Hp: 24, Atk: 5, Def: 0, Min: 6, Max: 12 }
+    { Name: "Воин", Emoji: "⚔️", Hp: 29, Atk: 5, Def: 2, Min: 3, Max: 9 },
+    { Name: "Паладин", Emoji: "🛡️", Hp: 34, Atk: 4, Def: 3, Min: 3, Max: 7 },
+    { Name: "Плут", Emoji: "🗡️", Hp: 21, Atk: 9, Def: 1, Min: 4, Max: 10 },
+    { Name: "Монах", Emoji: "🥋", Hp: 24, Atk: 6, Def: 2, Min: 4, Max: 9 },
+    { Name: "Следопыт", Emoji: "🏹", Hp: 26, Atk: 6, Def: 1, Min: 4, Max: 10 },
+    { Name: "Чародей", Emoji: "🔮", Hp: 20, Atk: 8, Def: 0, Min: 4, Max: 13 },
+    { Name: "Бард", Emoji: "🎸", Hp: 25, Atk: 6, Def: 1, Min: 4, Max: 10 },
+    { Name: "Друид", Emoji: "🌿", Hp: 28, Atk: 6, Def: 1, Min: 4, Max: 8 },
+    { Name: "Изобретатель", Emoji: "⚙️", Hp: 22, Atk: 5, Def: 1, Min: 4, Max: 12 },
+    { Name: "Варвар", Emoji: "🪓", Hp: 33, Atk: 4, Def: 2, Min: 4, Max: 8 },
+    { Name: "Волшебница", Emoji: "✨", Hp: 22, Atk: 7, Def: 0, Min: 5, Max: 11 },
+    { Name: "Некромант", Emoji: "🦴", Hp: 23, Atk: 7, Def: 0, Min: 5, Max: 10 },
+    { Name: "Жрец", Emoji: "✝️", Hp: 25, Atk: 5, Def: 1, Min: 5, Max: 9 },
+    { Name: "Колдун", Emoji: "👁️", Hp: 24, Atk: 5, Def: 0, Min: 6, Max: 12 }
 ];
 
 const racesData = [
-    { Name: "Человек", BonusHp: 1, BonusAtk: 0, BonusDef: 0, BonusMin: 0, BonusMax: 0 },
-    { Name: "Орк", BonusHp: 0, BonusAtk: 1, BonusDef: 0, BonusMin: 0, BonusMax: 0 },
-    { Name: "Дворф", BonusHp: 0, BonusAtk: 0, BonusDef: 1, BonusMin: 0, BonusMax: 0 },
-    { Name: "Эльф", BonusHp: 0, BonusAtk: 0, BonusDef: 0, BonusMin: 1, BonusMax: 0 },
-    { Name: "Нежить", BonusHp: 0, BonusAtk: 0, BonusDef: 0, BonusMin: 0, BonusMax: 1 }
+    { Name: "Человек", Emoji: "🧑", BonusHp: 1, BonusAtk: 0, BonusDef: 0, BonusMin: 0, BonusMax: 0 },
+    { Name: "Орк", Emoji: "👹", BonusHp: 0, BonusAtk: 1, BonusDef: 0, BonusMin: 0, BonusMax: 0 },
+    { Name: "Дворф", Emoji: "🧔", BonusHp: 0, BonusAtk: 0, BonusDef: 1, BonusMin: 0, BonusMax: 0 },
+    { Name: "Эльф", Emoji: "🧝", BonusHp: 0, BonusAtk: 0, BonusDef: 0, BonusMin: 1, BonusMax: 0 },
+    { Name: "Нежить", Emoji: "💀", BonusHp: 0, BonusAtk: 0, BonusDef: 0, BonusMin: 0, BonusMax: 1 }
 ];
+
+// Эмодзи классов и рас для быстрого доступа
+const classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
+const raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
 
 fetch(JSON_URL)
     .then(r => r.json())
@@ -379,7 +393,8 @@ function renderFullStats(data) {
     html += '<div class="table-container"><h3>⚔️ Статистика по классам</h3><table>';
     html += '<tr><th>Класс</th><th>Игроков</th><th>Победы</th><th>Поражения</th><th>Всего</th><th>Винрейт</th><th>Ср.осколки</th><th>Стрик</th></tr>';
     Object.entries(classStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses})).sort((a,b) => b.total - a.total).forEach(c => {
-        html += `<tr><td>${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${c.total>0?(c.wins*100/c.total).toFixed(1):0}%</td><td class="number">${Math.round(c.shards/c.players)}</td><td class="number">${c.best}</td></tr>`;
+        const emoji = classEmojis[c.name] || '⚔️';
+        html += `<tr><td>${emoji} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${c.total>0?(c.wins*100/c.total).toFixed(1):0}%</td><td class="number">${Math.round(c.shards/c.players)}</td><td class="number">${c.best}</td></tr>`;
     });
     html += '</table></div></div>';
     
@@ -396,7 +411,8 @@ function renderFullStats(data) {
     html += '<div class="table-container"><h3>🌍 Статистика по расам</h3><table>';
     html += '<tr><th>Раса</th><th>Игроков</th><th>Победы</th><th>Поражения</th><th>Всего</th><th>Винрейт</th></tr>';
     Object.entries(raceStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses})).sort((a,b) => b.total - a.total).forEach(r => {
-        html += `<tr><td>${r.name}</td><td class="number">${r.players}</td><td class="number">${r.wins}</td><td class="number">${r.losses}</td><td class="number">${r.total}</td><td class="number">${r.total>0?(r.wins*100/r.total).toFixed(1):0}%</td></tr>`;
+        const emoji = raceEmojis[r.name] || '🌍';
+        html += `<tr><td>${emoji} ${r.name}</td><td class="number">${r.players}</td><td class="number">${r.wins}</td><td class="number">${r.losses}</td><td class="number">${r.total}</td><td class="number">${r.total>0?(r.wins*100/r.total).toFixed(1):0}%</td></tr>`;
     });
     html += '</table></div></div>';
     
@@ -412,7 +428,10 @@ function renderFullStats(data) {
     html += '<div class="table-container"><h3>🔄 Комбинации (10+ боёв)</h3><table>';
     html += '<tr><th>Комбинация</th><th>Игроков</th><th>Победы</th><th>Поражения</th><th>Всего</th><th>Винрейт</th></tr>';
     Object.entries(comboStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses})).filter(c => c.total >= 10).sort((a,b) => (b.wins/b.total) - (a.wins/a.total)).forEach(c => {
-        html += `<tr><td>${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${(c.wins*100/c.total).toFixed(1)}%</td></tr>`;
+        const parts = c.name.split('-');
+        const raceEm = raceEmojis[parts[0]] || '';
+        const classEm = classEmojis[parts[1]] || '';
+        html += `<tr><td>${raceEm}${classEm} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${(c.wins*100/c.total).toFixed(1)}%</td></tr>`;
     });
     html += '</table></div></div>';
     
@@ -611,63 +630,53 @@ function renderFullStats(data) {
     html += '</table></div>';
     html += '</div>';
 
-// КАЛЬКУЛЯТОР
-html += '<div id="tab-calculator" class="tab-content">';
-html += '<div class="table-container"><h3>🎲 Калькулятор боёв</h3>';
-
-// Переключатель режима
-html += '<div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">';
-html += '<button id="mode-players" class="calc-mode-btn active" onclick="switchCalcMode(\'players\')">👥 Игроки</button>';
-html += '<button id="mode-classes" class="calc-mode-btn" onclick="switchCalcMode(\'classes\')">⚔️ Класс/Раса</button>';
-html += '</div>';
-
-// Режим ИГРОКИ
-html += '<div id="calc-mode-players" style="display: block;">';
-html += '<div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: end; padding: 20px;">';
-html += '<div><label style="color: #8b949e;">Игрок 1</label><br><select id="calc-p1">';
-players.sort((a,b) => a.display.localeCompare(b.display)).forEach(p => {
-    html += `<option value="${p.display}">${p.display} (${p.name})</option>`;
-});
-html += '</select></div>';
-html += '<div style="text-align: center; font-size: 24px; color: #ffd700;">VS</div>';
-html += '<div><label style="color: #8b949e;">Игрок 2</label><br><select id="calc-p2">';
-players.sort((a,b) => a.display.localeCompare(b.display)).forEach((p, idx) => {
-    html += `<option value="${p.display}" ${idx === 1 ? 'selected' : ''}>${p.display} (${p.name})</option>`;
-});
-html += '</select></div>';
-html += '</div></div>';
-
-// Режим КЛАСС/РАСА
-html += '<div id="calc-mode-classes" style="display: none;">';
-html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px;">';
-html += '<div>';
-html += '<label style="color: #8b949e;">Класс 1</label><br>';
-html += '<select id="calc-class1">';
-classesData.forEach(c => html += `<option value="${c.Name}">${c.Name}</option>`);
-html += '</select><br><br>';
-html += '<label style="color: #8b949e;">Раса 1</label><br>';
-html += '<select id="calc-race1">';
-racesData.forEach(r => html += `<option value="${r.Name}">${r.Name}</option>`);
-html += '</select>';
-html += '</div>';
-html += '<div>';
-html += '<label style="color: #8b949e;">Класс 2</label><br>';
-html += '<select id="calc-class2">';
-classesData.forEach((c, idx) => html += `<option value="${c.Name}" ${idx === 1 ? 'selected' : ''}>${c.Name}</option>`);
-html += '</select><br><br>';
-html += '<label style="color: #8b949e;">Раса 2</label><br>';
-html += '<select id="calc-race2">';
-racesData.forEach(r => html += `<option value="${r.Name}">${r.Name}</option>`);
-html += '</select>';
-html += '</div>';
-html += '</div>';
-html += '<div style="text-align: center; font-size: 24px; color: #ffd700; margin: 10px 0;">VS</div>';
-html += '</div>';
-
-html += '<div id="calc-table" style="padding: 20px; background: #21262d; border-radius: 10px; margin: 20px 0;">';
-html += '<div style="text-align: center; color: #8b949e;">Выбери игроков или классы для расчёта</div>';
-html += '</div>';
-html += '</div></div>';
+    // КАЛЬКУЛЯТОР
+    html += '<div id="tab-calculator" class="tab-content">';
+    html += '<div class="table-container"><h3>🎲 Калькулятор боёв</h3>';
+    
+    html += '<div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">';
+    html += '<button id="mode-players" class="calc-mode-btn active" onclick="switchCalcMode(\'players\')">👥 Игроки</button>';
+    html += '<button id="mode-classes" class="calc-mode-btn" onclick="switchCalcMode(\'classes\')">⚔️ Класс/Раса</button>';
+    html += '</div>';
+    
+    html += '<div id="calc-mode-players">';
+    html += '<div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: end; padding: 20px;">';
+    html += '<div><label style="color: #8b949e;">Игрок 1</label><br><select id="calc-p1">';
+    players.sort((a,b) => a.display.localeCompare(b.display)).forEach(p => {
+        html += `<option value="${p.display}">${p.emoji} ${p.display} (${p.name})</option>`;
+    });
+    html += '</select></div>';
+    html += '<div style="text-align: center; font-size: 24px; color: #ffd700;">VS</div>';
+    html += '<div><label style="color: #8b949e;">Игрок 2</label><br><select id="calc-p2">';
+    players.sort((a,b) => a.display.localeCompare(b.display)).forEach((p, idx) => {
+        html += `<option value="${p.display}" ${idx === 1 ? 'selected' : ''}>${p.emoji} ${p.display} (${p.name})</option>`;
+    });
+    html += '</select></div>';
+    html += '</div></div>';
+    
+    html += '<div id="calc-mode-classes" style="display: none;">';
+    html += '<div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 15px; padding: 20px;">';
+    html += '<div style="background: #161b22; padding: 15px; border-radius: 10px;">';
+    html += '<div style="margin-bottom: 15px;"><label style="color: #8b949e; font-size: 12px;">Класс</label><br><select id="calc-class1" style="width: 100%;">';
+    classesData.forEach(c => html += `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`);
+    html += '</select></div>';
+    html += '<div><label style="color: #8b949e; font-size: 12px;">Раса</label><br><select id="calc-race1" style="width: 100%;">';
+    racesData.forEach(r => html += `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`);
+    html += '</select></div></div>';
+    html += '<div style="display: flex; align-items: center;"><span style="font-size: 24px; color: #ffd700; font-weight: bold;">VS</span></div>';
+    html += '<div style="background: #161b22; padding: 15px; border-radius: 10px;">';
+    html += '<div style="margin-bottom: 15px;"><label style="color: #8b949e; font-size: 12px;">Класс</label><br><select id="calc-class2" style="width: 100%;">';
+    classesData.forEach((c, idx) => html += `<option value="${c.Name}" ${idx === 1 ? 'selected' : ''}>${c.Emoji} ${c.Name}</option>`);
+    html += '</select></div>';
+    html += '<div><label style="color: #8b949e; font-size: 12px;">Раса</label><br><select id="calc-race2" style="width: 100%;">';
+    racesData.forEach(r => html += `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`);
+    html += '</select></div></div>';
+    html += '</div></div>';
+    
+    html += '<div id="calc-table" style="padding: 20px; background: #21262d; border-radius: 10px; margin: 20px 0;">';
+    html += '<div style="text-align: center; color: #8b949e;">Выбери игроков или классы для расчёта</div>';
+    html += '</div>';
+    html += '</div></div>';
     
     // ВСЕ ИГРОКИ
     html += '<div id="tab-allplayers" class="tab-content">';
@@ -682,144 +691,128 @@ html += '</div></div>';
     
     document.getElementById('content').innerHTML = html;
 
-// Активация калькулятора
-setTimeout(() => {
-    let currentCalcMode = 'players';
-    
-    window.switchCalcMode = function(mode) {
-        currentCalcMode = mode;
-        document.getElementById('mode-players').classList.toggle('active', mode === 'players');
-        document.getElementById('mode-classes').classList.toggle('active', mode === 'classes');
-        document.getElementById('calc-mode-players').style.display = mode === 'players' ? 'block' : 'none';
-        document.getElementById('calc-mode-classes').style.display = mode === 'classes' ? 'block' : 'none';
-        updateDisplay();
-    };
-    
-    function getSelectedStats() {
-        if (currentCalcMode === 'players') {
-            const p1 = players.find(p => p.display === document.getElementById('calc-p1')?.value);
-            const p2 = players.find(p => p.display === document.getElementById('calc-p2')?.value);
-            if (!p1 || !p2) return null;
-            
-            const parseName = (name) => name.split('-');
-            const p1Parts = parseName(p1.name);
-            const p2Parts = parseName(p2.name);
-            
-            return {
-                p1: { display: p1.display, emoji: p1.emoji, class: p1Parts[1] || p1Parts[0], race: p1Parts[0] },
-                p2: { display: p2.display, emoji: p2.emoji, class: p2Parts[1] || p2Parts[0], race: p2Parts[0] }
-            };
-        } else {
-            const class1 = document.getElementById('calc-class1')?.value;
-            const race1 = document.getElementById('calc-race1')?.value;
-            const class2 = document.getElementById('calc-class2')?.value;
-            const race2 = document.getElementById('calc-race2')?.value;
-            
-            return {
-                p1: { display: `${class1} (${race1})`, emoji: '⚔️', class: class1, race: race1 },
-                p2: { display: `${class2} (${race2})`, emoji: '🛡️', class: class2, race: race2 }
-            };
+    // Активация калькулятора
+    setTimeout(() => {
+        let currentCalcMode = 'players';
+        
+        window.switchCalcMode = function(mode) {
+            currentCalcMode = mode;
+            document.getElementById('mode-players').classList.toggle('active', mode === 'players');
+            document.getElementById('mode-classes').classList.toggle('active', mode === 'classes');
+            document.getElementById('calc-mode-players').style.display = mode === 'players' ? 'block' : 'none';
+            document.getElementById('calc-mode-classes').style.display = mode === 'classes' ? 'block' : 'none';
+            updateDisplay();
+        };
+        
+        function getSelectedStats() {
+            if (currentCalcMode === 'players') {
+                const p1 = players.find(p => p.display === document.getElementById('calc-p1')?.value);
+                const p2 = players.find(p => p.display === document.getElementById('calc-p2')?.value);
+                if (!p1 || !p2) return null;
+                const parseName = (name) => name.split('-');
+                const p1Parts = parseName(p1.name);
+                const p2Parts = parseName(p2.name);
+                return {
+                    p1: { display: p1.display, emoji: p1.emoji, class: p1Parts[1] || p1Parts[0], race: p1Parts[0] },
+                    p2: { display: p2.display, emoji: p2.emoji, class: p2Parts[1] || p2Parts[0], race: p2Parts[0] }
+                };
+            } else {
+                const class1 = document.getElementById('calc-class1')?.value;
+                const race1 = document.getElementById('calc-race1')?.value;
+                const class2 = document.getElementById('calc-class2')?.value;
+                const race2 = document.getElementById('calc-race2')?.value;
+                const em1 = classEmojis[class1] + raceEmojis[race1];
+                const em2 = classEmojis[class2] + raceEmojis[race2];
+                return {
+                    p1: { display: `${class1} (${race1})`, emoji: em1, class: class1, race: race1 },
+                    p2: { display: `${class2} (${race2})`, emoji: em2, class: class2, race: race2 }
+                };
+            }
         }
-    }
-    
-    function calculateFight(sel) {
-        const class1 = classesData.find(c => c.Name === sel.p1.class) || classesData[0];
-        const class2 = classesData.find(c => c.Name === sel.p2.class) || classesData[0];
-        const race1 = racesData.find(r => r.Name === sel.p1.race) || racesData[0];
-        const race2 = racesData.find(r => r.Name === sel.p2.race) || racesData[0];
         
-        const s1 = {
-            hp: class1.Hp + race1.BonusHp, atk: class1.Atk + race1.BonusAtk,
-            def: class1.Def + race1.BonusDef, min: class1.Min + race1.BonusMin, max: class1.Max + race1.BonusMax
-        };
-        const s2 = {
-            hp: class2.Hp + race2.BonusHp, atk: class2.Atk + race2.BonusAtk,
-            def: class2.Def + race2.BonusDef, min: class2.Min + race2.BonusMin, max: class2.Max + race2.BonusMax
-        };
+        function calculateFight(sel) {
+            const class1 = classesData.find(c => c.Name === sel.p1.class) || classesData[0];
+            const class2 = classesData.find(c => c.Name === sel.p2.class) || classesData[0];
+            const race1 = racesData.find(r => r.Name === sel.p1.race) || racesData[0];
+            const race2 = racesData.find(r => r.Name === sel.p2.race) || racesData[0];
+            
+            const s1 = { hp: class1.Hp + race1.BonusHp, atk: class1.Atk + race1.BonusAtk, def: class1.Def + race1.BonusDef, min: class1.Min + race1.BonusMin, max: class1.Max + race1.BonusMax };
+            const s2 = { hp: class2.Hp + race2.BonusHp, atk: class2.Atk + race2.BonusAtk, def: class2.Def + race2.BonusDef, min: class2.Min + race2.BonusMin, max: class2.Max + race2.BonusMax };
+            
+            const hitChance = (atk, def) => { const needed = 10 + def - atk; if (needed <= 1) return 0.95; if (needed >= 20) return 0.05; return (21 - needed) / 20; };
+            const p1Hit = hitChance(s1.atk, s2.def), p2Hit = hitChance(s2.atk, s1.def);
+            
+            const calcDmg = (min, max, hit, def) => { const reduction = 1 - def * 0.05; const avg = (min + max) / 2; return hit * avg * reduction * 0.95 + 0.05 * avg * 2 * reduction; };
+            const p1Dmg = calcDmg(s1.min, s1.max, p1Hit, s2.def), p2Dmg = calcDmg(s2.min, s2.max, p2Hit, s1.def);
+            
+            const p1Turns = s2.hp / p1Dmg, p2Turns = s1.hp / p2Dmg;
+            const calcCrit = (max, def) => Math.ceil(max * 2 * (1 - def * 0.05));
+            const p1Crit = calcCrit(s1.max, s2.def), p2Crit = calcCrit(s2.max, s1.def);
+            const p1Quick = Math.ceil(s2.hp / p1Crit), p2Quick = Math.ceil(s1.hp / p2Crit);
+            const p1CritKill = p1Crit >= s2.hp, p2CritKill = p2Crit >= s1.hp;
+            
+            const p1Win = (p1Dmg / (p1Dmg + p2Dmg)) * 100, p2Win = 100 - p1Win;
+            const p1Spread = s1.max - s1.min, p2Spread = s2.max - s2.min;
+            const winner = p1Win > p2Win ? sel.p1 : sel.p2;
+            
+            const reasons = [], fmt = (n) => n.toFixed(2);
+            if (Math.abs(p1Dmg - p2Dmg) > 0.01) reasons.push(p1Dmg > p2Dmg ? `${sel.p1.display} наносит больше урона (${fmt(p1Dmg)} vs ${fmt(p2Dmg)})` : `${sel.p2.display} наносит больше урона (${fmt(p2Dmg)} vs ${fmt(p1Dmg)})`);
+            else reasons.push(`Одинаковый урон (${fmt(p1Dmg)})`);
+            if (Math.abs(p1Hit - p2Hit) > 0.001) reasons.push(p1Hit > p2Hit ? `${sel.p1.display} чаще попадает (${(p1Hit*100).toFixed(0)}% vs ${(p2Hit*100).toFixed(0)}%)` : `${sel.p2.display} чаще попадает (${(p2Hit*100).toFixed(0)}% vs ${(p1Hit*100).toFixed(0)}%)`);
+            else reasons.push(`Одинаковый шанс попадания (${(p1Hit*100).toFixed(0)}%)`);
+            if (Math.abs(p1Turns - p2Turns) > 0.01) reasons.push(p1Turns < p2Turns ? `${sel.p1.display} убивает быстрее (${p1Turns.toFixed(1)} ходов vs ${p2Turns.toFixed(1)})` : `${sel.p2.display} убивает быстрее (${p2Turns.toFixed(1)} ходов vs ${p1Turns.toFixed(1)})`);
+            else reasons.push(`Одинаковая скорость убийства (${p1Turns.toFixed(1)} ходов)`);
+            if (p1Crit !== p2Crit) reasons.push(p1Crit > p2Crit ? `${sel.p1.display} наносит больше урона критом (${p1Crit} vs ${p2Crit})` : `${sel.p2.display} наносит больше урона критом (${p2Crit} vs ${p1Crit})`);
+            else reasons.push(`Одинаковый крит урон (${p1Crit})`);
+            if (s1.hp !== s2.hp) reasons.push(s1.hp > s2.hp ? `${sel.p1.display} живучее (${s1.hp} HP vs ${s2.hp})` : `${sel.p2.display} живучее (${s2.hp} HP vs ${s1.hp})`);
+            else reasons.push(`Одинаковая живучесть (${s1.hp} HP)`);
+            if (s1.def !== s2.def) reasons.push(s1.def > s2.def ? `${sel.p1.display} лучше защищен (${s1.def} Def vs ${s2.def})` : `${sel.p2.display} лучше защищен (${s2.def} Def vs ${s1.def})`);
+            else reasons.push(`Одинаковая защита (${s1.def} Def)`);
+            if (p1Spread !== p2Spread) reasons.push(p1Spread < p2Spread ? `${sel.p1.display} стабильнее (разброс ${p1Spread} vs ${p2Spread})` : `${sel.p2.display} стабильнее (разброс ${p2Spread} vs ${p1Spread})`);
+            else reasons.push(`Одинаковая стабильность (разброс ${p1Spread})`);
+            
+            return { s1, s2, p1Hit, p2Hit, p1Dmg, p2Dmg, p1Turns, p2Turns, p1Crit, p2Crit, p1Quick, p2Quick, p1CritKill, p2CritKill, p1Win, p2Win, p1Spread, p2Spread, winner, reasons };
+        }
         
-        const hitChance = (atk, def) => {
-            const needed = 10 + def - atk;
-            if (needed <= 1) return 0.95;
-            if (needed >= 20) return 0.05;
-            return (21 - needed) / 20;
-        };
+        function updateDisplay() {
+            const sel = getSelectedStats();
+            if (!sel) return;
+            const r = calculateFight(sel);
+            const tableDiv = document.getElementById('calc-table');
+            tableDiv.innerHTML = `
+                <table style="width: 100%;">
+                    <tr><th style="width: 25%;"></th><th style="width: 35%;">${sel.p1.emoji} ${sel.p1.display}</th><th style="width: 35%;">${sel.p2.emoji} ${sel.p2.display}</th></tr>
+                    <tr><td>Класс</td><td>${sel.p1.class}</td><td>${sel.p2.class}</td></tr>
+                    <tr><td>Раса</td><td>${sel.p1.race}</td><td>${sel.p2.race}</td></tr>
+                    <tr><td>Atk</td><td class="number">${r.s1.atk}</td><td class="number">${r.s2.atk}</td></tr>
+                    <tr><td>Min</td><td class="number">${r.s1.min}</td><td class="number">${r.s2.min}</td></tr>
+                    <tr><td>Max</td><td class="number">${r.s1.max}</td><td class="number">${r.s2.max}</td></tr>
+                    <tr><td>Def</td><td class="number">${r.s1.def}</td><td class="number">${r.s2.def}</td></tr>
+                    <tr><td>HP</td><td class="number">${r.s1.hp}</td><td class="number">${r.s2.hp}</td></tr>
+                    <tr><td colspan="3" style="background: #30363d;"></td></tr>
+                    <tr><td>Шанс попадания</td><td class="number">${(r.p1Hit*100).toFixed(1)}%</td><td class="number">${(r.p2Hit*100).toFixed(1)}%</td></tr>
+                    <tr><td>Урон за ход</td><td class="number">${r.p1Dmg.toFixed(2)}</td><td class="number">${r.p2Dmg.toFixed(2)}</td></tr>
+                    <tr><td>Ходов до победы</td><td class="number">${r.p1Turns.toFixed(2)}</td><td class="number">${r.p2Turns.toFixed(2)}</td></tr>
+                    <tr><td>Крит-урон</td><td class="number">${r.p1Crit}</td><td class="number">${r.p2Crit}</td></tr>
+                    <tr><td>Быстрая победа</td><td class="number">${r.p1Quick}</td><td class="number">${r.p2Quick}</td></tr>
+                    <tr><td>Крит убивает?</td><td class="number">${r.p1CritKill ? '✅' : '❌'}</td><td class="number">${r.p2CritKill ? '✅' : '❌'}</td></tr>
+                    <tr><td style="color: #ffd700;">Вероятность победы</td><td class="number" style="color: #ffd700; font-weight: bold;">${r.p1Win.toFixed(2)}%</td><td class="number" style="color: #ffd700; font-weight: bold;">${r.p2Win.toFixed(2)}%</td></tr>
+                    <tr><td>Опаснее</td><td colspan="2" style="text-align: center;">💥 ${r.winner.display}</td></tr>
+                    <tr><td>Стабильность</td><td class="number">${r.p1Spread}</td><td class="number">${r.p2Spread}</td></tr>
+                </table>
+                <div style="margin-top: 15px; padding: 15px; background: #161b22; border-radius: 8px;">
+                    <strong style="color: #ffd700;">✅ Причина победы:</strong> ${r.winner.display} сильнее
+                    <ul class="reasons-list">${r.reasons.map(r => `<li>${r}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
         
-        const p1Hit = hitChance(s1.atk, s2.def);
-        const p2Hit = hitChance(s2.atk, s1.def);
-        
-        const calcDmg = (min, max, hit, def) => {
-            const reduction = 1 - def * 0.05;
-            const avg = (min + max) / 2;
-            return hit * avg * reduction * 0.95 + 0.05 * avg * 2 * reduction;
-        };
-        
-        const p1Dmg = calcDmg(s1.min, s1.max, p1Hit, s2.def);
-        const p2Dmg = calcDmg(s2.min, s2.max, p2Hit, s1.def);
-        
-        const p1Turns = s2.hp / p1Dmg;
-        const p2Turns = s1.hp / p2Dmg;
-        
-        const calcCrit = (max, def) => Math.ceil(max * 2 * (1 - def * 0.05));
-        const p1Crit = calcCrit(s1.max, s2.def);
-        const p2Crit = calcCrit(s2.max, s1.def);
-        
-        const p1Win = (p1Dmg / (p1Dmg + p2Dmg)) * 100;
-        const p2Win = 100 - p1Win;
-        
-        const reasons = [];
-        if (p1Dmg > p2Dmg) reasons.push(`${sel.p1.display} наносит больше урона (${p1Dmg.toFixed(2)} vs ${p2Dmg.toFixed(2)})`);
-        else if (p2Dmg > p1Dmg) reasons.push(`${sel.p2.display} наносит больше урона (${p2Dmg.toFixed(2)} vs ${p1Dmg.toFixed(2)})`);
-        
-        if (p1Hit > p2Hit) reasons.push(`${sel.p1.display} чаще попадает (${(p1Hit*100).toFixed(0)}% vs ${(p2Hit*100).toFixed(0)}%)`);
-        else if (p2Hit > p1Hit) reasons.push(`${sel.p2.display} чаще попадает (${(p2Hit*100).toFixed(0)}% vs ${(p1Hit*100).toFixed(0)}%)`);
-        
-        if (p1Turns < p2Turns) reasons.push(`${sel.p1.display} убивает быстрее (${p1Turns.toFixed(1)} ходов vs ${p2Turns.toFixed(1)})`);
-        else if (p2Turns < p1Turns) reasons.push(`${sel.p2.display} убивает быстрее (${p2Turns.toFixed(1)} ходов vs ${p1Turns.toFixed(1)})`);
-        
-        return { s1, s2, p1Hit, p2Hit, p1Dmg, p2Dmg, p1Turns, p2Turns, p1Crit, p2Crit, p1Win, p2Win, reasons };
-    }
-    
-    function updateDisplay() {
-        const sel = getSelectedStats();
-        if (!sel) return;
-        
-        const r = calculateFight(sel);
-        const tableDiv = document.getElementById('calc-table');
-        
-        tableDiv.innerHTML = `
-            <table style="width: 100%;">
-                <tr><th style="width: 25%;"></th><th style="width: 35%;">${sel.p1.emoji} ${sel.p1.display}</th><th style="width: 35%;">${sel.p2.emoji} ${sel.p2.display}</th></tr>
-                <tr><td>Класс</td><td>${sel.p1.class}</td><td>${sel.p2.class}</td></tr>
-                <tr><td>Раса</td><td>${sel.p1.race}</td><td>${sel.p2.race}</td></tr>
-                <tr><td>Atk</td><td class="number">${r.s1.atk}</td><td class="number">${r.s2.atk}</td></tr>
-                <tr><td>Min</td><td class="number">${r.s1.min}</td><td class="number">${r.s2.min}</td></tr>
-                <tr><td>Max</td><td class="number">${r.s1.max}</td><td class="number">${r.s2.max}</td></tr>
-                <tr><td>Def</td><td class="number">${r.s1.def}</td><td class="number">${r.s2.def}</td></tr>
-                <tr><td>HP</td><td class="number">${r.s1.hp}</td><td class="number">${r.s2.hp}</td></tr>
-                <tr><td colspan="3" style="background: #30363d;"></td></tr>
-                <tr><td>Шанс попадания</td><td class="number">${(r.p1Hit*100).toFixed(1)}%</td><td class="number">${(r.p2Hit*100).toFixed(1)}%</td></tr>
-                <tr><td>Урон за ход</td><td class="number">${r.p1Dmg.toFixed(2)}</td><td class="number">${r.p2Dmg.toFixed(2)}</td></tr>
-                <tr><td>Ходов до победы</td><td class="number">${r.p1Turns.toFixed(2)}</td><td class="number">${r.p2Turns.toFixed(2)}</td></tr>
-                <tr><td>Крит-урон</td><td class="number">${r.p1Crit}</td><td class="number">${r.p2Crit}</td></tr>
-                <tr><td style="color: #ffd700;">Вероятность победы</td><td class="number" style="color: #ffd700; font-weight: bold;">${r.p1Win.toFixed(2)}%</td><td class="number" style="color: #ffd700; font-weight: bold;">${r.p2Win.toFixed(2)}%</td></tr>
-            </table>
-            <div style="margin-top: 15px; padding: 15px; background: #161b22; border-radius: 8px;">
-                <strong style="color: #ffd700;">✅ Анализ:</strong>
-                <ul class="reasons-list">
-                    ${r.reasons.map(r => `<li>${r}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-    }
-    
-    // Привязка событий
-    ['calc-p1', 'calc-p2', 'calc-class1', 'calc-race1', 'calc-class2', 'calc-race2'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('change', updateDisplay);
-    });
-    
-    updateDisplay();
-}, 100);
+        ['calc-p1', 'calc-p2', 'calc-class1', 'calc-race1', 'calc-class2', 'calc-race2'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', updateDisplay);
+        });
+        updateDisplay();
+    }, 100);
 }
 
 window.switchTab = function(tabName) {
