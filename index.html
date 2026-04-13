@@ -621,110 +621,110 @@ function renderFullStats(data) {
     });
     html += '</table></div></div>';
 
-// КАЛЬКУЛЯТОР
-html += '<div id="tab-calculator" class="tab-content">';
-html += '<div class="table-container"><h3>🎲 Калькулятор боёв</h3>';
-html += '<div style="display:flex;gap:10px;margin-bottom:20px;justify-content:center;">';
-html += '<button id="mode-players" class="calc-mode-btn active" onclick="switchCalcMode(\'players\')">👥 Игроки</button>';
-html += '<button id="mode-classes" class="calc-mode-btn" onclick="switchCalcMode(\'classes\')">⚔️ Класс/Раса</button>';
-html += '</div>';
-html += '<div id="calc-mode-players">';
-html += '<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:end;padding:20px;">';
-html += '<div><label style="color:#8b949e;">Игрок 1</label><br><select id="calc-p1">';
-players.sort((a,b) => a.display.localeCompare(b.display)).forEach(p => {
-    html += `<option value="${p.display}">${p.emoji} ${p.display}</option>`;
-});
-html += '</select></div>';
-html += '<div style="text-align:center;font-size:24px;color:#ffd700;">VS</div>';
-html += '<div><label style="color:#8b949e;">Игрок 2</label><br><select id="calc-p2">';
-players.sort((a,b) => a.display.localeCompare(b.display)).forEach((p,idx) => {
-    html += `<option value="${p.display}" ${idx===1?'selected':''}>${p.emoji} ${p.display}</option>`;
-});
-html += '</select></div></div></div>';
-
-html += '<div id="calc-mode-classes" style="display:none;">';
-html += '<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:15px;padding:20px;">';
-html += '<div style="background:#161b22;padding:15px;border-radius:10px;">';
-html += '<div style="margin-bottom:15px;"><label style="color:#8b949e;font-size:12px;">Класс</label><br><select id="calc-class1" style="width:100%;">';
-classesData.forEach(c => html += `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`);
-html += '</select></div>';
-html += '<div><label style="color:#8b949e;font-size:12px;">Раса</label><br><select id="calc-race1" style="width:100%;">';
-racesData.forEach(r => html += `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`);
-html += '</select></div></div>';
-html += '<div style="display:flex;align-items:center;"><span style="font-size:24px;color:#ffd700;font-weight:bold;">VS</span></div>';
-html += '<div style="background:#161b22;padding:15px;border-radius:10px;">';
-html += '<div style="margin-bottom:15px;"><label style="color:#8b949e;font-size:12px;">Класс</label><br><select id="calc-class2" style="width:100%;">';
-classesData.forEach((c,idx) => html += `<option value="${c.Name}" ${idx===1?'selected':''}>${c.Emoji} ${c.Name}</option>`);
-html += '</select></div>';
-html += '<div><label style="color:#8b949e;font-size:12px;">Раса</label><br><select id="calc-race2" style="width:100%;">';
-racesData.forEach(r => html += `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`);
-html += '</select></div></div></div></div>';
-
-html += '<div id="calc-table" style="padding:20px;background:#21262d;border-radius:10px;margin:20px 0;">';
-html += '<div style="text-align:center;color:#8b949e;">Выбери игроков или классы</div>';
-html += '</div></div></div>';
-
-// РЕЙТИНГ (SEASON TOP)
-html += '<div id="tab-rating" class="tab-content">';
-html += '<div class="table-container"><h3>🏆 Сезонный рейтинг</h3>';
-html += '<table id="rating-table">';
-html += '<thead><tr>';
-html += '<th class="sortable-header" data-sort="rank">#</th>';
-html += '<th class="sortable-header" data-sort="name">Игрок</th>';
-html += '<th class="sortable-header" data-sort="class">Класс</th>';
-html += '<th class="sortable-header" data-sort="skill">Рейтинг</th>';
-html += '<th class="sortable-header" data-sort="wl">W/L</th>';
-html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
-html += '</tr></thead>';
-html += '<tbody id="rating-tbody">';
-
-const seasonTop = data.seasonTop || [];
-if (seasonTop.length > 0) {
-    seasonTop.forEach((p, i) => {
-        const player = players.find(pl => pl.display === p.display) || {};
-        const total = p.wins + p.losses;
-        const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
-        html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${player.name || ''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
+    // КАЛЬКУЛЯТОР
+    html += '<div id="tab-calculator" class="tab-content">';
+    html += '<div class="table-container"><h3>🎲 Калькулятор боёв</h3>';
+    html += '<div style="display:flex;gap:10px;margin-bottom:20px;justify-content:center;">';
+    html += '<button id="mode-players" class="calc-mode-btn active" onclick="switchCalcMode(\'players\')">👥 Игроки</button>';
+    html += '<button id="mode-classes" class="calc-mode-btn" onclick="switchCalcMode(\'classes\')">⚔️ Класс/Раса</button>';
+    html += '</div>';
+    html += '<div id="calc-mode-players">';
+    html += '<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:end;padding:20px;">';
+    html += '<div><label style="color:#8b949e;">Игрок 1</label><br><select id="calc-p1">';
+    players.sort((a,b) => a.display.localeCompare(b.display)).forEach(p => {
+        html += `<option value="${p.display}">${p.emoji} ${p.display}</option>`;
+    });
+    html += '</select></div>';
+    html += '<div style="text-align:center;font-size:24px;color:#ffd700;">VS</div>';
+    html += '<div><label style="color:#8b949e;">Игрок 2</label><br><select id="calc-p2">';
+    players.sort((a,b) => a.display.localeCompare(b.display)).forEach((p,idx) => {
+        html += `<option value="${p.display}" ${idx===1?'selected':''}>${p.emoji} ${p.display}</option>`;
+    });
+    html += '</select></div></div></div>';
+    
+    html += '<div id="calc-mode-classes" style="display:none;">';
+    html += '<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:15px;padding:20px;">';
+    html += '<div style="background:#161b22;padding:15px;border-radius:10px;">';
+    html += '<div style="margin-bottom:15px;"><label style="color:#8b949e;font-size:12px;">Класс</label><br><select id="calc-class1" style="width:100%;">';
+    classesData.forEach(c => html += `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`);
+    html += '</select></div>';
+    html += '<div><label style="color:#8b949e;font-size:12px;">Раса</label><br><select id="calc-race1" style="width:100%;">';
+    racesData.forEach(r => html += `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`);
+    html += '</select></div></div>';
+    html += '<div style="display:flex;align-items:center;"><span style="font-size:24px;color:#ffd700;font-weight:bold;">VS</span></div>';
+    html += '<div style="background:#161b22;padding:15px;border-radius:10px;">';
+    html += '<div style="margin-bottom:15px;"><label style="color:#8b949e;font-size:12px;">Класс</label><br><select id="calc-class2" style="width:100%;">';
+    classesData.forEach((c,idx) => html += `<option value="${c.Name}" ${idx===1?'selected':''}>${c.Emoji} ${c.Name}</option>`);
+    html += '</select></div>';
+    html += '<div><label style="color:#8b949e;font-size:12px;">Раса</label><br><select id="calc-race2" style="width:100%;">';
+    racesData.forEach(r => html += `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`);
+    html += '</select></div></div></div></div>';
+    
+    html += '<div id="calc-table" style="padding:20px;background:#21262d;border-radius:10px;margin:20px 0;">';
+    html += '<div style="text-align:center;color:#8b949e;">Выбери игроков или классы</div>';
+    html += '</div></div></div>';
+    
+    // РЕЙТИНГ (SEASON TOP)
+    html += '<div id="tab-rating" class="tab-content">';
+    html += '<div class="table-container"><h3>🏆 Сезонный рейтинг</h3>';
+    html += '<table id="rating-table">';
+    html += '<thead><tr>';
+    html += '<th class="sortable-header" data-sort="rank">#</th>';
+    html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+    html += '<th class="sortable-header" data-sort="class">Класс</th>';
+    html += '<th class="sortable-header" data-sort="skill">Рейтинг</th>';
+    html += '<th class="sortable-header" data-sort="wl">W/L</th>';
+    html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+    html += '</tr></thead>';
+    html += '<tbody id="rating-tbody">';
+    
+    const seasonTop = data.seasonTop || [];
+    if (seasonTop.length > 0) {
+        seasonTop.forEach((p, i) => {
+            const player = players.find(pl => pl.display === p.display) || {};
+            const total = p.wins + p.losses;
+            const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
+            html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${player.name || ''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
+            html += `<td>${i+1}</td>`;
+            html += `<td>${p.emoji || '🏆'} ${p.display}</td>`;
+            html += `<td>${player.name || '—'}</td>`;
+            html += `<td class="number">${p.skill}</td>`;
+            html += `<td class="number">${p.wins}-${p.losses}</td>`;
+            html += `<td class="number">${wr}%</td>`;
+            html += `</tr>`;
+        });
+    } else {
+        html += '<tr><td colspan="6" style="text-align:center;padding:20px;color:#8b949e;">Нет данных рейтинга</td></tr>';
+    }
+    html += '</tbody></table></div></div>';
+    
+    // ОСКОЛКИ (Топ коллекционеров)
+    html += '<div id="tab-shards" class="tab-content">';
+    html += '<div class="table-container"><h3>💎 Топ коллекционеров осколков</h3>';
+    html += '<table id="shards-table">';
+    html += '<thead><tr>';
+    html += '<th class="sortable-header" data-sort="rank">#</th>';
+    html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+    html += '<th class="sortable-header" data-sort="class">Класс</th>';
+    html += '<th class="sortable-header" data-sort="shards">Осколки</th>';
+    html += '<th class="sortable-header" data-sort="level">Уровень</th>';
+    html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
+    html += '</tr></thead>';
+    html += '<tbody id="shards-tbody">';
+    
+    const topShardsAll = [...players].sort((a,b) => b.shards - a.shards);
+    topShardsAll.forEach((p, i) => {
+        const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
+        html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}">`;
         html += `<td>${i+1}</td>`;
-        html += `<td>${p.emoji || '🏆'} ${p.display}</td>`;
-        html += `<td>${player.name || '—'}</td>`;
-        html += `<td class="number">${p.skill}</td>`;
-        html += `<td class="number">${p.wins}-${p.losses}</td>`;
-        html += `<td class="number">${wr}%</td>`;
+        html += `<td>${p.emoji} ${p.display}</td>`;
+        html += `<td>${p.name}</td>`;
+        html += `<td class="number">${p.shards}</td>`;
+        html += `<td class="number">${p.level}</td>`;
+        html += `<td>${fi}</td>`;
         html += `</tr>`;
     });
-} else {
-    html += '<tr><td colspan="6" style="text-align:center;padding:20px;color:#8b949e;">Нет данных рейтинга</td></tr>';
-}
-html += '</tbody></table></div></div>';
-
-// ОСКОЛКИ (Топ коллекционеров)
-html += '<div id="tab-shards" class="tab-content">';
-html += '<div class="table-container"><h3>💎 Топ коллекционеров осколков</h3>';
-html += '<table id="shards-table">';
-html += '<thead><tr>';
-html += '<th class="sortable-header" data-sort="rank">#</th>';
-html += '<th class="sortable-header" data-sort="name">Игрок</th>';
-html += '<th class="sortable-header" data-sort="class">Класс</th>';
-html += '<th class="sortable-header" data-sort="shards">Осколки</th>';
-html += '<th class="sortable-header" data-sort="level">Уровень</th>';
-html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
-html += '</tr></thead>';
-html += '<tbody id="shards-tbody">';
-
-const topShardsAll = [...players].sort((a,b) => b.shards - a.shards);
-topShardsAll.forEach((p, i) => {
-    const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
-    html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}">`;
-    html += `<td>${i+1}</td>`;
-    html += `<td>${p.emoji} ${p.display}</td>`;
-    html += `<td>${p.name}</td>`;
-    html += `<td class="number">${p.shards}</td>`;
-    html += `<td class="number">${p.level}</td>`;
-    html += `<td>${fi}</td>`;
-    html += `</tr>`;
-});
-html += '</tbody></table></div></div>';
+    html += '</tbody></table></div></div>';
     
     // ВСЕ ИГРОКИ
     html += '<div id="tab-allplayers" class="tab-content">';
@@ -763,12 +763,12 @@ html += '</tbody></table></div></div>';
     initSortableTable('classes-table', 'total', 'desc');
     initSortableTable('races-table', 'total', 'desc');
     initSortableTable('combos-table', 'winrate', 'desc');
-initSortableTable('rating-table', 'skill', 'desc');
-initSortableTable('shards-table', 'shards', 'desc');
+    initSortableTable('rating-table', 'skill', 'desc');
+    initSortableTable('shards-table', 'shards', 'desc');
     initPlayersTable();
     
-// Калькулятор
-setTimeout(() => {
+    // Калькулятор
+    setTimeout(() => {
     let currentCalcMode = 'players';
     window.switchCalcMode = function(mode) {
         currentCalcMode = mode;
