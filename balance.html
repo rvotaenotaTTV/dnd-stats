@@ -21,21 +21,18 @@
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 .nav-links {
     display: flex;
-    gap: 8px;
+    gap: 20px;
     justify-content: center;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
+    margin-bottom: 30px;
 }
 .nav-links a {
     color: #8b949e;
     text-decoration: none;
-    padding: 8px 14px;
+    padding: 8px 16px;
     border-radius: 20px;
     background: #21262d;
     border: 1px solid #30363d;
     transition: all 0.2s;
-    font-size: 13px;
-    white-space: nowrap;
 }
 .nav-links a:hover {
     color: #ffd700;
@@ -49,11 +46,12 @@
 
 @media (max-width: 768px) {
     .nav-links {
-        gap: 6px;
+        flex-wrap: wrap;
+        gap: 8px;
     }
     .nav-links a {
-        padding: 6px 10px;
-        font-size: 11px;
+        padding: 6px 12px;
+        font-size: 12px;
     }
 }
         .table-container {
