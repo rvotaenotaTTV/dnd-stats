@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DnD Раскол — Баланс</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', 'Arial', sans-serif; 
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); 
+            color: #c9d1d9; 
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 { 
+            color: #ffd700; 
+            text-align: center; 
+            margin-bottom: 20px; 
+            font-size: 2.5em;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        .nav-links a.active {
+            background: #ffd700;
+            color: #0d1117;
+            font-weight: bold;
+        }
+        .table-container {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        .table-container h3 {
+            color: #ffd700;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 1200px;
+        }
+        th, td {
+            border: 1px solid #30363d;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        th {
+            background: #21262d;
+            color: #ffd700;
+            font-weight: bold;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 20px !important;
+        }
+        th:hover { background: #30363d; }
+        th::after {
+            content: '⇅';
+            position: absolute;
+            right: 5px;
+            opacity: 0.5;
+            font-size: 12px;
+        }
+        th.asc::after { content: '↑'; opacity: 1; color: #ffd700; }
+        th.desc::after { content: '↓'; opacity: 1; color: #ffd700; }
+        td:first-child {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .number {
+            text-align: right;
+        }
+        .formula-box {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #30363d;
+            margin-top: 20px;
+        }
+        .formula-box h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        .formula {
+            background: #21262d;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #c9d1d9;
+        }
+        .formula span {
+            color: #ffd700;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+        }
+        .back-link:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .table-container { padding: 12px; }
+            table { font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>⚖️ Баланс классов и рас</h1>
+    
+    <div class="nav-links">
+        <a href="index.html">📊 Статистика</a>
+        <a href="balance.html" class="active">⚖️ Баланс</a>
+        <a href="battle.html">⚔️ Боевка</a>
+        <a href="lore.html">📜 Лор</a>
+    </div>
+
+    <!-- Таблица классов -->
+    <div class="table-container">
+        <h3>📊 Классы</h3>
+        <table id="classes-balance-table">
+            <thead>
+                <tr>
+                    <th data-sort="name">Класс</th><th>Эмодзи</th><th data-sort="hp">HP</th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th>
+                    <th data-sort="min">MIN</th><th data-sort="max">MAX</th><th data-sort="avg">Avg DMG</th>
+                    <th data-sort="acc">Точность</th><th data-sort="surv">Живучесть</th><th data-sort="dmg5">Урон/5</th>
+                    <th data-sort="power">POWER</th><th data-sort="cpi">CPI</th>
+                </tr>
+            </thead>
+            <tbody id="classes-balance-tbody">
+                <tr data-name="Воин" data-hp="29" data-atk="5" data-def="2" data-min="3" data-max="9" data-avg="6" data-acc="60" data-surv="32" data-dmg5="18" data-power="105.9" data-cpi="26.46"><td>Воин</td><td>⚔️</td><td class="number">29</td><td class="number">5</td><td class="number">2</td><td class="number">3</td><td class="number">9</td><td class="number">6</td><td class="number">60%</td><td class="number">32</td><td class="number">18</td><td class="number">105,9</td><td class="number">26,46</td></tr>
+                <tr data-name="Паладин" data-hp="34" data-atk="4" data-def="3" data-min="3" data-max="7" data-avg="5" data-acc="50" data-surv="39" data-dmg5="13" data-power="103.3" data-cpi="25.84"><td>Паладин</td><td>🛡️</td><td class="number">34</td><td class="number">4</td><td class="number">3</td><td class="number">3</td><td class="number">7</td><td class="number">5</td><td class="number">50%</td><td class="number">39</td><td class="number">13</td><td class="number">103,3</td><td class="number">25,84</td></tr>
+                <tr data-name="Плут" data-hp="21" data-atk="9" data-def="1" data-min="4" data-max="10" data-avg="7" data-acc="85" data-surv="22" data-dmg5="30" data-power="112.9" data-cpi="28.22"><td>Плут</td><td>🗡️</td><td class="number">21</td><td class="number">9</td><td class="number">1</td><td class="number">4</td><td class="number">10</td><td class="number">7</td><td class="number">85%</td><td class="number">22</td><td class="number">30</td><td class="number">112,9</td><td class="number">28,22</td></tr>
+                <tr data-name="Монах" data-hp="24" data-atk="6" data-def="2" data-min="4" data-max="9" data-avg="6.5" data-acc="65" data-surv="26" data-dmg5="21" data-power="104.1" data-cpi="26.02"><td>Монах</td><td>🥋</td><td class="number">24</td><td class="number">6</td><td class="number">2</td><td class="number">4</td><td class="number">9</td><td class="number">6,5</td><td class="number">65%</td><td class="number">26</td><td class="number">21</td><td class="number">104,1</td><td class="number">26,02</td></tr>
+                <tr data-name="Следопыт" data-hp="26" data-atk="6" data-def="1" data-min="4" data-max="10" data-avg="7" data-acc="70" data-surv="27" data-dmg5="25" data-power="109.5" data-cpi="27.37"><td>Следопыт</td><td>🏹</td><td class="number">26</td><td class="number">6</td><td class="number">1</td><td class="number">4</td><td class="number">10</td><td class="number">7</td><td class="number">70%</td><td class="number">27</td><td class="number">25</td><td class="number">109,5</td><td class="number">27,37</td></tr>
+                <tr data-name="Чародей" data-hp="20" data-atk="8" data-def="0" data-min="4" data-max="13" data-avg="8.5" data-acc="85" data-surv="20" data-dmg5="36" data-power="109.7" data-cpi="27.43"><td>Чародей</td><td>🔮</td><td class="number">20</td><td class="number">8</td><td class="number">0</td><td class="number">4</td><td class="number">13</td><td class="number">8,5</td><td class="number">85%</td><td class="number">20</td><td class="number">36</td><td class="number">109,7</td><td class="number">27,43</td></tr>
+                <tr data-name="Бард" data-hp="25" data-atk="6" data-def="1" data-min="4" data-max="10" data-avg="7" data-acc="70" data-surv="26" data-dmg5="25" data-power="106.5" data-cpi="26.63"><td>Бард</td><td>🎸</td><td class="number">25</td><td class="number">6</td><td class="number">1</td><td class="number">4</td><td class="number">10</td><td class="number">7</td><td class="number">70%</td><td class="number">26</td><td class="number">25</td><td class="number">106,5</td><td class="number">26,63</td></tr>
+                <tr data-name="Друид" data-hp="28" data-atk="6" data-def="1" data-min="4" data-max="8" data-avg="6" data-acc="70" data-surv="29" data-dmg5="21" data-power="105.1" data-cpi="26.28"><td>Друид</td><td>🌿</td><td class="number">28</td><td class="number">6</td><td class="number">1</td><td class="number">4</td><td class="number">8</td><td class="number">6</td><td class="number">70%</td><td class="number">29</td><td class="number">21</td><td class="number">105,1</td><td class="number">26,28</td></tr>
+                <tr data-name="Изобретатель" data-hp="22" data-atk="5" data-def="1" data-min="4" data-max="12" data-avg="8" data-acc="65" data-surv="23" data-dmg5="26" data-power="98.6" data-cpi="24.65"><td>Изобретатель</td><td>⚙️</td><td class="number">22</td><td class="number">5</td><td class="number">1</td><td class="number">4</td><td class="number">12</td><td class="number">8</td><td class="number">65%</td><td class="number">23</td><td class="number">26</td><td class="number">98,6</td><td class="number">24,65</td></tr>
+                <tr data-name="Варвар" data-hp="33" data-atk="4" data-def="2" data-min="4" data-max="8" data-avg="6" data-acc="55" data-surv="36" data-dmg5="17" data-power="107.8" data-cpi="26.94"><td>Варвар</td><td>🪓</td><td class="number">33</td><td class="number">4</td><td class="number">2</td><td class="number">4</td><td class="number">8</td><td class="number">6</td><td class="number">55%</td><td class="number">36</td><td class="number">17</td><td class="number">107,8</td><td class="number">26,94</td></tr>
+                <tr data-name="Волшебница" data-hp="22" data-atk="7" data-def="0" data-min="5" data-max="11" data-avg="8" data-acc="80" data-surv="22" data-dmg5="32" data-power="106.5" data-cpi="26.64"><td>Волшебница</td><td>✨</td><td class="number">22</td><td class="number">7</td><td class="number">0</td><td class="number">5</td><td class="number">11</td><td class="number">8</td><td class="number">80%</td><td class="number">22</td><td class="number">32</td><td class="number">106,5</td><td class="number">26,64</td></tr>
+                <tr data-name="Некромант" data-hp="23" data-atk="7" data-def="0" data-min="5" data-max="10" data-avg="7.5" data-acc="80" data-surv="23" data-dmg5="30" data-power="105.7" data-cpi="26.43"><td>Некромант</td><td>🦴</td><td class="number">23</td><td class="number">7</td><td class="number">0</td><td class="number">5</td><td class="number">10</td><td class="number">7,5</td><td class="number">80%</td><td class="number">23</td><td class="number">30</td><td class="number">105,7</td><td class="number">26,43</td></tr>
+                <tr data-name="Жрец" data-hp="25" data-atk="5" data-def="1" data-min="5" data-max="9" data-avg="7" data-acc="65" data-surv="26" data-dmg5="23" data-power="99.5" data-cpi="24.89"><td>Жрец</td><td>✝️</td><td class="number">25</td><td class="number">5</td><td class="number">1</td><td class="number">5</td><td class="number">9</td><td class="number">7</td><td class="number">65%</td><td class="number">26</td><td class="number">23</td><td class="number">99,5</td><td class="number">24,89</td></tr>
+                <tr data-name="Колдун" data-hp="24" data-atk="5" data-def="0" data-min="6" data-max="12" data-avg="9" data-acc="70" data-surv="24" data-dmg5="32" data-power="106.6" data-cpi="26.65"><td>Колдун</td><td>👁️</td><td class="number">24</td><td class="number">5</td><td class="number">0</td><td class="number">6</td><td class="number">12</td><td class="number">9</td><td class="number">70%</td><td class="number">24</td><td class="number">32</td><td class="number">106,6</td><td class="number">26,65</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Таблица рас -->
+    <div class="table-container">
+        <h3>🌍 Расы</h3>
+        <table id="races-balance-table">
+            <thead>
+                <tr>
+                    <th data-sort="name">Раса</th><th>Эмодзи</th><th data-sort="hp">Бонус HP</th><th data-sort="atk">Бонус ATK</th><th data-sort="def">Бонус DEF</th><th data-sort="min">Бонус MIN</th><th data-sort="max">Бонус MAX</th>
+                </tr>
+            </thead>
+            <tbody id="races-balance-tbody">
+                <tr data-name="Человек" data-hp="1" data-atk="0" data-def="0" data-min="0" data-max="0"><td>Человек</td><td>🧑</td><td class="number">1</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">0</td></tr>
+                <tr data-name="Орк" data-hp="0" data-atk="1" data-def="0" data-min="0" data-max="0"><td>Орк</td><td>👹</td><td class="number">0</td><td class="number">1</td><td class="number">0</td><td class="number">0</td><td class="number">0</td></tr>
+                <tr data-name="Дворф" data-hp="0" data-atk="0" data-def="1" data-min="0" data-max="0"><td>Дворф</td><td>🧔</td><td class="number">0</td><td class="number">0</td><td class="number">1</td><td class="number">0</td><td class="number">0</td></tr>
+                <tr data-name="Эльф" data-hp="0" data-atk="0" data-def="0" data-min="1" data-max="0"><td>Эльф</td><td>🧝</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">1</td><td class="number">0</td></tr>
+                <tr data-name="Нежить" data-hp="0" data-atk="0" data-def="0" data-min="0" data-max="1"><td>Нежить</td><td>💀</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">1</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Формулы -->
+    <div class="formula-box">
+        <h3>📐 Формулы баланса</h3>
+        <div class="formula">
+            <span>POWER = CPI × 4</span><br><br>
+            <span>CPI = (Эфф. HP) ^ 0,7 × (Средний урон × Точность × Бонус атаки × 0,9) ^ 0,6</span><br><br>
+            <span>Средний урон = (MIN + MAX) / 2</span><br><br>
+            <span>Точность = (7 + ATK) / 20</span><br><br>
+            <span>Бонус атаки = (1 + ATK × 0,04)</span><br><br>
+            <span>Снижение урона от защиты цели = 0,9</span> (фиксировано, при DEF цели = 2)<br><br>
+            <span>Эффективное HP = HP × (1 + DEF × 0,08)</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← Назад к статистике</a>
+
+    <script>
+        function initSortableTable(tableId, defaultSort = 'power', defaultDir = 'desc') {
+            const table = document.getElementById(tableId);
+            if (!table) return;
+            const tbody = table.querySelector('tbody');
+            const headers = table.querySelectorAll('th[data-sort]');
+            let currentSort = defaultSort;
+            let currentDir = defaultDir;
+            
+            function sortTable(sortBy) {
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                rows.sort((a, b) => {
+                    let valA = a.dataset[sortBy]?.replace(',', '.') || '0';
+                    let valB = b.dataset[sortBy]?.replace(',', '.') || '0';
+                    
+                    if (sortBy === 'name') {
+                        return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                    }
+                    
+                    valA = parseFloat(valA) || 0;
+                    valB = parseFloat(valB) || 0;
+                    return currentDir === 'asc' ? valA - valB : valB - valA;
+                });
+                rows.forEach(row => tbody.appendChild(row));
+            }
+            
+            headers.forEach(th => {
+                th.addEventListener('click', () => {
+                    const sortBy = th.dataset.sort;
+                    headers.forEach(h => h.classList.remove('asc', 'desc'));
+                    
+                    if (currentSort === sortBy) {
+                        currentDir = currentDir === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        currentSort = sortBy;
+                        currentDir = 'desc';
+                    }
+                    
+                    th.classList.add(currentDir);
+                    sortTable(currentSort);
+                });
+            });
+            
+            const defaultHeader = table.querySelector(`[data-sort="${defaultSort}"]`);
+            if (defaultHeader) {
+                defaultHeader.classList.add(defaultDir);
+                sortTable(defaultSort);
+            }
+        }
+        
+        initSortableTable('classes-balance-table', 'power', 'desc');
+        initSortableTable('races-balance-table', 'name', 'asc');
+    </script>
+</body>
+</html>
