@@ -495,6 +495,26 @@
                 white-space: nowrap;
             }
         }
+
+/* Титулы — сетка 2x2 (только на ПК) */
+@media (min-width: 769px) {
+    #tab-titles {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 20px !important;
+    }
+    
+    #tab-titles > .table-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+    
+    /* Последняя таблица (Титулованные игроки) — на всю ширину */
+    #tab-titles > .table-container:last-child {
+        grid-column: span 2 !important;
+        max-width: 100% !important;
+    }
+}
     </style>
 </head>
 <body>
