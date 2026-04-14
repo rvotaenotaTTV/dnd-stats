@@ -211,7 +211,6 @@
         margin-top: 50px;
     }
     
-    /* Шапка со статистикой */
     .stats-grid { 
         grid-template-columns: repeat(2, 1fr); 
         gap: 10px;
@@ -220,7 +219,6 @@
     .stat-value { font-size: 28px; }
     .stat-label { font-size: 11px; }
     
-    /* Кнопки */
     .fixed-buttons {
         top: 10px;
         right: 10px;
@@ -232,7 +230,6 @@
         font-size: 11px;
     }
     
-    /* Вкладки */
     .nav-tabs {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -247,18 +244,17 @@
         flex-shrink: 0;
     }
     
-    /* Таблицы — базовые */
     .table-container {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         padding: 12px;
     }
     table {
-        min-width: 600px;
-        font-size: 12px;
+        min-width: 480px;
+        font-size: 11px;
     }
     th, td {
-        padding: 6px 8px;
+        padding: 4px 5px;
     }
     
     .tables-grid {
@@ -266,7 +262,6 @@
         gap: 15px;
     }
     
-    /* Рекорды */
     .records-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
@@ -275,7 +270,6 @@
     .record-value { font-size: 18px; }
     .record-label { font-size: 10px; }
     
-    /* Поиск */
     .search-box {
         flex-wrap: wrap;
     }
@@ -283,7 +277,6 @@
         width: 100%;
     }
     
-    /* ===== КАЛЬКУЛЯТОР ===== */
     #calc-mode-players > div,
     #calc-mode-classes > div {
         grid-template-columns: 1fr !important;
@@ -326,13 +319,13 @@
     }
     
     #calc-table table {
-        min-width: 450px;
-        font-size: 11px;
+        min-width: 320px;
+        font-size: 9px;
     }
     
     #calc-table th,
     #calc-table td {
-        padding: 5px 6px;
+        padding: 2px 3px;
     }
     
     #calc-table table th:nth-child(2),
@@ -343,6 +336,11 @@
     #calc-table table td:nth-child(2),
     #calc-table table td:nth-child(3) {
         white-space: nowrap;
+        font-size: 9px;
+    }
+    
+    #calc-table th {
+        font-size: 9px;
     }
     
     #calc-table > div {
@@ -352,24 +350,24 @@
     
     .reasons-list {
         padding-left: 18px !important;
-        font-size: 11px !important;
+        font-size: 10px !important;
     }
     
     .reasons-list li {
         margin: 4px 0 !important;
     }
     
-    #tab-tops table th:nth-child(3),
-    #tab-tops table td:nth-child(3) {
-        max-width: 100px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    #tab-tops table {
+        min-width: 400px;
+        font-size: 10px;
     }
     
-    #tab-tops table,
-    #tab-titles table:not(:last-child) {
-        min-width: auto !important;
+    #tab-tops table th:nth-child(3),
+    #tab-tops table td:nth-child(3) {
+        max-width: none;
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
     }
     
     #tab-tops .table-container {
@@ -407,6 +405,10 @@
     #tab-titles .table-container:last-child th:nth-child(3),
     #tab-titles .table-container:last-child td:nth-child(3) {
         white-space: nowrap;
+    }
+    
+    #players-table {
+        min-width: 500px;
     }
     
     #players-table td {
