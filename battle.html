@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DnD Раскол — Боевая система</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', 'Arial', sans-serif; 
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); 
+            color: #c9d1d9; 
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 { 
+            color: #ffd700; 
+            text-align: center; 
+            margin-bottom: 20px; 
+            font-size: 2.5em;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        h2 { 
+            color: #ffd700; 
+            margin: 30px 0 20px; 
+            border-bottom: 2px solid #30363d; 
+            padding-bottom: 10px; 
+        }
+        h3 {
+            color: #ffd700;
+            margin: 20px 0 10px;
+            font-size: 18px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        .nav-links a.active {
+            background: #ffd700;
+            color: #0d1117;
+            font-weight: bold;
+        }
+        .content-card {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+        }
+        .formula {
+            background: #21262d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #c9d1d9;
+            margin: 15px 0;
+        }
+        .formula span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .mechanic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .mechanic-item {
+            background: #21262d;
+            border-radius: 10px;
+            padding: 18px;
+            border-left: 4px solid #ffd700;
+        }
+        .mechanic-item h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .mechanic-item p {
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #30363d;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        th {
+            background: #21262d;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        td:first-child {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .example {
+            background: #1a1f26;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #30363d;
+        }
+        .example-title {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+        }
+        .back-link:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        .highlight {
+            color: #ffd700;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .mechanic-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <h1>⚔️ Боевая система Раскола</h1>
+    
+    <div class="nav-links">
+        <a href="index.html">📊 Статистика</a>
+        <a href="balance.html">⚖️ Баланс</a>
+        <a href="battle.html" class="active">⚔️ Боевка</a>
+        <a href="lore.html">📜 Лор</a>
+    </div>
+
+    <!-- Основные механики -->
+    <div class="content-card">
+        <h2>🎲 Основные механики боя</h2>
+        <div class="mechanic-grid">
+            <div class="mechanic-item">
+                <h4>⚡ Инициатива</h4>
+                <p>В начале боя оба игрока бросают <span class="highlight">d20 + ATK + d3</span>.</p>
+                <p>У кого больше — тот ходит первым. При равенстве — случайный выбор.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>🎯 Попадание</h4>
+                <p>Бросок <span class="highlight">d20 + ATK</span> против <span class="highlight">10 + DEF</span> противника.</p>
+                <p>Если результат больше или равен — попадание.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>💥 Урон</h4>
+                <p>При попадании бросается <span class="highlight">d(MAX - MIN + 1) + MIN - 1</span>.</p>
+                <p>Урон снижается защитой: <span class="highlight">× (1 - DEF × 0,05)</span>.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>🔥 Критический удар</h4>
+                <p>При выпадении <span class="highlight">20</span> на d20 — критический удар!</p>
+                <p>Бросается <span class="highlight">два куба урона</span>, сумма умножается.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>❌ Критический провал</h4>
+                <p>При выпадении <span class="highlight">1</span> на d20 — автоматический промах.</p>
+                <p>Урон не наносится, даже если ATK больше DEF.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>🛡️ Блок и уклонение</h4>
+                <p>Если бросок атаки <span class="highlight">≤ 4</span> — уклонение (💨).</p>
+                <p>Если атака не пробила броню — блок (🛡️).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Формулы -->
+    <div class="content-card">
+        <h2>📐 Боевые формулы</h2>
+        
+        <h3>Шанс попадания</h3>
+        <div class="formula">
+            <span>P(попадание) = (21 - (10 + DEF - ATK)) / 20</span><br>
+            • Если (10 + DEF - ATK) ≤ 1 → 95% (только 1 промахивается)<br>
+            • Если (10 + DEF - ATK) ≥ 20 → 5% (только 20 попадает)
+        </div>
+
+        <h3>Средний урон за атаку</h3>
+        <div class="formula">
+            <span>AvgDMG = (MIN + MAX) / 2</span>
+        </div>
+
+        <h3>Урон с учётом защиты</h3>
+        <div class="formula">
+            <span>DMG = Roll × (1 - DEF × 0,05)</span>, но не менее 1
+        </div>
+
+        <h3>Урон за ход (с учётом критов)</h3>
+        <div class="formula">
+            <span>DPT = Hit × AvgDMG × (1 - DEF×0,05) × 0,95 + 0,05 × AvgDMG × 2 × (1 - DEF×0,05)</span>
+        </div>
+
+        <h3>Ходов до победы</h3>
+        <div class="formula">
+            <span>Turns = HP_врага / DPT</span>
+        </div>
+
+        <h3>Вероятность победы</h3>
+        <div class="formula">
+            <span>WinRate = DPT₁ / (DPT₁ + DPT₂) × 100%</span>
+        </div>
+    </div>
+
+    <!-- Символы в логах -->
+    <div class="content-card">
+        <h2>📝 Обозначения в логах боёв</h2>
+        <table>
+            <tr><th>Символ</th><th>Значение</th></tr>
+            <tr><td>❌</td><td>Критический промах (выпало 1)</td></tr>
+            <tr><td>💨</td><td>Уклонение / промах (выпало 2-4)</td></tr>
+            <tr><td>🛡️</td><td>Блок (атака не пробила броню)</td></tr>
+            <tr><td>💥X</td><td>Критический удар (выпало 20), X = сумма двух бросков</td></tr>
+            <tr><td>X</td><td>Обычный урон (число)</td></tr>
+            <tr><td>0</td><td>Не атаковал (бой уже завершён)</td></tr>
+        </table>
+    </div>
+
+    <!-- Пример боя -->
+    <div class="content-card">
+        <h2>📋 Пример боя</h2>
+        <div class="example">
+            <div class="example-title">💀🏹 Следопыт (Нежить) vs 🛡️🧑 Паладин (Человек)</div>
+            <table style="margin-top: 15px;">
+                <tr><th>Параметр</th><th>Следопыт</th><th>Паладин</th></tr>
+                <tr><td>HP</td><td>26</td><td>35</td></tr>
+                <tr><td>ATK</td><td>6</td><td>4</td></tr>
+                <tr><td>DEF</td><td>1</td><td>3</td></tr>
+                <tr><td>MIN</td><td>4</td><td>3</td></tr>
+                <tr><td>MAX</td><td>10</td><td>7</td></tr>
+                <tr><td>Шанс попадания</td><td>80%</td><td>55%</td></tr>
+                <tr><td>Урон за ход</td><td>6,13</td><td>2,56</td></tr>
+                <tr><td>Ходов до победы</td><td>5,7</td><td>10,2</td></tr>
+                <tr><td style="color:#ffd700;">Вероятность победы</td><td style="color:#ffd700;">70,5%</td><td style="color:#ffd700;">29,5%</td></tr>
+            </table>
+            <p style="margin-top: 15px;"><span class="highlight">Результат:</span> Следопыт побеждает в 7 из 10 боёв за счёт высокой атаки и урона, несмотря на меньшее HP.</p>
+        </div>
+    </div>
+
+    <!-- Механика уровней -->
+    <div class="content-card">
+        <h2>📈 Прогрессия и уровни</h2>
+        <div class="mechanic-grid">
+            <div class="mechanic-item">
+                <h4>💎 Осколки опыта</h4>
+                <p>За победу в дуэли: <span class="highlight">+2 осколка</span></p>
+                <p>За поражение: <span class="highlight">+1 осколок</span></p>
+                <p>За победу в турнире: <span class="highlight">+4 / +2</span></p>
+                <p>За чемпионство: <span class="highlight">+10 осколков</span></p>
+            </div>
+            <div class="mechanic-item">
+                <h4>⬆️ Повышение уровня</h4>
+                <p>Уровень 1: 5 осколков</p>
+                <p>Каждый следующий: +5 осколков</p>
+                <p>До 10 уровня включительно</p>
+                <p>После 10: 1 уровень = 10 осколков</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>🏆 Титулы</h4>
+                <p>Выдаются за достижения:</p>
+                <p>• Уровень, победы, стрики</p>
+                <p>• Турниры, фракции</p>
+                <p>• Особые условия</p>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← Назад к статистике</a>
+</body>
+</html>
