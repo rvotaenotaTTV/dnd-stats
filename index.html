@@ -408,20 +408,29 @@
         font-size: 14px !important;
     }
 }
-/* Калькулятор — широкие выпадающие списки */
+/* Калькулятор — селекты на всю ширину, без скролла */
 #calc-p1, #calc-p2,
 #calc-class1, #calc-race1,
 #calc-class2, #calc-race2 {
     width: 100% !important;
-    min-width: 200px;
+    max-width: 100%;
     font-size: 14px !important;
     padding: 10px 8px !important;
+    box-sizing: border-box;
 }
 
-/* Контейнеры для селектов — на всю ширину */
+/* Убираем лишние отступы */
+#calc-mode-players > div,
+#calc-mode-classes > div {
+    padding: 10px !important;
+    gap: 10px !important;
+}
+
+/* Контейнеры селектов */
 #calc-mode-players > div > div,
 #calc-mode-classes > div > div {
     width: 100%;
+    max-width: 100%;
 }
         }
     </style>
