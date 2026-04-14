@@ -27,7 +27,6 @@
         padding-bottom: 10px; 
     }
     
-    /* Навигация с бургером */
     .nav-wrapper {
         margin-bottom: 30px;
     }
@@ -266,7 +265,6 @@
     <a href="index.html" class="back-link">← Назад к статистике</a>
 
     <script>
-        // Бургер-меню
         const navToggle = document.querySelector('.nav-toggle');
         const navLinks = document.querySelector('.nav-links');
         navToggle.addEventListener('click', () => {
@@ -274,7 +272,6 @@
             navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         });
 
-        // Сортировка таблиц
         function initSortableTable(tableId, defaultSort = 'power', defaultDir = 'desc') {
             const table = document.getElementById(tableId);
             if (!table) return;
