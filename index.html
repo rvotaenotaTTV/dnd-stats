@@ -22,12 +22,27 @@
             letter-spacing: 2px;
         }
         
-        /* Навигация по страницам */
+        /* Навигация с бургером */
+        .nav-wrapper {
+            margin-bottom: 20px;
+        }
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
         .page-nav {
             display: flex;
             gap: 10px;
             justify-content: center;
-            margin-bottom: 15px;
             flex-wrap: wrap;
         }
         .page-nav a {
@@ -268,14 +283,22 @@
             body { padding: 10px; }
             h1 { font-size: 1.6em; margin-top: 45px; }
             
-            .page-nav {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                flex-wrap: nowrap;
-                justify-content: flex-start;
-                padding-bottom: 5px;
+            .nav-toggle {
+                display: block;
             }
-            .page-nav a { flex-shrink: 0; padding: 6px 12px; font-size: 12px; }
+            .page-nav {
+                display: none;
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            .page-nav.show {
+                display: flex;
+            }
+            .page-nav a {
+                text-align: center;
+                padding: 10px;
+            }
             
             .fixed-buttons { top: 10px; right: 10px; }
             .action-btn { padding: 6px 10px; font-size: 11px; }
@@ -314,12 +337,15 @@
 </head>
 <body>
 
-<!-- Навигация по страницам -->
-<div class="page-nav">
-    <a href="index.html" class="active">📊 Статистика</a>
-    <a href="balance.html">⚖️ Баланс</a>
-    <a href="battle.html">⚔️ Боевка</a>
-    <a href="lore.html">📜 Лор</a>
+<!-- Навигация с бургером -->
+<div class="nav-wrapper">
+    <button class="nav-toggle">☰ Меню</button>
+    <div class="page-nav">
+        <a href="index.html" class="active">📊 Статистика</a>
+        <a href="balance.html">⚖️ Баланс</a>
+        <a href="battle.html">⚔️ Боевка</a>
+        <a href="lore.html">📜 Лор</a>
+    </div>
 </div>
 
 <!-- Заголовок -->
@@ -334,6 +360,14 @@
 <div id="content"><div class="loading">⏳ Загрузка статистики...</div></div>
 
 <script>
+    // Бургер-меню
+    const navToggle = document.querySelector('.nav-toggle');
+    const pageNav = document.querySelector('.page-nav');
+    navToggle.addEventListener('click', () => {
+        pageNav.classList.toggle('show');
+        navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+    });
+
 const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 
 const classesData = [
