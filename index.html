@@ -515,12 +515,9 @@
 </head>
 <body>
 <h1>1 Сезон: Раскол - Статистика</h1>
-<input type="file" id="fileInput" accept=".json,application/json">
 <div class="fixed-buttons">
-    <button class="action-btn" onclick="document.getElementById('fileInput').click()">🔄 Обновить данные</button>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="action-btn beer-btn">🍺 На пиво</a>
 </div>
-<div id="content"><div class="loading">⏳ Загрузка статистики...</div></div>
 
 <script>
 const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
@@ -565,24 +562,10 @@ fetch(JSON_URL)
         document.getElementById('content').innerHTML = `
             <div class="loading">
                 ❌ Не удалось загрузить данные.<br>
-                <button onclick="document.getElementById('fileInput').click()" style="margin-top:20px;padding:10px 20px;background:#238636;color:white;border:none;border-radius:5px;cursor:pointer;">
-                    📁 Выбрать JSON вручную
-                </button>
+                <span style="color: #8b949e;">Попробуй обновить страницу позже</span>
             </div>
         `;
     });
-
-document.getElementById('fileInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-        const data = JSON.parse(e.target.result);
-        players = data.players.filter(p => p.name && p.name !== 'Unknown');
-        renderFullStats(data);
-    };
-    reader.readAsText(file);
-});
 
 function renderFullStats(data) {
     const totalPlayers = players.length;

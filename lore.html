@@ -31,41 +31,48 @@
             margin: 20px 0 10px;
             font-size: 18px;
         }
-.nav-links {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-.nav-links a {
-    color: #8b949e;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: #21262d;
-    border: 1px solid #30363d;
-    transition: all 0.2s;
-}
-.nav-links a:hover {
-    color: #ffd700;
-    border-color: #ffd700;
-}
-.nav-links a.active {
-    background: #ffd700;
-    color: #0d1117;
-    font-weight: bold;
-}
+        
+        /* Навигация с бургером */
+        .nav-wrapper {
+            margin-bottom: 30px;
+        }
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .nav-links a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        .nav-links a.active {
+            background: #ffd700;
+            color: #0d1117;
+            font-weight: bold;
+        }
 
-@media (max-width: 768px) {
-    .nav-links {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .nav-links a {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-}
         .content-card {
             background: #161b22;
             border-radius: 12px;
@@ -154,6 +161,24 @@
         @media (max-width: 768px) {
             h1 { font-size: 1.8em; }
             body { padding: 10px; }
+            
+            .nav-toggle {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            .nav-links.show {
+                display: flex;
+            }
+            .nav-links a {
+                text-align: center;
+                padding: 10px;
+            }
+            
             .content-card { padding: 15px; }
             .faction-card { grid-template-columns: 1fr; }
             .lore-text { font-size: 14px; }
@@ -165,11 +190,14 @@
 <body>
     <h1>📜 Лор Этерниса</h1>
     
-    <div class="nav-links">
-        <a href="index.html">📊 Статистика</a>
-        <a href="balance.html">⚖️ Баланс</a>
-        <a href="battle.html">⚔️ Боевка</a>
-        <a href="lore.html" class="active">📜 Лор</a>
+    <div class="nav-wrapper">
+        <button class="nav-toggle">☰ Меню</button>
+        <div class="nav-links">
+            <a href="index.html">📊 Статистика</a>
+            <a href="balance.html">⚖️ Баланс</a>
+            <a href="battle.html">⚔️ Боевка</a>
+            <a href="lore.html" class="active">📜 Лор</a>
+        </div>
     </div>
 
     <!-- Мир Этернис -->
@@ -322,5 +350,14 @@
     </div>
 
     <a href="index.html" class="back-link">← Назад к статистике</a>
+
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+            navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+    </script>
 </body>
 </html>

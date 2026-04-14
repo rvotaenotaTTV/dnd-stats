@@ -31,41 +31,48 @@
             margin: 20px 0 10px;
             font-size: 18px;
         }
-.nav-links {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-.nav-links a {
-    color: #8b949e;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: #21262d;
-    border: 1px solid #30363d;
-    transition: all 0.2s;
-}
-.nav-links a:hover {
-    color: #ffd700;
-    border-color: #ffd700;
-}
-.nav-links a.active {
-    background: #ffd700;
-    color: #0d1117;
-    font-weight: bold;
-}
+        
+        /* Навигация с бургером */
+        .nav-wrapper {
+            margin-bottom: 30px;
+        }
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .nav-links a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        .nav-links a.active {
+            background: #ffd700;
+            color: #0d1117;
+            font-weight: bold;
+        }
 
-@media (max-width: 768px) {
-    .nav-links {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .nav-links a {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-}
         .content-card {
             background: #161b22;
             border-radius: 12px;
@@ -162,13 +169,21 @@
             h2 { font-size: 1.3em; }
             body { padding: 10px; }
             
+            .nav-toggle {
+                display: block;
+            }
             .nav-links {
-                flex-wrap: wrap;
+                display: none;
+                flex-direction: column;
                 gap: 8px;
+                margin-top: 10px;
+            }
+            .nav-links.show {
+                display: flex;
             }
             .nav-links a {
-                padding: 6px 12px;
-                font-size: 12px;
+                text-align: center;
+                padding: 10px;
             }
             
             .content-card {
@@ -225,56 +240,59 @@
     </style>
 </head>
 <body>
-    <h1>Боевка</h1>
+    <h1>⚔️ Боевка</h1>
     
-    <div class="nav-links">
-        <a href="index.html">📊 Статистика</a>
-        <a href="balance.html">⚖️ Баланс</a>
-        <a href="battle.html" class="active">⚔️ Боевка</a>
-        <a href="lore.html">📜 Лор</a>
+    <div class="nav-wrapper">
+        <button class="nav-toggle">☰ Меню</button>
+        <div class="nav-links">
+            <a href="index.html">📊 Статистика</a>
+            <a href="balance.html">⚖️ Баланс</a>
+            <a href="battle.html" class="active">⚔️ Боевка</a>
+            <a href="lore.html">📜 Лор</a>
+        </div>
     </div>
 
-<!-- Основные механики -->
-<div class="content-card">
-    <h2>🎲 Как проходит бой</h2>
-    <div class="mechanic-grid">
-        <div class="mechanic-item">
-            <h4>⚡ Кто ходит первым?</h4>
-            <p>Перед боем оба героя проверяют свою реакцию: <span class="highlight">d20 + ATK + d3 (0–2)</span>.</p>
-            <p>Кто быстрее — тот наносит удар первым. Если показатели равны — судьба решает случайно.</p>
+    <!-- Основные механики -->
+    <div class="content-card">
+        <h2>🎲 Как проходит бой</h2>
+        <div class="mechanic-grid">
+            <div class="mechanic-item">
+                <h4>⚡ Кто ходит первым?</h4>
+                <p>Перед боем оба героя проверяют свою реакцию: <span class="highlight">d20 + ATK + d3 (0–2)</span>.</p>
+                <p>Кто быстрее — тот наносит удар первым. Если показатели равны — судьба решает случайно.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>🎯 Попал или нет?</h4>
+                <p>Атакующий бросает <span class="highlight">d20 + ATK</span> и сравнивает с защитой цели: <span class="highlight">10 + DEF</span>.</p>
+                <p>Если результат выше или равен — удар достигает цели. Если нет — противник уклоняется или блокирует.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>💥 Сколько урона?</h4>
+                <p>Урон — случайное число <span class="highlight">от MIN до MAX</span> (зависит от класса и расы).</p>
+                <p>Защита снижает полученный урон: каждая единица DEF уменьшает его на <span class="highlight">5%</span>. Но даже самая крепкая броня пропускает минимум 1 урона.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>🔥 Идеальный удар (Крит)</h4>
+                <p>Если на кубике d20 выпадает <span class="highlight">20</span> — это триумф! Герой наносит сокрушительный удар: бросок урона выполняется дважды, а результаты складываются.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>❌ Роковой промах</h4>
+                <p>Выпадение <span class="highlight">1</span> на d20 означает, что атака сорвалась — оружие застряло, противник ловко ушёл, или просто не повезло. Урон не наносится.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>💨 Уклонение</h4>
+                <p>Если бросок атаки <span class="highlight">≤ 4</span>, цель успевает среагировать и уйти из-под удара — атака не достигает цели, даже если ATK высок.</p>
+            </div>
+            <div class="mechanic-item">
+                <h4>🛡️ Глухой блок</h4>
+                <p>Когда атака не дотягивает до <span class="highlight">10 + DEF</span> (и бросок > 4), противник принимает удар на щит или броню — звон, искры, но без урона.</p>
+            </div>
         </div>
-        <div class="mechanic-item">
-            <h4>🎯 Попал или нет?</h4>
-            <p>Атакующий бросает <span class="highlight">d20 + ATK</span> и сравнивает с защитой цели: <span class="highlight">10 + DEF</span>.</p>
-            <p>Если результат выше или равен — удар достигает цели. Если нет — противник уклоняется или блокирует.</p>
-        </div>
-        <div class="mechanic-item">
-            <h4>💥 Сколько урона?</h4>
-            <p>Урон — случайное число <span class="highlight">от MIN до MAX</span> (зависит от класса и расы).</p>
-            <p>Защита снижает полученный урон: каждая единица DEF уменьшает его на <span class="highlight">5%</span>. Но даже самая крепкая броня пропускает минимум 1 урона.</p>
-        </div>
-        <div class="mechanic-item">
-            <h4>🔥 Идеальный удар (Крит)</h4>
-            <p>Если на кубике d20 выпадает <span class="highlight">20</span> — это триумф! Герой наносит сокрушительный удар: бросок урона выполняется дважды, а результаты складываются.</p>
-        </div>
-        <div class="mechanic-item">
-            <h4>❌ Роковой промах</h4>
-            <p>Выпадение <span class="highlight">1</span> на d20 означает, что атака сорвалась — оружие застряло, противник ловко ушёл, или просто не повезло. Урон не наносится.</p>
-        </div>
-        <div class="mechanic-item">
-            <h4>💨 Уклонение</h4>
-            <p>Если бросок атаки <span class="highlight">≤ 4</span>, цель успевает среагировать и уйти из-под удара — атака не достигает цели, даже если ATK высок.</p>
-        </div>
-        <div class="mechanic-item">
-            <h4>🛡️ Глухой блок</h4>
-            <p>Когда атака не дотягивает до <span class="highlight">10 + DEF</span> (и бросок > 4), противник принимает удар на щит или броню — звон, искры, но без урона.</p>
-        </div>
+        <p style="color: #8b949e; margin-top: 15px;">
+            <span class="highlight">💡 Порядок проверки:</span> Сначала игра смотрит, не уклонение ли это (d20 ≤ 4). 
+            Потом — не крит ли (20) и не промах ли (1). Всё остальное — либо чистое попадание, либо блок.
+        </p>
     </div>
-    <p style="color: #8b949e; margin-top: 15px;">
-        <span class="highlight">💡 Порядок проверки:</span> Сначала игра смотрит, не уклонение ли это (d20 ≤ 4). 
-        Потом — не крит ли (20) и не промах ли (1). Всё остальное — либо чистое попадание, либо блок.
-    </p>
-</div>
 
     <!-- Символы в логах -->
     <div class="content-card">
@@ -291,5 +309,14 @@
     </div>
 
     <a href="index.html" class="back-link">← Назад к статистике</a>
+
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+            navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+    </script>
 </body>
 </html>
