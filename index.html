@@ -211,6 +211,7 @@
         margin-top: 50px;
     }
     
+    /* Шапка со статистикой */
     .stats-grid { 
         grid-template-columns: repeat(2, 1fr); 
         gap: 10px;
@@ -219,6 +220,7 @@
     .stat-value { font-size: 28px; }
     .stat-label { font-size: 11px; }
     
+    /* Кнопки */
     .fixed-buttons {
         top: 10px;
         right: 10px;
@@ -230,6 +232,7 @@
         font-size: 11px;
     }
     
+    /* Вкладки */
     .nav-tabs {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -244,6 +247,7 @@
         flex-shrink: 0;
     }
     
+    /* Таблицы — базовые */
     .table-container {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -262,6 +266,7 @@
         gap: 15px;
     }
     
+    /* Рекорды */
     .records-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
@@ -270,6 +275,7 @@
     .record-value { font-size: 18px; }
     .record-label { font-size: 10px; }
     
+    /* Поиск */
     .search-box {
         flex-wrap: wrap;
     }
@@ -277,6 +283,7 @@
         width: 100%;
     }
     
+    /* ===== КАЛЬКУЛЯТОР ===== */
     #calc-mode-players > div,
     #calc-mode-classes > div {
         grid-template-columns: 1fr !important;
@@ -319,7 +326,7 @@
     }
     
     #calc-table table {
-        min-width: 550px;
+        min-width: 450px;
         font-size: 11px;
     }
     
@@ -328,17 +335,19 @@
         padding: 5px 6px;
     }
     
+    #calc-table table th:nth-child(2),
+    #calc-table table th:nth-child(3) {
+        width: 38% !important;
+    }
+    
+    #calc-table table td:nth-child(2),
+    #calc-table table td:nth-child(3) {
+        white-space: nowrap;
+    }
+    
     #calc-table > div {
         margin-top: 10px !important;
         padding: 12px !important;
-    }
-    
-    #calc-table table th:first-child {
-        width: 15% !important;
-    }
-    #calc-table table th:nth-child(2),
-    #calc-table table th:nth-child(3) {
-        width: 42.5% !important;
     }
     
     .reasons-list {
@@ -358,24 +367,50 @@
         text-overflow: ellipsis;
     }
     
-    #tab-titles table th:nth-child(2),
-    #tab-titles table td:nth-child(2) {
+    #tab-tops table,
+    #tab-titles table:not(:last-child) {
+        min-width: auto !important;
+    }
+    
+    #tab-tops .table-container {
+        overflow-x: visible;
+    }
+    
+    #tab-titles .table-container:not(:last-child) table {
+        min-width: auto !important;
+    }
+    
+    #tab-titles .table-container:not(:last-child) {
+        overflow-x: visible;
+    }
+    
+    #tab-titles .table-container:not(:last-child) th:nth-child(2),
+    #tab-titles .table-container:not(:last-child) td:nth-child(2) {
         max-width: 80px;
+        white-space: nowrap;
+    }
+    
+    #tab-titles .table-container:last-child {
+        overflow-x: auto !important;
+    }
+    
+    #tab-titles .table-container:last-child table {
+        min-width: 500px !important;
+    }
+    
+    #tab-titles .table-container:last-child th:nth-child(2),
+    #tab-titles .table-container:last-child td:nth-child(2) {
+        width: 180px;
+        white-space: nowrap;
+    }
+    
+    #tab-titles .table-container:last-child th:nth-child(3),
+    #tab-titles .table-container:last-child td:nth-child(3) {
         white-space: nowrap;
     }
     
     #players-table td {
         white-space: nowrap !important;
-    }
-    
-    #tab-tops table,
-    #tab-titles table {
-        min-width: auto !important;
-    }
-    
-    #tab-tops .table-container,
-    #tab-titles .table-container {
-        overflow-x: visible;
     }
 }
     </style>
