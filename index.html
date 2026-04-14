@@ -270,7 +270,13 @@
     .record-value { font-size: 18px; }
     .record-label { font-size: 10px; }
     
-    /* Калькулятор */
+    .search-box {
+        flex-wrap: wrap;
+    }
+    .search-input {
+        width: 100%;
+    }
+    
     #calc-mode-players > div,
     #calc-mode-classes > div {
         grid-template-columns: 1fr !important;
@@ -327,6 +333,14 @@
         padding: 12px !important;
     }
     
+    #calc-table table th:first-child {
+        width: 15% !important;
+    }
+    #calc-table table th:nth-child(2),
+    #calc-table table th:nth-child(3) {
+        width: 42.5% !important;
+    }
+    
     .reasons-list {
         padding-left: 18px !important;
         font-size: 11px !important;
@@ -336,11 +350,32 @@
         margin: 4px 0 !important;
     }
     
-    .search-box {
-        flex-wrap: wrap;
+    #tab-tops table th:nth-child(3),
+    #tab-tops table td:nth-child(3) {
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    .search-input {
-        width: 100%;
+    
+    #tab-titles table th:nth-child(2),
+    #tab-titles table td:nth-child(2) {
+        max-width: 80px;
+        white-space: nowrap;
+    }
+    
+    #players-table td {
+        white-space: nowrap !important;
+    }
+    
+    #tab-tops table,
+    #tab-titles table {
+        min-width: auto !important;
+    }
+    
+    #tab-tops .table-container,
+    #tab-titles .table-container {
+        overflow-x: visible;
     }
 }
     </style>
@@ -477,7 +512,7 @@ function renderFullStats(data) {
     html += '</table></div>';
     html += '</div></div>';
     
-    // КЛАССЫ (с сортировкой)
+    // КЛАССЫ
     html += '<div id="tab-classes" class="tab-content">';
     const classStats = {};
     players.forEach(p => {
@@ -510,7 +545,7 @@ function renderFullStats(data) {
     });
     html += '</tbody></table></div></div>';
     
-    // РАСЫ (с сортировкой)
+    // РАСЫ
     html += '<div id="tab-races" class="tab-content">';
     const raceStats = {};
     players.forEach(p => {
@@ -538,7 +573,7 @@ function renderFullStats(data) {
     });
     html += '</tbody></table></div></div>';
     
-    // КОМБИНАЦИИ (с сортировкой)
+    // КОМБИНАЦИИ
     html += '<div id="tab-combos" class="tab-content">';
     const comboStats = {};
     players.forEach(p => {
@@ -894,7 +929,6 @@ function renderFullStats(data) {
     
     document.getElementById('content').innerHTML = html;
     
-    // Инициализация сортировки
     initSortableTable('classes-table', 'total', 'desc');
     initSortableTable('races-table', 'total', 'desc');
     initSortableTable('combos-table', 'winrate', 'desc');
