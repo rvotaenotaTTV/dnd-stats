@@ -26,11 +26,28 @@
         border-bottom: 2px solid #30363d; 
         padding-bottom: 10px; 
     }
+    
+    /* Навигация с бургером */
+    .nav-wrapper {
+        margin-bottom: 30px;
+    }
+    .nav-toggle {
+        display: none;
+        width: 100%;
+        padding: 12px 20px;
+        background: #21262d;
+        border: 1px solid #30363d;
+        border-radius: 25px;
+        color: #ffd700;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: left;
+    }
     .nav-links {
         display: flex;
         gap: 20px;
         justify-content: center;
-        margin-bottom: 30px;
     }
     .nav-links a {
         color: #8b949e;
@@ -50,6 +67,7 @@
         color: #0d1117;
         font-weight: bold;
     }
+    
     .table-container {
         background: #161b22;
         border-radius: 12px;
@@ -135,17 +153,28 @@
         color: #ffd700;
         border-color: #ffd700;
     }
+    
     @media (max-width: 768px) {
         h1 { font-size: 1.5em; }
         body { padding: 10px; }
+        
+        .nav-toggle {
+            display: block;
+        }
         .nav-links {
-            flex-wrap: wrap;
+            display: none;
+            flex-direction: column;
             gap: 8px;
+            margin-top: 10px;
+        }
+        .nav-links.show {
+            display: flex;
         }
         .nav-links a {
-            padding: 6px 12px;
-            font-size: 12px;
+            text-align: center;
+            padding: 10px;
         }
+        
         .table-container { padding: 12px; }
         table { font-size: 11px; }
         th, td { padding: 6px 8px; }
@@ -158,13 +187,16 @@
 </style>
 </head>
 <body>
-    <h1>Баланс</h1>
+    <h1>⚖️ Баланс</h1>
     
-    <div class="nav-links">
-        <a href="index.html">📊 Статистика</a>
-        <a href="balance.html" class="active">⚖️ Баланс</a>
-        <a href="battle.html">⚔️ Боевка</a>
-        <a href="lore.html">📜 Лор</a>
+    <div class="nav-wrapper">
+        <button class="nav-toggle">☰ Меню</button>
+        <div class="nav-links">
+            <a href="index.html">📊 Статистика</a>
+            <a href="balance.html" class="active">⚖️ Баланс</a>
+            <a href="battle.html">⚔️ Боевка</a>
+            <a href="lore.html">📜 Лор</a>
+        </div>
     </div>
 
     <!-- Таблица классов -->
@@ -234,6 +266,15 @@
     <a href="index.html" class="back-link">← Назад к статистике</a>
 
     <script>
+        // Бургер-меню
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+            navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+
+        // Сортировка таблиц
         function initSortableTable(tableId, defaultSort = 'power', defaultDir = 'desc') {
             const table = document.getElementById(tableId);
             if (!table) return;
