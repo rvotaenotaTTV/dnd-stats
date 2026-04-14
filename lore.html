@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лор</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', 'Arial', sans-serif; 
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); 
+            color: #c9d1d9; 
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 { 
+            color: #ffd700; 
+            text-align: center; 
+            margin-bottom: 20px; 
+            font-size: 2.5em;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        h2 { 
+            color: #ffd700; 
+            margin: 30px 0 20px; 
+            border-bottom: 2px solid #30363d; 
+            padding-bottom: 10px; 
+        }
+        h3 {
+            color: #ffd700;
+            margin: 20px 0 10px;
+            font-size: 18px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        .nav-links a:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        .nav-links a.active {
+            background: #ffd700;
+            color: #0d1117;
+            font-weight: bold;
+        }
+        .content-card {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+        }
+        .lore-text {
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        .lore-text p {
+            margin-bottom: 15px;
+        }
+        .faction-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .faction-light {
+            background: linear-gradient(145deg, #2a1f1a, #1a1f26);
+            border: 1px solid #ffd966;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .faction-dark {
+            background: linear-gradient(145deg, #1a1a2e, #1a1f26);
+            border: 1px solid #a371f7;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .faction-light h3 { color: #ffd966; }
+        .faction-dark h3 { color: #c084fc; }
+        .faction-quote {
+            font-style: italic;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+        .faction-light .faction-quote { border-color: #ffd966; }
+        .faction-dark .faction-quote { border-color: #a371f7; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #30363d;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        th {
+            background: #21262d;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .highlight {
+            color: #ffd700;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+        }
+        .back-link:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+        .legend-box {
+            background: #1a1f26;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #30363d;
+            font-style: italic;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            body { padding: 10px; }
+            .content-card { padding: 15px; }
+            .faction-card { grid-template-columns: 1fr; }
+            .lore-text { font-size: 14px; }
+            table { font-size: 11px; }
+            th, td { padding: 6px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>📜 Лор Этерниса</h1>
+    
+    <div class="nav-links">
+        <a href="index.html">📊 Статистика</a>
+        <a href="balance.html">⚖️ Баланс</a>
+        <a href="battle.html">⚔️ Боевка</a>
+        <a href="lore.html" class="active">📜 Лор</a>
+    </div>
+
+    <!-- Мир Этернис -->
+    <div class="content-card">
+        <h2>🌍 Мир Этернис</h2>
+        <table>
+            <tr><th style="width: 25%;">Название</th><th>Описание</th></tr>
+            <tr><td>Этернис</td><td>Мир, расколотый падением древнего артефакта — Солнечного Клинка</td></tr>
+            <tr><td>Солнечный Клинок</td><td>Легендарное оружие, тысячелетия державшее равновесие между Светом и Тьмой. Раскололся, осколки разлетелись по миру</td></tr>
+            <tr><td>Раскол</td><td>Арена, где осколки чувствуются сильнее всего. Бои здесь — ритуал, а не просто состязание</td></tr>
+        </table>
+    </div>
+
+    <!-- Предыстория -->
+    <div class="content-card">
+        <h2>📖 Предыстория</h2>
+        <div class="legend-box">
+            <p>Мир Этернис раскололся после падения Солнечного Клинка — древнего артефакта, который тысячелетия удерживал равновесие между Светом и Тьмой. Осколки Клинка разлетелись по всему миру, наделяя смертных невиданной силой. Те, кто нашли эти осколки, стали первыми героями — и первыми врагами.</p>
+            <p style="margin-top: 15px;">Так началась эпоха Вечной Дуэли.</p>
+        </div>
+    </div>
+
+    <!-- Фракции -->
+    <div class="content-card">
+        <h2>⚔️ Фракции</h2>
+        <div class="faction-card">
+            <div class="faction-light">
+                <h3>🌝 ОРДЕН СВЕТА</h3>
+                <div class="faction-quote">«Свет во тьме — не угаснет никогда»</div>
+                <p>Орден был основан паладином Аэлионом, первым, кто поднял осколок Солнечного Клинка над головой и поклялся защищать слабых. Сегодня Орден — это рыцари, жрецы и маги, которые верят, что сила должна служить добру. Их цитадель — Сияющий Шпиль — стоит на месте падения Клинка.</p>
+                <p style="margin-top: 15px;">Аэлион не проиграл ни одной дуэли. Но и не убил ни одного врага. Все, кто сражался с ним, оставались живы. Некоторые даже присоединялись к Ордену.</p>
+                <p style="margin-top: 15px;">Во время Битвы Раскола Аэлион шагнул в центр раскола, чтобы удержать мир от полного уничтожения. С тех пор его никто не видел. Но его осколок остался. Он хранится в Сияющем Шпиле, и каждый новый Хранитель Раскола может почувствовать его присутствие.</p>
+                <p style="margin-top: 15px; font-style: italic;">«Сила — это ответственность. Мы не прячемся во тьме, мы освещаем её.»</p>
+            </div>
+            <div class="faction-dark">
+                <h3>🌚 КУЛЬТ ТЬМЫ</h3>
+                <div class="faction-quote">«Истинная сила рождается в тени»</div>
+                <p>Никто не знает имени основателя Культа. Говорят, это был маг, который первым понял, что осколки Клинка можно не только подчинить, но и сломать, вырвав из них ещё больше силы. Его называют Повествователем — он наблюдал за Битвой Раскола и ушёл в тень, когда Аэлион шагнул в центр раскола.</p>
+                <p style="margin-top: 15px;">Он никогда не сражался сам. Вместо этого он находил тех, кто сразится за него. Никто не знает, сколько у него было учеников. Говорят, десятки. Говорят, сотни. Говорят, что некоторые из них до сих пор служат Культу, храня его знания.</p>
+                <p style="margin-top: 15px;">Культ не скрывается — его храмы открыты для всех, кто ищет могущество. Их символ — новолуние — напоминает, что даже в полной темноте можно разглядеть путь.</p>
+                <p style="margin-top: 15px; font-style: italic;">«Свет обжигает. Тьма принимает. Выбирай, кем ты хочешь стать.»</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Арена Раскол -->
+    <div class="content-card">
+        <h2>🏟️ Арена «Раскол»</h2>
+        <div class="legend-box">
+            <p>Арена называется «Раскол» — это место, где осколки Клинка чувствуются сильнее всего. Бои на Расколе не просто состязание. Это ритуал. Говорят, что каждый удар — это эхо битвы, которая когда-то расколола мир.</p>
+            <p style="margin-top: 15px;">Зрители приходят не просто смотреть — они чувствуют вибрацию осколков. Говорят, что самые яростные болельщики иногда сами обретают искру силы. Но это лишь легенда... или нет?</p>
+        </div>
+    </div>
+
+    <!-- Герои и осколки -->
+    <div class="content-card">
+        <h2>✨ Герои и осколки</h2>
+        <p class="lore-text">Каждый класс — это путь, которым осколок проявился в герое:</p>
+        <table>
+            <tr><th>Класс</th><th>Эмодзи</th><th>Как осколок изменил героя</th><th>Рек. фракция</th></tr>
+            <tr><td>Чародей</td><td>🔮</td><td>Осколок прожёг плоть, открыв канал к чистой магии. Хрупок, но опасен</td><td>🌚</td></tr>
+            <tr><td>Волшебница</td><td>✨</td><td>Осколок слился с душой, дав контроль над стихиями</td><td>🌝</td></tr>
+            <tr><td>Плут</td><td>🗡️</td><td>Осколок спрятался в тени, научив смертного двигаться незаметно</td><td>🌚</td></tr>
+            <tr><td>Некромант</td><td>🦴</td><td>Осколок коснулся мёртвых. Герой научился слышать их голоса</td><td>🌚</td></tr>
+            <tr><td>Следопыт</td><td>🏹</td><td>Осколок стал частью леса. Герой чувствует каждый лист, каждую ветку</td><td>🌝</td></tr>
+            <tr><td>Монах</td><td>🥋</td><td>Осколок поселился в теле, закалив его до предела</td><td>🌝</td></tr>
+            <tr><td>Колдун</td><td>👁️</td><td>Осколок шепчет. Герой слышит древние знания, но не всегда понимает их</td><td>🌚</td></tr>
+            <tr><td>Воин</td><td>⚔️</td><td>Осколок укрепил мышцы и кости. Герой стал живым щитом</td><td>🌝</td></tr>
+            <tr><td>Паладин</td><td>🛡️</td><td>Осколок загорелся светом. Герой поклялся защищать</td><td>🌝</td></tr>
+            <tr><td>Варвар</td><td>🪓</td><td>Осколок пробудил ярость. Герой силён, но едва сдерживает гнев</td><td>🌚</td></tr>
+            <tr><td>Друид</td><td>🌿</td><td>Осколок пустил корни. Герой чувствует боль земли</td><td>🌝</td></tr>
+            <tr><td>Жрец</td><td>✝️</td><td>Осколок зазвучал как молитва. Герой слышит ответ богов</td><td>🌝</td></tr>
+            <tr><td>Бард</td><td>🎸</td><td>Осколок запел. Герой может менять реальность песней</td><td>🌚</td></tr>
+            <tr><td>Изобретатель</td><td>⚙️</td><td>Осколок вплавился в механизмы. Герой создаёт невозможное</td><td>🌚</td></tr>
+        </table>
+    </div>
+
+    <!-- Осколки — система опыта -->
+    <div class="content-card">
+        <h2>💎 Осколки — система опыта</h2>
+        <p>Осколки Солнечного Клинка — валюта силы. Каждая победа приносит осколки.</p>
+        <table>
+            <tr><th>Событие</th><th>Осколков</th></tr>
+            <tr><td>Победа в дуэли</td><td>2</td></tr>
+            <tr><td>Поражение в дуэли</td><td>1</td></tr>
+            <tr><td>Победа в турнирном бою</td><td>4</td></tr>
+            <tr><td>Поражение в турнирном бою</td><td>2</td></tr>
+            <tr><td>Чемпион турнира</td><td>10</td></tr>
+            <tr><td>Победа над врагом (другая фракция)</td><td>×2</td></tr>
+        </table>
+    </div>
+
+    <!-- Уровни -->
+    <div class="content-card">
+        <h2>📈 Уровни</h2>
+        <table>
+            <tr><th>Уровень</th><th>Всего осколков</th><th>Побед (дуэль)</th><th>Титул</th></tr>
+            <tr><td>1</td><td>5</td><td>3</td><td>—</td></tr>
+            <tr><td>2</td><td>15</td><td>8</td><td>—</td></tr>
+            <tr><td>3</td><td>30</td><td>15</td><td>—</td></tr>
+            <tr><td>4</td><td>50</td><td>25</td><td>—</td></tr>
+            <tr><td>5</td><td>75</td><td>38</td><td>Искатель</td></tr>
+            <tr><td>10</td><td>275</td><td>138</td><td>Собиратель</td></tr>
+            <tr><td>15</td><td>925</td><td>463</td><td>Хранитель</td></tr>
+            <tr><td>20</td><td>1825</td><td>913</td><td>Мастер клинка</td></tr>
+            <tr><td>30</td><td>4675</td><td>2338</td><td>Живая легенда</td></tr>
+            <tr><td>40</td><td>8925</td><td>4463</td><td>Мифический</td></tr>
+            <tr><td>50</td><td>14575</td><td>7288</td><td>Бессмертный</td></tr>
+        </table>
+    </div>
+
+    <!-- Турнир -->
+    <div class="content-card">
+        <h2>🏆 Турнир</h2>
+        <table>
+            <tr><th>Этап</th><th>Описание</th><th>Награда</th></tr>
+            <tr><td>Регистрация</td><td>16 искателей собираются на Расколе</td><td>—</td></tr>
+            <tr><td>Жеребьёвка</td><td>Осколки сами выбирают пары</td><td>—</td></tr>
+            <tr><td>Раунды</td><td>Бои идут, пока не останется один</td><td>4 осколка за победу, 2 за поражение</td></tr>
+            <tr><td>Финал</td><td>Два сильнейших сражаются за право стать Хранителем</td><td>—</td></tr>
+            <tr><td>Чемпион</td><td>Победитель получает титул «Хранитель Раскола»</td><td>10 осколков</td></tr>
+        </table>
+    </div>
+
+    <!-- Сезоны -->
+    <div class="content-card">
+        <h2>📅 Сезоны</h2>
+        <div class="legend-box">
+            <p>Каждый сезон — это новая глава. Старые осколки тускнеют, новые появляются. Чемпион предыдущего сезона получает особый титул — «Хранитель Раскола» — и начинает следующий сезон с преимуществом.</p>
+            <p style="margin-top: 15px;">Но никто не удерживает титул вечно. Раскол не терпит застоя.</p>
+        </div>
+    </div>
+
+    <!-- Легенда -->
+    <div class="content-card">
+        <h2>🔮 Легенда о восстановлении</h2>
+        <div class="legend-box">
+            <p>Говорят, что тот, кто соберёт все осколки, сможет восстановить Солнечный Клинок и... никто не знает, что произойдёт дальше. Может, мир обретёт покой. А может, расколется окончательно.</p>
+        </div>
+    </div>
+
+    <!-- Ваша роль -->
+    <div class="content-card">
+        <h2>⚔️ Ваша роль</h2>
+        <div class="legend-box">
+            <p>Вы — искатель осколков. Выбирайте путь: встать под знамя Ордена Света или принять тьму Культа. Сражайтесь на Арене, побеждайте в турнирах, собирайте осколки.</p>
+            <p style="margin-top: 15px;">Кто знает, может, именно вы соберёте их все?</p>
+            <p style="margin-top: 20px; font-size: 1.2em; color: #ffd700;">Добро пожаловать на Раскол.</p>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← Назад к статистике</a>
+</body>
+</html>
