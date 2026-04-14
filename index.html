@@ -495,6 +495,22 @@
                 white-space: nowrap;
             }
         }
+.titles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.titles-grid .table-container:last-child {
+    grid-column: span 2;
+}
+@media (max-width: 768px) {
+    .titles-grid {
+        grid-template-columns: 1fr;
+    }
+    .titles-grid .table-container:last-child {
+        grid-column: span 1;
+    }
+}
     </style>
 </head>
 <body>
@@ -761,6 +777,7 @@ function renderFullStats(data) {
 
     // ТИТУЛЫ
     html += '<div id="tab-titles" class="tab-content">';
+    html += '<div class="titles-grid">';
     const achievements = [
         { emoji:"👑",name:"Бессмертный",type:"level",value:50,priority:1000 },
         { emoji:"✨",name:"Мифический",type:"level",value:40,priority:900 },
@@ -893,13 +910,6 @@ function renderFullStats(data) {
         { name:"🥊 Мешок с песком", type:"Поражения", cond:"10 поражений" }
     ];
     
-    html += '<div class="table-container"><h3>📜 Все титулы и условия</h3><table>';
-    html += '<tr><th>Титул</th><th>Тип</th><th>Условие</th></tr>';
-    allTitlesInfo.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
-        html += `<tr><td>${t.name}</td><td>${t.type}</td><td>${t.cond}</td></tr>`;
-    });
-    html += '</table></div>';
-    
     html += '<div class="table-container"><h3>👑 Титулованные игроки (' + Object.keys(playerTitles).length + ')</h3><table>';
     html += '<tr><th>Игрок</th><th>Титул</th><th>Класс</th></tr>';
     Object.entries(playerTitles).sort((a,b) => a[0].localeCompare(b[0])).forEach(([name,title]) => {
@@ -907,7 +917,16 @@ function renderFullStats(data) {
         html += `<tr><td>${name}</td><td>${title}</td><td>${p?.name || ''}</td></tr>`;
     });
     html += '</table></div>';
-    html += '</div>';
+
+    html += '<div class="table-container"><h3>📜 Все титулы и условия</h3><table>';
+    html += '<tr><th>Титул</th><th>Тип</th><th>Условие</th></tr>';
+    allTitlesInfo.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
+        html += `<tr><td>${t.name}</td><td>${t.type}</td><td>${t.cond}</td></tr>`;
+    });
+    html += '</table></div>';
+    
+    html += '</div>'; // закрывает titles-grid
+    html += '</div>'; // закрывает tab-titles
 
     // КАЛЬКУЛЯТОР
     html += '<div id="tab-calculator" class="tab-content">';
