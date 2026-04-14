@@ -203,307 +203,328 @@
         .search-clear:hover { color: #ffd700; }
         .highlight { background: rgba(255, 215, 0, 0.2); padding: 0 2px; border-radius: 3px; }
 
-/* Титулы — компактные таблицы */
-#tab-titles .table-container {
-    max-width: 500px;
-}
+        /* Титулы — сетка 2x2 (только на ПК) */
+        @media (min-width: 769px) {
+            #tab-titles {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            #tab-titles .table-container {
+                max-width: 100%;
+            }
+        }
 
-#tab-titles table th:nth-child(2),
-#tab-titles table td:nth-child(2) {
-    width: 100px;
-    text-align: center !important;
-}
+        /* Титулы — ширина колонок */
+        #tab-titles table th:nth-child(2),
+        #tab-titles table td:nth-child(2) {
+            width: 100px;
+            text-align: center !important;
+        }
 
-/* Титулованные игроки — чуть шире */
-#tab-titles .table-container:last-child {
-    max-width: 700px;
-}
+        /* Титулованные игроки — чуть шире */
+        #tab-titles .table-container:last-child {
+            max-width: 700px;
+        }
 
-#tab-titles .table-container:last-child th:nth-child(2),
-#tab-titles .table-container:last-child td:nth-child(2) {
-    width: auto;
-    text-align: left !important;
-}
+        #tab-titles .table-container:last-child th:nth-child(2),
+        #tab-titles .table-container:last-child td:nth-child(2) {
+            width: auto;
+            text-align: left !important;
+        }
 
-/* Калькулятор — компактный */
-#calc-table {
-    max-width: 700px;
-    margin: 20px auto;
-}
+        /* Калькулятор — всё по центру */
+        #tab-calculator .table-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-#calc-table table th:first-child {
-    width: 20%;
-}
+        #calc-mode-players,
+        #calc-mode-classes {
+            width: 100%;
+            max-width: 600px;
+        }
 
-#calc-table table th:nth-child(2),
-#calc-table table th:nth-child(3) {
-    width: 40%;
-}
+        #calc-mode-players > div,
+        #calc-mode-classes > div {
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-#calc-mode-players > div,
-#calc-mode-classes > div {
-    max-width: 600px;
-    margin: 0 auto;
-}
+        #calc-table {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        #calc-table table th:first-child {
+            width: 20%;
+        }
+
+        #calc-table table th:nth-child(2),
+        #calc-table table th:nth-child(3) {
+            width: 40%;
+        }
         
-@media (max-width: 768px) {
-    body { padding: 10px; }
-    h1 { 
-        font-size: 1.5em; 
-        padding-right: 0;
-        margin-top: 50px;
-    }
-    
-    .stats-grid { 
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 10px;
-    }
-    .stat-card { padding: 15px; }
-    .stat-value { font-size: 28px; }
-    .stat-label { font-size: 11px; }
-    
-    .fixed-buttons {
-        top: 10px;
-        right: 10px;
-        gap: 5px;
-        opacity: 0.85;
-    }
-    .action-btn {
-        padding: 6px 10px;
-        font-size: 11px;
-    }
-    
-    .nav-tabs {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        flex-wrap: nowrap;
-        padding: 8px 5px;
-        gap: 3px;
-    }
-    .tab-btn {
-        padding: 8px 12px;
-        font-size: 12px;
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-    
-    .table-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 12px;
-    }
-    table {
-        min-width: 480px;
-        font-size: 11px;
-    }
-    th, td {
-        padding: 4px 5px;
-    }
-    
-    .tables-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .records-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-    .record-item { padding: 10px; }
-    .record-value { font-size: 18px; }
-    .record-label { font-size: 10px; }
-    
-    .search-box {
-        flex-wrap: wrap;
-    }
-    .search-input {
-        width: 100%;
-    }
-    
-    #calc-mode-players > div,
-    #calc-mode-classes > div {
-        grid-template-columns: 1fr !important;
-        gap: 10px !important;
-        padding: 10px !important;
-    }
-    
-    #calc-mode-players select,
-    #calc-mode-classes select {
-        width: 100% !important;
-        font-size: 14px;
-        padding: 10px;
-    }
-    
-    #calc-mode-players > div > div:nth-child(2),
-    #calc-mode-classes > div > div:nth-child(2) {
-        text-align: center !important;
-        font-size: 20px !important;
-        padding: 5px 0 !important;
-    }
-    
-    #calc-mode-classes > div > div:first-child,
-    #calc-mode-classes > div > div:last-child {
-        background: #161b22;
-        padding: 12px !important;
-        border-radius: 10px;
-    }
-    
-    .calc-mode-btn {
-        padding: 8px 16px;
-        font-size: 13px;
-        flex: 1;
-        max-width: 150px;
-    }
-    
-    #calc-table {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 10px !important;
-    }
-    
-    #calc-table table {
-        min-width: 320px;
-        font-size: 9px;
-    }
-    
-    #calc-table th,
-    #calc-table td {
-        padding: 2px 3px;
-    }
-    
-    #calc-table table th:nth-child(2),
-    #calc-table table th:nth-child(3) {
-        width: 30% !important;
-    }
-    
-    #calc-table table td:nth-child(2),
-    #calc-table table td:nth-child(3) {
-        white-space: nowrap;
-        font-size: 9px;
-    }
-    
-    #calc-table th {
-        font-size: 9px;
-    }
-    
-    #calc-table > div {
-        margin-top: 10px !important;
-        padding: 12px !important;
-    }
-    
-    .reasons-list {
-        padding-left: 18px !important;
-        font-size: 10px !important;
-    }
-    
-    .reasons-list li {
-        margin: 4px 0 !important;
-    }
-    
-    #tab-tops table {
-        min-width: 400px;
-        font-size: 10px;
-    }
-    
-    #tab-tops table th:nth-child(3),
-    #tab-tops table td:nth-child(3) {
-        max-width: none;
-        white-space: nowrap;
-        overflow: visible;
-        text-overflow: clip;
-    }
-    
-    #tab-tops .table-container {
-        overflow-x: visible;
-    }
-    
-    #tab-titles .table-container:not(:last-child) table {
-        min-width: auto !important;
-    }
-    
-    #tab-titles .table-container:not(:last-child) {
-        overflow-x: visible;
-    }
-    
-    #tab-titles .table-container:not(:last-child) th:nth-child(2),
-    #tab-titles .table-container:not(:last-child) td:nth-child(2) {
-        max-width: 80px;
-        white-space: nowrap;
-    }
-    
-    #tab-titles .table-container:last-child {
-        overflow-x: auto !important;
-    }
-    
-    #tab-titles .table-container:last-child table {
-        min-width: 500px !important;
-    }
-    
-    #tab-titles .table-container:last-child th:nth-child(2),
-    #tab-titles .table-container:last-child td:nth-child(2) {
-        width: 180px;
-        white-space: nowrap;
-    }
-    
-    #tab-titles .table-container:last-child th:nth-child(3),
-    #tab-titles .table-container:last-child td:nth-child(3) {
-        white-space: nowrap;
-    }
-    
-    #players-table {
-        min-width: 500px;
-    }
-    
-    #players-table td {
-        white-space: nowrap !important;
-    }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            h1 { 
+                font-size: 1.5em; 
+                padding-right: 0;
+                margin-top: 50px;
+            }
+            
+            .stats-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 10px;
+            }
+            .stat-card { padding: 15px; }
+            .stat-value { font-size: 28px; }
+            .stat-label { font-size: 11px; }
+            
+            .fixed-buttons {
+                top: 10px;
+                right: 10px;
+                gap: 5px;
+                opacity: 0.85;
+            }
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            
+            .nav-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                flex-wrap: nowrap;
+                padding: 8px 5px;
+                gap: 3px;
+            }
+            .tab-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 12px;
+            }
+            table {
+                min-width: 480px;
+                font-size: 11px;
+            }
+            th, td {
+                padding: 4px 5px;
+            }
+            
+            .tables-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .records-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .record-item { padding: 10px; }
+            .record-value { font-size: 18px; }
+            .record-label { font-size: 10px; }
+            
+            .search-box {
+                flex-wrap: wrap;
+            }
+            .search-input {
+                width: 100%;
+            }
+            
+            #calc-mode-players > div,
+            #calc-mode-classes > div {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+                padding: 10px !important;
+            }
+            
+            #calc-mode-players select,
+            #calc-mode-classes select {
+                width: 100% !important;
+                font-size: 14px;
+                padding: 10px;
+            }
+            
+            #calc-mode-players > div > div:nth-child(2),
+            #calc-mode-classes > div > div:nth-child(2) {
+                text-align: center !important;
+                font-size: 20px !important;
+                padding: 5px 0 !important;
+            }
+            
+            #calc-mode-classes > div > div:first-child,
+            #calc-mode-classes > div > div:last-child {
+                background: #161b22;
+                padding: 12px !important;
+                border-radius: 10px;
+            }
+            
+            .calc-mode-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+                flex: 1;
+                max-width: 150px;
+            }
+            
+            #calc-table {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 10px !important;
+            }
+            
+            #calc-table table {
+                min-width: 320px;
+                font-size: 9px;
+            }
+            
+            #calc-table th,
+            #calc-table td {
+                padding: 2px 3px;
+            }
+            
+            #calc-table table th:nth-child(2),
+            #calc-table table th:nth-child(3) {
+                width: 30% !important;
+            }
+            
+            #calc-table table td:nth-child(2),
+            #calc-table table td:nth-child(3) {
+                white-space: nowrap;
+                font-size: 9px;
+            }
+            
+            #calc-table th {
+                font-size: 9px;
+            }
+            
+            #calc-table > div {
+                margin-top: 10px !important;
+                padding: 12px !important;
+            }
+            
+            .reasons-list {
+                padding-left: 18px !important;
+                font-size: 10px !important;
+            }
+            
+            .reasons-list li {
+                margin: 4px 0 !important;
+            }
+            
+            #tab-tops table {
+                min-width: 400px;
+                font-size: 10px;
+            }
+            
+            #tab-tops table th:nth-child(3),
+            #tab-tops table td:nth-child(3) {
+                max-width: none;
+                white-space: nowrap;
+                overflow: visible;
+                text-overflow: clip;
+            }
+            
+            #tab-tops .table-container {
+                overflow-x: visible;
+            }
+            
+            #tab-titles .table-container:not(:last-child) table {
+                min-width: auto !important;
+            }
+            
+            #tab-titles .table-container:not(:last-child) {
+                overflow-x: visible;
+            }
+            
+            #tab-titles .table-container:not(:last-child) th:nth-child(2),
+            #tab-titles .table-container:not(:last-child) td:nth-child(2) {
+                max-width: 80px;
+                white-space: nowrap;
+            }
+            
+            #tab-titles .table-container:last-child {
+                overflow-x: auto !important;
+            }
+            
+            #tab-titles .table-container:last-child table {
+                min-width: 500px !important;
+            }
+            
+            #tab-titles .table-container:last-child th:nth-child(2),
+            #tab-titles .table-container:last-child td:nth-child(2) {
+                width: 180px;
+                white-space: nowrap;
+            }
+            
+            #tab-titles .table-container:last-child th:nth-child(3),
+            #tab-titles .table-container:last-child td:nth-child(3) {
+                white-space: nowrap;
+            }
+            
+            #players-table {
+                min-width: 500px;
+            }
+            
+            #players-table td {
+                white-space: nowrap !important;
+            }
 
-#tab-tops table {
-    min-width: 350px;
-}
+            #tab-tops table {
+                min-width: 350px;
+            }
 
-#tab-tops table th:nth-child(2),
-#tab-tops table td:nth-child(2) {
-    white-space: nowrap;
-}
+            #tab-tops table th:nth-child(2),
+            #tab-tops table td:nth-child(2) {
+                white-space: nowrap;
+            }
 
-#tab-tops table th:nth-child(3),
-#tab-tops table td:nth-child(3) {
-    max-width: 90px;
-    white-space: nowrap;
-    overflow: visible;
-    text-overflow: clip;
-}
+            #tab-tops table th:nth-child(3),
+            #tab-tops table td:nth-child(3) {
+                max-width: 90px;
+                white-space: nowrap;
+                overflow: visible;
+                text-overflow: clip;
+            }
 
-#classes-table th:nth-child(1),
-#classes-table td:nth-child(1) {
-    white-space: nowrap;
-    min-width: 100px;
-}
+            #classes-table th:nth-child(1),
+            #classes-table td:nth-child(1) {
+                white-space: nowrap;
+                min-width: 100px;
+            }
 
-#combos-table th:nth-child(1),
-#combos-table td:nth-child(1) {
-    white-space: nowrap;
-    min-width: 130px;
-}
+            #combos-table th:nth-child(1),
+            #combos-table td:nth-child(1) {
+                white-space: nowrap;
+                min-width: 130px;
+            }
 
-#shards-table th:nth-child(3),
-#shards-table td:nth-child(3) {
-    white-space: nowrap;
-    min-width: 120px;
-}
+            #shards-table th:nth-child(3),
+            #shards-table td:nth-child(3) {
+                white-space: nowrap;
+                min-width: 120px;
+            }
 
-#calc-table table td:nth-child(2),
-#calc-table table td:nth-child(3) {
-    white-space: nowrap;
-}
+            #calc-table table td:nth-child(2),
+            #calc-table table td:nth-child(3) {
+                white-space: nowrap;
+            }
 
-#shards-table th:nth-child(2),
-#shards-table td:nth-child(2) {
-    min-width: 120px;
-    white-space: nowrap;
-}
-}
+            #shards-table th:nth-child(2),
+            #shards-table td:nth-child(2) {
+                min-width: 120px;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 <body>
