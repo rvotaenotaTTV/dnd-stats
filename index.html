@@ -205,8 +205,6 @@
 
 /* Титулы — сетка 2x2 */
 #tab-titles {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
@@ -262,6 +260,13 @@
 #calc-table table th:nth-child(2),
 #calc-table table th:nth-child(3) {
     width: 40%;
+}
+
+@media (min-width: 769px) {
+    #tab-titles {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
 }
         
 @media (max-width: 768px) {
