@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>DnD Статистика - 1 Сезон: Раскол</title>
-    <style>
+<style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             font-family: 'Segoe UI', 'Arial', sans-serif; 
@@ -202,36 +202,6 @@
         }
         .search-clear:hover { color: #ffd700; }
         .highlight { background: rgba(255, 215, 0, 0.2); padding: 0 2px; border-radius: 3px; }
-
-        /* Титулы — сетка 2x2 (только на ПК) */
-        @media (min-width: 769px) {
-            #tab-titles {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-            }
-            #tab-titles .table-container {
-                max-width: 100%;
-            }
-        }
-
-        /* Титулы — ширина колонок */
-        #tab-titles table th:nth-child(2),
-        #tab-titles table td:nth-child(2) {
-            width: 100px;
-            text-align: center !important;
-        }
-
-        /* Титулованные игроки — чуть шире */
-        #tab-titles .table-container:last-child {
-            max-width: 700px;
-        }
-
-        #tab-titles .table-container:last-child th:nth-child(2),
-        #tab-titles .table-container:last-child td:nth-child(2) {
-            width: auto;
-            text-align: left !important;
-        }
 
         /* Калькулятор — всё по центру */
         #tab-calculator .table-container {
@@ -525,47 +495,6 @@
                 white-space: nowrap;
             }
         }
-
-/* Исправление для Титулов — только на ПК */
-@media (min-width: 769px) {
-    #tab-titles {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 20px !important;
-    }
-    
-    #tab-titles .table-container {
-        max-width: 100% !important;
-    }
-
-    #tab-titles table th:nth-child(2),
-    #tab-titles table td:nth-child(2) {
-        width: 100px !important;
-        text-align: center !important;
-    }
-
-    #tab-titles .table-container:last-child {
-        max-width: 700px !important;
-        grid-column: span 2 !important;
-    }
-
-    #tab-titles .table-container:last-child th:nth-child(2),
-    #tab-titles .table-container:last-child td:nth-child(2) {
-        width: auto !important;
-        text-align: left !important;
-    }
-}
-
-/* Убираем глобальные стили Титулов, которые ломают другие вкладки */
-#tab-titles .table-container,
-#tab-titles table th:nth-child(2),
-#tab-titles table td:nth-child(2),
-#tab-titles .table-container:last-child,
-#tab-titles .table-container:last-child th:nth-child(2),
-#tab-titles .table-container:last-child td:nth-child(2) {
-    /* Сбрасываем все глобальные стили */
-    all: revert;
-}
     </style>
 </head>
 <body>
