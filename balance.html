@@ -133,10 +133,49 @@
             color: #ffd700;
             border-color: #ffd700;
         }
-        @media (max-width: 768px) {
-            h1 { font-size: 1.8em; }
-            .table-container { padding: 12px; }
-            table { font-size: 11px; }
+@media (max-width: 768px) {
+    h1 { font-size: 1.5em; }
+    body { padding: 10px; }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .nav-links a {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .table-container {
+        padding: 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 900px;
+        font-size: 11px;
+    }
+    
+    th, td {
+        padding: 6px 8px;
+    }
+    
+    .formula-box {
+        padding: 15px;
+    }
+    
+    .formula {
+        font-size: 11px;
+        padding: 12px;
+        line-height: 1.6;
+    }
+    
+    .back-link {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
         }
     </style>
 </head>
