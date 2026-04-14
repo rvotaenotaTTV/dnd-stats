@@ -52,7 +52,6 @@
         .action-btn:hover { background: #30363d; color: white; transform: scale(1.02); }
         .beer-btn { background: #daa520; color: white; border-color: #ffd700; }
         .beer-btn:hover { background: #ffd700; color: #0d1117; }
-        #fileInput { display: none; }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -518,6 +517,7 @@
 <div class="fixed-buttons">
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="action-btn beer-btn">🍺 На пиво</a>
 </div>
+<div id="content"><div class="loading">⏳ Загрузка статистики...</div></div>
 
 <script>
 const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
