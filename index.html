@@ -406,7 +406,7 @@
     #calc-mode-players > div {
         display: flex !important;
         flex-direction: column !important;
-        gap: 12px !important;
+        gap: 15px !important;
     }
     
     #calc-mode-classes > div {
@@ -415,14 +415,13 @@
         gap: 15px !important;
     }
     
-    /* VS по центру */
+    /* Убираем VS */
     #calc-mode-players > div > div:nth-child(2),
     #calc-mode-classes > div > div:nth-child(2) {
-        text-align: center !important;
-        padding: 5px 0 !important;
+        display: none !important;
     }
     
-    /* Карточки классов/рас — без лишних отступов */
+    /* Карточки классов/рас */
     #calc-mode-classes > div > div:first-child,
     #calc-mode-classes > div > div:last-child {
         background: #161b22;
@@ -452,7 +451,6 @@
     #calc-table th, #calc-table td {
         padding: 5px 3px;
     }
-    /* Длинные названия переносим */
     #calc-table table td:nth-child(2),
     #calc-table table td:nth-child(3) {
         white-space: normal;
