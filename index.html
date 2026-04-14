@@ -408,29 +408,41 @@
         font-size: 14px !important;
     }
 }
-/* Калькулятор — селекты на всю ширину, без скролла */
+/* Калькулятор — компактная таблица */
+#calc-table {
+    padding: 8px !important;
+}
+#calc-table table {
+    min-width: 100% !important;
+    font-size: 9px;
+}
+#calc-table table th:nth-child(2),
+#calc-table table th:nth-child(3) {
+    width: 40% !important;
+    word-break: break-word;
+    white-space: normal;
+    padding: 4px 2px !important;
+}
+#calc-table table td:nth-child(2),
+#calc-table table td:nth-child(3) {
+    word-break: break-word;
+    white-space: normal;
+    padding: 4px 2px !important;
+}
+#calc-table table th:first-child {
+    width: 20% !important;
+    padding: 4px 2px !important;
+}
+#calc-table table td:first-child {
+    padding: 4px 2px !important;
+}
+
+/* Селекты — компактные */
 #calc-p1, #calc-p2,
 #calc-class1, #calc-race1,
 #calc-class2, #calc-race2 {
-    width: 100% !important;
-    max-width: 100%;
-    font-size: 14px !important;
-    padding: 10px 8px !important;
-    box-sizing: border-box;
-}
-
-/* Убираем лишние отступы */
-#calc-mode-players > div,
-#calc-mode-classes > div {
-    padding: 10px !important;
-    gap: 10px !important;
-}
-
-/* Контейнеры селектов */
-#calc-mode-players > div > div,
-#calc-mode-classes > div > div {
-    width: 100%;
-    max-width: 100%;
+    font-size: 13px !important;
+    padding: 8px 4px !important;
 }
         }
     </style>
