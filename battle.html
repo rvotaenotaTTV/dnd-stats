@@ -222,51 +222,47 @@
         <a href="battle.html" class="active">⚔️ Боевка</a>
     </div>
 
-    <!-- Основные механики -->
-    <div class="content-card">
-        <h2>🎲 Основные механики боя</h2>
-        <div class="mechanic-grid">
-            <div class="mechanic-item">
-                <h4>⚡ Инициатива</h4>
-                <p>Бросок <span class="highlight">d20 + ATK + d3</span> (0-2).</p>
-                <p>Кто больше — тот ходит первым. Равенство — случайно.</p>
-            </div>
-            <div class="mechanic-item">
-                <h4>🎯 Попадание</h4>
-                <p>Бросок <span class="highlight">d20 + ATK</span> против <span class="highlight">10 + DEF</span>.</p>
-                <p>Если ≥ — попадание. Иначе — промах или блок.</p>
-            </div>
-            <div class="mechanic-item">
-                <h4>💥 Урон</h4>
-                <p>При попадании: <span class="highlight">Random(MIN, MAX + 1)</span>.</p>
-                <p>Снижается защитой: <span class="highlight">× (1 - DEF × 0,05)</span>, мин. 1.</p>
-            </div>
-            <div class="mechanic-item">
-                <h4>🔥 Критический удар</h4>
-                <p>При <span class="highlight">d20 = 20</span>: бросок урона дважды, сумма.</p>
-                <p>В логе: <span class="highlight">💥X</span>, где X — сумма.</p>
-            </div>
-            <div class="mechanic-item">
-                <h4>❌ Критический провал</h4>
-                <p>При <span class="highlight">d20 = 1</span>: авто-промах, урон 0.</p>
-                <p>В логе: <span class="highlight">❌</span></p>
-            </div>
-            <div class="mechanic-item">
-                <h4>💨 Уклонение</h4>
-                <p>При <span class="highlight">d20 ≤ 4</span>: атака не попала.</p>
-                <p>В логе: <span class="highlight">💨</span></p>
-            </div>
-            <div class="mechanic-item">
-                <h4>🛡️ Блок</h4>
-                <p>Если <span class="highlight">d20 + ATK < 10 + DEF</span> и d20 > 4.</p>
-                <p>В логе: <span class="highlight">🛡️</span></p>
-            </div>
+<!-- Основные механики -->
+<div class="content-card">
+    <h2>🎲 Как проходит бой</h2>
+    <div class="mechanic-grid">
+        <div class="mechanic-item">
+            <h4>⚡ Кто ходит первым?</h4>
+            <p>Перед боем оба героя проверяют свою реакцию: <span class="highlight">d20 + ATK + d3 (0–2)</span>.</p>
+            <p>Кто быстрее — тот наносит удар первым. Если показатели равны — судьба решает случайно.</p>
         </div>
-        <p style="color: #8b949e; margin-top: 15px;">
-            <span class="highlight">💡 Примечание:</span> Уклонение (💨) проверяется первым (d20 ≤ 4). 
-            Затем крит (20) и промах (1). Всё остальное — либо попадание, либо блок.
-        </p>
+        <div class="mechanic-item">
+            <h4>🎯 Попал или нет?</h4>
+            <p>Атакующий бросает <span class="highlight">d20 + ATK</span> и сравнивает с защитой цели: <span class="highlight">10 + DEF</span>.</p>
+            <p>Если результат выше или равен — удар достигает цели. Если нет — противник уклоняется или блокирует.</p>
+        </div>
+        <div class="mechanic-item">
+            <h4>💥 Сколько урона?</h4>
+            <p>Урон — случайное число <span class="highlight">от MIN до MAX</span> (зависит от класса и расы).</p>
+            <p>Защита снижает полученный урон: каждая единица DEF уменьшает его на <span class="highlight">5%</span>. Но даже самая крепкая броня пропускает минимум 1 урона.</p>
+        </div>
+        <div class="mechanic-item">
+            <h4>🔥 Идеальный удар (Крит)</h4>
+            <p>Если на кубике d20 выпадает <span class="highlight">20</span> — это триумф! Герой наносит сокрушительный удар: бросок урона выполняется дважды, а результаты складываются.</p>
+        </div>
+        <div class="mechanic-item">
+            <h4>❌ Роковой промах</h4>
+            <p>Выпадение <span class="highlight">1</span> на d20 означает, что атака сорвалась — оружие застряло, противник ловко ушёл, или просто не повезло. Урон не наносится.</p>
+        </div>
+        <div class="mechanic-item">
+            <h4>💨 Уклонение</h4>
+            <p>Если бросок атаки <span class="highlight">≤ 4</span>, цель успевает среагировать и уйти из-под удара — атака не достигает цели, даже если ATK высок.</p>
+        </div>
+        <div class="mechanic-item">
+            <h4>🛡️ Глухой блок</h4>
+            <p>Когда атака не дотягивает до <span class="highlight">10 + DEF</span> (и бросок > 4), противник принимает удар на щит или броню — звон, искры, но без урона.</p>
+        </div>
     </div>
+    <p style="color: #8b949e; margin-top: 15px;">
+        <span class="highlight">💡 Порядок проверки:</span> Сначала игра смотрит, не уклонение ли это (d20 ≤ 4). 
+        Потом — не крит ли (20) и не промах ли (1). Всё остальное — либо чистое попадание, либо блок.
+    </p>
+</div>
 
     <!-- Символы в логах -->
     <div class="content-card">
