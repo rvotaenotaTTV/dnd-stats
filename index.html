@@ -393,12 +393,12 @@
         white-space: nowrap;
     }
 
-    /* === КАЛЬКУЛЯТОР — ПЕРЕСТРОЕННЫЙ === */
+    /* === КАЛЬКУЛЯТОР === */
     
     /* Кнопки режима */
     .calc-mode-btn {
-        padding: 10px 16px !important;
-        font-size: 14px !important;
+        padding: 8px 12px !important;
+        font-size: 13px !important;
         white-space: nowrap;
     }
     
@@ -422,28 +422,27 @@
         padding: 5px 0 !important;
     }
     
-    /* Карточки классов/рас */
+    /* Карточки классов/рас — без лишних отступов */
     #calc-mode-classes > div > div:first-child,
     #calc-mode-classes > div > div:last-child {
         background: #161b22;
-        padding: 12px !important;
+        padding: 10px !important;
         border-radius: 10px;
     }
     
-    /* Селекты — крупные и на всю ширину */
+    /* Селекты — компактные */
     #calc-p1, #calc-p2,
     #calc-class1, #calc-race1,
     #calc-class2, #calc-race2 {
         width: 100% !important;
-        font-size: 16px !important;
-        padding: 12px !important;
+        font-size: 15px !important;
+        padding: 10px !important;
     }
     
-    /* Таблица калькулятора — скролл только если нужно */
+    /* Таблица калькулятора */
     #calc-table {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 10px !important;
+        overflow-x: visible;
+        padding: 8px !important;
     }
     #calc-table table {
         min-width: 100% !important;
@@ -452,10 +451,10 @@
     }
     #calc-table th, #calc-table td {
         padding: 5px 3px;
-        white-space: nowrap;
     }
-    #calc-table table th:nth-child(2),
-    #calc-table table th:nth-child(3) {
+    /* Длинные названия переносим */
+    #calc-table table td:nth-child(2),
+    #calc-table table td:nth-child(3) {
         white-space: normal;
         word-break: break-word;
     }
