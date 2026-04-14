@@ -203,6 +203,27 @@
         .search-clear:hover { color: #ffd700; }
         .highlight { background: rgba(255, 215, 0, 0.2); padding: 0 2px; border-radius: 3px; }
 
+#tab-titles .table-container {
+    max-width: 500px;
+}
+
+#tab-titles table th:nth-child(2),
+#tab-titles table td:nth-child(2) {
+    width: 100px;
+    text-align: center !important;
+}
+
+/* Титулованные игроки — чуть шире */
+#tab-titles .table-container:last-child {
+    max-width: 700px;
+}
+
+#tab-titles .table-container:last-child th:nth-child(2),
+#tab-titles .table-container:last-child td:nth-child(2) {
+    width: auto;
+    text-align: left !important;
+}
+
 #calc-table {
     max-width: 700px;
     margin: 20px auto;
