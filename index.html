@@ -203,24 +203,20 @@
         .search-clear:hover { color: #ffd700; }
         .highlight { background: rgba(255, 215, 0, 0.2); padding: 0 2px; border-radius: 3px; }
 
-/* Титулы — сетка 2x2 */
-#tab-titles {
-    gap: 20px;
-}
-
+/* Титулы — компактные таблицы */
 #tab-titles .table-container {
-    max-width: 100%;
+    max-width: 500px;
 }
-
-#tab-titles .table-container:nth-child(1) { grid-column: 1; grid-row: 1; }
-#tab-titles .table-container:nth-child(2) { grid-column: 2; grid-row: 1; }
-#tab-titles .table-container:nth-child(3) { grid-column: 1; grid-row: 2; }
-#tab-titles .table-container:nth-child(4) { grid-column: 2; grid-row: 2; }
 
 #tab-titles table th:nth-child(2),
 #tab-titles table td:nth-child(2) {
     width: 100px;
     text-align: center !important;
+}
+
+/* Титулованные игроки — чуть шире */
+#tab-titles .table-container:last-child {
+    max-width: 700px;
 }
 
 #tab-titles .table-container:last-child th:nth-child(2),
@@ -229,26 +225,8 @@
     text-align: left !important;
 }
 
-#tab-calculator .table-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#calc-mode-players,
-#calc-mode-classes {
-    width: 100%;
-    max-width: 600px;
-}
-
-#calc-mode-players > div,
-#calc-mode-classes > div {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
+/* Калькулятор — компактный */
 #calc-table {
-    width: 100%;
     max-width: 700px;
     margin: 20px auto;
 }
@@ -262,11 +240,10 @@
     width: 40%;
 }
 
-@media (min-width: 769px) {
-    #tab-titles {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
+#calc-mode-players > div,
+#calc-mode-classes > div {
+    max-width: 600px;
+    margin: 0 auto;
 }
         
 @media (max-width: 768px) {
@@ -472,10 +449,6 @@
     #tab-titles .table-container:last-child td:nth-child(3) {
         white-space: nowrap;
     }
-
-#tab-titles {
-    display: block !important;
-}
     
     #players-table {
         min-width: 500px;
@@ -529,10 +502,6 @@
 #shards-table td:nth-child(2) {
     min-width: 120px;
     white-space: nowrap;
-}
-
-#tab-calculator {
-    display: block !important;
 }
 }
     </style>
