@@ -915,7 +915,8 @@ function renderFullStats(data) {
         const p = players.find(pl => pl.display === name);
         html += `<tr><td>${name}</td><td>${title}</td><td>${p?.name || ''}</td></tr>`;
     });
-    html += '</table></div></div>';
+    html += '</table></div>';
+    html += '</div>';
 
     // КАЛЬКУЛЯТОР
     html += '<div id="tab-calculator" class="tab-content">';
