@@ -196,7 +196,7 @@ h1 {
 
     function calculateDerivedFields(cls) {
         const avg = (cls.Min + cls.Max) / 2;
-        const acc = Math.min(0.95, Math.max(0.05, (9 + cls.Atk) / 20));
+        const acc = Math.min(0.95, Math.max(0.05, (9 + cls.Atk - cls.Def) / 20));
         const atkBonus = 1 + cls.Atk * 0.04;
         const dmg5 = avg * acc * atkBonus * 0.9 * 5;
         const effHP = cls.Hp * (1 + cls.Def * 0.08);
