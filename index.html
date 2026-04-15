@@ -1165,12 +1165,12 @@ function initSortableTable(tableId, defaultSort, defaultDir) {
             const rows = Array.from(tbody.querySelectorAll('tr'));
             rows.sort((a,b) => {
                 let valA = a.dataset[sortBy], valB = b.dataset[sortBy];
-                if (sortBy !== 'name') {
-                    valA = parseFloat(valA) || 0;
-                    valB = parseFloat(valB) || 0;
-                    return currentDir === 'asc' ? valA - valB : valB - valA;
+                if (sortBy === 'name' || sortBy === 'class' || sortBy === 'faction') {
+                    return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
                 }
-                return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                valA = parseFloat(valA) || 0;
+                valB = parseFloat(valB) || 0;
+                return currentDir === 'asc' ? valA - valB : valB - valA;
             });
             rows.forEach(row => tbody.appendChild(row));
         }
