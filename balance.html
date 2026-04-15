@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Баланс</title>
+    <title>⚖️ Баланс · Таблица</title>
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 body { 
@@ -39,161 +39,77 @@ h1 {
         padding-bottom: 10px; 
     }
     
-    .nav-wrapper {
-        margin-bottom: 30px;
-    }
+    .nav-wrapper { margin-bottom: 30px; }
     .nav-toggle {
-        display: none;
-        width: 100%;
-        padding: 12px 20px;
-        background: #21262d;
-        border: 1px solid #30363d;
-        border-radius: 25px;
-        color: #ffd700;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        text-align: left;
+        display: none; width: 100%; padding: 12px 20px; background: #21262d;
+        border: 1px solid #30363d; border-radius: 25px; color: #ffd700;
+        font-size: 16px; font-weight: bold; cursor: pointer; text-align: left;
     }
     .nav-links {
-        display: flex;
-        gap: 20px;
-        justify-content: center;
+        display: flex; gap: 20px; justify-content: center;
     }
     .nav-links a {
-        color: #8b949e;
-        text-decoration: none;
-        padding: 8px 16px;
-        border-radius: 20px;
-        background: #21262d;
-        border: 1px solid #30363d;
+        color: #8b949e; text-decoration: none; padding: 8px 16px;
+        border-radius: 20px; background: #21262d; border: 1px solid #30363d;
         transition: all 0.2s;
     }
-    .nav-links a:hover {
-        color: #ffd700;
-        border-color: #ffd700;
-    }
-    .nav-links a.active {
-        background: #ffd700;
-        color: #0d1117;
-        font-weight: bold;
-    }
+    .nav-links a:hover { color: #ffd700; border-color: #ffd700; }
+    .nav-links a.active { background: #ffd700; color: #0d1117; font-weight: bold; }
     
     .table-container {
-        background: #161b22;
-        border-radius: 12px;
-        padding: 18px;
-        border: 1px solid #30363d;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        margin-bottom: 30px;
-        overflow-x: auto;
+        background: #161b22; border-radius: 12px; padding: 18px;
+        border: 1px solid #30363d; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        margin-bottom: 30px; overflow-x: auto;
     }
-    .table-container h3 {
-        color: #ffd700;
-        font-size: 18px;
-        margin-bottom: 15px;
-    }
+    .table-container h3 { color: #ffd700; font-size: 18px; margin-bottom: 15px; }
     table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-        min-width: 1200px;
+        width: 100%; border-collapse: collapse; font-size: 13px; min-width: 1200px;
     }
     th, td {
-        border: 1px solid #30363d;
-        padding: 8px 10px;
-        text-align: center;
+        border: 1px solid #30363d; padding: 8px 10px; text-align: center;
     }
     th {
-        background: #21262d;
-        color: #ffd700;
-        font-weight: bold;
-        white-space: nowrap;
-        cursor: pointer;
-        user-select: none;
-        position: relative;
-        padding-right: 20px !important;
+        background: #21262d; color: #ffd700; font-weight: bold;
+        white-space: nowrap; cursor: pointer; user-select: none;
+        position: relative; padding-right: 20px !important;
     }
     th:hover { background: #30363d; }
     th::after {
-        content: '⇅';
-        position: absolute;
-        right: 5px;
-        opacity: 0.5;
-        font-size: 12px;
+        content: '⇅'; position: absolute; right: 5px; opacity: 0.5; font-size: 12px;
     }
     th.asc::after { content: '↑'; opacity: 1; color: #ffd700; }
     th.desc::after { content: '↓'; opacity: 1; color: #ffd700; }
-    td:first-child {
-        font-weight: bold;
-        color: #ffd700;
-    }
+    td:first-child { font-weight: bold; color: #ffd700; }
     .number { text-align: right; }
+    
     .formula-box {
-        background: #161b22;
-        border-radius: 12px;
-        padding: 20px;
-        border: 1px solid #30363d;
-        margin-top: 20px;
+        background: #161b22; border-radius: 12px; padding: 20px;
+        border: 1px solid #30363d; margin-top: 20px;
     }
-    .formula-box h3 {
-        color: #ffd700;
-        margin-bottom: 15px;
-    }
+    .formula-box h3 { color: #ffd700; margin-bottom: 15px; }
     .formula {
-        background: #21262d;
-        padding: 15px;
-        border-radius: 8px;
-        font-family: 'Consolas', monospace;
-        font-size: 14px;
-        line-height: 1.8;
+        background: #21262d; padding: 15px; border-radius: 8px;
+        font-family: 'Consolas', monospace; font-size: 14px; line-height: 1.8;
         color: #c9d1d9;
     }
     .formula span { color: #ffd700; }
     .back-link {
-        display: inline-block;
-        margin-top: 20px;
-        color: #8b949e;
-        text-decoration: none;
-        padding: 8px 16px;
-        border-radius: 20px;
-        background: #21262d;
-        border: 1px solid #30363d;
+        display: inline-block; margin-top: 20px; color: #8b949e;
+        text-decoration: none; padding: 8px 16px; border-radius: 20px;
+        background: #21262d; border: 1px solid #30363d;
     }
-    .back-link:hover {
-        color: #ffd700;
-        border-color: #ffd700;
-    }
+    .back-link:hover { color: #ffd700; border-color: #ffd700; }
     
     @media (max-width: 768px) {
-        h1 { font-size: 1.5em; }
-        body { padding: 10px; }
-        
-        .nav-toggle {
-            display: block;
-        }
-        .nav-links {
-            display: none;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .nav-links.show {
-            display: flex;
-        }
-        .nav-links a {
-            text-align: center;
-            padding: 10px;
-        }
-        
-        .table-container { padding: 12px; }
-        table { font-size: 11px; }
+        h1 { font-size: 1.5em; } body { padding: 10px; }
+        .nav-toggle { display: block; }
+        .nav-links { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .nav-links.show { display: flex; }
+        .nav-links a { text-align: center; padding: 10px; }
+        .table-container { padding: 12px; } table { font-size: 11px; }
         th, td { padding: 6px 8px; }
         .formula { font-size: 11px; padding: 12px; }
-        .back-link {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
+        .back-link { padding: 6px 12px; font-size: 12px; }
     }
 </style>
 </head>
@@ -222,22 +138,7 @@ h1 {
                     <th data-sort="power">POWER</th><th data-sort="cpi">CPI</th>
                 </tr>
             </thead>
-            <tbody id="classes-balance-tbody">
-                <tr data-name="Воин" data-hp="29" data-atk="5" data-def="2" data-min="3" data-max="9" data-avg="6" data-acc="60" data-surv="32" data-dmg5="18" data-power="105.9" data-cpi="26.46"><td>Воин</td><td>⚔️</td><td class="number">29</td><td class="number">5</td><td class="number">2</td><td class="number">3</td><td class="number">9</td><td class="number">6</td><td class="number">60%</td><td class="number">32</td><td class="number">18</td><td class="number">105,9</td><td class="number">26,46</td></tr>
-                <tr data-name="Паладин" data-hp="34" data-atk="4" data-def="3" data-min="3" data-max="7" data-avg="5" data-acc="50" data-surv="39" data-dmg5="13" data-power="103.3" data-cpi="25.84"><td>Паладин</td><td>🛡️</td><td class="number">34</td><td class="number">4</td><td class="number">3</td><td class="number">3</td><td class="number">7</td><td class="number">5</td><td class="number">50%</td><td class="number">39</td><td class="number">13</td><td class="number">103,3</td><td class="number">25,84</td></tr>
-                <tr data-name="Плут" data-hp="21" data-atk="9" data-def="1" data-min="4" data-max="10" data-avg="7" data-acc="85" data-surv="22" data-dmg5="30" data-power="112.9" data-cpi="28.22"><td>Плут</td><td>🗡️</td><td class="number">21</td><td class="number">9</td><td class="number">1</td><td class="number">4</td><td class="number">10</td><td class="number">7</td><td class="number">85%</td><td class="number">22</td><td class="number">30</td><td class="number">112,9</td><td class="number">28,22</td></tr>
-                <tr data-name="Монах" data-hp="24" data-atk="6" data-def="2" data-min="4" data-max="9" data-avg="6.5" data-acc="65" data-surv="26" data-dmg5="21" data-power="104.1" data-cpi="26.02"><td>Монах</td><td>🥋</td><td class="number">24</td><td class="number">6</td><td class="number">2</td><td class="number">4</td><td class="number">9</td><td class="number">6,5</td><td class="number">65%</td><td class="number">26</td><td class="number">21</td><td class="number">104,1</td><td class="number">26,02</td></tr>
-                <tr data-name="Следопыт" data-hp="26" data-atk="6" data-def="1" data-min="4" data-max="10" data-avg="7" data-acc="70" data-surv="27" data-dmg5="25" data-power="109.5" data-cpi="27.37"><td>Следопыт</td><td>🏹</td><td class="number">26</td><td class="number">6</td><td class="number">1</td><td class="number">4</td><td class="number">10</td><td class="number">7</td><td class="number">70%</td><td class="number">27</td><td class="number">25</td><td class="number">109,5</td><td class="number">27,37</td></tr>
-                <tr data-name="Чародей" data-hp="20" data-atk="8" data-def="0" data-min="4" data-max="13" data-avg="8.5" data-acc="85" data-surv="20" data-dmg5="36" data-power="109.7" data-cpi="27.43"><td>Чародей</td><td>🔮</td><td class="number">20</td><td class="number">8</td><td class="number">0</td><td class="number">4</td><td class="number">13</td><td class="number">8,5</td><td class="number">85%</td><td class="number">20</td><td class="number">36</td><td class="number">109,7</td><td class="number">27,43</td></tr>
-                <tr data-name="Бард" data-hp="25" data-atk="6" data-def="1" data-min="4" data-max="10" data-avg="7" data-acc="70" data-surv="26" data-dmg5="25" data-power="106.5" data-cpi="26.63"><td>Бард</td><td>🎸</td><td class="number">25</td><td class="number">6</td><td class="number">1</td><td class="number">4</td><td class="number">10</td><td class="number">7</td><td class="number">70%</td><td class="number">26</td><td class="number">25</td><td class="number">106,5</td><td class="number">26,63</td></tr>
-                <tr data-name="Друид" data-hp="28" data-atk="6" data-def="1" data-min="4" data-max="8" data-avg="6" data-acc="70" data-surv="29" data-dmg5="21" data-power="105.1" data-cpi="26.28"><td>Друид</td><td>🌿</td><td class="number">28</td><td class="number">6</td><td class="number">1</td><td class="number">4</td><td class="number">8</td><td class="number">6</td><td class="number">70%</td><td class="number">29</td><td class="number">21</td><td class="number">105,1</td><td class="number">26,28</td></tr>
-                <tr data-name="Изобретатель" data-hp="22" data-atk="5" data-def="1" data-min="4" data-max="12" data-avg="8" data-acc="65" data-surv="23" data-dmg5="26" data-power="98.6" data-cpi="24.65"><td>Изобретатель</td><td>⚙️</td><td class="number">22</td><td class="number">5</td><td class="number">1</td><td class="number">4</td><td class="number">12</td><td class="number">8</td><td class="number">65%</td><td class="number">23</td><td class="number">26</td><td class="number">98,6</td><td class="number">24,65</td></tr>
-                <tr data-name="Варвар" data-hp="33" data-atk="4" data-def="2" data-min="4" data-max="8" data-avg="6" data-acc="55" data-surv="36" data-dmg5="17" data-power="107.8" data-cpi="26.94"><td>Варвар</td><td>🪓</td><td class="number">33</td><td class="number">4</td><td class="number">2</td><td class="number">4</td><td class="number">8</td><td class="number">6</td><td class="number">55%</td><td class="number">36</td><td class="number">17</td><td class="number">107,8</td><td class="number">26,94</td></tr>
-                <tr data-name="Волшебница" data-hp="22" data-atk="7" data-def="0" data-min="5" data-max="11" data-avg="8" data-acc="80" data-surv="22" data-dmg5="32" data-power="106.5" data-cpi="26.64"><td>Волшебница</td><td>✨</td><td class="number">22</td><td class="number">7</td><td class="number">0</td><td class="number">5</td><td class="number">11</td><td class="number">8</td><td class="number">80%</td><td class="number">22</td><td class="number">32</td><td class="number">106,5</td><td class="number">26,64</td></tr>
-                <tr data-name="Некромант" data-hp="23" data-atk="7" data-def="0" data-min="5" data-max="10" data-avg="7.5" data-acc="80" data-surv="23" data-dmg5="30" data-power="105.7" data-cpi="26.43"><td>Некромант</td><td>🦴</td><td class="number">23</td><td class="number">7</td><td class="number">0</td><td class="number">5</td><td class="number">10</td><td class="number">7,5</td><td class="number">80%</td><td class="number">23</td><td class="number">30</td><td class="number">105,7</td><td class="number">26,43</td></tr>
-                <tr data-name="Жрец" data-hp="25" data-atk="5" data-def="1" data-min="5" data-max="9" data-avg="7" data-acc="65" data-surv="26" data-dmg5="23" data-power="99.5" data-cpi="24.89"><td>Жрец</td><td>✝️</td><td class="number">25</td><td class="number">5</td><td class="number">1</td><td class="number">5</td><td class="number">9</td><td class="number">7</td><td class="number">65%</td><td class="number">26</td><td class="number">23</td><td class="number">99,5</td><td class="number">24,89</td></tr>
-                <tr data-name="Колдун" data-hp="24" data-atk="5" data-def="0" data-min="6" data-max="12" data-avg="9" data-acc="70" data-surv="24" data-dmg5="32" data-power="106.6" data-cpi="26.65"><td>Колдун</td><td>👁️</td><td class="number">24</td><td class="number">5</td><td class="number">0</td><td class="number">6</td><td class="number">12</td><td class="number">9</td><td class="number">70%</td><td class="number">24</td><td class="number">32</td><td class="number">106,6</td><td class="number">26,65</td></tr>
-            </tbody>
+            <tbody id="classes-balance-tbody"></tbody>
         </table>
     </div>
 
@@ -250,13 +151,7 @@ h1 {
                     <th data-sort="name">Раса</th><th>Эмодзи</th><th data-sort="hp">Бонус HP</th><th data-sort="atk">Бонус ATK</th><th data-sort="def">Бонус DEF</th><th data-sort="min">Бонус MIN</th><th data-sort="max">Бонус MAX</th>
                 </tr>
             </thead>
-            <tbody id="races-balance-tbody">
-                <tr data-name="Человек" data-hp="1" data-atk="0" data-def="0" data-min="0" data-max="0"><td>Человек</td><td>🧑</td><td class="number">1</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">0</td></tr>
-                <tr data-name="Орк" data-hp="0" data-atk="1" data-def="0" data-min="0" data-max="0"><td>Орк</td><td>👹</td><td class="number">0</td><td class="number">1</td><td class="number">0</td><td class="number">0</td><td class="number">0</td></tr>
-                <tr data-name="Дворф" data-hp="0" data-atk="0" data-def="1" data-min="0" data-max="0"><td>Дворф</td><td>🧔</td><td class="number">0</td><td class="number">0</td><td class="number">1</td><td class="number">0</td><td class="number">0</td></tr>
-                <tr data-name="Эльф" data-hp="0" data-atk="0" data-def="0" data-min="1" data-max="0"><td>Эльф</td><td>🧝</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">1</td><td class="number">0</td></tr>
-                <tr data-name="Нежить" data-hp="0" data-atk="0" data-def="0" data-min="0" data-max="1"><td>Нежить</td><td>💀</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">0</td><td class="number">1</td></tr>
-            </tbody>
+            <tbody id="races-balance-tbody"></tbody>
         </table>
     </div>
 
@@ -276,7 +171,162 @@ h1 {
 
     <a href="index.html" class="back-link">← Назад к статистике</a>
 
-    <script>
+    <script>       
+        const classesData = [
+            {name:"Воин", emoji:"⚔️", hp:29, atk:5, def:2, min:3, max:9},
+            {name:"Паладин", emoji:"🛡️", hp:34, atk:4, def:3, min:3, max:7},
+            {name:"Плут", emoji:"🗡️", hp:21, atk:9, def:1, min:4, max:10},
+            {name:"Монах", emoji:"🥋", hp:24, atk:6, def:2, min:4, max:9},
+            {name:"Следопыт", emoji:"🏹", hp:26, atk:6, def:1, min:4, max:10},
+            {name:"Чародей", emoji:"🔮", hp:20, atk:8, def:0, min:4, max:13},
+            {name:"Бард", emoji:"🎸", hp:25, atk:6, def:1, min:4, max:10},
+            {name:"Друид", emoji:"🌿", hp:28, atk:6, def:1, min:4, max:8},
+            {name:"Изобретатель", emoji:"⚙️", hp:22, atk:5, def:1, min:4, max:12},
+            {name:"Варвар", emoji:"🪓", hp:33, atk:4, def:2, min:4, max:8},
+            {name:"Волшебница", emoji:"✨", hp:22, atk:7, def:0, min:5, max:11},
+            {name:"Некромант", emoji:"🦴", hp:23, atk:7, def:0, min:5, max:10},
+            {name:"Жрец", emoji:"✝️", hp:25, atk:5, def:1, min:5, max:9},
+            {name:"Колдун", emoji:"👁️", hp:24, atk:5, def:0, min:6, max:12}
+        ];
+
+        const racesData = [
+            {name:"Человек", emoji:"🧑", hp:1, atk:0, def:0, min:0, max:0},
+            {name:"Орк", emoji:"👹", hp:0, atk:1, def:0, min:0, max:0},
+            {name:"Дворф", emoji:"🧔", hp:0, atk:0, def:1, min:0, max:0},
+            {name:"Эльф", emoji:"🧝", hp:0, atk:0, def:0, min:1, max:0},
+            {name:"Нежить", emoji:"💀", hp:0, atk:0, def:0, min:0, max:1}
+        ];
+
+        
+        function calculateDerivedFields(cls) {
+            const avg = (cls.min + cls.max) / 2;
+            const acc = (7 + cls.atk) / 20;
+            const atkBonus = 1 + cls.atk * 0.04;
+            const dmg5 = avg * acc * atkBonus * 0.9 * 5;
+            const effHP = cls.hp * (1 + cls.def * 0.08);
+            const surv = cls.hp + cls.def * 2;
+            
+            const cpi = Math.pow(effHP, 0.7) * Math.pow(avg * acc * atkBonus * 0.9, 0.6);
+            const power = cpi * 4;
+            
+            return {
+                avg: avg,
+                acc: Math.round(acc * 100),
+                surv: Math.round(surv * 10) / 10,
+                dmg5: Math.round(dmg5 * 10) / 10,
+                cpi: Math.round(cpi * 100) / 100,
+                power: Math.round(power * 10) / 10
+            };
+        }
+
+        function renderClassesTable() {
+            const tbody = document.getElementById('classes-balance-tbody');
+            tbody.innerHTML = '';
+            
+            classesData.forEach(cls => {
+                const derived = calculateDerivedFields(cls);
+                const row = document.createElement('tr');
+                row.dataset.name = cls.name;
+                row.dataset.hp = cls.hp;
+                row.dataset.atk = cls.atk;
+                row.dataset.def = cls.def;
+                row.dataset.min = cls.min;
+                row.dataset.max = cls.max;
+                row.dataset.avg = derived.avg;
+                row.dataset.acc = derived.acc;
+                row.dataset.surv = derived.surv;
+                row.dataset.dmg5 = derived.dmg5;
+                row.dataset.power = derived.power;
+                row.dataset.cpi = derived.cpi;
+                
+                row.innerHTML = `
+                    <td>${cls.name}</td>
+                    <td>${cls.emoji}</td>
+                    <td class="number">${cls.hp}</td>
+                    <td class="number">${cls.atk}</td>
+                    <td class="number">${cls.def}</td>
+                    <td class="number">${cls.min}</td>
+                    <td class="number">${cls.max}</td>
+                    <td class="number">${derived.avg.toFixed(1)}</td>
+                    <td class="number">${derived.acc}%</td>
+                    <td class="number">${derived.surv}</td>
+                    <td class="number">${derived.dmg5}</td>
+                    <td class="number">${derived.power.toFixed(1)}</td>
+                    <td class="number">${derived.cpi}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            sortTable('classes-balance-table', 'power', 'desc');
+        }
+
+        function renderRacesTable() {
+            const tbody = document.getElementById('races-balance-tbody');
+            tbody.innerHTML = '';
+            racesData.forEach(race => {
+                const row = document.createElement('tr');
+                row.dataset.name = race.name;
+                row.dataset.hp = race.hp;
+                row.dataset.atk = race.atk;
+                row.dataset.def = race.def;
+                row.dataset.min = race.min;
+                row.dataset.max = race.max;
+                
+                row.innerHTML = `
+                    <td>${race.name}</td>
+                    <td>${race.emoji}</td>
+                    <td class="number">${race.hp}</td>
+                    <td class="number">${race.atk}</td>
+                    <td class="number">${race.def}</td>
+                    <td class="number">${race.min}</td>
+                    <td class="number">${race.max}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            sortTable('races-balance-table', 'name', 'asc');
+        }
+
+        function sortTable(tableId, sortBy, dir) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((a, b) => {
+                let valA = a.dataset[sortBy];
+                let valB = b.dataset[sortBy];
+                
+                if (sortBy === 'name') {
+                    return dir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                }
+                
+                valA = parseFloat(valA) || 0;
+                valB = parseFloat(valB) || 0;
+                return dir === 'asc' ? valA - valB : valB - valA;
+            });
+            
+            rows.forEach(row => tbody.appendChild(row));
+            
+            const headers = table.querySelectorAll('th[data-sort]');
+            headers.forEach(h => h.classList.remove('asc', 'desc'));
+            const activeHeader = table.querySelector(`th[data-sort="${sortBy}"]`);
+            if (activeHeader) activeHeader.classList.add(dir);
+        }
+
+        function initSortable() {
+            document.querySelectorAll('th[data-sort]').forEach(th => {
+                th.addEventListener('click', () => {
+                    const table = th.closest('table');
+                    const sortBy = th.dataset.sort;
+                    const isAsc = th.classList.contains('asc');
+                    const newDir = isAsc ? 'desc' : 'asc';
+                    sortTable(table.id, sortBy, newDir);
+                    
+                    table.querySelectorAll('th[data-sort]').forEach(h => h.classList.remove('asc', 'desc'));
+                    th.classList.add(newDir);
+                });
+            });
+        }
+
+        // Меню
         const navToggle = document.querySelector('.nav-toggle');
         const navLinks = document.querySelector('.nav-links');
         navToggle.addEventListener('click', () => {
@@ -284,57 +334,10 @@ h1 {
             navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         });
 
-        function initSortableTable(tableId, defaultSort = 'power', defaultDir = 'desc') {
-            const table = document.getElementById(tableId);
-            if (!table) return;
-            const tbody = table.querySelector('tbody');
-            const headers = table.querySelectorAll('th[data-sort]');
-            let currentSort = defaultSort;
-            let currentDir = defaultDir;
-            
-            function sortTable(sortBy) {
-                const rows = Array.from(tbody.querySelectorAll('tr'));
-                rows.sort((a, b) => {
-                    let valA = a.dataset[sortBy]?.replace(',', '.') || '0';
-                    let valB = b.dataset[sortBy]?.replace(',', '.') || '0';
-                    
-                    if (sortBy === 'name') {
-                        return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-                    }
-                    
-                    valA = parseFloat(valA) || 0;
-                    valB = parseFloat(valB) || 0;
-                    return currentDir === 'asc' ? valA - valB : valB - valA;
-                });
-                rows.forEach(row => tbody.appendChild(row));
-            }
-            
-            headers.forEach(th => {
-                th.addEventListener('click', () => {
-                    const sortBy = th.dataset.sort;
-                    headers.forEach(h => h.classList.remove('asc', 'desc'));
-                    
-                    if (currentSort === sortBy) {
-                        currentDir = currentDir === 'asc' ? 'desc' : 'asc';
-                    } else {
-                        currentSort = sortBy;
-                        currentDir = 'desc';
-                    }
-                    
-                    th.classList.add(currentDir);
-                    sortTable(currentSort);
-                });
-            });
-            
-            const defaultHeader = table.querySelector(`[data-sort="${defaultSort}"]`);
-            if (defaultHeader) {
-                defaultHeader.classList.add(defaultDir);
-                sortTable(defaultSort);
-            }
-        }
-        
-        initSortableTable('classes-balance-table', 'power', 'desc');
-        initSortableTable('races-balance-table', 'name', 'asc');
+        // Запуск
+        renderClassesTable();
+        renderRacesTable();
+        initSortable();
     </script>
 </body>
 </html>
