@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ Логи боёв</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
+                linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
+            color: #e6edf3;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 {
+            color: #ffd700;
+            text-align: center;
+            margin: 15px 0 25px;
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .nav-wrapper { margin-bottom: 30px; }
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+        .page-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .page-nav a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .page-nav a:hover { color: #ffd700; border-color: #ffd700; background: #2a303c; }
+        .page-nav a.active { background: #ffd700; color: #0d1117; font-weight: bold; border-color: #ffd700; }
+        
+        .logs-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .refresh-btn {
+            background: #21262d;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 10px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .refresh-btn:hover {
+            background: #ffd700;
+            color: #0d1117;
+        }
+        
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8b949e;
+            font-size: 14px;
+        }
+        
+        .auto-refresh input {
+            width: 18px;
+            height: 18px;
+            accent-color: #ffd700;
+            cursor: pointer;
+        }
+        
+        .log-count {
+            margin-left: auto;
+            color: #8b949e;
+            font-size: 14px;
+        }
+        
+        .log-item {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 18px 22px;
+            border: 1px solid #30363d;
+            margin-bottom: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            word-break: break-word;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .log-item:hover {
+            border-color: #ffd70040;
+            background: #1a1f28;
+        }
+        
+        .log-number {
+            display: inline-block;
+            color: #ffd700;
+            font-weight: bold;
+            margin-right: 15px;
+            opacity: 0.7;
+            font-size: 13px;
+            min-width: 35px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #8b949e;
+            font-size: 18px;
+        }
+        
+        .empty-logs {
+            text-align: center;
+            padding: 60px;
+            color: #8b949e;
+            font-size: 16px;
+            background: #161b22;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+        }
+        
+        .error-message {
+            background: #2a1515;
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            body { padding: 10px; }
+            .nav-toggle { display: block; }
+            .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+            .page-nav.show { display: flex; }
+            .page-nav a { text-align: center; padding: 10px; }
+            .log-item { font-size: 11px; padding: 14px 16px; }
+            .log-number { margin-right: 10px; min-width: 28px; }
+            .controls { flex-wrap: wrap; }
+            .log-count { margin-left: 0; width: 100%; text-align: center; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>⚔️ ПОСЛЕДНИЕ БОИ</h1>
+    
+    <div class="nav-wrapper">
+        <button class="nav-toggle">☰ Меню</button>
+        <div class="page-nav">
+            <a href="index.html">📊 Статистика</a>
+            <a href="balance.html">⚖️ Баланс</a>
+            <a href="guide.html">⚔️ Гайд</a>
+            <a href="hall_of_fame.html">🏆 Зал Славы</a>
+            <a href="logs.html" class="active">📜 Логи</a>
+        </div>
+    </div>
+    
+    <div class="logs-container">
+        <div class="controls">
+            <button class="refresh-btn" onclick="loadLogs()">
+                <span>🔄</span> Обновить
+            </button>
+            <label class="auto-refresh">
+                <input type="checkbox" id="autoRefresh" checked> Автообновление (30с)
+            </label>
+            <span class="log-count" id="logCount"></span>
+        </div>
+        
+        <div id="logs-content">
+            <div class="loading">⏳ Загрузка логов...</div>
+        </div>
+    </div>
+    
+    <script>
+        const LOGS_URL = 'recent_fights.json';
+        let autoRefreshTimer = null;
+        
+        function loadLogs() {
+            const content = document.getElementById('logs-content');
+            content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
+            
+            fetch(LOGS_URL + '?t=' + Date.now())
+                .then(r => {
+                    if (!r.ok) throw new Error('Файл не найден');
+                    return r.json();
+                })
+                .then(fights => {
+                    if (!fights || fights.length === 0) {
+                        content.innerHTML = '<div class="empty-logs">📜 Логов пока нет. Сыграйте первый бой!</div>';
+                        document.getElementById('logCount').textContent = '';
+                        return;
+                    }
+                    
+                    let html = '';
+                    const total = fights.length;
+                    
+                    fights.reverse().forEach((fight, index) => {
+                        const number = total - index;
+                        html += `<div class="log-item"><span class="log-number">#${number}</span>${fight.FullLog}</div>`;
+                    });
+                    
+                    content.innerHTML = html;
+                    document.getElementById('logCount').textContent = `Всего: ${total} ${pluralize(total, 'бой', 'боя', 'боёв')}`;
+                })
+                .catch(err => {
+                    content.innerHTML = '<div class="error-message">❌ Ошибка загрузки логов. Попробуйте позже.</div>';
+                    document.getElementById('logCount').textContent = '';
+                    console.error(err);
+                });
+        }
+        
+        function pluralize(n, one, two, five) {
+            if (n % 10 === 1 && n % 100 !== 11) return one;
+            if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return two;
+            return five;
+        }
+        
+        function toggleAutoRefresh() {
+            const checked = document.getElementById('autoRefresh').checked;
+            if (checked) {
+                autoRefreshTimer = setInterval(loadLogs, 30000);
+            } else {
+                clearInterval(autoRefreshTimer);
+            }
+        }
+        
+        // Загружаем при открытии
+        loadLogs();
+        
+        // Настраиваем автообновление
+        document.getElementById('autoRefresh').addEventListener('change', toggleAutoRefresh);
+        toggleAutoRefresh();
+        
+        // Бургер-меню
+        const navToggle = document.querySelector('.nav-toggle');
+        const pageNav = document.querySelector('.page-nav');
+        navToggle.addEventListener('click', () => {
+            pageNav.classList.toggle('show');
+            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+    </script>
+</body>
+</html>
