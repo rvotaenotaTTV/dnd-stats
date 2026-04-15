@@ -194,26 +194,39 @@ h1 {
                 '<tr><td colspan="13" style="text-align:center;color:#ff6b6b;">Ошибка загрузки данных</td></tr>';
         });
 
-    function calculateDerivedFields(cls) {
-        const avg = (cls.Min + cls.Max) / 2;
-        const acc = Math.min(0.95, Math.max(0.05, (9 + cls.Atk - cls.Def) / 20));
-        const atkBonus = 1 + cls.Atk * 0.04;
-        const dmg5 = avg * acc * atkBonus * 0.9 * 5;
-        const effHP = cls.Hp * (1 + cls.Def * 0.08);
-        const surv = cls.Hp * (1 + cls.Def * 0.05);
-        
-        const cpi = Math.pow(effHP, 0.7) * Math.pow(avg * acc * atkBonus * 0.9, 0.6);
-        const power = cpi * 4;
-        
-return {
-    avg: Math.round(avg * 10) / 10,
-    acc: Math.round(acc * 100),
-    surv: Math.round(surv),
-    dmg5: Math.round(dmg5),
-    cpi: Math.round(cpi * 100) / 100,
-    power: Math.round(power * 10) / 10
-};
-    }
+function calculateDerivedFields(cls) {
+    const avg = (cls.Min + cls.Max) / 2;
+    
+    // Точность для отображения (с DEF класса)
+    const accDisplay = Math.min(0.95, Math.max(0.05, (9 + cls.Atk - cls.Def) / 20));
+    
+    // Точность для CPI (старая формула)
+    const accCPI = (7 + cls.Atk) / 20;
+    
+    const atkBonus = 1 + cls.Atk * 0.04;
+    
+    // Урон/5 = Avg * Точность_отображения * 5
+    const dmg5 = avg * accDisplay * 5;
+    
+    // Живучесть
+    const surv = cls.Hp * (1 + cls.Def * 0.05);
+    
+    // Эффективное HP для CPI
+    const effHP = cls.Hp * (1 + cls.Def * 0.08);
+    
+    // CPI по формуле Excel
+    const cpi = Math.pow(effHP, 0.7) * Math.pow(avg * accCPI * atkBonus * 0.9, 0.6);
+    const power = cpi * 4;
+    
+    return {
+        avg: Math.round(avg * 10) / 10,
+        acc: Math.round(accDisplay * 100),
+        surv: Math.round(surv),
+        dmg5: Math.round(dmg5),
+        cpi: Math.round(cpi * 100) / 100,
+        power: Math.round(power * 10) / 10
+    };
+}
 
     function renderClassesTable() {
         const tbody = document.getElementById('classes-balance-tbody');
