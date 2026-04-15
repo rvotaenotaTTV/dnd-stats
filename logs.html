@@ -6,23 +6,23 @@
     <title>Логи</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', 'Arial', sans-serif;
+        body { 
+            font-family: 'Segoe UI', 'Arial', sans-serif; 
             background: 
                 radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
                 radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
                 linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-            color: #e6edf3;
+            color: #e6edf3; 
             min-height: 100vh;
             padding: 20px;
         }
-        h1 {
-            color: #ffd700;
-            text-align: center;
-            margin: 15px 0 25px;
+        h1 { 
+            color: #ffd700; 
+            text-align: center; 
+            margin: 15px 0 25px; 
             font-size: 2.5em;
             font-weight: 700;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
             letter-spacing: 2px;
             position: relative;
             display: inline-block;
@@ -32,7 +32,8 @@
             border-bottom: 2px solid rgba(255, 215, 0, 0.3);
             padding-bottom: 10px;
         }
-        
+
+        /* ===== НАВИГАЦИЯ ===== */
         .nav-wrapper { margin-bottom: 30px; }
         .nav-toggle {
             display: none;
@@ -67,181 +68,77 @@
         }
         .page-nav a:hover { color: #ffd700; border-color: #ffd700; background: #2a303c; }
         .page-nav a.active { background: #ffd700; color: #0d1117; font-weight: bold; border-color: #ffd700; }
-        
-        .logs-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 25px;
+
+        /* ===== ЛОГИ ===== */
+        .logs-container { max-width: 800px; margin: 0 auto; }
+        .controls { 
+            margin-bottom: 25px; display: flex; gap: 15px; align-items: center; 
             flex-wrap: wrap;
         }
-        
         .refresh-btn {
-            background: #21262d;
-            border: 1px solid #ffd700;
-            color: #ffd700;
-            padding: 10px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: #21262d; border: 1px solid #ffd700; color: #ffd700;
+            padding: 10px 24px; border-radius: 25px; cursor: pointer;
+            font-size: 14px; font-weight: bold; transition: all 0.2s;
         }
         .refresh-btn:hover { background: #ffd700; color: #0d1117; }
-        
-        .auto-refresh {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #8b949e;
-            font-size: 14px;
-        }
-        .auto-refresh input {
-            width: 18px;
-            height: 18px;
-            accent-color: #ffd700;
-            cursor: pointer;
-        }
-        
-        .log-count {
-            color: #8b949e;
-            font-size: 14px;
-        }
-        
+        .log-count { color: #8b949e; font-size: 14px; }
         .last-updated {
-            color: #8b949e;
-            font-size: 13px;
-            margin-left: auto;
-            padding: 5px 12px;
-            background: #21262d;
-            border-radius: 20px;
+            color: #8b949e; font-size: 13px; margin-left: auto;
+            padding: 5px 12px; background: #21262d; border-radius: 20px;
         }
         .last-updated span { color: #ffd700; font-weight: bold; }
-        
         .log-item {
-            background: #161b22;
-            border-radius: 12px;
-            padding: 15px 20px;
-            border: 1px solid #30363d;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
+            background: #161b22; border-radius: 12px; padding: 15px 20px;
+            border: 1px solid #30363d; margin-bottom: 20px;
         }
-        .log-item:hover { border-color: #ffd70040; background: #1a1f28; }
-        .log-item.expanded { border-color: #ffd700; }
-        
         .log-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 10px;
+            font-family: 'Consolas', monospace; font-size: 14px;
+            padding-bottom: 10px; border-bottom: 1px solid #30363d; margin-bottom: 10px;
         }
-        .log-number {
-            color: #ffd700;
-            font-weight: bold;
-            opacity: 0.7;
-            min-width: 40px;
-        }
-        .log-players {
-            font-family: 'Consolas', monospace;
-            font-size: 14px;
-        }
-        .winner-badge {
-            background: #ffd700;
-            color: #0d1117;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 5px;
-        }
-        .expand-hint {
-            margin-left: auto;
-            color: #8b949e;
-            font-size: 12px;
-        }
-        
-        .rounds-table {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #30363d;
-            display: none;
-        }
-        .log-item.expanded .rounds-table { display: block; }
-        
+        .log-number { color: #ffd700; font-weight: bold; min-width: 40px; }
+        .log-players { flex: 1; text-align: center; }
         .round-row {
-            display: grid;
-            grid-template-columns: 80px 1fr 50px 1fr;
-            gap: 10px;
-            padding: 5px 0;
-            font-family: 'Consolas', monospace;
-            font-size: 13px;
-            border-bottom: 1px solid #30363d40;
+            display: grid; grid-template-columns: 45px 1fr 30px 1fr;
+            padding: 4px 0; border-bottom: 1px solid #30363d40;
+            font-family: 'Consolas', monospace; font-size: 13px;
         }
         .round-row:last-child { border-bottom: none; }
         .round-num { color: #8b949e; }
-        .round-p1 { color: #e6edf3; }
+        .round-p1 { color: #e6edf3; text-align: right; padding-right: 5px; }
+        .round-p2 { color: #e6edf3; text-align: left; padding-left: 5px; }
         .round-vs { text-align: center; color: #ffd700; }
-        .round-p2 { color: #e6edf3; text-align: right; }
-        
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: #8b949e;
-            font-size: 18px;
-        }
-        .empty-logs {
-            text-align: center;
-            padding: 60px;
-            color: #8b949e;
-            background: #161b22;
-            border-radius: 12px;
-            border: 1px solid #30363d;
-        }
-        .error-message {
-            background: #2a1515;
-            border: 1px solid #ff6b6b;
-            color: #ff6b6b;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
+        .cup { color: #ffd700; }
+        .lightning { color: #ffd700; }
+        .crit { color: #ff6b6b; }
+        .miss { color: #8b949e; }
+        .loading { text-align: center; padding: 60px; color: #8b949e; }
+
+        /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
         @media (max-width: 768px) {
-            h1 { font-size: 1.8em; }
             body { padding: 10px; }
+            h1 { font-size: 1.8em; }
             .nav-toggle { display: block; }
             .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
             .page-nav.show { display: flex; }
             .page-nav a { text-align: center; padding: 10px; }
-            .log-item { padding: 12px; }
-            .log-header { flex-wrap: wrap; }
-            .expand-hint { margin-left: 0; width: 100%; margin-top: 5px; }
-            .round-row { grid-template-columns: 50px 1fr 30px 1fr; font-size: 11px; }
-            .controls { flex-wrap: wrap; }
             .last-updated { margin-left: 0; width: 100%; text-align: center; }
+            .log-item { padding: 12px; }
+            .round-row { grid-template-columns: 40px 1fr 25px 1fr; font-size: 12px; }
         }
     </style>
 </head>
 <body>
-    <h1>⚔️ ПОСЛЕДНИЕ БОИ</h1>
+    <h1>ПОСЛЕДНИЕ БОИ</h1>
     
     <div class="nav-wrapper">
-        <button class="nav-toggle">☰ Меню</button>
-        <div class="page-nav">
+        <button class="nav-toggle" id="navToggle">☰ Меню</button>
+        <div class="page-nav" id="pageNav">
             <a href="index.html">📊 Статистика</a>
             <a href="balance.html">⚖️ Баланс</a>
             <a href="guide.html">⚔️ Гайд</a>
+            <a href="lore.html">📜 Лог Этерниса</a>
             <a href="hall.html">🏆 Зал Славы</a>
-            <a href="lore.html">📜 Лор Этерниса</a>
             <a href="logs.html" class="active">📜 Логи</a>
         </div>
     </div>
@@ -249,112 +146,74 @@
     <div class="logs-container">
         <div class="controls">
             <button class="refresh-btn" onclick="loadLogs()">🔄 Обновить</button>
-            <label class="auto-refresh">
-                <input type="checkbox" id="autoRefresh" checked> Автообновление (30с)
-            </label>
             <span class="log-count" id="logCount"></span>
             <div class="last-updated" id="lastUpdated">🕐 <span>—</span></div>
         </div>
-        
-        <div id="logs-content">
-            <div class="loading">⏳ Загрузка логов...</div>
-        </div>
+        <div id="logs-content"><div class="loading">⏳ Загрузка...</div></div>
     </div>
     
     <script>
-        const LOGS_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/recent_fights.json';
+        // Бургер-меню
+        const navToggle = document.getElementById('navToggle');
+        const pageNav = document.getElementById('pageNav');
+        navToggle.addEventListener('click', () => {
+            pageNav.classList.toggle('show');
+            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+
+        const LOGS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/recent_fights.json';
         const API_URL = 'https://api.github.com/repos/rvotaenotaTTV/dnd-stats/commits?path=recent_fights.json&page=1&per_page=1';
-        let autoRefreshTimer = null;
-        
+
         function pluralize(n, one, two, five) {
             if (n % 10 === 1 && n % 100 !== 11) return one;
             if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return two;
             return five;
         }
-        
-        function parseLog(fullLog) {
-            // Пример: "⚡💀🏹 rvotaenota 13:27 🧑🎸 ursona | 💨:7 | 3:💨 | 💨:💨 | ❌:5 | ❌:3 | 3:❌ | 3:9 | 4:3"
+
+        function colorize(text) {
+            return text
+                .replace(/🏆/g, '<span class="cup">🏆</span>')
+                .replace(/⚡/g, '<span class="lightning">⚡</span>')
+                .replace(/💥\d+/g, m => `<span class="crit">${m}</span>`)
+                .replace(/❌/g, '<span class="miss">❌</span>')
+                .replace(/💨/g, '<span class="miss">💨</span>')
+                .replace(/🛡/g, '<span class="miss">🛡</span>');
+        }
+
+        function renderLog(fight, index, total) {
+            const fullLog = fight.FullLog;
             const parts = fullLog.split(' | ');
             const header = parts[0];
-            const roundsStr = parts.slice(1).join(' | ');
-            
-            // Парсим заголовок
-            const headerMatch = header.match(/^(⚡)?(.*?)\s+(\d+):(\d+)\s+(.*?)$/);
-            if (!headerMatch) return null;
-            
-            const firstStrike = headerMatch[1] || '';
-            const p1Full = headerMatch[2].trim();
-            const dmg1 = parseInt(headerMatch[3]);
-            const dmg2 = parseInt(headerMatch[4]);
-            const p2Full = headerMatch[5].trim();
-            
-            // Определяем победителя
-            const winner = dmg1 > dmg2 ? p1Full : p2Full;
-            
-            // Парсим раунды
-            const rounds = [];
-            const roundParts = roundsStr.split(' | ');
-            roundParts.forEach(r => {
-                const [hit1, hit2] = r.split(':');
-                rounds.push({ p1: hit1, p2: hit2 });
-            });
-            
-            return {
-                firstStrike,
-                p1Full,
-                p2Full,
-                dmg1,
-                dmg2,
-                winner,
-                rounds,
-                totalRounds: rounds.length
-            };
-        }
-        
-        function renderLog(fight, index, total) {
-            const parsed = parseLog(fight.FullLog);
-            if (!parsed) return `<div class="log-item">❌ Ошибка парсинга: ${fight.FullLog}</div>`;
-            
+            const rounds = parts.slice(1);
+
             const number = total - index;
-            const winnerIsP1 = parsed.winner === parsed.p1Full;
-            
+
             let roundsHtml = '';
-            parsed.rounds.forEach((r, i) => {
-                roundsHtml += `
-                    <div class="round-row">
-                        <span class="round-num">Раунд ${i+1}</span>
-                        <span class="round-p1">${r.p1}</span>
-                        <span class="round-vs">vs</span>
-                        <span class="round-p2">${r.p2}</span>
-                    </div>
-                `;
+            rounds.forEach((r, i) => {
+                const [hit1, hit2] = r.split(':');
+                roundsHtml += `<div class="round-row">
+                    <span class="round-num">R${i+1}</span>
+                    <span class="round-p1">${colorize(hit1)}</span>
+                    <span class="round-vs">vs</span>
+                    <span class="round-p2">${colorize(hit2)}</span>
+                </div>`;
             });
-            
-            return `
-                <div class="log-item" onclick="this.classList.toggle('expanded')">
-                    <div class="log-header">
-                        <span class="log-number">#${number}</span>
-                        <span class="log-players">
-                            ${parsed.firstStrike} ${parsed.p1Full} ${parsed.dmg1}:${parsed.dmg2} ${parsed.p2Full}
-                            ${winnerIsP1 ? 
-                                `<span class="winner-badge">👑 ${parsed.p1Full.split(' ').slice(1).join(' ')}</span>` : 
-                                `<span class="winner-badge">👑 ${parsed.p2Full.split(' ').slice(1).join(' ')}</span>`
-                            }
-                        </span>
-                        <span class="expand-hint">▶ ${parsed.totalRounds} раундов (нажми)</span>
-                    </div>
-                    <div class="rounds-table">
-                        ${roundsHtml}
-                    </div>
+
+            return `<div class="log-item">
+                <div class="log-header">
+                    <span class="log-number">#${number}</span>
+                    <span class="log-players">${colorize(header)}</span>
                 </div>
-            `;
+                <div class="rounds-table">
+                    ${roundsHtml}
+                </div>
+            </div>`;
         }
-        
+
         function loadLogs() {
             const content = document.getElementById('logs-content');
             content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
-            
-            // Обновляем время последнего коммита
+
             fetch(API_URL)
                 .then(r => r.json())
                 .then(commits => {
@@ -366,51 +225,27 @@
                     }
                 })
                 .catch(() => {});
-            
-            // Загружаем логи
+
             fetch(LOGS_URL + '?v=' + Date.now())
                 .then(r => r.json())
                 .then(fights => {
                     if (!fights || fights.length === 0) {
-                        content.innerHTML = '<div class="empty-logs">📜 Логов пока нет</div>';
+                        content.innerHTML = '<div class="loading">📜 Логов пока нет</div>';
                         document.getElementById('logCount').textContent = '';
                         return;
                     }
-                    
                     let html = '';
                     const total = fights.length;
-                    
-                    fights.reverse().forEach((fight, i) => {
-                        html += renderLog(fight, i, total);
-                    });
-                    
+                    fights.reverse().forEach((f, i) => { html += renderLog(f, i, total); });
                     content.innerHTML = html;
                     document.getElementById('logCount').textContent = `Всего: ${total} ${pluralize(total, 'бой', 'боя', 'боёв')}`;
                 })
                 .catch(err => {
-                    content.innerHTML = '<div class="error-message">❌ Ошибка загрузки</div>';
-                    console.error(err);
+                    content.innerHTML = '<div class="loading">❌ Ошибка загрузки</div>';
                 });
         }
-        
-        function toggleAutoRefresh() {
-            if (document.getElementById('autoRefresh').checked) {
-                autoRefreshTimer = setInterval(loadLogs, 30000);
-            } else {
-                clearInterval(autoRefreshTimer);
-            }
-        }
-        
+
         loadLogs();
-        document.getElementById('autoRefresh').addEventListener('change', toggleAutoRefresh);
-        toggleAutoRefresh();
-        
-        const navToggle = document.querySelector('.nav-toggle');
-        const pageNav = document.querySelector('.page-nav');
-        navToggle.addEventListener('click', () => {
-            pageNav.classList.toggle('show');
-            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        });
     </script>
 </body>
 </html>
