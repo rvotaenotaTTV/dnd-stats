@@ -171,173 +171,164 @@ h1 {
 
     <a href="index.html" class="back-link">← Назад к статистике</a>
 
-    <script>       
-        const classesData = [
-            {name:"Воин", emoji:"⚔️", hp:29, atk:5, def:2, min:3, max:9},
-            {name:"Паладин", emoji:"🛡️", hp:34, atk:4, def:3, min:3, max:7},
-            {name:"Плут", emoji:"🗡️", hp:21, atk:9, def:1, min:4, max:10},
-            {name:"Монах", emoji:"🥋", hp:24, atk:6, def:2, min:4, max:9},
-            {name:"Следопыт", emoji:"🏹", hp:26, atk:6, def:1, min:4, max:10},
-            {name:"Чародей", emoji:"🔮", hp:20, atk:8, def:0, min:4, max:13},
-            {name:"Бард", emoji:"🎸", hp:25, atk:6, def:1, min:4, max:10},
-            {name:"Друид", emoji:"🌿", hp:28, atk:6, def:1, min:4, max:8},
-            {name:"Изобретатель", emoji:"⚙️", hp:22, atk:5, def:1, min:4, max:12},
-            {name:"Варвар", emoji:"🪓", hp:33, atk:4, def:2, min:4, max:8},
-            {name:"Волшебница", emoji:"✨", hp:22, atk:7, def:0, min:5, max:11},
-            {name:"Некромант", emoji:"🦴", hp:23, atk:7, def:0, min:5, max:10},
-            {name:"Жрец", emoji:"✝️", hp:25, atk:5, def:1, min:5, max:9},
-            {name:"Колдун", emoji:"👁️", hp:24, atk:5, def:0, min:6, max:12}
-        ];
+<script>
+    // URL к data.json
+    const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+    
+    let classesData = [];
+    let racesData = [];
 
-        const racesData = [
-            {name:"Человек", emoji:"🧑", hp:1, atk:0, def:0, min:0, max:0},
-            {name:"Орк", emoji:"👹", hp:0, atk:1, def:0, min:0, max:0},
-            {name:"Дворф", emoji:"🧔", hp:0, atk:0, def:1, min:0, max:0},
-            {name:"Эльф", emoji:"🧝", hp:0, atk:0, def:0, min:1, max:0},
-            {name:"Нежить", emoji:"💀", hp:0, atk:0, def:0, min:0, max:1}
-        ];
-
-        
-        function calculateDerivedFields(cls) {
-            const avg = (cls.min + cls.max) / 2;
-            const acc = (7 + cls.atk) / 20;
-            const atkBonus = 1 + cls.atk * 0.04;
-            const dmg5 = avg * acc * atkBonus * 0.9 * 5;
-            const effHP = cls.hp * (1 + cls.def * 0.08);
-            const surv = cls.hp + cls.def * 2;
-            
-            const cpi = Math.pow(effHP, 0.7) * Math.pow(avg * acc * atkBonus * 0.9, 0.6);
-            const power = cpi * 4;
-            
-            return {
-                avg: avg,
-                acc: Math.round(acc * 100),
-                surv: Math.round(surv * 10) / 10,
-                dmg5: Math.round(dmg5 * 10) / 10,
-                cpi: Math.round(cpi * 100) / 100,
-                power: Math.round(power * 10) / 10
-            };
-        }
-
-        function renderClassesTable() {
-            const tbody = document.getElementById('classes-balance-tbody');
-            tbody.innerHTML = '';
-            
-            classesData.forEach(cls => {
-                const derived = calculateDerivedFields(cls);
-                const row = document.createElement('tr');
-                row.dataset.name = cls.name;
-                row.dataset.hp = cls.hp;
-                row.dataset.atk = cls.atk;
-                row.dataset.def = cls.def;
-                row.dataset.min = cls.min;
-                row.dataset.max = cls.max;
-                row.dataset.avg = derived.avg;
-                row.dataset.acc = derived.acc;
-                row.dataset.surv = derived.surv;
-                row.dataset.dmg5 = derived.dmg5;
-                row.dataset.power = derived.power;
-                row.dataset.cpi = derived.cpi;
-                
-                row.innerHTML = `
-                    <td>${cls.name}</td>
-                    <td>${cls.emoji}</td>
-                    <td class="number">${cls.hp}</td>
-                    <td class="number">${cls.atk}</td>
-                    <td class="number">${cls.def}</td>
-                    <td class="number">${cls.min}</td>
-                    <td class="number">${cls.max}</td>
-                    <td class="number">${derived.avg.toFixed(1)}</td>
-                    <td class="number">${derived.acc}%</td>
-                    <td class="number">${derived.surv}</td>
-                    <td class="number">${derived.dmg5}</td>
-                    <td class="number">${derived.power.toFixed(1)}</td>
-                    <td class="number">${derived.cpi}</td>
-                `;
-                tbody.appendChild(row);
-            });
-            sortTable('classes-balance-table', 'power', 'desc');
-        }
-
-        function renderRacesTable() {
-            const tbody = document.getElementById('races-balance-tbody');
-            tbody.innerHTML = '';
-            racesData.forEach(race => {
-                const row = document.createElement('tr');
-                row.dataset.name = race.name;
-                row.dataset.hp = race.hp;
-                row.dataset.atk = race.atk;
-                row.dataset.def = race.def;
-                row.dataset.min = race.min;
-                row.dataset.max = race.max;
-                
-                row.innerHTML = `
-                    <td>${race.name}</td>
-                    <td>${race.emoji}</td>
-                    <td class="number">${race.hp}</td>
-                    <td class="number">${race.atk}</td>
-                    <td class="number">${race.def}</td>
-                    <td class="number">${race.min}</td>
-                    <td class="number">${race.max}</td>
-                `;
-                tbody.appendChild(row);
-            });
-            sortTable('races-balance-table', 'name', 'asc');
-        }
-
-        function sortTable(tableId, sortBy, dir) {
-            const table = document.getElementById(tableId);
-            const tbody = table.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            
-            rows.sort((a, b) => {
-                let valA = a.dataset[sortBy];
-                let valB = b.dataset[sortBy];
-                
-                if (sortBy === 'name') {
-                    return dir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-                }
-                
-                valA = parseFloat(valA) || 0;
-                valB = parseFloat(valB) || 0;
-                return dir === 'asc' ? valA - valB : valB - valA;
-            });
-            
-            rows.forEach(row => tbody.appendChild(row));
-            
-            const headers = table.querySelectorAll('th[data-sort]');
-            headers.forEach(h => h.classList.remove('asc', 'desc'));
-            const activeHeader = table.querySelector(`th[data-sort="${sortBy}"]`);
-            if (activeHeader) activeHeader.classList.add(dir);
-        }
-
-        function initSortable() {
-            document.querySelectorAll('th[data-sort]').forEach(th => {
-                th.addEventListener('click', () => {
-                    const table = th.closest('table');
-                    const sortBy = th.dataset.sort;
-                    const isAsc = th.classList.contains('asc');
-                    const newDir = isAsc ? 'desc' : 'asc';
-                    sortTable(table.id, sortBy, newDir);
-                    
-                    table.querySelectorAll('th[data-sort]').forEach(h => h.classList.remove('asc', 'desc'));
-                    th.classList.add(newDir);
-                });
-            });
-        }
-
-        // Меню
-        const navToggle = document.querySelector('.nav-toggle');
-        const navLinks = document.querySelector('.nav-links');
-        navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('show');
-            navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+    // Загружаем данные
+    fetch(DATA_URL)
+        .then(r => r.json())
+        .then(data => {
+            classesData = data.classes;
+            racesData = data.races;
+            renderClassesTable();
+            renderRacesTable();
+            initSortable();
+        })
+        .catch(err => {
+            console.error('Ошибка загрузки:', err);
+            document.getElementById('classes-balance-tbody').innerHTML = 
+                '<tr><td colspan="13" style="text-align:center;color:#ff6b6b;">Ошибка загрузки данных</td></tr>';
         });
 
-        // Запуск
-        renderClassesTable();
-        renderRacesTable();
-        initSortable();
-    </script>
+    function calculateDerivedFields(cls) {
+        const avg = (cls.Min + cls.Max) / 2;
+        const acc = (7 + cls.Atk) / 20;
+        const atkBonus = 1 + cls.Atk * 0.04;
+        const dmg5 = avg * acc * atkBonus * 0.9 * 5;
+        const effHP = cls.Hp * (1 + cls.Def * 0.08);
+        const surv = cls.Hp + cls.Def * 2;
+        
+        const cpi = Math.pow(effHP, 0.7) * Math.pow(avg * acc * atkBonus * 0.9, 0.6);
+        const power = cpi * 4;
+        
+        return {
+            avg: avg,
+            acc: Math.round(acc * 100),
+            surv: Math.round(surv * 10) / 10,
+            dmg5: Math.round(dmg5 * 10) / 10,
+            cpi: Math.round(cpi * 100) / 100,
+            power: Math.round(power * 10) / 10
+        };
+    }
+
+    function renderClassesTable() {
+        const tbody = document.getElementById('classes-balance-tbody');
+        tbody.innerHTML = '';
+        
+        classesData.forEach(cls => {
+            const derived = calculateDerivedFields(cls);
+            const row = document.createElement('tr');
+            row.dataset.name = cls.Name;
+            row.dataset.hp = cls.Hp;
+            row.dataset.atk = cls.Atk;
+            row.dataset.def = cls.Def;
+            row.dataset.min = cls.Min;
+            row.dataset.max = cls.Max;
+            row.dataset.avg = derived.avg;
+            row.dataset.acc = derived.acc;
+            row.dataset.surv = derived.surv;
+            row.dataset.dmg5 = derived.dmg5;
+            row.dataset.power = derived.power;
+            row.dataset.cpi = derived.cpi;
+            
+            row.innerHTML = `
+                <td>${cls.Name}</td>
+                <td>${cls.Emoji}</td>
+                <td class="number">${cls.Hp}</td>
+                <td class="number">${cls.Atk}</td>
+                <td class="number">${cls.Def}</td>
+                <td class="number">${cls.Min}</td>
+                <td class="number">${cls.Max}</td>
+                <td class="number">${derived.avg.toFixed(1)}</td>
+                <td class="number">${derived.acc}%</td>
+                <td class="number">${derived.surv}</td>
+                <td class="number">${derived.dmg5}</td>
+                <td class="number">${derived.power.toFixed(1)}</td>
+                <td class="number">${derived.cpi}</td>
+            `;
+            tbody.appendChild(row);
+        });
+        sortTable('classes-balance-table', 'power', 'desc');
+    }
+
+    function renderRacesTable() {
+        const tbody = document.getElementById('races-balance-tbody');
+        tbody.innerHTML = '';
+        racesData.forEach(race => {
+            const row = document.createElement('tr');
+            row.dataset.name = race.Name;
+            row.dataset.hp = race.BonusHp;
+            row.dataset.atk = race.BonusAtk;
+            row.dataset.def = race.BonusDef;
+            row.dataset.min = race.BonusMin;
+            row.dataset.max = race.BonusMax;
+            
+            row.innerHTML = `
+                <td>${race.Name}</td>
+                <td>${race.Emoji}</td>
+                <td class="number">${race.BonusHp}</td>
+                <td class="number">${race.BonusAtk}</td>
+                <td class="number">${race.BonusDef}</td>
+                <td class="number">${race.BonusMin}</td>
+                <td class="number">${race.BonusMax}</td>
+            `;
+            tbody.appendChild(row);
+        });
+        sortTable('races-balance-table', 'name', 'asc');
+    }
+
+    function sortTable(tableId, sortBy, dir) {
+        const table = document.getElementById(tableId);
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        rows.sort((a, b) => {
+            let valA = a.dataset[sortBy];
+            let valB = b.dataset[sortBy];
+            
+            if (sortBy === 'name') {
+                return dir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+            }
+            
+            valA = parseFloat(valA) || 0;
+            valB = parseFloat(valB) || 0;
+            return dir === 'asc' ? valA - valB : valB - valA;
+        });
+        
+        rows.forEach(row => tbody.appendChild(row));
+        
+        const headers = table.querySelectorAll('th[data-sort]');
+        headers.forEach(h => h.classList.remove('asc', 'desc'));
+        const activeHeader = table.querySelector(`th[data-sort="${sortBy}"]`);
+        if (activeHeader) activeHeader.classList.add(dir);
+    }
+
+    function initSortable() {
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const table = th.closest('table');
+                const sortBy = th.dataset.sort;
+                const isAsc = th.classList.contains('asc');
+                const newDir = isAsc ? 'desc' : 'asc';
+                sortTable(table.id, sortBy, newDir);
+                
+                table.querySelectorAll('th[data-sort]').forEach(h => h.classList.remove('asc', 'desc'));
+                th.classList.add(newDir);
+            });
+        });
+    }
+
+    // Меню
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    navToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('show');
+        navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+    });
+</script>
 </body>
 </html>
