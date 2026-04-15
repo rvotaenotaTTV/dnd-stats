@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📜 Гайд</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
+                linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
+            color: #e6edf3;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 {
+            color: #ffd700;
+            text-align: center;
+            margin: 15px 0 25px;
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #ffd700;
+            margin: 30px 0 20px;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 10px;
+            font-size: 1.5em;
+        }
+        h3 {
+            color: #ffd700;
+            margin: 20px 0 15px;
+            font-size: 1.2em;
+        }
+        
+        .nav-wrapper { margin-bottom: 30px; }
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+        .page-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .page-nav a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .page-nav a:hover { color: #ffd700; border-color: #ffd700; background: #2a303c; }
+        .page-nav a.active { background: #ffd700; color: #0d1117; font-weight: bold; border-color: #ffd700; }
+        
+        .guide-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .guide-card {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+        }
+        
+        .guide-card p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .guide-card ul, .guide-card ol {
+            margin-left: 25px;
+            line-height: 1.8;
+        }
+        
+        .guide-card li {
+            margin-bottom: 8px;
+        }
+        
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .command-item {
+            background: #21262d;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffd700;
+        }
+        
+        .command-name {
+            color: #ffd700;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 16px;
+        }
+        
+        .command-desc {
+            color: #8b949e;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .step-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background: #ffd700;
+            color: #0d1117;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .faction-light { color: #ffd700; }
+        .faction-dark { color: #a371f7; }
+        
+        .divider {
+            height: 1px;
+            background: #30363d;
+            margin: 30px 0;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            body { padding: 10px; }
+            .nav-toggle { display: block; }
+            .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+            .page-nav.show { display: flex; }
+            .page-nav a { text-align: center; padding: 10px; }
+            .command-grid { grid-template-columns: 1fr; }
+            .guide-card { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>📜 ГАЙД</h1>
+    
+    <div class="nav-wrapper">
+        <button class="nav-toggle">☰ Меню</button>
+        <div class="page-nav">
+            <a href="index.html">📊 Статистика</a>
+            <a href="balance.html">⚖️ Баланс</a>
+            <a href="battle.html">⚔️ Боевка</a>
+            <a href="guide.html" class="active">📜 Гайд</a>
+            <a href="lore.html">📜 Лор</a>
+            <a href="hall.html">🏆 Зал Славы</a>
+        </div>
+    </div>
+    
+    <div class="guide-container">
+        
+        <!-- ЧТО ЭТО -->
+        <div class="guide-card">
+            <h2>🎲 ЧТО ЭТО?</h2>
+            <p>Бот для D&D-дуэлей в чате Twitch. Создай своего героя, выбери расу и класс, сражайся с другими игроками, собирай осколки и стань чемпионом арены!</p>
+        </div>
+        
+        <!-- КАК НАЧАТЬ -->
+        <div class="guide-card">
+            <h2>🚀 КАК НАЧАТЬ?</h2>
+            <div class="step-box">
+                <div class="step-number">1</div>
+                <div>Активируй награду канала <span class="highlight">«Создать героя»</span></div>
+            </div>
+            <div class="step-box">
+                <div class="step-number">2</div>
+                <div>Бот предложит 3 случайные комбинации (раса + класс)</div>
+            </div>
+            <div class="step-box">
+                <div class="step-number">3</div>
+                <div>Напиши в чат <span class="highlight">!1</span>, <span class="highlight">!2</span> или <span class="highlight">!3</span> чтобы выбрать героя</div>
+            </div>
+            <div class="step-box">
+                <div class="step-number">4</div>
+                <div>Готово! Твой герой создан. Проверь <span class="highlight">!инфо</span></div>
+            </div>
+        </div>
+        
+        <!-- ОСНОВНЫЕ КОМАНДЫ -->
+        <div class="guide-card">
+            <h2>📊 ОСНОВНЫЕ КОМАНДЫ</h2>
+            <div class="command-grid">
+                <div class="command-item">
+                    <div class="command-name">!инфо</div>
+                    <div class="command-desc">Статистика твоего героя (или @игрока)</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!бой</div>
+                    <div class="command-desc">Случайный бой с другим игроком</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!бой @игрок</div>
+                    <div class="command-desc">Вызвать конкретного игрока</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!харакири</div>
+                    <div class="command-desc">Удалить героя (осколки сохраняются)</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ТУРНИР -->
+        <div class="guide-card">
+            <h2>👑 ТУРНИР</h2>
+            <div class="command-grid">
+                <div class="command-item">
+                    <div class="command-name">!рега</div>
+                    <div class="command-desc">Записаться в турнир</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!список</div>
+                    <div class="command-desc">Список участников</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!сетка</div>
+                    <div class="command-desc">Текущие пары турнира</div>
+                </div>
+            </div>
+            <p style="margin-top: 15px; color: #8b949e;">Турнир запускается когда набирается 16 участников или командой админа.</p>
+        </div>
+        
+        <!-- КАК ПРОХОДИТ БОЙ -->
+        <div class="guide-card">
+            <h2>⚔️ КАК ПРОХОДИТ БОЙ?</h2>
+            <ol>
+                <li><span class="highlight">Инициатива:</span> кидаем d20 + Атака + d3. Кто больше — ходит первым</li>
+                <li><span class="highlight">Атака:</span> d20 + твоя Атака ≥ 10 + Защита врага</li>
+                <li><span class="highlight">Попадание:</span> наносишь случайный урон (от MIN до MAX)</li>
+                <li><span class="highlight">Крит (20):</span> двойной урон! 💥</li>
+                <li><span class="highlight">Промах (1):</span> урон 0 ❌</li>
+                <li><span class="highlight">Блок:</span> если атака не прошла, но кубик > 4 — 🛡️</li>
+                <li><span class="highlight">Промах:</span> если кубик ≤ 4 — 💨</li>
+                <li>Бой идёт до 0 HP у одного из бойцов (макс. 20 раундов)</li>
+            </ol>
+        </div>
+        
+        <!-- ОСКОЛКИ -->
+        <div class="guide-card">
+            <h2>💎 ЗА ЧТО ДАЮТ ОСКОЛКИ?</h2>
+            <div class="command-grid">
+                <div class="command-item">
+                    <div class="command-name">🏆 Победа в дуэли</div>
+                    <div class="command-desc">+2 осколка</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">💔 Поражение</div>
+                    <div class="command-desc">+1 осколок</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">⚔️ Победа в турнире</div>
+                    <div class="command-desc">+4 осколка</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">👑 Чемпион турнира</div>
+                    <div class="command-desc">+10 осколков</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">🌝🌚 Победа над врагом</div>
+                    <div class="command-desc">+1 осколок (другая фракция)</div>
+                </div>
+            </div>
+            <p style="margin-top: 15px; color: #8b949e;">Осколки повышают уровень героя. Каждые 5 осколков = новый уровень.</p>
+        </div>
+        
+        <!-- ЛОР -->
+        <div class="guide-card">
+            <h2>📜 ЛОР</h2>
+            <p>Мир раскололся на две фракции:</p>
+            <p>
+                <span class="faction-light">🌝 ОРДЕН СВЕТА</span> — верят, что осколки вернут порядок.<br>
+                <span class="faction-dark">🌚 КУЛЬТ ТЬМЫ</span> — хотят погрузить мир в хаос.
+            </p>
+            <p style="margin-top: 15px;">Каждый боец выбирает сторону случайно при создании героя. Побеждая врагов из другой фракции, ты приносишь очки своей стороне и получаешь дополнительные осколки.</p>
+            <p style="margin-top: 15px; font-style: italic; color: #ffd700;">Кто соберёт все осколки — восстановит Клинок и изменит судьбу мира.</p>
+        </div>
+        
+    </div>
+    
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const pageNav = document.querySelector('.page-nav');
+        navToggle.addEventListener('click', () => {
+            pageNav.classList.toggle('show');
+            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+    </script>
+</body>
+</html>
