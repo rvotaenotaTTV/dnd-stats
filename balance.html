@@ -205,14 +205,14 @@ h1 {
         const cpi = Math.pow(effHP, 0.7) * Math.pow(avg * acc * atkBonus * 0.9, 0.6);
         const power = cpi * 4;
         
-        return {
-            avg: avg,
-            acc: Math.round(acc * 100),
-            surv: Math.round(surv * 10) / 10,
-            dmg5: Math.round(dmg5 * 10) / 10,
-            cpi: Math.round(cpi * 100) / 100,
-            power: Math.round(power * 10) / 10
-        };
+return {
+    avg: Math.round(avg * 10) / 10,
+    acc: Math.round(acc * 100),
+    surv: Math.round(surv),
+    dmg5: Math.round(dmg5),
+    cpi: Math.round(cpi * 100) / 100,
+    power: Math.round(power * 10) / 10
+};
     }
 
     function renderClassesTable() {
