@@ -476,45 +476,34 @@ h1 {
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const JSON_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+const DATA_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
 
-const classesData = [
-    { Name: "Воин", Emoji: "⚔️", Hp: 29, Atk: 5, Def: 2, Min: 3, Max: 9 },
-    { Name: "Паладин", Emoji: "🛡️", Hp: 34, Atk: 4, Def: 3, Min: 3, Max: 7 },
-    { Name: "Плут", Emoji: "🗡️", Hp: 21, Atk: 9, Def: 1, Min: 4, Max: 10 },
-    { Name: "Монах", Emoji: "🥋", Hp: 24, Atk: 6, Def: 2, Min: 4, Max: 9 },
-    { Name: "Следопыт", Emoji: "🏹", Hp: 26, Atk: 6, Def: 1, Min: 4, Max: 10 },
-    { Name: "Чародей", Emoji: "🔮", Hp: 20, Atk: 8, Def: 0, Min: 4, Max: 13 },
-    { Name: "Бард", Emoji: "🎸", Hp: 25, Atk: 6, Def: 1, Min: 4, Max: 10 },
-    { Name: "Друид", Emoji: "🌿", Hp: 28, Atk: 6, Def: 1, Min: 4, Max: 8 },
-    { Name: "Изобретатель", Emoji: "⚙️", Hp: 22, Atk: 5, Def: 1, Min: 4, Max: 12 },
-    { Name: "Варвар", Emoji: "🪓", Hp: 33, Atk: 4, Def: 2, Min: 4, Max: 8 },
-    { Name: "Волшебница", Emoji: "✨", Hp: 22, Atk: 7, Def: 0, Min: 5, Max: 11 },
-    { Name: "Некромант", Emoji: "🦴", Hp: 23, Atk: 7, Def: 0, Min: 5, Max: 10 },
-    { Name: "Жрец", Emoji: "✝️", Hp: 25, Atk: 5, Def: 1, Min: 5, Max: 9 },
-    { Name: "Колдун", Emoji: "👁️", Hp: 24, Atk: 5, Def: 0, Min: 6, Max: 12 }
-];
-
-const racesData = [
-    { Name: "Человек", Emoji: "🧑", BonusHp: 1, BonusAtk: 0, BonusDef: 0, BonusMin: 0, BonusMax: 0 },
-    { Name: "Орк", Emoji: "👹", BonusHp: 0, BonusAtk: 1, BonusDef: 0, BonusMin: 0, BonusMax: 0 },
-    { Name: "Дворф", Emoji: "🧔", BonusHp: 0, BonusAtk: 0, BonusDef: 1, BonusMin: 0, BonusMax: 0 },
-    { Name: "Эльф", Emoji: "🧝", BonusHp: 0, BonusAtk: 0, BonusDef: 0, BonusMin: 1, BonusMax: 0 },
-    { Name: "Нежить", Emoji: "💀", BonusHp: 0, BonusAtk: 0, BonusDef: 0, BonusMin: 0, BonusMax: 1 }
-];
-
-const classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
-const raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
-
+let classesData = [];
+let racesData = [];
+let classEmojis = {};
+let raceEmojis = {};
 let players = [];
 
-fetch(JSON_URL)
+// Загружаем данные классов/рас, потом статистику
+fetch(DATA_URL)
+    .then(r => r.json())
+    .then(data => {
+        classesData = data.classes;
+        racesData = data.races;
+        classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
+        raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
+        
+        // После загрузки данных запускаем загрузку статистики игроков
+        return fetch(JSON_URL);
+    })
     .then(r => r.json())
     .then(data => {
         players = data.players.filter(p => p.name && p.name !== 'Unknown');
         renderFullStats(data);
     })
-    .catch(() => {
+    .catch(err => {
+        console.error('Ошибка загрузки:', err);
         document.getElementById('content').innerHTML = `
             <div class="loading">
                 ❌ Не удалось загрузить данные.<br>
