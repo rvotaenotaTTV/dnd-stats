@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+д<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -1016,6 +1016,15 @@ function renderFullStats(data) {
     initSortableTable('shards-table', 'shards', 'desc');
     initSortableTable('champions-table', 'wins', 'desc');
     initPlayersTable();
+
+    // Проверяем hash в URL
+    setTimeout(function() {
+        var hash = window.location.hash.substring(1);
+        var validTabs = ['tops', 'classes', 'races', 'combos', 'rating', 'shards', 'records', 'champions', 'titles', 'calculator', 'allplayers'];
+        if (hash && validTabs.includes(hash)) {
+            switchTab(hash);
+        }
+    }, 100);
     
     // Калькулятор
     setTimeout(() => {
@@ -1270,7 +1279,27 @@ window.switchTab = function(tabName) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
-    event.target.classList.add('active');
+    
+    // Найди активную кнопку и подсвети её
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.textContent.toLowerCase().includes(tabName) || 
+            (tabName === 'tops' && btn.textContent.includes('Топы')) ||
+            (tabName === 'classes' && btn.textContent.includes('Классы')) ||
+            (tabName === 'races' && btn.textContent.includes('Расы')) ||
+            (tabName === 'combos' && btn.textContent.includes('Комбинации')) ||
+            (tabName === 'rating' && btn.textContent.includes('Рейтинг')) ||
+            (tabName === 'shards' && btn.textContent.includes('Осколки')) ||
+            (tabName === 'records' && btn.textContent.includes('Рекорды')) ||
+            (tabName === 'champions' && btn.textContent.includes('Чемпионы')) ||
+            (tabName === 'titles' && btn.textContent.includes('Титулы')) ||
+            (tabName === 'calculator' && btn.textContent.includes('Калькулятор')) ||
+            (tabName === 'allplayers' && btn.textContent.includes('Игроки'))) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Обновляем URL
+    history.replaceState(null, null, '#' + tabName);
 };
 </script>
 </body>
