@@ -117,9 +117,24 @@
         }
         
         .log-count {
-            margin-left: auto;
             color: #8b949e;
             font-size: 14px;
+        }
+        
+        .last-updated {
+            color: #8b949e;
+            font-size: 13px;
+            margin-left: auto;
+            padding: 5px 12px;
+            background: #21262d;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .last-updated span {
+            color: #ffd700;
+            font-weight: bold;
         }
         
         .log-item {
@@ -187,12 +202,18 @@
             .log-item { font-size: 11px; padding: 14px 16px; }
             .log-number { margin-right: 10px; min-width: 28px; }
             .controls { flex-wrap: wrap; }
-            .log-count { margin-left: 0; width: 100%; text-align: center; margin-top: 5px; }
+            .log-count { margin-left: 0; }
+            .last-updated {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                margin-top: 5px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>ПОСЛЕДНИЕ БОИ</h1>
+    <h1>⚔️ ПОСЛЕДНИЕ БОИ</h1>
     
     <div class="nav-wrapper">
         <button class="nav-toggle">☰ Меню</button>
@@ -215,6 +236,9 @@
                 <input type="checkbox" id="autoRefresh" checked> Автообновление (30с)
             </label>
             <span class="log-count" id="logCount"></span>
+            <div class="last-updated" id="lastUpdated">
+                🕐 Последнее обновление: <span>—</span>
+            </div>
         </div>
         
         <div id="logs-content">
@@ -223,49 +247,64 @@
     </div>
     
     <script>
-        // Прямая ссылка на raw файл
         const LOGS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/recent_fights.json';
         let autoRefreshTimer = null;
-        
-        function loadLogs() {
-            const content = document.getElementById('logs-content');
-            content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
-            
-            fetch(LOGS_URL + '?t=' + Date.now())
-                .then(r => {
-                    if (!r.ok) throw new Error('Файл не найден');
-                    return r.json();
-                })
-                .then(fights => {
-                    if (!fights || fights.length === 0) {
-                        content.innerHTML = '<div class="empty-logs">📜 Логов пока нет. Сыграйте первый бой!</div>';
-                        document.getElementById('logCount').textContent = '';
-                        return;
-                    }
-                    
-                    let html = '';
-                    const total = fights.length;
-                    
-                    fights.reverse().forEach((fight, index) => {
-                        const number = total - index;
-                        html += `<div class="log-item"><span class="log-number">#${number}</span>${fight.FullLog}</div>`;
-                    });
-                    
-                    content.innerHTML = html;
-                    document.getElementById('logCount').textContent = `Всего: ${total} ${pluralize(total, 'бой', 'боя', 'боёв')}`;
-                })
-                .catch(err => {
-                    content.innerHTML = '<div class="error-message">❌ Ошибка загрузки логов. Попробуйте позже.</div>';
-                    document.getElementById('logCount').textContent = '';
-                    console.error(err);
-                });
-        }
         
         function pluralize(n, one, two, five) {
             if (n % 10 === 1 && n % 100 !== 11) return one;
             if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return two;
             return five;
         }
+        
+function loadLogs() {
+    const content = document.getElementById('logs-content');
+    content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
+    
+    const fileUrl = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/recent_fights.json?v=' + Date.now();
+    const apiUrl = 'https://api.github.com/repos/rvotaenotaTTV/dnd-stats/commits?path=recent_fights.json&page=1&per_page=1';
+    
+    // Сначала получаем время последнего коммита
+    fetch(apiUrl)
+        .then(r => r.json())
+        .then(commits => {
+            if (commits && commits.length > 0) {
+                const lastCommitDate = new Date(commits[0].commit.committer.date);
+                const timeStr = lastCommitDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                const dateStr = lastCommitDate.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+                document.getElementById('lastUpdated').innerHTML = `🕐 Обновлено: <span>${dateStr} ${timeStr}</span>`;
+            }
+        })
+        .catch(() => {
+            document.getElementById('lastUpdated').innerHTML = `🕐 Обновлено: <span>—</span>`;
+        });
+    
+    // Потом загружаем логи
+    fetch(fileUrl)
+        .then(r => r.json())
+        .then(fights => {
+            if (!fights || fights.length === 0) {
+                content.innerHTML = '<div class="empty-logs">📜 Логов пока нет. Сыграйте первый бой!</div>';
+                document.getElementById('logCount').textContent = '';
+                return;
+            }
+            
+            let html = '';
+            const total = fights.length;
+            
+            fights.reverse().forEach((fight, index) => {
+                const number = total - index;
+                html += `<div class="log-item"><span class="log-number">#${number}</span>${fight.FullLog}</div>`;
+            });
+            
+            content.innerHTML = html;
+            document.getElementById('logCount').textContent = `Всего: ${total} ${pluralize(total, 'бой', 'боя', 'боёв')}`;
+        })
+        .catch(err => {
+            content.innerHTML = '<div class="error-message">❌ Ошибка загрузки логов. Попробуйте позже.</div>';
+            document.getElementById('logCount').textContent = '';
+            console.error(err);
+        });
+}
         
         function toggleAutoRefresh() {
             const checked = document.getElementById('autoRefresh').checked;
@@ -276,14 +315,10 @@
             }
         }
         
-        // Загружаем при открытии
         loadLogs();
-        
-        // Настраиваем автообновление
         document.getElementById('autoRefresh').addEventListener('change', toggleAutoRefresh);
         toggleAutoRefresh();
         
-        // Бургер-меню
         const navToggle = document.querySelector('.nav-toggle');
         const pageNav = document.querySelector('.page-nav');
         navToggle.addEventListener('click', () => {
