@@ -861,7 +861,7 @@ function renderFullStats(data) {
     });
     html += '</table></div>';
 
-    html += '<div class="table-container"><h3>📜 Все титулы и условия</h3><table>';
+    html += '<div class="table-container"><h3>📜 Все ачивки и условия</h3><table>';
     html += '<tr><th>Титул</th><th>Тип</th><th>Условие</th></tr>';
     allTitlesInfo.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
         html += `<tr><td>${t.name}</td><td>${t.type}</td><td>${t.cond}</td></tr>`;
