@@ -476,8 +476,8 @@ h1 {
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-const JSON_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
-const DATA_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
+const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
 
 let classesData = [];
 let racesData = [];
@@ -485,7 +485,7 @@ let classEmojis = {};
 let raceEmojis = {};
 let players = [];
 
-// Загружаем данные классов/рас, потом статистику
+// Сначала грузим данные классов/рас
 fetch(DATA_URL)
     .then(r => r.json())
     .then(data => {
@@ -494,7 +494,7 @@ fetch(DATA_URL)
         classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
         raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
         
-        // После загрузки данных запускаем загрузку статистики игроков
+        // Потом грузим статистику игроков
         return fetch(JSON_URL);
     })
     .then(r => r.json())
@@ -506,11 +506,11 @@ fetch(DATA_URL)
         console.error('Ошибка загрузки:', err);
         document.getElementById('content').innerHTML = `
             <div class="loading">
-                ❌ Не удалось загрузить данные.<br>
-                <span style="color: #8b949e;">Попробуй обновить страницу позже</span>
+                ❌ Ошибка загрузки данных<br>
+                <span style="color: #ff6b6b;">${err.message}</span>
             </div>
         `;
-    });
+    });;
 
 function renderFullStats(data) {
     const totalPlayers = players.length;
