@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Таверна «Очко Этерниса»</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', 'Arial', sans-serif; 
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 140, 0, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(139, 69, 19, 0.1), transparent 40%),
+                linear-gradient(135deg, #1a0e0a 0%, #0d1117 40%, #0a0d12 100%);
+            color: #e6edf3; 
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 { 
+            color: #ffd700; 
+            text-align: center; 
+            margin: 15px 0 25px; 
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(255, 140, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .nav-wrapper { 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid #30363d;
+        }
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+        .page-nav {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .page-nav a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -1px;
+            background: transparent;
+            border-radius: 0;
+        }
+        .page-nav a:hover { color: #ffd700; border-bottom-color: #ffd70080; }
+        .page-nav a.active { color: #ffd700; font-weight: bold; border-bottom-color: #ffd700; }
+        
+        .tavern-container { max-width: 750px; margin: 0 auto; }
+        
+        .bar-counter {
+            background: linear-gradient(90deg, #5a3a1a, #8b5e2e, #5a3a1a);
+            height: 20px;
+            border-radius: 10px 10px 0 0;
+            margin: 20px 0 10px;
+            box-shadow: 0 5px 0 #3a2210;
+        }
+        .bar-wood {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            font-size: 24px;
+        }
+        
+        .tavern-card {
+            background: #1a1210;
+            border: 2px solid #8b5e2e;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 0 #3a2210, 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .innkeeper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #2a1a10;
+            border-radius: 40px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ffd700;
+        }
+        .innkeeper-avatar { font-size: 48px; }
+        .innkeeper-text { flex: 1; }
+        .innkeeper-name { color: #ffd700; font-weight: bold; }
+        .innkeeper-quote { color: #c9b89a; font-style: italic; }
+        .balance-badge {
+            display: inline-block;
+            background: #2a1a10;
+            border: 1px solid #ffd700;
+            border-radius: 30px;
+            padding: 5px 15px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .game-area {
+            background: #1e1410;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #5a3a1a;
+        }
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            min-height: 110px;
+        }
+        .card {
+            width: 70px;
+            height: 100px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #0d1117;
+            box-shadow: 0 4px 0 #999;
+        }
+        .card.red { color: #c0392b; }
+        .card.back {
+            background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 5px, #34495e 5px, #34495e 10px);
+            color: transparent;
+            box-shadow: 0 4px 0 #1a252f;
+        }
+        .card-suit { font-size: 24px; }
+        
+        .score {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .score-value { color: #ffd700; font-size: 28px; font-weight: bold; }
+        
+        .bet-info {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+        .bet-info span { color: #ffd700; font-weight: bold; }
+        
+        .game-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .game-btn {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 16px;
+        }
+        .btn-primary {
+            background: #ffd700;
+            color: #0d1117;
+            box-shadow: 0 4px 0 #b8860b;
+        }
+        .btn-primary:hover { background: #ffe44d; transform: translateY(-2px); box-shadow: 0 6px 0 #b8860b; }
+        .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 #b8860b; }
+        .btn-secondary {
+            background: #2a1a10;
+            border: 2px solid #5a3a1a;
+            color: #e6edf3;
+            box-shadow: 0 4px 0 #3a2210;
+        }
+        .btn-secondary:hover { background: #3a2a1a; border-color: #ffd700; }
+        .btn-secondary:active { transform: translateY(2px); box-shadow: 0 2px 0 #3a2210; }
+        .game-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #3a2210; }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.8em; }
+            .nav-wrapper { border-bottom: none; }
+            .nav-toggle { display: block; }
+            .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+            .page-nav.show { display: flex; }
+            .page-nav a { 
+                text-align: center; padding: 10px; background: #21262d;
+                border: 1px solid #30363d; border-radius: 20px; border-bottom: 1px solid #30363d;
+            }
+            .page-nav a.active { background: #ffd700; color: #0d1117; }
+            .card { width: 55px; height: 80px; font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>ТАВЕРНА «ОЧКО ЭТЕРНИСА»</h1>
+    
+    <div class="nav-wrapper">
+        <button class="nav-toggle" id="navToggle">☰ Меню</button>
+        <div class="page-nav" id="pageNav">
+            <a href="index.html">📊 Статистика</a>
+            <a href="balance.html">⚖️ Баланс</a>
+            <a href="guide.html">⚔️ Гайд</a>
+            <a href="hall.html">🏆 Зал Славы</a>
+            <a href="logs.html">📜 Логи</a>
+            <a href="simulator.html">🧪 Симулятор</a>
+            <a href="tavern.html" class="active">🍺 Таверна</a>
+        </div>
+    </div>
+    
+    <div class="tavern-container">
+        <div class="bar-counter"></div>
+        <div class="bar-wood">
+            <span>🍺</span><span>🃏</span><span>🍖</span><span>🎲</span><span>🍷</span>
+        </div>
+        
+        <div class="tavern-card">
+            <div class="innkeeper">
+                <div class="innkeeper-avatar">🐼🍺</div>
+                <div class="innkeeper-text">
+                    <div class="innkeeper-name">Трактирщик ГуангГуанг</div>
+                    <div class="innkeeper-quote" id="innkeeperQuote">«Сыграем в очко, странник? Ставка — 10 осколков.»</div>
+                </div>
+                <div class="balance-badge" id="balance">💎 100</div>
+            </div>
+            
+            <div class="game-area">
+                <h3 style="color:#ffd700;margin-bottom:15px;text-align:center;">ДВАДЦАТЬ ОДНО</h3>
+                
+                <div style="text-align:center;color:#c9b89a;">Карты ГуангГуанга</div>
+                <div class="cards-container" id="dealerCards"></div>
+                <div class="score">Сумма: <span class="score-value" id="dealerScore">0</span></div>
+                
+                <div style="text-align:center;color:#c9b89a;margin-top:20px;">Твои карты</div>
+                <div class="cards-container" id="playerCards"></div>
+                <div class="score">Сумма: <span class="score-value" id="playerScore">0</span></div>
+                
+                <div class="bet-info">🎲 Ставка: <span>10 💎</span></div>
+                
+                <div class="game-buttons">
+                    <button class="game-btn btn-primary" id="startBtn" onclick="startGame()">🃏 ИГРАЕМ</button>
+                    <button class="game-btn btn-secondary" id="hitBtn" onclick="hit()" disabled>➕ ЕЩЕ ЕЩЕ</button>
+                    <button class="game-btn btn-secondary" id="standBtn" onclick="stand()" disabled>✋ Я ВСЁ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const pageNav = document.getElementById('pageNav');
+        navToggle.addEventListener('click', () => {
+            pageNav.classList.toggle('show');
+            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+
+        let balance = parseInt(localStorage.getItem('tavernBalance_simple')) || 100;
+        const currentBet = 10;
+        
+        let deck = [], playerCards = [], dealerCards = [];
+        let gameActive = false;
+        
+        const suits = ['♥', '♦', '♠', '♣'];
+        const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+        const quotes = [
+            "«Сыграем в очко, странник? Ставка - 10 осколков.»",
+            "«ГуангГуанг верит в твою удачу!»",
+            "«Сегодня карты говорят со мной...»",
+            "«Не бойся, перебор — это не конец!»",
+            "«Бамбук шепчет: бери ещё!»",
+            "«ГуангГуанг видел, как ты победил дракона, а карты боишься?»",
+            "«В прошлый раз один эльф всё спустил, но ты не он!»",
+            "«Очко — игра смелых!»",
+            "«У ГуангГуанга сегодня карта валит!»",
+            "«Панда удачи с тобой!»",
+            "«Берёшь ещё? Бамбук не обманет!»",
+            "«ГуангГуанг чувствует твой страх...»",
+            "«Перебор? Бывает, друг, бывает...»",
+            "«Блэкджек! Ты великий воин!»",
+			"«сами леса Лордерона прошептали мне это имя… Настя_ВТФ»" 
+        ];
+        
+        function createDeck() {
+            const d = [];
+            for (let s of suits) for (let v of values) d.push({ suit: s, value: v });
+            return d.sort(() => Math.random() - 0.5);
+        }
+        
+        function cardValue(card) {
+            if (card.value === 'A') return 11;
+            if (['K','Q','J'].includes(card.value)) return 10;
+            return parseInt(card.value);
+        }
+        
+        function calculateScore(cards) {
+            let score = 0, aces = 0;
+            for (let c of cards) { score += cardValue(c); if (c.value === 'A') aces++; }
+            while (score > 21 && aces > 0) { score -= 10; aces--; }
+            return score;
+        }
+        
+        function renderCard(card, isBack = false) {
+            if (isBack) return '<div class="card back"></div>';
+            const isRed = card.suit === '♥' || card.suit === '♦';
+            return `<div class="card ${isRed ? 'red' : ''}"><span>${card.value}</span><span class="card-suit">${card.suit}</span></div>`;
+        }
+        
+        function renderGame() {
+            const dealerDiv = document.getElementById('dealerCards');
+            const playerDiv = document.getElementById('playerCards');
+            dealerDiv.innerHTML = gameActive ? renderCard(dealerCards[0]) + renderCard(null, true) : dealerCards.map(c => renderCard(c)).join('');
+            playerDiv.innerHTML = playerCards.map(c => renderCard(c)).join('');
+            document.getElementById('dealerScore').textContent = gameActive ? '?' : calculateScore(dealerCards);
+            document.getElementById('playerScore').textContent = calculateScore(playerCards);
+        }
+        
+        function updateBalance() {
+            document.getElementById('balance').textContent = `💎 ${balance}`;
+            localStorage.setItem('tavernBalance_simple', balance);
+        }
+        
+        function setQuote(text) {
+            document.getElementById('innkeeperQuote').textContent = '«' + text + '»';
+        }
+        
+        function resetQuote() {
+            document.getElementById('innkeeperQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        }
+        
+        function startGame() {
+            if (balance < currentBet) { setQuote('Недостаточно осколков, странник!'); return; }
+            deck = createDeck();
+            playerCards = [deck.pop(), deck.pop()];
+            dealerCards = [deck.pop(), deck.pop()];
+            gameActive = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('hitBtn').disabled = false;
+            document.getElementById('standBtn').disabled = false;
+            setQuote('Твой ход. Берёшь ещё?');
+            if (calculateScore(playerCards) === 21) stand();
+            renderGame();
+        }
+        
+        function hit() {
+            if (!gameActive) return;
+            playerCards.push(deck.pop());
+            renderGame();
+            if (calculateScore(playerCards) > 21) endGame('lose');
+            else if (calculateScore(playerCards) === 21) stand();
+            else setQuote('Ещё? Или хватит?');
+        }
+        
+        function stand() {
+            if (!gameActive) return;
+            gameActive = false;
+            document.getElementById('hitBtn').disabled = true;
+            document.getElementById('standBtn').disabled = true;
+            document.getElementById('startBtn').disabled = false;
+            while (calculateScore(dealerCards) < 17) dealerCards.push(deck.pop());
+            renderGame();
+            
+            const pScore = calculateScore(playerCards);
+            const dScore = calculateScore(dealerCards);
+            let result, winAmount;
+            
+            if (pScore > 21) { result = 'lose'; winAmount = -currentBet; }
+            else if (dScore > 21) { result = 'win'; winAmount = currentBet; }
+            else if (pScore > dScore) { result = 'win'; winAmount = currentBet; }
+            else if (pScore < dScore) { result = 'lose'; winAmount = -currentBet; }
+            else { result = 'push'; winAmount = 0; }
+            
+            if (pScore === 21 && playerCards.length === 2 && result !== 'lose') {
+                winAmount = Math.floor(currentBet * 1.5);
+                setQuote('🔥 БЛЭКДЖЕК! Поздравляю, воин!');
+            } else if (result === 'win') {
+                setQuote('🎉 Победа! ГуангГуанг в шоке!');
+            } else if (result === 'lose') {
+                setQuote('😢 Поражение. Приходи ещё!');
+            } else {
+                setQuote('🤝 Ничья. Сыграем ещё?');
+            }
+            
+            balance += winAmount;
+            updateBalance();
+            
+            setTimeout(resetQuote, 3000);
+        }
+        
+        function endGame(result) {
+            gameActive = false;
+            document.getElementById('hitBtn').disabled = true;
+            document.getElementById('standBtn').disabled = true;
+            document.getElementById('startBtn').disabled = false;
+            const winAmount = -currentBet;
+            balance += winAmount;
+            updateBalance();
+            setQuote('💔 ПЕРЕБОР! Не повезло...');
+            setTimeout(resetQuote, 3000);
+            renderGame();
+        }
+        
+        updateBalance();
+        window.startGame = startGame;
+        window.hit = hit;
+        window.stand = stand;
+    </script>
+</body>
+</html>
