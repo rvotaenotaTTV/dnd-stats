@@ -298,62 +298,67 @@
         return { emoji: '', name: text };
     }
 
-    function renderLog(fight, index, total) {
-        const fullLog = fight.FullLog;
-        const parts = fullLog.split(' | ');
-        const header = parts[0];
-        const rounds = parts.slice(1);
-        const number = total - index;
+function renderLog(fight, index, total) {
+    const fullLog = fight.FullLog;
+    const parts = fullLog.split(' | ');
+    const header = parts[0];
+    const rounds = parts.slice(1);
+    const number = total - index;
 
-const cupMatch = header.match(/🏆(.+?)\s+\d/);
-const lightningMatch = header.match(/⚡(.+?)\s+\d/);
-const winner = cupMatch ? cupMatch[1].replace(/[🏆⚡]/g, '').trim() : null;
-const first = lightningMatch ? lightningMatch[1].replace(/[🏆⚡]/g, '').trim() : null;
-const needSwap = (winner && first) ? winner !== first : false;
-
-        const headerMatch = header.match(/^(.+?)\s+(\d+:\d+)\s+(.+)$/);
-        let left = '', center = '', right = '';
-        if (headerMatch) {
-            left = headerMatch[1];
-            center = headerMatch[2];
-            right = headerMatch[3];
-        }
-
-        const isMobile = window.innerWidth <= 768;
-        const leftParts = splitEmojiAndName(left);
-        const rightParts = splitEmojiAndName(right);
-
-        let roundsHtml = '';
-        rounds.forEach((r, i) => {
-            let [hit1, hit2] = r.split(':');
-            if (needSwap) [hit1, hit2] = [hit2, hit1];
-            
-            roundsHtml += `<div class="round-row">
-                <span class="round-num">R${i+1}</span>
-                <span class="round-p1">${colorize(hit1)}</span>
-                <span class="round-vs">:</span>
-                <span class="round-p2">${colorize(hit2)}</span>
-            </div>`;
-        });
-
-        const leftContent = isMobile 
-            ? `<span class="log-emoji">${colorize(leftParts.emoji)}</span><span class="log-name">${leftParts.name}</span>`
-            : colorize(left);
-            
-        const rightContent = isMobile 
-            ? `<span class="log-emoji">${colorize(rightParts.emoji)}</span><span class="log-name">${rightParts.name}</span>`
-            : colorize(right);
-
-        return `<div class="log-item">
-            <div class="log-header">
-                <span class="log-number">#${number}</span>
-                <span class="log-header-left">${leftContent}</span>
-                <span class="log-header-center">${center}</span>
-                <span class="log-header-right">${rightContent}</span>
-            </div>
-            <div class="rounds-table">${roundsHtml}</div>
-        </div>`;
+    const headerMatch = header.match(/^(.+?)\s+(\d+:\d+)\s+(.+)$/);
+    let left = '', center = '', right = '';
+    if (headerMatch) {
+        left = headerMatch[1];
+        center = headerMatch[2];
+        right = headerMatch[3];
     }
+
+    const isMobile = window.innerWidth <= 768;
+    const leftParts = splitEmojiAndName(left);
+    const rightParts = splitEmojiAndName(right);
+
+    // Определяем, кто слева в шапке — по наличию 🏆 или ⚡ или просто первый
+    // Это не важно для вывода, важно что left = левый игрок, right = правый
+    
+    // А теперь ВАЖНО: раунды в логе ВСЕГДА в порядке "первый ход : второй игрок"
+    // Нам нужно определить, совпадает ли левый игрок в шапке с первым ходом
+    const hasLightningLeft = header.indexOf('⚡') < header.indexOf(':');
+    
+    let roundsHtml = '';
+    rounds.forEach((r, i) => {
+        let [hit1, hit2] = r.split(':');
+        
+        // Если левый игрок в шапке НЕ является первым ходом — меняем местами
+        if (!hasLightningLeft) {
+            [hit1, hit2] = [hit2, hit1];
+        }
+        
+        roundsHtml += `<div class="round-row">
+            <span class="round-num">R${i+1}</span>
+            <span class="round-p1">${colorize(hit1)}</span>
+            <span class="round-vs">:</span>
+            <span class="round-p2">${colorize(hit2)}</span>
+        </div>`;
+    });
+
+    const leftContent = isMobile 
+        ? `<span class="log-emoji">${colorize(leftParts.emoji)}</span><span class="log-name">${leftParts.name}</span>`
+        : colorize(left);
+        
+    const rightContent = isMobile 
+        ? `<span class="log-emoji">${colorize(rightParts.emoji)}</span><span class="log-name">${rightParts.name}</span>`
+        : colorize(right);
+
+    return `<div class="log-item">
+        <div class="log-header">
+            <span class="log-number">#${number}</span>
+            <span class="log-header-left">${leftContent}</span>
+            <span class="log-header-center">${center}</span>
+            <span class="log-header-right">${rightContent}</span>
+        </div>
+        <div class="rounds-table">${roundsHtml}</div>
+    </div>`;
+}
 
     function filterLogs() {
         const searchText = document.getElementById('logSearch').value.toLowerCase().trim();
