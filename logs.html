@@ -305,11 +305,11 @@
         const rounds = parts.slice(1);
         const number = total - index;
 
-        const cupMatch = header.match(/🏆(.*?)(\s+\d|$)/);
-        const lightningMatch = header.match(/⚡(.*?)(\s+\d|$)/);
-        const winner = cupMatch ? cupMatch[1].trim() : null;
-        const first = lightningMatch ? lightningMatch[1].trim() : null;
-        const needSwap = (winner && first) ? winner !== first : false;
+const cupMatch = header.match(/🏆(.+?)\s+\d/);
+const lightningMatch = header.match(/⚡(.+?)\s+\d/);
+const winner = cupMatch ? cupMatch[1].replace(/[🏆⚡]/g, '').trim() : null;
+const first = lightningMatch ? lightningMatch[1].replace(/[🏆⚡]/g, '').trim() : null;
+const needSwap = (winner && first) ? winner !== first : false;
 
         const headerMatch = header.match(/^(.+?)\s+(\d+:\d+)\s+(.+)$/);
         let left = '', center = '', right = '';
