@@ -39,7 +39,7 @@
             padding-bottom: 10px;
         }
         
-        /* ===== НОВОЕ МЕНЮ ВКЛАДКАМИ ===== */
+        /* ===== МЕНЮ: ПК = ВКЛАДКИ, МОБИЛКА = КРУГЛЫЕ КНОПКИ ===== */
         .nav-wrapper { 
             margin-bottom: 30px; 
             border-bottom: 1px solid #30363d;
@@ -183,34 +183,44 @@
         .champion-name { font-size: 24px; color: #ffd700; font-weight: bold; }
         .champion-class { font-size: 16px; color: #8b949e; }
         
+        /* ===== МОБИЛЬНАЯ ВЕРСИЯ: КРУГЛЫЕ КНОПКИ ===== */
         @media (max-width: 768px) {
             h1 { font-size: 1.6em; }
             body { padding: 10px; }
+            
+            /* Убираем нижнюю границу у wrapper */
+            .nav-wrapper { border-bottom: none; }
+            
             .nav-toggle { display: block; }
+            
             .page-nav { 
                 display: none; 
                 flex-direction: column; 
-                gap: 0; 
-                margin-top: 10px;
-                border: 1px solid #30363d;
-                border-radius: 12px;
-                overflow: hidden;
+                gap: 8px; 
+                margin-top: 10px; 
             }
             .page-nav.show { display: flex; }
+            
+            /* КРУГЛЫЕ КНОПКИ ДЛЯ МОБИЛОК */
             .page-nav a { 
-                text-align: left; 
-                padding: 12px 20px;
-                border-bottom: 1px solid #30363d;
-                background: #161b22;
-                border-radius: 0;
-                margin: 0;
+                text-align: center; 
+                padding: 10px;
+                background: #21262d;
+                border: 1px solid #30363d;
+                border-radius: 20px;
+                border-bottom: 1px solid #30363d;  /* возвращаем обычную рамку */
+                margin-bottom: 0;
             }
-            .page-nav a:last-child { border-bottom: none; }
+            .page-nav a:hover { 
+                border-bottom-color: #ffd700;
+            }
             .page-nav a.active { 
                 background: #ffd700; 
-                color: #0d1117;
-                border-bottom-color: #30363d;
+                color: #0d1117; 
+                font-weight: bold;
+                border-bottom-color: #ffd700;
             }
+            
             .nav-tabs { overflow-x: auto; flex-wrap: nowrap; }
             .tab-btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
             .tables-grid { grid-template-columns: 1fr; }
