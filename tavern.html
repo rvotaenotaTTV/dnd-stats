@@ -194,20 +194,47 @@
         .btn-secondary:active { transform: translateY(2px); box-shadow: 0 2px 0 #3a2210; }
         .game-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #3a2210; }
         
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            h1 { font-size: 1.8em; }
-            .nav-wrapper { border-bottom: none; }
-            .nav-toggle { display: block; }
-            .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
-            .page-nav.show { display: flex; }
-            .page-nav a { 
-                text-align: center; padding: 10px; background: #21262d;
-                border: 1px solid #30363d; border-radius: 20px; border-bottom: 1px solid #30363d;
-            }
-            .page-nav a.active { background: #ffd700; color: #0d1117; }
-            .card { width: 55px; height: 80px; font-size: 22px; }
-        }
+		@media (max-width: 768px) {
+			body { padding: 8px; }
+			h1 { font-size: 1.5em; margin: 10px 0 15px; }
+			
+			.nav-wrapper { border-bottom: none; margin-bottom: 15px; }
+			.nav-toggle { display: block; padding: 10px 15px; font-size: 14px; }
+			.page-nav { display: none; flex-direction: column; gap: 6px; margin-top: 8px; }
+			.page-nav.show { display: flex; }
+			.page-nav a { 
+				text-align: center; padding: 8px; background: #21262d;
+				border: 1px solid #30363d; border-radius: 20px; font-size: 13px;
+			}
+			
+			.tavern-container { max-width: 100%; }
+			
+			.bar-counter { height: 12px; margin: 10px 0 5px; }
+			.bar-wood { padding: 8px 0; font-size: 20px; }
+			
+			.tavern-card { padding: 15px; }
+			
+			.innkeeper { padding: 10px 15px; gap: 10px; margin-bottom: 15px; }
+			.innkeeper-avatar { font-size: 36px; }
+			.innkeeper-name { font-size: 14px; }
+			.innkeeper-quote { font-size: 12px; }
+			.balance-badge { padding: 3px 10px; font-size: 13px; }
+			
+			.game-area { padding: 15px; }
+			.game-area h3 { font-size: 16px; margin-bottom: 10px; }
+			
+			.cards-container { gap: 8px; margin: 10px 0; min-height: 85px; }
+			.card { width: 50px; height: 70px; font-size: 20px; }
+			.card-suit { font-size: 18px; }
+			
+			.score { font-size: 14px; margin: 5px 0; }
+			.score-value { font-size: 22px; }
+			
+			.bet-info { margin: 10px 0; font-size: 15px; }
+			
+			.game-buttons { gap: 8px; }
+			.game-btn { padding: 10px 12px; font-size: 14px; }
+		}
     </style>
 </head>
 <body>
