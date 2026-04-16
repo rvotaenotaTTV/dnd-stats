@@ -268,7 +268,7 @@
     });
 
     const LOGS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/recent_fights.json';
-    const API_URL = 'https://api.github.com/repos/rvotaenotaTTV/dnd-stats/commits?path=recent_fights.json&page=1&per_page=1';
+    const API_URL = 'https://data.jsdelivr.com/v1/package/gh/rvotaenotaTTV/dnd-stats';
     
     let allFights = [];
 
@@ -388,17 +388,18 @@
         const content = document.getElementById('logs-content');
         content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
 
-        fetch(API_URL)
-            .then(r => r.json())
-            .then(commits => {
-                if (commits && commits.length > 0) {
-                    const d = new Date(commits[0].commit.committer.date);
-                    const timeStr = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-                    const dateStr = d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
-                    document.getElementById('lastUpdated').innerHTML = `🕐 <span>${dateStr} ${timeStr}</span> (до 5 мин)`;
-                }
-            })
-            .catch(() => {});
+		fetch(API_URL)
+			.then(r => r.json())
+			.then(data => {
+				if (data && data.versions && data.versions.length > 0) {
+					const lastModified = data.modified; // дата последнего изменения
+					const d = new Date(lastModified);
+					const timeStr = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+					const dateStr = d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+					document.getElementById('lastUpdated').innerHTML = `🕐 <span>${dateStr} ${timeStr}</span> (до 5 мин)`;
+				}
+			})
+			.catch(() => {});
 
         fetch(LOGS_URL + '?v=' + Date.now())
             .then(r => r.json())
