@@ -32,7 +32,11 @@
             border-bottom: 2px solid rgba(255, 215, 0, 0.3);
             padding-bottom: 10px;
         }
-        .nav-wrapper { margin-bottom: 30px; }
+        
+        .nav-wrapper { 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid #30363d;
+        }
         .nav-toggle {
             display: none;
             width: 100%;
@@ -48,24 +52,33 @@
         }
         .page-nav {
             display: flex;
-            gap: 10px;
+            gap: 5px;
             justify-content: center;
             flex-wrap: wrap;
         }
         .page-nav a {
             color: #8b949e;
             text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: #21262d;
-            border: 1px solid #30363d;
+            padding: 12px 20px;
             font-size: 14px;
             font-weight: 500;
             transition: all 0.2s;
             white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -1px;
+            background: transparent;
+            border-radius: 0;
         }
-        .page-nav a:hover { color: #ffd700; border-color: #ffd700; background: #2a303c; }
-        .page-nav a.active { background: #ffd700; color: #0d1117; font-weight: bold; border-color: #ffd700; }
+        .page-nav a:hover { 
+            color: #ffd700; 
+            border-bottom-color: #ffd70080;
+        }
+        .page-nav a.active { 
+            color: #ffd700; 
+            font-weight: bold; 
+            border-bottom-color: #ffd700;
+        }
+        
         .logs-container { max-width: 850px; margin: 0 auto; }
         
         .controls { 
@@ -176,10 +189,35 @@
         @media (max-width: 768px) {
             body { padding: 10px; }
             h1 { font-size: 1.8em; }
+            
+            .nav-wrapper { border-bottom: none; }
+            
             .nav-toggle { display: block; }
-            .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+            
+            .page-nav { 
+                display: none; 
+                flex-direction: column; 
+                gap: 8px; 
+                margin-top: 10px; 
+            }
             .page-nav.show { display: flex; }
-            .page-nav a { text-align: center; padding: 10px; }
+            
+            .page-nav a { 
+                text-align: center; 
+                padding: 10px;
+                background: #21262d;
+                border: 1px solid #30363d;
+                border-radius: 20px;
+                border-bottom: 1px solid #30363d;
+                margin-bottom: 0;
+            }
+            .page-nav a:hover { border-bottom-color: #ffd700; }
+            .page-nav a.active { 
+                background: #ffd700; 
+                color: #0d1117; 
+                font-weight: bold;
+                border-bottom-color: #ffd700;
+            }
             
             .controls {
                 display: grid;
@@ -208,18 +246,10 @@
             .log-header-left { align-items: flex-start !important; text-align: left !important; }
             .log-header-right { align-items: flex-end !important; text-align: right !important; }
             
-            .log-emoji {
-                white-space: nowrap !important;
-            }
-            .log-name {
-                word-break: break-word !important;
-                white-space: normal !important;
-            }
+            .log-emoji { white-space: nowrap !important; }
+            .log-name { word-break: break-word !important; white-space: normal !important; }
             
-            .log-header-center {
-                padding: 0 3px;
-                white-space: nowrap;
-            }
+            .log-header-center { padding: 0 3px; white-space: nowrap; }
             
             .round-row {
                 grid-template-columns: 30px 1fr 30px 1fr;
@@ -290,95 +320,77 @@
 
     function splitEmojiAndName(text) {
         const match = text.match(/^([🏆⚡💀🧑🧝🧔👹✨🗡️🛡️🔮🥋🏹🪓✝️👁️🎸🌿⚙️🦴]+)\s+(.+)$/);
-        if (match) {
-            return { emoji: match[1], name: match[2] };
-        }
+        if (match) return { emoji: match[1], name: match[2] };
         return { emoji: '', name: text };
     }
 
-	function renderLog(fight, index, total) {
-		const fullLog = fight.FullLog;
-		const parts = fullLog.split(' | ');
-		const header = parts[0];
-		const rounds = parts.slice(1);
-		const number = total - index;
+    function renderLog(fight, index, total) {
+        const fullLog = fight.FullLog;
+        const parts = fullLog.split(' | ');
+        const header = parts[0];
+        const rounds = parts.slice(1);
+        const number = total - index;
 
-		const headerMatch = header.match(/^(.+?)\s+(\d+:\d+)\s+(.+)$/);
-		let left = '', center = '', right = '';
-		if (headerMatch) {
-			left = headerMatch[1];
-			center = headerMatch[2];
-			right = headerMatch[3];
-		}
+        const headerMatch = header.match(/^(.+?)\s+(\d+:\d+)\s+(.+)$/);
+        let left = '', center = '', right = '';
+        if (headerMatch) { left = headerMatch[1]; center = headerMatch[2]; right = headerMatch[3]; }
 
-		const isMobile = window.innerWidth <= 768;
-		const leftParts = splitEmojiAndName(left);
-		const rightParts = splitEmojiAndName(right);
+        const isMobile = window.innerWidth <= 768;
+        const leftParts = splitEmojiAndName(left);
+        const rightParts = splitEmojiAndName(right);
+        const hasLightningLeft = header.indexOf('⚡') < header.indexOf(':');
+        
+        let roundsHtml = '';
+        rounds.forEach((r, i) => {
+            let [hit1, hit2] = r.split(':');
+            if (!hasLightningLeft) [hit1, hit2] = [hit2, hit1];
+            roundsHtml += `<div class="round-row">
+                <span class="round-num">R${i+1}</span>
+                <span class="round-p1">${colorize(hit1)}</span>
+                <span class="round-vs">:</span>
+                <span class="round-p2">${colorize(hit2)}</span>
+            </div>`;
+        });
 
-		const hasLightningLeft = header.indexOf('⚡') < header.indexOf(':');
-		
-		let roundsHtml = '';
-		rounds.forEach((r, i) => {
-			let [hit1, hit2] = r.split(':');
-			
-			if (!hasLightningLeft) {
-				[hit1, hit2] = [hit2, hit1];
-			}
-			
-			roundsHtml += `<div class="round-row">
-				<span class="round-num">R${i+1}</span>
-				<span class="round-p1">${colorize(hit1)}</span>
-				<span class="round-vs">:</span>
-				<span class="round-p2">${colorize(hit2)}</span>
-			</div>`;
-		});
+        const leftContent = isMobile 
+            ? `<span class="log-emoji">${colorize(leftParts.emoji)}</span><span class="log-name">${leftParts.name}</span>`
+            : colorize(left);
+        const rightContent = isMobile 
+            ? `<span class="log-emoji">${colorize(rightParts.emoji)}</span><span class="log-name">${rightParts.name}</span>`
+            : colorize(right);
 
-		const leftContent = isMobile 
-			? `<span class="log-emoji">${colorize(leftParts.emoji)}</span><span class="log-name">${leftParts.name}</span>`
-			: colorize(left);
-			
-		const rightContent = isMobile 
-			? `<span class="log-emoji">${colorize(rightParts.emoji)}</span><span class="log-name">${rightParts.name}</span>`
-			: colorize(right);
-
-		return `<div class="log-item">
-			<div class="log-header">
-				<span class="log-number">#${number}</span>
-				<span class="log-header-left">${leftContent}</span>
-				<span class="log-header-center">${center}</span>
-				<span class="log-header-right">${rightContent}</span>
-			</div>
-			<div class="rounds-table">${roundsHtml}</div>
-		</div>`;
-	}
+        return `<div class="log-item">
+            <div class="log-header">
+                <span class="log-number">#${number}</span>
+                <span class="log-header-left">${leftContent}</span>
+                <span class="log-header-center">${center}</span>
+                <span class="log-header-right">${rightContent}</span>
+            </div>
+            <div class="rounds-table">${roundsHtml}</div>
+        </div>`;
+    }
 
     function filterLogs() {
         const searchText = document.getElementById('logSearch').value.toLowerCase().trim();
         const content = document.getElementById('logs-content');
-        
         if (!allFights.length) return;
         
         if (!searchText) {
-            let html = '';
-            const total = allFights.length;
+            let html = ''; const total = allFights.length;
             [...allFights].reverse().forEach((f, i) => { html += renderLog(f, i, total); });
             content.innerHTML = html;
             document.getElementById('logCount').textContent = `Всего: ${total} ${pluralize(total, 'бой', 'боя', 'боёв')}`;
             return;
         }
         
-        const filtered = allFights.filter(f => 
-            f.FullLog.toLowerCase().includes(searchText)
-        );
-        
+        const filtered = allFights.filter(f => f.FullLog.toLowerCase().includes(searchText));
         if (filtered.length === 0) {
             content.innerHTML = '<div class="loading">🔍 Ничего не найдено</div>';
             document.getElementById('logCount').textContent = '';
             return;
         }
         
-        let html = '';
-        const total = filtered.length;
+        let html = ''; const total = filtered.length;
         [...filtered].reverse().forEach((f, i) => { html += renderLog(f, i, total); });
         content.innerHTML = html;
         document.getElementById('logCount').textContent = `Найдено: ${total} ${pluralize(total, 'бой', 'боя', 'боёв')}`;
@@ -388,18 +400,17 @@
         const content = document.getElementById('logs-content');
         content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
 
-		fetch(API_URL)
-			.then(r => r.json())
-			.then(data => {
-				if (data && data.versions && data.versions.length > 0) {
-					const lastModified = data.modified; // дата последнего изменения
-					const d = new Date(lastModified);
-					const timeStr = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-					const dateStr = d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
-					document.getElementById('lastUpdated').innerHTML = `🕐 <span>${dateStr} ${timeStr}</span> (до 5 мин)`;
-				}
-			})
-			.catch(() => {});
+        fetch(API_URL)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.modified) {
+                    const d = new Date(data.modified);
+                    const timeStr = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                    const dateStr = d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+                    document.getElementById('lastUpdated').innerHTML = `🕐 <span>${dateStr} ${timeStr}</span>`;
+                }
+            })
+            .catch(() => {});
 
         fetch(LOGS_URL + '?v=' + Date.now())
             .then(r => r.json())
@@ -412,9 +423,7 @@
                 allFights = fights;
                 filterLogs();
             })
-            .catch(err => {
-                content.innerHTML = '<div class="loading">❌ Ошибка загрузки</div>';
-            });
+            .catch(err => { content.innerHTML = '<div class="loading">❌ Ошибка загрузки</div>'; });
     }
 
     loadLogs();
