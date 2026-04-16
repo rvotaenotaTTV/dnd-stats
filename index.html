@@ -98,7 +98,7 @@
         .beer-btn:hover { background: #ffd700; color: #0d1117; }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 20px;
             margin-bottom: 30px;
         }
@@ -420,6 +420,13 @@ function renderFullStats(data) {
     html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
     html += `<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
     html += `<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
+
+    const factionLight = data.factionScore?.light || 0;
+    const factionDark = data.factionScore?.dark || 0;
+    html += `<div class="stat-card" style="grid-column: span 1;">
+      <div class="stat-value">${factionLight} : ${factionDark}</div>
+      <div class="stat-label">🌝 Орден Света vs Культ Тьмы 🌚</div>
+    </div>`;
     html += '</div>';
     
     html += '<div class="nav-tabs">';
