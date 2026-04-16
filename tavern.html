@@ -145,6 +145,15 @@
             padding: 5px 15px;
             color: #ffd700;
             font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .balance-badge.shake {
+            animation: shake 0.3s;
+        }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
         }
         
         .game-area {
@@ -176,6 +185,11 @@
             font-size: 28px;
             font-weight: bold;
             color: #0d1117;
+            animation: deal 0.3s ease;
+        }
+        @keyframes deal {
+            from { transform: translateY(-20px) scale(0.8) rotate(var(--rot)); opacity: 0; }
+            to { transform: translateY(0) scale(1) rotate(var(--rot)); opacity: 1; }
         }
         .card:hover {
             transform: translateY(-5px) rotate(var(--rot, 0deg));
@@ -341,7 +355,7 @@
             </div>
             
             <div class="game-area">
-                <h3 style="color:#ffd700;margin-bottom:15px;text-align:center;">ДВАДЦАТЬ ОДНО</h3>
+                <h3 style="color:#ffd700;margin-bottom:15px;text-align:center;">🃏 ДВАДЦАТЬ ОДНО</h3>
                 
                 <div style="text-align:center;color:#c9b89a;">Карты ГуангГуанга</div>
                 <div class="cards-container" id="dealerCards"></div>
@@ -354,9 +368,9 @@
                 <div class="bet-info">🎲 Ставка: <span>10 💎</span></div>
                 
                 <div class="game-buttons">
-                    <button class="game-btn btn-primary" id="startBtn" onclick="startGame()">ИГРАЕМ</button>
-                    <button class="game-btn btn-secondary" id="hitBtn" onclick="hit()" disabled>ЕЩЁ ЕЩЁ</button>
-                    <button class="game-btn btn-secondary" id="standBtn" onclick="stand()" disabled>Я ВСЁ</button>
+                    <button class="game-btn btn-primary" id="startBtn" onclick="startGame()">🃏 ИГРАЕМ</button>
+                    <button class="game-btn btn-secondary" id="hitBtn" onclick="hit()" disabled>➕ ЕЩЁ ЕЩЁ</button>
+                    <button class="game-btn btn-secondary" id="standBtn" onclick="stand()" disabled>✋ Я ВСЁ</button>
                 </div>
             </div>
         </div>
@@ -422,7 +436,15 @@
         
         function createDeck() {
             const d = [];
-            for (let s of suits) for (let v of values) d.push({ suit: s, value: v });
+            for (let s of suits) {
+                for (let v of values) {
+                    d.push({ 
+                        suit: s, 
+                        value: v,
+                        rot: Math.random() * 6 - 3
+                    });
+                }
+            }
             return d.sort(() => Math.random() - 0.5);
         }
         
@@ -442,8 +464,7 @@
         function renderCard(card, isBack = false) {
             if (isBack) return '<div class="card back"></div>';
             const isRed = card.suit === '♥' || card.suit === '♦';
-            const rot = Math.random() * 6 - 3;
-            return `<div class="card ${isRed ? 'red' : ''}" style="--rot:${rot}deg"><span>${card.value}</span><span class="card-suit">${card.suit}</span></div>`;
+            return `<div class="card ${isRed ? 'red' : ''}" style="--rot:${card.rot}deg"><span>${card.value}</span><span class="card-suit">${card.suit}</span></div>`;
         }
         
         function renderGame() {
@@ -474,6 +495,18 @@
             setTimeout(() => card.classList.remove('flash-win'), 500);
         }
         
+        function shakeBalance() {
+            const el = document.getElementById('balance');
+            el.classList.add('shake');
+            setTimeout(() => el.classList.remove('shake'), 300);
+        }
+        
+        function disableButtons() {
+            document.getElementById('hitBtn').disabled = true;
+            document.getElementById('standBtn').disabled = true;
+            document.getElementById('startBtn').disabled = false;
+        }
+        
         function startGame() {
             if (balance < currentBet) { setQuote('Недостаточно осколков, странник!'); return; }
             deck = createDeck();
@@ -502,10 +535,17 @@
             gameActive = false;
             document.getElementById('hitBtn').disabled = true;
             document.getElementById('standBtn').disabled = true;
-            document.getElementById('startBtn').disabled = false;
-            while (calculateScore(dealerCards) < 17) dealerCards.push(deck.pop());
-            renderGame();
             
+            setQuote('🐼 ГуангГуанг думает...');
+            
+            setTimeout(() => {
+                while (calculateScore(dealerCards) < 17) dealerCards.push(deck.pop());
+                renderGame();
+                resolveGame();
+            }, 1000);
+        }
+        
+        function resolveGame() {
             const pScore = calculateScore(playerCards);
             const dScore = calculateScore(dealerCards);
             let result, winAmount;
@@ -521,30 +561,31 @@
                 setQuote('🔥 БЛЭКДЖЕК! Поздравляю, воин!');
                 flashWin();
             } else if (result === 'win') {
-                setQuote('🎉 Победа! ГуангГуанг в шоке!');
+                setQuote('😡 ГуангГуанг злится... но платит!');
                 flashWin();
             } else if (result === 'lose') {
-                setQuote('😢 Поражение. Приходи ещё!');
+                setQuote('😏 Хе-хе... сегодня удача не с тобой.');
+                shakeBalance();
             } else {
                 setQuote('🤝 Ничья. Сыграем ещё?');
             }
             
             balance += winAmount;
             updateBalance();
+            disableButtons();
             
-            setTimeout(resetQuote, 5000);
+            setTimeout(resetQuote, 3000);
         }
         
         function endGame(result) {
             gameActive = false;
-            document.getElementById('hitBtn').disabled = true;
-            document.getElementById('standBtn').disabled = true;
-            document.getElementById('startBtn').disabled = false;
+            disableButtons();
             const winAmount = -currentBet;
             balance += winAmount;
             updateBalance();
             setQuote('💔 ПЕРЕБОР! Не повезло...');
-            setTimeout(resetQuote, 5000);
+            shakeBalance();
+            setTimeout(resetQuote, 3000);
             renderGame();
         }
         
