@@ -73,7 +73,24 @@
             border-radius: 10px 10px 0 0;
             margin: 20px 0 10px;
             box-shadow: 0 5px 0 #3a2210;
+            position: relative;
+            overflow: hidden;
         }
+        .bar-counter::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 150%; }
+        }
+        
         .bar-wood {
             display: flex;
             justify-content: space-around;
@@ -87,6 +104,16 @@
             border-radius: 20px;
             padding: 25px;
             box-shadow: 0 8px 0 #3a2210, 0 10px 20px rgba(0,0,0,0.3);
+            transition: box-shadow 0.2s;
+            margin-bottom: 25px;
+        }
+        .tavern-card.flash-win {
+            animation: winFlash 0.5s;
+        }
+        @keyframes winFlash {
+            0% { box-shadow: 0 8px 0 #3a2210, 0 10px 20px rgba(0,0,0,0.3), 0 0 0 rgba(255,215,0,0); }
+            50% { box-shadow: 0 8px 0 #3a2210, 0 10px 20px rgba(0,0,0,0.3), 0 0 30px rgba(255,215,0,0.8); }
+            100% { box-shadow: 0 8px 0 #3a2210, 0 10px 20px rgba(0,0,0,0.3), 0 0 0 rgba(255,215,0,0); }
         }
         
         .innkeeper {
@@ -99,7 +126,14 @@
             margin-bottom: 25px;
             border-left: 5px solid #ffd700;
         }
-        .innkeeper-avatar { font-size: 48px; }
+        .innkeeper-avatar { 
+            font-size: 48px; 
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
         .innkeeper-text { flex: 1; }
         .innkeeper-name { color: #ffd700; font-weight: bold; }
         .innkeeper-quote { color: #c9b89a; font-style: italic; }
@@ -129,8 +163,12 @@
         .card {
             width: 70px;
             height: 100px;
-            background: white;
-            border-radius: 8px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border-radius: 10px;
+            border: 1px solid #999;
+            box-shadow: 0 6px 0 #999, 0 10px 15px rgba(0,0,0,0.4);
+            transform: rotate(var(--rot, 0deg));
+            transition: transform 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -138,13 +176,15 @@
             font-size: 28px;
             font-weight: bold;
             color: #0d1117;
-            box-shadow: 0 4px 0 #999;
+        }
+        .card:hover {
+            transform: translateY(-5px) rotate(var(--rot, 0deg));
         }
         .card.red { color: #c0392b; }
         .card.back {
             background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 5px, #34495e 5px, #34495e 10px);
             color: transparent;
-            box-shadow: 0 4px 0 #1a252f;
+            box-shadow: 0 6px 0 #1a252f, 0 10px 15px rgba(0,0,0,0.4);
         }
         .card-suit { font-size: 24px; }
         
@@ -176,6 +216,21 @@
             transition: all 0.2s;
             border: none;
             font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.4s;
+        }
+        .game-btn:hover::after {
+            left: 100%;
         }
         .btn-primary {
             background: #ffd700;
@@ -194,47 +249,63 @@
         .btn-secondary:active { transform: translateY(2px); box-shadow: 0 2px 0 #3a2210; }
         .game-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #3a2210; }
         
-		@media (max-width: 768px) {
-			body { padding: 8px; }
-			h1 { font-size: 1.5em; margin: 10px 0 15px; }
-			
-			.nav-wrapper { border-bottom: none; margin-bottom: 15px; }
-			.nav-toggle { display: block; padding: 10px 15px; font-size: 14px; }
-			.page-nav { display: none; flex-direction: column; gap: 6px; margin-top: 8px; }
-			.page-nav.show { display: flex; }
-			.page-nav a { 
-				text-align: center; padding: 8px; background: #21262d;
-				border: 1px solid #30363d; border-radius: 20px; font-size: 13px;
-			}
-			
-			.tavern-container { max-width: 100%; }
-			
-			.bar-counter { height: 12px; margin: 10px 0 5px; }
-			.bar-wood { padding: 8px 0; font-size: 20px; }
-			
-			.tavern-card { padding: 15px; }
-			
-			.innkeeper { padding: 10px 15px; gap: 10px; margin-bottom: 15px; }
-			.innkeeper-avatar { font-size: 36px; }
-			.innkeeper-name { font-size: 14px; }
-			.innkeeper-quote { font-size: 12px; }
-			.balance-badge { padding: 3px 10px; font-size: 13px; }
-			
-			.game-area { padding: 15px; }
-			.game-area h3 { font-size: 16px; margin-bottom: 10px; }
-			
-			.cards-container { gap: 8px; margin: 10px 0; min-height: 85px; }
-			.card { width: 50px; height: 70px; font-size: 20px; }
-			.card-suit { font-size: 18px; }
-			
-			.score { font-size: 14px; margin: 5px 0; }
-			.score-value { font-size: 22px; }
-			
-			.bet-info { margin: 10px 0; font-size: 15px; }
-			
-			.game-buttons { gap: 8px; }
-			.game-btn { padding: 10px 12px; font-size: 14px; }
-		}
+        .rules-box {
+            background: #1a1210;
+            border: 2px solid #8b5e2e;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 0 #3a2210, 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .rules-box h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rules-box p {
+            color: #c9b89a;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+        .rules-box strong {
+            color: #ffd700;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            h1 { font-size: 1.5em; margin: 10px 0 15px; }
+            .nav-wrapper { border-bottom: none; margin-bottom: 15px; }
+            .nav-toggle { display: block; padding: 10px 15px; font-size: 14px; }
+            .page-nav { display: none; flex-direction: column; gap: 6px; margin-top: 8px; }
+            .page-nav.show { display: flex; }
+            .page-nav a { 
+                text-align: center; padding: 8px; background: #21262d;
+                border: 1px solid #30363d; border-radius: 20px; font-size: 13px;
+            }
+            .tavern-container { max-width: 100%; }
+            .bar-counter { height: 12px; margin: 10px 0 5px; }
+            .bar-wood { padding: 8px 0; font-size: 20px; }
+            .tavern-card { padding: 15px; }
+            .innkeeper { padding: 10px 15px; gap: 10px; margin-bottom: 15px; }
+            .innkeeper-avatar { font-size: 36px; }
+            .innkeeper-name { font-size: 14px; }
+            .innkeeper-quote { font-size: 12px; }
+            .balance-badge { padding: 3px 10px; font-size: 13px; }
+            .game-area { padding: 15px; }
+            .game-area h3 { font-size: 16px; margin-bottom: 10px; }
+            .cards-container { gap: 8px; margin: 10px 0; min-height: 85px; }
+            .card { width: 50px; height: 70px; font-size: 20px; }
+            .card-suit { font-size: 18px; }
+            .score { font-size: 14px; margin: 5px 0; }
+            .score-value { font-size: 22px; }
+            .bet-info { margin: 10px 0; font-size: 15px; }
+            .game-buttons { gap: 8px; }
+            .game-btn { padding: 10px 12px; font-size: 14px; }
+            .rules-box { padding: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -259,12 +330,12 @@
             <span>🍺</span><span>🃏</span><span>🍖</span><span>🎲</span><span>🍷</span>
         </div>
         
-        <div class="tavern-card">
+        <div class="tavern-card" id="tavernCard">
             <div class="innkeeper">
                 <div class="innkeeper-avatar">🐼🍺</div>
                 <div class="innkeeper-text">
                     <div class="innkeeper-name">Трактирщик ГуангГуанг</div>
-                    <div class="innkeeper-quote" id="innkeeperQuote">«Сыграем в очко, странник? Ставка — 10 осколков.»</div>
+                    <div class="innkeeper-quote" id="innkeeperQuote">Сыграем в очко, странник? Ставка — 10 осколков.</div>
                 </div>
                 <div class="balance-badge" id="balance">💎 100</div>
             </div>
@@ -283,11 +354,23 @@
                 <div class="bet-info">🎲 Ставка: <span>10 💎</span></div>
                 
                 <div class="game-buttons">
-                    <button class="game-btn btn-primary" id="startBtn" onclick="startGame()">🃏 ИГРАЕМ</button>
-                    <button class="game-btn btn-secondary" id="hitBtn" onclick="hit()" disabled>➕ ЕЩЕ ЕЩЕ</button>
-                    <button class="game-btn btn-secondary" id="standBtn" onclick="stand()" disabled>✋ Я ВСЁ</button>
+                    <button class="game-btn btn-primary" id="startBtn" onclick="startGame()">ИГРАЕМ</button>
+                    <button class="game-btn btn-secondary" id="hitBtn" onclick="hit()" disabled>ЕЩЁ ЕЩЁ</button>
+                    <button class="game-btn btn-secondary" id="standBtn" onclick="stand()" disabled>Я ВСЁ</button>
                 </div>
             </div>
+        </div>
+        
+        <div class="rules-box">
+            <h3>📜 ПРАВИЛА ИГРЫ</h3>
+            <p><strong>🎯 Цель:</strong> Набрать 21 очко или больше, чем ГуангГуанг, но не более 21.</p>
+            <p><strong>🃏 Карты:</strong> 2-10 = номинал, Валет/Дама/Король = 10, Туз = 1 или 11.</p>
+            <p><strong>⚔️ Ход игры:</strong> Ты и ГуангГуанг получаете по 2 карты. Ты видишь только одну карту ГуангГуанга.</p>
+            <p><strong>➕ ЕЩЁ ЕЩЁ:</strong> Взять дополнительную карту. Можно брать, пока не скажешь «Я ВСЁ» или не переберёшь.</p>
+            <p><strong>✋ Я ВСЁ:</strong> Остановиться. После этого ГуангГуанг добирает карты, пока у него не станет 17 или больше.</p>
+            <p><strong>💥 Перебор:</strong> Если сумма больше 21 — мгновенный проигрыш.</p>
+            <p><strong>🔥 Блэкджек:</strong> 21 с первых двух карт (Туз + 10/картинка). Оплачивается x1.5!</p>
+            <p><strong>🏆 Победа:</strong> У тебя больше очков, чем у ГуангГуанга, и нет перебора. Или у ГуангГуанга перебор.</p>
         </div>
     </div>
     
@@ -307,35 +390,35 @@
         
         const suits = ['♥', '♦', '♠', '♣'];
         const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-		const quotes = [
-			"«Сыграем в очко, странник? Ставка — 10 осколков.»",
-			"«ГуангГуанг верит в твою удачу!»",
-			"«Сегодня карты говорят со мной...»",
-			"«Не бойся, перебор — это не конец!»",
-			"«Бамбук шепчет: бери ещё!»",
-			"«ГуангГуанг видел, как ты победил дракона, а карты боишься?»",
-			"«В прошлый раз один эльф всё спустил, но ты не он!»",
-			"«Очко — игра смелых!»",
-			"«У ГуангГуанга сегодня карта валит!»",
-			"«Панда удачи с тобой!»",
-			"«Берёшь ещё? Бамбук не обманет!»",
-			"«ГуангГуанг чувствует твой страх...»",
-			"«Перебор? Бывает, друг, бывает...»",
-			"«Блэкджек! Ты великий воин!»",
-			"«Сами леса Лордерона прошептали мне это имя… Настя_ВТФ»",
-			"«ГуангГуанг слышал, rvotaenota сегодня в ударе!»",
-			"«Даже Rvotaenota здесь играет, а ты чего ждёшь?»",
-			"«Бамбук говорит: rvotaenota — легенда!»",
-			"«В Этернисе все играют в очко. Даже драконы.»",
-			"«Осколки приходят и уходят, а ГуангГуанг остаётся.»",
-			"«Ставки сделаны, ставок больше нет!»",
-			"«Помни: очко — это не только игра, это стиль жизни.»",
-			"«ГуангГуанг знает твой следующий ход...»",
-			"«Не тяни карту из рукава, ГуангГуанг всё видит!»",
-			"«Сегодня ты выиграешь, я чувствую это бамбуком!»",
-			"«Заходи ещё, тут всегда наливают... осколки!»",
-			"«ГуангГуанг не пьёт, но очко любит.»"
-		];
+        const quotes = [
+            "Сыграем в очко, странник? Ставка — 10 осколков.",
+            "ГуангГуанг верит в твою удачу!",
+            "Сегодня карты говорят со мной...",
+            "Не бойся, перебор — это не конец!",
+            "Бамбук шепчет: бери ещё!",
+            "ГуангГуанг видел, как ты победил дракона, а карты боишься?",
+            "В прошлый раз один эльф всё спустил, но ты не он!",
+            "Очко — игра смелых!",
+            "У ГуангГуанга сегодня карта валит!",
+            "Панда удачи с тобой!",
+            "Берёшь ещё? Бамбук не обманет!",
+            "ГуангГуанг чувствует твой страх...",
+            "Перебор? Бывает, друг, бывает...",
+            "Блэкджек! Ты великий воин!",
+            "Сами леса Лордерона прошептали мне это имя… Настя_ВТФ",
+            "ГуангГуанг слышал, rvotaenota сегодня в ударе!",
+            "Даже rvotaenota здесь играет, а ты чего ждёшь?",
+            "Бамбук говорит: rvotaenota — легенда!",
+            "В Этернисе все играют в очко. Даже драконы.",
+            "Осколки приходят и уходят, а ГуангГуанг остаётся.",
+            "Ставки сделаны, ставок больше нет!",
+            "Помни: очко — это не только игра, это стиль жизни.",
+            "ГуангГуанг знает твой следующий ход...",
+            "Не тяни карту из рукава, ГуангГуанг всё видит!",
+            "Сегодня ты выиграешь, я чувствую это бамбуком!",
+            "Заходи ещё, тут всегда наливают... осколки!",
+            "ГуангГуанг не пьёт, но очко любит."
+        ];
         
         function createDeck() {
             const d = [];
@@ -359,7 +442,8 @@
         function renderCard(card, isBack = false) {
             if (isBack) return '<div class="card back"></div>';
             const isRed = card.suit === '♥' || card.suit === '♦';
-            return `<div class="card ${isRed ? 'red' : ''}"><span>${card.value}</span><span class="card-suit">${card.suit}</span></div>`;
+            const rot = Math.random() * 6 - 3;
+            return `<div class="card ${isRed ? 'red' : ''}" style="--rot:${rot}deg"><span>${card.value}</span><span class="card-suit">${card.suit}</span></div>`;
         }
         
         function renderGame() {
@@ -377,11 +461,17 @@
         }
         
         function setQuote(text) {
-            document.getElementById('innkeeperQuote').textContent = '«' + text + '»';
+            document.getElementById('innkeeperQuote').textContent = text;
         }
         
         function resetQuote() {
             document.getElementById('innkeeperQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        }
+        
+        function flashWin() {
+            const card = document.getElementById('tavernCard');
+            card.classList.add('flash-win');
+            setTimeout(() => card.classList.remove('flash-win'), 500);
         }
         
         function startGame() {
@@ -393,7 +483,7 @@
             document.getElementById('startBtn').disabled = true;
             document.getElementById('hitBtn').disabled = false;
             document.getElementById('standBtn').disabled = false;
-            setQuote('Твой ход. Берёшь ещё?');
+            setQuote('Твой ход. ЕЩЁ ЕЩЁ или Я ВСЁ?');
             if (calculateScore(playerCards) === 21) stand();
             renderGame();
         }
@@ -404,7 +494,7 @@
             renderGame();
             if (calculateScore(playerCards) > 21) endGame('lose');
             else if (calculateScore(playerCards) === 21) stand();
-            else setQuote('Ещё? Или хватит?');
+            else setQuote('ЕЩЁ ЕЩЁ? Или Я ВСЁ?');
         }
         
         function stand() {
@@ -429,8 +519,10 @@
             if (pScore === 21 && playerCards.length === 2 && result !== 'lose') {
                 winAmount = Math.floor(currentBet * 1.5);
                 setQuote('🔥 БЛЭКДЖЕК! Поздравляю, воин!');
+                flashWin();
             } else if (result === 'win') {
                 setQuote('🎉 Победа! ГуангГуанг в шоке!');
+                flashWin();
             } else if (result === 'lose') {
                 setQuote('😢 Поражение. Приходи ещё!');
             } else {
