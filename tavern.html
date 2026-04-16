@@ -270,13 +270,15 @@
             padding: 20px;
             box-shadow: 0 8px 0 #3a2210, 0 10px 20px rgba(0,0,0,0.3);
         }
-        .rules-box h3 {
+        .rules-box summary {
             color: #ffd700;
             margin-bottom: 15px;
             font-size: 18px;
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            font-weight: bold;
         }
         .rules-box p {
             color: #c9b89a;
@@ -375,8 +377,8 @@
             </div>
         </div>
         
-        <div class="rules-box">
-            <h3>📜 ПРАВИЛА ИГРЫ</h3>
+        <details class="rules-box">
+            <summary>📜 ПРАВИЛА ИГРЫ</summary>
             <p><strong>🎯 Цель:</strong> Набрать 21 очко или больше, чем ГуангГуанг, но не более 21.</p>
             <p><strong>🃏 Карты:</strong> 2-10 = номинал, Валет/Дама/Король = 10, Туз = 1 или 11.</p>
             <p><strong>⚔️ Ход игры:</strong> Ты и ГуангГуанг получаете по 2 карты. Ты видишь только одну карту ГуангГуанга.</p>
@@ -385,7 +387,7 @@
             <p><strong>💥 Перебор:</strong> Если сумма больше 21 — мгновенный проигрыш.</p>
             <p><strong>🔥 Блэкджек:</strong> 21 с первых двух карт (Туз + 10/картинка). Оплачивается x1.5!</p>
             <p><strong>🏆 Победа:</strong> У тебя больше очков, чем у ГуангГуанга, и нет перебора. Или у ГуангГуанга перебор.</p>
-        </div>
+        </details>
     </div>
     
     <script>
@@ -539,7 +541,10 @@
             setQuote('🐼 ГуангГуанг думает...');
             
             setTimeout(() => {
-                while (calculateScore(dealerCards) < 17) dealerCards.push(deck.pop());
+                while (calculateScore(dealerCards) < 17 || 
+                      (calculateScore(dealerCards) < 19 && Math.random() < 0.3)) {
+                    dealerCards.push(deck.pop());
+                }
                 renderGame();
                 resolveGame();
             }, 1000);
