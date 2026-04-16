@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Симулятор</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', 'Arial', sans-serif; 
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
+                linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
+            color: #e6edf3; 
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 { 
+            color: #ffd700; 
+            text-align: center; 
+            margin: 15px 0 25px; 
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        h2 { color: #ffd700; margin: 20px 0 15px; font-size: 1.3em; }
+        h3 { color: #ffd700; margin-bottom: 15px; font-size: 16px; }
+        
+        .nav-wrapper { margin-bottom: 30px; }
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+        .page-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .page-nav a {
+            color: #8b949e;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .page-nav a:hover { color: #ffd700; border-color: #ffd700; background: #2a303c; }
+        .page-nav a.active { background: #ffd700; color: #0d1117; font-weight: bold; border-color: #ffd700; }
+        
+        .sim-container { max-width: 950px; margin: 0 auto; }
+        
+        .fight-card {
+            background: #161b22;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #30363d;
+            margin-bottom: 25px;
+        }
+        
+        .vs-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .fighter { text-align: center; flex: 1; }
+        .fighter-emoji { font-size: 48px; }
+        .fighter-name { font-size: 18px; color: #ffd700; margin-top: 5px; }
+        .vs-divider { font-size: 32px; color: #ffd700; font-weight: bold; }
+        
+        .selectors {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+        .selector-group {
+            background: #21262d;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .mode-switch {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .mode-btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #8b949e;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .mode-btn.active { background: #ffd700; color: #0d1117; border-color: #ffd700; }
+        
+        select, .player-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        select:hover, .player-select:hover { border-color: #ffd700; }
+        
+        .custom-row { display: flex; gap: 10px; }
+        .custom-row select { flex: 1; }
+        
+        .fight-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .fight-btn {
+            flex: 1;
+            background: #ffd700;
+            border: none;
+            color: #0d1117;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .fight-btn:hover { background: #ffe44d; transform: scale(1.02); }
+        .analyze-btn {
+            flex: 1;
+            background: #21262d;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .analyze-btn:hover { background: #2a303c; }
+        
+        .result-card {
+            background: #161b22;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #30363d;
+            min-height: 250px;
+        }
+        .result-log {
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            word-break: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .result-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-item { color: #8b949e; }
+        .stat-value { color: #ffd700; font-weight: bold; }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .analytics-card {
+            background: #21262d;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .analytics-card h4 { color: #ffd700; margin-bottom: 15px; font-size: 16px; }
+        .progress-bar {
+            background: #161b22;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffe44d);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-weight: bold;
+            color: #0d1117;
+        }
+        
+        .cup { color: #ffd700; }
+        .lightning { color: #ffd700; }
+        .crit { color: #ff6b6b; }
+        .miss { color: #8b949e; }
+        
+        .loading { text-align: center; padding: 40px; color: #8b949e; }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.8em; }
+            .nav-toggle { display: block; }
+            .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+            .page-nav.show { display: flex; }
+            .selectors { grid-template-columns: 1fr; gap: 15px; }
+            .vs-header { gap: 10px; }
+            .fighter-emoji { font-size: 36px; }
+            .fighter-name { font-size: 14px; }
+            .fight-buttons { flex-direction: column; }
+            .analytics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <h1>СИМУЛЯТОР БОЯ</h1>
+    
+    <div class="nav-wrapper">
+        <button class="nav-toggle" id="navToggle">☰ Меню</button>
+        <div class="page-nav" id="pageNav">
+            <a href="index.html">📊 Статистика</a>
+            <a href="balance.html">⚖️ Баланс</a>
+            <a href="simulator.html" class="active">🧪 Симулятор</a>
+        </div>
+    </div>
+    
+    <div class="sim-container">
+        <div class="fight-card">
+            <div class="mode-switch">
+                <button class="mode-btn active" onclick="setMode('players')">👥 Игроки</button>
+                <button class="mode-btn" onclick="setMode('custom')">⚙️ Сборка</button>
+            </div>
+            
+            <div class="vs-header">
+                <div class="fighter">
+                    <div class="fighter-emoji" id="p1Emoji">⚔️</div>
+                    <div class="fighter-name" id="p1Name">Воин</div>
+                </div>
+                <div class="vs-divider">VS</div>
+                <div class="fighter">
+                    <div class="fighter-emoji" id="p2Emoji">🛡️</div>
+                    <div class="fighter-name" id="p2Name">Паладин</div>
+                </div>
+            </div>
+            
+            <div id="mode-players">
+                <div class="selectors">
+                    <div class="selector-group">
+                        <h3>🎮 Игрок 1</h3>
+                        <select id="player1Select" class="player-select" onchange="updateFighterDisplay()"></select>
+                    </div>
+                    <div class="selector-group">
+                        <h3>🎮 Игрок 2</h3>
+                        <select id="player2Select" class="player-select" onchange="updateFighterDisplay()"></select>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="mode-custom" style="display:none;">
+                <div class="selectors">
+                    <div class="selector-group">
+                        <h3>⚙️ Player 1</h3>
+                        <select id="class1Select" onchange="updateCustomDisplay()"></select>
+                        <div class="custom-row">
+                            <select id="race1Select" onchange="updateCustomDisplay()"></select>
+                        </div>
+                    </div>
+                    <div class="selector-group">
+                        <h3>⚙️ Player 2</h3>
+                        <select id="class2Select" onchange="updateCustomDisplay()"></select>
+                        <div class="custom-row">
+                            <select id="race2Select" onchange="updateCustomDisplay()"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="fight-buttons">
+                <button class="fight-btn" onclick="simulateFight()">⚔️ 1 БОЙ</button>
+                <button class="analyze-btn" onclick="simulateMultiple(100)">📊 ×100 БОЁВ</button>
+            </div>
+        </div>
+        
+        <div class="result-card" id="resultCard" style="display:none;">
+            <h2 id="resultTitle">📋 РЕЗУЛЬТАТ БОЯ</h2>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const pageNav = document.getElementById('pageNav');
+        navToggle.addEventListener('click', () => {
+            pageNav.classList.toggle('show');
+            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+
+        let classesData = [];
+        let racesData = [];
+        let playersData = [];
+        let currentMode = 'players';
+        
+        const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        
+        Promise.all([
+            fetch(DATA_URL).then(r => r.json()),
+            fetch(STATS_URL).then(r => r.json())
+        ]).then(([data, stats]) => {
+            classesData = data.classes;
+            racesData = data.races;
+            playersData = stats.players.filter(p => p.name && p.name !== 'Unknown');
+            populateSelects();
+            updateFighterDisplay();
+        });
+        
+        function populateSelects() {
+            const p1Select = document.getElementById('player1Select');
+            const p2Select = document.getElementById('player2Select');
+            playersData.sort((a,b) => a.display.localeCompare(b.display)).forEach((p, i) => {
+                const opt = `<option value="${p.display}">${p.emoji} ${p.display}</option>`;
+                p1Select.innerHTML += opt;
+                p2Select.innerHTML += opt;
+            });
+            if (playersData.length > 0) p2Select.selectedIndex = Math.min(1, playersData.length - 1);
+            
+            ['class1Select', 'class2Select'].forEach(id => {
+                document.getElementById(id).innerHTML = classesData.map(c => `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join('');
+            });
+            ['race1Select', 'race2Select'].forEach(id => {
+                document.getElementById(id).innerHTML = racesData.map(r => `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join('');
+            });
+        }
+        
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('mode-players').style.display = mode === 'players' ? 'block' : 'none';
+            document.getElementById('mode-custom').style.display = mode === 'custom' ? 'block' : 'none';
+            updateFighterDisplay();
+        }
+        window.setMode = setMode;
+        
+        function getFighterStats(isPlayer1) {
+            if (currentMode === 'players') {
+                const sel = document.getElementById(isPlayer1 ? 'player1Select' : 'player2Select');
+                const player = playersData.find(p => p.display === sel.value);
+                if (!player) return null;
+                const parts = player.name.split('-');
+                return {
+                    name: player.display,
+                    emoji: player.emoji,
+                    className: parts[1] || parts[0],
+                    raceName: parts[0],
+                    stats: getStatsFromClassRace(parts[1] || parts[0], parts[0])
+                };
+            } else {
+                const classSel = document.getElementById(isPlayer1 ? 'class1Select' : 'class2Select');
+                const raceSel = document.getElementById(isPlayer1 ? 'race1Select' : 'race2Select');
+                const cls = classesData.find(c => c.Name === classSel.value) || classesData[0];
+                const race = racesData.find(r => r.Name === raceSel.value) || racesData[0];
+                return {
+                    name: `${cls.Name} (${race.Name})`,
+                    emoji: race.Emoji + cls.Emoji,
+                    className: cls.Name,
+                    raceName: race.Name,
+                    stats: getStatsFromClassRace(cls.Name, race.Name)
+                };
+            }
+        }
+        
+        function getStatsFromClassRace(className, raceName) {
+            const cls = classesData.find(c => c.Name === className) || classesData[0];
+            const race = racesData.find(r => r.Name === raceName) || racesData[0];
+            return {
+                hp: cls.Hp + race.BonusHp,
+                atk: cls.Atk + race.BonusAtk,
+                def: cls.Def + race.BonusDef,
+                min: cls.Min + race.BonusMin,
+                max: cls.Max + race.BonusMax
+            };
+        }
+        
+        function updateFighterDisplay() {
+            const p1 = getFighterStats(true);
+            const p2 = getFighterStats(false);
+            if (p1) {
+                document.getElementById('p1Emoji').textContent = p1.emoji;
+                document.getElementById('p1Name').textContent = p1.name;
+            }
+            if (p2) {
+                document.getElementById('p2Emoji').textContent = p2.emoji;
+                document.getElementById('p2Name').textContent = p2.name;
+            }
+        }
+        window.updateFighterDisplay = updateFighterDisplay;
+        window.updateCustomDisplay = updateFighterDisplay;
+        
+        function simulateSingleFight() {
+            const p1 = getFighterStats(true);
+            const p2 = getFighterStats(false);
+            if (!p1 || !p2) return null;
+            
+            const s1 = p1.stats;
+            const s2 = p2.stats;
+            const rnd = () => Math.floor(Math.random() * 20) + 1;
+            const d3 = () => Math.floor(Math.random() * 3);
+            
+            const init1 = rnd() + s1.atk + d3();
+            const init2 = rnd() + s2.atk + d3();
+            const first = init1 !== init2 ? init1 > init2 : Math.random() < 0.5;
+            
+            let hp1 = s1.hp, hp2 = s2.hp;
+            let dmg1 = 0, dmg2 = 0;
+            const log = [];
+            
+            let rounds = 0;
+            const MAX_ROUNDS = 20;
+            
+            while (hp1 > 0 && hp2 > 0 && rounds < MAX_ROUNDS) {
+                rounds++;
+                
+                if (first) {
+                    const r1 = rnd();
+                    if (r1 === 1) { log.push('❌'); }
+                    else if (r1 + s1.atk < 10 + s2.def) { log.push(r1 <= 4 ? '💨' : '🛡'); }
+                    else {
+                        let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
+                        if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
+                        d = Math.max(1, Math.floor(d * (1 - s2.def * 0.05)));
+                        dmg1 += d; hp2 = Math.max(0, hp2 - d);
+                        log.push(r1 === 20 ? `💥${d}` : d.toString());
+                    }
+                    if (hp2 <= 0) { log.push('0'); break; }
+                    
+                    const r2 = rnd();
+                    if (r2 === 1) { log.push('❌'); }
+                    else if (r2 + s2.atk < 10 + s1.def) { log.push(r2 <= 4 ? '💨' : '🛡'); }
+                    else {
+                        let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
+                        if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
+                        d = Math.max(1, Math.floor(d * (1 - s1.def * 0.05)));
+                        dmg2 += d; hp1 = Math.max(0, hp1 - d);
+                        log.push(r2 === 20 ? `💥${d}` : d.toString());
+                    }
+                } else {
+                    const r2 = rnd();
+                    if (r2 === 1) { log.push('❌'); }
+                    else if (r2 + s2.atk < 10 + s1.def) { log.push(r2 <= 4 ? '💨' : '🛡'); }
+                    else {
+                        let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
+                        if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
+                        d = Math.max(1, Math.floor(d * (1 - s1.def * 0.05)));
+                        dmg2 += d; hp1 = Math.max(0, hp1 - d);
+                        log.push(r2 === 20 ? `💥${d}` : d.toString());
+                    }
+                    if (hp1 <= 0) { log.push('0'); break; }
+                    
+                    const r1 = rnd();
+                    if (r1 === 1) { log.push('❌'); }
+                    else if (r1 + s1.atk < 10 + s2.def) { log.push(r1 <= 4 ? '💨' : '🛡'); }
+                    else {
+                        let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
+                        if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
+                        d = Math.max(1, Math.floor(d * (1 - s2.def * 0.05)));
+                        dmg1 += d; hp2 = Math.max(0, hp2 - d);
+                        log.push(r1 === 20 ? `💥${d}` : d.toString());
+                    }
+                }
+            }
+            
+            const winner = hp1 > hp2 ? p1 : p2;
+            const loser = hp1 > hp2 ? p2 : p1;
+            const winnerDmg = hp1 > hp2 ? dmg1 : dmg2;
+            const loserDmg = hp1 > hp2 ? dmg2 : dmg1;
+            const winnerHp = hp1 > hp2 ? hp1 : hp2;
+            
+            const firstMark1 = first ? '⚡' : '';
+            const firstMark2 = !first ? '⚡' : '';
+            const cup1 = winner === p1 ? '🏆' : '';
+            const cup2 = winner === p2 ? '🏆' : '';
+            
+            const header = `${firstMark1}${cup1}${p1.emoji} ${p1.name} ${dmg1}:${dmg2} ${firstMark2}${cup2}${p2.emoji} ${p2.name}`;
+            const roundsStr = [];
+            for (let i = 0; i < log.length; i += 2) roundsStr.push(`${log[i]}:${log[i+1] || '0'}`);
+            
+            return {
+                winner, loser, winnerHp, winnerDmg, loserDmg, rounds,
+                first: first ? p1 : p2,
+                fullLog: `${header} | ${roundsStr.join(' | ')}`,
+                p1, p2, dmg1, dmg2, crits: log.filter(l => l.includes('💥')).length,
+                misses: log.filter(l => l === '❌' || l === '💨' || l === '🛡').length
+            };
+        }
+        
+        function simulateFight() {
+            const result = simulateSingleFight();
+            if (!result) return;
+            
+            document.getElementById('resultCard').style.display = 'block';
+            document.getElementById('resultTitle').textContent = '📋 РЕЗУЛЬТАТ БОЯ';
+            document.getElementById('resultContent').innerHTML = `
+                <div class="result-stats">
+                    <div class="stat-item">🏆 Победитель: <span class="stat-value">${result.winner.name}</span></div>
+                    <div class="stat-item">❤️ HP: <span class="stat-value">${result.winnerHp}</span></div>
+                    <div class="stat-item">⚔️ Урон: <span class="stat-value">${result.winnerDmg}:${result.loserDmg}</span></div>
+                    <div class="stat-item">⏱ Раундов: <span class="stat-value">${result.rounds}</span></div>
+                    <div class="stat-item">⚡ Первый ход: <span class="stat-value">${result.first.name}</span></div>
+                </div>
+                <div class="result-log">${colorize(result.fullLog)}</div>
+            `;
+        }
+        window.simulateFight = simulateFight;
+        
+        function simulateMultiple(count) {
+            const results = [];
+            let p1Wins = 0, p2Wins = 0;
+            let firstWins = 0;
+            let totalRounds = 0, totalCrits = 0, totalMisses = 0;
+            const firstCount = { p1: 0, p2: 0 };
+            
+            for (let i = 0; i < count; i++) {
+                const r = simulateSingleFight();
+                if (!r) continue;
+                results.push(r);
+                
+                if (r.winner === r.p1) p1Wins++; else p2Wins++;
+                if (r.winner === r.first) firstWins++;
+                if (r.first === r.p1) firstCount.p1++; else firstCount.p2++;
+                totalRounds += r.rounds;
+                totalCrits += r.crits;
+                totalMisses += r.misses;
+            }
+            
+            const p1 = results[0]?.p1;
+            const p2 = results[0]?.p2;
+            const p1Rate = (p1Wins / count * 100).toFixed(1);
+            const p2Rate = (p2Wins / count * 100).toFixed(1);
+            
+            document.getElementById('resultCard').style.display = 'block';
+            document.getElementById('resultTitle').textContent = `📊 РЕЗУЛЬТАТЫ ${count} БОЁВ`;
+            document.getElementById('resultContent').innerHTML = `
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h4>🏆 Победитель</h4>
+                        <div>${p1?.name || 'Player 1'}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:${p1Rate}%">${p1Wins} (${p1Rate}%)</div>
+                        </div>
+                        <div style="margin-top:15px;">${p2?.name || 'Player 2'}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:${p2Rate}%">${p2Wins} (${p2Rate}%)</div>
+                        </div>
+                        <div style="margin-top:15px;text-align:center;">
+                            ${p1Wins > p2Wins ? `${p1?.name} сильнее!` : (p2Wins > p1Wins ? `${p2?.name} сильнее!` : 'Равные силы!')}
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>⚡ Первый ход</h4>
+                        <div>${p1?.name}: ${firstCount.p1} раз (${(firstCount.p1/count*100).toFixed(0)}%)</div>
+                        <div>${p2?.name}: ${firstCount.p2} раз (${(firstCount.p2/count*100).toFixed(0)}%)</div>
+                        <div style="margin-top:15px;">Побед первого хода: ${firstWins}/${count} (${(firstWins/count*100).toFixed(0)}%)</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>📈 Статистика</h4>
+                        <div>Средняя длительность: ${(totalRounds / count).toFixed(1)} раунда</div>
+                        <div>Всего критов: ${totalCrits}</div>
+                        <div>Всего промахов/блоков: ${totalMisses}</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>📋 Пример боя</h4>
+                        <div class="result-log" style="max-height:120px;margin-top:5px;">${colorize(results[0]?.fullLog || '')}</div>
+                    </div>
+                </div>
+            `;
+        }
+        window.simulateMultiple = simulateMultiple;
+        
+        function colorize(text) {
+            return text
+                .replace(/🏆/g, '<span class="cup">🏆</span>')
+                .replace(/⚡/g, '<span class="lightning">⚡</span>')
+                .replace(/💥\d+/g, m => `<span class="crit">${m}</span>`)
+                .replace(/❌/g, '<span class="miss">❌</span>')
+                .replace(/💨/g, '<span class="miss">💨</span>')
+                .replace(/🛡/g, '<span class="miss">🛡</span>');
+        }
+    </script>
+</body>
+</html>
