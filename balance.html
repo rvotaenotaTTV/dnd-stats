@@ -248,14 +248,8 @@
     <!-- Формулы -->
     <div class="formula-box">
         <h3>📐 Формулы баланса</h3>
-        <div class="formula">
-            <span>POWER = CPI × 4</span><br><br>
-            <span>CPI = (Эфф. HP) ^ 0,7 × (Средний урон × Точность × Бонус атаки × 0,9) ^ 0,6</span><br><br>
-            <span>Средний урон = (MIN + MAX) / 2</span><br><br>
-            <span>Точность = (7 + ATK) / 20</span><br><br>
-            <span>Бонус атаки = (1 + ATK × 0,04)</span><br><br>
-            <span>Снижение урона от защиты цели = 0,9</span> (фиксировано, при DEF цели = 2)<br><br>
-            <span>Эффективное HP = HP × (1 + DEF × 0,08)</span>
+        <div class="formula" id="formula-text">
+            <!-- Заполняется из CONFIG -->
         </div>
     </div>
 
@@ -265,16 +259,24 @@
 
     const DATA_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
     
+    let CONFIG = {};
     let classesData = [];
     let racesData = [];
 
     fetch(DATA_URL)
         .then(r => r.json())
         .then(data => {
+            CONFIG = data.config || { 
+                defReduction: 0.03, hitChanceMin: 0.05, hitChanceMax: 0.95, 
+                hitChanceBase: 9, accBaseCPI: 7, cpiHpPower: 0.7, cpiDmgPower: 0.6,
+                cpiAtkBonus: 0.04, cpiFixedReduction: 0.9, effHpDefMult: 0.08,
+                powerMultiplier: 4 
+            };
             classesData = data.classes;
             racesData = data.races;
             renderClassesTable();
             renderRacesTable();
+            renderFormulaText();
             initSortable();
         })
         .catch(err => {
@@ -283,16 +285,33 @@
                 '<tr><td colspan="13" style="text-align:center;color:#ff6b6b;">Ошибка загрузки данных</td></tr>';
         });
 
+    function renderFormulaText() {
+        document.getElementById('formula-text').innerHTML = `
+            <span>POWER = CPI × ${CONFIG.powerMultiplier}</span><br><br>
+            <span>CPI = (Эфф. HP) ^ ${CONFIG.cpiHpPower} × (Средний урон × Точность × Бонус атаки × ${CONFIG.cpiFixedReduction}) ^ ${CONFIG.cpiDmgPower}</span><br><br>
+            <span>Средний урон = (MIN + MAX) / 2</span><br><br>
+            <span>Точность (для CPI) = (${CONFIG.accBaseCPI} + ATK) / 20</span><br><br>
+            <span>Точность (отображение) = (${CONFIG.hitChanceBase} + ATK - DEF цели) / 20 (мин ${(CONFIG.hitChanceMin*100)}%, макс ${(CONFIG.hitChanceMax*100)}%)</span><br><br>
+            <span>Бонус атаки = (1 + ATK × ${CONFIG.cpiAtkBonus})</span><br><br>
+            <span>Снижение урона от защиты цели = ${(1 - CONFIG.defReduction * 2).toFixed(2)}</span> (фиксировано, при DEF цели = 2)<br><br>
+            <span>Эффективное HP = HP × (1 + DEF × ${CONFIG.effHpDefMult})</span><br><br>
+            <span>Живучесть (отображение) = HP × (1 + DEF × ${CONFIG.defReduction})</span>
+        `;
+    }
+
 	function calculateDerivedFields(cls) {
 		const avg = (cls.Min + cls.Max) / 2;
-		const accDisplay = Math.min(0.95, Math.max(0.05, (9 + cls.Atk - cls.Def) / 20));
-		const accCPI = (7 + cls.Atk) / 20;
-		const atkBonus = 1 + cls.Atk * 0.04;
+		const accDisplay = Math.min(
+		    CONFIG.hitChanceMax, 
+		    Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + cls.Atk - cls.Def) / 20)
+		);
+		const accCPI = (CONFIG.accBaseCPI + cls.Atk) / 20;
+		const atkBonus = 1 + cls.Atk * CONFIG.cpiAtkBonus;
 		const dmg5 = avg * accDisplay * 5;
-		const surv = cls.Hp * (1 + cls.Def * 0.03);
-		const effHP = cls.Hp * (1 + cls.Def * 0.08);
-		const cpi = Math.pow(effHP, 0.7) * Math.pow(avg * accCPI * atkBonus * 0.9, 0.6);
-		const power = cpi * 4;
+		const surv = cls.Hp * (1 + cls.Def * CONFIG.defReduction);
+		const effHP = cls.Hp * (1 + cls.Def * CONFIG.effHpDefMult);
+		const cpi = Math.pow(effHP, CONFIG.cpiHpPower) * Math.pow(avg * accCPI * atkBonus * CONFIG.cpiFixedReduction, CONFIG.cpiDmgPower);
+		const power = cpi * CONFIG.powerMultiplier;
 		
 		return {
 			avg: Math.round(avg * 10) / 10,
