@@ -226,29 +226,7 @@
         gap: 20px;
     }
     .titles-grid .table-container:last-child { grid-column: span 2; }
-    
-    #tab-calculator .table-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    #calc-mode-players, #calc-mode-classes { width: 100%; max-width: 600px; }
-    #calc-table { width: 100%; max-width: 700px; margin: 20px auto; }
-    .calc-mode-btn {
-        background: #21262d;
-        border: 1px solid #30363d;
-        color: #8b949e;
-        padding: 8px 20px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s;
-    }
-    .calc-mode-btn.active { background: #ffd700; color: #0d1117; border-color: #ffd700; }
-    .calc-mode-btn:hover:not(.active) { background: #30363d; color: #c9d1d9; }
-    .reasons-list { padding-left: 25px; margin-top: 10px; color: #8b949e; }
-    .reasons-list li { margin: 5px 0; }
-    
+      
     select {
         padding: 8px 12px;
         background: #21262d;
@@ -401,8 +379,10 @@
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+const DATA_VERSION = 1;
+const STATS_VERSION = 1;
+const JSON_URL = `https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json?v=${STATS_VERSION}`;
+const DATA_URL = `https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json?v=${DATA_VERSION}`;
 
 let classesData = [];
 let racesData = [];
