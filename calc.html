@@ -239,19 +239,19 @@
 
 		const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 		const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-        
-        let CONFIG = {};
-        let classesData = [];
-        let racesData = [];
-        let classEmojis = {};
-        let raceEmojis = {};
-        let players = [];
-        let currentMode = 'players';
 
-        Promise.all([
-            fetch(DATA_URL).then(r => r.json()),
-            fetch(STATS_URL).then(r => r.json())
-        ]).then(([data, stats]) => {
+		let CONFIG = {};
+		let classesData = [];
+		let racesData = [];
+		let classEmojis = {};
+		let raceEmojis = {};
+		let players = [];
+		let currentMode = 'players';
+
+		Promise.all([
+			fetch(DATA_URL).then(r => r.json()),
+			fetch(JSON_URL).then(r => r.json())
+		]).then(([data, stats]) => {
             CONFIG = data.config || { 
                 defReduction: 0.03,
                 hitChanceMin: 0.05,
