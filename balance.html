@@ -289,7 +289,7 @@
 		const accCPI = (7 + cls.Atk) / 20;
 		const atkBonus = 1 + cls.Atk * 0.04;
 		const dmg5 = avg * accDisplay * 5;
-		const surv = cls.Hp * (1 + cls.Def * 0.05);
+		const surv = cls.Hp * (1 + cls.Def * 0.03);
 		const effHP = cls.Hp * (1 + cls.Def * 0.08);
 		const cpi = Math.pow(effHP, 0.7) * Math.pow(avg * accCPI * atkBonus * 0.9, 0.6);
 		const power = cpi * 4;
