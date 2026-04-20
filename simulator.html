@@ -366,32 +366,32 @@
             navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         });
 
-        let CONFIG = {};
-        let classesData = [];
-        let racesData = [];
-        let playersData = [];
-        let currentMode = 'players';
-        
 		const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 		const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-        
-        Promise.all([
-            fetch(DATA_URL).then(r => r.json()),
-            fetch(STATS_URL).then(r => r.json())
-        ]).then(([data, stats]) => {
-            CONFIG = data.config || { 
-                defReduction: 0.03,
-                baseAC: 10,
-                critMultiplier: 2,
-                maxRounds: 20,
-                blockThreshold: 4
-            };
-            classesData = data.classes;
-            racesData = data.races;
-            playersData = stats.players.filter(p => p.name && p.name !== 'Unknown');
-            populateSelects();
-            updateFighterDisplay();
-        });
+
+		let CONFIG = {};
+		let classesData = [];
+		let racesData = [];
+		let playersData = [];
+		let currentMode = 'players';
+
+		Promise.all([
+			fetch(DATA_URL).then(r => r.json()),
+			fetch(JSON_URL).then(r => r.json())
+		]).then(([data, stats]) => {
+			CONFIG = data.config || { 
+				defReduction: 0.03,
+				baseAC: 10,
+				critMultiplier: 2,
+				maxRounds: 20,
+				blockThreshold: 4
+			};
+			classesData = data.classes;
+			racesData = data.races;
+			playersData = stats.players.filter(p => p.name && p.name !== 'Unknown');
+			populateSelects();
+			updateFighterDisplay();
+		});
         
         function populateSelects() {
             const p1Select = document.getElementById('player1Select');
