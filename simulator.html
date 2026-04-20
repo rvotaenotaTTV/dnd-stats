@@ -372,10 +372,9 @@
         let playersData = [];
         let currentMode = 'players';
         
-        const DATA_VERSION = 1;
-        const STATS_VERSION = 1;
-        const DATA_URL = `https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json?v=${DATA_VERSION}`;
-        const STATS_URL = `https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json?v=${STATS_VERSION}`;
+		const DATA_VERSION = 1;
+		const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+		const DATA_URL = `https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json?v=${DATA_VERSION}`;
         
         Promise.all([
             fetch(DATA_URL).then(r => r.json()),
