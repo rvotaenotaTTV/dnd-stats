@@ -499,7 +499,7 @@
                     else {
                         let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
                         if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                        d = Math.max(1, Math.floor(d * (1 - s2.def * 0.05)));
+                        d = Math.max(1, Math.floor(d * (1 - s2.def * 0.03)));
                         dmg1 += d; hp2 = Math.max(0, hp2 - d);
                         log.push(r1 === 20 ? `💥${d}` : d.toString());
                     }
@@ -511,7 +511,7 @@
                     else {
                         let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
                         if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                        d = Math.max(1, Math.floor(d * (1 - s1.def * 0.05)));
+                        d = Math.max(1, Math.floor(d * (1 - s1.def * 0.03)));
                         dmg2 += d; hp1 = Math.max(0, hp1 - d);
                         log.push(r2 === 20 ? `💥${d}` : d.toString());
                     }
@@ -522,7 +522,7 @@
                     else {
                         let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
                         if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                        d = Math.max(1, Math.floor(d * (1 - s1.def * 0.05)));
+                        d = Math.max(1, Math.floor(d * (1 - s1.def * 0.03)));
                         dmg2 += d; hp1 = Math.max(0, hp1 - d);
                         log.push(r2 === 20 ? `💥${d}` : d.toString());
                     }
@@ -534,7 +534,7 @@
                     else {
                         let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
                         if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                        d = Math.max(1, Math.floor(d * (1 - s2.def * 0.05)));
+                        d = Math.max(1, Math.floor(d * (1 - s2.def * 0.03)));
                         dmg1 += d; hp2 = Math.max(0, hp2 - d);
                         log.push(r1 === 20 ? `💥${d}` : d.toString());
                     }
