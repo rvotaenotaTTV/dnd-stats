@@ -1,4 +1,21 @@
 {
+  "config": {
+    "defReduction": 0.03,
+    "hitChanceMin": 0.05,
+    "hitChanceMax": 0.95,
+    "hitChanceBase": 9,
+    "accBaseCPI": 7,
+    "cpiHpPower": 0.7,
+    "cpiDmgPower": 0.6,
+    "cpiAtkBonus": 0.04,
+    "cpiFixedReduction": 0.9,
+    "effHpDefMult": 0.08,
+    "powerMultiplier": 4,
+    "critMultiplier": 2,
+    "maxRounds": 20,
+    "baseAC": 10,
+    "blockThreshold": 4
+  },
   "classes": [
     {"Name": "Воин", "Emoji": "⚔️", "Hp": 29, "Atk": 5, "Def": 2, "Min": 3, "Max": 9},
     {"Name": "Паладин", "Emoji": "🛡️", "Hp": 34, "Atk": 4, "Def": 3, "Min": 3, "Max": 7},
