@@ -113,13 +113,58 @@
         .reasons-box h4 { color: #ffd700; margin-bottom: 15px; }
         .reasons-list { padding-left: 25px; color: #8b949e; line-height: 1.8; }
         
-        @media (max-width: 768px) {
-            .nav-toggle { display: block; }
-            .page-nav { display: none; flex-direction: column; margin-top: 10px; }
-            .page-nav.show { display: flex; }
-            .page-nav a { text-align: center; padding: 10px; background: #21262d; border-radius: 20px; }
-            .players-select, .classes-select { grid-template-columns: 1fr; }
-        }
+		@media (max-width: 768px) {
+			body { padding: 10px; }
+			h1 { font-size: 1.6em; margin-top: 45px; }
+			
+			.nav-wrapper { border-bottom: none; }
+			.nav-toggle { display: block; }
+			.page-nav { 
+				display: none; 
+				flex-direction: column; 
+				gap: 8px; 
+				margin-top: 10px; 
+			}
+			.page-nav.show { display: flex; }
+			.page-nav a { 
+				text-align: center; 
+				padding: 10px;
+				background: #21262d;
+				border: 1px solid #30363d;
+				border-radius: 20px;
+				margin-bottom: 0;
+			}
+			
+			.calc-container {
+				overflow-x: hidden;
+			}
+			
+			.selectors {
+				overflow-x: hidden;
+				padding: 15px;
+			}
+			
+			.players-select, .classes-select { 
+				grid-template-columns: 1fr; 
+				gap: 15px;
+			}
+			
+			.vs-divider { font-size: 22px; }
+			
+			.fighter-card { padding: 15px; }
+			
+			table { 
+				display: block;
+				overflow-x: auto;
+				white-space: nowrap;
+				font-size: 11px; 
+			}
+			
+			th, td { padding: 6px 8px; }
+			
+			.reasons-box { padding: 15px; }
+			.reasons-list { padding-left: 20px; font-size: 11px; }
+		}
     </style>
 </head>
 <body>
