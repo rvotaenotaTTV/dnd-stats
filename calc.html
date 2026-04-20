@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор боёв</title>
+    <title>Калькулятор</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -123,7 +123,7 @@
     </style>
 </head>
 <body>
-    <h1>🎲 КАЛЬКУЛЯТОР БОЁВ</h1>
+    <h1>КАЛЬКУЛЯТОР</h1>
     
     <div class="nav-wrapper">
         <button class="nav-toggle">☰ Меню</button>
@@ -327,10 +327,9 @@
             const defReduce1 = 1 - s2.def * CONFIG.defReduction;
             const defReduce2 = 1 - s1.def * CONFIG.defReduction;
             
-			// Урон за ход (с учётом критов)
-			const critChance = 0.05;
-			const d1 = h1 * avg1 * defReduce1 * (1 - critChance) + critChance * avg1 * CONFIG.critMultiplier * defReduce1;
-			const d2 = h2 * avg2 * defReduce2 * (1 - critChance) + critChance * avg2 * CONFIG.critMultiplier * defReduce2;
+			// Урон за ход
+			const d1 = h1 * avg1 * defReduce1 * 0.95 + 0.03 * avg1 * 2 * defReduce1;
+			const d2 = h2 * avg2 * defReduce2 * 0.95 + 0.03 * avg2 * 2 * defReduce2;
             
             // Ходов до победы
             const t1 = d1 > 0 ? s2.hp / d1 : 999;
