@@ -396,7 +396,8 @@
         const win1 = totalDmg > 0 ? (d1 / totalDmg) * 100 : 50;
         const win2 = totalDmg > 0 ? (d2 / totalDmg) * 100 : 50;
         
-        const winner = win1 >= win2 ? sel.p1 : sel.p2;
+        const isEqual = Math.abs(win1 - win2) < 0.01;
+		const winner = isEqual ? null : (win1 > win2 ? sel.p1 : sel.p2);
         
         // Разброс (стабильность)
         const spread1 = s1.max - s1.min;
@@ -470,11 +471,11 @@
                 <tr><td>Быстрая победа</td><td class="number">${r.quick1}</td><td class="number">${r.quick2}</td></tr>
                 <tr><td>Крит убивает?</td><td class="number">${r.critKill1 ? '✅' : '❌'}</td><td class="number">${r.critKill2 ? '✅' : '❌'}</td></tr>
                 <tr><td style="color:#ffd700;">Вероятность победы</td><td class="number" style="color:#ffd700;font-weight:bold;">${r.win1.toFixed(2)}%</td><td class="number" style="color:#ffd700;font-weight:bold;">${r.win2.toFixed(2)}%</td></tr>
-                <tr><td>Опаснее</td><td colspan="2" style="text-align:center;">💥 ${r.winner.display}</td></tr>
+                <tr><td>Опаснее</td><td colspan="2" style="text-align:center;">${r.winner ? `💥 ${r.winner.display}` : '⚖️ Равные силы'}</td></tr>
                 <tr><td>Стабильность</td><td class="number">${r.spread1}</td><td class="number">${r.spread2}</td></tr>
             </table>
             <div class="reasons-box">
-                <h4>✅ Причина победы: ${r.winner.display} сильнее</h4>
+                <h4>✅ Причина победы: ${r.winner ? `${r.winner.display} сильнее` : '⚖️ Полное равновесие'}</h4>
                 <ul class="reasons-list">${r.reasons.map(x => `<li>${x}</li>`).join('')}</ul>
             </div>
         `;
