@@ -346,6 +346,13 @@
 		#players-table th:nth-child(4), #players-table td:nth-child(4) { white-space: nowrap; }
 	}
 </style>
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/dnd-stats/sw.js')
+        .then(() => console.log('✅ SW зарегистрирован'))
+        .catch(err => console.log('❌ SW ошибка:', err));
+}
+</script>
 </head>
 <body>
 
@@ -372,6 +379,12 @@
 <div id="content"><div class="loading">⏳ Загрузка статистики...</div></div>
 
 <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/dnd-stats/sw.js')
+            .then(() => console.log('✅ SW зарегистрирован'))
+            .catch(err => console.log('❌ SW ошибка:', err));
+    }
+
     const navToggle = document.querySelector('.nav-toggle');
     const pageNav = document.querySelector('.page-nav');
     navToggle.addEventListener('click', () => {
