@@ -381,32 +381,29 @@
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-	// Режим KZ: false = Raw GitHub (по умолчанию), true = jsDelivr (для Казахстана)
 	let useKZ = localStorage.getItem('useKZ') === 'true';
 
-	// URL'ы
 	const JSON_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 	const DATA_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
 	const JSON_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 	const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
 
-	// Обновляем текст кнопки
 	function updateButton() {
 		const btn = document.getElementById('kzToggleBtn');
+		const icon = document.getElementById('kzIcon');
 		if (btn) {
 			if (useKZ) {
-				btn.textContent = '🇰🇿 KZ (CDN)';
+				icon.textContent = '⚡';
 				btn.style.color = '#ffd700';
 				btn.style.borderColor = '#ffd700';
 			} else {
-				btn.textContent = '🇰🇿 KZ';
+				icon.textContent = '🐢';
 				btn.style.color = '#8b949e';
 				btn.style.borderColor = '#30363d';
 			}
 		}
 	}
 
-	// Функция переключения
 	function toggleKZ() {
 		useKZ = !useKZ;
 		localStorage.setItem('useKZ', useKZ);
@@ -415,7 +412,6 @@
 	}
 	window.toggleKZ = toggleKZ;
 
-	// Устанавливаем URL
 	const JSON_URL = useKZ ? JSON_URL_CDN : JSON_URL_RAW;
 	const DATA_URL = useKZ ? DATA_URL_CDN : DATA_URL_RAW;
 
@@ -692,203 +688,203 @@
 			{ emoji:"🌙",name:"Глас тьмы",type:"faction",value:25,faction:"Культ Тьмы",priority:300 }
 		];
     
-    function checkAchievement(ach, p) {
-        const total = p.wins + p.losses;
-        if (ach.minFights && total < ach.minFights) return false;
-        switch (ach.type) {
-            case "level": return p.level >= ach.value;
-            case "wins": return p.wins >= ach.value;
-            case "losses": return p.losses >= ach.value;
-            case "best": return p.best >= ach.value;
-            case "fights": return total >= ach.value;
-            case "tournament": return p.tournamentWins >= ach.value;
-            case "faction": return p.faction === ach.faction && p.factionWins >= ach.value;
-            case "winrate": return total>0 && (p.wins*100/total) >= ach.value;
-            case "balance": return p.wins === p.losses && p.wins >= 10;
-            case "zero_hero": return p.wins === 0 && p.losses > 0;
-            case "zero_villain": return p.losses === 0 && p.wins > 0;
-            default: return false;
-        }
-    }
+		function checkAchievement(ach, p) {
+			const total = p.wins + p.losses;
+			if (ach.minFights && total < ach.minFights) return false;
+			switch (ach.type) {
+				case "level": return p.level >= ach.value;
+				case "wins": return p.wins >= ach.value;
+				case "losses": return p.losses >= ach.value;
+				case "best": return p.best >= ach.value;
+				case "fights": return total >= ach.value;
+				case "tournament": return p.tournamentWins >= ach.value;
+				case "faction": return p.faction === ach.faction && p.factionWins >= ach.value;
+				case "winrate": return total>0 && (p.wins*100/total) >= ach.value;
+				case "balance": return p.wins === p.losses && p.wins >= 10;
+				case "zero_hero": return p.wins === 0 && p.losses > 0;
+				case "zero_villain": return p.losses === 0 && p.wins > 0;
+				default: return false;
+			}
+		}
     
-    const playerTitles = {};
-    players.forEach(p => {
-        let bestPriority = -1, bestTitle = "";
-        achievements.forEach(ach => {
-            if (checkAchievement(ach,p) && ach.priority > bestPriority) {
-                bestPriority = ach.priority;
-                bestTitle = ach.emoji + " " + ach.name;
-            }
-        });
-        if (bestTitle) playerTitles[p.display] = bestTitle;
-    });
+		const playerTitles = {};
+		players.forEach(p => {
+			let bestPriority = -1, bestTitle = "";
+			achievements.forEach(ach => {
+				if (checkAchievement(ach,p) && ach.priority > bestPriority) {
+					bestPriority = ach.priority;
+					bestTitle = ach.emoji + " " + ach.name;
+				}
+			});
+			if (bestTitle) playerTitles[p.display] = bestTitle;
+		});
     
-    const titleCounts = {};
-    Object.values(playerTitles).forEach(t => titleCounts[t] = (titleCounts[t]||0)+1);
-    
-    html += '<div class="table-container"><h3>💎 Самые редкие титулы</h3><table>';
-    html += '<tr><th>Титул</th><th>Обладателей</th></tr>';
-    Object.entries(titleCounts).sort((a,b) => a[1]-b[1]).slice(0,10).forEach(([t,c]) => html += `<tr><td>${t}</td><td class="number">${c}</td></tr>`);
-    html += '</table></div>';
-    
-    html += '<div class="table-container"><h3>🌟 Самые популярные титулы</h3><table>';
-    html += '<tr><th>Титул</th><th>Обладателей</th></tr>';
-    Object.entries(titleCounts).sort((a,b) => b[1]-a[1]).slice(0,10).forEach(([t,c]) => html += `<tr><td>${t}</td><td class="number">${c}</td></tr>`);
-    html += '</table></div>';
+		const titleCounts = {};
+		Object.values(playerTitles).forEach(t => titleCounts[t] = (titleCounts[t]||0)+1);
+		
+		html += '<div class="table-container"><h3>💎 Самые редкие титулы</h3><table>';
+		html += '<tr><th>Титул</th><th>Обладателей</th></tr>';
+		Object.entries(titleCounts).sort((a,b) => a[1]-b[1]).slice(0,10).forEach(([t,c]) => html += `<tr><td>${t}</td><td class="number">${c}</td></tr>`);
+		html += '</table></div>';
+		
+		html += '<div class="table-container"><h3>🌟 Самые популярные титулы</h3><table>';
+		html += '<tr><th>Титул</th><th>Обладателей</th></tr>';
+		Object.entries(titleCounts).sort((a,b) => b[1]-a[1]).slice(0,10).forEach(([t,c]) => html += `<tr><td>${t}</td><td class="number">${c}</td></tr>`);
+		html += '</table></div>';
 
-    const allTitlesInfo = [
-        { name:"👑 Бессмертный", type:"Уровень", cond:"50 уровень" },
-        { name:"✨ Мифический", type:"Уровень", cond:"40 уровень" },
-        { name:"⚡ Живая легенда", type:"Уровень", cond:"30 уровень" },
-        { name:"🗡️ Мастер клинка", type:"Уровень", cond:"20 уровень" },
-        { name:"🛡️ Хранитель", type:"Уровень", cond:"15 уровень" },
-        { name:"📿 Собиратель", type:"Уровень", cond:"10 уровень" },
-        { name:"👑 Властелин Раскола", type:"Турнир", cond:"5 побед" },
-        { name:"🏆 Хранитель Вечности", type:"Турнир", cond:"1 победа" },
-        { name:"⚜️ Аэлион", type:"Фракция", cond:"100 побед за Свет" },
-        { name:"🌑 Повествователь", type:"Фракция", cond:"100 побед за Тьму" },
-        { name:"🛡️ Рыцарь Света", type:"Фракция", cond:"50 побед за Свет" },
-        { name:"🗡️ Теневой клинок", type:"Фракция", cond:"50 побед за Тьму" },
-        { name:"✨ Страж порядка", type:"Фракция", cond:"25 побед за Свет" },
-        { name:"🌙 Глас тьмы", type:"Фракция", cond:"25 побед за Тьму" },
-        { name:"☠️ Бог войны", type:"Стрик", cond:"20 побед подряд" },
-        { name:"👑 Легенда", type:"Победы", cond:"100 побед" },
-        { name:"🤪 Безумный", type:"Бои", cond:"1000 боёв" },
-        { name:"🤖 Читер", type:"Винрейт", cond:"90% (30+ боёв)" },
-        { name:"⚡ Непобедимый", type:"Стрик", cond:"10 побед подряд" },
-        { name:"💎 Элита", type:"Винрейт", cond:"80% (30+ боёв)" },
-        { name:"⚔️ Ветеран", type:"Бои", cond:"500 боёв" },
-        { name:"🛡️ Воитель", type:"Победы", cond:"50 побед" },
-        { name:"🛡️ Гладиатор", type:"Поражения", cond:"200 поражений" },
-        { name:"🔥 Неудержимый", type:"Стрик", cond:"5 побед подряд" },
-        { name:"🏹 Мастер", type:"Винрейт", cond:"70% (30+ боёв)" },
-        { name:"🎯 Профессионал", type:"Винрейт", cond:"60% (30+ боёв)" },
-        { name:"⚔️ Опытный", type:"Победы", cond:"10 побед" },
-        { name:"⚙️ Трудяга", type:"Бои", cond:"100 боёв" },
-        { name:"🔥 Задира", type:"Стрик", cond:"3 победы подряд" },
-        { name:"⚖️ Ровный", type:"Винрейт", cond:"50% (10+ боёв)" },
-        { name:"☯️ Инь-Янь", type:"Особое", cond:"Побед = Поражений (20+)" },
-        { name:"🌱 Новичок", type:"Победы", cond:"1 победа" },
-        { name:"👀 Любопытный", type:"Бои", cond:"50 боёв" },
-        { name:"😐 Середнячок", type:"Винрейт", cond:"40% (10+ боёв)" },
-        { name:"🦸 Герой с нуля", type:"Особое", cond:"0 побед, есть поражения" },
-        { name:"👿 Злодей", type:"Особое", cond:"0 поражений, есть победы" },
-        { name:"⚙️ Железный", type:"Поражения", cond:"100 поражений" },
-        { name:"🪀 Груша для битья", type:"Поражения", cond:"50 поражений" },
-        { name:"🥊 Мешок с песком", type:"Поражения", cond:"10 поражений" }
-    ];
-    
-    html += '<div class="table-container"><h3>👑 Титулованные игроки (' + Object.keys(playerTitles).length + ')</h3><table>';
-    html += '<tr><th>Игрок</th><th>Титул</th><th>Класс</th></tr>';
-    Object.entries(playerTitles).sort((a,b) => a[0].localeCompare(b[0])).forEach(([name,title]) => {
-        const p = players.find(pl => pl.display === name);
-        html += `<tr><td>${name}</td><td>${title}</td><td>${p?.name || ''}</td></tr>`;
-    });
-    html += '</table></div>';
+		const allTitlesInfo = [
+			{ name:"👑 Бессмертный", type:"Уровень", cond:"50 уровень" },
+			{ name:"✨ Мифический", type:"Уровень", cond:"40 уровень" },
+			{ name:"⚡ Живая легенда", type:"Уровень", cond:"30 уровень" },
+			{ name:"🗡️ Мастер клинка", type:"Уровень", cond:"20 уровень" },
+			{ name:"🛡️ Хранитель", type:"Уровень", cond:"15 уровень" },
+			{ name:"📿 Собиратель", type:"Уровень", cond:"10 уровень" },
+			{ name:"👑 Властелин Раскола", type:"Турнир", cond:"5 побед" },
+			{ name:"🏆 Хранитель Вечности", type:"Турнир", cond:"1 победа" },
+			{ name:"⚜️ Аэлион", type:"Фракция", cond:"100 побед за Свет" },
+			{ name:"🌑 Повествователь", type:"Фракция", cond:"100 побед за Тьму" },
+			{ name:"🛡️ Рыцарь Света", type:"Фракция", cond:"50 побед за Свет" },
+			{ name:"🗡️ Теневой клинок", type:"Фракция", cond:"50 побед за Тьму" },
+			{ name:"✨ Страж порядка", type:"Фракция", cond:"25 побед за Свет" },
+			{ name:"🌙 Глас тьмы", type:"Фракция", cond:"25 побед за Тьму" },
+			{ name:"☠️ Бог войны", type:"Стрик", cond:"20 побед подряд" },
+			{ name:"👑 Легенда", type:"Победы", cond:"100 побед" },
+			{ name:"🤪 Безумный", type:"Бои", cond:"1000 боёв" },
+			{ name:"🤖 Читер", type:"Винрейт", cond:"90% (30+ боёв)" },
+			{ name:"⚡ Непобедимый", type:"Стрик", cond:"10 побед подряд" },
+			{ name:"💎 Элита", type:"Винрейт", cond:"80% (30+ боёв)" },
+			{ name:"⚔️ Ветеран", type:"Бои", cond:"500 боёв" },
+			{ name:"🛡️ Воитель", type:"Победы", cond:"50 побед" },
+			{ name:"🛡️ Гладиатор", type:"Поражения", cond:"200 поражений" },
+			{ name:"🔥 Неудержимый", type:"Стрик", cond:"5 побед подряд" },
+			{ name:"🏹 Мастер", type:"Винрейт", cond:"70% (30+ боёв)" },
+			{ name:"🎯 Профессионал", type:"Винрейт", cond:"60% (30+ боёв)" },
+			{ name:"⚔️ Опытный", type:"Победы", cond:"10 побед" },
+			{ name:"⚙️ Трудяга", type:"Бои", cond:"100 боёв" },
+			{ name:"🔥 Задира", type:"Стрик", cond:"3 победы подряд" },
+			{ name:"⚖️ Ровный", type:"Винрейт", cond:"50% (10+ боёв)" },
+			{ name:"☯️ Инь-Янь", type:"Особое", cond:"Побед = Поражений (20+)" },
+			{ name:"🌱 Новичок", type:"Победы", cond:"1 победа" },
+			{ name:"👀 Любопытный", type:"Бои", cond:"50 боёв" },
+			{ name:"😐 Середнячок", type:"Винрейт", cond:"40% (10+ боёв)" },
+			{ name:"🦸 Герой с нуля", type:"Особое", cond:"0 побед, есть поражения" },
+			{ name:"👿 Злодей", type:"Особое", cond:"0 поражений, есть победы" },
+			{ name:"⚙️ Железный", type:"Поражения", cond:"100 поражений" },
+			{ name:"🪀 Груша для битья", type:"Поражения", cond:"50 поражений" },
+			{ name:"🥊 Мешок с песком", type:"Поражения", cond:"10 поражений" }
+		];
+		
+		html += '<div class="table-container"><h3>👑 Титулованные игроки (' + Object.keys(playerTitles).length + ')</h3><table>';
+		html += '<tr><th>Игрок</th><th>Титул</th><th>Класс</th></tr>';
+		Object.entries(playerTitles).sort((a,b) => a[0].localeCompare(b[0])).forEach(([name,title]) => {
+			const p = players.find(pl => pl.display === name);
+			html += `<tr><td>${name}</td><td>${title}</td><td>${p?.name || ''}</td></tr>`;
+		});
+		html += '</table></div>';
 
-    html += '<div class="table-container"><h3>📜 Все титулы и условия</h3><table>';
-    html += '<tr><th>Титул</th><th>Тип</th><th>Условие</th></tr>';
-    allTitlesInfo.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => html += `<tr><td>${t.name}</td><td>${t.type}</td><td>${t.cond}</td></tr>`);
-    html += '</table></div>';
-    html += '</div></div>';
+		html += '<div class="table-container"><h3>📜 Все титулы и условия</h3><table>';
+		html += '<tr><th>Титул</th><th>Тип</th><th>Условие</th></tr>';
+		allTitlesInfo.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => html += `<tr><td>${t.name}</td><td>${t.type}</td><td>${t.cond}</td></tr>`);
+		html += '</table></div>';
+		html += '</div></div>';
 
-    // РЕЙТИНГ (SEASON TOP)
-    html += '<div id="tab-rating" class="tab-content">';
-    html += '<div class="table-container"><h3>🏆 Сезонный рейтинг</h3>';
-    html += '<table id="rating-table">';
-    html += '<thead><tr>';
-    html += '<th class="sortable-header" data-sort="rank">#</th>';
-    html += '<th class="sortable-header" data-sort="name">Игрок</th>';
-    html += '<th class="sortable-header" data-sort="class">Класс</th>';
-    html += '<th class="sortable-header" data-sort="skill">Рейтинг</th>';
-    html += '<th class="sortable-header" data-sort="wl">W/L</th>';
-    html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
-    html += '</tr></thead><tbody id="rating-tbody">';
+		// РЕЙТИНГ (SEASON TOP)
+		html += '<div id="tab-rating" class="tab-content">';
+		html += '<div class="table-container"><h3>🏆 Сезонный рейтинг</h3>';
+		html += '<table id="rating-table">';
+		html += '<thead><tr>';
+		html += '<th class="sortable-header" data-sort="rank">#</th>';
+		html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+		html += '<th class="sortable-header" data-sort="class">Класс</th>';
+		html += '<th class="sortable-header" data-sort="skill">Рейтинг</th>';
+		html += '<th class="sortable-header" data-sort="wl">W/L</th>';
+		html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+		html += '</tr></thead><tbody id="rating-tbody">';
     
-    const seasonTop = data.seasonTop || [];
-    if (seasonTop.length > 0) {
-        seasonTop.forEach((p, i) => {
-            const player = players.find(pl => pl.display === p.display) || {};
-            const total = p.wins + p.losses;
-            const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
-            html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${player.name || ''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
-            html += `<td>${i+1}</td><td>${p.emoji || '🏆'} ${p.display}</td><td>${player.name || '—'}</td><td class="number">${p.skill}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td></tr>`;
-        });
-    } else {
-        html += '<tr><td colspan="6" style="text-align:center;padding:20px;color:#8b949e;">Нет данных рейтинга</td></tr>';
-    }
-    html += '</tbody></table></div></div>';
+		const seasonTop = data.seasonTop || [];
+		if (seasonTop.length > 0) {
+			seasonTop.forEach((p, i) => {
+				const player = players.find(pl => pl.display === p.display) || {};
+				const total = p.wins + p.losses;
+				const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
+				html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${player.name || ''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
+				html += `<td>${i+1}</td><td>${p.emoji || '🏆'} ${p.display}</td><td>${player.name || '—'}</td><td class="number">${p.skill}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td></tr>`;
+			});
+		} else {
+			html += '<tr><td colspan="6" style="text-align:center;padding:20px;color:#8b949e;">Нет данных рейтинга</td></tr>';
+		}
+		html += '</tbody></table></div></div>';
     
-    // ОСКОЛКИ
-    html += '<div id="tab-shards" class="tab-content">';
-    html += '<div class="table-container"><h3>💎 Топ коллекционеров осколков</h3>';
-    html += '<table id="shards-table">';
-    html += '<thead><tr>';
-    html += '<th class="sortable-header" data-sort="rank">#</th>';
-    html += '<th class="sortable-header" data-sort="name">Игрок</th>';
-    html += '<th class="sortable-header" data-sort="class">Класс</th>';
-    html += '<th class="sortable-header" data-sort="shards">Осколки</th>';
-    html += '<th class="sortable-header" data-sort="level">Уровень</th>';
-    html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
-    html += '</tr></thead><tbody id="shards-tbody">';
+		// ОСКОЛКИ
+		html += '<div id="tab-shards" class="tab-content">';
+		html += '<div class="table-container"><h3>💎 Топ коллекционеров осколков</h3>';
+		html += '<table id="shards-table">';
+		html += '<thead><tr>';
+		html += '<th class="sortable-header" data-sort="rank">#</th>';
+		html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+		html += '<th class="sortable-header" data-sort="class">Класс</th>';
+		html += '<th class="sortable-header" data-sort="shards">Осколки</th>';
+		html += '<th class="sortable-header" data-sort="level">Уровень</th>';
+		html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
+		html += '</tr></thead><tbody id="shards-tbody">';
     
-    const topShardsAll = [...players].sort((a,b) => b.shards - a.shards);
-    topShardsAll.forEach((p, i) => {
-        const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
-        html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}">`;
-        html += `<td>${i+1}</td><td>${p.emoji} ${p.display}</td><td>${p.name}</td><td class="number">${p.shards}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
-    });
-    html += '</tbody></table></div></div>';
+		const topShardsAll = [...players].sort((a,b) => b.shards - a.shards);
+		topShardsAll.forEach((p, i) => {
+			const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
+			html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}">`;
+			html += `<td>${i+1}</td><td>${p.emoji} ${p.display}</td><td>${p.name}</td><td class="number">${p.shards}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
+		});
+		html += '</tbody></table></div></div>';
     
-    // ВСЕ ИГРОКИ
-    html += '<div id="tab-allplayers" class="tab-content">';
-    html += '<div class="table-container"><h3>👥 Все игроки (' + totalPlayers + ')</h3>';
-    html += '<div class="search-box">';
-    html += '<input type="text" id="player-search" class="search-input" placeholder="🔍 Поиск по имени или классу...">';
-    html += '<button id="clear-search" class="search-clear">✕</button>';
-    html += '<span id="search-result" style="color:#8b949e;margin-left:auto;"></span>';
-    html += '</div>';
-    html += '<table id="players-table"><thead><tr>';
-    html += '<th class="sortable-header" data-sort="index">#</th>';
-    html += '<th class="sortable-header" data-sort="name">Игрок</th>';
-    html += '<th class="sortable-header" data-sort="class">Класс</th>';
-    html += '<th class="sortable-header" data-sort="wl">W/L</th>';
-    html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
-    html += '<th class="sortable-header" data-sort="streak">Стрик</th>';
-    html += '<th class="sortable-header" data-sort="level">Уровень</th>';
-    html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
-    html += '</tr></thead><tbody id="players-tbody">';
+		// ВСЕ ИГРОКИ
+		html += '<div id="tab-allplayers" class="tab-content">';
+		html += '<div class="table-container"><h3>👥 Все игроки (' + totalPlayers + ')</h3>';
+		html += '<div class="search-box">';
+		html += '<input type="text" id="player-search" class="search-input" placeholder="🔍 Поиск по имени или классу...">';
+		html += '<button id="clear-search" class="search-clear">✕</button>';
+		html += '<span id="search-result" style="color:#8b949e;margin-left:auto;"></span>';
+		html += '</div>';
+		html += '<table id="players-table"><thead><tr>';
+		html += '<th class="sortable-header" data-sort="index">#</th>';
+		html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+		html += '<th class="sortable-header" data-sort="class">Класс</th>';
+		html += '<th class="sortable-header" data-sort="wl">W/L</th>';
+		html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+		html += '<th class="sortable-header" data-sort="streak">Стрик</th>';
+		html += '<th class="sortable-header" data-sort="level">Уровень</th>';
+		html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
+		html += '</tr></thead><tbody id="players-tbody">';
     
-    const sortedPlayers = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses));
-    sortedPlayers.forEach((p,i) => {
-        const total = p.wins + p.losses;
-        const wr = total>0 ? (p.wins*100/total).toFixed(1) : '0.0';
-        const fi = p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');
-        const originalIdx = players.indexOf(p) + 1;
-        html += `<tr data-index="${originalIdx}" data-name="${p.display}" data-class="${p.name}" data-wl="${total}" data-winrate="${wr}" data-streak="${p.best}" data-level="${p.level}" data-faction="${fi}">`;
-        html += `<td>${originalIdx}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td><td class="number">${p.best}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
-    });
-    html += '</tbody></table></div></div>';
+		const sortedPlayers = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses));
+		sortedPlayers.forEach((p,i) => {
+			const total = p.wins + p.losses;
+			const wr = total>0 ? (p.wins*100/total).toFixed(1) : '0.0';
+			const fi = p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');
+			const originalIdx = players.indexOf(p) + 1;
+			html += `<tr data-index="${originalIdx}" data-name="${p.display}" data-class="${p.name}" data-wl="${total}" data-winrate="${wr}" data-streak="${p.best}" data-level="${p.level}" data-faction="${fi}">`;
+			html += `<td>${originalIdx}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td><td class="number">${p.best}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
+		});
+		html += '</tbody></table></div></div>';
     
-    document.getElementById('content').innerHTML = html;
+		document.getElementById('content').innerHTML = html;
+		
+		initSortableTable('classes-table', 'total', 'desc');
+		initSortableTable('races-table', 'total', 'desc');
+		initSortableTable('combos-table', 'winrate', 'desc');
+		initSortableTable('rating-table', 'skill', 'desc');
+		initSortableTable('shards-table', 'shards', 'desc');
+		initSortableTable('champions-table', 'wins', 'desc');
+		initPlayersTable();
     
-    initSortableTable('classes-table', 'total', 'desc');
-    initSortableTable('races-table', 'total', 'desc');
-    initSortableTable('combos-table', 'winrate', 'desc');
-    initSortableTable('rating-table', 'skill', 'desc');
-    initSortableTable('shards-table', 'shards', 'desc');
-    initSortableTable('champions-table', 'wins', 'desc');
-    initPlayersTable();
-    
-    // Проверяем hash в URL
-    setTimeout(function() {
-        var hash = window.location.hash.substring(1);
-        var validTabs = ['tops', 'classes', 'races', 'combos', 'rating', 'shards', 'records', 'champions', 'titles', 'allplayers'];
-        if (hash && validTabs.includes(hash)) {
-            switchTab(hash);
-        }
-    }, 100);
-}
+		// Проверяем hash в URL
+		setTimeout(function() {
+			var hash = window.location.hash.substring(1);
+			var validTabs = ['tops', 'classes', 'races', 'combos', 'rating', 'shards', 'records', 'champions', 'titles', 'allplayers'];
+			if (hash && validTabs.includes(hash)) {
+				switchTab(hash);
+			}
+		}, 100);
+	}
 
 	function initSortableTable(tableId, defaultSort, defaultDir) {
 		setTimeout(() => {
@@ -1015,33 +1011,26 @@
 		history.replaceState(null, null, '#' + tabName);
 };
 </script>
-<!-- КНОПКА KZ-->
-<div style="position: fixed; top: 15px; left: 15px; z-index: 1000;">
-    <button id="kzToggleBtn" onclick="toggleKZ()" style="
-        background: #21262d;
-        border: 1px solid #30363d;
-        color: #8b949e;
-        padding: 8px 12px;
-        border-radius: 30px;
-        cursor: pointer;
-        font-size: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        transition: all 0.2s;
-        backdrop-filter: blur(5px);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    ">
-        <svg width="16" height="12" viewBox="0 0 16 12" style="border-radius: 2px;">
-            <rect width="16" height="12" fill="#00B4D8"/>
-            <circle cx="8" cy="6" r="3" fill="#FFD700"/>
-            <circle cx="8" cy="6" r="2.5" fill="#00B4D8"/>
-            <polygon points="8,3 8.5,5 10,5 9,6.5 9.5,8.5 8,7 6.5,8.5 7,6.5 6,5 7.5,5" fill="#FFD700"/>
-            <line x1="0" y1="3" x2="16" y2="3" stroke="#FFD700" stroke-width="1.5"/>
-            <line x1="0" y1="9" x2="16" y2="9" stroke="#FFD700" stroke-width="1.5"/>
-        </svg>
-        KZ
-    </button>
-</div>
+	<!-- КНОПКА KZ (ЧЕРЕПАХА / МОЛНИЯ) - ЛЕВЫЙ ВЕРХНИЙ УГОЛ -->
+	<div style="position: fixed; top: 15px; left: 15px; z-index: 1000;">
+		<button id="kzToggleBtn" onclick="toggleKZ()" style="
+			background: #21262d;
+			border: 1px solid #30363d;
+			color: #8b949e;
+			padding: 8px 12px;
+			border-radius: 30px;
+			cursor: pointer;
+			font-size: 12px;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+			transition: all 0.2s;
+			backdrop-filter: blur(5px);
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		">
+			<span id="kzIcon">🐢</span>
+			<span>KZ</span>
+		</button>
+	</div>
 </body>
 </html>
