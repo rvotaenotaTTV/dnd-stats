@@ -346,13 +346,6 @@
 		#players-table th:nth-child(4), #players-table td:nth-child(4) { white-space: nowrap; }
 	}
 </style>
-<script>
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/dnd-stats/sw.js')
-        .then(() => console.log('✅ SW зарегистрирован'))
-        .catch(err => console.log('❌ SW ошибка:', err));
-}
-</script>
 </head>
 <body>
 
@@ -381,12 +374,6 @@ if ('serviceWorker' in navigator) {
 <div id="content"><div class="loading">⏳ Загрузка статистики...</div></div>
 
 <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/dnd-stats/sw.js')
-            .then(() => console.log('✅ SW зарегистрирован'))
-            .catch(err => console.log('❌ SW ошибка:', err));
-    }
-
     const navToggle = document.querySelector('.nav-toggle');
     const pageNav = document.querySelector('.page-nav');
     navToggle.addEventListener('click', () => {
@@ -394,279 +381,279 @@ if ('serviceWorker' in navigator) {
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+	const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+	const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
 
-let classesData = [];
-let racesData = [];
-let classEmojis = {};
-let raceEmojis = {};
-let players = [];
+	let classesData = [];
+	let racesData = [];
+	let classEmojis = {};
+	let raceEmojis = {};
+	let players = [];
 
-fetch(DATA_URL)
-    .then(r => r.json())
-    .then(data => {
-        classesData = data.classes;
-        racesData = data.races;
-        classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
-        raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
-        return fetch(JSON_URL);
-    })
-    .then(r => r.json())
-    .then(data => {
-        players = data.players.filter(p => p.name && p.name !== 'Unknown');
-        renderFullStats(data);
-    })
-    .catch(err => {
-        console.error('Ошибка загрузки:', err);
-        document.getElementById('content').innerHTML = `<div class="loading">❌ Ошибка загрузки данных<br><span style="color:#ff6b6b;">${err.message}</span></div>`;
-    });
+	fetch(DATA_URL)
+		.then(r => r.json())
+		.then(data => {
+			classesData = data.classes;
+			racesData = data.races;
+			classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
+			raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
+			return fetch(JSON_URL);
+		})
+		.then(r => r.json())
+		.then(data => {
+			players = data.players.filter(p => p.name && p.name !== 'Unknown');
+			renderFullStats(data);
+		})
+		.catch(err => {
+			console.error('Ошибка загрузки:', err);
+			document.getElementById('content').innerHTML = `<div class="loading">❌ Ошибка загрузки данных<br><span style="color:#ff6b6b;">${err.message}</span></div>`;
+		});
 
-function renderFullStats(data) {
-    const totalPlayers = players.length;
-    const totalFights = Math.floor(players.reduce((sum, p) => sum + p.wins + p.losses, 0) / 2);
-    const lightCount = players.filter(p => p.faction === 'Орден Света').length;
-    const darkCount = players.filter(p => p.faction === 'Культ Тьмы').length;
-    
-    let html = '';
-    
-    html += '<div class="stats-grid">';
-    html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
-    html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
-    html += `<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
-    html += `<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
+	function renderFullStats(data) {
+		const totalPlayers = players.length;
+		const totalFights = Math.floor(players.reduce((sum, p) => sum + p.wins + p.losses, 0) / 2);
+		const lightCount = players.filter(p => p.faction === 'Орден Света').length;
+		const darkCount = players.filter(p => p.faction === 'Культ Тьмы').length;
+		
+		let html = '';
+		
+		html += '<div class="stats-grid">';
+		html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
+		html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
+		html += `<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
+		html += `<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
 
-    const factionLight = data.factionScore?.light || 0;
-    const factionDark = data.factionScore?.dark || 0;
-    html += `<div class="stat-card" style="grid-column: span 1;">
-      <div class="stat-value">${factionLight} : ${factionDark}</div>
-      <div class="stat-label">🌝 Свет vs Тьма 🌚</div>
-    </div>`;
-    html += '</div>';
+		const factionLight = data.factionScore?.light || 0;
+		const factionDark = data.factionScore?.dark || 0;
+		html += `<div class="stat-card" style="grid-column: span 1;">
+		  <div class="stat-value">${factionLight} : ${factionDark}</div>
+		  <div class="stat-label">🌝 Свет vs Тьма 🌚</div>
+		</div>`;
+		html += '</div>';
+		
+		html += '<div class="nav-tabs">';
+		html += '<button class="tab-btn active" onclick="switchTab(\'tops\')">🏆 Топы</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'classes\')">⚔️ Классы</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'races\')">🌍 Расы</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'combos\')">🔄 Комбинации</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'rating\')">🏆 Рейтинг</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'shards\')">💎 Осколки</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'records\')">🏅 Рекорды</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'champions\')">👑 Чемпионы</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'titles\')">🏅 Титулы</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'allplayers\')">👥 Игроки</button>';
+		html += '</div>';
     
-    html += '<div class="nav-tabs">';
-    html += '<button class="tab-btn active" onclick="switchTab(\'tops\')">🏆 Топы</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'classes\')">⚔️ Классы</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'races\')">🌍 Расы</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'combos\')">🔄 Комбинации</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'rating\')">🏆 Рейтинг</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'shards\')">💎 Осколки</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'records\')">🏅 Рекорды</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'champions\')">👑 Чемпионы</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'titles\')">🏅 Титулы</button>';
-    html += '<button class="tab-btn" onclick="switchTab(\'allplayers\')">👥 Игроки</button>';
-    html += '</div>';
+		// ТОПЫ
+		html += '<div id="tab-tops" class="tab-content active"><div class="tables-grid">';
+		
+		const topWins = [...players].sort((a,b) => b.wins - a.wins).slice(0,15);
+		html += '<div class="table-container"><h3>🏆 Топ-15 по победам</h3><table>';
+		html += '<tr><th>#</th><th>Игрок</th><th>Класс</th><th>Победы</th></tr>';
+		topWins.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}</td></tr>`);
+		html += '</table></div>';
+		
+		const topWinrate = players.filter(p => p.wins+p.losses >= 20).map(p => ({...p, wr: p.wins*100/(p.wins+p.losses)})).sort((a,b) => b.wr - a.wr).slice(0,15);
+		html += '<div class="table-container"><h3>📈 Топ-15 по винрейту</h3><table>';
+		html += '<tr><th>#</th><th>Игрок</th><th>W/L</th><th>Винрейт</th></tr>';
+		topWinrate.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${p.wr.toFixed(1)}%</td></tr>`);
+		html += '</table></div>';
+		
+		const topFights = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses)).slice(0,15);
+		html += '<div class="table-container"><h3>⚔️ Топ-15 по боям</h3><table>';
+		html += '<tr><th>#</th><th>Игрок</th><th>Боёв</th><th>W/L</th></tr>';
+		topFights.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins+p.losses}</td><td class="number">${p.wins}-${p.losses}</td></tr>`);
+		html += '</table></div>';
+		
+		const topStreak = [...players].sort((a,b) => b.best - a.best).slice(0,15);
+		html += '<div class="table-container"><h3>🔥 Топ-15 по стрику</h3><table>';
+		html += '<tr><th>#</th><th>Игрок</th><th>Стрик</th></tr>';
+		topStreak.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.best}</td></tr>`);
+		html += '</table></div>';
+		html += '</div></div>';
     
-    // ТОПЫ
-    html += '<div id="tab-tops" class="tab-content active"><div class="tables-grid">';
+		// КЛАССЫ
+		html += '<div id="tab-classes" class="tab-content">';
+		const classStats = {};
+		players.forEach(p => {
+			const className = p.name.split('-')[1] || p.name;
+			if (!classStats[className]) classStats[className] = { wins:0, losses:0, players:0, shards:0, best:0 };
+			classStats[className].wins += p.wins;
+			classStats[className].losses += p.losses;
+			classStats[className].players++;
+			classStats[className].shards += p.shards;
+			classStats[className].best = Math.max(classStats[className].best, p.best);
+		});
+		const classArray = Object.entries(classStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses}));
+		html += '<div class="table-container"><h3>⚔️ Статистика по классам</h3>';
+		html += '<table id="classes-table"><thead><tr>';
+		html += '<th class="sortable-header" data-sort="name">Класс</th>';
+		html += '<th class="sortable-header" data-sort="players">Игроков</th>';
+		html += '<th class="sortable-header" data-sort="wins">Победы</th>';
+		html += '<th class="sortable-header" data-sort="losses">Поражения</th>';
+		html += '<th class="sortable-header" data-sort="total">Всего</th>';
+		html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+		html += '<th class="sortable-header" data-sort="shards">Ср.осколки</th>';
+		html += '<th class="sortable-header" data-sort="streak">Стрик</th>';
+		html += '</tr></thead><tbody id="classes-tbody">';
+		classArray.sort((a,b) => b.total - a.total).forEach(c => {
+			const emoji = classEmojis[c.name] || '⚔️';
+			const wr = c.total>0 ? (c.wins*100/c.total).toFixed(1) : '0.0';
+			const avgShards = Math.round(c.shards/c.players);
+			html += `<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-shards="${avgShards}" data-streak="${c.best}">`;
+			html += `<td>${emoji} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${wr}%</td><td class="number">${avgShards}</td><td class="number">${c.best}</td></tr>`;
+		});
+		html += '</tbody></table></div></div>';
     
-    const topWins = [...players].sort((a,b) => b.wins - a.wins).slice(0,15);
-    html += '<div class="table-container"><h3>🏆 Топ-15 по победам</h3><table>';
-    html += '<tr><th>#</th><th>Игрок</th><th>Класс</th><th>Победы</th></tr>';
-    topWins.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}</td></tr>`);
-    html += '</table></div>';
+		// РАСЫ
+		html += '<div id="tab-races" class="tab-content">';
+		const raceStats = {};
+		players.forEach(p => {
+			const raceName = p.name.split('-')[0];
+			if (!raceStats[raceName]) raceStats[raceName] = { wins:0, losses:0, players:0 };
+			raceStats[raceName].wins += p.wins;
+			raceStats[raceName].losses += p.losses;
+			raceStats[raceName].players++;
+		});
+		const raceArray = Object.entries(raceStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses}));
+		html += '<div class="table-container"><h3>🌍 Статистика по расам</h3>';
+		html += '<table id="races-table"><thead><tr>';
+		html += '<th class="sortable-header" data-sort="name">Раса</th>';
+		html += '<th class="sortable-header" data-sort="players">Игроков</th>';
+		html += '<th class="sortable-header" data-sort="wins">Победы</th>';
+		html += '<th class="sortable-header" data-sort="losses">Поражения</th>';
+		html += '<th class="sortable-header" data-sort="total">Всего</th>';
+		html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+		html += '</tr></thead><tbody id="races-tbody">';
+		raceArray.sort((a,b) => b.total - a.total).forEach(r => {
+			const emoji = raceEmojis[r.name] || '🌍';
+			const wr = r.total>0 ? (r.wins*100/r.total).toFixed(1) : '0.0';
+			html += `<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}">`;
+			html += `<td>${emoji} ${r.name}</td><td class="number">${r.players}</td><td class="number">${r.wins}</td><td class="number">${r.losses}</td><td class="number">${r.total}</td><td class="number">${wr}%</td></tr>`;
+		});
+		html += '</tbody></table></div></div>';
     
-    const topWinrate = players.filter(p => p.wins+p.losses >= 20).map(p => ({...p, wr: p.wins*100/(p.wins+p.losses)})).sort((a,b) => b.wr - a.wr).slice(0,15);
-    html += '<div class="table-container"><h3>📈 Топ-15 по винрейту</h3><table>';
-    html += '<tr><th>#</th><th>Игрок</th><th>W/L</th><th>Винрейт</th></tr>';
-    topWinrate.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${p.wr.toFixed(1)}%</td></tr>`);
-    html += '</table></div>';
+		// КОМБИНАЦИИ
+		html += '<div id="tab-combos" class="tab-content">';
+		const comboStats = {};
+		players.forEach(p => {
+			if (!comboStats[p.name]) comboStats[p.name] = { wins:0, losses:0, players:0 };
+			comboStats[p.name].wins += p.wins;
+			comboStats[p.name].losses += p.losses;
+			comboStats[p.name].players++;
+		});
+		const comboArray = Object.entries(comboStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses})).filter(c => c.total >= 10);
+		html += '<div class="table-container"><h3>🔄 Комбинации (10+ боёв)</h3>';
+		html += '<table id="combos-table"><thead><tr>';
+		html += '<th class="sortable-header" data-sort="name">Комбинация</th>';
+		html += '<th class="sortable-header" data-sort="players">Игроков</th>';
+		html += '<th class="sortable-header" data-sort="wins">Победы</th>';
+		html += '<th class="sortable-header" data-sort="losses">Поражения</th>';
+		html += '<th class="sortable-header" data-sort="total">Всего</th>';
+		html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+		html += '</tr></thead><tbody id="combos-tbody">';
+		comboArray.sort((a,b) => (b.wins/b.total) - (a.wins/a.total)).forEach(c => {
+			const parts = c.name.split('-');
+			const raceEm = raceEmojis[parts[0]] || '';
+			const classEm = classEmojis[parts[1]] || '';
+			const wr = (c.wins*100/c.total).toFixed(1);
+			html += `<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}">`;
+			html += `<td>${raceEm}${classEm} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${wr}%</td></tr>`;
+		});
+		html += '</tbody></table></div></div>';
     
-    const topFights = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses)).slice(0,15);
-    html += '<div class="table-container"><h3>⚔️ Топ-15 по боям</h3><table>';
-    html += '<tr><th>#</th><th>Игрок</th><th>Боёв</th><th>W/L</th></tr>';
-    topFights.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins+p.losses}</td><td class="number">${p.wins}-${p.losses}</td></tr>`);
-    html += '</table></div>';
-    
-    const topStreak = [...players].sort((a,b) => b.best - a.best).slice(0,15);
-    html += '<div class="table-container"><h3>🔥 Топ-15 по стрику</h3><table>';
-    html += '<tr><th>#</th><th>Игрок</th><th>Стрик</th></tr>';
-    topStreak.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.best}</td></tr>`);
-    html += '</table></div>';
-    html += '</div></div>';
-    
-    // КЛАССЫ
-    html += '<div id="tab-classes" class="tab-content">';
-    const classStats = {};
-    players.forEach(p => {
-        const className = p.name.split('-')[1] || p.name;
-        if (!classStats[className]) classStats[className] = { wins:0, losses:0, players:0, shards:0, best:0 };
-        classStats[className].wins += p.wins;
-        classStats[className].losses += p.losses;
-        classStats[className].players++;
-        classStats[className].shards += p.shards;
-        classStats[className].best = Math.max(classStats[className].best, p.best);
-    });
-    const classArray = Object.entries(classStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses}));
-    html += '<div class="table-container"><h3>⚔️ Статистика по классам</h3>';
-    html += '<table id="classes-table"><thead><tr>';
-    html += '<th class="sortable-header" data-sort="name">Класс</th>';
-    html += '<th class="sortable-header" data-sort="players">Игроков</th>';
-    html += '<th class="sortable-header" data-sort="wins">Победы</th>';
-    html += '<th class="sortable-header" data-sort="losses">Поражения</th>';
-    html += '<th class="sortable-header" data-sort="total">Всего</th>';
-    html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
-    html += '<th class="sortable-header" data-sort="shards">Ср.осколки</th>';
-    html += '<th class="sortable-header" data-sort="streak">Стрик</th>';
-    html += '</tr></thead><tbody id="classes-tbody">';
-    classArray.sort((a,b) => b.total - a.total).forEach(c => {
-        const emoji = classEmojis[c.name] || '⚔️';
-        const wr = c.total>0 ? (c.wins*100/c.total).toFixed(1) : '0.0';
-        const avgShards = Math.round(c.shards/c.players);
-        html += `<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-shards="${avgShards}" data-streak="${c.best}">`;
-        html += `<td>${emoji} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${wr}%</td><td class="number">${avgShards}</td><td class="number">${c.best}</td></tr>`;
-    });
-    html += '</tbody></table></div></div>';
-    
-    // РАСЫ
-    html += '<div id="tab-races" class="tab-content">';
-    const raceStats = {};
-    players.forEach(p => {
-        const raceName = p.name.split('-')[0];
-        if (!raceStats[raceName]) raceStats[raceName] = { wins:0, losses:0, players:0 };
-        raceStats[raceName].wins += p.wins;
-        raceStats[raceName].losses += p.losses;
-        raceStats[raceName].players++;
-    });
-    const raceArray = Object.entries(raceStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses}));
-    html += '<div class="table-container"><h3>🌍 Статистика по расам</h3>';
-    html += '<table id="races-table"><thead><tr>';
-    html += '<th class="sortable-header" data-sort="name">Раса</th>';
-    html += '<th class="sortable-header" data-sort="players">Игроков</th>';
-    html += '<th class="sortable-header" data-sort="wins">Победы</th>';
-    html += '<th class="sortable-header" data-sort="losses">Поражения</th>';
-    html += '<th class="sortable-header" data-sort="total">Всего</th>';
-    html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
-    html += '</tr></thead><tbody id="races-tbody">';
-    raceArray.sort((a,b) => b.total - a.total).forEach(r => {
-        const emoji = raceEmojis[r.name] || '🌍';
-        const wr = r.total>0 ? (r.wins*100/r.total).toFixed(1) : '0.0';
-        html += `<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}">`;
-        html += `<td>${emoji} ${r.name}</td><td class="number">${r.players}</td><td class="number">${r.wins}</td><td class="number">${r.losses}</td><td class="number">${r.total}</td><td class="number">${wr}%</td></tr>`;
-    });
-    html += '</tbody></table></div></div>';
-    
-    // КОМБИНАЦИИ
-    html += '<div id="tab-combos" class="tab-content">';
-    const comboStats = {};
-    players.forEach(p => {
-        if (!comboStats[p.name]) comboStats[p.name] = { wins:0, losses:0, players:0 };
-        comboStats[p.name].wins += p.wins;
-        comboStats[p.name].losses += p.losses;
-        comboStats[p.name].players++;
-    });
-    const comboArray = Object.entries(comboStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses})).filter(c => c.total >= 10);
-    html += '<div class="table-container"><h3>🔄 Комбинации (10+ боёв)</h3>';
-    html += '<table id="combos-table"><thead><tr>';
-    html += '<th class="sortable-header" data-sort="name">Комбинация</th>';
-    html += '<th class="sortable-header" data-sort="players">Игроков</th>';
-    html += '<th class="sortable-header" data-sort="wins">Победы</th>';
-    html += '<th class="sortable-header" data-sort="losses">Поражения</th>';
-    html += '<th class="sortable-header" data-sort="total">Всего</th>';
-    html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
-    html += '</tr></thead><tbody id="combos-tbody">';
-    comboArray.sort((a,b) => (b.wins/b.total) - (a.wins/a.total)).forEach(c => {
-        const parts = c.name.split('-');
-        const raceEm = raceEmojis[parts[0]] || '';
-        const classEm = classEmojis[parts[1]] || '';
-        const wr = (c.wins*100/c.total).toFixed(1);
-        html += `<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}">`;
-        html += `<td>${raceEm}${classEm} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${wr}%</td></tr>`;
-    });
-    html += '</tbody></table></div></div>';
-    
-    // РЕКОРДЫ
-    html += '<div id="tab-records" class="tab-content">';
-    const maxWins = players.reduce((max,p) => p.wins > max.wins ? p : max, players[0]);
-    const maxStreak = players.reduce((max,p) => p.best > max.best ? p : max, players[0]);
-    const maxShards = players.reduce((max,p) => p.shards > max.shards ? p : max, players[0]);
-    const maxFights = players.reduce((max,p) => (p.wins+p.losses) > (max.wins+max.losses) ? p : max, players[0]);
-    const maxFaction = players.reduce((max,p) => p.factionWins > max.factionWins ? p : max, players[0]);
-    const maxTournament = players.reduce((max,p) => p.tournamentWins > max.tournamentWins ? p : max, players[0]);
-    html += '<div class="records-grid">';
-    html += `<div class="record-item"><div class="record-value">${maxWins.wins}</div><div class="record-label">🏆 Побед — ${maxWins.display}</div></div>`;
-    html += `<div class="record-item"><div class="record-value">${maxStreak.best}</div><div class="record-label">🔥 Стрик — ${maxStreak.display}</div></div>`;
-    html += `<div class="record-item"><div class="record-value">${maxShards.shards}</div><div class="record-label">💎 Осколков — ${maxShards.display}</div></div>`;
-    html += `<div class="record-item"><div class="record-value">${maxFights.wins+maxFights.losses}</div><div class="record-label">⚔️ Боёв — ${maxFights.display}</div></div>`;
-    html += `<div class="record-item"><div class="record-value">${maxFaction.factionWins}</div><div class="record-label">🌝🌚 Фракция — ${maxFaction.display}</div></div>`;
-    html += `<div class="record-item"><div class="record-value">${maxTournament.tournamentWins}</div><div class="record-label">👑 Чемпионств — ${maxTournament.display}</div></div>`;
-    html += '</div></div>';
+		// РЕКОРДЫ
+		html += '<div id="tab-records" class="tab-content">';
+		const maxWins = players.reduce((max,p) => p.wins > max.wins ? p : max, players[0]);
+		const maxStreak = players.reduce((max,p) => p.best > max.best ? p : max, players[0]);
+		const maxShards = players.reduce((max,p) => p.shards > max.shards ? p : max, players[0]);
+		const maxFights = players.reduce((max,p) => (p.wins+p.losses) > (max.wins+max.losses) ? p : max, players[0]);
+		const maxFaction = players.reduce((max,p) => p.factionWins > max.factionWins ? p : max, players[0]);
+		const maxTournament = players.reduce((max,p) => p.tournamentWins > max.tournamentWins ? p : max, players[0]);
+		html += '<div class="records-grid">';
+		html += `<div class="record-item"><div class="record-value">${maxWins.wins}</div><div class="record-label">🏆 Побед — ${maxWins.display}</div></div>`;
+		html += `<div class="record-item"><div class="record-value">${maxStreak.best}</div><div class="record-label">🔥 Стрик — ${maxStreak.display}</div></div>`;
+		html += `<div class="record-item"><div class="record-value">${maxShards.shards}</div><div class="record-label">💎 Осколков — ${maxShards.display}</div></div>`;
+		html += `<div class="record-item"><div class="record-value">${maxFights.wins+maxFights.losses}</div><div class="record-label">⚔️ Боёв — ${maxFights.display}</div></div>`;
+		html += `<div class="record-item"><div class="record-value">${maxFaction.factionWins}</div><div class="record-label">🌝🌚 Фракция — ${maxFaction.display}</div></div>`;
+		html += `<div class="record-item"><div class="record-value">${maxTournament.tournamentWins}</div><div class="record-label">👑 Чемпионств — ${maxTournament.display}</div></div>`;
+		html += '</div></div>';
 
-    // ЧЕМПИОНЫ
-    html += '<div id="tab-champions" class="tab-content">';
-    const currentChampion = players.find(p => p.champion === true);
-    html += '<div class="table-container"><h3>👑 Текущий Чемпион</h3>';
-    if (currentChampion) {
-        html += `<div class="champion-block">`;
-        html += `<div class="champion-emoji">${currentChampion.emoji}</div>`;
-        html += `<div class="champion-name">${currentChampion.display}</div>`;
-        html += `<div class="champion-class">${currentChampion.name}</div>`;
-        html += `<div style="margin-top:10px;color:#8b949e;">🏆 ${currentChampion.tournamentWins} чемпионств</div></div>`;
-    } else {
-        html += '<p style="color:#8b949e;padding:20px;text-align:center;">Нет текущего чемпиона</p>';
-    }
-    html += '</div>';
+		// ЧЕМПИОНЫ
+		html += '<div id="tab-champions" class="tab-content">';
+		const currentChampion = players.find(p => p.champion === true);
+		html += '<div class="table-container"><h3>👑 Текущий Чемпион</h3>';
+		if (currentChampion) {
+			html += `<div class="champion-block">`;
+			html += `<div class="champion-emoji">${currentChampion.emoji}</div>`;
+			html += `<div class="champion-name">${currentChampion.display}</div>`;
+			html += `<div class="champion-class">${currentChampion.name}</div>`;
+			html += `<div style="margin-top:10px;color:#8b949e;">🏆 ${currentChampion.tournamentWins} чемпионств</div></div>`;
+		} else {
+			html += '<p style="color:#8b949e;padding:20px;text-align:center;">Нет текущего чемпиона</p>';
+		}
+		html += '</div>';
     
-    const topChampions = players.filter(p => p.tournamentWins > 0).sort((a,b) => b.tournamentWins - a.tournamentWins);
-    html += '<div class="table-container"><h3>🏆 Все чемпионы (' + topChampions.length + ')</h3>';
-    html += '<table id="champions-table"><thead><tr>';
-    html += '<th class="sortable-header" data-sort="rank">#</th>';
-    html += '<th class="sortable-header" data-sort="name">Игрок</th>';
-    html += '<th class="sortable-header" data-sort="class">Класс</th>';
-    html += '<th class="sortable-header" data-sort="wins">Чемпионств</th>';
-    html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
-    html += '</tr></thead><tbody id="champions-tbody">';
-    topChampions.forEach((p, i) => {
-        const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
-        html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}">`;
-        html += `<td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.tournamentWins}</td><td>${fi}</td></tr>`;
-    });
-    html += '</tbody></table></div></div>';
+		const topChampions = players.filter(p => p.tournamentWins > 0).sort((a,b) => b.tournamentWins - a.tournamentWins);
+		html += '<div class="table-container"><h3>🏆 Все чемпионы (' + topChampions.length + ')</h3>';
+		html += '<table id="champions-table"><thead><tr>';
+		html += '<th class="sortable-header" data-sort="rank">#</th>';
+		html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+		html += '<th class="sortable-header" data-sort="class">Класс</th>';
+		html += '<th class="sortable-header" data-sort="wins">Чемпионств</th>';
+		html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
+		html += '</tr></thead><tbody id="champions-tbody">';
+		topChampions.forEach((p, i) => {
+			const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
+			html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}">`;
+			html += `<td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.tournamentWins}</td><td>${fi}</td></tr>`;
+		});
+		html += '</tbody></table></div></div>';
 
-    // ТИТУЛЫ
-    html += '<div id="tab-titles" class="tab-content">';
-    html += '<div class="titles-grid">';
-    const achievements = [
-        { emoji:"👑",name:"Бессмертный",type:"level",value:50,priority:1000 },
-        { emoji:"✨",name:"Мифический",type:"level",value:40,priority:900 },
-        { emoji:"⚡",name:"Живая легенда",type:"level",value:30,priority:800 },
-        { emoji:"🗡️",name:"Мастер клинка",type:"level",value:20,priority:700 },
-        { emoji:"🛡️",name:"Хранитель",type:"level",value:15,priority:600 },
-        { emoji:"📿",name:"Собиратель",type:"level",value:10,priority:500 },
-        { emoji:"👑",name:"Властелин Раскола",type:"tournament",value:5,priority:1100 },
-        { emoji:"🏆",name:"Хранитель Вечности",type:"tournament",value:1,priority:400 },
-        { emoji:"⚜️",name:"Аэлион",type:"faction",value:100,faction:"Орден Света",priority:380 },
-        { emoji:"🌑",name:"Повествователь",type:"faction",value:100,faction:"Культ Тьмы",priority:380 },
-        { emoji:"🛡️",name:"Рыцарь Света",type:"faction",value:50,faction:"Орден Света",priority:340 },
-        { emoji:"🗡️",name:"Теневой клинок",type:"faction",value:50,faction:"Культ Тьмы",priority:340 },
-        { emoji:"☠️",name:"Бог войны",type:"best",value:20,priority:290 },
-        { emoji:"👑",name:"Легенда",type:"wins",value:100,priority:280 },
-        { emoji:"🤪",name:"Безумный",type:"fights",value:1000,priority:270 },
-        { emoji:"🤖",name:"Читер",type:"winrate",value:90,minFights:30,priority:260 },
-        { emoji:"⚡",name:"Непобедимый",type:"best",value:10,priority:250 },
-        { emoji:"💎",name:"Элита",type:"winrate",value:80,minFights:30,priority:240 },
-        { emoji:"⚔️",name:"Ветеран",type:"fights",value:500,priority:230 },
-        { emoji:"🛡️",name:"Воитель",type:"wins",value:50,priority:220 },
-        { emoji:"🛡️",name:"Гладиатор",type:"losses",value:200,priority:210 },
-        { emoji:"🔥",name:"Неудержимый",type:"best",value:5,priority:200 },
-        { emoji:"🏹",name:"Мастер",type:"winrate",value:70,minFights:30,priority:190 },
-        { emoji:"🎯",name:"Профессионал",type:"winrate",value:60,minFights:30,priority:180 },
-        { emoji:"⚔️",name:"Опытный",type:"wins",value:10,priority:170 },
-        { emoji:"⚙️",name:"Трудяга",type:"fights",value:100,priority:160 },
-        { emoji:"🔥",name:"Задира",type:"best",value:3,priority:150 },
-        { emoji:"⚖️",name:"Ровный",type:"winrate",value:50,minFights:10,priority:140 },
-        { emoji:"☯️",name:"Инь-Янь",type:"balance",priority:130 },
-        { emoji:"🌱",name:"Новичок",type:"wins",value:1,priority:120 },
-        { emoji:"👀",name:"Любопытный",type:"fights",value:50,priority:110 },
-        { emoji:"😐",name:"Середнячок",type:"winrate",value:40,minFights:10,priority:100 },
-        { emoji:"🦸",name:"Герой с нуля",type:"zero_hero",priority:80 },
-        { emoji:"👿",name:"Злодей",type:"zero_villain",priority:70 },
-        { emoji:"⚙️",name:"Железный",type:"losses",value:100,priority:60 },
-        { emoji:"🪀",name:"Груша для битья",type:"losses",value:50,priority:50 },
-        { emoji:"🥊",name:"Мешок с песком",type:"losses",value:10,priority:40 },
-        { emoji:"✨",name:"Страж порядка",type:"faction",value:25,faction:"Орден Света",priority:310 },
-        { emoji:"🌙",name:"Глас тьмы",type:"faction",value:25,faction:"Культ Тьмы",priority:300 }
-    ];
+		// ТИТУЛЫ
+		html += '<div id="tab-titles" class="tab-content">';
+		html += '<div class="titles-grid">';
+		const achievements = [
+			{ emoji:"👑",name:"Бессмертный",type:"level",value:50,priority:1000 },
+			{ emoji:"✨",name:"Мифический",type:"level",value:40,priority:900 },
+			{ emoji:"⚡",name:"Живая легенда",type:"level",value:30,priority:800 },
+			{ emoji:"🗡️",name:"Мастер клинка",type:"level",value:20,priority:700 },
+			{ emoji:"🛡️",name:"Хранитель",type:"level",value:15,priority:600 },
+			{ emoji:"📿",name:"Собиратель",type:"level",value:10,priority:500 },
+			{ emoji:"👑",name:"Властелин Раскола",type:"tournament",value:5,priority:1100 },
+			{ emoji:"🏆",name:"Хранитель Вечности",type:"tournament",value:1,priority:400 },
+			{ emoji:"⚜️",name:"Аэлион",type:"faction",value:100,faction:"Орден Света",priority:380 },
+			{ emoji:"🌑",name:"Повествователь",type:"faction",value:100,faction:"Культ Тьмы",priority:380 },
+			{ emoji:"🛡️",name:"Рыцарь Света",type:"faction",value:50,faction:"Орден Света",priority:340 },
+			{ emoji:"🗡️",name:"Теневой клинок",type:"faction",value:50,faction:"Культ Тьмы",priority:340 },
+			{ emoji:"☠️",name:"Бог войны",type:"best",value:20,priority:290 },
+			{ emoji:"👑",name:"Легенда",type:"wins",value:100,priority:280 },
+			{ emoji:"🤪",name:"Безумный",type:"fights",value:1000,priority:270 },
+			{ emoji:"🤖",name:"Читер",type:"winrate",value:90,minFights:30,priority:260 },
+			{ emoji:"⚡",name:"Непобедимый",type:"best",value:10,priority:250 },
+			{ emoji:"💎",name:"Элита",type:"winrate",value:80,minFights:30,priority:240 },
+			{ emoji:"⚔️",name:"Ветеран",type:"fights",value:500,priority:230 },
+			{ emoji:"🛡️",name:"Воитель",type:"wins",value:50,priority:220 },
+			{ emoji:"🛡️",name:"Гладиатор",type:"losses",value:200,priority:210 },
+			{ emoji:"🔥",name:"Неудержимый",type:"best",value:5,priority:200 },
+			{ emoji:"🏹",name:"Мастер",type:"winrate",value:70,minFights:30,priority:190 },
+			{ emoji:"🎯",name:"Профессионал",type:"winrate",value:60,minFights:30,priority:180 },
+			{ emoji:"⚔️",name:"Опытный",type:"wins",value:10,priority:170 },
+			{ emoji:"⚙️",name:"Трудяга",type:"fights",value:100,priority:160 },
+			{ emoji:"🔥",name:"Задира",type:"best",value:3,priority:150 },
+			{ emoji:"⚖️",name:"Ровный",type:"winrate",value:50,minFights:10,priority:140 },
+			{ emoji:"☯️",name:"Инь-Янь",type:"balance",priority:130 },
+			{ emoji:"🌱",name:"Новичок",type:"wins",value:1,priority:120 },
+			{ emoji:"👀",name:"Любопытный",type:"fights",value:50,priority:110 },
+			{ emoji:"😐",name:"Середнячок",type:"winrate",value:40,minFights:10,priority:100 },
+			{ emoji:"🦸",name:"Герой с нуля",type:"zero_hero",priority:80 },
+			{ emoji:"👿",name:"Злодей",type:"zero_villain",priority:70 },
+			{ emoji:"⚙️",name:"Железный",type:"losses",value:100,priority:60 },
+			{ emoji:"🪀",name:"Груша для битья",type:"losses",value:50,priority:50 },
+			{ emoji:"🥊",name:"Мешок с песком",type:"losses",value:10,priority:40 },
+			{ emoji:"✨",name:"Страж порядка",type:"faction",value:25,faction:"Орден Света",priority:310 },
+			{ emoji:"🌙",name:"Глас тьмы",type:"faction",value:25,faction:"Культ Тьмы",priority:300 }
+		];
     
     function checkAchievement(ach, p) {
         const total = p.wins + p.losses;
@@ -866,129 +853,129 @@ function renderFullStats(data) {
     }, 100);
 }
 
-function initSortableTable(tableId, defaultSort, defaultDir) {
-    setTimeout(() => {
-        const table = document.getElementById(tableId);
-        if (!table) return;
-        const tbody = table.querySelector('tbody');
-        const headers = table.querySelectorAll('.sortable-header');
-        let currentSort = defaultSort, currentDir = defaultDir;
-        
-        function sortTable(sortBy) {
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            rows.sort((a,b) => {
-                let valA = a.dataset[sortBy], valB = b.dataset[sortBy];
-                if (sortBy === 'name' || sortBy === 'class' || sortBy === 'faction') {
-                    return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-                }
-                valA = parseFloat(valA) || 0;
-                valB = parseFloat(valB) || 0;
-                return currentDir === 'asc' ? valA - valB : valB - valA;
-            });
-            rows.forEach(row => tbody.appendChild(row));
-        }
-        
-        headers.forEach(th => {
-            th.addEventListener('click', () => {
-                const sortBy = th.dataset.sort;
-                headers.forEach(h => h.classList.remove('asc','desc'));
-                if (currentSort === sortBy) currentDir = currentDir === 'asc' ? 'desc' : 'asc';
-                else { currentSort = sortBy; currentDir = 'desc'; }
-                th.classList.add(currentDir);
-                sortTable(currentSort);
-            });
-        });
-        
-        const defaultHeader = table.querySelector(`[data-sort="${defaultSort}"]`);
-        if (defaultHeader) { defaultHeader.classList.add(defaultDir); sortTable(defaultSort); }
-    }, 200);
-}
+	function initSortableTable(tableId, defaultSort, defaultDir) {
+		setTimeout(() => {
+			const table = document.getElementById(tableId);
+			if (!table) return;
+			const tbody = table.querySelector('tbody');
+			const headers = table.querySelectorAll('.sortable-header');
+			let currentSort = defaultSort, currentDir = defaultDir;
+			
+			function sortTable(sortBy) {
+				const rows = Array.from(tbody.querySelectorAll('tr'));
+				rows.sort((a,b) => {
+					let valA = a.dataset[sortBy], valB = b.dataset[sortBy];
+					if (sortBy === 'name' || sortBy === 'class' || sortBy === 'faction') {
+						return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+					}
+					valA = parseFloat(valA) || 0;
+					valB = parseFloat(valB) || 0;
+					return currentDir === 'asc' ? valA - valB : valB - valA;
+				});
+				rows.forEach(row => tbody.appendChild(row));
+			}
+			
+			headers.forEach(th => {
+				th.addEventListener('click', () => {
+					const sortBy = th.dataset.sort;
+					headers.forEach(h => h.classList.remove('asc','desc'));
+					if (currentSort === sortBy) currentDir = currentDir === 'asc' ? 'desc' : 'asc';
+					else { currentSort = sortBy; currentDir = 'desc'; }
+					th.classList.add(currentDir);
+					sortTable(currentSort);
+				});
+			});
+			
+			const defaultHeader = table.querySelector(`[data-sort="${defaultSort}"]`);
+			if (defaultHeader) { defaultHeader.classList.add(defaultDir); sortTable(defaultSort); }
+		}, 200);
+	}
 
-function initPlayersTable() {
-    setTimeout(() => {
-        const tbody = document.getElementById('players-tbody');
-        const searchInput = document.getElementById('player-search');
-        const clearBtn = document.getElementById('clear-search');
-        const resultSpan = document.getElementById('search-result');
-        const headers = document.querySelectorAll('#players-table .sortable-header');
-        if (!tbody) return;
-        
-        let currentSort = 'wl', currentDir = 'desc';
-        const allRows = Array.from(tbody.querySelectorAll('tr'));
-        
-        function filterAndSort() {
-            const searchText = searchInput?.value.toLowerCase() || '';
-            let filtered = allRows.filter(row => {
-                if (!searchText) return true;
-                const name = row.dataset.name?.toLowerCase() || '';
-                const cls = row.dataset.class?.toLowerCase() || '';
-                return name.includes(searchText) || cls.includes(searchText);
-            });
-            
-            filtered.sort((a,b) => {
-                let valA = a.dataset[currentSort], valB = b.dataset[currentSort];
-                if (currentSort === 'name' || currentSort === 'class' || currentSort === 'faction') {
-                    return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-                }
-                valA = parseFloat(valA) || 0; valB = parseFloat(valB) || 0;
-                return currentDir === 'asc' ? valA - valB : valB - valA;
-            });
-            
-            filtered.forEach((row, idx) => { row.cells[0].textContent = idx + 1; });
-            tbody.innerHTML = '';
-            filtered.forEach(row => tbody.appendChild(row));
-            if (resultSpan) resultSpan.textContent = searchText ? `Найдено: ${filtered.length}` : '';
-            
-            if (searchText) {
-                tbody.querySelectorAll('tr').forEach(row => {
-                    const nameCell = row.cells[1], classCell = row.cells[2];
-                    if (nameCell) nameCell.innerHTML = nameCell.textContent.replace(new RegExp(`(${searchText})`,'gi'), '<span class="highlight">$1</span>');
-                    if (classCell) classCell.innerHTML = classCell.textContent.replace(new RegExp(`(${searchText})`,'gi'), '<span class="highlight">$1</span>');
-                });
-            }
-        }
-        
-        headers.forEach(th => {
-            th.addEventListener('click', () => {
-                const sortBy = th.dataset.sort;
-                headers.forEach(h => h.classList.remove('asc','desc'));
-                if (currentSort === sortBy) currentDir = currentDir === 'asc' ? 'desc' : 'asc';
-                else { currentSort = sortBy; currentDir = 'desc'; }
-                th.classList.add(currentDir);
-                filterAndSort();
-            });
-        });
-        
-        if (searchInput) searchInput.addEventListener('input', filterAndSort);
-        if (clearBtn) clearBtn.addEventListener('click', () => { searchInput.value = ''; filterAndSort(); });
-        
-        const wlHeader = document.querySelector('[data-sort="wl"]');
-        if (wlHeader) { wlHeader.classList.add('desc'); filterAndSort(); }
-    }, 200);
-}
+	function initPlayersTable() {
+		setTimeout(() => {
+			const tbody = document.getElementById('players-tbody');
+			const searchInput = document.getElementById('player-search');
+			const clearBtn = document.getElementById('clear-search');
+			const resultSpan = document.getElementById('search-result');
+			const headers = document.querySelectorAll('#players-table .sortable-header');
+			if (!tbody) return;
+			
+			let currentSort = 'wl', currentDir = 'desc';
+			const allRows = Array.from(tbody.querySelectorAll('tr'));
+			
+			function filterAndSort() {
+				const searchText = searchInput?.value.toLowerCase() || '';
+				let filtered = allRows.filter(row => {
+					if (!searchText) return true;
+					const name = row.dataset.name?.toLowerCase() || '';
+					const cls = row.dataset.class?.toLowerCase() || '';
+					return name.includes(searchText) || cls.includes(searchText);
+				});
+				
+				filtered.sort((a,b) => {
+					let valA = a.dataset[currentSort], valB = b.dataset[currentSort];
+					if (currentSort === 'name' || currentSort === 'class' || currentSort === 'faction') {
+						return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+					}
+					valA = parseFloat(valA) || 0; valB = parseFloat(valB) || 0;
+					return currentDir === 'asc' ? valA - valB : valB - valA;
+				});
+				
+				filtered.forEach((row, idx) => { row.cells[0].textContent = idx + 1; });
+				tbody.innerHTML = '';
+				filtered.forEach(row => tbody.appendChild(row));
+				if (resultSpan) resultSpan.textContent = searchText ? `Найдено: ${filtered.length}` : '';
+				
+				if (searchText) {
+					tbody.querySelectorAll('tr').forEach(row => {
+						const nameCell = row.cells[1], classCell = row.cells[2];
+						if (nameCell) nameCell.innerHTML = nameCell.textContent.replace(new RegExp(`(${searchText})`,'gi'), '<span class="highlight">$1</span>');
+						if (classCell) classCell.innerHTML = classCell.textContent.replace(new RegExp(`(${searchText})`,'gi'), '<span class="highlight">$1</span>');
+					});
+				}
+			}
+			
+			headers.forEach(th => {
+				th.addEventListener('click', () => {
+					const sortBy = th.dataset.sort;
+					headers.forEach(h => h.classList.remove('asc','desc'));
+					if (currentSort === sortBy) currentDir = currentDir === 'asc' ? 'desc' : 'asc';
+					else { currentSort = sortBy; currentDir = 'desc'; }
+					th.classList.add(currentDir);
+					filterAndSort();
+				});
+			});
+			
+			if (searchInput) searchInput.addEventListener('input', filterAndSort);
+			if (clearBtn) clearBtn.addEventListener('click', () => { searchInput.value = ''; filterAndSort(); });
+			
+			const wlHeader = document.querySelector('[data-sort="wl"]');
+			if (wlHeader) { wlHeader.classList.add('desc'); filterAndSort(); }
+		}, 200);
+	}
 
-window.switchTab = function(tabName) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + tabName).classList.add('active');
-    
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        if (btn.textContent.toLowerCase().includes(tabName) || 
-            (tabName === 'tops' && btn.textContent.includes('Топы')) ||
-            (tabName === 'classes' && btn.textContent.includes('Классы')) ||
-            (tabName === 'races' && btn.textContent.includes('Расы')) ||
-            (tabName === 'combos' && btn.textContent.includes('Комбинации')) ||
-            (tabName === 'rating' && btn.textContent.includes('Рейтинг')) ||
-            (tabName === 'shards' && btn.textContent.includes('Осколки')) ||
-            (tabName === 'records' && btn.textContent.includes('Рекорды')) ||
-            (tabName === 'champions' && btn.textContent.includes('Чемпионы')) ||
-            (tabName === 'titles' && btn.textContent.includes('Титулы')) ||
-            (tabName === 'allplayers' && btn.textContent.includes('Игроки'))) {
-            btn.classList.add('active');
-        }
-    });
-    
-    history.replaceState(null, null, '#' + tabName);
+	window.switchTab = function(tabName) {
+		document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+		document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+		document.getElementById('tab-' + tabName).classList.add('active');
+		
+		document.querySelectorAll('.tab-btn').forEach(btn => {
+			if (btn.textContent.toLowerCase().includes(tabName) || 
+				(tabName === 'tops' && btn.textContent.includes('Топы')) ||
+				(tabName === 'classes' && btn.textContent.includes('Классы')) ||
+				(tabName === 'races' && btn.textContent.includes('Расы')) ||
+				(tabName === 'combos' && btn.textContent.includes('Комбинации')) ||
+				(tabName === 'rating' && btn.textContent.includes('Рейтинг')) ||
+				(tabName === 'shards' && btn.textContent.includes('Осколки')) ||
+				(tabName === 'records' && btn.textContent.includes('Рекорды')) ||
+				(tabName === 'champions' && btn.textContent.includes('Чемпионы')) ||
+				(tabName === 'titles' && btn.textContent.includes('Титулы')) ||
+				(tabName === 'allplayers' && btn.textContent.includes('Игроки'))) {
+				btn.classList.add('active');
+			}
+		});
+		
+		history.replaceState(null, null, '#' + tabName);
 };
 </script>
 </body>
