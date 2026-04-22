@@ -213,7 +213,7 @@
             <a href="hall.html">🏆 Зал Славы</a>
             <a href="logs.html">📜 Логи</a>
             <a href="simulator.html">🧪 Симулятор</a>
-			<a href="calc.html">🎲 Калькулятор</a>
+            <a href="calc.html">🎲 Калькулятор</a>
         </div>
     </div>
 
@@ -257,22 +257,33 @@
     <a href="index.html" class="back-link">← Назад к статистике</a>
 
 <script>
-
-	const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+    const DATA_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+    const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
     
     let CONFIG = {};
     let classesData = [];
     let racesData = [];
 
-    fetch(DATA_URL)
+    // Функция загрузки с таймаутом 3 секунды
+    function fetchWithTimeout(url, timeout = 3000) {
+        return Promise.race([
+            fetch(url).then(r => {
+                if (!r.ok) throw new Error('Status ' + r.status);
+                return r;
+            }),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+        ]);
+    }
+
+    // Пробуем Raw, если не отвечает — переключаемся на CDN
+    fetchWithTimeout(DATA_URL_RAW)
+        .catch(() => {
+            console.warn('⚠️ Raw GitHub не отвечает, переключаемся на CDN');
+            return fetch(DATA_URL_CDN);
+        })
         .then(r => r.json())
         .then(data => {
-            CONFIG = data.config || { 
-                defReduction: 0.03, hitChanceMin: 0.05, hitChanceMax: 0.95, 
-                hitChanceBase: 9, accBaseCPI: 7, cpiHpPower: 0.7, cpiDmgPower: 0.6,
-                cpiAtkBonus: 0.04, cpiFixedReduction: 0.9, effHpDefMult: 0.08,
-                powerMultiplier: 4 
-            };
+            CONFIG = data.config;
             classesData = data.classes;
             racesData = data.races;
             renderClassesTable();
@@ -285,7 +296,7 @@
             document.getElementById('classes-balance-tbody').innerHTML = 
                 '<tr><td colspan="13" style="text-align:center;color:#ff6b6b;">Ошибка загрузки данных</td></tr>';
         });
-
+    
     function renderFormulaText() {
         document.getElementById('formula-text').innerHTML = `
             <span>POWER = CPI × ${CONFIG.powerMultiplier}</span><br><br>
@@ -296,55 +307,55 @@
             <span>Бонус атаки = (1 + ATK × ${CONFIG.cpiAtkBonus})</span><br><br>
             <span>Снижение урона от защиты цели = ${(1 - CONFIG.defReduction * 2).toFixed(2)}</span> (фиксировано, при DEF цели = 2)<br><br>
             <span>Эффективное HP = HP × (1 + DEF × ${CONFIG.effHpDefMult})</span><br><br>
-            <span>Живучесть (отображение) = HP × (1 + DEF × ${CONFIG.defReduction})</span>
+            <span>Живучесть (отображение) = HP × (1 + DEF × ${CONFIG.defReduction})</span><br><br>
+            <span style="color: #ffd700;">⚙️ В расчёте учитываются скрытые коэффициенты стабильности (MIN) и живучести (HP), а также штраф за сверхвысокую атаку (ATK > 8).</span>
         `;
     }
 
-	function calculateDerivedFields(cls) {
-		const avg = (cls.Min + cls.Max) / 2;
-		const accDisplay = Math.min(
-			CONFIG.hitChanceMax, 
-			Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + cls.Atk - cls.Def) / 20)
-		);
-		const accCPI = (CONFIG.accBaseCPI + cls.Atk) / 20;
-		const atkBonus = 1 + cls.Atk * CONFIG.cpiAtkBonus;
-		const dmg5 = avg * accDisplay * 5;
-		const surv = cls.Hp * (1 + cls.Def * CONFIG.defReduction);
-		const effHP = cls.Hp * (1 + cls.Def * CONFIG.effHpDefMult);
-		
-		// Базовый CPI (старая формула)
-		let cpi = Math.pow(effHP, CONFIG.cpiHpPower) * Math.pow(avg * accCPI * atkBonus * CONFIG.cpiFixedReduction, CONFIG.cpiDmgPower);
-		
-		// 1. Штраф за ATK > 8 (потолок точности)
-		if (cls.Atk > 8) {
-			cpi -= (cls.Atk - 8) * 0.8;
-			if (cls.Atk > 9) {
-				cpi -= (cls.Atk - 9) * 0.5;
-			}
-		}
-		
-		// 2. Бонус за MIN > 5 (стабильность)
-		if (cls.Min > 5) {
-			cpi += (cls.Min - 5) * 0.4;
-		}
-		
-		// 3. Бонус за HP > 28 (живучесть танков)
-		if (cls.Hp > 28) {
-			cpi += (cls.Hp - 28) * 0.2;
-		}
-		// ===========================================
-		
-		const power = cpi * CONFIG.powerMultiplier;
-		
-		return {
-			avg: Math.round(avg * 10) / 10,
-			acc: Math.round(accDisplay * 100),
-			surv: Math.round(surv),
-			dmg5: Math.round(dmg5),
-			cpi: Math.round(cpi * 100) / 100,
-			power: Math.round(power * 10) / 10
-		};
-	}
+    function calculateDerivedFields(cls) {
+        const avg = (cls.Min + cls.Max) / 2;
+        const accDisplay = Math.min(
+            CONFIG.hitChanceMax, 
+            Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + cls.Atk - cls.Def) / 20)
+        );
+        const accCPI = (CONFIG.accBaseCPI + cls.Atk) / 20;
+        const atkBonus = 1 + cls.Atk * CONFIG.cpiAtkBonus;
+        const dmg5 = avg * accDisplay * 5;
+        const surv = cls.Hp * (1 + cls.Def * CONFIG.defReduction);
+        const effHP = cls.Hp * (1 + cls.Def * CONFIG.effHpDefMult);
+        
+        // Базовый CPI
+        let cpi = Math.pow(effHP, CONFIG.cpiHpPower) * Math.pow(avg * accCPI * atkBonus * CONFIG.cpiFixedReduction, CONFIG.cpiDmgPower);
+        
+        // Штраф за ATK > 8
+        if (cls.Atk > 8) {
+            cpi -= (cls.Atk - 8) * 0.8;
+            if (cls.Atk > 9) {
+                cpi -= (cls.Atk - 9) * 0.5;
+            }
+        }
+        
+        // Бонус за MIN > 5
+        if (cls.Min > 5) {
+            cpi += (cls.Min - 5) * 0.4;
+        }
+        
+        // Бонус за HP > 28
+        if (cls.Hp > 28) {
+            cpi += (cls.Hp - 28) * 0.2;
+        }
+        
+        const power = cpi * CONFIG.powerMultiplier;
+        
+        return {
+            avg: Math.round(avg * 10) / 10,
+            acc: Math.round(accDisplay * 100),
+            surv: Math.round(surv),
+            dmg5: Math.round(dmg5),
+            cpi: Math.round(cpi * 100) / 100,
+            power: Math.round(power * 10) / 10
+        };
+    }
 
     function renderClassesTable() {
         const tbody = document.getElementById('classes-balance-tbody');
