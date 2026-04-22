@@ -265,7 +265,7 @@
     
     <div class="nav-wrapper">
         <button class="nav-toggle" id="navToggle">☰ Меню</button>
-		<div class="page-nav">
+		<div class="page-nav" id="pageNav">
 			<a href="index.html">📊 Статистика</a>
 			<a href="logs.html" class="active">📜 Логи</a>
 			<a href="calc.html">🎲 Калькулятор</a>
@@ -293,12 +293,14 @@
     </div>
     
 <script>
-    const navToggle = document.getElementById('navToggle');
-    const pageNav = document.getElementById('pageNav');
-    navToggle.addEventListener('click', () => {
-        pageNav.classList.toggle('show');
-        navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-    });
+	const navToggle = document.querySelector('.nav-toggle');
+	const pageNav = document.querySelector('.page-nav');
+	if (navToggle && pageNav) {
+		navToggle.addEventListener('click', () => {
+			pageNav.classList.toggle('show');
+			navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+		});
+	}
 
     const LOGS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/recent_fights.json';
     const API_URL = 'https://data.jsdelivr.com/v1/package/gh/rvotaenotaTTV/dnd-stats';
