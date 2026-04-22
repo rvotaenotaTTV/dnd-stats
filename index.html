@@ -381,8 +381,38 @@
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-	const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-	const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+	// Режим загрузки: false = Raw GitHub (по умолчанию), true = CDN
+	let useCDN = false;
+
+	// URL'ы
+	const JSON_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+	const DATA_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+	const JSON_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+	const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
+
+	// Функция переключения
+	function toggleCDN() {
+		useCDN = !useCDN;
+		const btn = document.getElementById('cdnToggleBtn');
+		
+		if (useCDN) {
+			btn.textContent = '⚡ CDN';
+			btn.style.color = '#ffd700';
+			btn.style.borderColor = '#ffd700';
+		} else {
+			btn.textContent = '🐢 CDN';
+			btn.style.color = '#8b949e';
+			btn.style.borderColor = '#30363d';
+		}
+		
+		// Перезагружаем страницу с новым режимом
+		location.reload();
+	}
+	window.toggleCDN = toggleCDN;
+
+	// Определяем URL в зависимости от режима
+	const JSON_URL = useCDN ? JSON_URL_CDN : JSON_URL_RAW;
+	const DATA_URL = useCDN ? DATA_URL_RAW : DATA_URL_RAW;  // DATA_URL_RAW используется в обоих случаях? Уточни
 
 	let classesData = [];
 	let racesData = [];
@@ -978,5 +1008,20 @@
 		history.replaceState(null, null, '#' + tabName);
 };
 </script>
+<!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ CDN -->
+<div style="position: fixed; bottom: 15px; right: 15px; z-index: 1000;">
+    <button id="cdnToggleBtn" onclick="toggleCDN()" style="
+        background: #21262d;
+        border: 1px solid #30363d;
+        color: #8b949e;
+        padding: 8px 12px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        transition: all 0.2s;
+        backdrop-filter: blur(5px);
+    ">🐢 CDN</button>
+</div>
 </body>
 </html>
