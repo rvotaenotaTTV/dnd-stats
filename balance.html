@@ -295,20 +295,49 @@
                 '<tr><td colspan="13" style="text-align:center;color:#ff6b6b;">Ошибка загрузки данных</td></tr>';
         });
     
-    function renderFormulaText() {
-        document.getElementById('formula-text').innerHTML = `
-            <span>POWER = CPI × ${CONFIG.powerMultiplier}</span><br><br>
-            <span>CPI = (Эфф. HP) ^ ${CONFIG.cpiHpPower} × (Средний урон × Точность × Бонус атаки × ${CONFIG.cpiFixedReduction}) ^ ${CONFIG.cpiDmgPower}</span><br><br>
-            <span>Средний урон = (MIN + MAX) / 2</span><br><br>
-            <span>Точность (для CPI) = (${CONFIG.accBaseCPI} + ATK) / 20</span><br><br>
-            <span>Точность (отображение) = (${CONFIG.hitChanceBase} + ATK - DEF цели) / 20 (мин ${(CONFIG.hitChanceMin*100)}%, макс ${(CONFIG.hitChanceMax*100)}%)</span><br><br>
-            <span>Бонус атаки = (1 + ATK × ${CONFIG.cpiAtkBonus})</span><br><br>
-            <span>Снижение урона от защиты цели = ${(1 - CONFIG.defReduction * 2).toFixed(2)}</span> (фиксировано, при DEF цели = 2)<br><br>
-            <span>Эффективное HP = HP × (1 + DEF × ${CONFIG.effHpDefMult})</span><br><br>
-            <span>Живучесть (отображение) = HP × (1 + DEF × ${CONFIG.defReduction})</span><br><br>
-            <span style="color: #ffd700;">⚙️ В расчёте учитываются скрытые коэффициенты стабильности (MIN) и живучести (HP), а также штраф за сверхвысокую атаку (ATK > 8).</span>
-        `;
-    }
+	function renderFormulaText() {
+		document.getElementById('formula-text').innerHTML = `
+			<div style="margin-bottom: 20px;">
+				<span style="color: #ffd700; font-size: 16px;">📊 POWER — общая боевая мощь класса</span><br>
+				Чем выше POWER, тем сильнее класс в среднестатистическом бою.
+			</div>
+			
+			<div style="margin-bottom: 15px;">
+				<span style="color: #ffd700;">POWER = CPI × ${CONFIG.powerMultiplier}</span>
+			</div>
+			
+			<div style="margin-bottom: 15px;">
+				<span style="color: #ffd700;">CPI складывается из двух частей:</span><br>
+				• <strong>Живучесть</strong> — сколько урона класс может выдержать<br>
+				• <strong>Атака</strong> — сколько урона класс наносит
+			</div>
+			
+			<div style="margin-bottom: 15px;">
+				<span style="color: #ffd700;">CPI = (Живучесть) ^ ${CONFIG.cpiHpPower} × (Атака) ^ ${CONFIG.cpiDmgPower}</span>
+			</div>
+			
+			<div style="margin-bottom: 15px;">
+				<span style="color: #ffd700;">Живучесть</span> = HP × (1 + DEF × ${CONFIG.effHpDefMult})<br>
+				<span style="color: #8b949e; font-size: 12px;">Каждое очко защиты (DEF) увеличивает эффективное здоровье на ${CONFIG.effHpDefMult * 100}%.</span>
+			</div>
+			
+			<div style="margin-bottom: 15px;">
+				<span style="color: #ffd700;">Атака</span> = Средний урон × Точность × Бонус атаки × ${CONFIG.cpiFixedReduction}<br>
+				<span style="color: #8b949e; font-size: 12px;">• Средний урон = (MIN + MAX) / 2</span><br>
+				<span style="color: #8b949e; font-size: 12px;">• Точность = (${CONFIG.accBaseCPI} + ATK) / 20</span><br>
+				<span style="color: #8b949e; font-size: 12px;">• Бонус атаки = 1 + ATK × ${CONFIG.cpiAtkBonus}</span>
+			</div>
+			
+			<div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #30363d;">
+				<span style="color: #ffd700;">⚙️ Скрытые поправки</span><br>
+				<span style="color: #8b949e; font-size: 12px;">
+				• Сверхвысокая атака (ATK > 8) даёт меньше пользы из-за потолка точности 95%<br>
+				• Высокая стабильность (MIN > 5) усиливает класс — нет слабых ударов<br>
+				• Большой запас здоровья (HP > 28) даёт дополнительное преимущество
+				</span>
+			</div>
+		`;
+	}
 
     function calculateDerivedFields(cls) {
         const avg = (cls.Min + cls.Max) / 2;
