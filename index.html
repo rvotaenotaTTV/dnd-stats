@@ -666,6 +666,7 @@ th {
     let classEmojis = {};
     let raceEmojis = {};
     let players = [];
+	let achievements = [];
 
     fetchWithTimeout(DATA_URL_RAW)
         .catch(() => {
@@ -949,7 +950,7 @@ th {
 		// ТИТУЛЫ
 		html += '<div id="tab-titles" class="tab-content">';
 
-		const achievements = [
+		achievements = [
 			// =========================================================================
 			// ЛЕГЕНДАРНЫЕ ТИТУЛЫ (priority 1200-800)
 			// =========================================================================
