@@ -197,149 +197,163 @@
         </div>
     </div>
 
-    <script>
-        const navToggle = document.querySelector('.nav-toggle');
-        const pageNav = document.querySelector('.page-nav');
-        navToggle.addEventListener('click', () => {
-            pageNav.classList.toggle('show');
-            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        });
+<script>
+    const navToggle = document.querySelector('.nav-toggle');
+    const pageNav = document.querySelector('.page-nav');
+    navToggle.addEventListener('click', () => {
+        pageNav.classList.toggle('show');
+        navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+    });
 
-        const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+    const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+    const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+    
+    let CONFIG = {};
+    let classesData = [];
+    let racesData = [];
+    let players = [];
+    let originalStats = {};
+    let currentClass = 'Некромант';
+    let currentRace = '';
+    let isRunning = false;
+    let REAL_WINRATES = {};
+
+    async function loadData() {
+        const [dataResp, statsResp] = await Promise.all([fetch(DATA_URL), fetch(STATS_URL)]);
+        const data = await dataResp.json();
+        const stats = await statsResp.json();
         
-        let CONFIG = {};
-        let classesData = [];
-        let racesData = [];
-        let players = [];
-        let classBuilds = {};
-        let originalStats = {};
-        let currentClass = 'Некромант';
-        let currentRace = '';
-        let isRunning = false;
-        let REAL_WINRATES = {};
-
-        async function loadData() {
-            const [dataResp, statsResp] = await Promise.all([fetch(DATA_URL), fetch(STATS_URL)]);
-            const data = await dataResp.json();
-            const stats = await statsResp.json();
+        CONFIG = data.config || { defReduction: 0.05, baseAC: 10, critMultiplier: 2, maxRounds: 20, blockThreshold: 4 };
+        classesData = data.classes;
+        racesData = data.races;
+        players = stats.players.filter(p => p.name && p.name !== 'Unknown');
+        
+        // === ИСПРАВЛЕННЫЙ СБОР ЖИВЫХ ВИНРЕЙТОВ ===
+        const classStats = {};
+        let totalBattles = 0;
+        
+        players.forEach(p => {
+            // Корректно вытаскиваем класс, даже если имя кривое
+            const parts = p.name.split('-');
+            const className = parts.length > 1 ? parts[1] : p.name;
             
-            CONFIG = data.config || { defReduction: 0.05, baseAC: 10, critMultiplier: 2, maxRounds: 20, blockThreshold: 4 };
-            classesData = data.classes;
-            racesData = data.races;
-            players = stats.players.filter(p => p.name && p.name !== 'Unknown');
-            
-            // === ЖИВОЙ РАСЧЁТ ВИНРЕЙТОВ ===
-            const classStats = {};
-            players.forEach(p => {
-                const className = p.name.split('-')[1] || p.name;
-                if (!classStats[className]) classStats[className] = { wins: 0, losses: 0 };
-                classStats[className].wins += p.Wins;
-                classStats[className].losses += p.Losses;
-            });
-            
-            REAL_WINRATES = {};
-            let totalBattles = 0;
-            Object.entries(classStats).forEach(([name, s]) => {
-                const total = s.wins + s.losses;
-                REAL_WINRATES[name] = total > 0 ? (s.wins / total) * 100 : 50.0;
-                totalBattles += total;
-            });
-            document.getElementById('liveStatsInfo').innerHTML = `на основе ${totalBattles} реальных боёв`;
-            
-            // Заполнение селектов
-            const classSelect = document.getElementById('classSelect');
-            classSelect.innerHTML = '';
-            classesData.sort((a,b) => a.Name.localeCompare(b.Name)).forEach(cls => {
-                const opt = document.createElement('option'); opt.value = cls.Name;
-                opt.textContent = `${cls.Emoji} ${cls.Name}`; classSelect.appendChild(opt);
-            });
-            
-            const raceSelect = document.getElementById('raceSelect');
-            raceSelect.innerHTML = '<option value="">🚫 Без расы (голый класс)</option>';
-            racesData.forEach(r => {
-                const opt = document.createElement('option'); opt.value = r.Name;
-                opt.textContent = `${r.Emoji} ${r.Name}`; raceSelect.appendChild(opt);
-            });
-            
-            classSelect.value = currentClass;
-            classSelect.addEventListener('change', onClassChange);
-            raceSelect.addEventListener('change', onRaceChange);
-            setOptimalRace(currentClass);
-            loadClassStats();
-        }
-
-        function setOptimalRace(className) {
-            const optimal = {'Варвар':'Орк','Следопыт':'Эльф','Бард':'Человек','Паладин':'Дворф','Колдун':'Нежить','Чародей':'Нежить','Изобретатель':'Эльф','Воин':'Дворф','Жрец':'Человек','Друид':'Эльф','Плут':'Орк','Некромант':'Дворф','Монах':'Человек','Волшебница':'Эльф'};
-            currentRace = optimal[className] || '';
-            document.getElementById('raceSelect').value = currentRace;
-        }
-
-        function onClassChange() { currentClass = document.getElementById('classSelect').value; setOptimalRace(currentClass); loadClassStats(); }
-        function onRaceChange() { currentRace = document.getElementById('raceSelect').value; loadClassStats(); }
-
-        function loadClassStats() {
-            const cls = classesData.find(c => c.Name === currentClass); if (!cls) return;
-            const race = currentRace ? racesData.find(r => r.Name === currentRace) : null;
-            originalStats = { hp: cls.Hp + (race?.BonusHp || 0), atk: cls.Atk + (race?.BonusAtk || 0), def: cls.Def + (race?.BonusDef || 0), min: cls.Min + (race?.BonusMin || 0), max: cls.Max + (race?.BonusMax || 0) };
-            
-            ['hp','atk','def','min','max'].forEach(s => {
-                document.getElementById(`${s}Display`).textContent = originalStats[s];
-                document.getElementById(`${s}Input`).value = originalStats[s];
-            });
-            document.getElementById('currentWinrate').textContent = (REAL_WINRATES[currentClass] || 50).toFixed(1) + '%';
-        }
-        window.resetToOriginal = function() { loadClassStats(); };
-
-        function simulateSingleFight(s1, s2) {
-            const rnd = () => Math.floor(Math.random() * 20) + 1, d3 = () => Math.floor(Math.random() * 3);
-            const init1 = rnd() + Math.floor(s1.atk) + d3(), init2 = rnd() + Math.floor(s2.atk) + d3();
-            const first = init1 !== init2 ? init1 > init2 : Math.random() < 0.5;
-            let hp1 = s1.hp, hp2 = s2.hp, rounds = 0;
-            
-            while (hp1 > 0 && hp2 > 0 && rounds < CONFIG.maxRounds) {
-                rounds++;
-                if (first) {
-                    const r1 = rnd(); if (r1 !== 1 && r1 + s1.atk >= CONFIG.baseAC + s2.def) { let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction))); hp2 = Math.max(0, hp2 - d); } if (hp2 <= 0) break;
-                    const r2 = rnd(); if (r2 !== 1 && r2 + s2.atk >= CONFIG.baseAC + s1.def) { let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction))); hp1 = Math.max(0, hp1 - d); }
-                } else {
-                    const r2 = rnd(); if (r2 !== 1 && r2 + s2.atk >= CONFIG.baseAC + s1.def) { let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction))); hp1 = Math.max(0, hp1 - d); } if (hp1 <= 0) break;
-                    const r1 = rnd(); if (r1 !== 1 && r1 + s1.atk >= CONFIG.baseAC + s2.def) { let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction))); hp2 = Math.max(0, hp2 - d); }
-                }
+            if (!classStats[className]) {
+                classStats[className] = { wins: 0, losses: 0 };
             }
-            return hp1 > hp2 ? 1 : 0;
-        }
+            classStats[className].wins += p.Wins;
+            classStats[className].losses += p.Losses;
+        });
+        
+        // Заполняем REAL_WINRATES
+        classesData.forEach(cls => {
+            const stats = classStats[cls.Name];
+            if (stats) {
+                const total = stats.wins + stats.losses;
+                REAL_WINRATES[cls.Name] = total > 0 ? (stats.wins / total) * 100 : 50.0;
+                totalBattles += total;
+            } else {
+                REAL_WINRATES[cls.Name] = 50.0; // Класс есть в data.json, но нет в базе игроков
+            }
+        });
+        
+        // Обновляем инфо-блок
+        document.getElementById('liveStatsInfo').innerHTML = `на основе ${totalBattles} реальных боёв`;
+        console.log('✅ Живые винрейты загружены:', REAL_WINRATES);
+        
+        // Заполнение селектов
+        const classSelect = document.getElementById('classSelect');
+        classSelect.innerHTML = '';
+        classesData.sort((a,b) => a.Name.localeCompare(b.Name)).forEach(cls => {
+            const opt = document.createElement('option'); opt.value = cls.Name;
+            opt.textContent = `${cls.Emoji} ${cls.Name}`; classSelect.appendChild(opt);
+        });
+        
+        const raceSelect = document.getElementById('raceSelect');
+        raceSelect.innerHTML = '<option value="">🚫 Без расы (голый класс)</option>';
+        racesData.forEach(r => {
+            const opt = document.createElement('option'); opt.value = r.Name;
+            opt.textContent = `${r.Emoji} ${r.Name}`; raceSelect.appendChild(opt);
+        });
+        
+        classSelect.value = currentClass;
+        classSelect.addEventListener('change', onClassChange);
+        raceSelect.addEventListener('change', onRaceChange);
+        setOptimalRace(currentClass);
+        loadClassStats();
+    }
 
-        async function runGradient() {
-            if (isRunning) return; isRunning = true;
-            const btn = document.getElementById('simulateBtn'), progress = document.getElementById('progress');
-            btn.disabled = true; if (classesData.length === 0) { progress.textContent = 'Загрузка...'; await loadData(); }
-            
-            const fightsPerClass = 100, classes = classesData.map(c => c.Name), n = classes.length;
-            const currentStats = { ...originalStats };
-            const newStats = { hp: +document.getElementById('hpInput').value || originalStats.hp, atk: +document.getElementById('atkInput').value || originalStats.atk, def: +document.getElementById('defInput').value || originalStats.def, min: +document.getElementById('minInput').value || originalStats.min, max: +document.getElementById('maxInput').value || originalStats.max };
-            
-            progress.textContent = 'Симуляция текущих...'; let currentWins = 0;
-            for (const other of classes) { if (other === currentClass) continue; const o = classesData.find(c => c.Name === other); if (!o) continue; const s = { hp: o.Hp, atk: o.Atk, def: o.Def, min: o.Min, max: o.Max }; for (let i=0; i<fightsPerClass; i++) currentWins += simulateSingleFight(currentStats, s); await new Promise(r => setTimeout(r, 5)); }
-            
-            progress.textContent = 'Симуляция новых...'; let newWins = 0;
-            for (const other of classes) { if (other === currentClass) continue; const o = classesData.find(c => c.Name === other); if (!o) continue; const s = { hp: o.Hp, atk: o.Atk, def: o.Def, min: o.Min, max: o.Max }; for (let i=0; i<fightsPerClass; i++) newWins += simulateSingleFight(newStats, s); await new Promise(r => setTimeout(r, 5)); }
-            
-            const total = (n - 1) * fightsPerClass, simCur = (currentWins / total) * 100, simNew = (newWins / total) * 100;
-            const realCur = REAL_WINRATES[currentClass] || 50, coef = simCur > 0 ? realCur / simCur : 1;
-            const pred = simNew * coef, diff = pred - realCur;
-            
-            document.getElementById('resultCard').style.display = 'block';
-            document.getElementById('currentWinrate').textContent = realCur.toFixed(1) + '%';
-            document.getElementById('predictedWinrate').textContent = pred.toFixed(1) + '%';
-            const diffEl = document.getElementById('winrateDiff'), sign = diff >= 0 ? '+' : '';
-            diffEl.textContent = `${sign}${diff.toFixed(1)}%`; diffEl.className = 'diff-badge ' + (diff > 0.5 ? 'diff-positive' : (diff < -0.5 ? 'diff-negative' : 'diff-neutral'));
-            document.getElementById('simulationDetails').innerHTML = `Симулировано: ${simCur.toFixed(1)}% → ${simNew.toFixed(1)}% | Коэф: ${coef.toFixed(3)} | Боёв: ${total}`;
-            
-            btn.disabled = false; isRunning = false; progress.textContent = '✅ Готово!';
+    function setOptimalRace(className) {
+        const optimal = {'Варвар':'Орк','Следопыт':'Эльф','Бард':'Человек','Паладин':'Дворф','Колдун':'Нежить','Чародей':'Нежить','Изобретатель':'Эльф','Воин':'Дворф','Жрец':'Человек','Друид':'Эльф','Плут':'Орк','Некромант':'Дворф','Монах':'Человек','Волшебница':'Эльф'};
+        currentRace = optimal[className] || '';
+        document.getElementById('raceSelect').value = currentRace;
+    }
+
+    function onClassChange() { currentClass = document.getElementById('classSelect').value; setOptimalRace(currentClass); loadClassStats(); }
+    function onRaceChange() { currentRace = document.getElementById('raceSelect').value; loadClassStats(); }
+
+    function loadClassStats() {
+        const cls = classesData.find(c => c.Name === currentClass); if (!cls) return;
+        const race = currentRace ? racesData.find(r => r.Name === currentRace) : null;
+        originalStats = { hp: cls.Hp + (race?.BonusHp || 0), atk: cls.Atk + (race?.BonusAtk || 0), def: cls.Def + (race?.BonusDef || 0), min: cls.Min + (race?.BonusMin || 0), max: cls.Max + (race?.BonusMax || 0) };
+        
+        ['hp','atk','def','min','max'].forEach(s => {
+            document.getElementById(`${s}Display`).textContent = originalStats[s];
+            document.getElementById(`${s}Input`).value = originalStats[s];
+        });
+        const realCur = REAL_WINRATES[currentClass] || 50;
+        document.getElementById('currentWinrate').textContent = realCur.toFixed(1) + '%';
+    }
+    window.resetToOriginal = function() { loadClassStats(); };
+
+    function simulateSingleFight(s1, s2) {
+        const rnd = () => Math.floor(Math.random() * 20) + 1, d3 = () => Math.floor(Math.random() * 3);
+        const init1 = rnd() + Math.floor(s1.atk) + d3(), init2 = rnd() + Math.floor(s2.atk) + d3();
+        const first = init1 !== init2 ? init1 > init2 : Math.random() < 0.5;
+        let hp1 = s1.hp, hp2 = s2.hp, rounds = 0;
+        
+        while (hp1 > 0 && hp2 > 0 && rounds < CONFIG.maxRounds) {
+            rounds++;
+            if (first) {
+                const r1 = rnd(); if (r1 !== 1 && r1 + s1.atk >= CONFIG.baseAC + s2.def) { let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction))); hp2 = Math.max(0, hp2 - d); } if (hp2 <= 0) break;
+                const r2 = rnd(); if (r2 !== 1 && r2 + s2.atk >= CONFIG.baseAC + s1.def) { let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction))); hp1 = Math.max(0, hp1 - d); }
+            } else {
+                const r2 = rnd(); if (r2 !== 1 && r2 + s2.atk >= CONFIG.baseAC + s1.def) { let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction))); hp1 = Math.max(0, hp1 - d); } if (hp1 <= 0) break;
+                const r1 = rnd(); if (r1 !== 1 && r1 + s1.atk >= CONFIG.baseAC + s2.def) { let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction))); hp2 = Math.max(0, hp2 - d); }
+            }
         }
-        window.runGradient = runGradient;
-        loadData();
-    </script>
+        return hp1 > hp2 ? 1 : 0;
+    }
+
+    async function runGradient() {
+        if (isRunning) return; isRunning = true;
+        const btn = document.getElementById('simulateBtn'), progress = document.getElementById('progress');
+        btn.disabled = true; if (classesData.length === 0) { progress.textContent = 'Загрузка...'; await loadData(); }
+        
+        const fightsPerClass = 100, classes = classesData.map(c => c.Name), n = classes.length;
+        const currentStats = { ...originalStats };
+        const newStats = { hp: +document.getElementById('hpInput').value || originalStats.hp, atk: +document.getElementById('atkInput').value || originalStats.atk, def: +document.getElementById('defInput').value || originalStats.def, min: +document.getElementById('minInput').value || originalStats.min, max: +document.getElementById('maxInput').value || originalStats.max };
+        
+        progress.textContent = 'Симуляция текущих...'; let currentWins = 0;
+        for (const other of classes) { if (other === currentClass) continue; const o = classesData.find(c => c.Name === other); if (!o) continue; const s = { hp: o.Hp, atk: o.Atk, def: o.Def, min: o.Min, max: o.Max }; for (let i=0; i<fightsPerClass; i++) currentWins += simulateSingleFight(currentStats, s); await new Promise(r => setTimeout(r, 5)); }
+        
+        progress.textContent = 'Симуляция новых...'; let newWins = 0;
+        for (const other of classes) { if (other === currentClass) continue; const o = classesData.find(c => c.Name === other); if (!o) continue; const s = { hp: o.Hp, atk: o.Atk, def: o.Def, min: o.Min, max: o.Max }; for (let i=0; i<fightsPerClass; i++) newWins += simulateSingleFight(newStats, s); await new Promise(r => setTimeout(r, 5)); }
+        
+        const total = (n - 1) * fightsPerClass, simCur = (currentWins / total) * 100, simNew = (newWins / total) * 100;
+        const realCur = REAL_WINRATES[currentClass] || 50, coef = simCur > 0 ? realCur / simCur : 1;
+        const pred = simNew * coef, diff = pred - realCur;
+        
+        document.getElementById('resultCard').style.display = 'block';
+        document.getElementById('currentWinrate').textContent = realCur.toFixed(1) + '%';
+        document.getElementById('predictedWinrate').textContent = pred.toFixed(1) + '%';
+        const diffEl = document.getElementById('winrateDiff'), sign = diff >= 0 ? '+' : '';
+        diffEl.textContent = `${sign}${diff.toFixed(1)}%`; diffEl.className = 'diff-badge ' + (diff > 0.5 ? 'diff-positive' : (diff < -0.5 ? 'diff-negative' : 'diff-neutral'));
+        document.getElementById('simulationDetails').innerHTML = `Симулировано: ${simCur.toFixed(1)}% → ${simNew.toFixed(1)}% | Коэф: ${coef.toFixed(3)} | Боёв: ${total}`;
+        
+        btn.disabled = false; isRunning = false; progress.textContent = '✅ Готово!';
+    }
+    window.runGradient = runGradient;
+    loadData();
+</script>
 </body>
 </html>
