@@ -381,39 +381,10 @@
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-	let useKZ = localStorage.getItem('useKZ') === 'true';
-
 	const JSON_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 	const DATA_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
 	const JSON_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 	const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
-
-	function updateButton() {
-		const btn = document.getElementById('kzToggleBtn');
-		const icon = document.getElementById('kzIcon');
-		if (btn) {
-			if (useKZ) {
-				icon.textContent = '⚡';
-				btn.style.color = '#ffd700';
-				btn.style.borderColor = '#ffd700';
-			} else {
-				icon.textContent = '🐢';
-				btn.style.color = '#8b949e';
-				btn.style.borderColor = '#30363d';
-			}
-		}
-	}
-
-	function toggleKZ() {
-		useKZ = !useKZ;
-		localStorage.setItem('useKZ', useKZ);
-		updateButton();
-		location.reload();
-	}
-	window.toggleKZ = toggleKZ;
-
-	const JSON_URL = useKZ ? JSON_URL_CDN : JSON_URL_RAW;
-	const DATA_URL = useKZ ? DATA_URL_CDN : DATA_URL_RAW;
 
 	let classesData = [];
 	let racesData = [];
@@ -421,16 +392,32 @@
 	let raceEmojis = {};
 	let players = [];
 
-	document.addEventListener('DOMContentLoaded', updateButton);
+	function fetchWithTimeout(url, timeout = 3000) {
+		return Promise.race([
+			fetch(url).then(r => {
+				if (!r.ok) throw new Error('Status ' + r.status);
+				return r;
+			}),
+			new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+		]);
+	}
 
-	fetch(DATA_URL)
+	fetchWithTimeout(DATA_URL_RAW)
+		.catch(() => {
+			console.warn('⚠️ Raw GitHub не отвечает, переключаемся на CDN');
+			return fetch(DATA_URL_CDN);
+		})
 		.then(r => r.json())
 		.then(data => {
 			classesData = data.classes;
 			racesData = data.races;
 			classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
 			raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
-			return fetch(JSON_URL);
+			
+			const useCDN = data._cdn || false;
+			const jsonUrl = (data._source === 'cdn') ? JSON_URL_CDN : JSON_URL_RAW;
+			
+			return fetchWithTimeout(jsonUrl).catch(() => fetch(JSON_URL_CDN));
 		})
 		.then(r => r.json())
 		.then(data => {
@@ -439,7 +426,7 @@
 		})
 		.catch(err => {
 			console.error('Ошибка загрузки:', err);
-			document.getElementById('content').innerHTML = `<div class="loading">❌ Ошибка загрузки данных<br><span style="color:#ff6b6b;">${err.message}</span></div>`;
+			document.getElementById('content').innerHTML = `<div class="loading">❌ Ошибка загрузки данных<br><span style="color:#ff6b6b;">Попробуйте обновить страницу</span></div>`;
 		});
 
 	function renderFullStats(data) {
@@ -1011,26 +998,5 @@
 		history.replaceState(null, null, '#' + tabName);
 };
 </script>
-	<!-- КНОПКА KZ (ЧЕРЕПАХА / МОЛНИЯ) - ЛЕВЫЙ ВЕРХНИЙ УГОЛ -->
-	<div style="position: fixed; top: 15px; left: 15px; z-index: 1000;">
-		<button id="kzToggleBtn" onclick="toggleKZ()" style="
-			background: #21262d;
-			border: 1px solid #30363d;
-			color: #8b949e;
-			padding: 8px 12px;
-			border-radius: 30px;
-			cursor: pointer;
-			font-size: 12px;
-			box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-			transition: all 0.2s;
-			backdrop-filter: blur(5px);
-			display: flex;
-			align-items: center;
-			gap: 6px;
-		">
-			<span id="kzIcon">🐢</span>
-			<span>KZ</span>
-		</button>
-	</div>
 </body>
 </html>
