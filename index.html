@@ -331,58 +331,54 @@
         margin: 10px 0;
     }
 
-    /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
-    @media (max-width: 768px) {
-        body { padding: 10px; }
-        h1 { font-size: 1.6em; margin-top: 45px; }
-        
-        .nav-wrapper { border-bottom: none; }
-        .nav-toggle { display: block; }
-        
-        .page-nav { 
-            display: none; 
-            flex-direction: column; 
-            gap: 8px; 
-            margin-top: 10px; 
-        }
-        .page-nav.show { display: flex; }
-        
-        .page-nav a { 
-            text-align: center; 
-            padding: 10px;
-            background: #21262d;
-            border: 1px solid #30363d;
-            border-radius: 20px;
-            border-bottom: 1px solid #30363d;
-            margin-bottom: 0;
-        }
-        .page-nav a:hover { border-bottom-color: #ffd700; }
-        .page-nav a.active { 
-            background: #ffd700; 
-            color: #0d1117; 
-            font-weight: bold;
-            border-bottom-color: #ffd700;
-        }
-        
-        .fixed-buttons { top: 10px; right: 10px; }
-        .action-btn { padding: 6px 10px; font-size: 11px; }
-        
-        .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .stat-card { padding: 15px; }
-        .stat-value { font-size: 28px; }
-        .stat-label { font-size: 11px; }
-        
-        .nav-tabs { overflow-x: auto; flex-wrap: nowrap; padding: 8px 5px; }
-        .tab-btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
-        
-        .table-container { overflow-x: auto; padding: 12px; }
-        table { min-width: 480px; font-size: 11px; }
-        th, td { padding: 4px 5px; }
-        
-        .titles-gallery { grid-template-columns: repeat(2, 1fr); }
-        .hunters-top { grid-template-columns: 1fr; }
-        .records-grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 768px) {
+    body { padding: 10px; }
+    h1 { font-size: 1.6em; margin-top: 45px; }
+    .nav-toggle { display: block; }
+    .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .page-nav.show { display: flex; }
+    .page-nav a { text-align: center; padding: 10px; }
+    .fixed-buttons { top: 10px; right: 10px; }
+    .action-btn { padding: 6px 10px; font-size: 11px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat-card { padding: 15px; }
+    .stat-value { font-size: 28px; }
+    .stat-label { font-size: 11px; }
+    .nav-tabs { overflow-x: auto; flex-wrap: nowrap; padding: 8px 5px; }
+    .tab-btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
+    .table-container { overflow-x: auto; padding: 12px; }
+    table { min-width: 480px; font-size: 11px; }
+    th, td { padding: 4px 5px; }
+    .titles-grid { grid-template-columns: 1fr; }
+    .titles-grid .table-container:last-child { grid-column: span 1; }
+    .tables-grid { grid-template-columns: 1fr; }
+    .records-grid { grid-template-columns: repeat(2, 1fr); }
+    .calc-mode-btn { padding: 8px 16px; font-size: 13px; }
+    .reasons-list { padding-left: 18px; font-size: 10px; }
+
+    #tab-tops table th:nth-child(3),
+    #tab-tops table td:nth-child(3) { white-space: nowrap; }
+    #tab-tops table { min-width: 320px; }
+    #tab-tops table th:nth-child(1) { width: 30px; }
+    #tab-tops table th:nth-child(2) { width: 95px; }
+    #tab-tops table th:nth-child(3) { width: 85px; }
+    #tab-tops table th:nth-child(4) { width: 55px; }
+    #tab-tops table td:nth-child(2) {
+        max-width: 95px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
+    #classes-table th:nth-child(1), #classes-table td:nth-child(1) { white-space: nowrap; }
+    #combos-table th:nth-child(1), #combos-table td:nth-child(1) { white-space: nowrap; }
+    #shards-table th:nth-child(2), #shards-table td:nth-child(2),
+    #shards-table th:nth-child(3), #shards-table td:nth-child(3) { white-space: nowrap; }
+    #tab-titles .table-container:not(:last-child) table { min-width: 350px; }
+    #tab-titles .table-container:not(:last-child) th:nth-child(1),
+    #tab-titles .table-container:not(:last-child) td:nth-child(1) { white-space: nowrap; }
+    #players-table th:nth-child(3), #players-table td:nth-child(3),
+    #players-table th:nth-child(4), #players-table td:nth-child(4) { white-space: nowrap; }
+}
 </style>
 </head>
 <body>
