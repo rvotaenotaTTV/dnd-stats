@@ -264,7 +264,6 @@
     let classesData = [];
     let racesData = [];
 
-    // Функция загрузки с таймаутом 3 секунды
     function fetchWithTimeout(url, timeout = 3000) {
         return Promise.race([
             fetch(url).then(r => {
@@ -275,7 +274,6 @@
         ]);
     }
 
-    // Пробуем Raw, если не отвечает — переключаемся на CDN
     fetchWithTimeout(DATA_URL_RAW)
         .catch(() => {
             console.warn('⚠️ Raw GitHub не отвечает, переключаемся на CDN');
@@ -464,7 +462,6 @@
         });
     }
 
-    // Меню
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
     navToggle.addEventListener('click', () => {
