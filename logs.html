@@ -265,16 +265,18 @@
     
     <div class="nav-wrapper">
         <button class="nav-toggle" id="navToggle">☰ Меню</button>
-        <div class="page-nav" id="pageNav">
-            <a href="index.html">📊 Статистика</a>
-            <a href="balance.html">⚖️ Баланс</a>
-            <a href="guide.html">⚔️ Гайд</a>
-            <a href="lore.html">📜 Лор Этерниса</a>
-            <a href="hall.html">🏆 Зал Славы</a>
-            <a href="logs.html" class="active">📜 Логи</a>
-            <a href="simulator.html">🧪 Симулятор</a>
+		<div class="page-nav">
+			<a href="index.html">📊 Статистика</a>
+			<a href="logs.html" class="active">📜 Логи</a>
 			<a href="calc.html">🎲 Калькулятор</a>
-        </div>
+			<a href="balance.html">⚖️ Баланс</a>
+			<a href="simulator.html">🧪 Симулятор</a>
+			<a href="gradient.html">📈 Градиент</a>
+			<a href="guide.html">⚔️ Гайд</a>
+			<a href="hall.html">🏆 Зал Славы</a>
+			<a href="lore.html">📜 Лор Этерниса</a>
+			<a href="tavern.html">🍺 Таверна</a>
+		</div>
     </div>
     
     <div class="logs-container">
@@ -401,8 +403,6 @@
 		const content = document.getElementById('logs-content');
 		content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
 
-		// Убираем запрос к API jsDelivr
-		// Вместо этого показываем текущее время
 		const d = new Date();
 		const timeStr = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 		const dateStr = d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
