@@ -197,6 +197,8 @@
         th, td { padding: 6px 8px; }
         .formula { font-size: 11px; padding: 12px; }
         .back-link { padding: 6px 12px; font-size: 12px; }
+		
+		.table-container { overflow-x: auto; }
     }
 </style>
 </head>
@@ -493,12 +495,13 @@
         });
     }
 
-    const navToggle = document.querySelector('.nav-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('show');
-        navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-    });
+	const navToggle = document.querySelector('.nav-toggle');
+	const navLinks = document.querySelector('.nav-links');
+	if (navToggle && navLinks) {
+		navToggle.addEventListener('click', () => {
+			navLinks.classList.toggle('show');
+			navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+		});
 </script>
 </body>
 </html>

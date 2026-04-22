@@ -373,6 +373,13 @@
     #shards-table th:nth-child(3), #shards-table td:nth-child(3) { white-space: nowrap; }
     #players-table th:nth-child(3), #players-table td:nth-child(3),
     #players-table th:nth-child(4), #players-table td:nth-child(4) { white-space: nowrap; }
+	
+	@media (max-width: 768px) {
+    .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { min-width: 100%; }
+    th, td { white-space: nowrap; }
+    td:first-child { white-space: normal; word-break: break-word; }
+}
 }
 </style>
 </head>

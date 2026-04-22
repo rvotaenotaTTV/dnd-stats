@@ -214,6 +214,8 @@
         .lore-text { font-size: 14px; }
         table { font-size: 11px; }
         th, td { padding: 6px 8px; }
+		
+		.table-container { overflow-x: auto; }
     }
 </style>
 </head>
@@ -388,12 +390,12 @@
     <a href="index.html" class="back-link">← Назад к статистике</a>
 
     <script>
-        const navToggle = document.querySelector('.nav-toggle');
-        const navLinks = document.querySelector('.nav-links');
-        navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('show');
-            navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        });
+		const navToggle = document.querySelector('.nav-toggle');
+		const navLinks = document.querySelector('.nav-links');
+		navToggle.addEventListener('click', () => {
+			navLinks.classList.toggle('show');
+			navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+		});
     </script>
 </body>
 </html>
