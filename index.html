@@ -381,8 +381,8 @@
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-	// Режим загрузки: читаем из localStorage (если нет — false)
-	let useCDN = localStorage.getItem('useCDN') === 'true';
+	// Режим KZ: false = Raw GitHub (по умолчанию), true = jsDelivr (для Казахстана)
+	let useKZ = localStorage.getItem('useKZ') === 'true';
 
 	// URL'ы
 	const JSON_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
@@ -390,16 +390,16 @@
 	const JSON_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 	const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
 
-	// Обновляем текст кнопки при загрузке
+	// Обновляем текст кнопки
 	function updateButton() {
-		const btn = document.getElementById('cdnToggleBtn');
+		const btn = document.getElementById('kzToggleBtn');
 		if (btn) {
-			if (useCDN) {
-				btn.textContent = '⚡ CDN';
+			if (useKZ) {
+				btn.textContent = '🇰🇿 KZ (CDN)';
 				btn.style.color = '#ffd700';
 				btn.style.borderColor = '#ffd700';
 			} else {
-				btn.textContent = '🐢 CDN';
+				btn.textContent = '🇰🇿 KZ';
 				btn.style.color = '#8b949e';
 				btn.style.borderColor = '#30363d';
 			}
@@ -407,19 +407,17 @@
 	}
 
 	// Функция переключения
-	function toggleCDN() {
-		useCDN = !useCDN;
-		localStorage.setItem('useCDN', useCDN);
+	function toggleKZ() {
+		useKZ = !useKZ;
+		localStorage.setItem('useKZ', useKZ);
 		updateButton();
-		
-		// Перезагружаем страницу
 		location.reload();
 	}
-	window.toggleCDN = toggleCDN;
+	window.toggleKZ = toggleKZ;
 
-	// Устанавливаем URL в зависимости от режима
-	const JSON_URL = useCDN ? JSON_URL_CDN : JSON_URL_RAW;
-	const DATA_URL = useCDN ? DATA_URL_CDN : DATA_URL_RAW;
+	// Устанавливаем URL
+	const JSON_URL = useKZ ? JSON_URL_CDN : JSON_URL_RAW;
+	const DATA_URL = useKZ ? DATA_URL_CDN : DATA_URL_RAW;
 
 	let classesData = [];
 	let racesData = [];
@@ -427,7 +425,6 @@
 	let raceEmojis = {};
 	let players = [];
 
-	// Обновляем кнопку после загрузки DOM
 	document.addEventListener('DOMContentLoaded', updateButton);
 
 	fetch(DATA_URL)
@@ -1018,9 +1015,9 @@
 		history.replaceState(null, null, '#' + tabName);
 };
 </script>
-<!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ CDN -->
+<!-- КНОПКА KZ -->
 <div style="position: fixed; bottom: 15px; right: 15px; z-index: 1000;">
-    <button id="cdnToggleBtn" onclick="toggleCDN()" style="
+    <button id="kzToggleBtn" onclick="toggleKZ()" style="
         background: #21262d;
         border: 1px solid #30363d;
         color: #8b949e;
@@ -1031,7 +1028,7 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         transition: all 0.2s;
         backdrop-filter: blur(5px);
-    ">🐢 CDN</button>
+    ">🇰🇿 KZ</button>
 </div>
 </body>
 </html>
