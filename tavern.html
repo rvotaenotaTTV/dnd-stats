@@ -120,7 +120,6 @@
 			<a href="tavern.html" class="active">🍺 Таверна</a>
         </div>
     </div>
-    </div>
     <div class="tavern-container">
         <div class="bar-counter"></div>
         <div class="bar-wood">
@@ -198,8 +197,8 @@
         </div>
     </div>
     <script>
-        const navToggle = document.getElementById('navToggle');
-        const pageNav = document.getElementById('pageNav');
+		const navToggle = document.querySelector('.nav-toggle');
+		const pageNav = document.querySelector('.page-nav');
         navToggle.addEventListener('click', () => { pageNav.classList.toggle('show'); navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню'; });
         
         let balance = parseInt(localStorage.getItem('tavernBalance')) || 100;

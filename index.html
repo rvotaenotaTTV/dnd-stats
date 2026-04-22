@@ -379,6 +379,14 @@
     table { min-width: 100%; }
     th, td { white-space: nowrap; }
     td:first-child { white-space: normal; word-break: break-word; }
+	
+	.table-container { overflow-x: auto; }
+	#tab-tops table td:nth-child(2) { 
+    max-width: 95px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
 }
 }
 </style>
