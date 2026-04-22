@@ -269,20 +269,25 @@
 		}
 		.table-container.full-width { grid-column: span 1; }
 		
-		/* Топ-5 таблица — без скролла */
 		.table-container.full-width table { min-width: 100%; }
 		.table-container.full-width th, 
 		.table-container.full-width td { 
-			white-space: normal; 
-			word-break: break-word;
+			white-space: nowrap; 
+			font-size: 12px;
+			padding: 6px 4px;
 		}
 		.table-container.full-width td:nth-child(2) { 
-			white-space: normal;
-			word-break: break-word;
+			white-space: nowrap;
 			max-width: none;
 			overflow: visible;
 			text-overflow: clip;
 		}
+
+		.table-container.full-width th:nth-child(1) { width: 30px; }  /* # */
+		.table-container.full-width th:nth-child(2) { width: auto; }  /* Игрок */
+		.table-container.full-width th:nth-child(3) { width: auto; }  /* Класс */
+		.table-container.full-width th:nth-child(4) { width: 60px; }  /* Skill */
+		.table-container.full-width th:nth-child(5) { width: 55px; }  /* Победы */
 		
 		/* Обычные таблицы */
 		table { min-width: 100%; }

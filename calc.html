@@ -250,33 +250,32 @@
 		
 		/* Таблица результатов */
 		.result-card {
-			overflow-x: auto;
-			-webkit-overflow-scrolling: touch;
+			overflow-x: visible;
 		}
 		.result-card table {
 			min-width: 100%;
 			table-layout: fixed;
 			font-size: 11px;
 		}
-		.result-card th,
-		.result-card td {
-			padding: 6px 4px;
+		.result-card th:nth-child(1) {
+			width: 35%;  /* Первая колонка — шире */
 		}
 		.result-card th:nth-child(2),
-		.result-card td:nth-child(2) {
-			width: 45%;
-			word-break: break-word;
-			white-space: normal;
+		.result-card th:nth-child(3) {
+			width: 32.5%;  /* Остальные — поровну */
 		}
-		.result-card th:nth-child(3),
+		.result-card td:nth-child(2),
 		.result-card td:nth-child(3) {
-			width: 45%;
 			word-break: break-word;
 			white-space: normal;
+			padding: 6px 3px;
+			text-align: right;  /* Числа — вправо */
 		}
 		.result-card td:first-child {
-			width: 10%;
-			white-space: nowrap;
+			white-space: normal;
+			word-break: break-word;
+			padding: 6px 3px;
+			font-size: 10px;
 		}
 		
 		/* Блок причин */
