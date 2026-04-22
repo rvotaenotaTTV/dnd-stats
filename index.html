@@ -1227,14 +1227,18 @@ th {
 		
 		function renderBar(label, current, max, nextTitle) {
 			const percent = Math.min(100, (current / max) * 100);
+			const completed = current >= max;
 			return `
 				<div style="margin-bottom: 20px;">
 					<div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
 						<span style="color: #c9d1d9;">${label}</span>
-						<span style="color: #ffd700;">${current}/${max} ${nextTitle ? '→ ' + nextTitle.emoji + ' ' + nextTitle.name : '✅ Максимум!'}</span>
+						<span style="color: #8b949e; font-size: 11px;">${current}/${max}</span>
 					</div>
-					<div style="background: #21262d; height: 10px; border-radius: 5px;">
-						<div style="width: ${percent}%; background: linear-gradient(90deg, #ffd700, #ffe44d); height: 10px; border-radius: 5px;"></div>
+					<div style="background: #21262d; height: 8px; border-radius: 4px;">
+						<div style="width: ${percent}%; background: ${completed ? '#ffd700' : '#a371f7'}; height: 8px; border-radius: 4px;"></div>
+					</div>
+					<div style="margin-top: 5px; color: #ffd700; font-size: 12px;">
+						${nextTitle ? '⏩️ ' + nextTitle.emoji + ' ' + nextTitle.name : '✅ Максимум!'}
 					</div>
 				</div>
 			`;
