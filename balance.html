@@ -303,15 +303,37 @@
 	function calculateDerivedFields(cls) {
 		const avg = (cls.Min + cls.Max) / 2;
 		const accDisplay = Math.min(
-		    CONFIG.hitChanceMax, 
-		    Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + cls.Atk - cls.Def) / 20)
+			CONFIG.hitChanceMax, 
+			Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + cls.Atk - cls.Def) / 20)
 		);
 		const accCPI = (CONFIG.accBaseCPI + cls.Atk) / 20;
 		const atkBonus = 1 + cls.Atk * CONFIG.cpiAtkBonus;
 		const dmg5 = avg * accDisplay * 5;
 		const surv = cls.Hp * (1 + cls.Def * CONFIG.defReduction);
 		const effHP = cls.Hp * (1 + cls.Def * CONFIG.effHpDefMult);
-		const cpi = Math.pow(effHP, CONFIG.cpiHpPower) * Math.pow(avg * accCPI * atkBonus * CONFIG.cpiFixedReduction, CONFIG.cpiDmgPower);
+		
+		// Базовый CPI (старая формула)
+		let cpi = Math.pow(effHP, CONFIG.cpiHpPower) * Math.pow(avg * accCPI * atkBonus * CONFIG.cpiFixedReduction, CONFIG.cpiDmgPower);
+		
+		// 1. Штраф за ATK > 8 (потолок точности)
+		if (cls.Atk > 8) {
+			cpi -= (cls.Atk - 8) * 0.8;
+			if (cls.Atk > 9) {
+				cpi -= (cls.Atk - 9) * 0.5;
+			}
+		}
+		
+		// 2. Бонус за MIN > 5 (стабильность)
+		if (cls.Min > 5) {
+			cpi += (cls.Min - 5) * 0.4;
+		}
+		
+		// 3. Бонус за HP > 28 (живучесть танков)
+		if (cls.Hp > 28) {
+			cpi += (cls.Hp - 28) * 0.2;
+		}
+		// ===========================================
+		
 		const power = cpi * CONFIG.powerMultiplier;
 		
 		return {
