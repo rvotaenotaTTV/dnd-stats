@@ -950,21 +950,38 @@ th {
 		html += '<div id="tab-titles" class="tab-content">';
 
 		const achievements = [
+			// =========================================================================
+			// ЛЕГЕНДАРНЫЕ ТИТУЛЫ (priority 1200-800)
+			// =========================================================================
+			{ emoji:"🌟", name:"Легенда Этерниса", type:"level", value:150, priority:1200 },
+			{ emoji:"👑", name:"Король арены", type:"tournament", value:10, priority:1150 },
 			{ emoji:"👑", name:"Властелин Раскола", type:"tournament", value:5, priority:1100 },
+			{ emoji:"💫", name:"Властелин осколков", type:"level", value:100, priority:1050 },
 			{ emoji:"👑", name:"Бессмертный", type:"level", value:50, priority:1000 },
 			{ emoji:"☠️", name:"Бог войны", type:"best", value:20, priority:950 },
 			{ emoji:"✨", name:"Мифический", type:"level", value:40, priority:900 },
 			{ emoji:"🤖", name:"Читер", type:"winrate", value:90, minFights:50, priority:880 },
 			{ emoji:"🤪", name:"Безумный", type:"fights", value:1000, priority:850 },
 			{ emoji:"⚡", name:"Живая легенда", type:"level", value:30, priority:800 },
+
+			// =========================================================================
+			// ЭЛИТНЫЕ ТИТУЛЫ (priority 750-550)
+			// =========================================================================
 			{ emoji:"💎", name:"Элита", type:"winrate", value:80, minFights:30, priority:750 },
 			{ emoji:"🗡️", name:"Мастер клинка", type:"level", value:20, priority:700 },
+			{ emoji:"🏆", name:"Триумфатор", type:"wins", value:200, priority:660 },
 			{ emoji:"👑", name:"Легенда", type:"wins", value:100, priority:650 },
 			{ emoji:"⚔️", name:"Ветеран", type:"fights", value:500, priority:620 },
 			{ emoji:"🛡️", name:"Хранитель", type:"level", value:15, priority:600 },
 			{ emoji:"⚡", name:"Непобедимый", type:"best", value:10, priority:580 },
 			{ emoji:"🏹", name:"Мастер", type:"winrate", value:70, minFights:30, priority:560 },
 			{ emoji:"📿", name:"Собиратель", type:"level", value:10, priority:550 },
+
+			// =========================================================================
+			// ФРАКЦИОННЫЕ ТИТУЛЫ (priority 510-340)
+			// =========================================================================
+			{ emoji:"🔱", name:"Избранный светом", type:"faction", value:150, faction:"Орден Света", priority:510 },
+			{ emoji:"🌋", name:"Владыка тьмы", type:"faction", value:150, faction:"Культ Тьмы", priority:510 },
 			{ emoji:"⚜️", name:"Аэлион", type:"faction", value:100, faction:"Орден Света", priority:500 },
 			{ emoji:"🌑", name:"Повествователь", type:"faction", value:100, faction:"Культ Тьмы", priority:500 },
 			{ emoji:"🏆", name:"Хранитель Вечности", type:"tournament", value:1, priority:450 },
@@ -973,26 +990,32 @@ th {
 			{ emoji:"🗡️", name:"Теневой клинок", type:"faction", value:50, faction:"Культ Тьмы", priority:380 },
 			{ emoji:"✨", name:"Страж порядка", type:"faction", value:25, faction:"Орден Света", priority:340 },
 			{ emoji:"🌙", name:"Глас тьмы", type:"faction", value:25, faction:"Культ Тьмы", priority:340 },
+
+			// =========================================================================
+			// ВОИНСКИЕ ТИТУЛЫ (priority 280-180)
+			// =========================================================================
 			{ emoji:"🛡️", name:"Воитель", type:"wins", value:50, priority:280 },
 			{ emoji:"🛡️", name:"Гладиатор", type:"losses", value:200, priority:260 },
 			{ emoji:"🔥", name:"Неудержимый", type:"best", value:5, priority:240 },
 			{ emoji:"🎯", name:"Профессионал", type:"winrate", value:60, minFights:30, priority:220 },
 			{ emoji:"⚔️", name:"Опытный", type:"wins", value:10, priority:200 },
 			{ emoji:"⚙️", name:"Трудяга", type:"fights", value:100, priority:180 },
+
+			// =========================================================================
+			// НАЧИНАЮЩИЕ ТИТУЛЫ (priority 160-110)
+			// =========================================================================
 			{ emoji:"🔥", name:"Задира", type:"best", value:3, priority:160 },
 			{ emoji:"🌱", name:"Новичок", type:"wins", value:1, priority:150 },
 			{ emoji:"👀", name:"Любопытный", type:"fights", value:50, priority:140 },
 			{ emoji:"⚖️", name:"Ровный", type:"winrate", value:50, minFights:10, priority:130 },
 			{ emoji:"🥊", name:"Боец", type:"losses", value:10, priority:120 },
 			{ emoji:"☯️", name:"Инь-Янь", type:"balance", minFights:20, priority:110 },
+
+			// =========================================================================
+			// ОСОБЫЕ ТИТУЛЫ (priority 90-70)
+			// =========================================================================
 			{ emoji:"⚙️", name:"Железный", type:"losses", value:100, priority:90 },
-			{ emoji:"🪀", name:"Груша для битья", type:"losses", value:50, priority:70 },
-			{ emoji:"🌟", name:"Легенда Этерниса", type:"level", value:150, priority:1200 },
-			{ emoji:"💫", name:"Властелин осколков", type:"level", value:100, priority:1050 },
-			{ emoji:"🏆", name:"Триумфатор", type:"wins", value:200, priority:640 },
-			{ emoji:"👑", name:"Король арены", type:"tournament", value:10, priority:1150 },
-			{ emoji:"🔱", name:"Избранный светом", type:"faction", value:150, faction:"Орден Света", priority:510 },
-			{ emoji:"🌋", name:"Владыка тьмы", type:"faction", value:150, faction:"Культ Тьмы", priority:510 }
+			{ emoji:"🪀", name:"Груша для битья", type:"losses", value:50, priority:70 }
 		];
 
 		function checkAchievement(ach, p) {
@@ -1013,7 +1036,6 @@ th {
 			}
 		}
 
-		// Условия для отображения (без "Особое")
 		function getConditionText(ach) {
 			if (ach.type === 'level') return `${ach.value} уровень`;
 			if (ach.type === 'wins') return `${ach.value} побед`;
