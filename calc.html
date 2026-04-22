@@ -113,58 +113,38 @@
         .reasons-box h4 { color: #ffd700; margin-bottom: 15px; }
         .reasons-list { padding-left: 25px; color: #8b949e; line-height: 1.8; }
         
-		@media (max-width: 768px) {
-			body { padding: 10px; }
-			h1 { font-size: 1.6em; margin-top: 45px; }
-			
-			.nav-wrapper { border-bottom: none; }
-			.nav-toggle { display: block; }
-			.page-nav { 
-				display: none; 
-				flex-direction: column; 
-				gap: 8px; 
-				margin-top: 10px; 
-			}
-			.page-nav.show { display: flex; }
-			.page-nav a { 
-				text-align: center; 
-				padding: 10px;
-				background: #21262d;
-				border: 1px solid #30363d;
-				border-radius: 20px;
-				margin-bottom: 0;
-			}
-			
-			.calc-container {
-				overflow-x: hidden;
-			}
-			
-			.selectors {
-				overflow-x: hidden;
-				padding: 15px;
-			}
-			
-			.players-select, .classes-select { 
-				grid-template-columns: 1fr; 
-				gap: 15px;
-			}
-			
-			.vs-divider { font-size: 22px; }
-			
-			.fighter-card { padding: 15px; }
-			
-			table { 
-				display: block;
-				overflow-x: auto;
-				white-space: nowrap;
-				font-size: 11px; 
-			}
-			
-			th, td { padding: 6px 8px; }
-			
-			.reasons-box { padding: 15px; }
-			.reasons-list { padding-left: 20px; font-size: 11px; }
-		}
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.6em; margin-top: 45px; }
+            
+            .nav-wrapper { border-bottom: none; }
+            .nav-toggle { display: block; }
+            .page-nav { 
+                display: none; 
+                flex-direction: column; 
+                gap: 8px; 
+                margin-top: 10px; 
+            }
+            .page-nav.show { display: flex; }
+            .page-nav a { 
+                text-align: center; 
+                padding: 10px;
+                background: #21262d;
+                border: 1px solid #30363d;
+                border-radius: 20px;
+                margin-bottom: 0;
+            }
+            
+            .calc-container { overflow-x: hidden; }
+            .selectors { overflow-x: hidden; padding: 15px; }
+            .players-select, .classes-select { grid-template-columns: 1fr; gap: 15px; }
+            .vs-divider { font-size: 22px; }
+            .fighter-card { padding: 15px; }
+            table { display: block; overflow-x: auto; white-space: nowrap; font-size: 11px; }
+            th, td { padding: 6px 8px; }
+            .reasons-box { padding: 15px; }
+            .reasons-list { padding-left: 20px; font-size: 11px; }
+        }
     </style>
 </head>
 <body>
@@ -237,8 +217,22 @@
         navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     });
 
-    const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-    const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+    const JSON_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+    const DATA_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+    const JSON_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+    const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
+
+    let useCDN = false;
+
+    function fetchWithTimeout(url, timeout = 3000) {
+        return Promise.race([
+            fetch(url).then(r => {
+                if (!r.ok) throw new Error('Status ' + r.status);
+                return r;
+            }),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+        ]);
+    }
 
     let CONFIG = {};
     let classesData = [];
@@ -248,27 +242,33 @@
     let players = [];
     let currentMode = 'players';
 
-    Promise.all([
-        fetch(DATA_URL).then(r => r.json()),
-        fetch(JSON_URL).then(r => r.json())
-    ]).then(([data, stats]) => {
-        CONFIG = data.config || { 
-            defReduction: 0.05,
-            hitChanceMin: 0.05,
-            hitChanceMax: 0.95,
-            baseAC: 10,
-            critMultiplier: 2,
-            hitChanceDivisor: 20
-        };
-        classesData = data.classes;
-        racesData = data.races;
-        classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
-        raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
-        players = stats.players.filter(p => p.name && p.name !== 'Unknown');
-        
-        populateSelects();
-        updateCalc();
-    });
+    fetchWithTimeout(DATA_URL_RAW)
+        .catch(() => {
+            console.warn('⚠️ Raw GitHub не отвечает, переключаемся на CDN');
+            useCDN = true;
+            return fetch(DATA_URL_CDN);
+        })
+        .then(r => r.json())
+        .then(data => {
+            CONFIG = data.config;
+            classesData = data.classes;
+            racesData = data.races;
+            classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
+            raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
+            
+            const statsUrl = useCDN ? JSON_URL_CDN : JSON_URL_RAW;
+            return fetchWithTimeout(statsUrl).catch(() => fetch(JSON_URL_CDN));
+        })
+        .then(r => r.json())
+        .then(stats => {
+            players = stats.players.filter(p => p.name && p.name !== 'Unknown');
+            populateSelects();
+            updateCalc();
+        })
+        .catch(err => {
+            console.error('Ошибка загрузки:', err);
+            document.getElementById('calc-result').innerHTML = '<div style="text-align:center;color:#ff6b6b;padding:20px;">❌ Ошибка загрузки данных</div>';
+        });
 
     function populateSelects() {
         const p1 = document.getElementById('calc-p1');
@@ -397,7 +397,7 @@
         const win2 = totalDmg > 0 ? (d2 / totalDmg) * 100 : 50;
         
         const isEqual = Math.abs(win1 - win2) < 0.01;
-		const winner = isEqual ? null : (win1 > win2 ? sel.p1 : sel.p2);
+        const winner = isEqual ? null : (win1 > win2 ? sel.p1 : sel.p2);
         
         // Разброс (стабильность)
         const spread1 = s1.max - s1.min;
