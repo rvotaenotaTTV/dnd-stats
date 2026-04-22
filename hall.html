@@ -223,6 +223,15 @@
             table { min-width: 100%; }
             th, td { white-space: nowrap; }
             td:first-child { white-space: normal; word-break: break-word; }
+			.table-container.full-width table { min-width: 100%; }
+			.table-container.full-width th, 
+			.table-container.full-width td { white-space: normal; }
+			.table-container.full-width td:nth-child(2) { 
+				max-width: 100px; 
+				white-space: nowrap; 
+				overflow: hidden; 
+				text-overflow: ellipsis; 
+			}
         }
     </style>
 </head>
