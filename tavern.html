@@ -49,7 +49,6 @@
         .balance-badge.shake { animation: shake 0.3s; }
         @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
         
-        /* Выбор игры */
         .game-select { display: flex; gap: 20px; justify-content: center; padding: 20px; }
         .game-option { flex: 1; background: #2a1a10; border: 2px solid #5a3a1a; border-radius: 20px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.2s; }
         .game-option:hover { border-color: #ffd700; transform: translateY(-3px); background: #3a2a1a; }
@@ -83,7 +82,6 @@
         .btn-secondary:active { transform: translateY(2px); box-shadow: 0 2px 0 #3a2210; }
         .game-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #b8860b; }
         
-        /* Стили для Свиньи */
         .drawn-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 15px 0; min-height: 130px; }
         .pig-card { width: 90px; height: 130px; background: linear-gradient(145deg, #ffffff, #e6e6e6); border-radius: 10px; border: 1px solid #999; box-shadow: 0 6px 0 #999, 0 10px 15px rgba(0,0,0,0.4); transform: rotate(var(--rot, 0deg)); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 36px; font-weight: bold; color: #0d1117; animation: deal 0.3s ease; }
         .pig-card.red { color: #c0392b; }
@@ -108,12 +106,20 @@
 <body>
     <h1>🍺 ТАВЕРНА «ОЧКО ЭТЕРНИСА»</h1>
     <div class="nav-wrapper">
-        <button class="nav-toggle" id="navToggle">☰ Меню</button>
-        <div class="page-nav" id="pageNav">
-            <a href="index.html">📊 Статистика</a><a href="balance.html">⚖️ Баланс</a><a href="guide.html">⚔️ Гайд</a>
-            <a href="hall.html">🏆 Зал Славы</a><a href="logs.html">📜 Логи</a><a href="simulator.html">🧪 Симулятор</a><a href="calc.html">🎲 Калькулятор</a>
-            <a href="tavern.html" class="active">🍺 Таверна</a>
+        <button class="nav-toggle">☰ Меню</button>
+        <div class="nav-links">
+            <a href="index.html">📊 Статистика</a>
+			<a href="logs.html">📜 Логи</a>
+            <a href="calc.html">🎲 Калькулятор</a>
+            <a href="balance.html">⚖️ Баланс</a>
+			<a href="simulator.html">🧪 Симулятор</a>
+			<a href="gradient.html">📈 Градиент</a>
+			<a href="guide.html">⚔️ Гайд</a>
+			<a href="hall.html">🏆 Зал Славы</a>
+			<a href="lore.html">📜 Лор Этерниса</a>
+			<a href="tavern.html" class="active">🍺 Таверна</a>
         </div>
+    </div>
     </div>
     <div class="tavern-container">
         <div class="bar-counter"></div>
@@ -196,7 +202,6 @@
         const pageNav = document.getElementById('pageNav');
         navToggle.addEventListener('click', () => { pageNav.classList.toggle('show'); navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню'; });
         
-        // Общий баланс
         let balance = parseInt(localStorage.getItem('tavernBalance')) || 100;
         function updateBalance() { document.getElementById('balance').textContent = `💎 ${balance}`; localStorage.setItem('tavernBalance', balance); }
         function setQuote(text) { document.getElementById('innkeeperQuote').textContent = text; }
@@ -234,7 +239,6 @@
         ];
         function randomQuote() { return quotes[Math.floor(Math.random() * quotes.length)]; }
         
-        // Переключение панелей
         function selectGame(game) {
             document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
             document.getElementById(`panel-${game}`).classList.add('active');
@@ -351,7 +355,6 @@
         updateBalance();
         setQuote(randomQuote());
         
-        // Открыть по хэшу
         if (window.location.hash === '#pig') selectGame('pig');
         else if (window.location.hash === '#ochko') selectGame('ochko');
     </script>

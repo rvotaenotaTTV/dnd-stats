@@ -39,7 +39,6 @@
             padding-bottom: 10px;
         }
         
-        /* ===== МЕНЮ: ПК = ВКЛАДКИ, МОБИЛКА = КРУГЛЫЕ КНОПКИ ===== */
         .nav-wrapper { 
             margin-bottom: 30px; 
             border-bottom: 1px solid #30363d;
@@ -183,7 +182,6 @@
         .champion-name { font-size: 24px; color: #ffd700; font-weight: bold; }
         .champion-class { font-size: 16px; color: #8b949e; }
         
-        /* ===== МОБИЛЬНАЯ ВЕРСИЯ: КРУГЛЫЕ КНОПКИ ===== */
         @media (max-width: 768px) {
             h1 { font-size: 1.6em; }
             body { padding: 10px; }
@@ -201,14 +199,13 @@
             }
             .page-nav.show { display: flex; }
             
-            /* КРУГЛЫЕ КНОПКИ ДЛЯ МОБИЛОК */
             .page-nav a { 
                 text-align: center; 
                 padding: 10px;
                 background: #21262d;
                 border: 1px solid #30363d;
                 border-radius: 20px;
-                border-bottom: 1px solid #30363d;  /* возвращаем обычную рамку */
+                border-bottom: 1px solid #30363d;
                 margin-bottom: 0;
             }
             .page-nav a:hover { 
@@ -236,13 +233,15 @@
         <button class="nav-toggle">☰ Меню</button>
         <div class="page-nav">
             <a href="index.html">📊 Статистика</a>
+			<a href="logs.html">📜 Логи</a>
+            <a href="calc.html">🎲 Калькулятор</a>
             <a href="balance.html">⚖️ Баланс</a>
-            <a href="guide.html">⚔️ Гайд</a>
-            <a href="lore.html">📜 Лор Этерниса</a>
-            <a href="hall.html" class="active">🏆 Зал Славы</a>
-            <a href="logs.html">📜 Логи</a>
-            <a href="simulator.html">🧪 Симулятор</a>
-			<a href="calc.html">🎲 Калькулятор</a>
+			<a href="simulator.html">🧪 Симулятор</a>
+			<a href="gradient.html">📈 Градиент</a>
+			<a href="guide.html">⚔️ Гайд</a>
+			<a href="hall.html" class="active">🏆 Зал Славы</a>
+			<a href="lore.html">📜 Лор Этерниса</a>
+			<a href="tavern.html">🍺 Таверна</a>
         </div>
     </div>
     
@@ -335,7 +334,6 @@
             event.target.classList.add('active');
         }
         
-        // Бургер-меню
         const navToggle = document.querySelector('.nav-toggle');
         const pageNav = document.querySelector('.page-nav');
         navToggle.addEventListener('click', () => {
