@@ -3,147 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Градиент баланса v3 (Live)</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-            color: #e6edf3;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        h1 { color: #ffd700; text-align: center; margin: 15px 0 10px; font-size: 2.2em; font-weight: 700; }
-        .subtitle { text-align: center; color: #8b949e; margin-bottom: 25px; font-size: 14px; }
-        
-        .nav-wrapper { margin-bottom: 30px; border-bottom: 1px solid #30363d; }
-        .nav-toggle {
-            display: none; width: 100%; padding: 12px 20px; background: #21262d;
-            border: 1px solid #30363d; border-radius: 25px; color: #ffd700;
-            font-size: 16px; font-weight: bold; cursor: pointer; text-align: left;
-        }
-        .page-nav { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
-        .page-nav a {
-            color: #8b949e; text-decoration: none; padding: 12px 20px;
-            font-size: 14px; font-weight: 500; transition: all 0.2s;
-            white-space: nowrap; border-bottom: 3px solid transparent;
-        }
-        .page-nav a:hover { color: #ffd700; border-bottom-color: #ffd70080; }
-        .page-nav a.active { color: #ffd700; font-weight: bold; border-bottom-color: #ffd700; }
-        
-        .container { max-width: 1000px; margin: 0 auto; }
-        
-        .class-selector {
-            background: #161b22; border-radius: 16px; padding: 20px;
-            border: 1px solid #30363d; margin-bottom: 25px;
-        }
-        
-        .selector-row {
-            display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        
-        .class-select, .race-select {
-            background: #21262d; border: 1px solid #30363d; color: white;
-            padding: 12px 20px; border-radius: 12px; font-size: 16px;
-            cursor: pointer;
-        }
-        .class-select { min-width: 250px; }
-        .race-select { min-width: 200px; }
-        
-        .btn {
-            background: #21262d; border: 1px solid #ffd700; color: #ffd700;
-            padding: 12px 30px; border-radius: 25px; cursor: pointer;
-            font-size: 16px; font-weight: bold; transition: all 0.2s;
-        }
-        .btn:hover { background: #ffd700; color: #0d1117; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        .stats-panel {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .stat-card {
-            background: #21262d; border-radius: 12px; padding: 15px;
-            text-align: center; border: 1px solid #30363d;
-        }
-        
-        .stat-emoji { font-size: 20px; margin-bottom: 5px; }
-        .stat-name { color: #8b949e; font-size: 12px; margin-bottom: 8px; }
-        .stat-value { color: #ffd700; font-size: 24px; font-weight: bold; margin-bottom: 10px; }
-        
-        .stat-input {
-            width: 70px; background: #0d1117; border: 1px solid #30363d;
-            color: #ffd700; font-size: 14px; font-weight: bold; text-align: center;
-            padding: 5px; border-radius: 6px; margin: 0 auto;
-        }
-        
-        .result-panel {
-            background: linear-gradient(145deg, #1a1f26, #161b22);
-            border-radius: 20px; padding: 30px; border: 1px solid #30363d;
-            text-align: center; margin-top: 25px;
-        }
-        
-        .winrate-display {
-            display: flex; gap: 30px; justify-content: center; align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .winrate-box {
-            text-align: center; padding: 20px 30px; background: #21262d;
-            border-radius: 16px; border: 1px solid #30363d;
-        }
-        
-        .winrate-label { color: #8b949e; font-size: 14px; margin-bottom: 10px; }
-        .winrate-value { font-size: 42px; font-weight: bold; color: #ffd700; }
-        .winrate-arrow { font-size: 32px; color: #ffd700; }
-        
-        .diff-badge {
-            display: inline-block; padding: 6px 16px; border-radius: 30px;
-            font-size: 16px; font-weight: bold; margin-top: 10px;
-        }
-        .diff-positive { background: #1a4d1a; color: #90ee90; }
-        .diff-negative { background: #4d1a1a; color: #ff9090; }
-        .diff-neutral { background: #4d4d1a; color: #ffff90; }
-        
-        .progress { color: #ffd700; font-size: 14px; margin-left: 15px; }
-        .sim-details { margin-top: 20px; color: #8b949e; font-size: 13px; }
-        
-        .reset-btn {
-            background: transparent; border: 1px solid #30363d; color: #8b949e;
-            padding: 8px 16px; border-radius: 20px; cursor: pointer;
-            font-size: 13px; transition: all 0.2s;
-        }
-        .reset-btn:hover { border-color: #ffd700; color: #ffd700; }
-        
-        .info-box {
-            background: #161b22; border-radius: 12px; padding: 20px;
-            border: 1px solid #30363d; margin-top: 30px;
-        }
-        .info-title { color: #ffd700; margin-bottom: 15px; font-size: 16px; }
-        .info-text { color: #8b949e; font-size: 13px; line-height: 1.6; }
-        .info-text span { color: #ffd700; }
-        
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            h1 { font-size: 1.6em; margin-top: 45px; }
-            .nav-wrapper { border-bottom: none; }
-            .nav-toggle { display: block; }
-            .page-nav { display: none; flex-direction: column; margin-top: 10px; }
-            .page-nav.show { display: flex; }
-            .page-nav a { text-align: center; padding: 10px; background: #21262d; border-radius: 20px; }
-            .stats-panel { grid-template-columns: repeat(2, 1fr); }
-            .winrate-value { font-size: 32px; }
-            .winrate-arrow { transform: rotate(90deg); }
-            .selector-row { flex-direction: column; align-items: stretch; }
-            .class-select, .race-select { min-width: auto; width: 100%; }
-            .btn { width: 100%; }
-        }
-    </style>
+    <title>Градиент баланса</title>
+<style>
+	* { box-sizing: border-box; margin: 0; padding: 0; }
+
+	body { 
+		font-family: 'Segoe UI', 'Arial', sans-serif; 
+		background: 
+			radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
+			radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
+			linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
+		color: #e6edf3; 
+		min-height: 100vh;
+		padding: 20px;
+	}
+
+	h1 { 
+		color: #ffd700; 
+		text-align: center; 
+		margin: 15px 0 25px; 
+		font-size: 2.5em;
+		font-weight: 700;
+		text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
+		letter-spacing: 2px;
+		position: relative;
+		display: inline-block;
+		left: 50%;
+		transform: translateX(-50%);
+		white-space: nowrap;
+		border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+		padding-bottom: 10px;
+	}
+
+	.subtitle { 
+		text-align: center; 
+		color: #8b949e; 
+		margin-bottom: 25px; 
+		font-size: 14px; 
+	}
+
+	/* ==================== НАВИГАЦИЯ ==================== */
+	.nav-wrapper { 
+		margin-bottom: 30px; 
+		border-bottom: 1px solid #30363d; 
+	}
+
+	.nav-toggle {
+		display: none;
+		width: 100%;
+		padding: 12px 20px;
+		background: #21262d;
+		border: 1px solid #30363d;
+		border-radius: 25px;
+		color: #ffd700;
+		font-size: 16px;
+		font-weight: bold;
+		cursor: pointer;
+		text-align: left;
+	}
+
+	.page-nav { 
+		display: flex; 
+		gap: 5px; 
+		justify-content: center; 
+		flex-wrap: wrap; 
+	}
+
+	.page-nav a {
+		color: #8b949e;
+		text-decoration: none;
+		padding: 12px 20px;
+		font-size: 14px;
+		font-weight: 500;
+		transition: all 0.2s;
+		white-space: nowrap;
+		border-bottom: 3px solid transparent;
+		background: transparent;
+	}
+
+	.page-nav a:hover { 
+		color: #ffd700; 
+		border-bottom-color: #ffd70080; 
+	}
+
+	.page-nav a.active { 
+		color: #ffd700; 
+		font-weight: bold; 
+		border-bottom-color: #ffd700; 
+	}
+
+	/* ==================== КОНТЕЙНЕР ==================== */
+	.container { 
+		max-width: 1000px; 
+		margin: 0 auto; 
+	}
+
+	/* ==================== СЕЛЕКТОР КЛАССА ==================== */
+	.class-selector {
+		background: #161b22;
+		border-radius: 16px;
+		padding: 20px;
+		border: 1px solid #30363d;
+		margin-bottom: 25px;
+	}
+
+	.selector-row {
+		display: flex;
+		gap: 20px;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-bottom: 20px;
+	}
+
+	.class-select, .race-select {
+		background: #21262d;
+		border: 1px solid #30363d;
+		color: white;
+		padding: 12px 20px;
+		border-radius: 12px;
+		font-size: 16px;
+		cursor: pointer;
+	}
+
+	.class-select { min-width: 250px; }
+	.race-select { min-width: 200px; }
+
+	/* ==================== КНОПКИ ==================== */
+	.btn {
+		background: #21262d;
+		border: 1px solid #ffd700;
+		color: #ffd700;
+		padding: 12px 30px;
+		border-radius: 25px;
+		cursor: pointer;
+		font-size: 16px;
+		font-weight: bold;
+		transition: all 0.2s;
+	}
+
+	.btn:hover { 
+		background: #ffd700; 
+		color: #0d1117; 
+	}
+
+	.btn:disabled { 
+		opacity: 0.5; 
+		cursor: not-allowed; 
+	}
+
+	.reset-btn {
+		background: transparent;
+		border: 1px solid #30363d;
+		color: #8b949e;
+		padding: 8px 16px;
+		border-radius: 20px;
+		cursor: pointer;
+		font-size: 13px;
+		transition: all 0.2s;
+	}
+
+	.reset-btn:hover { 
+		border-color: #ffd700; 
+		color: #ffd700; 
+	}
+
+	/* ==================== ПАНЕЛЬ СТАТОВ ==================== */
+	.stats-panel {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 15px;
+		margin: 20px 0;
+	}
+
+	.stat-card {
+		background: #21262d;
+		border-radius: 12px;
+		padding: 15px;
+		text-align: center;
+		border: 1px solid #30363d;
+	}
+
+	.stat-emoji { 
+		font-size: 20px; 
+		margin-bottom: 5px; 
+	}
+
+	.stat-name { 
+		color: #8b949e; 
+		font-size: 12px; 
+		margin-bottom: 8px; 
+	}
+
+	.stat-value { 
+		color: #ffd700; 
+		font-size: 24px; 
+		font-weight: bold; 
+		margin-bottom: 10px; 
+	}
+
+	.stat-input {
+		width: 70px;
+		background: #0d1117;
+		border: 1px solid #30363d;
+		color: #ffd700;
+		font-size: 14px;
+		font-weight: bold;
+		text-align: center;
+		padding: 5px;
+		border-radius: 6px;
+		margin: 0 auto;
+	}
+
+	/* ==================== ПАНЕЛЬ РЕЗУЛЬТАТА ==================== */
+	.result-panel {
+		background: linear-gradient(145deg, #1a1f26, #161b22);
+		border-radius: 20px;
+		padding: 30px;
+		border: 1px solid #30363d;
+		text-align: center;
+		margin-top: 25px;
+	}
+
+	.winrate-display {
+		display: flex;
+		gap: 30px;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.winrate-box {
+		text-align: center;
+		padding: 20px 30px;
+		background: #21262d;
+		border-radius: 16px;
+		border: 1px solid #30363d;
+	}
+
+	.winrate-label { 
+		color: #8b949e; 
+		font-size: 14px; 
+		margin-bottom: 10px; 
+	}
+
+	.winrate-value { 
+		font-size: 42px; 
+		font-weight: bold; 
+		color: #ffd700; 
+	}
+
+	.winrate-arrow { 
+		font-size: 32px; 
+		color: #ffd700; 
+	}
+
+	.diff-badge {
+		display: inline-block;
+		padding: 6px 16px;
+		border-radius: 30px;
+		font-size: 16px;
+		font-weight: bold;
+		margin-top: 10px;
+	}
+
+	.diff-positive { background: #1a4d1a; color: #90ee90; }
+	.diff-negative { background: #4d1a1a; color: #ff9090; }
+	.diff-neutral { background: #4d4d1a; color: #ffff90; }
+
+	.progress { 
+		color: #ffd700; 
+		font-size: 14px; 
+		margin-left: 15px; 
+	}
+
+	.sim-details { 
+		margin-top: 20px; 
+		color: #8b949e; 
+		font-size: 13px; 
+	}
+
+	/* ==================== ИНФО-БЛОК ==================== */
+	.info-box {
+		background: #161b22;
+		border-radius: 12px;
+		padding: 20px;
+		border: 1px solid #30363d;
+		margin-top: 30px;
+	}
+
+	.info-title { 
+		color: #ffd700; 
+		margin-bottom: 15px; 
+		font-size: 16px; 
+	}
+
+	.info-text { 
+		color: #8b949e; 
+		font-size: 13px; 
+		line-height: 1.6; 
+	}
+
+	.info-text span { color: #ffd700; }
+
+	/* ==================== МОБИЛЬНАЯ ВЕРСИЯ ==================== */
+	@media (max-width: 768px) {
+		body { padding: 10px; }
+		h1 { font-size: 1.6em; margin-top: 45px; }
+		
+		/* Меню */
+		.nav-wrapper { border-bottom: none; }
+		.nav-toggle { display: block; }
+		.page-nav { 
+			display: none; 
+			flex-direction: column; 
+			margin-top: 10px; 
+		}
+		.page-nav.show { display: flex; }
+		.page-nav a { 
+			text-align: center; 
+			padding: 10px;
+			background: #21262d;
+			border: 1px solid #30363d;
+			border-radius: 20px;
+		}
+		.page-nav a.active { 
+			background: #ffd700; 
+			color: #0d1117; 
+			border-color: #ffd700;
+		}
+		
+		/* Селекторы */
+		.selector-row { 
+			flex-direction: column; 
+			align-items: stretch; 
+		}
+		.class-select, .race-select { 
+			min-width: auto; 
+			width: 100%; 
+		}
+		.btn { width: 100%; }
+		
+		/* Статы */
+		.stats-panel { grid-template-columns: repeat(2, 1fr); }
+		
+		/* Винрейт */
+		.winrate-value { font-size: 32px; }
+		.winrate-arrow { transform: rotate(90deg); }
+	}
+</style>
 </head>
 <body>
-    <h1>ГРАДИЕНТ БАЛАНСА v3 (LIVE)</h1>
+    <h1>ГРАДИЕНТ БАЛАНСА v3</h1>
     <div class="subtitle">Живая статистика • Честная симуляция • Умная калибровка</div>
     
     <div class="nav-wrapper">
