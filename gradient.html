@@ -136,14 +136,10 @@
             .stats-panel { grid-template-columns: repeat(2, 1fr); }
             .winrate-value { font-size: 32px; }
             .winrate-arrow { transform: rotate(90deg); }
+            .selector-row { flex-direction: column; align-items: stretch; }
+            .class-select, .race-select { min-width: auto; width: 100%; }
+            .btn { width: 100%; }
         }
-		
-		@media (max-width: 768px) {
-		.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-		table { min-width: 100%; }
-		th, td { white-space: nowrap; }
-		td:first-child { white-space: normal; word-break: break-word; }
-	}
     </style>
 </head>
 <body>

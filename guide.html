@@ -210,7 +210,6 @@
         body { padding: 10px; }
         
         .nav-wrapper { border-bottom: none; }
-        
         .nav-toggle { display: block; }
         
         .page-nav { 
@@ -239,16 +238,10 @@
         }
         
         .command-grid { grid-template-columns: 1fr; }
-        .guide-card { padding: 18px; }
-        table { font-size: 12px; }
-        th, td { padding: 8px; }
-		
-		@media (max-width: 768px) {
-		.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-		table { min-width: 100%; }
-		th, td { white-space: nowrap; }
-		td:first-child { white-space: normal; word-break: break-word; }
-	}
+        .guide-card { padding: 18px; overflow-x: auto; }
+        table { font-size: 12px; min-width: 100%; }
+        th, td { padding: 8px; white-space: nowrap; }
+        td:first-child { white-space: normal; word-break: break-word; }
     }
 </style>
 </head>

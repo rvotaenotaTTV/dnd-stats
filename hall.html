@@ -186,9 +186,7 @@
             h1 { font-size: 1.6em; }
             body { padding: 10px; }
             
-            /* Убираем нижнюю границу у wrapper */
             .nav-wrapper { border-bottom: none; }
-            
             .nav-toggle { display: block; }
             
             .page-nav { 
@@ -208,9 +206,7 @@
                 border-bottom: 1px solid #30363d;
                 margin-bottom: 0;
             }
-            .page-nav a:hover { 
-                border-bottom-color: #ffd700;
-            }
+            .page-nav a:hover { border-bottom-color: #ffd700; }
             .page-nav a.active { 
                 background: #ffd700; 
                 color: #0d1117; 
@@ -221,14 +217,12 @@
             .nav-tabs { overflow-x: auto; flex-wrap: nowrap; }
             .tab-btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
             .tables-grid { grid-template-columns: 1fr; }
+            .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
             .table-container.full-width { grid-column: span 1; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
-			@media (max-width: 768px) {
-			.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-			table { min-width: 100%; }
-			th, td { white-space: nowrap; }
-			td:first-child { white-space: normal; word-break: break-word; }
-		}
+            table { min-width: 100%; }
+            th, td { white-space: nowrap; }
+            td:first-child { white-space: normal; word-break: break-word; }
         }
     </style>
 </head>

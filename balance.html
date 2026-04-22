@@ -93,6 +93,7 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         margin-bottom: 30px;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
     .table-container h3 { color: #ffd700; font-size: 18px; margin-bottom: 15px; }
     table {
@@ -198,7 +199,6 @@
         .formula { font-size: 11px; padding: 12px; }
         .back-link { padding: 6px 12px; font-size: 12px; }
 		
-		.table-container { overflow-x: auto; }
     }
 </style>
 </head>
@@ -502,6 +502,7 @@
 			navLinks.classList.toggle('show');
 			navToggle.textContent = navLinks.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
 		});
+	}
 </script>
 </body>
 </html>
