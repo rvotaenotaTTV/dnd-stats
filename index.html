@@ -220,7 +220,6 @@
     .search-clear:hover { color: #ffd700; }
     .highlight { background: rgba(255, 215, 0, 0.2); padding: 0 2px; border-radius: 3px; }
     
-    /* Стили для новой вкладки ТИТУЛЫ */
     .titles-gallery {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -308,6 +307,29 @@
     .champion-emoji { font-size: 48px; }
     .champion-name { font-size: 24px; color: #ffd700; font-weight: bold; }
     .champion-class { font-size: 16px; color: #8b949e; }
+	
+	.rating-card {
+        background: linear-gradient(145deg, #21262d, #161b22);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid #30363d;
+    }
+    .rating-medal {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+    .rating-name {
+        font-size: 18px;
+        color: #ffd700;
+        font-weight: bold;
+    }
+    .rating-skill {
+        font-size: 28px;
+        color: #ffd700;
+        font-weight: bold;
+        margin: 10px 0;
+    }
 
     /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
     @media (max-width: 768px) {
@@ -650,27 +672,53 @@
 
         // ЧЕМПИОНЫ
         html += '<div id="tab-champions" class="tab-content">';
+        
         const currentChampion = players.find(p => p.champion === true);
-        html += '<div class="table-container"><h3>👑 Текущий Чемпион</h3>';
+        const topChampions = players.filter(p => p.tournamentWins > 0).sort((a,b) => b.tournamentWins - a.tournamentWins);
+        
         if (currentChampion) {
-            html += `<div class="champion-block">`;
+            html += '<div class="champion-block" style="margin-bottom: 30px;">';
+            html += '<div style="font-size: 14px; color: #8b949e; letter-spacing: 3px; margin-bottom: 10px;">ХРАНИТЕЛЬ РАСКОЛА</div>';
             html += `<div class="champion-emoji">${currentChampion.emoji}</div>`;
             html += `<div class="champion-name">${currentChampion.display}</div>`;
             html += `<div class="champion-class">${currentChampion.name}</div>`;
-            html += `<div style="margin-top:10px;color:#8b949e;">🏆 ${currentChampion.tournamentWins} чемпионств</div></div>`;
+            html += `<div style="margin-top: 20px; display: flex; justify-content: center; gap: 40px;">`;
+            html += `<div><span style="color: #8b949e; font-size: 12px;">Турнирные победы</span><br><span style="color: #ffd700; font-size: 28px; font-weight: bold;">${currentChampion.tournamentWins}</span></div>`;
+            html += `<div><span style="color: #8b949e; font-size: 12px;">Всего побед</span><br><span style="color: #c9d1d9; font-size: 28px; font-weight: bold;">${currentChampion.wins}</span></div>`;
+            html += `<div><span style="color: #8b949e; font-size: 12px;">Винрейт</span><br><span style="color: #c9d1d9; font-size: 28px; font-weight: bold;">${(currentChampion.wins*100/(currentChampion.wins+currentChampion.losses)).toFixed(1)}%</span></div>`;
+            html += `</div></div>`;
         } else {
-            html += '<p style="color:#8b949e;padding:20px;text-align:center;">Нет текущего чемпиона</p>';
+            html += '<div class="champion-block"><div style="font-size: 14px; color: #8b949e; letter-spacing: 3px; margin-bottom: 10px;">ХРАНИТЕЛЬ РАСКОЛА</div><div style="font-size: 64px; margin: 20px 0; opacity: 0.5;">👑</div><div style="color: #8b949e;">Титул ждёт своего героя</div></div>';
         }
+        
+        if (topChampions.length > 0) {
+            html += '<div class="table-container">';
+            html += '<h3>🏆 ЧЕМПИОНЫ</h3>';
+            html += '<table id="champions-table"><thead><tr>';
+            html += '<th class="sortable-header" data-sort="rank">#</th>';
+            html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+            html += '<th class="sortable-header" data-sort="class">Класс</th>';
+            html += '<th class="sortable-header" data-sort="wins">🏆</th>';
+            html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
+            html += '</tr></thead><tbody id="champions-tbody">';
+            
+            topChampions.forEach((p, i) => {
+                const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
+                const isCurrent = p.champion;
+                
+                html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${isCurrent ? 'style="background: rgba(255, 215, 0, 0.08);"' : ''}>`;
+                html += `<td>${i+1}</td>`;
+                html += `<td>${p.emoji} ${p.display} ${isCurrent ? '<span style="color: #ffd700; margin-left: 5px;">👑</span>' : ''}</td>`;
+                html += `<td>${p.name}</td>`;
+                html += `<td class="number" style="color: #ffd700; font-weight: bold;">${p.tournamentWins}</td>`;
+                html += `<td>${fi}</td>`;
+                html += `</tr>`;
+            });
+            
+            html += '</tbody></table></div>';
+        }
+        
         html += '</div>';
-        const topChampions = players.filter(p => p.tournamentWins > 0).sort((a,b) => b.tournamentWins - a.tournamentWins);
-        html += '<div class="table-container"><h3>🏆 Все чемпионы (' + topChampions.length + ')</h3>';
-        html += '<table id="champions-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="wins">Чемпионств</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="champions-tbody">';
-        topChampions.forEach((p, i) => {
-            const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
-            html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}">`;
-            html += `<td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.tournamentWins}</td><td>${fi}</td></tr>`;
-        });
-        html += '</tbody></table></div></div>';
 
         // ТИТУЛЫ
         html += '<div id="tab-titles" class="tab-content">';
@@ -808,26 +856,44 @@
         html += '<span style="color: #8b949e;">Введите ник, чтобы увидеть прогресс</span>';
         html += '</div></div>';
         
-        html += '</div>'; // конец tab-titles
+        html += '</div>';
 
-        // РЕЙТИНГ
+        // РЕЙТИНГ (SEASON TOP)
         html += '<div id="tab-rating" class="tab-content">';
-        html += '<div class="table-container"><h3>🏆 Сезонный рейтинг</h3><table id="rating-table"><thead><tr>';
-        html += '<th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="skill">Рейтинг</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Винрейт</th>';
-        html += '</tr></thead><tbody id="rating-tbody">';
+        html += '<div class="table-container"><h3>🏆 Сезонный рейтинг</h3>';
+        
         const seasonTop = data.seasonTop || [];
         if (seasonTop.length > 0) {
+            html += '<table id="rating-table"><thead><tr>';
+            html += '<th class="sortable-header" data-sort="rank">#</th>';
+            html += '<th class="sortable-header" data-sort="name">Игрок</th>';
+            html += '<th class="sortable-header" data-sort="class">Класс</th>';
+            html += '<th class="sortable-header" data-sort="skill">Рейтинг</th>';
+            html += '<th class="sortable-header" data-sort="wl">W/L</th>';
+            html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+            html += '</tr></thead><tbody id="rating-tbody">';
+            
             seasonTop.forEach((p, i) => {
                 const player = players.find(pl => pl.display === p.display) || {};
                 const total = p.wins + p.losses;
                 const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
-                html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${player.name || ''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
-                html += `<td>${i+1}</td><td>${p.emoji || '🏆'} ${p.display}</td><td>${player.name || '—'}</td><td class="number">${p.skill}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td></tr>`;
+                const rank = i + 1;
+                const medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : rank));
+                
+                html += `<tr data-rank="${rank}" data-name="${p.display}" data-class="${player.name || ''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
+                html += `<td style="color: ${rank <= 3 ? '#ffd700' : '#8b949e'}; font-weight: ${rank <= 3 ? 'bold' : 'normal'};">${medal}</td>`;
+                html += `<td>${p.emoji || '🏆'} ${p.display}</td>`;
+                html += `<td>${player.name || '—'}</td>`;
+                html += `<td class="number" style="color: #ffd700; font-weight: bold;">${p.skill}</td>`;
+                html += `<td class="number">${p.wins}-${p.losses}</td>`;
+                html += `<td class="number">${wr}%</td>`;
+                html += `</tr>`;
             });
+            html += '</tbody></table>';
         } else {
-            html += '<tr><td colspan="6" style="text-align:center;padding:20px;color:#8b949e;">Нет данных рейтинга</td></tr>';
+            html += '<div style="text-align:center;padding:40px;color:#8b949e;">Нет данных рейтинга</div>';
         }
-        html += '</tbody></table></div></div>';
+        html += '</div></div>';
         
         // ОСКОЛКИ
         html += '<div id="tab-shards" class="tab-content">';
