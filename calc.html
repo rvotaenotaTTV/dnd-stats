@@ -140,18 +140,12 @@
             .players-select, .classes-select { grid-template-columns: 1fr; gap: 15px; }
             .vs-divider { font-size: 22px; }
             .fighter-card { padding: 15px; }
-            table { display: block; overflow-x: auto; white-space: nowrap; font-size: 11px; }
+            table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; font-size: 11px; }
             th, td { padding: 6px 8px; }
+            td:first-child { white-space: normal; word-break: break-word; }
             .reasons-box { padding: 15px; }
             .reasons-list { padding-left: 20px; font-size: 11px; }
         }
-		
-		@media (max-width: 768px) {
-		.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-		table { min-width: 100%; }
-		th, td { white-space: nowrap; }
-		td:first-child { white-space: normal; word-break: break-word; }
-	}
     </style>
 </head>
 <body>
