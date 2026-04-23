@@ -1203,7 +1203,7 @@ th {
 		html += '<div class="table-container"><h3>👥 Все игроки (' + totalPlayers + ')</h3>';
 		html += '<div class="search-box"><input type="text" id="player-search" class="search-input" placeholder="🔍 Поиск по имени или классу..."><button id="clear-search" class="search-clear">✕</button><span id="search-result" style="color:#8b949e;margin-left:auto;"></span></div>';
 		html += '<table id="players-table"><thead><tr>';
-		html += '<th class="sortable-header" data-sort="index">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Винрейт</th><th class="sortable-header" data-sort="streak">Стрик</th><th class="sortable-header" data-sort="worst">💀</th><th class="sortable-header" data-sort="level">Уровень</th><th class="sortable-header" data-sort="faction">Фракция</th>';
+		html += '<th class="sortable-header" data-sort="index">#</th><th class="sortable-header" data-sort="name">Name</th><th class="sortable-header" data-sort="class">Class</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Winrate</th><th class="sortable-header" data-sort="streak">Streak</th><th class="sortable-header" data-sort="worst">Worst</th><th class="sortable-header" data-sort="level">Level</th><th class="sortable-header" data-sort="faction">Faction</th>';
 		html += '</tr></thead><tbody id="players-tbody">';
 		const sortedPlayers = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses));
 		sortedPlayers.forEach((p,i) => {
