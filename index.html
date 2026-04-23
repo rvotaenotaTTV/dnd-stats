@@ -835,7 +835,7 @@ th {
         
         html += '<div style="text-align: center; margin-bottom: 30px;">';
         html += '<div style="font-size: 48px; color: #ffd700;">👑</div>';
-        html += '<h2 style="color: #ffd700; margin: 10px 0; border-bottom: none;">ЗАЛ СЛАВЫ ЭТЕРНИСА</h2>';
+        html += '<h2 style="color: #ffd700; margin: 10px 0; border-bottom: none;">РЕКОРДСМЕНЫ ЭТЕРНИСА</h2>';
         html += '<p style="color: #8b949e;">Величайшие герои, вписавшие свои имена в историю</p>';
         html += '</div>';
         
@@ -1116,7 +1116,7 @@ th {
 
         // РЕЙТИНГ (SEASON TOP)
         html += '<div id="tab-rating" class="tab-content">';
-        html += '<div class="table-container"><h3>🏆 Сезонный рейтинг</h3>';
+        html += '<div class="table-container"><h3>🏆 Сезонный рейтинг (SKILL)</h3>';
         
         const seasonTop = data.seasonTop || [];
         if (seasonTop.length > 0) {
@@ -1124,7 +1124,7 @@ th {
             html += '<th class="sortable-header" data-sort="rank">#</th>';
             html += '<th class="sortable-header" data-sort="name">Игрок</th>';
             html += '<th class="sortable-header" data-sort="class">Класс</th>';
-            html += '<th class="sortable-header" data-sort="skill">Рейтинг</th>';
+            html += '<th class="sortable-header" data-sort="skill">Skill</th>';
             html += '<th class="sortable-header" data-sort="wl">W/L</th>';
             html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
             html += '</tr></thead><tbody id="rating-tbody">';
@@ -1146,6 +1146,13 @@ th {
                 html += `</tr>`;
             });
             html += '</tbody></table>';
+            
+            // Пояснение
+            html += `<div style="margin-top: 15px; padding: 12px 15px; background: #1a1f26; border-radius: 10px; border: 1px solid #30363d; font-size: 12px; color: #8b949e; line-height: 1.6;">`;
+            html += `<span style="color: #ffd700;">📐 Как считается рейтинг:</span><br>`;
+            html += `<code style="color: #c9d1d9;">Skill ≈ (Победы × Винрейт × 10 + Стрик × 5 + Уровень × 3) ÷ √(Боёв / 100 + 1)</code><br>`;
+            html += `<span style="font-size: 11px;">Чем больше боёв — тем точнее рейтинг</span>`;
+            html += `</div>`;
         } else {
             html += '<div style="text-align:center;padding:40px;color:#8b949e;">Нет данных рейтинга</div>';
         }
