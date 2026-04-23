@@ -772,27 +772,56 @@ th {
         });
         html += '</tbody></table></div></div>';
         
-        // РАСЫ
-        html += '<div id="tab-races" class="tab-content">';
-        const raceStats = {};
-        players.forEach(p => {
-            const raceName = p.name.split('-')[0];
-            if (!raceStats[raceName]) raceStats[raceName] = { wins:0, losses:0, players:0 };
-            raceStats[raceName].wins += p.wins;
-            raceStats[raceName].losses += p.losses;
-            raceStats[raceName].players++;
-        });
-        const raceArray = Object.entries(raceStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses}));
-        html += '<div class="table-container"><h3>🌍 Статистика по расам</h3><table id="races-table"><thead><tr>';
-        html += '<th class="sortable-header" data-sort="name">Раса</th><th class="sortable-header" data-sort="players">Игроков</th><th class="sortable-header" data-sort="wins">Победы</th><th class="sortable-header" data-sort="losses">Поражения</th><th class="sortable-header" data-sort="total">Всего</th><th class="sortable-header" data-sort="winrate">Винрейт</th>';
-        html += '</tr></thead><tbody id="races-tbody">';
-        raceArray.sort((a,b) => b.total - a.total).forEach(r => {
-            const emoji = raceEmojis[r.name] || '🌍';
-            const wr = r.total>0 ? (r.wins*100/r.total).toFixed(1) : '0.0';
-            html += `<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}">`;
-            html += `<td>${emoji} ${r.name}</td><td class="number">${r.players}</td><td class="number">${r.wins}</td><td class="number">${r.losses}</td><td class="number">${r.total}</td><td class="number">${wr}%</td></tr>`;
-        });
-        html += '</tbody></table></div></div>';
+		// РАСЫ
+		html += '<div id="tab-races" class="tab-content">';
+		const raceStats = {};
+		const raceChamps = {};
+		players.forEach(p => {
+			const raceName = p.name.split('-')[0];
+			if (!raceName) return;
+			
+			if (!raceStats[raceName]) {
+				raceStats[raceName] = { wins: 0, losses: 0, players: 0 };
+				raceChamps[raceName] = 0;
+			}
+			raceStats[raceName].wins += p.wins;
+			raceStats[raceName].losses += p.losses;
+			raceStats[raceName].players++;
+			
+			if (p.tournamentWins > 0) raceChamps[raceName]++;
+		});
+
+		const raceArray = Object.entries(raceStats).map(([n, s]) => ({
+			name: n,
+			...s,
+			total: s.wins + s.losses,
+			champs: raceChamps[n] || 0
+		}));
+
+		html += '<div class="table-container"><h3>🌍 Статистика по расам</h3><table id="races-table"><thead><tr>';
+		html += '<th class="sortable-header" data-sort="name">Раса</th>';
+		html += '<th class="sortable-header" data-sort="players">Игроков</th>';
+		html += '<th class="sortable-header" data-sort="wins">Победы</th>';
+		html += '<th class="sortable-header" data-sort="losses">Поражения</th>';
+		html += '<th class="sortable-header" data-sort="total">Боёв</th>';
+		html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+		html += '<th class="sortable-header" data-sort="champs">👑</th>';
+		html += '</tr></thead><tbody id="races-tbody">';
+
+		raceArray.sort((a, b) => b.total - a.total).forEach(r => {
+			const emoji = raceEmojis[r.name] || '🌍';
+			const wr = r.total > 0 ? (r.wins * 100 / r.total).toFixed(1) : '0.0';
+			html += `<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}" data-champs="${r.champs}">`;
+			html += `<td>${emoji} ${r.name}</td>`;
+			html += `<td class="number">${r.players}</td>`;
+			html += `<td class="number">${r.wins}</td>`;
+			html += `<td class="number">${r.losses}</td>`;
+			html += `<td class="number">${r.total}</td>`;
+			html += `<td class="number">${wr}%</td>`;
+			html += `<td class="number">${r.champs || '-'}</td>`;
+			html += `</tr>`;
+		});
+		html += '</tbody></table></div></div>';
         
         // КОМБИНАЦИИ
         html += '<div id="tab-combos" class="tab-content">';
