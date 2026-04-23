@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Зал Славы</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Segoe UI', 'Arial', sans-serif;
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
+            radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
+            linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
+        color: #e6edf3;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    h1 {
+        color: #ffd700; text-align: center; margin: 15px 0 25px;
+        font-size: 2.5em; font-weight: 700;
+        text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        letter-spacing: 2px;
+    }
+
+    .nav-wrapper { margin-bottom: 30px; border-bottom: 1px solid #30363d; }
+    .nav-toggle {
+        display: none; width: 100%; padding: 12px 20px;
+        background: #21262d; border: 1px solid #30363d;
+        border-radius: 25px; color: #ffd700;
+        font-size: 16px; font-weight: bold; cursor: pointer; text-align: left;
+    }
+    .page-nav { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+    .page-nav a {
+        color: #8b949e; text-decoration: none; padding: 12px 20px;
+        font-size: 14px; font-weight: 500; transition: all 0.2s;
+        white-space: nowrap; border-bottom: 3px solid transparent; background: transparent;
+    }
+    .page-nav a:hover { color: #ffd700; border-bottom-color: #ffd70080; }
+    .page-nav a.active { color: #ffd700; font-weight: bold; border-bottom-color: #ffd700; }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    /* Сезонная карточка */
+    .season-card {
+        background: #161b22; border-radius: 16px; padding: 25px;
+        border: 1px solid #30363d; margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .season-card.current { border-color: #ffd700; }
+
+    .season-header {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 20px; padding-bottom: 15px;
+        border-bottom: 2px solid #30363d; flex-wrap: wrap; gap: 10px;
+    }
+    .season-title { font-size: 22px; color: #ffd700; font-weight: bold; }
+    .season-badge {
+        padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: bold;
+    }
+    .season-badge.ended { background: #30363d; color: #8b949e; }
+    .season-badge.live { background: #ffd700; color: #0d1117; }
+
+    /* Стат-карточки */
+    .stats-row {
+        display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+    }
+    .stat-card {
+        background: linear-gradient(145deg, #21262d, #161b22);
+        border-radius: 10px; padding: 15px 18px; text-align: center;
+        border: 1px solid #30363d; flex: 1; min-width: 100px; max-width: 150px;
+    }
+    .stat-value { font-size: 24px; font-weight: bold; color: #ffd700; }
+    .stat-label { color: #8b949e; font-size: 10px; margin-top: 4px; text-transform: uppercase; }
+
+    /* Топ-5 */
+    .top-list { margin-top: 20px; }
+    .top-item {
+        display: flex; align-items: center; gap: 12px; padding: 8px 0;
+        border-bottom: 1px solid #30363d40;
+    }
+    .top-item:last-child { border-bottom: none; }
+    .top-medal { font-size: 20px; width: 30px; text-align: center; }
+    .top-name { flex: 1; color: #c9d1d9; font-weight: 500; }
+    .top-class { color: #8b949e; font-size: 13px; width: 80px; }
+    .top-skill { color: #ffd700; font-weight: bold; width: 60px; text-align: right; }
+    .top-wins { color: #8b949e; font-size: 12px; width: 70px; text-align: right; }
+
+    /* Рекорды */
+    .records-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px; margin-top: 20px;
+    }
+    .record-card {
+        background: #21262d; border-radius: 10px; padding: 15px;
+        border-left: 4px solid #ffd700;
+    }
+    .record-value { font-size: 20px; color: #ffd700; font-weight: bold; }
+    .record-label { color: #8b949e; font-size: 12px; margin-top: 4px; }
+
+    /* Подиум */
+    .podium {
+        display: flex; justify-content: center; align-items: flex-end;
+        gap: 15px; margin: 25px 0; flex-wrap: wrap;
+    }
+    .podium-card {
+        background: linear-gradient(145deg, #1a1f26, #0d1117);
+        border-radius: 16px; padding: 20px; text-align: center;
+        border: 2px solid #30363d; min-width: 130px; flex: 1; max-width: 180px;
+    }
+    .podium-card.gold { border-color: #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.2); transform: scale(1.05); }
+    .podium-card.silver { border-color: #c0c0c0; }
+    .podium-card.bronze { border-color: #cd7f32; }
+    .podium-medal { font-size: 32px; margin-bottom: 6px; }
+    .podium-name { font-size: 16px; color: #ffd700; font-weight: bold; }
+    .podium-skill { font-size: 20px; color: #ffd700; font-weight: bold; margin-top: 5px; }
+
+    .loading { text-align: center; padding: 40px; color: #8b949e; }
+
+    @media (max-width: 768px) {
+        h1 { font-size: 1.6em; }
+        body { padding: 10px; }
+        .nav-wrapper { border-bottom: none; }
+        .nav-toggle { display: block; }
+        .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .page-nav.show { display: flex; }
+        .page-nav a { text-align: center; padding: 10px; background: #21262d; border: 1px solid #30363d; border-radius: 20px; }
+        .page-nav a.active { background: #ffd700; color: #0d1117; border-color: #ffd700; }
+        .stat-card { min-width: 70px; padding: 12px; }
+        .stat-value { font-size: 20px; }
+        .podium-card { min-width: 100px; padding: 15px; }
+        .podium-name { font-size: 14px; }
+    }
+</style>
+</head>
+<body>
+    <h1>🏆 ЗАЛ СЛАВЫ</h1>
+    
+    <div class="nav-wrapper">
+        <button class="nav-toggle">☰ Меню</button>
+        <div class="page-nav">
+            <a href="index.html">📊 Статистика</a>
+            <a href="logs.html">📜 Логи</a>
+            <a href="calc.html">🎲 Калькулятор</a>
+            <a href="balance.html">⚖️ Баланс</a>
+            <a href="simulator.html">🧪 Симулятор</a>
+            <a href="gradient.html">📈 Градиент</a>
+            <a href="guide.html">⚔️ Гайд</a>
+            <a href="hall.html" class="active">🏆 Зал Славы</a>
+            <a href="lore.html">📜 Лор Этерниса</a>
+            <a href="tavern.html">🍺 Таверна</a>
+        </div>
+    </div>
+    
+    <div class="container" id="hall-content">
+        <div class="loading">⏳ Загрузка Зала Славы...</div>
+    </div>
+     
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const pageNav = document.querySelector('.page-nav');
+        navToggle.addEventListener('click', () => {
+            pageNav.classList.toggle('show');
+            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        });
+
+        // ==================== URL-ы ====================
+        const SEASON_0_URL = 'season_0.json';
+        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+
+        // ==================== РЕНДЕР СЕЗОНА ====================
+        function renderSeason(data, seasonNum, seasonName, isCurrent) {
+            const players = data.players || [];
+            const seasonTop = data.seasonTop || [];
+            
+            // Статистика
+            const totalPlayers = players.length;
+            const totalFights = players.reduce((s, p) => s + (p.wins||0) + (p.losses||0), 0);
+            const maxStreak = players.reduce((m, p) => (p.best||0) > m ? (p.best||0) : m, 0);
+            const maxShards = players.reduce((m, p) => (p.shards||0) > m ? (p.shards||0) : m, 0);
+            const maxLevel = players.reduce((m, p) => (p.level||0) > m ? (p.level||0) : m, 0);
+            
+            // Макс. стрик — кто
+            const streakPlayer = players.find(p => (p.best||0) === maxStreak);
+            const shardsPlayer = players.find(p => (p.shards||0) === maxShards);
+            const fightsPlayer = players.reduce((m, p) => {
+                const t = (p.wins||0) + (p.losses||0);
+                return t > ((m.wins||0)+(m.losses||0)) ? p : m;
+            }, players[0]);
+
+            let html = '';
+            
+            // Карточка сезона
+            html += `<div class="season-card ${isCurrent ? 'current' : ''}">`;
+            html += `<div class="season-header">`;
+            html += `<div class="season-title">${seasonNum === 0 ? '📅' : '🔥'} Сезон ${seasonNum} — ${seasonName}</div>`;
+            html += `<div class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'В РАЗГАРЕ' : 'ЗАВЕРШЁН'}</div>`;
+            html += `</div>`;
+            
+            // Стат-карточки
+            html += `<div class="stats-row">`;
+            html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Осколков</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Стрик</div></div>`;
+            html += `</div>`;
+
+            // Топ-3 рейтинга
+            if (seasonTop.length >= 3) {
+                const top3 = seasonTop.slice(0, 3);
+                const medals = ['🥇', '🥈', '🥉'];
+                const grades = ['gold', 'silver', 'bronze'];
+                
+                html += `<div class="podium">`;
+                html += renderPodiumCard(top3[1], medals[1], grades[1], 2);
+                html += renderPodiumCard(top3[0], medals[0], grades[0], 1);
+                html += renderPodiumCard(top3[2], medals[2], grades[2], 3);
+                html += `</div>`;
+            }
+
+            // Топ-5 список
+            if (seasonTop.length > 3) {
+                html += `<div class="top-list">`;
+                html += `<div style="color: #ffd700; font-size: 14px; margin-bottom: 10px;">Остальные в топе:</div>`;
+                seasonTop.slice(3).forEach(p => {
+                    html += `<div class="top-item">
+                        <span class="top-medal">4</span>
+                        <span class="top-name">${p.display}</span>
+                        <span class="top-skill">${p.skill}</span>
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+
+            // Рекорды
+            html += `<div style="color: #ffd700; font-size: 14px; margin: 20px 0 10px;">🏅 РЕКОРДЫ СЕЗОНА</div>`;
+            html += `<div class="records-grid">`;
+            if (streakPlayer) html += `<div class="record-card"><div class="record-value">🔥 ${maxStreak}</div><div class="record-label">Побед подряд — ${streakPlayer.display}</div></div>`;
+            if (shardsPlayer) html += `<div class="record-card"><div class="record-value">💎 ${maxShards}</div><div class="record-label">Осколков — ${shardsPlayer.display}</div></div>`;
+            if (fightsPlayer) html += `<div class="record-card"><div class="record-value">⚔️ ${(fightsPlayer.wins||0)+(fightsPlayer.losses||0)}</div><div class="record-label">Боёв — ${fightsPlayer.display}</div></div>`;
+            html += `</div>`;
+            
+            html += `</div>`; // .season-card
+            
+            return html;
+        }
+
+        function renderPodiumCard(p, medal, grade, pos) {
+            if (!p) return '';
+            return `
+                <div class="podium-card ${grade}">
+                    <div class="podium-medal">${medal}</div>
+                    <div class="podium-name">${p.display}</div>
+                    <div style="color:#8b949e;font-size:12px;">${p.emoji || ''}</div>
+                    <div class="podium-skill">${p.skill}</div>
+                    <div style="color:#8b949e;font-size:11px;">${p.wins} побед</div>
+                </div>
+            `;
+        }
+
+        // ==================== ЗАГРУЗКА ====================
+        async function loadHall() {
+            const container = document.getElementById('hall-content');
+            
+            try {
+                // Загружаем оба файла
+                const [season0, current] = await Promise.all([
+                    fetch(SEASON_0_URL).then(r => r.json()),
+                    fetch(STATS_URL).then(r => r.json())
+                ]);
+                
+                let html = '';
+                
+                // Сезон 0
+                html += renderSeason(season0, 0, 'Эпоха Становления', false);
+                
+                // Сезон 1 (текущий)
+                html += renderSeason(current, 1, 'Эра Раскола', true);
+                
+                container.innerHTML = html;
+                
+            } catch (err) {
+                console.error('Ошибка загрузки:', err);
+                container.innerHTML = '<div class="loading">❌ Ошибка загрузки данных</div>';
+            }
+        }
+
+        loadHall();
+    </script>
+</body>
+</html>
