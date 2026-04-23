@@ -720,6 +720,7 @@ th {
 		html += '<button class="tab-btn" onclick="switchTab(\'records\')">🏅 Рекорды</button>';
 		html += '<button class="tab-btn" onclick="switchTab(\'champions\')">👑 Чемпионы</button>';
 		html += '<button class="tab-btn" onclick="switchTab(\'titles\')">🏅 Титулы</button>';
+		html += '<button class="tab-btn" onclick="switchTab(\'shame\')">💀 Стена позора</button>';
 		html += '<button class="tab-btn" onclick="switchTab(\'shards\')">💎 Осколки</button>';
 		html += '<button class="tab-btn" onclick="switchTab(\'rating\')">🏆 Рейтинг</button>';
 		html += '<button class="tab-btn" onclick="switchTab(\'allplayers\')">👥 Игроки</button>';
@@ -1142,7 +1143,39 @@ th {
 		html += '</div></div>';
 
 		html += '</div>';
+		
+		// СТЕНА ПОЗОРА
+		html += '<div id="tab-shame" class="tab-content">';
+		html += '<div class="table-container"><h3>💀 СТЕНА ПОЗОРА</h3>';
+		html += '<p style="color:#8b949e;margin-bottom:15px;">Игроки с самыми длинными сериями поражений</p>';
 
+		const shameList = [...players]
+			.filter(p => (p.worst || 0) > 0)
+			.sort((a, b) => (b.worst || 0) - (a.worst || 0))
+			.slice(0, 10);
+
+		if (shameList.length > 0) {
+			html += '<table><thead><tr>';
+			html += '<th>#</th><th>Игрок</th><th>Класс</th><th>💀 Рекорд поражений</th><th>W/L</th>';
+			html += '</tr></thead><tbody>';
+			
+			shameList.forEach((p, i) => {
+				html += `<tr>`;
+				html += `<td>${i + 1}</td>`;
+				html += `<td>${p.emoji || '⚔️'} ${p.display}</td>`;
+				html += `<td>${p.name || '—'}</td>`;
+				html += `<td class="number" style="color:#ff6b6b;font-weight:bold;">${p.worst}</td>`;
+				html += `<td class="number">${p.wins}-${p.losses}</td>`;
+				html += `</tr>`;
+			});
+			
+			html += '</tbody></table>';
+		} else {
+			html += '<div style="text-align:center;padding:30px;color:#8b949e;">Пока никто не проигрывал подряд... Но это вопрос времени 😏</div>';
+		}
+
+		html += '</div></div>';
+		
         // РЕЙТИНГ (SEASON TOP)
         html += '<div id="tab-rating" class="tab-content">';
         html += '<div class="table-container"><h3>🏆 Сезонный рейтинг (SKILL)</h3>';
@@ -1229,7 +1262,7 @@ th {
         
         setTimeout(() => {
             const hash = window.location.hash.substring(1);
-            const validTabs = ['tops', 'classes', 'races', 'combos', 'rating', 'shards', 'records', 'champions', 'titles', 'allplayers'];
+            const validTabs = ['tops', 'classes', 'races', 'combos', 'rating', 'shards', 'records', 'champions', 'titles', 'shame', 'allplayers'];
             if (hash && validTabs.includes(hash)) switchTab(hash);
         }, 100);
     }
@@ -1398,6 +1431,7 @@ th {
                 (tabName === 'records' && btn.textContent.includes('Рекорды')) ||
                 (tabName === 'champions' && btn.textContent.includes('Чемпионы')) ||
                 (tabName === 'titles' && btn.textContent.includes('Титулы')) ||
+				(tabName === 'shame' && btn.textContent.includes('Стена позора')) ||
                 (tabName === 'allplayers' && btn.textContent.includes('Игроки'))) {
                 btn.classList.add('active');
             }
