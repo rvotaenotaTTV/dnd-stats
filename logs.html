@@ -372,9 +372,6 @@
 		});
 	}
 
-    const LOGS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/recent_fights.json';
-    const API_URL = 'https://data.jsdelivr.com/v1/package/gh/rvotaenotaTTV/dnd-stats';
-    
     let allFights = [];
 
     function pluralize(n, one, two, five) {
@@ -471,6 +468,20 @@
         document.getElementById('logCount').textContent = `Найдено: ${total} ${pluralize(total, 'бой', 'боя', 'боёв')}`;
     }
 
+    // ==================== АВТО-ДЕТЕКЦИЯ RAW/CDN ====================
+    const LOGS_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/recent_fights.json';
+    const LOGS_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/recent_fights.json';
+
+    function fetchWithTimeout(url, timeout = 3000) {
+        return Promise.race([
+            fetch(url).then(r => {
+                if (!r.ok) throw new Error('Status ' + r.status);
+                return r;
+            }),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+        ]);
+    }
+
 	function loadLogs() {
 		const content = document.getElementById('logs-content');
 		content.innerHTML = '<div class="loading">⏳ Загрузка...</div>';
@@ -480,7 +491,11 @@
 		const dateStr = d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
 		document.getElementById('lastUpdated').innerHTML = `🕐 <span>${dateStr} ${timeStr}</span>`;
 
-		fetch(LOGS_URL + '?v=' + Date.now())
+		fetchWithTimeout(LOGS_URL_RAW + '?v=' + Date.now())
+			.catch(() => {
+				console.warn('⚠️ Raw GitHub не отвечает, переключаемся на CDN');
+				return fetchWithTimeout(LOGS_URL_CDN + '?v=' + Date.now());
+			})
 			.then(r => r.json())
 			.then(fights => {
 				if (!fights || fights.length === 0) {
