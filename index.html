@@ -1200,64 +1200,64 @@ th {
     }
 
 	window.showPlayerProgress = function(nickname) {
-		const container = document.getElementById('player-progress-result');
-		if (!nickname) {
-			container.innerHTML = '<span style="color: #8b949e;">Введите ник, чтобы увидеть прогресс</span>';
-			return;
-		}
-		
-		const player = players.find(p => p.display.toLowerCase() === nickname.toLowerCase());
-		if (!player) {
-			container.innerHTML = '<span style="color: #ff6b6b;">Игрок не найден</span>';
-			return;
-		}
-		
-		const total = player.wins + player.losses;
-		const winrate = total > 0 ? (player.wins * 100 / total) : 0;
-		const faction = player.faction || '';
-		
-		const nextLevel = achievements.filter(a => a.type === 'level' && a.value > player.level).sort((a,b) => a.value - b.value)[0];
-		const nextTournament = achievements.filter(a => a.type === 'tournament' && a.value > player.tournamentWins).sort((a,b) => a.value - b.value)[0];
-		const nextWins = achievements.filter(a => a.type === 'wins' && a.value > player.wins).sort((a,b) => a.value - b.value)[0];
-		const nextBest = achievements.filter(a => a.type === 'best' && a.value > player.best).sort((a,b) => a.value - b.value)[0];
-		const nextFaction = achievements.filter(a => a.type === 'faction' && a.faction === faction && a.value > player.factionWins).sort((a,b) => a.value - b.value)[0];
-		const nextWinrate = achievements.filter(a => a.type === 'winrate' && a.value > winrate && (!a.minFights || total >= a.minFights)).sort((a,b) => a.value - b.value)[0];
-		
-		let html = '';
-		
-		function renderBar(label, current, max, nextTitle) {
-			const percent = Math.min(100, (current / max) * 100);
-			const completed = current >= max;
-			return `
-				<div style="margin-bottom: 20px;">
-					<div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-						<span style="color: #c9d1d9;">${label}</span>
-						<span style="color: #8b949e; font-size: 11px;">${current}/${max}</span>
+			const container = document.getElementById('player-progress-result');
+			if (!nickname) {
+				container.innerHTML = '<span style="color: #8b949e;">Введите ник, чтобы увидеть прогресс</span>';
+				return;
+			}
+			
+			const player = players.find(p => p.display.toLowerCase() === nickname.toLowerCase());
+			if (!player) {
+				container.innerHTML = '<span style="color: #ff6b6b;">Игрок не найден</span>';
+				return;
+			}
+			
+			const total = player.wins + player.losses;
+			const winrate = total > 0 ? (player.wins * 100 / total) : 0;
+			const faction = player.faction || '';
+			
+			const nextLevel = achievements.filter(a => a.type === 'level' && a.value > player.level).sort((a,b) => a.value - b.value)[0];
+			const nextTournament = achievements.filter(a => a.type === 'tournament' && a.value > player.tournamentWins).sort((a,b) => a.value - b.value)[0];
+			const nextWins = achievements.filter(a => a.type === 'wins' && a.value > player.wins).sort((a,b) => a.value - b.value)[0];
+			const nextBest = achievements.filter(a => a.type === 'best' && a.value > player.best).sort((a,b) => a.value - b.value)[0];
+			const nextFaction = achievements.filter(a => a.type === 'faction' && a.faction === faction && a.value > player.factionWins).sort((a,b) => a.value - b.value)[0];
+			const nextWinrate = achievements.filter(a => a.type === 'winrate' && a.value > winrate && (!a.minFights || total >= a.minFights)).sort((a,b) => a.value - b.value)[0];
+			
+			let html = '';
+						
+			function renderBar(label, current, max, nextTitle) {
+				const percent = Math.min(100, (current / max) * 100);
+				const completed = current >= max;
+				return `
+					<div style="margin-bottom: 20px;">
+						<div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+							<span style="color: #c9d1d9;">${label}</span>
+							<span style="color: #8b949e; font-size: 11px;">${current}/${max}</span>
+						</div>
+						<div style="background: #21262d; height: 8px; border-radius: 4px;">
+							<div style="width: ${percent}%; background: ${completed ? '#ffd700' : '#a371f7'}; height: 8px; border-radius: 4px;"></div>
+						</div>
+						<div style="margin-top: 5px; color: #ffd700; font-size: 12px;">
+							${nextTitle ? '⏩️ ' + nextTitle.emoji + ' ' + nextTitle.name : '✅ Максимум!'}
+						</div>
 					</div>
-					<div style="background: #21262d; height: 8px; border-radius: 4px;">
-						<div style="width: ${percent}%; background: ${completed ? '#ffd700' : '#a371f7'}; height: 8px; border-radius: 4px;"></div>
-					</div>
-					<div style="margin-top: 5px; color: #ffd700; font-size: 12px;">
-						${nextTitle ? '⏩️ ' + nextTitle.emoji + ' ' + nextTitle.name : '✅ Максимум!'}
-					</div>
-				</div>
-			`;
-		}
-		
-		if (nextLevel) html += renderBar('📈 Уровень', player.level, nextLevel.value, nextLevel);
-		if (nextTournament) html += renderBar('🏆 Турнирные победы', player.tournamentWins, nextTournament.value, nextTournament);
-		if (nextWins) html += renderBar('⚔️ Всего побед', player.wins, nextWins.value, nextWins);
-		if (nextBest) html += renderBar('🔥 Лучший стрик', player.best, nextBest.value, nextBest);
-		if (nextFaction && faction) {
-			const factionIcon = faction === 'Орден Света' ? '🌝' : '🌚';
-			html += renderBar(`${factionIcon} ${faction}`, player.factionWins, nextFaction.value, nextFaction);
-		}
-		if (nextWinrate) html += renderBar('📊 Винрейт', winrate.toFixed(1), nextWinrate.value, nextWinrate);
-		
-		if (html === '') html = '<span style="color: #ffd700;">🏆 Все титулы получены! Ты легенда!</span>';
-		
-		container.innerHTML = html;
-	};
+				`;
+			}
+			
+			if (nextLevel) html += renderBar('📈 Уровень', player.level, nextLevel.value, nextLevel);
+			if (nextTournament) html += renderBar('🏆 Турнирные победы', player.tournamentWins, nextTournament.value, nextTournament);
+			if (nextWins) html += renderBar('⚔️ Всего побед', player.wins, nextWins.value, nextWins);
+			if (nextBest) html += renderBar('🔥 Лучший стрик', player.best, nextBest.value, nextBest);
+			if (nextFaction && faction) {
+				const factionIcon = faction === 'Орден Света' ? '🌝' : '🌚';
+				html += renderBar(`${factionIcon} ${faction}`, player.factionWins, nextFaction.value, nextFaction);
+			}
+			if (nextWinrate) html += renderBar('📊 Винрейт', winrate.toFixed(1), nextWinrate.value, nextWinrate);
+			
+			if (html === '') html = '<span style="color: #ffd700;">🏆 Все титулы получены! Ты легенда!</span>';
+			
+			container.innerHTML = html;
+		};
 
     function initSortableTable(tableId, defaultSort, defaultDir) {
         setTimeout(() => {
