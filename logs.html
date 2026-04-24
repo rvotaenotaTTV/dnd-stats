@@ -469,8 +469,8 @@
     }
 
     // ==================== АВТО-ДЕТЕКЦИЯ RAW/CDN ====================
-    const LOGS_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/recent_fights.json';
-    const LOGS_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/recent_fights.json';
+	const LOGS_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+	const LOGS_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 
     function fetchWithTimeout(url, timeout = 3000) {
         return Promise.race([
@@ -497,7 +497,8 @@
 				return fetchWithTimeout(LOGS_URL_CDN + '?v=' + Date.now());
 			})
 			.then(r => r.json())
-			.then(fights => {
+			.then(data => {
+				const fights = data.fights || [];
 				if (!fights || fights.length === 0) {
 					content.innerHTML = '<div class="loading">📜 Логов пока нет</div>';
 					document.getElementById('logCount').textContent = '';
