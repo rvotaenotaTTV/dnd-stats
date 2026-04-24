@@ -403,7 +403,69 @@
             </table>
             <p style="margin-top: 15px; color: #8b949e;">Осколки повышают уровень героя. Каждые 5 осколков = новый уровень.</p>
         </div>
-        
+		
+        <!-- ФРАКЦИОННАЯ БИТВА -->
+		<div class="guide-card">
+			<h2>⚔️ ФРАКЦИОННАЯ БИТВА</h2>
+			<p>Командное сражение <span class="highlight">5 на 5</span> между Орденом Света и Культом Тьмы. Бойцы сражаются за честь своей фракции!</p>
+			
+			<div class="command-grid">
+				<div class="command-item">
+					<div class="command-name">!фрега</div>
+					<div class="command-desc">Записаться в битву (нужен герой с фракцией)</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!фрлист</div>
+					<div class="command-desc">Список записавшихся бойцов</div>
+				</div>
+			</div>
+			
+			<p style="margin-top: 15px;"><span class="highlight">Как работает:</span></p>
+			<ol>
+				<li>Админ запускает битву: <span class="highlight">!битва</span></li>
+				<li>Игроки записываются: <span class="highlight">!фрега</span></li>
+				<li>Нужно по <span class="highlight">5 бойцов</span> от каждой фракции</li>
+				<li>Таймаут на сбор: <span class="highlight">10 минут</span></li>
+				<li>Случайная <span class="highlight">локация</span> даёт бонус всем бойцам</li>
+				<li>5 боёв 1 на 1 — побеждает фракция с большим счётом</li>
+			</ol>
+			
+			<p style="margin-top: 15px; color: #8b949e;">🏆 Победившая фракция получает <span style="color:#ffd700;">+5💎</span> каждому бойцу, проигравшая — <span style="color:#ffd700;">+2💎</span>.</p>
+		</div>
+		
+		<!-- ПОДЗЕМЕЛЬЕ -->
+		<div class="guide-card">
+			<h2>🏔 ПОДЗЕМЕЛЬЕ</h2>
+			<p>Одиночное PvE-приключение. Твой герой против <span class="highlight">бесконечных волн монстров</span>. Сколько волн пройдёшь — твой рекорд!</p>
+			
+			<div class="command-grid">
+				<div class="command-item">
+					<div class="command-name">!данж</div>
+					<div class="command-desc">Отправить героя в подземелье</div>
+				</div>
+			</div>
+			
+			<p style="margin-top: 15px;"><span class="highlight">Как работает:</span></p>
+			<ol>
+				<li>Бот создаёт <span class="highlight">копию твоего героя</span> (оригинал жив и может драться на дуэлях)</li>
+				<li>Каждая волна — <span class="highlight">бой с мобом</span> по правилам боевки</li>
+				<li>После победы: <span class="highlight">+10 HP</span></li>
+				<li>Мобы становятся <span class="highlight">сильнее с каждой волной</span></li>
+				<li>Проиграл — данж закончен. <span class="highlight">Рекорд</span> сохраняется</li>
+			</ol>
+			
+			<p style="margin-top: 15px;"><span class="highlight">🎲 Случайные события (30% после волны):</span></p>
+			<table>
+				<tr><th>Значок</th><th>Событие</th><th>Эффект</th></tr>
+				<tr><td>🧪</td><td>Зелье силы</td><td>+3 ATK до конца данжа</td></tr>
+				<tr><td>🛡️</td><td>Благословение</td><td>+2 DEF до конца данжа</td></tr>
+				<tr><td>💀</td><td>Проклятие</td><td>-5 HP</td></tr>
+				<tr><td>✨</td><td>Чудо</td><td>Полное восстановление HP</td></tr>
+			</table>
+			
+			<p style="margin-top: 15px; color: #8b949e;">📊 Результаты на странице <span style="color:#ffd700;">Подземелье</span> на сайте.</p>
+		</div>
+
         <!-- ЛОР -->
         <div class="guide-card">
             <h2>📜 ЛОР</h2>
