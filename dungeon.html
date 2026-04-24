@@ -234,6 +234,23 @@
                 }
                 
                 let html = '';
+				
+				//Прогресс
+				const total = data.territory.light + data.territory.dark;
+				const lightPct = total > 0 ? Math.round(data.territory.light * 100 / total) : 50;
+
+				html += `
+				<div class="territory-bar">
+					<div class="territory-title">🏰 КОРОНА РАСКОЛА</div>
+					<div class="territory-row">
+						<span>🌝 Свет: ${data.territory.light}</span>
+						<span>${data.territory.dark} :🌚 Тьма</span>
+					</div>
+					<div class="territory-progress">
+						<div class="territory-light" style="width:${lightPct}%">${lightPct}%</div>
+						<div class="territory-dark" style="width:${100-lightPct}%">${100-lightPct}%</div>
+					</div>
+				</div>`;
                 
                 // ПОДИУМ ТОП-3 (сортировка: волны → урон)
                 const top3 = sortPlayers([...players]).slice(0, 3);
