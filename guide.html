@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Гайд</title>
 <style>
-	* { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-	body {
-		font-family: 'Segoe UI', 'Arial', sans-serif;
-		background: 
-			radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
-			radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
-			linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-		color: #e6edf3;
-		min-height: 100vh;
-		padding: 20px;
-	}
+    body {
+        font-family: 'Segoe UI', 'Arial', sans-serif;
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
+            radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
+            linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
+        color: #e6edf3;
+        min-height: 100vh;
+        padding: 20px;
+    }
 
 	h1 {
 		color: #ffd700;
@@ -35,44 +35,27 @@
 		padding-bottom: 10px;
 	}
 
-	h2 {
-		color: #ffd700;
-		margin: 0 0 20px 0;
-		border-bottom: 2px solid #30363d;
-		padding-bottom: 10px;
-		font-size: 1.4em;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
-	/* ==================== НАВИГАЦИЯ ==================== */
-	.nav-wrapper { 
-		margin-bottom: 30px; 
-		border-bottom: 1px solid #30363d;
-	}
-
-	.nav-toggle {
-		display: none;
-		width: 100%;
-		padding: 12px 20px;
-		background: #21262d;
-		border: 1px solid #30363d;
-		border-radius: 25px;
-		color: #ffd700;
-		font-size: 16px;
-		font-weight: bold;
-		cursor: pointer;
-		text-align: left;
-	}
-
-	.page-nav {
-		display: flex;
-		gap: 5px;
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-
+    /* ===== НАВИГАЦИЯ ===== */
+    .nav-wrapper { margin-bottom: 30px; }
+    .nav-toggle {
+        display: none;
+        width: 100%;
+        padding: 14px 20px;
+        background: #21262d;
+        border: 1px solid #30363d;
+        border-radius: 25px;
+        color: #ffd700;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: left;
+    }
+    .page-nav {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 	.page-nav a {
 		color: #8b949e;
 		text-decoration: none;
@@ -96,209 +79,233 @@
 		border-bottom-color: #ffd700;
 	}
 
-	/* ==================== КОНТЕЙНЕР ==================== */
-	.guide-container {
-		max-width: 900px;
-		margin: 0 auto;
-	}
+    /* ===== КОНТЕЙНЕР ===== */
+    .guide-container { max-width: 900px; margin: 0 auto; }
 
-	/* ==================== КАРТОЧКИ ГАЙДА ==================== */
-	.guide-card {
-		background: #161b22;
-		border-radius: 12px;
-		padding: 25px;
-		border: 1px solid #30363d;
-		box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-		margin-bottom: 25px;
-	}
+    /* ===== КАРТОЧКИ ===== */
+    .card {
+        background: linear-gradient(145deg, #1a1f26, #0d1117);
+        border: 2px solid #8b5e2e;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
+        opacity: 0.6;
+    }
+    .card h2 {
+        color: #ffd700;
+        margin: 0 0 20px 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #30363d;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .card h3 {
+        color: #ffd700;
+        font-size: 16px;
+        margin: 15px 0 10px;
+    }
+    .card p {
+        line-height: 1.8;
+        margin-bottom: 12px;
+        color: #c9d1d9;
+    }
+    .card ol {
+        margin-left: 25px;
+        line-height: 1.8;
+    }
+    .card li {
+        margin-bottom: 8px;
+    }
 
-	.guide-card p {
-		line-height: 1.8;
-		margin-bottom: 15px;
-	}
+    /* ===== КОМАНДЫ ===== */
+    .command-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 15px;
+    }
+    .command-item {
+        background: #21262d;
+        padding: 14px 16px;
+        border-radius: 10px;
+        border-left: 4px solid #ffd700;
+    }
+    .command-name {
+        color: #ffd700;
+        font-weight: bold;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 15px;
+    }
+    .command-desc {
+        color: #8b949e;
+        font-size: 13px;
+        margin-top: 5px;
+        line-height: 1.5;
+    }
 
-	.guide-card ol {
-		margin-left: 25px;
-		line-height: 1.8;
-	}
+    /* ===== ШАГИ ===== */
+    .step-box {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+        align-items: center;
+    }
+    .step-number {
+        background: #ffd700;
+        color: #0d1117;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
 
-	.guide-card li {
-		margin-bottom: 8px;
-	}
+    /* ===== ЦВЕТА ===== */
+    .highlight { color: #ffd700; font-weight: bold; }
+    .faction-light { color: #ffd700; font-weight: bold; }
+    .faction-dark { color: #a371f7; font-weight: bold; }
+    .text-muted { color: #8b949e; }
 
-	/* ==================== КОМАНДЫ ==================== */
-	.command-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 10px;
-		margin-top: 15px;
-	}
+    /* ===== ТАБЛИЦЫ ===== */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        font-size: 14px;
+    }
+    th {
+        background: #21262d;
+        color: #ffd700;
+        font-weight: bold;
+        padding: 12px;
+        border: 1px solid #30363d;
+        text-align: left;
+    }
+    td {
+        border: 1px solid #30363d;
+        padding: 10px 12px;
+        text-align: left;
+    }
+    tr:hover td { background: rgba(255,215,0,0.03); }
 
-	.command-item {
-		background: #21262d;
-		padding: 12px 15px;
-		border-radius: 8px;
-		border-left: 4px solid #ffd700;
-	}
+    /* Таблица обозначений */
+    .symbol-table td:first-child {
+        text-align: center;
+        font-size: 20px;
+        width: 60px;
+    }
 
-	.command-name {
-		color: #ffd700;
-		font-weight: bold;
-		font-family: monospace;
-		font-size: 16px;
-	}
+    /* Таблица осколков */
+    .shards-table td:first-child { width: auto; }
+    .shards-table td:last-child {
+        color: #ffd700;
+        font-weight: bold;
+        text-align: center;
+        width: 100px;
+    }
 
-	.command-desc {
-		color: #8b949e;
-		font-size: 13px;
-		margin-top: 5px;
-	}
+    /* Таблица фракций */
+    .faction-table {
+        table-layout: fixed;
+        width: 100%;
+    }
+    .faction-table th {
+        text-align: center;
+        width: 50%;
+    }
+    .faction-table td {
+        padding: 10px 14px;
+        vertical-align: top;
+    }
+    .faction-table td:first-child { color: #ffd700; }
+    .faction-table td:last-child { color: #a371f7; }
 
-	/* ==================== ШАГИ ==================== */
-	.step-box {
-		display: flex;
-		gap: 15px;
-		margin-bottom: 15px;
-	}
+    /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
+    @media (max-width: 768px) {
+        body { padding: 10px; }
+        h1 { font-size: 1.6em; }
 
-	.step-number {
-		background: #ffd700;
-		color: #0d1117;
-		width: 30px;
-		height: 30px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-weight: bold;
-		font-size: 16px;
-		flex-shrink: 0;
-	}
-
-	.highlight {
-		color: #ffd700;
-		font-weight: bold;
-	}
-
-	/* ==================== ФРАКЦИИ ==================== */
-	.faction-light { color: #ffd700; }
-	.faction-dark { color: #a371f7; }
-
-	/* ==================== ТАБЛИЦЫ ==================== */
-	table {
-		width: 100%;
-		border-collapse: collapse;
-		margin-top: 15px;
-		font-size: 14px;
-	}
-
-	th, td {
-		border: 1px solid #30363d;
-		padding: 10px 12px;
-		text-align: left;
-	}
-
-	th {
-		background: #21262d;
-		color: #ffd700;
-		font-weight: bold;
-	}
-
-	td:first-child {
-		font-weight: bold;
-		color: #ffd700;
-		text-align: center;
-		width: 80px;
-	}
-
-	.shards-table td:first-child {
-		color: #e6edf3;
-		font-weight: normal;
-		text-align: left;
-		width: auto;
-	}
-
-	/* ==================== МОБИЛЬНАЯ ВЕРСИЯ ==================== */
-	@media (max-width: 768px) {
-		h1 { font-size: 1.8em; }
-		body { padding: 10px; }
-		
-		/* Меню */
-		.nav-wrapper { border-bottom: none; }
-		.nav-toggle { display: block; }
-		.page-nav { 
-			display: none; 
-			flex-direction: column; 
-			gap: 8px; 
-			margin-top: 10px; 
-		}
-		.page-nav.show { display: flex; }
+        .nav-toggle { display: block; }
+        .page-nav {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .page-nav.show { display: flex; }
 		.page-nav a { 
 			text-align: center; 
 			padding: 10px;
 			background: #21262d;
 			border: 1px solid #30363d;
 			border-radius: 20px;
-			margin-bottom: 0;
 		}
 		.page-nav a.active { 
 			background: #ffd700; 
 			color: #0d1117; 
-			font-weight: bold;
 			border-color: #ffd700;
 		}
-		
-		/* Контент */
-		.command-grid { grid-template-columns: 1fr; }
-		.guide-card { 
-			padding: 18px; 
-			overflow-x: auto; 
-			-webkit-overflow-scrolling: touch;
-		}
-		table { 
-			font-size: 12px; 
-			min-width: 100%; 
-		}
-		th, td { 
-			padding: 8px; 
-			white-space: nowrap; 
-		}
-		td:first-child { 
-			white-space: normal; 
-			word-break: break-word; 
-		}
-	}
+
+        .card { padding: 18px; }
+        .command-grid { grid-template-columns: 1fr; }
+
+        table { font-size: 12px; }
+        th, td { padding: 8px; }
+    }
 </style>
 </head>
 <body>
-    <h1>ГАЙД</h1>
+    <h1>⚔ГАЙД</h1>
     
     <div class="nav-wrapper">
-        <button class="nav-toggle">☰ Меню</button>
-        <div class="page-nav">
+        <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+        <div class="page-nav" id="pageNav">
             <a href="index.html">📊 Статистика</a>
-			<a href="logs.html">📜 Логи</a>
+            <a href="logs.html">📜 Логи</a>
             <a href="calc.html">🎲 Калькулятор</a>
             <a href="balance.html">⚖️ Баланс</a>
-			<a href="simulator.html">🧪 Симулятор</a>
-			<a href="gradient.html">📈 Градиент</a>
-			<a href="guide.html" class="active">⚔️ Гайд</a>
-			<a href="hall.html">🏆 Зал Славы</a>
-			<a href="lore.html">📜 Лор Этерниса</a>
-			<a href="tavern.html">🍺 Таверна</a>
+            <a href="simulator.html">🧪 Симулятор</a>
+            <a href="gradient.html">📈 Градиент</a>
+            <a href="guide.html" class="active">⚔️ Гайд</a>
+            <a href="hall.html">🏆 Зал Славы</a>
+            <a href="lore.html">📜 Лор</a>
+            <a href="tavern.html">🍺 Таверна</a>
+            <a href="dungeon.html">🏔 Подземелье</a>
         </div>
     </div>
     
     <div class="guide-container">
         
         <!-- ЧТО ЭТО -->
-        <div class="guide-card">
+        <div class="card">
             <h2>🎲 ЧТО ЭТО?</h2>
             <p>Бот для D&D-дуэлей в чате Twitch. Создай своего героя, выбери расу и класс, сражайся с другими игроками, собирай осколки и стань чемпионом арены!</p>
         </div>
         
         <!-- КАК НАЧАТЬ -->
-        <div class="guide-card">
+        <div class="card">
             <h2>🚀 КАК НАЧАТЬ?</h2>
             <div class="step-box">
                 <div class="step-number">1</div>
@@ -319,7 +326,7 @@
         </div>
         
         <!-- ОСНОВНЫЕ КОМАНДЫ -->
-        <div class="guide-card">
+        <div class="card">
             <h2>📊 ОСНОВНЫЕ КОМАНДЫ</h2>
             <div class="command-grid">
                 <div class="command-item">
@@ -338,11 +345,15 @@
                     <div class="command-name">!харакири</div>
                     <div class="command-desc">Удалить героя (осколки сохраняются)</div>
                 </div>
+                <div class="command-item">
+                    <div class="command-name">!данж</div>
+                    <div class="command-desc">Отправиться в подземелье</div>
+                </div>
             </div>
         </div>
         
         <!-- ТУРНИР -->
-        <div class="guide-card">
+        <div class="card">
             <h2>👑 ТУРНИР</h2>
             <div class="command-grid">
                 <div class="command-item">
@@ -358,128 +369,136 @@
                     <div class="command-desc">Текущие пары турнира</div>
                 </div>
             </div>
-            <p style="margin-top: 15px; color: #8b949e;">Турнир запускается когда набирается 16 участников или командой админа.</p>
+            <p style="margin-top:15px;" class="text-muted">Турнир запускается когда набирается 16 участников или командой админа <span class="highlight">!старт</span>.</p>
         </div>
         
         <!-- КАК ПРОХОДИТ БОЙ -->
-        <div class="guide-card">
+        <div class="card">
             <h2>⚔️ КАК ПРОХОДИТ БОЙ?</h2>
             <ol>
-                <li><span class="highlight">Инициатива:</span> кидаем d20 + Атака + d3. Кто больше — ходит первым</li>
+                <li><span class="highlight">Инициатива:</span> d20 + Атака + d3. Кто больше — ходит первым ⚡</li>
                 <li><span class="highlight">Атака:</span> d20 + твоя Атака ≥ 10 + Защита врага</li>
-                <li><span class="highlight">Попадание:</span> наносишь случайный урон (от MIN до MAX)</li>
-                <li><span class="highlight">Крит (20):</span> двойной урон! 💥</li>
+                <li><span class="highlight">Попадание:</span> случайный урон от MIN до MAX</li>
+                <li><span class="highlight">Крит (20):</span> двойной урон 💥</li>
                 <li><span class="highlight">Промах (1):</span> урон 0 ❌</li>
-                <li><span class="highlight">Блок:</span> если атака не прошла, но кубик > 4 — 🛡️</li>
-                <li><span class="highlight">Уклонение:</span> если кубик ≤ 4 — 💨</li>
-                <li>Бой идёт до 0 HP у одного из бойцов (макс. 20 раундов)</li>
+                <li><span class="highlight">Блок:</span> атака не прошла, кубик > 4 → 🛡️</li>
+                <li><span class="highlight">Уклонение:</span> кубик ≤ 4 → 💨</li>
+                <li>Бой идёт до 0 HP (макс. 20 раундов, потом по HP)</li>
             </ol>
         </div>
         
         <!-- ОБОЗНАЧЕНИЯ В ЛОГАХ -->
-        <div class="guide-card">
+        <div class="card">
             <h2>📝 ОБОЗНАЧЕНИЯ В ЛОГАХ</h2>
-            <table>
-                <tr><th>Символ</th><th>Значение</th></tr>
-                <tr><td>❌</td><td>Критический промах (выпало 1)</td></tr>
-                <tr><td>💨</td><td>Уклонение / промах (выпало 2-4)</td></tr>
-                <tr><td>🛡️</td><td>Блок (атака не пробила броню)</td></tr>
-                <tr><td>💥X</td><td>Критический удар (выпало 20, X = урон)</td></tr>
-                <tr><td>X</td><td>Обычный урон (число)</td></tr>
-                <tr><td>0</td><td>Не атаковал (бой уже завершён)</td></tr>
-            </table>
+            <div class="table-wrapper">
+                <table class="symbol-table">
+                    <tr><th>Символ</th><th>Значение</th></tr>
+                    <tr><td>❌</td><td>Критический промах (выпало 1)</td></tr>
+                    <tr><td>💨</td><td>Уклонение / промах (выпало 2–4)</td></tr>
+                    <tr><td>🛡️</td><td>Блок (атака не пробила броню)</td></tr>
+                    <tr><td>💥X</td><td>Критический удар (выпало 20, X = урон)</td></tr>
+                    <tr><td>X</td><td>Обычный урон (число)</td></tr>
+                    <tr><td>0</td><td>Не атаковал (бой уже завершён)</td></tr>
+                </table>
+            </div>
         </div>
 
         <!-- ОСКОЛКИ -->
-        <div class="guide-card">
+        <div class="card">
             <h2>💎 ЗА ЧТО ДАЮТ ОСКОЛКИ?</h2>
-            <table class="shards-table">
-                <tr><th>Действие</th><th>Награда</th></tr>
-                <tr><td>🏆 Победа в дуэли</td><td>+2 осколка</td></tr>
-                <tr><td>💔 Поражение</td><td>+1 осколок</td></tr>
-                <tr><td>⚔️ Победа в турнире</td><td>+4 осколка</td></tr>
-                <tr><td>👑 Чемпион турнира</td><td>+10 осколков</td></tr>
-                <tr><td>🌝🌚 Победа над врагом</td><td>+1 осколок (другая фракция)</td></tr>
-            </table>
-            <p style="margin-top: 15px; color: #8b949e;">Осколки повышают уровень героя. Каждые 5 осколков = новый уровень.</p>
+            <div class="table-wrapper">
+                <table class="shards-table">
+                    <tr><th>Действие</th><th>Награда</th></tr>
+                    <tr><td>🏆 Победа в дуэли</td><td>+2 💎</td></tr>
+                    <tr><td>💔 Поражение в дуэли</td><td>+1 💎</td></tr>
+                    <tr><td>⚔️ Победа в турнирном бою</td><td>+4 💎</td></tr>
+                    <tr><td>💔 Поражение в турнире</td><td>+2 💎</td></tr>
+                    <tr><td>👑 Чемпион турнира</td><td>+10 💎</td></tr>
+                    <tr><td>🌝🌚 Победа над врагом</td><td>×2 💎 (другая фракция)</td></tr>
+                </table>
+            </div>
+            <p style="margin-top:15px;" class="text-muted">Осколки повышают уровень. Каждые 5 💎 = новый уровень (после 10-го — каждые 10 💎).</p>
         </div>
-		
+        
         <!-- ФРАКЦИОННАЯ БИТВА -->
-		<div class="guide-card">
-			<h2>⚔️ ФРАКЦИОННАЯ БИТВА</h2>
-			<p>Командное сражение <span class="highlight">5 на 5</span> между Орденом Света и Культом Тьмы. Бойцы сражаются за честь своей фракции!</p>
-			
-			<div class="command-grid">
-				<div class="command-item">
-					<div class="command-name">!фрега</div>
-					<div class="command-desc">Записаться в битву (нужен герой с фракцией)</div>
-				</div>
-				<div class="command-item">
-					<div class="command-name">!фрлист</div>
-					<div class="command-desc">Список записавшихся бойцов</div>
-				</div>
-			</div>
-			
-			<p style="margin-top: 15px;"><span class="highlight">Как работает:</span></p>
-			<ol>
-				<li>Админ запускает битву: <span class="highlight">!битва</span></li>
-				<li>Игроки записываются: <span class="highlight">!фрега</span></li>
-				<li>Нужно по <span class="highlight">5 бойцов</span> от каждой фракции</li>
-				<li>Таймаут на сбор: <span class="highlight">10 минут</span></li>
-				<li>Случайная <span class="highlight">локация</span> даёт бонус всем бойцам</li>
-				<li>5 боёв 1 на 1 — побеждает фракция с большим счётом</li>
-			</ol>
-			
-			<p style="margin-top: 15px; color: #8b949e;">🏆 Победившая фракция получает <span style="color:#ffd700;">+5💎</span> каждому бойцу, проигравшая — <span style="color:#ffd700;">+2💎</span>.</p>
-		</div>
-		
-		<!-- ПОДЗЕМЕЛЬЕ -->
-		<div class="guide-card">
-			<h2>🏔 ПОДЗЕМЕЛЬЕ</h2>
-			<p>Одиночное PvE-приключение. Сражайся с волнами мобов, убивай боссов, собирай трофеи для своей фракции!</p>
-			
-			<div class="command-grid">
-				<div class="command-item">
-					<div class="command-name">!данж</div>
-					<div class="command-desc">Отправиться в подземелье (КД 60 минут)</div>
-				</div>
-			</div>
-			
-			<p style="margin-top:15px;"><span class="highlight">Фракционные пассивки (случайные):</span></p>
-			<table>
-				<tr><th>🌝 Свет</th><th>🌚 Тьма</th></tr>
-				<tr><td>🔥 Очищение (+5 HP/волна)</td><td>💀 Вампиризм (+2 HP/убийство)</td></tr>
-				<tr><td>⚡ Благословение (20% пропуск волны)</td><td>🕳️ Теневой шаг (15% пропуск волны)</td></tr>
-				<tr><td>💫 Сияние (-20% HP боссам)</td><td>🩸 Кровавая жатва (+урон за HP)</td></tr>
-				<tr><td>🛡️ Святая защита (первый урон 0)</td><td>👻 Призрачный щит (25% уклон)</td></tr>
-				<tr><td>✨ Вдохновение (+2 MIN)</td><td>🖤 Проклятие (-1 ATK мобам)</td></tr>
-			</table>
-			
-			<p style="margin-top:15px;"><span class="highlight">Боссы:</span> каждые 5 волн — усиленный моб. За победу: +1 трофей в кассу фракции.</p>
-			<p><span class="highlight">Территория:</span> трофеи влияют на захват Короны Раскола. Следи за битвой на странице Подземелья!</p>
-		</div>
+        <div class="card">
+            <h2>⚔️ ФРАКЦИОННАЯ БИТВА</h2>
+            <p>Командное сражение <span class="highlight">5 на 5</span> между <span class="faction-light">🌝 Орденом Света</span> и <span class="faction-dark">🌚 Культом Тьмы</span>.</p>
+            
+            <div class="command-grid">
+                <div class="command-item">
+                    <div class="command-name">!фрега</div>
+                    <div class="command-desc">Записаться в битву</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!фрлист</div>
+                    <div class="command-desc">Список записавшихся бойцов</div>
+                </div>
+            </div>
+            
+            <h3>Как работает:</h3>
+            <ol>
+                <li>Админ запускает: <span class="highlight">!битва</span></li>
+                <li>Игроки записываются: <span class="highlight">!фрега</span></li>
+                <li>Нужно по <span class="highlight">5 бойцов</span> от каждой фракции</li>
+                <li>Таймаут на сбор: <span class="highlight">10 минут</span></li>
+                <li>Случайная <span class="highlight">локация</span> даёт бонусы всем</li>
+                <li>5 боёв 1 на 1 — фракция с большим счётом побеждает</li>
+            </ol>
+            
+            <p class="text-muted">🏆 Победители: <span style="color:#ffd700;">+5💎</span> | Проигравшие: <span style="color:#ffd700;">+2💎</span></p>
+        </div>
+        
+        <!-- ПОДЗЕМЕЛЬЕ -->
+        <div class="card">
+            <h2>🏔 ПОДЗЕМЕЛЬЕ</h2>
+            <p>Одиночное PvE-приключение. Сражайся с волнами мобов, убивай боссов, собирай трофеи для фракции!</p>
+            
+            <div class="command-grid">
+                <div class="command-item">
+                    <div class="command-name">!данж</div>
+                    <div class="command-desc">Отправиться в подземелье</div>
+                </div>
+            </div>
+            
+            <h3>🌍 Фракционные пассивки (случайные):</h3>
+            <div class="table-wrapper">
+                <table class="faction-table">
+                    <tr><th>🌝 Орден Света</th><th>🌚 Культ Тьмы</th></tr>
+                    <tr><td>🔥 Очищение (+5 HP/волна)</td><td>💀 Вампиризм (+2 HP/волна)</td></tr>
+                    <tr><td>⚡ Благословение (20% пропуск)</td><td>🕳️ Теневой шаг (15% пропуск)</td></tr>
+                    <tr><td>💫 Сияние (-20% HP боссам)</td><td>🩸 Кровавая жатва (+урон)</td></tr>
+                    <tr><td>🛡️ Святая защита (1-й урон 0)</td><td>👻 Призрачный щит (25% уклон)</td></tr>
+                    <tr><td>✨ Вдохновение (+2 MIN)</td><td>🖤 Проклятие (-1 ATK мобам)</td></tr>
+                </table>
+            </div>
+            
+            <h3>🐉 Боссы:</h3>
+            <p>Каждые 5 волн — усиленный моб. Победа = <span class="highlight">+1 трофей</span> в кассу фракции.</p>
+            <p class="text-muted">Трофеи влияют на Корону Раскола. Следи на странице <a href="dungeon.html" style="color:#ffd700;">Подземелья</a>!</p>
+        </div>
 
         <!-- ЛОР -->
-        <div class="guide-card">
+        <div class="card">
             <h2>📜 ЛОР</h2>
             <p>Мир раскололся на две фракции:</p>
             <p>
                 <span class="faction-light">🌝 ОРДЕН СВЕТА</span> — верят, что осколки вернут порядок.<br>
                 <span class="faction-dark">🌚 КУЛЬТ ТЬМЫ</span> — хотят погрузить мир в хаос.
             </p>
-            <p style="margin-top: 15px;">Каждый боец выбирает сторону случайно при создании героя. Побеждая врагов из другой фракции, ты приносишь очки своей стороне и получаешь дополнительные осколки.</p>
-            <p style="margin-top: 15px; font-style: italic; color: #ffd700;">Кто соберёт все осколки — восстановит Клинок и изменит судьбу мира.</p>
+            <p style="margin-top:15px;">Каждый боец выбирает сторону случайно при создании героя. Побеждая врагов из другой фракции, ты приносишь очки своей стороне и получаешь дополнительные осколки.</p>
+            <p style="margin-top:15px; font-style: italic; color: #ffd700;">Кто соберёт все осколки — восстановит Клинок и изменит судьбу мира.</p>
         </div>
         
     </div>
     
     <script>
-        const navToggle = document.querySelector('.nav-toggle');
-        const pageNav = document.querySelector('.page-nav');
-        navToggle.addEventListener('click', () => {
-            pageNav.classList.toggle('show');
-            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        });
+        function toggleNav() {
+            const nav = document.getElementById('pageNav');
+            const btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show');
+            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        }
     </script>
 </body>
 </html>
