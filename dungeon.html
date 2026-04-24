@@ -650,14 +650,15 @@
         }
 
         // ===== ЗАГРУЗКА ДАННЫХ =====
-        fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/dungeon.json?' + Date.now())
+        fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json?' + Date.now())
             .then(r => {
                 if (!r.ok) throw new Error('HTTP ' + r.status);
                 return r.json();
             })
             .then(data => {
-                const players = Object.values(data.players || {});
-                const territory = data.territory || { light: 0, dark: 0 };
+                const dungeonData = data.dungeon || {};
+				const players = Object.values(dungeonData.players || {});
+				const territory = dungeonData.territory || { light: 0, dark: 0 };
                 
                 if (players.length === 0) {
                     document.getElementById('stats-loading').innerHTML = `
