@@ -6,15 +6,33 @@
     <title>Подземелье</title>
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-        font-family: 'Segoe UI', 'Arial', sans-serif;
-        background: 
-            radial-gradient(circle at 20% 20%, rgba(139, 69, 19, 0.08), transparent 40%),
-            radial-gradient(circle at 80% 30%, rgba(255, 140, 0, 0.06), transparent 40%),
-            linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-        color: #e6edf3; min-height: 100vh; padding: 20px;
-    }
-    h1 { color: #ffd700; text-align: center; margin: 15px 0 25px; font-size: 2.5em; font-weight: 700; text-shadow: 0 0 30px rgba(255,140,0,0.5); letter-spacing: 2px; }
+	body { 
+		font-family: 'Segoe UI', 'Arial', sans-serif; 
+		background: 
+			radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
+			radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
+			linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
+		color: #e6edf3; 
+		min-height: 100vh;
+		padding: 20px;
+	}
+
+	h1 { 
+		color: #ffd700; 
+		text-align: center; 
+		margin: 15px 0 25px; 
+		font-size: 2.5em;
+		font-weight: 700;
+		text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
+		letter-spacing: 2px;
+		position: relative;
+		display: inline-block;
+		left: 50%;
+		transform: translateX(-50%);
+		white-space: nowrap;
+		border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+		padding-bottom: 10px;
+	}
     
     .nav-wrapper { margin-bottom: 30px; border-bottom: 1px solid #30363d; }
     .nav-toggle { display: none; width: 100%; padding: 12px 20px; background: #21262d; border: 1px solid #30363d; border-radius: 25px; color: #ffd700; font-size: 16px; font-weight: bold; cursor: pointer; text-align: left; }
