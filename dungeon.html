@@ -364,12 +364,6 @@
 	.event-table td:first-child { font-size: 24px; width: 50px; }
 
 	/* Таблицы фракций */
-	.faction-table { 
-		width: 100%; 
-		table-layout: fixed; 
-		border-collapse: collapse;
-		margin-bottom: 20px;
-	}
 	.faction-table th { 
 		text-align: center; 
 		background: #21262d;
@@ -378,23 +372,26 @@
 		padding: 12px 10px;
 		border: 1px solid #30363d;
 		cursor: default;
-		user-select: none;
-		white-space: nowrap;
+		white-space: normal !important;
 	}
 	.faction-table th:first-child { width: 30%; }
 	.faction-table th:last-child { width: 70%; }
+	.faction-table th { 
+		white-space: normal;
+	}
 	.faction-table td { 
 		text-align: left; 
 		padding: 10px 14px; 
 		vertical-align: top;
 		border: 1px solid #30363d;
-		color: #c9d1d9;
-		font-size: 13px;
-		line-height: 1.6;
+		white-space: normal !important;
+		word-break: break-word;
 	}
 	.faction-table td:first-child { 
 		color: #ffd700;
 		font-weight: bold;
+		white-space: nowrap;
+		width: 1%;
 	}
 	.faction-table tr:hover td { background: rgba(255,215,0,0.02); }
 
@@ -459,6 +456,13 @@
         .territory-progress { height: 36px; }
         .territory-light, .territory-dark { font-size: 12px; }
         .territory-title { font-size: 17px; }
+		.faction-table { table-layout: auto; }
+		.faction-table th:first-child,
+		.faction-table th:last-child { width: auto; }
+		.faction-table td { 
+			font-size: 12px; 
+			padding: 8px 10px; 
+		}
     }
 </style>
 </head>
