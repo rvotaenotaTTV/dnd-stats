@@ -341,53 +341,65 @@
     .highlight { color: #ffd700; font-weight: bold; }
     tr:hover td { background: rgba(255,215,0,0.03); }
 
-    /* ===== ПРАВИЛА ===== */
-    .rule-item { 
-        margin-bottom: 15px; 
-        padding: 14px; 
-        background: #21262d; 
-        border-radius: 10px; 
-        border-left: 4px solid #ffd700; 
-    }
-    .rule-item p { color: #c9d1d9; font-size: 13px; line-height: 1.7; }
-    .rule-item p code { 
-        background: #0d1117; 
-        padding: 3px 8px; 
-        border-radius: 5px; 
-        color: #ffd700; 
-        font-size: 14px;
-        border: 1px solid #30363d;
-    }
-    .event-table td { text-align: center; }
-    .event-table td:first-child { font-size: 24px; width: 50px; }
+	/* ===== ПРАВИЛА ===== */
+	.rule-item { 
+		margin-bottom: 15px; 
+		padding: 14px; 
+		background: #21262d; 
+		border-radius: 10px; 
+		border-left: 4px solid #ffd700; 
+	}
+	.rule-item p { color: #c9d1d9; font-size: 13px; line-height: 1.7; }
+	.rule-item p code { 
+		background: #0d1117; 
+		padding: 3px 8px; 
+		border-radius: 5px; 
+		color: #ffd700; 
+		font-size: 14px;
+		border: 1px solid #30363d;
+	}
+	.rule-item h4 { color: #ffd700; font-size: 15px; margin-bottom: 5px; }
+
+	.event-table td { text-align: center; }
+	.event-table td:first-child { font-size: 24px; width: 50px; }
+
+	/* Таблицы фракций */
 	.faction-table { 
 		width: 100%; 
 		table-layout: fixed; 
 		border-collapse: collapse;
+		margin-bottom: 20px;
 	}
 	.faction-table th { 
 		text-align: center; 
-		width: 50%;
 		background: #21262d;
 		color: #ffd700;
 		font-weight: bold;
 		padding: 12px 10px;
 		border: 1px solid #30363d;
+		cursor: default;
+		user-select: none;
+		white-space: nowrap;
 	}
+	.faction-table th:first-child { width: 30%; }
+	.faction-table th:last-child { width: 70%; }
 	.faction-table td { 
 		text-align: left; 
 		padding: 10px 14px; 
 		vertical-align: top;
 		border: 1px solid #30363d;
+		color: #c9d1d9;
+		font-size: 13px;
+		line-height: 1.6;
 	}
 	.faction-table td:first-child { 
 		color: #ffd700;
+		font-weight: bold;
 	}
-	.faction-table td:last-child { 
-		color: #a371f7;
-	}
-    .mob-table td { text-align: center; }
-    .mob-table .number { text-align: center; }
+	.faction-table tr:hover td { background: rgba(255,215,0,0.02); }
+
+	.mob-table td { text-align: center; }
+	.mob-table .number { text-align: center; }
 
     /* ===== ЗАГРУЗКА ===== */
     .loading { 
@@ -526,32 +538,59 @@
                 </table>
             </div>
 
-            <div class="card">
-                <h3>🌍 Фракционные пассивки (случайная при входе)</h3>
-                <table class="faction-table">
-                    <tr><th>🌝 Орден Света</th><th>🌚 Культ Тьмы</th></tr>
-                    <tr>
-                        <td>🔥 Очищение (+5 HP после каждой волны)</td>
-                        <td>💀 Вампиризм (+2 HP после каждой волны)</td>
-                    </tr>
-                    <tr>
-                        <td>⚡ Благословение (20% пропустить волну)</td>
-                        <td>🕳️ Теневой шаг (15% пропустить волну)</td>
-                    </tr>
-                    <tr>
-                        <td>💫 Сияние (-20% HP боссам)</td>
-                        <td>🩸 Кровавая жатва (+урон = потерянное HP / 5)</td>
-                    </tr>
-                    <tr>
-                        <td>🛡️ Святая защита (первый урон = 0)</td>
-                        <td>👻 Призрачный щит (25% шанс уклониться)</td>
-                    </tr>
-                    <tr>
-                        <td>✨ Вдохновение (+2 MIN на весь забег)</td>
-                        <td>🖤 Проклятие (-1 ATK всем мобам)</td>
-                    </tr>
-                </table>
-            </div>
+			<div class="card">
+				<h3>🌍 Фракционные пассивки (случайная при входе)</h3>
+				
+				<h4 style="color: #ffd700; margin: 15px 0 10px;">🌝 Орден Света — Защита и восстановление</h4>
+				<table class="faction-table">
+					<tr><th>Пассивка</th><th>Механика</th></tr>
+					<tr>
+						<td>🔥 Очищение</td>
+						<td>Дополнительно +4 HP после каждой выигранной волны. Суммируется с базовым восстановлением (8 + волна × 2). За 8 волн даёт +32 HP.</td>
+					</tr>
+					<tr>
+						<td>⚡ Благословение</td>
+						<td>20% шанс что волна засчитается без боя: счётчик волн увеличивается, моб не появляется, HP не тратится.</td>
+					</tr>
+					<tr>
+						<td>💫 Сияние</td>
+						<td>Боссы (каждая 5-я волна) теряют 20% HP. Босс волны 5: 105 → 84 HP. Волны 10: 225 → 180 HP.</td>
+					</tr>
+					<tr>
+						<td>🛡️ Святая защита</td>
+						<td>Самый первый урон по герою в каждой волне = 0. Криты тоже обнуляются. Дальше урон проходит как обычно.</td>
+					</tr>
+					<tr>
+						<td>✨ Вдохновение</td>
+						<td>+1 MIN и +1 MAX на весь забег. Средний урон вырастает на 1 за атаку. За ~24 атаки даёт +24 суммарного урона.</td>
+					</tr>
+				</table>
+				
+				<h4 style="color: #a371f7; margin: 20px 0 10px;">🌚 Культ Тьмы — Агрессия и риск</h4>
+				<table class="faction-table">
+					<tr><th>Пассивка</th><th>Механика</th></tr>
+					<tr>
+						<td>💀 Вампиризм</td>
+						<td>Дополнительно +4 HP после каждой выигранной волны. Идентично Очищению по цифрам.</td>
+					</tr>
+					<tr>
+						<td>🕳️ Теневой шаг</td>
+						<td>20% шанс пропустить волну без боя. Идентично Благословению.</td>
+					</tr>
+					<tr>
+						<td>🩸 Кровавая жатва</td>
+						<td>Каждый удар героя добавляет (потерянное HP в этом бою / 4) к урону. Потерял 20 HP → +5 урона к каждой атаке. Чем ближе к смерти, тем больше урона.</td>
+					</tr>
+					<tr>
+						<td>👻 Призрачный щит</td>
+						<td>Каждый раз когда моб попал по герою — 25% шанс что урон станет 0. Может срабатывать несколько раз за одну волну.</td>
+					</tr>
+					<tr>
+						<td>🖤 Проклятие</td>
+						<td>Все мобы на всех волнах получают -1 ATK. Это снижает шанс попадания моба на 5% каждую атаку и уменьшает урон.</td>
+					</tr>
+				</table>
+			</div>
 
             <div class="card">
                 <h3>🐉 Боссы (каждые 5 волн)</h3>
