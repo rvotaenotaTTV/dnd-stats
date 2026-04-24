@@ -6,21 +6,21 @@
     <title>Подземелье</title>
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-	body { 
-		font-family: 'Segoe UI', 'Arial', sans-serif; 
+	body {
+		font-family: 'Segoe UI', 'Arial', sans-serif;
 		background: 
 			radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
 			radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
 			linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-		color: #e6edf3; 
+		color: #e6edf3;
 		min-height: 100vh;
 		padding: 20px;
 	}
 
-	h1 { 
-		color: #ffd700; 
-		text-align: center; 
-		margin: 15px 0 25px; 
+	h1 {
+		color: #ffd700;
+		text-align: center;
+		margin: 15px 0 25px;
 		font-size: 2.5em;
 		font-weight: 700;
 		text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
@@ -33,87 +33,416 @@
 		border-bottom: 2px solid rgba(255, 215, 0, 0.3);
 		padding-bottom: 10px;
 	}
-    
-    .nav-wrapper { margin-bottom: 30px; border-bottom: 1px solid #30363d; }
-    .nav-toggle { display: none; width: 100%; padding: 12px 20px; background: #21262d; border: 1px solid #30363d; border-radius: 25px; color: #ffd700; font-size: 16px; font-weight: bold; cursor: pointer; text-align: left; }
-    .page-nav { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
-    .page-nav a { color: #8b949e; text-decoration: none; padding: 12px 20px; font-size: 14px; font-weight: 500; transition: all 0.2s; white-space: nowrap; border-bottom: 3px solid transparent; background: transparent; }
-    .page-nav a:hover { color: #ffd700; border-bottom-color: #ffd70080; }
-    .page-nav a.active { color: #ffd700; font-weight: bold; border-bottom-color: #ffd700; }
 
-    .nav-tabs { display: flex; gap: 5px; margin: 20px 0; flex-wrap: wrap; background: #161b22; padding: 10px; border-radius: 12px; border: 1px solid #30363d; }
-    .tab-btn { background: transparent; border: none; color: #8b949e; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+    /* ===== НАВИГАЦИЯ ===== */
+    .nav-wrapper { margin-bottom: 25px; }
+    .nav-toggle { 
+        display: none; 
+        width: 100%; 
+        padding: 14px 20px; 
+        background: #21262d; 
+        border: 1px solid #30363d; 
+        border-radius: 25px; 
+        color: #ffd700; 
+        font-size: 16px; 
+        font-weight: bold; 
+        cursor: pointer; 
+        text-align: left; 
+    }
+    .page-nav { 
+        display: flex; 
+        gap: 5px; 
+        justify-content: center; 
+        flex-wrap: wrap; 
+    }
+    .page-nav a { 
+        color: #8b949e; 
+        text-decoration: none; 
+        padding: 10px 16px; 
+        font-size: 13px; 
+        font-weight: 500; 
+        transition: all 0.2s; 
+        white-space: nowrap; 
+        border-radius: 8px;
+    }
+    .page-nav a:hover { color: #ffd700; background: #21262d; }
+    .page-nav a.active { color: #ffd700; background: #21262d; font-weight: bold; }
+
+    /* ===== ТАБЫ ===== */
+    .nav-tabs { 
+        display: flex; 
+        gap: 6px; 
+        margin: 20px 0; 
+        flex-wrap: wrap; 
+        background: #161b22; 
+        padding: 8px; 
+        border-radius: 12px; 
+        border: 1px solid #30363d; 
+        justify-content: center;
+    }
+    .tab-btn { 
+        background: transparent; 
+        border: none; 
+        color: #8b949e; 
+        padding: 10px 20px; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        font-size: 14px; 
+        font-weight: 500; 
+        transition: all 0.2s; 
+    }
     .tab-btn:hover { background: #21262d; color: #c9d1d9; }
     .tab-btn.active { background: #ffd700; color: #0d1117; font-weight: bold; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    /* ===== КОНТЕЙНЕР ===== */
     .container { max-width: 900px; margin: 0 auto; }
-    
-    .podium-row { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
-    .podium-card { flex: 1; min-width: 130px; max-width: 200px; background: linear-gradient(145deg, #21262d, #161b22); border-radius: 16px; padding: 20px 15px; text-align: center; border: 2px solid #30363d; transition: transform 0.2s; }
-    .podium-card:hover { transform: translateY(-3px); }
-    .podium-card.gold { border-color: #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.2); }
+
+    /* ===== ОБЩИЕ КАРТОЧКИ ===== */
+    .card { 
+        background: linear-gradient(145deg, #1a1f26, #0d1117); 
+        border: 2px solid #8b5e2e; 
+        border-radius: 20px; 
+        padding: 25px; 
+        margin-bottom: 25px; 
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
+        position: relative; 
+        overflow: hidden; 
+    }
+    .card::before { 
+        content: ''; 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 3px; 
+        background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700); 
+        opacity: 0.6; 
+    }
+    .card h3 { 
+        color: #ffd700; 
+        font-size: 18px; 
+        font-weight: bold; 
+        margin-bottom: 18px; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+    }
+    .card h4 { color: #ffd700; margin-bottom: 5px; font-size: 15px; }
+
+    /* ===== ТЕРРИТОРИЯ ===== */
+    .territory-title { 
+        color: #ffd700; 
+        font-size: 20px; 
+        font-weight: bold; 
+        text-align: center; 
+        margin-bottom: 5px; 
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.4); 
+        letter-spacing: 1px;
+    }
+    .territory-subtitle {
+        text-align: center;
+        color: #8b949e;
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+    .territory-row { 
+        display: flex; 
+        justify-content: space-between; 
+        color: #c9d1d9; 
+        font-size: 15px; 
+        margin-bottom: 12px; 
+        padding: 0 5px; 
+        font-weight: bold;
+    }
+    .territory-row .light-score { color: #ffd700; }
+    .territory-row .dark-score { color: #a371f7; }
+    .territory-progress { 
+        display: flex; 
+        height: 42px; 
+        border-radius: 21px; 
+        overflow: hidden; 
+        border: 2px solid #30363d; 
+        background: #0d1117; 
+    }
+    .territory-light { 
+        background: linear-gradient(135deg, #ffd700, #ffed4a); 
+        color: #0d1117; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-weight: bold; 
+        font-size: 14px; 
+        transition: width 0.6s ease; 
+        min-width: 40px;
+        text-shadow: none;
+    }
+    .territory-dark { 
+        background: linear-gradient(135deg, #6f42c1, #a371f7); 
+        color: #fff; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-weight: bold; 
+        font-size: 14px; 
+        transition: width 0.6s ease; 
+        min-width: 40px;
+    }
+    .territory-total {
+        text-align: center;
+        color: #8b949e;
+        font-size: 12px;
+        margin-top: 12px;
+    }
+    .territory-crown {
+        text-align: center;
+        font-size: 40px;
+        margin-bottom: 16px;
+        animation: float 2s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    /* ===== ПОДИУМ ===== */
+    .podium-row { 
+        display: flex; 
+        gap: 15px; 
+        margin-bottom: 25px; 
+        justify-content: center; 
+        flex-wrap: wrap; 
+    }
+    .podium-card { 
+        flex: 1; 
+        min-width: 140px; 
+        max-width: 220px; 
+        background: linear-gradient(145deg, #21262d, #161b22); 
+        border-radius: 16px; 
+        padding: 20px 15px; 
+        text-align: center; 
+        border: 2px solid #30363d; 
+        transition: transform 0.2s; 
+    }
+    .podium-card:hover { transform: translateY(-5px); }
+    .podium-card.gold { border-color: #ffd700; box-shadow: 0 0 25px rgba(255,215,0,0.2); }
     .podium-card.silver { border-color: #c0c0c0; }
     .podium-card.bronze { border-color: #cd7f32; }
-    .podium-medal { font-size: 32px; margin-bottom: 8px; }
-    .podium-emoji { font-size: 40px; margin-bottom: 8px; }
-    .podium-name { font-size: 18px; color: #ffd700; font-weight: bold; }
+    .podium-medal { font-size: 36px; margin-bottom: 8px; }
+    .podium-emoji { font-size: 44px; margin-bottom: 8px; }
+    .podium-name { 
+        font-size: 18px; 
+        color: #ffd700; 
+        font-weight: bold; 
+        word-break: break-word; 
+    }
     .podium-class { font-size: 12px; color: #8b949e; margin: 5px 0; }
-    .podium-record { font-size: 28px; color: #ffd700; font-weight: bold; margin-top: 8px; }
-    .podium-detail { font-size: 11px; color: #8b949e; margin-top: 5px; }
+    .podium-record { 
+        font-size: 32px; 
+        color: #ffd700; 
+        font-weight: bold; 
+        margin-top: 10px; 
+    }
+    .podium-detail { font-size: 11px; color: #8b949e; margin-top: 5px; line-height: 1.5; }
+    .podium-empty { 
+        flex: 1; 
+        min-width: 140px; 
+        max-width: 220px; 
+        background: #161b22; 
+        border-radius: 16px; 
+        padding: 40px 15px; 
+        text-align: center; 
+        border: 2px dashed #30363d; 
+        color: #484f58; 
+        font-size: 14px;
+    }
 
-    .records-row { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
-    .record-box { flex: 1; min-width: 120px; background: linear-gradient(145deg, #21262d, #161b22); border-radius: 14px; padding: 18px; text-align: center; border: 1px solid #30363d; }
-    .record-value { font-size: 26px; color: #ffd700; font-weight: bold; }
-    .record-label { color: #8b949e; font-size: 11px; margin-top: 5px; text-transform: uppercase; }
-    .record-player { color: #8b949e; font-size: 12px; margin-top: 8px; }
+    /* ===== РЕКОРДЫ ===== */
+    .records-row { 
+        display: flex; 
+        gap: 12px; 
+        margin-bottom: 25px; 
+        flex-wrap: wrap; 
+    }
+    .record-box { 
+        flex: 1; 
+        min-width: 130px; 
+        background: linear-gradient(145deg, #21262d, #161b22); 
+        border-radius: 14px; 
+        padding: 18px; 
+        text-align: center; 
+        border: 1px solid #30363d; 
+        transition: transform 0.2s;
+    }
+    .record-box:hover { transform: translateY(-3px); }
+    .record-icon { font-size: 28px; margin-bottom: 8px; }
+    .record-value { 
+        font-size: 28px; 
+        color: #ffd700; 
+        font-weight: bold; 
+    }
+    .record-label { 
+        color: #8b949e; 
+        font-size: 11px; 
+        margin-top: 5px; 
+        text-transform: uppercase; 
+        letter-spacing: 1px;
+    }
+    .record-player { 
+        color: #c9d1d9; 
+        font-size: 13px; 
+        margin-top: 8px; 
+        font-weight: 500; 
+    }
 
-    .table-card { background: linear-gradient(145deg, #1a1f26, #0d1117); border: 2px solid #8b5e2e; border-radius: 20px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
-    .table-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700); opacity: 0.6; }
-    .table-card h3 { color: #ffd700; font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { border: 1px solid #30363d; padding: 8px 10px; text-align: left; }
-    th { background: #21262d; color: #ffd700; font-weight: bold; cursor: pointer; user-select: none; }
+    /* ===== ТАБЛИЦА ===== */
+    .table-wrapper { 
+        overflow-x: auto; 
+        -webkit-overflow-scrolling: touch; 
+    }
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        font-size: 13px; 
+    }
+    th { 
+        background: #21262d; 
+        color: #ffd700; 
+        font-weight: bold; 
+        cursor: pointer; 
+        user-select: none; 
+        padding: 12px 10px; 
+        border: 1px solid #30363d; 
+        text-align: left;
+        white-space: nowrap;
+    }
     th:hover { background: #30363d; }
-    td:first-child { text-align: center; width: 35px; }
-    .number { text-align: right; }
-    
-    .loading { text-align: center; padding: 60px; color: #8b949e; font-size: 18px; }
+    th .sort-arrow { font-size: 10px; margin-left: 3px; color: #8b949e; }
+    th.sorted .sort-arrow { color: #ffd700; }
+    td { 
+        border: 1px solid #30363d; 
+        padding: 10px; 
+        text-align: left; 
+    }
+    td:first-child { text-align: center; width: 35px; color: #8b949e; }
+    td:nth-child(2) { white-space: nowrap; }
+    .number { text-align: right; font-variant-numeric: tabular-nums; }
+    .highlight { color: #ffd700; font-weight: bold; }
+    tr:hover td { background: rgba(255,215,0,0.03); }
 
-    .section-frame { background: linear-gradient(145deg, #1a1f26, #0d1117); border: 2px solid #8b5e2e; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
-    .section-frame::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700); opacity: 0.6; }
-    .section-frame h3 { color: #ffd700; font-size: 18px; font-weight: bold; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
-    .rule-item { margin-bottom: 15px; padding: 14px; background: #21262d; border-radius: 10px; border-left: 4px solid #ffd700; }
-    .rule-item h4 { color: #ffd700; margin-bottom: 5px; font-size: 15px; }
-    .rule-item p { color: #8b949e; font-size: 13px; line-height: 1.6; }
+    /* ===== ПРАВИЛА ===== */
+    .rule-item { 
+        margin-bottom: 15px; 
+        padding: 14px; 
+        background: #21262d; 
+        border-radius: 10px; 
+        border-left: 4px solid #ffd700; 
+    }
+    .rule-item p { color: #c9d1d9; font-size: 13px; line-height: 1.7; }
+    .rule-item p code { 
+        background: #0d1117; 
+        padding: 3px 8px; 
+        border-radius: 5px; 
+        color: #ffd700; 
+        font-size: 14px;
+        border: 1px solid #30363d;
+    }
     .event-table td { text-align: center; }
-    .event-icon { font-size: 24px; }
+    .event-table td:first-child { font-size: 24px; width: 50px; }
+	.faction-table { 
+		width: 100%; 
+		table-layout: fixed; 
+		border-collapse: collapse;
+	}
+	.faction-table th { 
+		text-align: center; 
+		width: 50%;
+		background: #21262d;
+		color: #ffd700;
+		font-weight: bold;
+		padding: 12px 10px;
+		border: 1px solid #30363d;
+	}
+	.faction-table td { 
+		text-align: left; 
+		padding: 10px 14px; 
+		vertical-align: top;
+		border: 1px solid #30363d;
+	}
+	.faction-table td:first-child { 
+		color: #ffd700;
+	}
+	.faction-table td:last-child { 
+		color: #a371f7;
+	}
+    .mob-table td { text-align: center; }
+    .mob-table .number { text-align: center; }
 
+    /* ===== ЗАГРУЗКА ===== */
+    .loading { 
+        text-align: center; 
+        padding: 60px; 
+        color: #8b949e; 
+        font-size: 18px; 
+    }
+    .loading .spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 3px solid #30363d;
+        border-top-color: #ffd700;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 15px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== МОБИЛЬНЫЕ ===== */
     @media (max-width: 768px) {
-        h1 { font-size: 1.6em; } body { padding: 10px; }
-        .nav-wrapper { border-bottom: none; }
+        body { padding: 10px; }
+        h1 { font-size: 1.6em; }
+        
         .nav-toggle { display: block; }
-        .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .page-nav { 
+            display: none; 
+            flex-direction: column; 
+            gap: 6px; 
+            margin-top: 10px; 
+        }
         .page-nav.show { display: flex; }
-        .page-nav a { text-align: center; padding: 10px; background: #21262d; border: 1px solid #30363d; border-radius: 20px; }
+        .page-nav a { 
+            text-align: center; 
+            padding: 12px; 
+            background: #21262d; 
+            border: 1px solid #30363d; 
+            border-radius: 20px; 
+        }
         .page-nav a.active { background: #ffd700; color: #0d1117; border-color: #ffd700; }
-        .nav-tabs { overflow-x: auto; flex-wrap: nowrap; }
-        .tab-btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
-        .table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 15px; }
-        .section-frame { padding: 18px; }
-        .podium-card { min-width: 100px; }
-        .record-box { min-width: 80px; }
+        
+        .nav-tabs { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; }
+        .tab-btn { padding: 8px 14px; font-size: 12px; white-space: nowrap; }
+        
+        .card { padding: 18px; }
+        .podium-card { min-width: 100px; padding: 15px 10px; }
+        .podium-record { font-size: 26px; }
+        .podium-emoji { font-size: 36px; }
+        .record-box { min-width: 110px; padding: 14px; }
         .record-value { font-size: 22px; }
+        
+        .territory-progress { height: 36px; }
+        .territory-light, .territory-dark { font-size: 12px; }
+        .territory-title { font-size: 17px; }
     }
 </style>
 </head>
 <body>
     <h1>ПОДЗЕМЕЛЬЕ</h1>
     
+    <!-- Навигация -->
     <div class="nav-wrapper">
-        <button class="nav-toggle">☰ Меню</button>
-        <div class="page-nav">
+        <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+        <div class="page-nav" id="pageNav">
             <a href="index.html">📊 Статистика</a>
             <a href="logs.html">📜 Логи</a>
             <a href="calc.html">🎲 Калькулятор</a>
@@ -122,92 +451,139 @@
             <a href="gradient.html">📈 Градиент</a>
             <a href="guide.html">⚔️ Гайд</a>
             <a href="hall.html">🏆 Зал Славы</a>
-            <a href="lore.html">📜 Лор Этерниса</a>
+            <a href="lore.html">📜 Лор</a>
             <a href="tavern.html">🍺 Таверна</a>
             <a href="dungeon.html" class="active">🏔 Подземелье</a>
         </div>
     </div>
     
+    <!-- Табы -->
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('stats')">📊 Статистика</button>
         <button class="tab-btn" onclick="switchTab('rules')">📜 Правила</button>
     </div>
     
     <div class="container">
+        <!-- Вкладка Статистика -->
         <div id="tab-stats" class="tab-content active">
-            <div class="loading" id="stats-loading">⏳ Загрузка статистики...</div>
-        </div>
-        <div id="tab-rules" class="tab-content">
-            <div class="section-frame"><h3>🏔 Что такое Подземелье?</h3><div class="rule-item"><p>Бесконечные волны монстров. Твой герой сражается один на один. Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса!</p></div></div>
-            <div class="section-frame"><h3>⚔️ Как играть?</h3>
-                <div class="rule-item"><h4>1️⃣ Напиши в чат</h4><p><code style="color:#ffd700;font-size:16px;">!данж</code> — и твой герой отправится в подземелье</p></div>
-                <div class="rule-item"><h4>2️⃣ Бой с волнами</h4><p>Копия твоего героя сражается. Оригинал жив и может драться на дуэлях</p></div>
-                <div class="rule-item"><h4>3️⃣ Награда за волну</h4><p>После каждой победы <span style="color:#ffd700;">+10 HP</span>. Мобы становятся сильнее</p></div>
-                <div class="rule-item"><h4>4️⃣ Финал</h4><p>Проиграл — данж закончен. <span style="color:#ffd700;">Рекорд</span> сохраняется только если побит</p></div>
+            <div class="loading" id="stats-loading">
+                <div class="spinner"></div>
+                <div>Загрузка статистики подземелья...</div>
             </div>
-				<div class="section-frame">
-					<h3>🎲 Случайные события (30% после волны)</h3>
-					<table class="event-table">
-						<tr><th>Значок</th><th>Событие</th><th>Шанс</th><th>Эффект</th></tr>
-						<tr><td class="event-icon">🧪</td><td>Зелье силы</td><td>7.5%</td><td>+1 ATK (макс +5)</td></tr>
-						<tr><td class="event-icon">🛡️</td><td>Благословение</td><td>7.5%</td><td>+1 DEF (макс +5)</td></tr>
-						<tr><td class="event-icon">💀</td><td>Проклятие</td><td>7.5%</td><td>-5 HP</td></tr>
-						<tr><td class="event-icon">✨</td><td>Чудо</td><td>7.5%</td><td>Полное восстановление HP</td></tr>
-					</table>
-				</div>
+        </div>
+        
+        <!-- Вкладка Правила -->
+        <div id="tab-rules" class="tab-content">
+            <div class="card">
+                <h3>🏔 Что такое Подземелье?</h3>
+                <div class="rule-item">
+                    <p>Бесконечные волны монстров. Твой герой сражается один на один с копией своих статов. Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса! Напиши <code>!данж</code> в чат Twitch.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>⚔️ Как играть?</h3>
+                <div class="rule-item">
+                    <h4>1️⃣ Команда</h4>
+                    <p>Напиши в чат <code>!данж</code> — и твой герой отправится в подземелье.</p>
+                </div>
+                <div class="rule-item">
+                    <h4>2️⃣ Бой с волнами</h4>
+                    <p>Копия твоего героя сражается с волнами монстров. Оригинальный герой жив и может параллельно драться на дуэлях.</p>
+                </div>
+                <div class="rule-item">
+                    <h4>3️⃣ Восстановление</h4>
+                    <p>После каждой победы <span style="color:#ffd700;">+10 HP</span>. Мобы становятся сильнее с каждой волной.</p>
+                </div>
+                <div class="rule-item">
+                    <h4>4️⃣ Финал</h4>
+                    <p>Проиграл — данж закончен. <span style="color:#ffd700;">Рекорд</span> сохраняется только если побит (по волнам, затем по урону).</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🎲 Случайные события (30% после волны)</h3>
+                <table class="event-table">
+                    <tr><th>Значок</th><th>Событие</th><th>Шанс</th><th>Эффект</th></tr>
+                    <tr><td>🧪</td><td>Зелье силы</td><td>7.5%</td><td>+1 ATK (макс +5 от базового)</td></tr>
+                    <tr><td>🛡️</td><td>Благословение</td><td>7.5%</td><td>+1 DEF (макс +5 от базового)</td></tr>
+                    <tr><td>💀</td><td>Проклятие</td><td>7.5%</td><td>-5 HP</td></tr>
+                    <tr><td>✨</td><td>Чудо</td><td>7.5%</td><td>Полное восстановление HP</td></tr>
+                </table>
+            </div>
 
-				<div class="section-frame">
-					<h3>🌍 Фракционные пассивки (случайная при входе)</h3>
-					<table>
-						<tr><th>🌝 Свет</th><th>🌚 Тьма</th></tr>
-						<tr><td>🔥 Очищение (+5 HP/волна)</td><td>💀 Вампиризм (+2 HP/убийство)</td></tr>
-						<tr><td>⚡ Благословение (20% пропуск)</td><td>🕳️ Теневой шаг (15% пропуск)</td></tr>
-						<tr><td>💫 Сияние (-20% HP боссам)</td><td>🩸 Кровавая жатва (+урон)</td></tr>
-						<tr><td>🛡️ Святая защита (первый урон 0)</td><td>👻 Призрачный щит (25% уклон)</td></tr>
-						<tr><td>✨ Вдохновение (+2 MIN)</td><td>🖤 Проклятие (-1 ATK мобам)</td></tr>
-					</table>
-				</div>
+            <div class="card">
+                <h3>🌍 Фракционные пассивки (случайная при входе)</h3>
+                <table class="faction-table">
+                    <tr><th>🌝 Орден Света</th><th>🌚 Культ Тьмы</th></tr>
+                    <tr>
+                        <td>🔥 Очищение (+5 HP после каждой волны)</td>
+                        <td>💀 Вампиризм (+2 HP после каждой волны)</td>
+                    </tr>
+                    <tr>
+                        <td>⚡ Благословение (20% пропустить волну)</td>
+                        <td>🕳️ Теневой шаг (15% пропустить волну)</td>
+                    </tr>
+                    <tr>
+                        <td>💫 Сияние (-20% HP боссам)</td>
+                        <td>🩸 Кровавая жатва (+урон = потерянное HP / 5)</td>
+                    </tr>
+                    <tr>
+                        <td>🛡️ Святая защита (первый урон = 0)</td>
+                        <td>👻 Призрачный щит (25% шанс уклониться)</td>
+                    </tr>
+                    <tr>
+                        <td>✨ Вдохновение (+2 MIN на весь забег)</td>
+                        <td>🖤 Проклятие (-1 ATK всем мобам)</td>
+                    </tr>
+                </table>
+            </div>
 
-				<div class="section-frame">
-					<h3>🐉 Боссы (каждые 5 волн)</h3>
-					<div class="rule-item">
-						<p>×1.5 HP, +2 ATK, +1 DEF. Победа даёт <span style="color:#ffd700;">+1 трофей</span> игроку и в кассу фракции.</p>
-					</div>
-				</div>
+            <div class="card">
+                <h3>🐉 Боссы (каждые 5 волн)</h3>
+                <div class="rule-item">
+                    <p>Боссы имеют ×1.5 HP, +2 ATK, +1 DEF. Победа над боссом даёт <span style="color:#ffd700;">+1 трофей</span> игроку и +1 очко в кассу фракции.</p>
+                </div>
+            </div>
 
-				<div class="section-frame">
-					<h3>🏰 Корона Раскола</h3>
-					<div class="rule-item">
-						<p>Трофеи с боссов пополняют счёт фракции. У кого больше очков — тот владеет Короной. В конце сезона победитель вписывается в Зал Славы.</p>
-					</div>
-				</div>
-            <div class="section-frame"><h3>👾 Статы мобов</h3>
-				<table>
-					<tr><th>Волна</th><th>HP</th><th>ATK</th><th>DEF</th><th>Урон</th></tr>
-					<tr><td>1</td><td class="number">30</td><td class="number">1</td><td class="number">0</td><td class="number">1-4</td></tr>
-					<tr><td>2</td><td class="number">40</td><td class="number">1</td><td class="number">0</td><td class="number">2-5</td></tr>
-					<tr><td>3</td><td class="number">50</td><td class="number">2</td><td class="number">0</td><td class="number">2-6</td></tr>
-					<tr><td>4</td><td class="number">60</td><td class="number">2</td><td class="number">1</td><td class="number">3-7</td></tr>
-					<tr><td>5</td><td class="number">70</td><td class="number">3</td><td class="number">1</td><td class="number">3-8</td></tr>
-					<tr><td>6</td><td class="number">85</td><td class="number">3</td><td class="number">1</td><td class="number">4-9</td></tr>
-					<tr><td>7</td><td class="number">100</td><td class="number">4</td><td class="number">1</td><td class="number">4-10</td></tr>
-					<tr><td>8</td><td class="number">115</td><td class="number">4</td><td class="number">2</td><td class="number">5-11</td></tr>
-					<tr><td>9</td><td class="number">130</td><td class="number">5</td><td class="number">2</td><td class="number">5-12</td></tr>
-					<tr><td>10</td><td class="number">150</td><td class="number">5</td><td class="number">2</td><td class="number">6-14</td></tr>
-					<tr><td>12</td><td class="number">190</td><td class="number">6</td><td class="number">3</td><td class="number">7-16</td></tr>
-					<tr><td>15</td><td class="number">270</td><td class="number">8</td><td class="number">3</td><td class="number">8-21</td></tr>
-				</table>
+            <div class="card">
+                <h3>🏰 Корона Раскола</h3>
+                <div class="rule-item">
+                    <p>Трофеи с боссов пополняют счёт фракции. У кого больше очков — тот владеет Короной. В конце сезона победитель вписывается в Зал Славы.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>👾 Статы мобов по волнам</h3>
+                <div class="table-wrapper">
+                    <table class="mob-table">
+                        <tr><th>Волна</th><th>HP</th><th>ATK</th><th>DEF</th><th>Урон</th></tr>
+                        <tr><td>1</td><td class="number">30</td><td class="number">1</td><td class="number">0</td><td class="number">1–4</td></tr>
+                        <tr><td>2</td><td class="number">40</td><td class="number">1</td><td class="number">0</td><td class="number">2–5</td></tr>
+                        <tr><td>3</td><td class="number">50</td><td class="number">2</td><td class="number">0</td><td class="number">2–6</td></tr>
+                        <tr><td>4</td><td class="number">60</td><td class="number">2</td><td class="number">1</td><td class="number">3–7</td></tr>
+                        <tr><td>5 🐉</td><td class="number">105</td><td class="number">3</td><td class="number">1</td><td class="number">3–8</td></tr>
+                        <tr><td>6</td><td class="number">85</td><td class="number">3</td><td class="number">1</td><td class="number">4–9</td></tr>
+                        <tr><td>7</td><td class="number">100</td><td class="number">4</td><td class="number">1</td><td class="number">4–10</td></tr>
+                        <tr><td>8</td><td class="number">115</td><td class="number">4</td><td class="number">2</td><td class="number">5–11</td></tr>
+                        <tr><td>9</td><td class="number">130</td><td class="number">5</td><td class="number">2</td><td class="number">5–12</td></tr>
+                        <tr><td>10 🐉</td><td class="number">225</td><td class="number">7</td><td class="number">3</td><td class="number">6–14</td></tr>
+                        <tr><td>12</td><td class="number">190</td><td class="number">6</td><td class="number">3</td><td class="number">7–16</td></tr>
+                        <tr><td>15 🐉</td><td class="number">405</td><td class="number">9</td><td class="number">4</td><td class="number">8–21</td></tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
     
     <script>
-        const navToggle = document.querySelector('.nav-toggle');
-        const pageNav = document.querySelector('.page-nav');
-        navToggle.addEventListener('click', () => {
-            pageNav.classList.toggle('show');
-            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        });
+        // ===== НАВИГАЦИЯ =====
+        function toggleNav() {
+            const nav = document.getElementById('pageNav');
+            const btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show');
+            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        }
 
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -216,111 +592,212 @@
             event.target.classList.add('active');
         }
 
-        // Функция сортировки (сначала по волнам, потом по урону)
-        function sortPlayers(arr) {
-            return arr.sort((a, b) => {
-                if (b.record !== a.record) return b.record - a.record;
-                return b.damage - a.damage;
-            });
-        }
-
+        // ===== ЗАГРУЗКА ДАННЫХ =====
         fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/dungeon.json?' + Date.now())
-            .then(r => r.json())
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
             .then(data => {
-                const players = Object.values(data);
+                const players = Object.values(data.players || {});
+                const territory = data.territory || { light: 0, dark: 0 };
+                
                 if (players.length === 0) {
-                    document.getElementById('stats-loading').innerHTML = '<div class="section-frame"><h3>🏔 Подземелье</h3><div style="text-align:center;padding:30px;color:#8b949e;">Пока никто не был в данже. Напиши !данж в чат и стань первым!</div></div>';
+                    document.getElementById('stats-loading').innerHTML = `
+                        <div class="card">
+                            <h3>🏔 Подземелье пустует</h3>
+                            <div style="text-align:center;padding:30px;color:#8b949e;">
+                                <div style="font-size:60px;margin-bottom:20px;">🏔</div>
+                                <p>Пока никто не спускался в данж.</p>
+                                <p style="margin-top:10px;">Напиши <code style="color:#ffd700;background:#161b22;padding:3px 10px;border-radius:5px;">!данж</code> в чат и стань первым!</p>
+                            </div>
+                        </div>`;
                     return;
                 }
                 
-                let html = '';
-				
-				//Прогресс
-				const total = data.territory.light + data.territory.dark;
-				const lightPct = total > 0 ? Math.round(data.territory.light * 100 / total) : 50;
-
-				html += `
-				<div class="territory-bar">
-					<div class="territory-title">🏰 КОРОНА РАСКОЛА</div>
-					<div class="territory-row">
-						<span>🌝 Свет: ${data.territory.light}</span>
-						<span>${data.territory.dark} :🌚 Тьма</span>
-					</div>
-					<div class="territory-progress">
-						<div class="territory-light" style="width:${lightPct}%">${lightPct}%</div>
-						<div class="territory-dark" style="width:${100-lightPct}%">${100-lightPct}%</div>
-					</div>
-				</div>`;
+                // Сортировка: сначала по волнам (record), потом по урону (damage)
+                function sortPlayers(arr) {
+                    return [...arr].sort((a, b) => {
+                        if (b.record !== a.record) return b.record - a.record;
+                        return b.damage - a.damage;
+                    });
+                }
                 
-                // ПОДИУМ ТОП-3 (сортировка: волны → урон)
-                const top3 = sortPlayers([...players]).slice(0, 3);
+                const sorted = sortPlayers(players);
+                let html = '';
+                
+                // ===== КОРОНА РАСКОЛА =====
+                const total = territory.light + territory.dark;
+                const lightPct = total > 0 ? Math.round(territory.light * 100 / total) : 50;
+                const darkPct = 100 - lightPct;
+                const crownOwner = territory.light > territory.dark ? '🌝 Орден Света' : 
+                                   territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
+                
+                html += `
+                <div class="card">
+                    <div class="territory-crown">👑</div>
+                    <div class="territory-title">КОРОНА РАСКОЛА</div>
+                    <div class="territory-subtitle">Владелец: ${crownOwner}</div>
+                    <div class="territory-row">
+                        <span>🌝 Свет: <span class="light-score">${territory.light}</span></span>
+                        <span><span class="dark-score">${territory.dark}</span> :Тьма 🌚</span>
+                    </div>
+                    <div class="territory-progress">
+                        <div class="territory-light" style="width:${lightPct}%">${lightPct > 5 ? lightPct + '%' : ''}</div>
+                        <div class="territory-dark" style="width:${darkPct}%">${darkPct > 5 ? darkPct + '%' : ''}</div>
+                    </div>
+                    <div class="territory-total">Всего трофеев: ${total}</div>
+                </div>`;
+                
+                // ===== ПОДИУМ ТОП-3 =====
+                const top3 = sorted.slice(0, 3);
                 const medals = ['🥇', '🥈', '🥉'];
                 const grades = ['gold', 'silver', 'bronze'];
                 
                 html += '<div class="podium-row">';
                 top3.forEach((p, i) => {
-                    html += `<div class="podium-card ${grades[i]}">
+                    html += `
+                    <div class="podium-card ${grades[i]}">
                         <div class="podium-medal">${medals[i]}</div>
-                        <div class="podium-emoji">${p.emoji||'⚔️'}</div>
-                        <div class="podium-name">${p.display}</div>
-                        <div class="podium-class">${p.name}</div>
-                        <div class="podium-record">${p.record} волн</div>
-                        <div class="podium-detail">Урон: ${p.damage} | 💥${p.crits} | ❌${p.misses}</div>
+                        <div class="podium-emoji">${p.emoji || '⚔️'}</div>
+                        <div class="podium-name">${p.display || '???'}</div>
+                        <div class="podium-class">${p.name || ''}</div>
+                        <div class="podium-record">${p.record}</div>
+                        <div class="podium-detail">
+                            Урон: ${p.damage} | 💥${p.crits} | ❌${p.misses} | 🛡${p.blocks}
+                        </div>
                     </div>`;
                 });
+                // Заполняем пустые места если игроков меньше 3
+                for (let i = top3.length; i < 3; i++) {
+                    html += `<div class="podium-empty">🏔<br>Ждёт героя</div>`;
+                }
                 html += '</div>';
                 
-                // РЕКОРДЫ
-                const sorted = sortPlayers([...players]);
+                // ===== РЕКОРДЫ =====
                 const bestRecord = sorted[0];
                 const bestDamage = [...players].sort((a,b) => b.damage - a.damage)[0];
                 const bestCrits = [...players].sort((a,b) => b.crits - a.crits)[0];
                 const bestBlocks = [...players].sort((a,b) => b.blocks - a.blocks)[0];
                 
                 html += '<div class="records-row">';
-                html += `<div class="record-box"><div class="record-value">🏆 ${bestRecord.record}</div><div class="record-label">Рекорд волн</div><div class="record-player">${bestRecord.emoji||''} ${bestRecord.display}</div></div>`;
-                html += `<div class="record-box"><div class="record-value">💥 ${bestDamage.damage}</div><div class="record-label">Рекорд урона</div><div class="record-player">${bestDamage.emoji||''} ${bestDamage.display}</div></div>`;
-                html += `<div class="record-box"><div class="record-value">🎯 ${bestCrits.crits}</div><div class="record-label">Рекорд критов</div><div class="record-player">${bestCrits.emoji||''} ${bestCrits.display}</div></div>`;
-                html += `<div class="record-box"><div class="record-value">🛡 ${bestBlocks.blocks}</div><div class="record-label">Рекорд блоков</div><div class="record-player">${bestBlocks.emoji||''} ${bestBlocks.display}</div></div>`;
+                html += `
+                <div class="record-box">
+                    <div class="record-icon">🏆</div>
+                    <div class="record-value">${bestRecord.record}</div>
+                    <div class="record-label">Рекорд волн</div>
+                    <div class="record-player">${bestRecord.emoji||''} ${bestRecord.display||'???'}</div>
+                </div>`;
+                html += `
+                <div class="record-box">
+                    <div class="record-icon">💥</div>
+                    <div class="record-value">${bestDamage.damage}</div>
+                    <div class="record-label">Рекорд урона</div>
+                    <div class="record-player">${bestDamage.emoji||''} ${bestDamage.display||'???'}</div>
+                </div>`;
+                html += `
+                <div class="record-box">
+                    <div class="record-icon">🎯</div>
+                    <div class="record-value">${bestCrits.crits}</div>
+                    <div class="record-label">Рекорд критов</div>
+                    <div class="record-player">${bestCrits.emoji||''} ${bestCrits.display||'???'}</div>
+                </div>`;
+                html += `
+                <div class="record-box">
+                    <div class="record-icon">🛡</div>
+                    <div class="record-value">${bestBlocks.blocks}</div>
+                    <div class="record-label">Рекорд блоков</div>
+                    <div class="record-player">${bestBlocks.emoji||''} ${bestBlocks.display||'???'}</div>
+                </div>`;
                 html += '</div>';
                 
-                // ТАБЛИЦА ТОП-20 (сортировка: волны → урон)
+                // ===== ТАБЛИЦА ТОП-20 =====
                 const top20 = sorted.slice(0, 20);
-                html += '<div class="table-card"><h3>📊 Топ-20 подземелья</h3><table><tbody>';
-                html += '<tr><th>#</th><th>Игрок</th><th>Класс</th><th onclick="sortTable(\'record\')">Волн ⇅</th><th onclick="sortTable(\'damage\')">Урон ⇅</th><th onclick="sortTable(\'crits\')">💥 ⇅</th><th onclick="sortTable(\'misses\')">❌ ⇅</th><th onclick="sortTable(\'blocks\')">🛡 ⇅</th></tr>';
+                html += `
+                <div class="card">
+                    <h3>📊 Таблица лидеров</h3>
+                    <div class="table-wrapper">
+                        <table id="leaderTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Игрок</th>
+                                    <th>Класс</th>
+                                    <th data-sort="record" class="sorted" data-dir="desc">Волн <span class="sort-arrow">▼</span></th>
+                                    <th data-sort="damage">Урон <span class="sort-arrow">⇅</span></th>
+                                    <th data-sort="crits">💥 <span class="sort-arrow">⇅</span></th>
+                                    <th data-sort="misses">❌ <span class="sort-arrow">⇅</span></th>
+                                    <th data-sort="blocks">🛡 <span class="sort-arrow">⇅</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                
                 top20.forEach((p, i) => {
-                    html += `<tr data-record="${p.record}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}">`;
-                    html += `<td>${i+1}</td><td>${p.emoji||''} ${p.display}</td><td>${p.name}</td>`;
-                    html += `<td class="number" style="color:#ffd700;font-weight:bold;">${p.record}</td>`;
-                    html += `<td class="number">${p.damage}</td>`;
-                    html += `<td class="number">${p.crits}</td>`;
-                    html += `<td class="number">${p.misses}</td>`;
-                    html += `<td class="number">${p.blocks}</td></tr>`;
+                    html += `
+                    <tr data-record="${p.record}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}">
+                        <td>${i + 1}</td>
+                        <td>${p.emoji || ''} ${p.display || '???'}</td>
+                        <td>${p.name || ''}</td>
+                        <td class="number highlight">${p.record}</td>
+                        <td class="number">${p.damage}</td>
+                        <td class="number">${p.crits}</td>
+                        <td class="number">${p.misses}</td>
+                        <td class="number">${p.blocks}</td>
+                    </tr>`;
                 });
-                html += '</tbody></table></div>';
+                
+                html += '</tbody></table></div></div>';
                 
                 document.getElementById('stats-loading').innerHTML = html;
                 
-                // Сортировка таблицы по клику
-                window.sortTable = function(col) {
-                    const tbody = document.querySelector('.table-card tbody');
-                    const rows = Array.from(tbody.querySelectorAll('tr')).slice(1); // без заголовка
-                    const isAsc = tbody.dataset.sort === col && tbody.dataset.dir === 'asc';
-                    tbody.dataset.sort = col;
-                    tbody.dataset.dir = isAsc ? 'desc' : 'asc';
-                    
-                    rows.sort((a, b) => {
-                        const valA = parseInt(a.dataset[col]) || 0;
-                        const valB = parseInt(b.dataset[col]) || 0;
-                        return isAsc ? valA - valB : valB - valA;
+                // ===== СОРТИРОВКА ТАБЛИЦЫ =====
+                document.querySelectorAll('#leaderTable th[data-sort]').forEach(th => {
+                    th.addEventListener('click', function() {
+                        const col = this.dataset.sort;
+                        const tbody = document.querySelector('#leaderTable tbody');
+                        const rows = Array.from(tbody.querySelectorAll('tr'));
+                        
+                        // Определяем направление
+                        const isAsc = this.classList.contains('sorted') && this.dataset.dir === 'asc';
+                        
+                        // Сбрасываем все заголовки
+                        document.querySelectorAll('#leaderTable th').forEach(h => {
+                            h.classList.remove('sorted');
+                            h.dataset.dir = '';
+                            h.querySelector('.sort-arrow').textContent = '⇅';
+                        });
+                        
+                        // Устанавливаем новый заголовок
+                        this.classList.add('sorted');
+                        this.dataset.dir = isAsc ? 'desc' : 'asc';
+                        this.querySelector('.sort-arrow').textContent = isAsc ? '▲' : '▼';
+                        
+                        // Сортируем
+                        rows.sort((a, b) => {
+                            const valA = parseInt(a.dataset[col]) || 0;
+                            const valB = parseInt(b.dataset[col]) || 0;
+                            return isAsc ? valA - valB : valB - valA;
+                        });
+                        
+                        // Перестраиваем таблицу
+                        rows.forEach(row => tbody.appendChild(row));
+                        rows.forEach((row, i) => {
+                            row.cells[0].textContent = i + 1;
+                        });
                     });
-                    
-                    rows.forEach(row => tbody.appendChild(row));
-                    rows.forEach((row, i) => row.cells[0].textContent = i + 1);
-                };
+                });
             })
             .catch(err => {
-                document.getElementById('stats-loading').innerHTML = '<div class="section-frame"><h3>🏔 Подземелье</h3><div style="text-align:center;padding:30px;color:#8b949e;">❌ Ошибка загрузки dungeon.json</div></div>';
+                console.error('Dungeon load error:', err);
+                document.getElementById('stats-loading').innerHTML = `
+                    <div class="card">
+                        <h3>🏔 Подземелье</h3>
+                        <div style="text-align:center;padding:30px;color:#e5534b;">
+                            <div style="font-size:40px;margin-bottom:15px;">⚠️</div>
+                            <p>Не удалось загрузить dungeon.json</p>
+                            <p style="color:#8b949e;font-size:13px;margin-top:8px;">Попробуй обновить страницу</p>
+                        </div>
+                    </div>`;
             });
     </script>
 </body>
