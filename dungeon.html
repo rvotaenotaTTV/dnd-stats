@@ -50,14 +50,8 @@
 
     .container { max-width: 900px; margin: 0 auto; }
     
-    /* Подиум */
     .podium-row { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
-    .podium-card {
-        flex: 1; min-width: 130px; max-width: 200px;
-        background: linear-gradient(145deg, #21262d, #161b22);
-        border-radius: 16px; padding: 20px 15px; text-align: center;
-        border: 2px solid #30363d; transition: transform 0.2s;
-    }
+    .podium-card { flex: 1; min-width: 130px; max-width: 200px; background: linear-gradient(145deg, #21262d, #161b22); border-radius: 16px; padding: 20px 15px; text-align: center; border: 2px solid #30363d; transition: transform 0.2s; }
     .podium-card:hover { transform: translateY(-3px); }
     .podium-card.gold { border-color: #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.2); }
     .podium-card.silver { border-color: #c0c0c0; }
@@ -69,32 +63,14 @@
     .podium-record { font-size: 28px; color: #ffd700; font-weight: bold; margin-top: 8px; }
     .podium-detail { font-size: 11px; color: #8b949e; margin-top: 5px; }
 
-    /* Рекорды */
     .records-row { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
-    .record-box {
-        flex: 1; min-width: 120px;
-        background: linear-gradient(145deg, #21262d, #161b22);
-        border-radius: 14px; padding: 18px; text-align: center;
-        border: 1px solid #30363d;
-    }
+    .record-box { flex: 1; min-width: 120px; background: linear-gradient(145deg, #21262d, #161b22); border-radius: 14px; padding: 18px; text-align: center; border: 1px solid #30363d; }
     .record-value { font-size: 26px; color: #ffd700; font-weight: bold; }
     .record-label { color: #8b949e; font-size: 11px; margin-top: 5px; text-transform: uppercase; }
     .record-player { color: #8b949e; font-size: 12px; margin-top: 8px; }
 
-    /* Таблица */
-    .table-card {
-        background: linear-gradient(145deg, #1a1f26, #0d1117);
-        border: 2px solid #8b5e2e;
-        border-radius: 20px; padding: 20px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        position: relative; overflow: hidden;
-    }
-    .table-card::before {
-        content: ''; position: absolute; top: 0; left: 0; right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
-        opacity: 0.6;
-    }
+    .table-card { background: linear-gradient(145deg, #1a1f26, #0d1117); border: 2px solid #8b5e2e; border-radius: 20px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
+    .table-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700); opacity: 0.6; }
     .table-card h3 { color: #ffd700; font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th, td { border: 1px solid #30363d; padding: 8px 10px; text-align: left; }
@@ -105,12 +81,7 @@
     
     .loading { text-align: center; padding: 60px; color: #8b949e; font-size: 18px; }
 
-    /* Правила */
-    .section-frame {
-        background: linear-gradient(145deg, #1a1f26, #0d1117);
-        border: 2px solid #8b5e2e; border-radius: 20px; padding: 25px; margin-bottom: 25px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden;
-    }
+    .section-frame { background: linear-gradient(145deg, #1a1f26, #0d1117); border: 2px solid #8b5e2e; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
     .section-frame::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700); opacity: 0.6; }
     .section-frame h3 { color: #ffd700; font-size: 18px; font-weight: bold; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
     .rule-item { margin-bottom: 15px; padding: 14px; background: #21262d; border-radius: 10px; border-left: 4px solid #ffd700; }
@@ -167,19 +138,14 @@
             <div class="loading" id="stats-loading">⏳ Загрузка статистики...</div>
         </div>
         <div id="tab-rules" class="tab-content">
-            <div class="section-frame">
-                <h3>🏔 Что такое Подземелье?</h3>
-                <div class="rule-item"><p>Бесконечные волны монстров. Твой герой сражается один на один. Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса!</p></div>
-            </div>
-            <div class="section-frame">
-                <h3>⚔️ Как играть?</h3>
+            <div class="section-frame"><h3>🏔 Что такое Подземелье?</h3><div class="rule-item"><p>Бесконечные волны монстров. Твой герой сражается один на один. Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса!</p></div></div>
+            <div class="section-frame"><h3>⚔️ Как играть?</h3>
                 <div class="rule-item"><h4>1️⃣ Напиши в чат</h4><p><code style="color:#ffd700;font-size:16px;">!данж</code> — и твой герой отправится в подземелье</p></div>
                 <div class="rule-item"><h4>2️⃣ Бой с волнами</h4><p>Копия твоего героя сражается. Оригинал жив и может драться на дуэлях</p></div>
                 <div class="rule-item"><h4>3️⃣ Награда за волну</h4><p>После каждой победы <span style="color:#ffd700;">+10 HP</span>. Мобы становятся сильнее</p></div>
                 <div class="rule-item"><h4>4️⃣ Финал</h4><p>Проиграл — данж закончен. <span style="color:#ffd700;">Рекорд</span> сохраняется только если побит</p></div>
             </div>
-            <div class="section-frame">
-                <h3>🎲 Случайные события (30% после волны)</h3>
+            <div class="section-frame"><h3>🎲 Случайные события (30% после волны)</h3>
                 <table class="event-table">
                     <tr><th>Значок</th><th>Событие</th><th>Шанс</th><th>Эффект</th></tr>
                     <tr><td class="event-icon">🧪</td><td>Зелье силы</td><td>7.5%</td><td>+3 ATK до конца данжа</td></tr>
@@ -188,8 +154,7 @@
                     <tr><td class="event-icon">✨</td><td>Чудо</td><td>7.5%</td><td>Полное восстановление HP</td></tr>
                 </table>
             </div>
-            <div class="section-frame">
-                <h3>👾 Статы мобов</h3>
+            <div class="section-frame"><h3>👾 Статы мобов</h3>
 				<table>
 					<tr><th>Волна</th><th>HP</th><th>ATK</th><th>DEF</th><th>Урон</th></tr>
 					<tr><td>1</td><td class="number">30</td><td class="number">1</td><td class="number">0</td><td class="number">1-4</td></tr>
@@ -224,6 +189,14 @@
             event.target.classList.add('active');
         }
 
+        // Функция сортировки (сначала по волнам, потом по урону)
+        function sortPlayers(arr) {
+            return arr.sort((a, b) => {
+                if (b.record !== a.record) return b.record - a.record;
+                return b.damage - a.damage;
+            });
+        }
+
         fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/dungeon.json?' + Date.now())
             .then(r => r.json())
             .then(data => {
@@ -235,27 +208,27 @@
                 
                 let html = '';
                 
-                // ПОДИУМ ТОП-3
-                const top3 = [...players].sort((a,b) => b.record - a.record).slice(0, 3);
+                // ПОДИУМ ТОП-3 (сортировка: волны → урон)
+                const top3 = sortPlayers([...players]).slice(0, 3);
                 const medals = ['🥇', '🥈', '🥉'];
                 const grades = ['gold', 'silver', 'bronze'];
                 
                 html += '<div class="podium-row">';
                 top3.forEach((p, i) => {
-                    html += `
-                        <div class="podium-card ${grades[i]}">
-                            <div class="podium-medal">${medals[i]}</div>
-                            <div class="podium-emoji">${p.emoji||'⚔️'}</div>
-                            <div class="podium-name">${p.display}</div>
-                            <div class="podium-class">${p.name}</div>
-                            <div class="podium-record">${p.record} волн</div>
-                            <div class="podium-detail">Урон: ${p.damage} | 💥${p.crits} | ❌${p.misses}</div>
-                        </div>`;
+                    html += `<div class="podium-card ${grades[i]}">
+                        <div class="podium-medal">${medals[i]}</div>
+                        <div class="podium-emoji">${p.emoji||'⚔️'}</div>
+                        <div class="podium-name">${p.display}</div>
+                        <div class="podium-class">${p.name}</div>
+                        <div class="podium-record">${p.record} волн</div>
+                        <div class="podium-detail">Урон: ${p.damage} | 💥${p.crits} | ❌${p.misses}</div>
+                    </div>`;
                 });
                 html += '</div>';
                 
                 // РЕКОРДЫ
-                const bestRecord = [...players].sort((a,b) => b.record - a.record)[0];
+                const sorted = sortPlayers([...players]);
+                const bestRecord = sorted[0];
                 const bestDamage = [...players].sort((a,b) => b.damage - a.damage)[0];
                 const bestCrits = [...players].sort((a,b) => b.crits - a.crits)[0];
                 const bestBlocks = [...players].sort((a,b) => b.blocks - a.blocks)[0];
@@ -267,10 +240,10 @@
                 html += `<div class="record-box"><div class="record-value">🛡 ${bestBlocks.blocks}</div><div class="record-label">Рекорд блоков</div><div class="record-player">${bestBlocks.emoji||''} ${bestBlocks.display}</div></div>`;
                 html += '</div>';
                 
-                // ТАБЛИЦА ТОП-20
-                const top20 = [...players].sort((a,b) => b.record - a.record).slice(0, 20);
-                html += '<div class="table-card"><h3>📊 Топ-20 подземелья</h3><table>';
-                html += '<tr><th>#</th><th>Игрок</th><th>Класс</th><th onclick="sortTable(\'record\')" style="cursor:pointer;">Волн ⇅</th><th onclick="sortTable(\'damage\')" style="cursor:pointer;">Урон ⇅</th><th onclick="sortTable(\'crits\')" style="cursor:pointer;">💥 ⇅</th><th onclick="sortTable(\'misses\')" style="cursor:pointer;">❌ ⇅</th><th onclick="sortTable(\'blocks\')" style="cursor:pointer;">🛡 ⇅</th></tr>';
+                // ТАБЛИЦА ТОП-20 (сортировка: волны → урон)
+                const top20 = sorted.slice(0, 20);
+                html += '<div class="table-card"><h3>📊 Топ-20 подземелья</h3><table><tbody>';
+                html += '<tr><th>#</th><th>Игрок</th><th>Класс</th><th onclick="sortTable(\'record\')">Волн ⇅</th><th onclick="sortTable(\'damage\')">Урон ⇅</th><th onclick="sortTable(\'crits\')">💥 ⇅</th><th onclick="sortTable(\'misses\')">❌ ⇅</th><th onclick="sortTable(\'blocks\')">🛡 ⇅</th></tr>';
                 top20.forEach((p, i) => {
                     html += `<tr data-record="${p.record}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}">`;
                     html += `<td>${i+1}</td><td>${p.emoji||''} ${p.display}</td><td>${p.name}</td>`;
@@ -280,18 +253,17 @@
                     html += `<td class="number">${p.misses}</td>`;
                     html += `<td class="number">${p.blocks}</td></tr>`;
                 });
-                html += '</table></div>';
+                html += '</tbody></table></div>';
                 
                 document.getElementById('stats-loading').innerHTML = html;
                 
-                // Сортировка таблицы
+                // Сортировка таблицы по клику
                 window.sortTable = function(col) {
-                    const table = document.querySelector('.table-card table');
-                    const tbody = table.querySelector('tbody') || table;
-                    const rows = Array.from(tbody.querySelectorAll('tr'));
-                    const isAsc = table.dataset.sort === col && table.dataset.dir === 'asc';
-                    table.dataset.sort = col;
-                    table.dataset.dir = isAsc ? 'desc' : 'asc';
+                    const tbody = document.querySelector('.table-card tbody');
+                    const rows = Array.from(tbody.querySelectorAll('tr')).slice(1); // без заголовка
+                    const isAsc = tbody.dataset.sort === col && tbody.dataset.dir === 'asc';
+                    tbody.dataset.sort = col;
+                    tbody.dataset.dir = isAsc ? 'desc' : 'asc';
                     
                     rows.sort((a, b) => {
                         const valA = parseInt(a.dataset[col]) || 0;
@@ -300,7 +272,6 @@
                     });
                     
                     rows.forEach(row => tbody.appendChild(row));
-                    // Обновить нумерацию
                     rows.forEach((row, i) => row.cells[0].textContent = i + 1);
                 };
             })
