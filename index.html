@@ -707,8 +707,9 @@ th {
         html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
         html += `<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
         html += `<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
-        const factionLight = data.factionScore?.light || 0;
-        const factionDark = data.factionScore?.dark || 0;
+		const fs = data.factionScore || {};
+		const factionLight = fs.battleLight || 0;
+		const factionDark = fs.battleDark || 0;
         html += `<div class="stat-card" style="grid-column: span 1;"><div class="stat-value">${factionLight} : ${factionDark}</div><div class="stat-label">🌝 Свет vs Тьма 🌚</div></div>`;
         html += '</div>';
         
