@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Подземелье</title>
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -152,6 +152,8 @@
     .table-wrapper {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        margin: 0 -15px;
+        padding: 0 15px;
     }
     table {
         width: 100%;
@@ -177,45 +179,88 @@
     .rule-item { margin-bottom: 15px; padding: 14px; background: #21262d; border-radius: 10px; border-left: 4px solid #ffd700; }
     .rule-item p { color: #c9d1d9; font-size: 13px; line-height: 1.7; }
     .rule-item p code { background: #0d1117; padding: 3px 8px; border-radius: 5px; color: #ffd700; font-size: 14px; border: 1px solid #30363d; }
-    .rule-item h4 { color: #ffd700; font-size: 15px; margin-bottom: 5px; }
 
     .loading { text-align: center; padding: 60px; color: #8b949e; font-size: 18px; }
 
-	@media (max-width: 768px) {
-		.table-wrapper {
-			overflow-x: auto;
-			-webkit-overflow-scrolling: touch;
-			margin: 0 -15px;           /* немного расширяет область скролла */
-			padding: 0 15px;
-		}
+    /* ==================== МОБИЛЬНАЯ ВЕРСИЯ ==================== */
+    @media (max-width: 768px) {
+        body { padding: 10px; }
+        h1 { font-size: 1.8em; margin-top: 10px; }
+        
+        .nav-toggle { display: block; }
+        .page-nav { 
+            display: none; 
+            flex-direction: column; 
+            gap: 8px; 
+            margin-top: 10px; 
+        }
+        .page-nav.show { display: flex; }
+        .page-nav a { 
+            text-align: center; 
+            padding: 12px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 20px;
+        }
 
-		table {
-			min-width: 620px;          /* фиксируем минимальную ширину, чтобы не сжималась слишком сильно */
-			font-size: 13px;           /* чуть крупнее, чем было */
-		}
+        .nav-tabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 8px;
+        }
+        .tab-btn {
+            padding: 8px 14px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
 
-		th, td {
-			padding: 8px 6px;
-			font-size: 12px;
-			white-space: nowrap;       /* не переносим текст в ячейках */
-		}
+        /* ТАБЛИЦЫ — главное исправление */
+        .table-wrapper {
+            margin: 0 -12px;
+            padding: 0 12px;
+        }
 
-		/* Делаем колонку "Игрок" чуть шире и позволяем перенос */
-		td:nth-child(2) {              /* вторая колонка — игрок */
-			white-space: normal;
-			min-width: 110px;
-		}
+        table {
+            min-width: 520px;
+            font-size: 12.5px;
+        }
 
-		/* Опционально: скрываем менее важные колонки на очень маленьких экранах */
-		@media (max-width: 480px) {
-			table th:nth-child(6),   /* ❌ misses */
-			table td:nth-child(6),
-			table th:nth-child(7),   /* 🛡 blocks */
-			table td:nth-child(7) {
-				display: none;
-			}
-		}
-	}
+        th, td {
+            padding: 8px 6px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* Колонка "Игрок" — самая важная */
+        td:nth-child(2), th:nth-child(2) {
+            white-space: normal;
+            min-width: 130px;
+            word-break: break-word;
+        }
+
+        /* На очень маленьких экранах скрываем менее важные колонки */
+        @media (max-width: 480px) {
+            table th:nth-child(5), table td:nth-child(5), /* 💥 */
+            table th:nth-child(6), table td:nth-child(6), /* ❌ */
+            table th:nth-child(7), table td:nth-child(7) { /* 🛡 */
+                display: none;
+            }
+            table {
+                min-width: 380px;
+            }
+        }
+
+        /* Таблицы внутри правил (они проще) */
+        .card table {
+            min-width: 100%;
+            font-size: 12px;
+        }
+        .card th, .card td {
+            padding: 7px 5px;
+            white-space: normal;
+            font-size: 11.5px;
+        }
+    }
 </style>
 </head>
 <body>
@@ -248,7 +293,7 @@
             <div class="loading" id="stats-loading">Загрузка...</div>
         </div>
         <div id="tab-rules" class="tab-content">
-            <div class="card">
+			<div class="card">
                 <h3>🏔 Что такое Подземелье?</h3>
                 <div class="rule-item"><p>Бесконечные волны монстров. Твой герой сражается один на один с копией своих статов. Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса! Напиши <code>!данж</code> в чат Twitch.</p></div>
             </div>
@@ -328,6 +373,7 @@
             nav.classList.toggle('show');
             btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         }
+
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -335,88 +381,94 @@
             event.target.classList.add('active');
         }
 
-        fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json?' + Date.now())
-            .then(r => r.json())
-            .then(data => {
-                const dungeon = data.dungeon || {};
-                const playersArr = Object.values(dungeon.players || {});
-                const territory = dungeon.territory || { light: 0, dark: 0 };
-                
-                if (playersArr.length === 0) {
-                    document.getElementById('stats-loading').innerHTML = '<div class="card"><h3>🏔 Подземелье пустует</h3><p style="text-align:center;padding:30px;">Напиши !данж в чат!</p></div>';
-                    return;
-                }
-                
-                function sortPlayers(arr) {
-                    return [...arr].sort((a, b) => b.record !== a.record ? b.record - a.record : b.damage - a.damage);
-                }
-                
-                const sorted = sortPlayers(playersArr);
-                let html = '';
-                
-                const total = territory.light + territory.dark;
-                const lightPct = total > 0 ? Math.round(territory.light * 100 / total) : 50;
-                const crownOwner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
-                
-                html += `<div class="card">
-                    <div class="territory-crown">👑</div>
-                    <div class="territory-title">КОРОНА РАСКОЛА</div>
-                    <div class="territory-subtitle">Владелец: ${crownOwner}</div>
-                    <div class="territory-row"><span>🌝 Свет: <span class="light-score">${territory.light}</span></span><span><span class="dark-score">${territory.dark}</span> :Тьма 🌚</span></div>
-                    <div class="territory-progress">
-                        <div class="territory-light" style="width:${lightPct}%">${lightPct>5?lightPct+'%':''}</div>
-                        <div class="territory-dark" style="width:${100-lightPct}%">${100-lightPct>5?100-lightPct+'%':''}</div>
-                    </div>
-                    <div class="territory-total">Всего трофеев: ${total}</div>
+        fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json?' + Date.now(), {
+            cache: 'no-store'
+        })
+        .then(r => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
+        .then(data => {
+            const dungeon = data.dungeon || {};
+            const playersArr = Object.values(dungeon.players || {});
+            const territory = dungeon.territory || { light: 0, dark: 0 };
+            
+            if (playersArr.length === 0) {
+                document.getElementById('stats-loading').innerHTML = '<div class="card"><h3>🏔 Подземелье пустует</h3><p style="text-align:center;padding:30px;">Напиши !данж в чат!</p></div>';
+                return;
+            }
+            
+            function sortPlayers(arr) {
+                return [...arr].sort((a, b) => b.record !== a.record ? b.record - a.record : b.damage - a.damage);
+            }
+            
+            const sorted = sortPlayers(playersArr);
+            let html = '';
+            
+            const total = territory.light + territory.dark;
+            const lightPct = total > 0 ? Math.round(territory.light * 100 / total) : 50;
+            const crownOwner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
+            
+            html += `<div class="card">
+                <div class="territory-crown">👑</div>
+                <div class="territory-title">КОРОНА РАСКОЛА</div>
+                <div class="territory-subtitle">Владелец: ${crownOwner}</div>
+                <div class="territory-row"><span>🌝 Свет: <span class="light-score">${territory.light}</span></span><span><span class="dark-score">${territory.dark}</span> :Тьма 🌚</span></div>
+                <div class="territory-progress">
+                    <div class="territory-light" style="width:${lightPct}%">${lightPct>5?lightPct+'%':''}</div>
+                    <div class="territory-dark" style="width:${100-lightPct}%">${100-lightPct>5?100-lightPct+'%':''}</div>
+                </div>
+                <div class="territory-total">Всего трофеев: ${total}</div>
+            </div>`;
+            
+            const top3 = sorted.slice(0, 3);
+            const medals = ['🥇','🥈','🥉'];
+            const grades = ['gold','silver','bronze'];
+            html += '<div class="podium-row">';
+            top3.forEach((p, i) => {
+                html += `<div class="podium-card ${grades[i]}">
+                    <div class="podium-medal">${medals[i]}</div>
+                    <div class="podium-emoji">${p.emoji||'⚔️'}</div>
+                    <div class="podium-name">${p.display||'???'}</div>
+                    <div class="podium-class">${p.name||''}</div>
+                    <div class="podium-record">${p.record}</div>
+                    <div class="podium-detail">Урон: ${p.damage} | 💥${p.crits} | ❌${p.misses} | 🛡${p.blocks}</div>
                 </div>`;
-                
-                const top3 = sorted.slice(0, 3);
-                const medals = ['🥇','🥈','🥉'];
-                const grades = ['gold','silver','bronze'];
-                html += '<div class="podium-row">';
-                top3.forEach((p, i) => {
-                    html += `<div class="podium-card ${grades[i]}">
-                        <div class="podium-medal">${medals[i]}</div>
-                        <div class="podium-emoji">${p.emoji||'⚔️'}</div>
-                        <div class="podium-name">${p.display||'???'}</div>
-                        <div class="podium-class">${p.name||''}</div>
-                        <div class="podium-record">${p.record}</div>
-                        <div class="podium-detail">Урон: ${p.damage} | 💥${p.crits} | ❌${p.misses} | 🛡${p.blocks}</div>
-                    </div>`;
-                });
-                html += '</div>';
-                
-                const bestRecord = sorted[0];
-                const bestDamage = [...playersArr].sort((a,b)=>b.damage-a.damage)[0];
-                const bestCrits = [...playersArr].sort((a,b)=>b.crits-a.crits)[0];
-                const bestBlocks = [...playersArr].sort((a,b)=>b.blocks-a.blocks)[0];
-                
-                html += '<div class="records-row">';
-                html += `<div class="record-box"><div class="record-icon">🏆</div><div class="record-value">${bestRecord.record}</div><div class="record-label">Рекорд волн</div><div class="record-player">${bestRecord.emoji||''} ${bestRecord.display||'???'}</div></div>`;
-                html += `<div class="record-box"><div class="record-icon">💥</div><div class="record-value">${bestDamage.damage}</div><div class="record-label">Рекорд урона</div><div class="record-player">${bestDamage.emoji||''} ${bestDamage.display||'???'}</div></div>`;
-                html += `<div class="record-box"><div class="record-icon">🎯</div><div class="record-value">${bestCrits.crits}</div><div class="record-label">Рекорд критов</div><div class="record-player">${bestCrits.emoji||''} ${bestCrits.display||'???'}</div></div>`;
-                html += `<div class="record-box"><div class="record-icon">🛡</div><div class="record-value">${bestBlocks.blocks}</div><div class="record-label">Рекорд блоков</div><div class="record-player">${bestBlocks.emoji||''} ${bestBlocks.display||'???'}</div></div>`;
-                html += '</div>';
-                
-                const top20 = sorted.slice(0, 20);
-                html += `<div class="card"><h3>📊 Таблица лидеров</h3><div class="table-wrapper"><table><thead><tr>
-                    <th>Волн</th><th>Игрок</th><th>Класс</th><th>Урон</th><th>💥</th><th>❌</th><th>🛡</th>
-                </tr></thead><tbody>`;
-                top20.forEach((p, i) => {
-                    html += `<tr>
-                        <td class="highlight">${p.record}</td>
-                        <td>${p.emoji||''} ${p.display||'???'}</td>
-                        <td>${p.name||''}</td>
-                        <td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td>
-                    </tr>`;
-                });
-                html += '</tbody></table></div></div>';
-                
-                document.getElementById('stats-loading').innerHTML = html;
-            })
-            .catch(err => {
-                document.getElementById('stats-loading').innerHTML = '<div class="card"><h3>🏔 Подземелье</h3><p style="text-align:center;color:#e5534b;">❌ Ошибка загрузки</p></div>';
             });
+            html += '</div>';
+            
+            const bestRecord = sorted[0];
+            const bestDamage = [...playersArr].sort((a,b)=>b.damage-a.damage)[0];
+            const bestCrits = [...playersArr].sort((a,b)=>b.crits-a.crits)[0];
+            const bestBlocks = [...playersArr].sort((a,b)=>b.blocks-a.blocks)[0];
+            
+            html += '<div class="records-row">';
+            html += `<div class="record-box"><div class="record-icon">🏆</div><div class="record-value">${bestRecord.record}</div><div class="record-label">Рекорд волн</div><div class="record-player">${bestRecord.emoji||''} ${bestRecord.display||'???'}</div></div>`;
+            html += `<div class="record-box"><div class="record-icon">💥</div><div class="record-value">${bestDamage.damage}</div><div class="record-label">Рекорд урона</div><div class="record-player">${bestDamage.emoji||''} ${bestDamage.display||'???'}</div></div>`;
+            html += `<div class="record-box"><div class="record-icon">🎯</div><div class="record-value">${bestCrits.crits}</div><div class="record-label">Рекорд критов</div><div class="record-player">${bestCrits.emoji||''} ${bestCrits.display||'???'}</div></div>`;
+            html += `<div class="record-box"><div class="record-icon">🛡</div><div class="record-value">${bestBlocks.blocks}</div><div class="record-label">Рекорд блоков</div><div class="record-player">${bestBlocks.emoji||''} ${bestBlocks.display||'???'}</div></div>`;
+            html += '</div>';
+            
+            const top20 = sorted.slice(0, 20);
+            html += `<div class="card"><h3>📊 Таблица лидеров</h3><div class="table-wrapper"><table><thead><tr>
+                <th>Волн</th><th>Игрок</th><th>Класс</th><th>Урон</th><th>💥</th><th>❌</th><th>🛡</th>
+            </tr></thead><tbody>`;
+            top20.forEach((p, i) => {
+                html += `<tr>
+                    <td class="highlight">${p.record}</td>
+                    <td>${p.emoji||''} ${p.display||'???'}</td>
+                    <td>${p.name||''}</td>
+                    <td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td>
+                </tr>`;
+            });
+            html += '</tbody></table></div></div>';
+            
+            document.getElementById('stats-loading').innerHTML = html;
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('stats-loading').innerHTML = '<div class="card"><h3>🏔 Подземелье</h3><p style="text-align:center;color:#e5534b;">❌ Ошибка загрузки данных</p><p style="text-align:center;font-size:13px;color:#8b949e;">Попробуй обновить страницу (Ctrl+Shift+R)</p></div>';
+        });
     </script>
 </body>
 </html>
