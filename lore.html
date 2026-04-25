@@ -152,13 +152,6 @@
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        .card h3 {
-            color: var(--gold);
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin: 16px 0 10px;
-        }
-
         .card p {
             line-height: 1.7;
             margin-bottom: 10px;
@@ -228,6 +221,38 @@
         .faction-card.light .faction-quote { border-color: var(--gold); color: var(--gold); }
         .faction-card.dark .faction-quote { border-color: var(--purple); color: var(--purple); }
 
+        /* World table — без скролла */
+        .world-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .world-table th {
+            background: var(--bg-elevated);
+            color: var(--gold);
+            font-weight: 700;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 2px solid var(--border-subtle);
+        }
+
+        .world-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .world-table th:first-child { width: 30%; }
+
+        /* Hero table */
         .table-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -264,18 +289,15 @@
         tr:hover td { background: rgba(255,255,255,0.02); }
 
         .hero-table td:first-child { font-weight: 600; }
-        .hero-table td:nth-child(2) { text-align: center; font-size: 1.1rem; width: 60px; }
-        .hero-table td:last-child { width: 60px; text-align: center; }
+        .hero-table td:nth-child(2) { text-align: center; width: 44px; }
+        .hero-table td:last-child { text-align: center; width: 60px; }
 
         .cta-block {
             text-align: center;
             padding: 10px 0;
         }
 
-        .cta-block p {
-            font-size: 1rem;
-            color: var(--text-primary);
-        }
+        .cta-block p { font-size: 1rem; color: var(--text-primary); }
 
         .cta-block .big-text {
             font-size: 1.3rem;
@@ -308,8 +330,14 @@
 
             .faction-grid { grid-template-columns: 1fr; }
             .header-title { font-size: 1.8rem; }
+
+            .world-table { font-size: 0.8rem; }
+            .world-table th, .world-table td { padding: 8px 10px; }
+
             table { font-size: 0.78rem; min-width: 350px; }
             th, td { padding: 8px 10px; }
+
+            .hero-table td:nth-child(2) { width: 36px; }
         }
     </style>
 </head>
@@ -340,16 +368,14 @@
         <!-- Мир -->
         <div class="card">
             <h2 class="card-title">🌍 Мир Этернис</h2>
-            <div class="table-container">
-                <table>
-                    <thead><tr><th>Название</th><th>Описание</th></tr></thead>
-                    <tbody>
-                        <tr><td>Этернис</td><td>Мир, расколотый падением древнего артефакта — Солнечного Клинка</td></tr>
-                        <tr><td>Солнечный Клинок</td><td>Легендарное оружие, тысячелетия державшее равновесие между Светом и Тьмой. Раскололся, осколки разлетелись по миру</td></tr>
-                        <tr><td>Раскол</td><td>Арена, где осколки чувствуются сильнее всего. Бои здесь — ритуал, а не просто состязание</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <table class="world-table">
+                <thead><tr><th>Название</th><th>Описание</th></tr></thead>
+                <tbody>
+                    <tr><td>Этернис</td><td>Мир, расколотый падением древнего артефакта — Солнечного Клинка</td></tr>
+                    <tr><td>Солнечный Клинок</td><td>Легендарное оружие, тысячелетия державшее равновесие между Светом и Тьмой. Раскололся, осколки разлетелись по миру</td></tr>
+                    <tr><td>Арена Тысячи Эхо</td><td>Арена, где осколки чувствуются сильнее всего. Бои здесь — ритуал, а не просто состязание</td></tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- Предыстория -->
@@ -384,14 +410,32 @@
             </div>
         </div>
 
-        <!-- Арена -->
-        <div class="card">
-            <h2 class="card-title">🏟️ Арена «Раскол»</h2>
-            <div class="lore-block">
-                <p>Арена называется «Раскол» — это место, где осколки Клинка чувствуются сильнее всего. Бои на Расколе не просто состязание. Это ритуал. Говорят, что каждый удар — это эхо битвы, которая когда-то расколола мир.</p>
-                <p style="margin-top: 12px;">Зрители приходят не просто смотреть — они чувствуют вибрацию осколков. Говорят, что самые яростные болельщики иногда сами обретают искру силы. Но это лишь легенда... или нет?</p>
-            </div>
-        </div>
+        <!-- Арены -->
+		<div class="card">
+			<h2 class="card-title">🗺️ Места силы</h2>
+			<p style="margin-bottom: 12px;">Когда Свет и Тьма сходятся в битве, само место сражения дарует бойцам благословение — или проклятие:</p>
+			
+			<div class="lore-block">
+				<p><strong>🌑 Эпицентр Раскола</strong> — место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул в бездну.</p>
+			</div>
+			<div class="lore-block">
+				<p><strong>🗡️ Поле Павшего Клинка</strong> — земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.</p>
+			</div>
+			<div class="lore-block">
+				<p><strong>🌫️ Зал Повествователя</strong> — тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</p>
+			</div>
+			<div class="lore-block">
+				<p><strong>✨ Сияющий Шпиль</strong> — цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё теплый.</p>
+			</div>
+			<div class="lore-block">
+				<p><strong>🔥 Кузня Расколотых</strong> — здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.</p>
+			</div>
+			<div class="lore-block">
+				<p><strong>🎭 Арена Тысячи Эхо</strong> — легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.</p>
+			</div>
+			
+			<p class="text-muted" style="margin-top: 10px; font-size: 0.8rem;">Перед каждой фракционной битвой место сражения выбирается случайно — и дарует всем бойцам свою уникальную силу.</p>
+		</div>
 
         <!-- Герои -->
         <div class="card">
@@ -399,7 +443,7 @@
             <p style="margin-bottom: 12px;">Каждый класс — это путь, которым осколок проявился в герое:</p>
             <div class="table-container">
                 <table class="hero-table">
-                    <thead><tr><th>Класс</th><th>Эм</th><th>Как осколок изменил героя</th><th>Фракция</th></tr></thead>
+                    <thead><tr><th>Класс</th><th></th><th>Как осколок изменил героя</th><th>⚔</th></tr></thead>
                     <tbody>
                         <tr><td>Чародей</td><td>🔮</td><td>Осколок прожёг плоть, открыв канал к чистой магии</td><td>🌚</td></tr>
                         <tr><td>Волшебница</td><td>✨</td><td>Осколок слился с душой, дав контроль над стихиями</td><td>🌝</td></tr>
@@ -418,16 +462,17 @@
                     </tbody>
                 </table>
             </div>
+            <p class="text-muted" style="margin-top: 8px; font-size: 0.8rem;">🌝 = склонность к Свету &nbsp;|&nbsp; 🌚 = склонность к Тьме</p>
         </div>
 
         <!-- Сезоны -->
-        <div class="card">
-            <h2 class="card-title">📅 Сезоны</h2>
-            <div class="lore-block">
-                <p>Каждый сезон — это новая глава. Старые осколки тускнеют, новые появляются. Чемпион предыдущего сезона получает особый титул — «Хранитель Раскола» — и начинает следующий сезон с преимуществом.</p>
-                <p style="margin-top: 12px;">Но никто не удерживает титул вечно. Раскол не терпит застоя.</p>
-            </div>
-        </div>
+		<div class="card">
+			<h2 class="card-title">📅 Сезоны</h2>
+			<div class="lore-block">
+				<p>Каждый сезон — это новая глава в истории Этерниса. С началом нового сезона осколки обнуляются, герои начинают с чистого листа, а чемпион прошлого сезона навсегда остаётся в Зале Славы.</p>
+				<p style="margin-top: 12px;">Никто не удерживает титул вечно. Раскол не терпит застоя — каждый сезон рождает новых легенд.</p>
+			</div>
+		</div>
 
         <!-- Легенда -->
         <div class="card">
@@ -440,8 +485,8 @@
         <!-- Призыв -->
         <div class="card">
             <div class="cta-block">
-                <p>Вы — искатель осколков. Выбирайте путь: встать под знамя <span class="text-light">🌝 Ордена Света</span> или принять <span class="text-dark">🌚 тьму Культа</span>.</p>
-                <p>Сражайтесь на Арене, побеждайте в турнирах, собирайте осколки.</p>
+                <p>Вы — искатель осколков. Выбирайте путь: встать под знамя <span class="text-light">🌝 Ордена Света</span> или принять <span class="text-dark">🌚 тьму Культа</span></p>
+                <p>Сражайтесь на Арене, побеждайте в турнирах, собирайте осколки</p>
                 <p class="big-text">Добро пожаловать на Раскол</p>
             </div>
         </div>
