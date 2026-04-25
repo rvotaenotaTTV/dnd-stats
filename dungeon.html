@@ -135,6 +135,15 @@
 		.rule-item p { font-size: 11px; }
 		.rule-item h4 { font-size: 12px; }
 		.event-table td:first-child { font-size: 16px; width: 30px; }
+		/* Таблица лидеров — на всю ширину экрана */
+		#leaderTable { min-width: 100%; }
+		#leaderTable th, #leaderTable td { padding: 4px 2px; font-size: 9px; white-space: nowrap; }
+		#leaderTable th:nth-child(1) { width: 30px; }
+		#leaderTable th:nth-child(2) { width: auto; }
+		#leaderTable th:nth-child(3) { width: auto; }
+		#leaderTable td:nth-child(2) { white-space: normal; word-break: break-word; max-width: 80px; }
+		#leaderTable td:nth-child(3) { white-space: normal; font-size: 8px; max-width: 60px; }
+		.table-wrapper { margin: 0 -8px; }
 	}
 </style>
 </head>
