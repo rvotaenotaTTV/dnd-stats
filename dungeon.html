@@ -135,8 +135,8 @@
     .loading { text-align:center; padding:60px; color:#8b949e; font-size:18px; }
 
 	@media (max-width: 768px) {
-		body { padding: 10px; }
-		h1 { font-size: 1.6em; }
+		body { padding: 8px; }
+		h1 { font-size: 1.4em; margin: 10px 0 15px; }
 
 		.nav-toggle { display: block; }
 		.page-nav {
@@ -146,24 +146,51 @@
 			margin-top: 10px;
 		}
 		.page-nav.show { display: flex; }
-		.page-nav a { 
-			text-align: center; 
+		.page-nav a {
+			text-align: center;
 			padding: 10px;
 			background: #21262d;
 			border: 1px solid #30363d;
 			border-radius: 20px;
 		}
-		.page-nav a.active { 
-			background: #ffd700; 
-			color: #0d1117; 
+		.page-nav a.active {
+			background: #ffd700;
+			color: #0d1117;
 			border-color: #ffd700;
 		}
+		.nav-tabs { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; }
+		.tab-btn { padding: 8px 14px; font-size: 12px; white-space: nowrap; }
 
-		.card { padding: 18px; }
-		.command-grid { grid-template-columns: 1fr; }
+		.card { padding: 15px; }
+		.card h3 { font-size: 15px; }
+		.card h4 { font-size: 13px; }
 
-		table { font-size: 12px; }
-		th, td { padding: 8px; }
+		/* Топ-3: три карточки в ряд */
+		.podium-row { gap: 4px; }
+		.podium-card { min-width: 0; max-width: none; flex: 1 1 30%; padding: 10px 3px; }
+		.podium-medal { font-size: 20px; }
+		.podium-emoji { font-size: 24px; }
+		.podium-name { font-size: 11px; }
+		.podium-record { font-size: 20px; }
+		.podium-detail { font-size: 8px; }
+
+		/* Рекорды: 2 ряда по 2 карточки */
+		.records-row { gap: 6px; flex-wrap: wrap; }
+		.record-box { flex: 1 1 48%; min-width: 0; padding: 12px 8px; }
+		.record-value { font-size: 22px; }
+		.record-player { font-size: 11px; }
+
+		.territory-progress { height: 32px; }
+		.territory-light, .territory-dark { font-size: 11px; }
+		.territory-title { font-size: 15px; }
+
+		/* Все таблицы: скролл если не помещаются */
+		.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+		table { font-size: 11px; }
+		th, td { padding: 6px 4px; white-space: nowrap; }
+
+		.rule-item p { font-size: 12px; }
+		.rule-item h4 { font-size: 13px; }
 	}
 </style>
 </head>
