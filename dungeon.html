@@ -563,6 +563,13 @@
 		.passive-item strong {
 			color: var(--text-primary);
 		}
+		
+		.mini-table {
+			width: 100%;
+			min-width: auto;
+			font-size: 0.825rem;
+			border-collapse: collapse;
+		}
 
         /* Mobile */
         @media (max-width: 768px) {
@@ -704,7 +711,7 @@
             <div class="card">
                 <h3 class="card-title">🏔 Что такое Подземелье?</h3>
                 <div class="rule-block">
-                    <p>Бесконечные волны монстров. Твой герой сражается один на один с копией своих статов. Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса! Напиши <code>!данж</code> в чат Twitch.</p>
+                    <p>Бесконечные волны монстров. Твой герой сражается один на один с копией своих статов. Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса!</p>
                 </div>
             </div>
 
@@ -724,22 +731,20 @@
                 </div>
             </div>
 
-            <div class="card">
-                <h3 class="card-title">🎲 Случайные события (30% после волны)</h3>
-                <div class="table-container">
-                    <table class="mini-table">
-                        <thead>
-                            <tr><th>Эм</th><th>Событие</th><th>Шанс</th><th>Эффект</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>🧪</td><td>Зелье силы</td><td>7.5%</td><td>+1 ATK (макс +5 от базового)</td></tr>
-                            <tr><td>🛡️</td><td>Благословение</td><td>7.5%</td><td>+1 DEF (макс +5 от базового)</td></tr>
-                            <tr><td>💀</td><td>Проклятие</td><td>7.5%</td><td>-5 HP</td></tr>
-                            <tr><td>✨</td><td>Чудо</td><td>7.5%</td><td>Полное восстановление HP</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+			<div class="card">
+				<h3 class="card-title">🎲 Случайные события (30% после волны)</h3>
+				<table class="mini-table" style="border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+					<thead>
+						<tr><th>Эм</th><th>Событие</th><th>Шанс</th><th>Эффект</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>🧪</td><td>Зелье силы</td><td>7.5%</td><td>+1 ATK (макс +5 от базового)</td></tr>
+						<tr><td>🛡️</td><td>Благословение</td><td>7.5%</td><td>+1 DEF (макс +5 от базового)</td></tr>
+						<tr><td>💀</td><td>Проклятие</td><td>7.5%</td><td>-5 HP</td></tr>
+						<tr><td>✨</td><td>Чудо</td><td>7.5%</td><td>Полное восстановление HP</td></tr>
+					</tbody>
+				</table>
+			</div>
 
 			<div class="card">
 				<h3 class="card-title">🌍 Фракционные пассивки (случайная при входе)</h3>
