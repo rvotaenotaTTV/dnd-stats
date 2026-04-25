@@ -128,31 +128,65 @@
         .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (max-width: 768px) {
-            .container { padding: 12px 14px 32px; }
-            .nav-toggle { display: block; }
-            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
-            .nav-bar.show { display: flex; }
-            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
-            .header-title { font-size: 1.8rem; }
+		@media (max-width: 768px) {
+			.container { padding: 12px 14px 32px; }
+			.nav-toggle { display: block; }
+			.nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
+			.nav-bar.show { display: flex; }
+			.nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
+			.header-title { font-size: 1.8rem; }
 
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .stat-card { padding: 14px 10px; }
-            .stat-value { font-size: 1.5rem; }
+			.stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+			.stat-card { padding: 14px 10px; }
+			.stat-value { font-size: 1.5rem; }
 
-            .tables-grid { grid-template-columns: 1fr; }
+			.tables-grid { grid-template-columns: 1fr; }
 
-            table { font-size: 0.72rem; }
-            th, td { padding: 6px 8px; white-space: normal; word-break: break-word; }
+			/* Таблицы со скроллом */
+			.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+			table { font-size: 0.7rem; min-width: auto; }
+			th, td { padding: 6px 8px; white-space: nowrap; }
+			td:first-child, th:first-child { white-space: normal; word-break: break-word; }
 
-            .titles-gallery { grid-template-columns: repeat(2, 1fr); }
-            .hunters-top { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .hunter-card { padding: 12px 6px; }
-            .hunter-name { font-size: 0.8rem; }
+			/* Титулы 2 колонки */
+			.titles-gallery { grid-template-columns: repeat(2, 1fr) !important; }
 
-            .fixed-buttons { top: 8px; right: 8px; }
-            .action-btn { padding: 6px 10px; font-size: 0.7rem; }
-        }
+			/* Рекорды 2×2 */
+			.titles-gallery[style*="repeat(4"] { grid-template-columns: repeat(2, 1fr) !important; }
+
+			/* Охотники */
+			.hunters-top { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+			.hunter-card { padding: 12px 6px; }
+			.hunter-name { font-size: 0.8rem; }
+
+			/* Чемпион — компактнее */
+			.champion-block > div:last-child {
+				display: flex !important;
+				justify-content: space-around;
+				gap: 4px;
+				margin-top: 12px;
+			}
+			.champion-block > div:last-child > div {
+				flex: 1;
+				text-align: center;
+			}
+			.champion-block > div:last-child span[style*="color: var(--text-muted)"] {
+				font-size: 0.6rem !important;
+				display: block;
+				line-height: 1.2;
+				min-height: 28px;
+			}
+			.champion-block > div:last-child span[style*="font-size: 1.5rem"] {
+				font-size: 1.1rem !important;
+			}
+
+			/* Кнопки */
+			.fixed-buttons { top: 8px; right: 8px; }
+			.action-btn { padding: 6px 10px; font-size: 0.7rem; }
+
+			/* Поиск */
+			.search-input { width: 100%; }
+		}
     </style>
 </head>
 <body>
