@@ -29,7 +29,7 @@
 	.tab-content { display:none; }
 	.tab-content.active { display:block; }
 	.container { max-width: 900px; margin: 0 auto; }
-	.card { background:linear-gradient(145deg,#1a1f26,#0d1117); border:2px solid #8b5e2e; border-radius:20px; padding:25px; margin-bottom:25px; box-shadow:0 8px 25px rgba(0,0,0,0.3); position:relative; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+	.card { background:linear-gradient(145deg,#1a1f26,#0d1117); border:2px solid #8b5e2e; border-radius:20px; padding:25px; margin-bottom:25px; box-shadow:0 8px 25px rgba(0,0,0,0.3); position:relative; overflow-x:visible; -webkit-overflow-scrolling:touch; }
 	.card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#ffd700,#ff8c00,#ffd700); opacity:0.6; }
 	.card h3 { color:#ffd700; font-size:18px; font-weight:bold; margin-bottom:18px; }
 	.card h4 { color:#ffd700; font-size:15px; margin-bottom:10px; }
@@ -101,7 +101,7 @@
 		.nav-tabs { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; }
 		.tab-btn { padding: 8px 14px; font-size: 12px; white-space: nowrap; }
 		
-		.card { padding: 14px; }
+		.card { padding: 10px; }
 		.card h3 { font-size: 15px; }
 		.card h4 { font-size: 13px; }
 		
@@ -122,9 +122,9 @@
 		.territory-light, .territory-dark { font-size: 11px; }
 		.territory-title { font-size: 15px; }
 		
-		.table-wrapper { margin: 0; }
-		table { font-size: 11px; width: 100%; }
-		th, td { padding: 6px 4px; font-size: 10px; }
+		.table-wrapper { width: 100%; overflow-x: visible; }
+		table { width: 100%; table-layout: auto; }
+		th, td { white-space: normal; }
 		.faction-table th, .faction-table td { padding: 6px 4px; font-size: 10px; line-height: 1.4; }
 		.faction-table td { word-break: break-word; }
 		.rule-item p { font-size: 12px; }
