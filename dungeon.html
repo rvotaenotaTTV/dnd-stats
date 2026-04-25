@@ -62,9 +62,21 @@
         .podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
         .podium-card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 20px 14px; text-align: center; border: 1px solid var(--border-subtle); transition: var(--transition); }
         .podium-card:hover { transform: translateY(-4px); }
-        .podium-card.gold { border-color: rgba(255,215,0,0.4); box-shadow: var(--shadow-gold); background: linear-gradient(180deg, rgba(255,215,0,0.08) 0%, var(--bg-elevated) 40%); }
-        .podium-card.silver { border-color: rgba(192,192,192,0.3); }
-        .podium-card.bronze { border-color: rgba(205,127,50,0.3); }
+		.podium-card.gold {
+			border-color: rgba(255,215,0,1);
+			box-shadow: 0 0 25px rgba(255,215,0,0.2), 0 4px 12px rgba(0,0,0,0.3);
+			background: linear-gradient(180deg, rgba(255,215,0,0.15) 0%, rgba(255,180,0,0.05) 30%, var(--bg-elevated) 100%);
+		}
+		.podium-card.silver {
+			border-color: rgba(192,192,192,1);
+			box-shadow: 0 0 20px rgba(192,192,192,0.15), 0 4px 12px rgba(0,0,0,0.3);
+			background: linear-gradient(180deg, rgba(192,192,192,0.12) 0%, rgba(160,160,160,0.04) 30%, var(--bg-elevated) 100%);
+		}
+		.podium-card.bronze {
+			border-color: rgba(205,127,50,1);
+			box-shadow: 0 0 20px rgba(205,127,50,0.15), 0 4px 12px rgba(0,0,0,0.3);
+			background: linear-gradient(180deg, rgba(205,127,50,0.12) 0%, rgba(180,100,30,0.04) 30%, var(--bg-elevated) 100%);
+		}
         .podium-medal { font-size: 2.4rem; margin-bottom: 4px; }
         .podium-emoji { font-size: 2.2rem; margin-bottom: 4px; }
         .podium-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); word-break: break-word; }
@@ -72,7 +84,14 @@
         .podium-record { font-size: 1.8rem; font-weight: 800; color: var(--gold); }
         .podium-detail { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
 
-        .records-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+        .records-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 10px;
+			margin-bottom: 24px;
+			padding-top: 20px;
+			border-top: 1px solid var(--border-subtle);
+		}
         .record-item { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; border: 1px solid var(--border-subtle); }
         .record-icon { font-size: 1.6rem; margin-bottom: 4px; }
         .record-value { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
@@ -152,7 +171,7 @@
         </div>
 
         <div id="tab-rules" class="tab-content">
-            <div class="card"><h3 class="card-title">🏔 Что такое Подземелье?</h3><div class="rule-block"><p>Бесконечные волны монстров. Твой герой сражается один на один с копией своих статов. Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса!</p></div></div>
+            <div class="card"><h3 class="card-title">🏔 Что такое Подземелье?</h3><div class="rule-block"><p>Бесконечные волны монстров. Твой герой сражается один на один с копией своих статов.<br> Проверь свою силу, побить рекорд и впиши своё имя в историю Этерниса!</p></div></div>
 
             <div class="card">
                 <h3 class="card-title">⚔️ Как играть?</h3>
@@ -203,7 +222,7 @@
 			<div class="card">
 				<h3 class="card-title">🏰 Корона Раскола</h3>
 				<div class="rule-block">
-					<p>Каждый убитый босс приносит <span class="highlight-text">от 1 до 3 трофеев</span> в копилку фракции. У какой фракции больше — та владеет Короной. При равенстве — равновесие ⚖️.</p>
+					<p>Каждый убитый босс приносит <span class="highlight-text">от 1 до 3 трофеев</span> в копилку фракции.<br> У какой фракции больше — та владеет Короной. При равенстве — равновесие ⚖️.</p>
 				</div>
 			</div>
 
@@ -348,7 +367,7 @@
                     });
                 });
                 const dh = table.querySelector(`[data-sort="${defaultSort}"]`);
-                if (dh) { dh.classList.add(defaultDir); };
+                if (dh) { dh.classList.add(defaultDir); sortTable(defaultSort); }
             }, 100);
         }
 
