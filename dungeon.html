@@ -61,7 +61,6 @@
             padding: 20px 24px 40px;
         }
 
-        /* Header */
         .header {
             text-align: center;
             padding: 30px 0 20px;
@@ -86,7 +85,6 @@
             letter-spacing: 0.04em;
         }
 
-        /* Navigation Wrapper */
         .nav-wrapper {
             margin-bottom: 28px;
         }
@@ -148,7 +146,6 @@
             box-shadow: var(--shadow-gold);
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
             gap: 8px;
@@ -198,7 +195,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Cards */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
@@ -237,7 +233,6 @@
             margin: 16px 0 10px;
         }
 
-        /* Crown Section */
         .crown-section {
             text-align: center;
             padding: 10px 0;
@@ -314,7 +309,6 @@
             margin-top: 10px;
         }
 
-        /* Podium */
         .podium {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -385,7 +379,6 @@
             line-height: 1.5;
         }
 
-        /* Records Grid */
         .records-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -428,7 +421,6 @@
             word-break: break-word;
         }
 
-        /* Table */
         .table-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -472,7 +464,6 @@
             font-weight: 700;
         }
 
-        /* Rules */
         .rule-block {
             background: var(--bg-elevated);
             border-radius: var(--radius-md);
@@ -502,7 +493,6 @@
             font-weight: 600;
         }
 
-        /* Loading & Error */
         .status-message {
             text-align: center;
             padding: 40px 20px;
@@ -560,7 +550,6 @@
 			padding: 6px 8px;
 		}
 
-        /* Mobile */
         @media (max-width: 768px) {
             .container {
                 padding: 12px 14px 32px;
@@ -571,7 +560,6 @@
                 border-radius: var(--radius-md);
             }
 
-            /* Burger menu */
             .nav-toggle {
                 display: block;
             }
@@ -624,7 +612,6 @@
                 font-size: 0.8rem;
             }
 
-            /* Records 2x2 */
             .records-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
@@ -657,13 +644,11 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <header class="header">
             <h1 class="header-title">ПОДЗЕМЕЛЬЕ</h1>
             <p class="header-subtitle">Бесконечные волны · Проверь свою силу</p>
         </header>
 
-        <!-- Page Navigation -->
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
@@ -681,13 +666,11 @@
             </nav>
         </div>
 
-        <!-- Tabs -->
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('stats', this)">📊 Статистика</button>
             <button class="tab-btn" onclick="switchTab('rules', this)">📜 Правила</button>
         </div>
 
-        <!-- Stats Tab -->
         <div id="tab-stats" class="tab-content active">
             <div class="status-message" id="stats-loading">
                 <div class="spinner"></div>
@@ -695,7 +678,6 @@
             </div>
         </div>
 
-        <!-- Rules Tab -->
         <div id="tab-rules" class="tab-content">
             <div class="card">
                 <h3 class="card-title">🏔 Что такое Подземелье?</h3>
@@ -806,7 +788,6 @@
     </div>
 
     <script>
-        // Burger menu toggle
         function toggleNav() {
             const nav = document.getElementById('pageNav');
             const btn = document.querySelector('.nav-toggle');
@@ -814,7 +795,6 @@
             btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         }
 
-        // Close nav when clicking a link
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 const nav = document.getElementById('pageNav');
@@ -824,21 +804,15 @@
             });
         });
 
-        // Tab switching (fixed)
         function switchTab(tabName, clickedBtn) {
-            // Deactivate all buttons
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            // Activate clicked button
             if (clickedBtn) clickedBtn.classList.add('active');
             
-            // Hide all content
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            // Show target content
             const targetTab = document.getElementById('tab-' + tabName);
             if (targetTab) targetTab.classList.add('active');
         }
 
-        // Fetch and render stats
         async function loadStats() {
             const container = document.getElementById('stats-loading');
             
@@ -884,11 +858,9 @@
         function renderStats(playersArr, territory) {
             const container = document.getElementById('stats-loading');
             
-            // Sort helpers
             const sortByRecord = (a, b) => b.record - a.record || b.damage - a.damage;
             const sorted = [...playersArr].sort(sortByRecord);
             
-            // Territory calculations
             const totalTrophies = territory.light + territory.dark;
             const lightPercent = totalTrophies > 0 ? (territory.light * 100 / totalTrophies) : 50;
             const crownOwner = territory.light > territory.dark 
@@ -899,7 +871,6 @@
 
             let html = '';
 
-            // Crown Section
             html += `
             <div class="card">
                 <div class="crown-section">
@@ -922,7 +893,6 @@
                 </div>
             </div>`;
 
-            // Top 3 Podium
             const top3 = sorted.slice(0, 3);
             const medals = ['🥇', '🥈', '🥉'];
             const grades = ['gold', 'silver', 'bronze'];
@@ -941,7 +911,6 @@
             });
             html += '</div>';
 
-            // Records Grid (4 columns desktop, 2x2 mobile)
             const bestRecord = sorted[0];
             const bestDamage = [...playersArr].sort((a, b) => b.damage - a.damage)[0];
             const bestCrits = [...playersArr].sort((a, b) => b.crits - a.crits)[0];
@@ -954,7 +923,6 @@
             html += createRecordItem('🛡', bestBlocks.blocks, 'Рекорд блоков', bestBlocks);
             html += '</div>';
 
-            // Leaderboard Table
             const top20 = sorted.slice(0, 20);
             html += `
             <div class="card">
@@ -1002,7 +970,6 @@
                 </div>`;
         }
 
-        // Initial load
         loadStats();
     </script>
 </body>
