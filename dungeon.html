@@ -379,7 +379,7 @@
         }
 
         .podium-detail {
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             margin-top: 6px;
             line-height: 1.5;
@@ -543,6 +543,26 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+		
+		.passive-list {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			margin-bottom: 8px;
+		}
+
+		.passive-item {
+			background: var(--bg-elevated);
+			padding: 12px 16px;
+			border-radius: var(--radius-sm);
+			font-size: 0.9rem;
+			color: var(--text-secondary);
+			border-left: 3px solid var(--border-subtle);
+		}
+
+		.passive-item strong {
+			color: var(--text-primary);
+		}
 
         /* Mobile */
         @media (max-width: 768px) {
@@ -600,7 +620,7 @@
             }
 
             .podium-detail {
-                font-size: 0.65rem;
+                font-size: 0.8rem;
             }
 
             .tab-btn {
@@ -721,50 +741,48 @@
                 </div>
             </div>
 
-            <div class="card">
-                <h3 class="card-title">🌍 Фракционные пассивки (случайная при входе)</h3>
-                <h4 class="card-subtitle">🌝 Орден Света</h4>
-                <div class="table-container" style="margin-bottom: 16px;">
-                    <table class="mini-table">
-                        <thead><tr><th>Пассивка</th><th>Механика</th></tr></thead>
-                        <tbody>
-                            <tr><td>🔥 Очищение</td><td>+4 HP после волны</td></tr>
-                            <tr><td>⚡ Благословение</td><td>20% пропуск волны</td></tr>
-                            <tr><td>💫 Сияние</td><td>Боссы -20% HP</td></tr>
-                            <tr><td>🛡️ Святая защита</td><td>Первый урон = 0</td></tr>
-                            <tr><td>✨ Вдохновение</td><td>+1 MIN, +1 MAX</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+			<div class="card">
+				<h3 class="card-title">🌍 Фракционные пассивки (случайная при входе)</h3>
+				
+				<h4 class="card-subtitle">🌝 Орден Света</h4>
+				<div class="passive-list">
+					<div class="passive-item">🔥 <strong>Очищение</strong> — священный огонь даёт дополнительные +4 HP к обычному восстановлению после каждой волны</div>
+					<div class="passive-item">⚡ <strong>Благословение</strong> — 20% шанс пропустить волну (счётчик волн растёт, но волна не засчитывается как пройденная)</div>
+					<div class="passive-item">💫 <strong>Сияние</strong> — все боссы теряют 20% здоровья (множитель ×1.5 снижается до ×1.2)</div>
+					<div class="passive-item">🛡️ <strong>Святая защита</strong> — первый удар в каждой волне полностью блокируется (0 урона)</div>
+					<div class="passive-item">✨ <strong>Вдохновение</strong> — вера придаёт сил: +1 к MIN и +1 к MAX урона на весь забег</div>
+				</div>
 
-                <h4 class="card-subtitle" style="color: var(--purple);">🌚 Культ Тьмы</h4>
-                <div class="table-container">
-                    <table class="mini-table">
-                        <thead><tr><th>Пассивка</th><th>Механика</th></tr></thead>
-                        <tbody>
-                            <tr><td>💀 Вампиризм</td><td>+4 HP после волны</td></tr>
-                            <tr><td>🕳️ Теневой шаг</td><td>20% пропуск волны</td></tr>
-                            <tr><td>🩸 Кровавая жатва</td><td>+урон от потери HP</td></tr>
-                            <tr><td>👻 Призрачный щит</td><td>25% шанс не получить урон</td></tr>
-                            <tr><td>🖤 Проклятие</td><td>-1 ATK мобам</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+				<h4 class="card-subtitle" style="color: var(--purple);">🌚 Культ Тьмы</h4>
+				<div class="passive-list">
+					<div class="passive-item">💀 <strong>Вампиризм</strong> — высасываешь жизнь из врагов: дополнительные +4 HP к обычному восстановлению после каждой волны</div>
+					<div class="passive-item">🕳️ <strong>Теневой шаг</strong> — 20% шанс раствориться во тьме и пропустить волну (счётчик растёт, но волна не очищена)</div>
+					<div class="passive-item">🩸 <strong>Кровавая жатва</strong> — каждая атака получает бонус к урону: (потерянное HP за эту волну) ÷ 4</div>
+					<div class="passive-item">👻 <strong>Призрачный щит</strong> — 25% шанс стать бесплотным и полностью избежать вражеского удара</div>
+					<div class="passive-item">🖤 <strong>Проклятие</strong> — аура тьмы ослабляет мобов: -1 ATK всем врагам (минимум 1 ATK)</div>
+				</div>
+			</div>
 
-            <div class="card">
-                <h3 class="card-title">🐉 Боссы (каждые 5 волн)</h3>
-                <div class="rule-block">
-                    <p>×1.5 HP, +2 ATK, +1 DEF. Победа = <span class="highlight-text">+1 трофей</span></p>
-                </div>
-            </div>
+			<div class="card">
+				<h3 class="card-title">🐉 Боссы (каждые 5 волн)</h3>
+				<div class="rule-block">
+					<p>На волнах <span class="highlight-text">5, 10, 15, 20...</span> появляется босс — усиленная версия моба:</p>
+					<p style="margin-top: 10px;">
+						🩸 <strong>HP:</strong> ×1.5 от обычного<br>
+						⚔️ <strong>ATK:</strong> +2 к базовому<br>
+						🛡️ <strong>DEF:</strong> +1 к базовому
+					</p>
+				</div>
+			</div>
 
-            <div class="card">
-                <h3 class="card-title">🏰 Корона Раскола</h3>
-                <div class="rule-block">
-                    <p>Трофеи пополняют счёт фракции. У кого больше — тот владеет Короной.</p>
-                </div>
-            </div>
+			<div class="card">
+				<h3 class="card-title">🏰 Корона Раскола</h3>
+				<div class="rule-block">
+					<p>Каждый убитый босс даёт <span class="highlight-text">+1 трофей</span> в копилку твоей фракции — Света или Тьмы.</p>
+					<p style="margin-top: 10px;">У какой фракции больше трофеев — та и <span class="highlight-text">владеет Короной</span>. При равенстве — равновесие ⚖️.</p>
+					<p style="margin-top: 10px;">Каждый забег в Подземелье может склонить чашу весов!</p>
+				</div>
+			</div>
 
             <div class="card">
                 <h3 class="card-title">👾 Статы мобов</h3>
