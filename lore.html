@@ -250,7 +250,13 @@
             word-break: break-word;
         }
 
-        .world-table th:first-child { width: 30%; }
+        .world-table {
+			table-layout: fixed;
+		}
+
+		.world-table th:first-child {
+			width: 35%;
+		}
 
         /* Hero table */
         .table-container {
@@ -331,13 +337,21 @@
             .faction-grid { grid-template-columns: 1fr; }
             .header-title { font-size: 1.8rem; }
 
-            .world-table { font-size: 0.7rem; }
-            .world-table th, .world-table td { padding: 6px 8px; }
+			.world-table {
+				font-size: 0.7rem;
+				table-layout: auto;
+			}
+			.world-table th:first-child {
+				width: auto;
+			}
+			.world-table th, .world-table td {
+				padding: 6px 8px;
+			}
 
             table { font-size: 0.78rem; min-width: 350px; }
             th, td { padding: 8px 10px; }
 
-            .hero-table td:nth-child(2) { width: 32px; }
+            .hero-table td:nth-child(2) { width: 30px; }
         }
     </style>
 </head>
