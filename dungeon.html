@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Подземелье</title>
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -87,6 +87,7 @@
         cursor: pointer;
         font-size: 14px;
         font-weight: 500;
+        transition: all 0.2s;
     }
     .tab-btn:hover { background: #21262d; color: #c9d1d9; }
     .tab-btn.active { background: #ffd700; color: #0d1117; font-weight: bold; }
@@ -120,12 +121,12 @@
 
     .territory-title { color: #ffd700; font-size: 20px; font-weight: bold; text-align: center; }
     .territory-subtitle { text-align: center; color: #8b949e; font-size: 13px; margin-bottom: 20px; }
-    .territory-row { display: flex; justify-content: space-between; color: #c9d1d9; font-size: 15px; margin-bottom: 12px; font-weight: bold; }
+    .territory-row { display: flex; justify-content: space-between; color: #c9d1d9; font-size: 15px; margin-bottom: 12px; font-weight: bold; flex-wrap: wrap; gap: 10px; }
     .territory-row .light-score { color: #ffd700; }
     .territory-row .dark-score { color: #a371f7; }
-    .territory-progress { display: flex; height: 42px; border-radius: 21px; overflow: hidden; border: 2px solid #30363d; background: #0d1117; }
-    .territory-light { background: linear-gradient(135deg,#ffd700,#ffed4a); color: #0d1117; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; transition: width 0.6s; min-width: 40px; }
-    .territory-dark { background: linear-gradient(135deg,#6f42c1,#a371f7); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; transition: width 0.6s; min-width: 40px; }
+    .territory-progress { display: flex; height: 42px; border-radius: 21px; overflow: hidden; border: 2px solid #30363d; background: #0d1117; width: 100%; }
+    .territory-light { background: linear-gradient(135deg,#ffd700,#ffed4a); color: #0d1117; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; transition: width 0.6s; min-width: 40px; flex-shrink: 0; }
+    .territory-dark { background: linear-gradient(135deg,#6f42c1,#a371f7); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; transition: width 0.6s; min-width: 40px; flex-shrink: 0; }
     .territory-total { text-align: center; color: #8b949e; font-size: 12px; margin-top: 12px; }
     .territory-crown { text-align: center; font-size: 40px; margin-bottom: 16px; animation: float 2s infinite; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
@@ -140,25 +141,30 @@
     .podium-name { font-size: 18px; color: #ffd700; font-weight: bold; word-break: break-word; }
     .podium-class { font-size: 12px; color: #8b949e; margin: 5px 0; }
     .podium-record { font-size: 32px; color: #ffd700; font-weight: bold; margin-top: 10px; }
-    .podium-detail { font-size: 11px; color: #8b949e; margin-top: 5px; line-height: 1.5; }
+    .podium-detail { font-size: 11px; color: #8b949e; margin-top: 5px; line-height: 1.5; word-break: break-word; }
 
-    .records-row { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
-    .record-box { flex: 1; min-width: 130px; background: linear-gradient(145deg,#21262d,#161b22); border-radius: 14px; padding: 18px; text-align: center; border: 1px solid #30363d; }
+    .records-row { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
+    .record-box { flex: 1; min-width: 130px; max-width: 180px; background: linear-gradient(145deg,#21262d,#161b22); border-radius: 14px; padding: 18px; text-align: center; border: 1px solid #30363d; }
     .record-icon { font-size: 28px; margin-bottom: 8px; }
-    .record-value { font-size: 28px; color: #ffd700; font-weight: bold; }
+    .record-value { font-size: 28px; color: #ffd700; font-weight: bold; word-break: break-word; }
     .record-label { color: #8b949e; font-size: 11px; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
-    .record-player { color: #c9d1d9; font-size: 13px; margin-top: 8px; font-weight: 500; }
+    .record-player { color: #c9d1d9; font-size: 13px; margin-top: 8px; font-weight: 500; word-break: break-word; }
 
     .table-wrapper {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         margin: 0 -15px;
         padding: 0 15px;
+        width: calc(100% + 30px);
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
     }
     table {
         width: 100%;
         border-collapse: collapse;
         font-size: 14px;
+        min-width: 500px;
     }
     th {
         background: #21262d;
@@ -185,7 +191,7 @@
     /* ==================== МОБИЛЬНАЯ ВЕРСИЯ ==================== */
     @media (max-width: 768px) {
         body { padding: 10px; }
-        h1 { font-size: 1.8em; margin-top: 10px; }
+        h1 { font-size: 1.8em; margin-top: 10px; white-space: normal !important; width: 100%; text-align: center; left: 0; transform: none; display: block; }
         
         .nav-toggle { display: block; }
         .page-nav { 
@@ -207,42 +213,46 @@
             flex-wrap: nowrap;
             overflow-x: auto;
             padding: 8px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
         }
         .tab-btn {
             padding: 8px 14px;
             font-size: 13px;
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        /* ТАБЛИЦЫ — главное исправление */
+        /* Исправление для мобильных таблиц */
         .table-wrapper {
-            margin: 0 -12px;
-            padding: 0 12px;
+            margin: 0 -10px;
+            padding: 0 10px;
+            width: calc(100% + 20px);
         }
-
+        
         table {
             min-width: 520px;
-            font-size: 12.5px;
+            font-size: 12px;
         }
 
         th, td {
             padding: 8px 6px;
-            font-size: 12px;
-            white-space: nowrap;
+            font-size: 11px;
         }
 
-        /* Колонка "Игрок" — самая важная */
+        /* Колонка с именем игрока - самая широкая */
         td:nth-child(2), th:nth-child(2) {
+            min-width: 110px;
+            max-width: 150px;
             white-space: normal;
-            min-width: 130px;
             word-break: break-word;
         }
 
-        /* На очень маленьких экранах скрываем менее важные колонки */
+        /* На очень маленьких экранах скрываем вспомогательные колонки */
         @media (max-width: 480px) {
-            table th:nth-child(5), table td:nth-child(5), /* 💥 */
-            table th:nth-child(6), table td:nth-child(6), /* ❌ */
-            table th:nth-child(7), table td:nth-child(7) { /* 🛡 */
+            table th:nth-child(5), table td:nth-child(5),
+            table th:nth-child(6), table td:nth-child(6),
+            table th:nth-child(7), table td:nth-child(7) {
                 display: none;
             }
             table {
@@ -250,15 +260,65 @@
             }
         }
 
-        /* Таблицы внутри правил (они проще) */
+        /* Таблицы в правилах */
+        .card .table-wrapper {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            left: 0;
+            transform: none;
+        }
         .card table {
             min-width: 100%;
-            font-size: 12px;
+            font-size: 11px;
         }
         .card th, .card td {
-            padding: 7px 5px;
+            padding: 6px 4px;
             white-space: normal;
-            font-size: 11.5px;
+            word-break: break-word;
+        }
+        
+        /* Рекордные блоки на мобилках */
+        .records-row {
+            gap: 8px;
+        }
+        .record-box {
+            min-width: calc(50% - 8px);
+            max-width: none;
+            padding: 12px;
+        }
+        .record-value {
+            font-size: 22px;
+        }
+        
+        /* Подиум на мобилках */
+        .podium-row {
+            gap: 10px;
+        }
+        .podium-card {
+            min-width: 110px;
+            padding: 15px 10px;
+        }
+        .podium-record {
+            font-size: 24px;
+        }
+        .podium-name {
+            font-size: 14px;
+        }
+    }
+    
+    @media (max-width: 380px) {
+        .podium-card {
+            min-width: 95px;
+        }
+        .podium-emoji {
+            font-size: 32px;
+        }
+        .podium-record {
+            font-size: 20px;
+        }
+        .podium-detail {
+            font-size: 9px;
         }
     }
 </style>
@@ -306,34 +366,46 @@
             </div>
             <div class="card">
                 <h3>🎲 Случайные события (30% после волны)</h3>
+                <div class="table-wrapper">
                 <table>
-                    <tr><th>Эм</th><th>Событие</th><th>Шанс</th><th>Эффект</th></tr>
-                    <tr><td>🧪</td><td>Зелье силы</td><td>7.5%</td><td>+1 ATK (макс +5 от базового)</td></tr>
-                    <tr><td>🛡️</td><td>Благословение</td><td>7.5%</td><td>+1 DEF (макс +5 от базового)</td></tr>
-                    <tr><td>💀</td><td>Проклятие</td><td>7.5%</td><td>-5 HP</td></tr>
-                    <tr><td>✨</td><td>Чудо</td><td>7.5%</td><td>Полное восстановление HP</td></tr>
+                    <thead><tr><th>Эм</th><th>Событие</th><th>Шанс</th><th>Эффект</th></tr></thead>
+                    <tbody>
+                        <tr><td>🧪</td><td>Зелье силы</td><td>7.5%</td><td>+1 ATK (макс +5 от базового)</td></tr>
+                        <tr><td>🛡️</td><td>Благословение</td><td>7.5%</td><td>+1 DEF (макс +5 от базового)</td></tr>
+                        <tr><td>💀</td><td>Проклятие</td><td>7.5%</td><td>-5 HP</td></tr>
+                        <tr><td>✨</td><td>Чудо</td><td>7.5%</td><td>Полное восстановление HP</td></tr>
+                    </tbody>
                 </table>
+                </div>
             </div>
             <div class="card">
                 <h3>🌍 Фракционные пассивки (случайная при входе)</h3>
                 <h4 style="color:#ffd700;margin:15px 0 10px;">🌝 Орден Света</h4>
+                <div class="table-wrapper">
                 <table>
-                    <tr><th>Пассивка</th><th>Механика</th></tr>
-                    <tr><td>🔥 Очищение</td><td>+4 HP после волны</td></tr>
-                    <tr><td>⚡ Благословение</td><td>20% пропуск волны</td></tr>
-                    <tr><td>💫 Сияние</td><td>Боссы -20% HP</td></tr>
-                    <tr><td>🛡️ Святая защита</td><td>Первый урон = 0</td></tr>
-                    <tr><td>✨ Вдохновение</td><td>+1 MIN, +1 MAX</td></tr>
+                    <thead><tr><th>Пассивка</th><th>Механика</th></tr></thead>
+                    <tbody>
+                        <tr><td>🔥 Очищение</td><td>+4 HP после волны</td></tr>
+                        <tr><td>⚡ Благословение</td><td>20% пропуск волны</td></tr>
+                        <tr><td>💫 Сияние</td><td>Боссы -20% HP</td></tr>
+                        <tr><td>🛡️ Святая защита</td><td>Первый урон = 0</td></tr>
+                        <tr><td>✨ Вдохновение</td><td>+1 MIN, +1 MAX</td></tr>
+                    </tbody>
                 </table>
+                </div>
                 <h4 style="color:#a371f7;margin:20px 0 10px;">🌚 Культ Тьмы</h4>
+                <div class="table-wrapper">
                 <table>
-                    <tr><th>Пассивка</th><th>Механика</th></tr>
-                    <tr><td>💀 Вампиризм</td><td>+4 HP после волны</td></tr>
-                    <tr><td>🕳️ Теневой шаг</td><td>20% пропуск волны</td></tr>
-                    <tr><td>🩸 Кровавая жатва</td><td>+урон от потери HP</td></tr>
-                    <tr><td>👻 Призрачный щит</td><td>25% шанс не получить урон</td></tr>
-                    <tr><td>🖤 Проклятие</td><td>-1 ATK мобам</td></tr>
+                    <thead><tr><th>Пассивка</th><th>Механика</th></tr></thead>
+                    <tbody>
+                        <tr><td>💀 Вампиризм</td><td>+4 HP после волны</td></tr>
+                        <tr><td>🕳️ Теневой шаг</td><td>20% пропуск волны</td></tr>
+                        <tr><td>🩸 Кровавая жатва</td><td>+урон от потери HP</td></tr>
+                        <tr><td>👻 Призрачный щит</td><td>25% шанс не получить урон</td></tr>
+                        <tr><td>🖤 Проклятие</td><td>-1 ATK мобам</td></tr>
+                    </tbody>
                 </table>
+                </div>
             </div>
             <div class="card">
                 <h3>🐉 Боссы (каждые 5 волн)</h3>
@@ -347,19 +419,21 @@
                 <h3>👾 Статы мобов</h3>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Волна</th><th>HP</th><th>ATK</th><th>DEF</th><th>Урон</th></tr>
-                        <tr><td>1</td><td>30</td><td>1</td><td>0</td><td>1–4</td></tr>
-                        <tr><td>2</td><td>40</td><td>1</td><td>0</td><td>2–5</td></tr>
-                        <tr><td>3</td><td>50</td><td>2</td><td>0</td><td>2–6</td></tr>
-                        <tr><td>4</td><td>60</td><td>2</td><td>1</td><td>3–7</td></tr>
-                        <tr><td>5 🐉</td><td>105</td><td>3</td><td>1</td><td>3–8</td></tr>
-                        <tr><td>6</td><td>85</td><td>3</td><td>1</td><td>4–9</td></tr>
-                        <tr><td>7</td><td>100</td><td>4</td><td>1</td><td>4–10</td></tr>
-                        <tr><td>8</td><td>115</td><td>4</td><td>2</td><td>5–11</td></tr>
-                        <tr><td>9</td><td>130</td><td>5</td><td>2</td><td>5–12</td></tr>
-                        <tr><td>10 🐉</td><td>225</td><td>7</td><td>3</td><td>6–14</td></tr>
-                        <tr><td>12</td><td>190</td><td>6</td><td>3</td><td>7–16</td></tr>
-                        <tr><td>15 🐉</td><td>405</td><td>9</td><td>4</td><td>8–21</td></tr>
+                        <thead><tr><th>Волна</th><th>HP</th><th>ATK</th><th>DEF</th><th>Урон</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>30</td><td>1</td><td>0</td><td>1–4</td></tr>
+                            <tr><td>2</td><td>40</td><td>1</td><td>0</td><td>2–5</td></tr>
+                            <tr><td>3</td><td>50</td><td>2</td><td>0</td><td>2–6</td></tr>
+                            <tr><td>4</td><td>60</td><td>2</td><td>1</td><td>3–7</td></tr>
+                            <tr><td>5 🐉</td><td>105</td><td>3</td><td>1</td><td>3–8</td></tr>
+                            <tr><td>6</td><td>85</td><td>3</td><td>1</td><td>4–9</td></tr>
+                            <tr><td>7</td><td>100</td><td>4</td><td>1</td><td>4–10</td></tr>
+                            <tr><td>8</td><td>115</td><td>4</td><td>2</td><td>5–11</td></tr>
+                            <tr><td>9</td><td>130</td><td>5</td><td>2</td><td>5–12</td></tr>
+                            <tr><td>10 🐉</td><td>225</td><td>7</td><td>3</td><td>6–14</td></tr>
+                            <tr><td>12</td><td>190</td><td>6</td><td>3</td><td>7–16</td></tr>
+                            <tr><td>15 🐉</td><td>405</td><td>9</td><td>4</td><td>8–21</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -373,6 +447,15 @@
             nav.classList.toggle('show');
             btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         }
+        
+        // Закрывать меню при клике на ссылку
+        document.querySelectorAll('.page-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('pageNav').classList.remove('show');
+                const btn = document.querySelector('.nav-toggle');
+                if (btn) btn.textContent = '☰ Меню';
+            });
+        });
 
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -406,7 +489,7 @@
             let html = '';
             
             const total = territory.light + territory.dark;
-            const lightPct = total > 0 ? Math.round(territory.light * 100 / total) : 50;
+            const lightPct = total > 0 ? (territory.light * 100 / total) : 50;
             const crownOwner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
             
             html += `<div class="card">
@@ -415,8 +498,8 @@
                 <div class="territory-subtitle">Владелец: ${crownOwner}</div>
                 <div class="territory-row"><span>🌝 Свет: <span class="light-score">${territory.light}</span></span><span><span class="dark-score">${territory.dark}</span> :Тьма 🌚</span></div>
                 <div class="territory-progress">
-                    <div class="territory-light" style="width:${lightPct}%">${lightPct>5?lightPct+'%':''}</div>
-                    <div class="territory-dark" style="width:${100-lightPct}%">${100-lightPct>5?100-lightPct+'%':''}</div>
+                    <div class="territory-light" style="width: ${lightPct}%">${lightPct > 8 ? Math.round(lightPct) + '%' : ''}</div>
+                    <div class="territory-dark" style="width: ${100 - lightPct}%">${(100 - lightPct) > 8 ? Math.round(100 - lightPct) + '%' : ''}</div>
                 </div>
                 <div class="territory-total">Всего трофеев: ${total}</div>
             </div>`;
@@ -428,9 +511,9 @@
             top3.forEach((p, i) => {
                 html += `<div class="podium-card ${grades[i]}">
                     <div class="podium-medal">${medals[i]}</div>
-                    <div class="podium-emoji">${p.emoji||'⚔️'}</div>
-                    <div class="podium-name">${p.display||'???'}</div>
-                    <div class="podium-class">${p.name||''}</div>
+                    <div class="podium-emoji">${p.emoji || '⚔️'}</div>
+                    <div class="podium-name">${p.display || '???'}</div>
+                    <div class="podium-class">${p.name || ''}</div>
                     <div class="podium-record">${p.record}</div>
                     <div class="podium-detail">Урон: ${p.damage} | 💥${p.crits} | ❌${p.misses} | 🛡${p.blocks}</div>
                 </div>`;
@@ -438,15 +521,15 @@
             html += '</div>';
             
             const bestRecord = sorted[0];
-            const bestDamage = [...playersArr].sort((a,b)=>b.damage-a.damage)[0];
-            const bestCrits = [...playersArr].sort((a,b)=>b.crits-a.crits)[0];
-            const bestBlocks = [...playersArr].sort((a,b)=>b.blocks-a.blocks)[0];
+            const bestDamage = [...playersArr].sort((a,b)=>b.damage - a.damage)[0];
+            const bestCrits = [...playersArr].sort((a,b)=>b.crits - a.crits)[0];
+            const bestBlocks = [...playersArr].sort((a,b)=>b.blocks - a.blocks)[0];
             
             html += '<div class="records-row">';
-            html += `<div class="record-box"><div class="record-icon">🏆</div><div class="record-value">${bestRecord.record}</div><div class="record-label">Рекорд волн</div><div class="record-player">${bestRecord.emoji||''} ${bestRecord.display||'???'}</div></div>`;
-            html += `<div class="record-box"><div class="record-icon">💥</div><div class="record-value">${bestDamage.damage}</div><div class="record-label">Рекорд урона</div><div class="record-player">${bestDamage.emoji||''} ${bestDamage.display||'???'}</div></div>`;
-            html += `<div class="record-box"><div class="record-icon">🎯</div><div class="record-value">${bestCrits.crits}</div><div class="record-label">Рекорд критов</div><div class="record-player">${bestCrits.emoji||''} ${bestCrits.display||'???'}</div></div>`;
-            html += `<div class="record-box"><div class="record-icon">🛡</div><div class="record-value">${bestBlocks.blocks}</div><div class="record-label">Рекорд блоков</div><div class="record-player">${bestBlocks.emoji||''} ${bestBlocks.display||'???'}</div></div>`;
+            html += `<div class="record-box"><div class="record-icon">🏆</div><div class="record-value">${bestRecord.record}</div><div class="record-label">Рекорд волн</div><div class="record-player">${bestRecord.emoji || ''} ${bestRecord.display || '???'}</div></div>`;
+            html += `<div class="record-box"><div class="record-icon">💥</div><div class="record-value">${bestDamage.damage}</div><div class="record-label">Рекорд урона</div><div class="record-player">${bestDamage.emoji || ''} ${bestDamage.display || '???'}</div></div>`;
+            html += `<div class="record-box"><div class="record-icon">🎯</div><div class="record-value">${bestCrits.crits}</div><div class="record-label">Рекорд критов</div><div class="record-player">${bestCrits.emoji || ''} ${bestCrits.display || '???'}</div></div>`;
+            html += `<div class="record-box"><div class="record-icon">🛡</div><div class="record-value">${bestBlocks.blocks}</div><div class="record-label">Рекорд блоков</div><div class="record-player">${bestBlocks.emoji || ''} ${bestBlocks.display || '???'}</div></div>`;
             html += '</div>';
             
             const top20 = sorted.slice(0, 20);
@@ -456,8 +539,8 @@
             top20.forEach((p, i) => {
                 html += `<tr>
                     <td class="highlight">${p.record}</td>
-                    <td>${p.emoji||''} ${p.display||'???'}</td>
-                    <td>${p.name||''}</td>
+                    <td>${p.emoji || ''} ${p.display || '???'}</td>
+                    <td>${p.name || ''}</td>
                     <td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td>
                 </tr>`;
             });
@@ -468,6 +551,15 @@
         .catch(err => {
             console.error(err);
             document.getElementById('stats-loading').innerHTML = '<div class="card"><h3>🏔 Подземелье</h3><p style="text-align:center;color:#e5534b;">❌ Ошибка загрузки данных</p><p style="text-align:center;font-size:13px;color:#8b949e;">Попробуй обновить страницу (Ctrl+Shift+R)</p></div>';
+        });
+        
+        // Фикс для кнопок вкладок на мобилках
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('active')) {
+                    switchTab(this.getAttribute('onclick').match(/'(\w+)'/)[1]);
+                }
+            });
         });
     </script>
 </body>
