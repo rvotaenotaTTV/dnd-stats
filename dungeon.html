@@ -134,104 +134,37 @@
 
     .loading { text-align:center; padding:60px; color:#8b949e; font-size:18px; }
 
-    /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
-    @media (max-width: 768px) {
-        body { padding: 10px; }
-        h1 { font-size: 1.5em; margin-bottom: 15px; }
-        
-        .nav-toggle { display: block; }
-        .page-nav { display: none; flex-direction: column; gap: 6px; margin-top: 10px; }
-        .page-nav.show { display: flex; }
-        .page-nav a { text-align: center; padding: 10px; background: #21262d; border: 1px solid #30363d; border-radius: 20px; }
-        .page-nav a.active { background: #ffd700; color: #0d1117; border-color: #ffd700; }
-        .nav-tabs { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; padding: 6px; }
-        .tab-btn { padding: 8px 14px; font-size: 12px; white-space: nowrap; }
+	@media (max-width: 768px) {
+		body { padding: 10px; }
+		h1 { font-size: 1.6em; }
 
-        .card { padding: 15px; }
-        .card h3 { font-size: 16px; }
-        .card h4 { font-size: 13px; }
+		.nav-toggle { display: block; }
+		.page-nav {
+			display: none;
+			flex-direction: column;
+			gap: 6px;
+			margin-top: 10px;
+		}
+		.page-nav.show { display: flex; }
+		.page-nav a { 
+			text-align: center; 
+			padding: 10px;
+			background: #21262d;
+			border: 1px solid #30363d;
+			border-radius: 20px;
+		}
+		.page-nav a.active { 
+			background: #ffd700; 
+			color: #0d1117; 
+			border-color: #ffd700;
+		}
 
-        .podium-row { gap: 6px; }
-        .podium-card { min-width: 0; max-width: none; flex: 1 1 30%; padding: 10px 4px; }
-        .podium-medal { font-size: 22px; }
-        .podium-emoji { font-size: 26px; }
-        .podium-name { font-size: 12px; }
-        .podium-record { font-size: 20px; }
-        .podium-detail { font-size: 9px; }
+		.card { padding: 18px; }
+		.command-grid { grid-template-columns: 1fr; }
 
-        .records-row { gap: 4px; justify-content: space-between; }
-        .record-box { min-width: 0; flex: 1 1 22%; padding: 8px 2px; }
-        .record-value { font-size: 18px; }
-        .record-player { font-size: 10px; word-break: break-word; }
-        .record-label { font-size: 9px; }
-
-        .territory-progress { height: 32px; }
-        .territory-light, .territory-dark { font-size: 11px; }
-        .territory-title { font-size: 15px; }
-
-        /* === ГЛАВНОЕ ИСПРАВЛЕНИЕ ТАБЛИЦ === */
-        
-        /* Все таблицы: уменьшаем шрифт и отступы */
-        table { font-size: 12px; }
-        th, td { padding: 6px 4px; }
-
-        /* Таблица лидеров (7 колонок) — скролл горизонтально */
-        #leaderTable { 
-            min-width: 500px; /* Форсируем ширину, чтобы колонки не сжимались */
-            table-layout: auto;
-        }
-        #leaderTable th, #leaderTable td {
-            white-space: nowrap; /* Имена игроков не переносим, даём скролл */
-            padding: 6px 8px;
-        }
-        /* Разрешаем перенос только в колонке "Игрок", если имя длинное */
-        #leaderTable td:nth-child(2) { 
-            white-space: normal; 
-            word-break: break-word;
-            min-width: 80px;
-        }
-        #leaderTable td:nth-child(3) { 
-            white-space: normal; 
-            word-break: break-word;
-            min-width: 60px;
-        }
-
-        /* Таблица фракций: переопределяем ширины */
-        .faction-table {
-            table-layout: auto; /* Убираем fixed, который сжимал текст */
-            width: 100%;
-        }
-        .faction-table th, .faction-table td {
-            width: 50%;
-            padding: 8px 6px;
-            font-size: 11px;
-            line-height: 1.6; /* Даём воздух строкам */
-            word-break: break-word; /* Нормальный перенос по словам */
-        }
-        /* Убираем возможный nowrap у первой колонки */
-        .faction-table td:first-child { white-space: normal; }
-
-        /* Таблица мобов: разрешаем скролл, оставляем компактно */
-        .mob-table {
-            min-width: 320px; /* Минимальная ширина для 5 колонок */
-        }
-        .mob-table th, .mob-table td {
-            white-space: nowrap;
-            padding: 6px 8px;
-            font-size: 11px;
-        }
-
-        /* Таблица событий */
-        .event-table td:first-child { width: 35px; font-size: 18px; }
-        .event-table td { font-size: 11px; padding: 8px 4px; }
-        .event-table td:nth-child(4) { 
-            white-space: normal; 
-            word-break: break-word;
-        }
-
-        .rule-item p { font-size: 12px; }
-        .rule-item h4 { font-size: 13px; }
-    }
+		table { font-size: 12px; }
+		th, td { padding: 8px; }
+	}
 </style>
 </head>
 <body>
