@@ -223,101 +223,57 @@
 
     .loading { text-align: center; padding: 60px; color: #8b949e; font-size: 18px; }
 
-    /* ========== МОБИЛЬНАЯ ВЕРСИЯ — ТАБЛИЦА ВО ВСЮ ЖОПУ ========== */
-    @media (max-width: 768px) {
-        body { padding: 10px; }
-        h1 { font-size: 1.8em; white-space: normal; width: 100%; left: 0; transform: none; display: block; }
-        
-        .nav-toggle { display: block; }
-        .page-nav { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
-        .page-nav.show { display: flex; }
-        .page-nav a { text-align: center; padding: 12px; background: #21262d; border: 1px solid #30363d; border-radius: 20px; }
-
-        .nav-tabs { flex-wrap: nowrap; overflow-x: auto; padding: 8px; -webkit-overflow-scrolling: touch; }
-        .tab-btn { padding: 8px 14px; font-size: 13px; white-space: nowrap; flex-shrink: 0; }
-
-        /* Топ-3 */
-        .podium-row { gap: 8px; }
-        .podium-card { min-width: 85px; padding: 10px 6px; }
-        .podium-medal { font-size: 24px; }
-        .podium-emoji { font-size: 28px; }
-        .podium-name { font-size: 12px; }
-        .podium-record { font-size: 20px; }
-        .podium-detail { font-size: 8px; }
-
-        /* Блоки рекордов */
-        .record-box { min-width: calc(50% - 8px); max-width: none; padding: 10px; }
-        .record-value { font-size: 20px; }
-
-        /* ТАБЛИЦА — НА ВСЮ ШИРИНУ ЭКРАНА, ЕБАНАЯ, БЕЗ ОТСТУПОВ */
-        .card:last-of-type {
-            padding: 0;
-            overflow: hidden;
-        }
-        .card:last-of-type h3 {
-            padding: 25px 25px 0 25px;
-        }
-        .table-wrapper {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            left: 0;
-            transform: none;
-        }
-        table {
-            min-width: 100%;
-            font-size: 12px;
-        }
-        th, td {
-            padding: 10px 8px;
-            font-size: 12px;
-        }
-        
-        /* Имя игрока */
-        td:nth-child(2), th:nth-child(2) { 
-            min-width: 110px; 
-            white-space: normal; 
-            word-break: break-word;
-        }
-
-        /* Скролл внутри карточки с таблицей */
-        .card:last-of-type .table-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* На совсем узких экранах */
-        @media (max-width: 480px) {
-            table th:nth-child(5), table td:nth-child(5),
-            table th:nth-child(6), table td:nth-child(6),
-            table th:nth-child(7), table td:nth-child(7) {
-                display: none;
-            }
-            th, td {
-                padding: 8px 6px;
-                font-size: 11px;
-            }
-            td:nth-child(2), th:nth-child(2) { 
-                min-width: 100px;
-            }
-        }
-
-        /* Таблицы в правилах — оставляем в порядке */
-        .card:not(:last-of-type) .table-wrapper {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-        }
-        .card:not(:last-of-type) table {
-            min-width: 100%;
-            font-size: 11px;
-        }
-        .card:not(:last-of-type) th, 
-        .card:not(:last-of-type) td {
-            padding: 6px 4px;
-            white-space: normal;
-        }
+/* ========== ЕБАНЫЙ ФИКС ТАБЛИЦЫ НА МОБИЛКЕ ========== */
+@media (max-width: 768px) {
+    body {
+        padding: 0 !important;
+        margin: 0 !important;
     }
+    
+    .container {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    /* Карточка с таблицей лидеров — без паддингов */
+    .card:has(table) {
+        padding: 0 !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
+    
+    .card:has(table) h3 {
+        padding: 20px 15px 0 15px !important;
+    }
+    
+    .table-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        left: 0 !important;
+        transform: none !important;
+        overflow-x: auto !important;
+    }
+    
+    table {
+        display: table !important;
+        width: 100% !important;
+        min-width: 600px !important;
+        font-size: 13px !important;
+    }
+    
+    th, td {
+        padding: 10px 8px !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Имя игрока — с переносом, но широкое */
+    td:nth-child(2), th:nth-child(2) {
+        white-space: normal !important;
+        min-width: 120px !important;
+        max-width: 160px !important;
+    }
+}
 </style>
 </head>
 <body>
