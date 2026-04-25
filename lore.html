@@ -222,36 +222,32 @@
         .faction-card.dark .faction-quote { border-color: var(--purple); color: var(--purple); }
 
         /* World table — без скролла */
-        .world-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-subtle);
-        }
+		.world-table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 0.85rem;
+			border-radius: var(--radius-sm);
+			border: 1px solid var(--border-subtle);
+		}
 
-        .world-table th {
-            background: var(--bg-elevated);
-            color: var(--gold);
-            font-weight: 700;
-            padding: 10px 14px;
-            text-align: left;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            border-bottom: 2px solid var(--border-subtle);
-        }
+		.world-table th {
+			background: var(--bg-elevated);
+			color: var(--gold);
+			font-weight: 700;
+			padding: 10px 14px;
+			text-align: left;
+			font-size: 0.75rem;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			border-bottom: 2px solid var(--border-subtle);
+		}
 
-        .world-table td {
-            padding: 9px 14px;
-            border-bottom: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            white-space: normal;
-            word-break: break-word;
-        }
-
-        .world-table {
-			table-layout: fixed;
+		.world-table td {
+			padding: 9px 14px;
+			border-bottom: 1px solid var(--border-subtle);
+			color: var(--text-primary);
+			white-space: normal;
+			word-break: break-word;
 		}
 
 		.world-table th:first-child {
@@ -338,14 +334,15 @@
             .header-title { font-size: 1.8rem; }
 
 			.world-table {
-				font-size: 0.7rem;
-				table-layout: auto;
+				font-size: 0.75rem;
 			}
+
+			.world-table th, .world-table td {
+				padding: 8px 10px;
+			}
+
 			.world-table th:first-child {
 				width: auto;
-			}
-			.world-table th, .world-table td {
-				padding: 6px 8px;
 			}
 
             table { font-size: 0.78rem; min-width: 350px; }
