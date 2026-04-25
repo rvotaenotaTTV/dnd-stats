@@ -301,40 +301,7 @@
 
 		<div class="card">
 			<h2 class="card-title">📐 Формулы баланса</h2>
-
-			<div class="formula-box" style="margin-bottom:12px;">
-				<p style="color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:8px;">📊 POWER — общая боевая мощь класса</p>
-				<p>Чем выше POWER, тем сильнее класс в среднестатистическом бою.</p>
-			</div>
-
-			<div class="formula-box"><p><span>POWER = CPI × PowerMultiplier</span></p></div>
-
-			<div class="formula-box">
-				<p><span>CPI складывается из двух частей:</span></p>
-				<p style="margin-top:4px;">• <strong>Живучесть</strong> — сколько урона класс может выдержать</p>
-				<p>• <strong>Атака</strong> — сколько урона класс наносит</p>
-			</div>
-
-			<div class="formula-box"><p><span>CPI = Живучесть<sup>HP_POWER</sup> × Атака<sup>DMG_POWER</sup></span></p></div>
-
-			<div class="formula-box">
-				<p><span>Живучесть</span> = HP × (1 + DEF × EffHpDefMult)</p>
-				<p class="text-muted">Каждое очко защиты (DEF) увеличивает эффективное здоровье на EffHpDefMult × 100%.</p>
-			</div>
-
-			<div class="formula-box">
-				<p><span>Атака</span> = Средний урон × Точность × Бонус атаки × FixedReduction</p>
-				<p class="text-muted" style="margin-top:4px;">• Средний урон = (MIN + MAX) / 2</p>
-				<p class="text-muted">• Точность = (BaseACC + ATK) / 20</p>
-				<p class="text-muted">• Бонус атаки = 1 + ATK × AtkBonus</p>
-			</div>
-
-			<div class="formula-box">
-				<p><span>⚙️ Скрытые поправки:</span></p>
-				<p class="text-muted">• ATK > 8 — штраф (потолок точности 95%), чем выше ATK, тем меньше пользы</p>
-				<p class="text-muted">• MIN > 5 — бонус (высокая стабильность, нет слабых ударов)</p>
-				<p class="text-muted">• HP > 28 — бонус (большой запас здоровья даёт преимущество)</p>
-			</div>
+			<div id="formula-text"></div>
 		</div>
     </div>
 
@@ -371,6 +338,7 @@
             .then(data => {
                 CONFIG = data.config;
                 renderClasses(data.classes);
+				renderFormulaText();
                 renderRaces(data.races);
                 initSort();
             })
@@ -450,6 +418,45 @@
 				});
 			});
 		}
+		
+		function renderFormulaText() {
+		const c = CONFIG;
+		document.getElementById('formula-text').innerHTML = `
+			<div class="formula-box" style="margin-bottom:12px;">
+				<p style="color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:8px;">📊 POWER — общая боевая мощь класса</p>
+				<p>Чем выше POWER, тем сильнее класс в среднестатистическом бою.</p>
+			</div>
+			<div class="formula-box"><p><span>POWER = CPI × ${c.powerMultiplier}</span></p></div>
+			<div class="formula-box">
+				<p><span>CPI складывается из двух частей:</span></p>
+				<p style="margin-top:4px;">• <strong>Живучесть</strong> — сколько урона класс может выдержать</p>
+				<p>• <strong>Атака</strong> — сколько урона класс наносит</p>
+			</div>
+			<div class="formula-box"><p><span>CPI = Живучесть<sup>${c.cpiHpPower}</sup> × Атака<sup>${c.cpiDmgPower}</sup></span></p></div>
+			<div class="formula-box">
+				<p><span>Живучесть</span> = HP × (1 + DEF × ${c.effHpDefMult})</p>
+				<p class="text-muted">Каждое очко защиты (DEF) увеличивает эффективное здоровье на ${(c.effHpDefMult*100).toFixed(0)}%.</p>
+			</div>
+			<div class="formula-box">
+				<p><span>Атака</span> = Средний урон × Точность × Бонус атаки × ${c.cpiFixedReduction}</p>
+				<p class="text-muted" style="margin-top:4px;">• Средний урон = (MIN + MAX) / 2</p>
+				<p class="text-muted">• Точность = (${c.accBaseCPI} + ATK) / 20</p>
+				<p class="text-muted">• Бонус атаки = 1 + ATK × ${c.cpiAtkBonus}</p>
+			</div>
+			<div class="formula-box">
+				<p><span>🎯 Точность в бою:</span></p>
+				<p class="text-muted">• Базовая: ${c.hitChanceBase} + ATK</p>
+				<p class="text-muted">• Против DEF: (${c.hitChanceBase} + ATK − DEF) / 20</p>
+				<p class="text-muted">• Ограничена: ${(c.hitChanceMin*100).toFixed(0)}% − ${(c.hitChanceMax*100).toFixed(0)}%</p>
+			</div>
+			<div class="formula-box">
+				<p><span>⚙️ Скрытые поправки:</span></p>
+				<p class="text-muted">• ATK > 8 — штраф (потолок точности 95%)</p>
+				<p class="text-muted">• MIN > 5 — бонус (стабильность, нет слабых ударов)</p>
+				<p class="text-muted">• HP > 28 — бонус (запас здоровья)</p>
+			</div>
+		`;
+	}
     </script>
 </body>
 </html>

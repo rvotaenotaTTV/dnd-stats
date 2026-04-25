@@ -2,755 +2,424 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Симулятор</title>
-<style>
-	* { box-sizing: border-box; margin: 0; padding: 0; }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #11161d;
+            --bg-card: #161c24;
+            --bg-elevated: #1c2330;
+            --border-subtle: #252d38;
+            --text-primary: #e8edf4;
+            --text-secondary: #8b95a5;
+            --text-muted: #5c6675;
+            --gold: #ffd700;
+            --red: #e5534b;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --shadow-gold: 0 0 20px rgba(255,215,0,0.15);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-	body { 
-		font-family: 'Segoe UI', 'Arial', sans-serif; 
-		background: 
-			radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
-			radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
-			linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-		color: #e6edf3; 
-		min-height: 100vh;
-		padding: 20px;
-	}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-	h1 { 
-		color: #ffd700; 
-		text-align: center; 
-		margin: 15px 0 25px; 
-		font-size: 2.5em;
-		font-weight: 700;
-		text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
-		letter-spacing: 2px;
-		position: relative;
-		display: inline-block;
-		left: 50%;
-		transform: translateX(-50%);
-		white-space: nowrap;
-		border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-		padding-bottom: 10px;
-	}
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            background-image: 
+                radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
 
-	h2 { 
-		color: #ffd700; 
-		margin: 20px 0 15px; 
-		font-size: 1.3em; 
-	}
+        .container { max-width: 900px; margin: 0 auto; padding: 20px 24px 40px; }
 
-	h3 { 
-		color: #ffd700; 
-		margin-bottom: 15px; 
-		font-size: 16px; 
-	}
+        .header { text-align: center; padding: 30px 0 20px; }
 
-	/* ==================== НАВИГАЦИЯ ==================== */
-	.nav-wrapper { 
-		margin-bottom: 30px; 
-		border-bottom: 1px solid #30363d;
-	}
+        .header-title {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+            margin-bottom: 4px;
+        }
 
-	.nav-toggle {
-		display: none;
-		width: 100%;
-		padding: 12px 20px;
-		background: #21262d;
-		border: 1px solid #30363d;
-		border-radius: 25px;
-		color: #ffd700;
-		font-size: 16px;
-		font-weight: bold;
-		cursor: pointer;
-		text-align: left;
-	}
+        .header-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
 
-	.page-nav {
-		display: flex;
-		gap: 5px;
-		justify-content: center;
-		flex-wrap: wrap;
-	}
+        .nav-wrapper { margin-bottom: 28px; }
 
-	.page-nav a {
-		color: #8b949e;
-		text-decoration: none;
-		padding: 12px 20px;
-		font-size: 14px;
-		font-weight: 500;
-		transition: all 0.2s;
-		white-space: nowrap;
-		border-bottom: 3px solid transparent;
-		background: transparent;
-	}
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 14px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            color: var(--gold);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            transition: var(--transition);
+        }
 
-	.page-nav a:hover { 
-		color: #ffd700; 
-		border-bottom-color: #ffd70080;
-	}
+        .nav-toggle:hover { background: var(--bg-elevated); }
 
-	.page-nav a.active { 
-		color: #ffd700; 
-		font-weight: bold; 
-		border-bottom-color: #ffd700;
-	}
+        .nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-subtle);
+        }
 
-	/* ==================== КОНТЕЙНЕР ==================== */
-	.sim-container { 
-		max-width: 950px; 
-		margin: 0 auto; 
-	}
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
 
-	/* ==================== КАРТОЧКА БОЯ ==================== */
-	.fight-card {
-		background: #161b22;
-		border-radius: 16px;
-		padding: 25px;
-		border: 1px solid #30363d;
-		margin-bottom: 25px;
-	}
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; box-shadow: var(--shadow-gold); }
 
-	.vs-header {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 30px;
-		margin-bottom: 30px;
-	}
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
 
-	.fighter { 
-		text-align: center; 
-		flex: 1; 
-	}
+        .card::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5;
+        }
 
-	.fighter-emoji { font-size: 48px; }
+        .card-title { font-size: 1.15rem; font-weight: 700; color: var(--gold); margin-bottom: 16px; }
 
-	.fighter-name { 
-		font-size: 18px; 
-		color: #ffd700; 
-		margin-top: 5px; 
-	}
+        .mode-switch { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+        .mode-btn {
+            background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+            padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: var(--transition);
+        }
+        .mode-btn.active { background: var(--gold); color: var(--bg-primary); border-color: var(--gold); }
 
-	.vs-divider { 
-		font-size: 32px; 
-		color: #ffd700; 
-		font-weight: bold; 
-	}
+        .vs-header { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 24px; }
+        .fighter { text-align: center; flex: 1; }
+        .fighter-emoji { font-size: 2.5rem; }
+        .fighter-name { font-size: 1rem; color: var(--gold); font-weight: 700; margin-top: 4px; }
+        .vs-divider { font-size: 1.5rem; color: var(--gold); font-weight: 800; }
 
-	/* ==================== СЕЛЕКТЫ ==================== */
-	.selectors {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 30px;
-		margin-bottom: 25px;
-	}
+        .selectors { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .selector-group { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px; }
+        .selector-group h3 { color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; }
 
-	.selector-group {
-		background: #21262d;
-		border-radius: 12px;
-		padding: 20px;
-	}
+        select {
+            width: 100%; padding: 10px 12px; background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem; font-family: inherit; cursor: pointer; margin-bottom: 8px;
+        }
 
-	.mode-switch {
-		display: flex;
-		gap: 10px;
-		margin-bottom: 20px;
-		justify-content: center;
-	}
+        .btn-row { display: flex; gap: 10px; }
+        .btn {
+            flex: 1; padding: 14px; border-radius: 25px; font-weight: 700; cursor: pointer;
+            font-size: 0.9rem; font-family: inherit; transition: var(--transition); border: none;
+        }
+        .btn-primary { background: var(--gold); color: #1a1a1a; }
+        .btn-primary:hover { background: #ffe44d; }
+        .btn-secondary { background: var(--bg-elevated); border: 1px solid var(--gold); color: var(--gold); }
+        .btn-secondary:hover { background: #252d38; }
 
-	.mode-btn {
-		background: #21262d;
-		border: 1px solid #30363d;
-		color: #8b949e;
-		padding: 8px 20px;
-		border-radius: 20px;
-		cursor: pointer;
-		font-size: 14px;
-		transition: all 0.2s;
-	}
+        .result-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; }
+        .result-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+        .stat-item { color: var(--text-secondary); font-size: 0.85rem; }
+        .stat-value { color: var(--gold); font-weight: 700; }
 
-	.mode-btn.active { 
-		background: #ffd700; 
-		color: #0d1117; 
-		border-color: #ffd700; 
-	}
+        .result-log {
+            font-family: 'SF Mono', 'Consolas', monospace; font-size: 0.8rem; line-height: 1.8;
+            max-height: 250px; overflow-y: auto; color: var(--text-secondary);
+        }
 
-	select, .player-select {
-		width: 100%;
-		padding: 10px 12px;
-		background: #161b22;
-		border: 1px solid #30363d;
-		border-radius: 8px;
-		color: white;
-		font-size: 14px;
-		margin-bottom: 15px;
-		cursor: pointer;
-	}
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .analytics-card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px; }
+        .analytics-card h4 { color: var(--gold); font-size: 0.85rem; margin-bottom: 10px; }
 
-	select:hover, .player-select:hover { border-color: #ffd700; }
+        .progress-bar { background: var(--bg-card); height: 26px; border-radius: 13px; overflow: hidden; margin: 8px 0; }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, #c49600, #ffd700); display: flex;
+            align-items: center; justify-content: flex-end; padding-right: 10px;
+            font-weight: 700; color: #1a1a1a; font-size: 0.78rem;
+        }
 
-	.custom-row { 
-		display: flex; 
-		gap: 10px; 
-	}
+        .cup { color: var(--gold); } .lightning { color: var(--gold); }
+        .crit { color: var(--red); } .miss { color: var(--text-muted); }
 
-	.custom-row select { flex: 1; }
+        .status-message { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-	/* ==================== КНОПКИ БОЯ ==================== */
-	.fight-buttons {
-		display: flex;
-		gap: 15px;
-		margin-top: 10px;
-	}
-
-	.fight-btn {
-		flex: 1;
-		background: #ffd700;
-		border: none;
-		color: #0d1117;
-		padding: 15px;
-		border-radius: 30px;
-		font-size: 16px;
-		font-weight: bold;
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	.fight-btn:hover { 
-		background: #ffe44d; 
-		transform: scale(1.02); 
-	}
-
-	.analyze-btn {
-		flex: 1;
-		background: #21262d;
-		border: 1px solid #ffd700;
-		color: #ffd700;
-		padding: 15px;
-		border-radius: 30px;
-		font-size: 16px;
-		font-weight: bold;
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	.analyze-btn:hover { background: #2a303c; }
-
-	/* ==================== КАРТОЧКА РЕЗУЛЬТАТА ==================== */
-	.result-card {
-		background: #161b22;
-		border-radius: 16px;
-		padding: 25px;
-		border: 1px solid #30363d;
-		min-height: 250px;
-	}
-
-	.result-log { 
-		font-family: 'Consolas', monospace;
-		font-size: 14px;
-		line-height: 1.8;
-		word-break: break-word;
-		max-height: 300px;
-		overflow-y: auto;
-		-webkit-overflow-scrolling: touch;
-	}
-
-	.result-stats {
-		display: flex;
-		gap: 30px;
-		margin-bottom: 20px;
-		flex-wrap: wrap;
-	}
-
-	.stat-item { color: #8b949e; }
-
-	.stat-value { 
-		color: #ffd700; 
-		font-weight: bold; 
-	}
-
-	/* ==================== АНАЛИТИКА ==================== */
-	.analytics-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 20px;
-		margin-bottom: 20px;
-	}
-
-	.analytics-card {
-		background: #21262d;
-		border-radius: 12px;
-		padding: 20px;
-	}
-
-	.analytics-card h4 { 
-		color: #ffd700; 
-		margin-bottom: 15px; 
-		font-size: 16px; 
-	}
-
-	.progress-bar {
-		background: #161b22;
-		height: 30px;
-		border-radius: 15px;
-		overflow: hidden;
-		margin: 10px 0;
-	}
-
-	.progress-fill {
-		height: 100%;
-		background: linear-gradient(90deg, #ffd700, #ffe44d);
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		padding-right: 10px;
-		font-weight: bold;
-		color: #0d1117;
-	}
-
-	/* ==================== ЦВЕТА ДЛЯ ЛОГОВ ==================== */
-	.cup { color: #ffd700; }
-	.lightning { color: #ffd700; }
-	.crit { color: #ff6b6b; }
-	.miss { color: #8b949e; }
-
-	/* ==================== ЗАГРУЗКА ==================== */
-	.loading { 
-		text-align: center; 
-		padding: 40px; 
-		color: #8b949e; 
-	}
-
-	/* ==================== МОБИЛЬНАЯ ВЕРСИЯ ==================== */
-	@media (max-width: 768px) {
-		body { padding: 10px; }
-		h1 { font-size: 1.8em; }
-		
-		/* Меню */
-		.nav-wrapper { border-bottom: none; }
-		.nav-toggle { display: block; }
-		.page-nav { 
-			display: none; 
-			flex-direction: column; 
-			gap: 8px; 
-			margin-top: 10px; 
-		}
-		.page-nav.show { display: flex; }
-		.page-nav a { 
-			text-align: center; 
-			padding: 10px;
-			background: #21262d;
-			border: 1px solid #30363d;
-			border-radius: 20px;
-			margin-bottom: 0;
-		}
-		.page-nav a.active { 
-			background: #ffd700; 
-			color: #0d1117; 
-			font-weight: bold;
-			border-color: #ffd700;
-		}
-		
-		/* Селекты */
-		.selectors { grid-template-columns: 1fr; gap: 15px; }
-		.vs-header { gap: 10px; }
-		.fighter-emoji { font-size: 36px; }
-		.fighter-name { font-size: 14px; }
-		.fight-buttons { flex-direction: column; }
-		.analytics-grid { grid-template-columns: 1fr; }
-	}
-</style>
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 32px; }
+            .card { padding: 18px 14px; border-radius: var(--radius-md); }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
+            .header-title { font-size: 1.8rem; }
+            .selectors { grid-template-columns: 1fr; }
+            .analytics-grid { grid-template-columns: 1fr; }
+            .vs-header { gap: 10px; }
+            .fighter-emoji { font-size: 2rem; }
+        }
+    </style>
 </head>
 <body>
-    <h1>СИМУЛЯТОР БОЯ</h1>
-    
-    <div class="nav-wrapper">
-        <button class="nav-toggle" id="navToggle">☰ Меню</button>
-        <div class="page-nav">
-            <a href="index.html">📊 Статистика</a>
-			<a href="logs.html">📜 Логи</a>
-            <a href="calc.html">🎲 Калькулятор</a>
-            <a href="balance.html">⚖️ Баланс</a>
-			<a href="simulator.html" class="active">🧪 Симулятор</a>
-			<a href="gradient.html">📈 Градиент</a>
-			<a href="guide.html">⚔️ Гайд</a>
-			<a href="hall.html">🏆 Зал Славы</a>
-			<a href="lore.html">📜 Лор Этерниса</a>
-			<a href="tavern.html">🍺 Таверна</a>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title">СИМУЛЯТОР БОЯ</h1>
+            <p class="header-subtitle">Точная копия C# боевой системы</p>
+        </header>
+
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link">📊 Статистика</a>
+                <a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link active">🧪 Симулятор</a>
+                <a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a>
+                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+            </nav>
         </div>
-    </div>
-    
-    <div class="sim-container">
-        <div class="fight-card">
+
+        <div class="card">
             <div class="mode-switch">
                 <button class="mode-btn active" onclick="setMode('players')">👥 Игроки</button>
                 <button class="mode-btn" onclick="setMode('custom')">⚙️ Сборка</button>
             </div>
-            
+
             <div class="vs-header">
-                <div class="fighter">
-                    <div class="fighter-emoji" id="p1Emoji">⚔️</div>
-                    <div class="fighter-name" id="p1Name">Воин</div>
-                </div>
+                <div class="fighter"><div class="fighter-emoji" id="p1Emoji">⚔️</div><div class="fighter-name" id="p1Name">Воин</div></div>
                 <div class="vs-divider">VS</div>
-                <div class="fighter">
-                    <div class="fighter-emoji" id="p2Emoji">🛡️</div>
-                    <div class="fighter-name" id="p2Name">Паладин</div>
-                </div>
+                <div class="fighter"><div class="fighter-emoji" id="p2Emoji">🛡️</div><div class="fighter-name" id="p2Name">Паладин</div></div>
             </div>
-            
+
             <div id="mode-players">
                 <div class="selectors">
-                    <div class="selector-group">
-                        <h3>🎮 Игрок 1</h3>
-                        <select id="player1Select" class="player-select" onchange="updateFighterDisplay()"></select>
-                    </div>
-                    <div class="selector-group">
-                        <h3>🎮 Игрок 2</h3>
-                        <select id="player2Select" class="player-select" onchange="updateFighterDisplay()"></select>
-                    </div>
+                    <div class="selector-group"><h3>🎮 Игрок 1</h3><select id="player1Select" onchange="updateFighterDisplay()"></select></div>
+                    <div class="selector-group"><h3>🎮 Игрок 2</h3><select id="player2Select" onchange="updateFighterDisplay()"></select></div>
                 </div>
             </div>
-            
+
             <div id="mode-custom" style="display:none;">
                 <div class="selectors">
-                    <div class="selector-group">
-                        <h3>⚙️ Player 1</h3>
-                        <select id="class1Select" onchange="updateCustomDisplay()"></select>
-                        <div class="custom-row">
-                            <select id="race1Select" onchange="updateCustomDisplay()"></select>
-                        </div>
-                    </div>
-                    <div class="selector-group">
-                        <h3>⚙️ Player 2</h3>
-                        <select id="class2Select" onchange="updateCustomDisplay()"></select>
-                        <div class="custom-row">
-                            <select id="race2Select" onchange="updateCustomDisplay()"></select>
-                        </div>
-                    </div>
+                    <div class="selector-group"><h3>⚙️ Player 1</h3><select id="class1Select" onchange="updateFighterDisplay()"></select><select id="race1Select" onchange="updateFighterDisplay()"></select></div>
+                    <div class="selector-group"><h3>⚙️ Player 2</h3><select id="class2Select" onchange="updateFighterDisplay()"></select><select id="race2Select" onchange="updateFighterDisplay()"></select></div>
                 </div>
             </div>
-            
-            <div class="fight-buttons">
-                <button class="fight-btn" onclick="simulateFight()">⚔️ 1 БОЙ</button>
-                <button class="analyze-btn" onclick="simulateMultiple(100)">📊 ×100 БОЁВ</button>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="simulateFight()">⚔️ 1 бой</button>
+                <button class="btn btn-secondary" onclick="simulateMultiple(100)">📊 ×100 боёв</button>
             </div>
         </div>
-        
+
         <div class="result-card" id="resultCard" style="display:none;">
-            <h2 id="resultTitle">📋 РЕЗУЛЬТАТ БОЯ</h2>
+            <h2 class="card-title" id="resultTitle">📋 Результат</h2>
             <div id="resultContent"></div>
         </div>
     </div>
-    
+
     <script>
-		const navToggle = document.querySelector('.nav-toggle');
-		const pageNav = document.querySelector('.page-nav');
-        navToggle.addEventListener('click', () => {
-            pageNav.classList.toggle('show');
-            navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        function toggleNav() {
+            const nav = document.getElementById('pageNav'), btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show'); btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        }
+        document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
+            const nav = document.getElementById('pageNav'), btn = document.querySelector('.nav-toggle');
+            nav.classList.remove('show'); if(btn) btn.textContent = '☰ Меню';
+        }));
+
+        const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+
+        let CONFIG = {}, classesData = [], racesData = [], playersData = [], currentMode = 'players';
+
+        Promise.all([fetch(DATA_URL).then(r=>r.json()), fetch(STATS_URL).then(r=>r.json())]).then(([data,stats]) => {
+            CONFIG = data.config || { defReduction:0.05, baseAC:10, maxRounds:20, blockThreshold:4 };
+            classesData = data.classes; racesData = data.races;
+            playersData = (stats.players || []).filter(p => p.name && p.name !== 'Unknown');
+            const p1 = document.getElementById('player1Select'), p2 = document.getElementById('player2Select');
+            playersData.sort((a,b)=>a.display.localeCompare(b.display)).forEach((p,i) => {
+                const o = `<option value="${p.display}">${p.emoji} ${p.display}</option>`;
+                p1.innerHTML += o; p2.innerHTML += o;
+            });
+            if(playersData.length>1) p2.selectedIndex = 1;
+            ['class1Select','class2Select'].forEach(id => document.getElementById(id).innerHTML = classesData.map(c => `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join(''));
+            ['race1Select','race2Select'].forEach(id => document.getElementById(id).innerHTML = racesData.map(r => `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join(''));
+            updateFighterDisplay();
         });
 
-		const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-		const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-
-		let CONFIG = {};
-		let classesData = [];
-		let racesData = [];
-		let playersData = [];
-		let currentMode = 'players';
-
-		Promise.all([
-			fetch(DATA_URL).then(r => r.json()),
-			fetch(JSON_URL).then(r => r.json())
-		]).then(([data, stats]) => {
-			CONFIG = data.config || { 
-				defReduction: 0.05,
-				baseAC: 10,
-				critMultiplier: 2,
-				maxRounds: 20,
-				blockThreshold: 4
-			};
-			classesData = data.classes;
-			racesData = data.races;
-			playersData = stats.players.filter(p => p.name && p.name !== 'Unknown');
-			populateSelects();
-			updateFighterDisplay();
-		});
-        
-        function populateSelects() {
-            const p1Select = document.getElementById('player1Select');
-            const p2Select = document.getElementById('player2Select');
-            playersData.sort((a,b) => a.display.localeCompare(b.display)).forEach((p, i) => {
-                const opt = `<option value="${p.display}">${p.emoji} ${p.display}</option>`;
-                p1Select.innerHTML += opt;
-                p2Select.innerHTML += opt;
-            });
-            if (playersData.length > 0) p2Select.selectedIndex = Math.min(1, playersData.length - 1);
-            
-            ['class1Select', 'class2Select'].forEach(id => {
-                document.getElementById(id).innerHTML = classesData.map(c => `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join('');
-            });
-            ['race1Select', 'race2Select'].forEach(id => {
-                document.getElementById(id).innerHTML = racesData.map(r => `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join('');
-            });
-        }
-        
-        function setMode(mode) {
-            currentMode = mode;
+        function setMode(m) {
+            currentMode = m;
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
-            document.getElementById('mode-players').style.display = mode === 'players' ? 'block' : 'none';
-            document.getElementById('mode-custom').style.display = mode === 'custom' ? 'block' : 'none';
+            document.getElementById('mode-players').style.display = m==='players'?'block':'none';
+            document.getElementById('mode-custom').style.display = m==='custom'?'block':'none';
             updateFighterDisplay();
         }
         window.setMode = setMode;
-        
-        function getFighterStats(isPlayer1) {
+
+        function getStats(className, raceName) {
+            const cls = classesData.find(c=>c.Name===className) || {Hp:20,Atk:5,Def:0,Min:3,Max:8};
+            const race = racesData.find(r=>r.Name===raceName) || {BonusHp:0,BonusAtk:0,BonusDef:0,BonusMin:0,BonusMax:0};
+            return { hp:cls.Hp+race.BonusHp, atk:cls.Atk+race.BonusAtk, def:cls.Def+race.BonusDef, min:cls.Min+race.BonusMin, max:cls.Max+race.BonusMax };
+        }
+
+        function getFighter(isP1) {
             if (currentMode === 'players') {
-                const sel = document.getElementById(isPlayer1 ? 'player1Select' : 'player2Select');
-                const player = playersData.find(p => p.display === sel.value);
-                if (!player) return null;
-                const parts = player.name.split('-');
-                return {
-                    name: player.display,
-                    emoji: player.emoji,
-                    className: parts[1] || parts[0],
-                    raceName: parts[0],
-                    stats: getStatsFromClassRace(parts[1] || parts[0], parts[0])
-                };
+                const sel = document.getElementById(isP1?'player1Select':'player2Select');
+                const p = playersData.find(x=>x.display===sel.value);
+                if(!p) return null;
+                const parts = p.name.split('-');
+                return { name:p.display, emoji:p.emoji, stats:getStats(parts[1]||parts[0], parts[0]) };
             } else {
-                const classSel = document.getElementById(isPlayer1 ? 'class1Select' : 'class2Select');
-                const raceSel = document.getElementById(isPlayer1 ? 'race1Select' : 'race2Select');
-                const cls = classesData.find(c => c.Name === classSel.value) || classesData[0];
-                const race = racesData.find(r => r.Name === raceSel.value) || racesData[0];
-                return {
-                    name: `${cls.Name} (${race.Name})`,
-                    emoji: race.Emoji + cls.Emoji,
-                    className: cls.Name,
-                    raceName: race.Name,
-                    stats: getStatsFromClassRace(cls.Name, race.Name)
-                };
+                const cls = document.getElementById(isP1?'class1Select':'class2Select').value;
+                const race = document.getElementById(isP1?'race1Select':'race2Select').value;
+                const c = classesData.find(x=>x.Name===cls)||classesData[0];
+                const r = racesData.find(x=>x.Name===race)||racesData[0];
+                return { name:`${cls} (${race})`, emoji:r.Emoji+c.Emoji, stats:getStats(cls,race) };
             }
         }
-        
-        function getStatsFromClassRace(className, raceName) {
-            const cls = classesData.find(c => c.Name === className) || classesData[0];
-            const race = racesData.find(r => r.Name === raceName) || racesData[0];
-            return {
-                hp: cls.Hp + race.BonusHp,
-                atk: cls.Atk + race.BonusAtk,
-                def: cls.Def + race.BonusDef,
-                min: cls.Min + race.BonusMin,
-                max: cls.Max + race.BonusMax
-            };
-        }
-        
+
         function updateFighterDisplay() {
-            const p1 = getFighterStats(true);
-            const p2 = getFighterStats(false);
-            if (p1) {
-                document.getElementById('p1Emoji').textContent = p1.emoji;
-                document.getElementById('p1Name').textContent = p1.name;
-            }
-            if (p2) {
-                document.getElementById('p2Emoji').textContent = p2.emoji;
-                document.getElementById('p2Name').textContent = p2.name;
-            }
+            const p1=getFighter(true), p2=getFighter(false);
+            if(p1){ document.getElementById('p1Emoji').textContent=p1.emoji; document.getElementById('p1Name').textContent=p1.name; }
+            if(p2){ document.getElementById('p2Emoji').textContent=p2.emoji; document.getElementById('p2Name').textContent=p2.name; }
         }
         window.updateFighterDisplay = updateFighterDisplay;
-        window.updateCustomDisplay = updateFighterDisplay;
-        
-        function simulateSingleFight() {
-            const p1 = getFighterStats(true);
-            const p2 = getFighterStats(false);
-            if (!p1 || !p2) return null;
-            
-            const s1 = p1.stats;
-            const s2 = p2.stats;
-            const rnd = () => Math.floor(Math.random() * 20) + 1;
-            const d3 = () => Math.floor(Math.random() * 3);
-            
-            const init1 = rnd() + s1.atk + d3();
-            const init2 = rnd() + s2.atk + d3();
-            const first = init1 !== init2 ? init1 > init2 : Math.random() < 0.5;
-            
-            let hp1 = s1.hp, hp2 = s2.hp;
-            let dmg1 = 0, dmg2 = 0;
-            const log = [];
-            
-            let rounds = 0;
-            
-            while (hp1 > 0 && hp2 > 0 && rounds < CONFIG.maxRounds) {
+
+        function fight(p1,p2) {
+            const s1=p1.stats, s2=p2.stats;
+            const rnd=()=>Math.floor(Math.random()*20)+1, d3=()=>Math.floor(Math.random()*3);
+            const first = rnd()+s1.atk+d3() > rnd()+s2.atk+d3();
+            let hp1=s1.hp, hp2=s2.hp, d1=0, d2=0, rounds=0;
+            const log=[];
+            while(hp1>0 && hp2>0 && rounds<CONFIG.maxRounds){
                 rounds++;
-                
-                if (first) {
-                    const r1 = rnd();
-                    if (r1 === 1) { log.push('❌'); }
-                    else if (r1 + s1.atk < CONFIG.baseAC + s2.def) { log.push(r1 <= CONFIG.blockThreshold ? '💨' : '🛡'); }
-                    else {
-                        let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                        if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                        d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction)));
-                        dmg1 += d; hp2 = Math.max(0, hp2 - d);
-                        log.push(r1 === 20 ? `💥${d}` : d.toString());
-                    }
-                    if (hp2 <= 0) { log.push('0'); break; }
-                    
-                    const r2 = rnd();
-                    if (r2 === 1) { log.push('❌'); }
-                    else if (r2 + s2.atk < CONFIG.baseAC + s1.def) { log.push(r2 <= CONFIG.blockThreshold ? '💨' : '🛡'); }
-                    else {
-                        let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                        if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                        d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction)));
-                        dmg2 += d; hp1 = Math.max(0, hp1 - d);
-                        log.push(r2 === 20 ? `💥${d}` : d.toString());
-                    }
+                if(first){
+                    const r=rnd(); if(r===1)log.push('❌'); else if(r+s1.atk<CONFIG.baseAC+s2.def)log.push(r<=4?'💨':'🛡'); else { let d=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min; if(r===20)d+=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min; d=Math.max(1,Math.round(d*(1-s2.def*CONFIG.defReduction))); d1+=d; hp2=Math.max(0,hp2-d); log.push(r===20?`💥${d}`:d+''); }
+                    if(hp2<=0){log.push('0');break;}
+                    const r2=rnd(); if(r2===1)log.push('❌'); else if(r2+s2.atk<CONFIG.baseAC+s1.def)log.push(r2<=4?'💨':'🛡'); else { let d=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min; if(r2===20)d+=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min; d=Math.max(1,Math.round(d*(1-s1.def*CONFIG.defReduction))); d2+=d; hp1=Math.max(0,hp1-d); log.push(r2===20?`💥${d}`:d+''); }
                 } else {
-                    const r2 = rnd();
-                    if (r2 === 1) { log.push('❌'); }
-                    else if (r2 + s2.atk < CONFIG.baseAC + s1.def) { log.push(r2 <= CONFIG.blockThreshold ? '💨' : '🛡'); }
-                    else {
-                        let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                        if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                        d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction)));
-                        dmg2 += d; hp1 = Math.max(0, hp1 - d);
-                        log.push(r2 === 20 ? `💥${d}` : d.toString());
-                    }
-                    if (hp1 <= 0) { log.push('0'); break; }
-                    
-                    const r1 = rnd();
-                    if (r1 === 1) { log.push('❌'); }
-                    else if (r1 + s1.atk < CONFIG.baseAC + s2.def) { log.push(r1 <= CONFIG.blockThreshold ? '💨' : '🛡'); }
-                    else {
-                        let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                        if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                        d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction)));
-                        dmg1 += d; hp2 = Math.max(0, hp2 - d);
-                        log.push(r1 === 20 ? `💥${d}` : d.toString());
-                    }
+                    const r=rnd(); if(r===1)log.push('❌'); else if(r+s2.atk<CONFIG.baseAC+s1.def)log.push(r<=4?'💨':'🛡'); else { let d=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min; if(r===20)d+=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min; d=Math.max(1,Math.round(d*(1-s1.def*CONFIG.defReduction))); d2+=d; hp1=Math.max(0,hp1-d); log.push(r===20?`💥${d}`:d+''); }
+                    if(hp1<=0){log.push('0');break;}
+                    const r2=rnd(); if(r2===1)log.push('❌'); else if(r2+s1.atk<CONFIG.baseAC+s2.def)log.push(r2<=4?'💨':'🛡'); else { let d=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min; if(r2===20)d+=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min; d=Math.max(1,Math.round(d*(1-s2.def*CONFIG.defReduction))); d1+=d; hp2=Math.max(0,hp2-d); log.push(r2===20?`💥${d}`:d+''); }
                 }
             }
-            
-            const winner = hp1 > hp2 ? p1 : p2;
-            const loser = hp1 > hp2 ? p2 : p1;
-            const winnerDmg = hp1 > hp2 ? dmg1 : dmg2;
-            const loserDmg = hp1 > hp2 ? dmg2 : dmg1;
-            const winnerHp = hp1 > hp2 ? hp1 : hp2;
-            
-            const firstMark1 = first ? '⚡' : '';
-            const firstMark2 = !first ? '⚡' : '';
-            const cup1 = winner === p1 ? '🏆' : '';
-            const cup2 = winner === p2 ? '🏆' : '';
-            
-            const header = `${firstMark1}${cup1}${p1.emoji} ${p1.name} ${dmg1}:${dmg2} ${firstMark2}${cup2}${p2.emoji} ${p2.name}`;
-            const roundsStr = [];
-            for (let i = 0; i < log.length; i += 2) roundsStr.push(`${log[i]}:${log[i+1] || '0'}`);
-            
-            return {
-                winner, loser, winnerHp, winnerDmg, loserDmg, rounds,
-                first: first ? p1 : p2,
-                fullLog: `${header} | ${roundsStr.join(' | ')}`,
-                p1, p2, dmg1, dmg2, crits: log.filter(l => l.includes('💥')).length,
-                misses: log.filter(l => l === '❌' || l === '💨' || l === '🛡').length
-            };
+            const winner = hp1>hp2?p1:p2, loser = hp1>hp2?p2:p1;
+            const wz = hp1>hp2?d1:d2, lz = hp1>hp2?d2:d1, wh = hp1>hp2?hp1:hp2;
+            const fm1 = first?'⚡':'', fm2 = !first?'⚡':'', c1 = winner===p1?'🏆':'', c2 = winner===p2?'🏆':'';
+            const header = `${fm1}${c1}${p1.emoji} ${p1.name} ${d1}:${d2} ${fm2}${c2}${p2.emoji} ${p2.name}`;
+            const rs = []; for(let i=0;i<log.length;i+=2) rs.push(`${log[i]}:${log[i+1]||'0'}`);
+            return { winner,loser,winnerHp:wh,winnerDmg:wz,loserDmg:lz,rounds,first:first?p1:p2,
+                fullLog:`${header} | ${rs.join(' | ')}`,p1,p2,d1,d2,
+                crits:log.filter(l=>l.includes('💥')).length, misses:log.filter(l=>l==='❌'||l==='💨'||l==='🛡').length };
         }
-        
+
+        function colorize(t) { return t.replace(/🏆/g,'<span class="cup">🏆</span>').replace(/⚡/g,'<span class="lightning">⚡</span>').replace(/💥\d+/g,m=>`<span class="crit">${m}</span>`).replace(/❌/g,'<span class="miss">❌</span>').replace(/💨/g,'<span class="miss">💨</span>').replace(/🛡/g,'<span class="miss">🛡</span>'); }
+
         function simulateFight() {
-            const result = simulateSingleFight();
-            if (!result) return;
-            
-            document.getElementById('resultCard').style.display = 'block';
-            document.getElementById('resultTitle').textContent = '📋 РЕЗУЛЬТАТ БОЯ';
+            const p1=getFighter(true), p2=getFighter(false);
+            if(!p1||!p2) return;
+            const r = fight(p1,p2);
+            document.getElementById('resultCard').style.display='block';
+            document.getElementById('resultTitle').textContent='📋 Результат боя';
             document.getElementById('resultContent').innerHTML = `
                 <div class="result-stats">
-                    <div class="stat-item">🏆 Победитель: <span class="stat-value">${result.winner.name}</span></div>
-                    <div class="stat-item">❤️ HP: <span class="stat-value">${result.winnerHp}</span></div>
-                    <div class="stat-item">⚔️ Урон: <span class="stat-value">${result.winnerDmg}:${result.loserDmg}</span></div>
-                    <div class="stat-item">⏱ Раундов: <span class="stat-value">${result.rounds}</span></div>
-                    <div class="stat-item">⚡ Первый ход: <span class="stat-value">${result.first.name}</span></div>
+                    <div class="stat-item">🏆 <span class="stat-value">${r.winner.name}</span></div>
+                    <div class="stat-item">❤️ <span class="stat-value">${r.winnerHp}</span></div>
+                    <div class="stat-item">⚔️ <span class="stat-value">${r.winnerDmg}:${r.loserDmg}</span></div>
+                    <div class="stat-item">⏱ <span class="stat-value">${r.rounds}</span></div>
+                    <div class="stat-item">⚡ <span class="stat-value">${r.first.name}</span></div>
                 </div>
-                <div class="result-log">${colorize(result.fullLog)}</div>
-            `;
+                <div class="result-log">${colorize(r.fullLog)}</div>`;
         }
         window.simulateFight = simulateFight;
-        
-        function simulateMultiple(count) {
+
+        function simulateMultiple(n) {
+            const p1=getFighter(true), p2=getFighter(false);
+            if(!p1||!p2) return;
+            let w1=0, w2=0, fw=0, tr=0, tc=0, tm=0, fc={p1:0,p2:0};
             const results = [];
-            let p1Wins = 0, p2Wins = 0;
-            let firstWins = 0;
-            let totalRounds = 0, totalCrits = 0, totalMisses = 0;
-            const firstCount = { p1: 0, p2: 0 };
-            
-            for (let i = 0; i < count; i++) {
-                const r = simulateSingleFight();
-                if (!r) continue;
+            for(let i=0;i<n;i++) {
+                const r = fight(p1,p2); if(!r) continue;
                 results.push(r);
-                
-                if (r.winner === r.p1) p1Wins++; else p2Wins++;
-                if (r.winner === r.first) firstWins++;
-                if (r.first === r.p1) firstCount.p1++; else firstCount.p2++;
-                totalRounds += r.rounds;
-                totalCrits += r.crits;
-                totalMisses += r.misses;
+                if(r.winner===p1) w1++; else w2++;
+                if(r.winner===r.first) fw++;
+                if(r.first===p1) fc.p1++; else fc.p2++;
+                tr+=r.rounds; tc+=r.crits; tm+=r.misses;
             }
-            
-            const p1 = results[0]?.p1;
-            const p2 = results[0]?.p2;
-            const p1Rate = (p1Wins / count * 100).toFixed(1);
-            const p2Rate = (p2Wins / count * 100).toFixed(1);
-            
-            document.getElementById('resultCard').style.display = 'block';
-            document.getElementById('resultTitle').textContent = `📊 РЕЗУЛЬТАТЫ ${count} БОЁВ`;
+            const r1=(w1/n*100).toFixed(1), r2=(w2/n*100).toFixed(1);
+            document.getElementById('resultCard').style.display='block';
+            document.getElementById('resultTitle').textContent=`📊 Результаты ×${n}`;
             document.getElementById('resultContent').innerHTML = `
                 <div class="analytics-grid">
-                    <div class="analytics-card">
-                        <h4>🏆 Победитель</h4>
-                        <div>${p1?.name || 'Player 1'}</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width:${p1Rate}%">${p1Wins} (${p1Rate}%)</div>
-                        </div>
-                        <div style="margin-top:15px;">${p2?.name || 'Player 2'}</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width:${p2Rate}%">${p2Wins} (${p2Rate}%)</div>
-                        </div>
-                        <div style="margin-top:15px;text-align:center;">
-                            ${p1Wins > p2Wins ? `${p1?.name} сильнее!` : (p2Wins > p1Wins ? `${p2?.name} сильнее!` : 'Равные силы!')}
-                        </div>
+                    <div class="analytics-card"><h4>🏆 Победитель</h4>
+                        <div>${p1.name}</div><div class="progress-bar"><div class="progress-fill" style="width:${r1}%">${w1} (${r1}%)</div></div>
+                        <div style="margin-top:12px;">${p2.name}</div><div class="progress-bar"><div class="progress-fill" style="width:${r2}%">${w2} (${r2}%)</div></div>
+                        <div style="margin-top:12px;text-align:center;">${w1>w2?p1.name+' сильнее!':w2>w1?p2.name+' сильнее!':'Равные силы!'}</div>
                     </div>
-                    <div class="analytics-card">
-                        <h4>⚡ Первый ход</h4>
-                        <div>${p1?.name}: ${firstCount.p1} раз (${(firstCount.p1/count*100).toFixed(0)}%)</div>
-                        <div>${p2?.name}: ${firstCount.p2} раз (${(firstCount.p2/count*100).toFixed(0)}%)</div>
-                        <div style="margin-top:15px;">Побед первого хода: ${firstWins}/${count} (${(firstWins/count*100).toFixed(0)}%)</div>
+                    <div class="analytics-card"><h4>⚡ Первый ход</h4>
+                        <div>${p1.name}: ${fc.p1} (${(fc.p1/n*100).toFixed(0)}%)</div>
+                        <div>${p2.name}: ${fc.p2} (${(fc.p2/n*100).toFixed(0)}%)</div>
+                        <div style="margin-top:12px;">Побед первого хода: ${fw}/${n} (${(fw/n*100).toFixed(0)}%)</div>
                     </div>
-                    <div class="analytics-card">
-                        <h4>📈 Статистика</h4>
-                        <div>Средняя длительность: ${(totalRounds / count).toFixed(1)} раунда</div>
-                        <div>Всего критов: ${totalCrits}</div>
-                        <div>Всего промахов/блоков: ${totalMisses}</div>
+                    <div class="analytics-card"><h4>📈 Статистика</h4>
+                        <div>Средняя длительность: ${(tr/n).toFixed(1)} раунда</div>
+                        <div>Всего критов: ${tc}</div><div>Всего промахов/блоков: ${tm}</div>
                     </div>
-                    <div class="analytics-card">
-                        <h4>📋 Пример боя</h4>
-                        <div class="result-log" style="max-height:120px;margin-top:5px;">${colorize(results[0]?.fullLog || '')}</div>
+                    <div class="analytics-card"><h4>📋 Пример боя</h4>
+                        <div class="result-log" style="max-height:100px;margin-top:4px;">${colorize(results[0]?.fullLog||'')}</div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
         window.simulateMultiple = simulateMultiple;
-        
-        function colorize(text) {
-            return text
-                .replace(/🏆/g, '<span class="cup">🏆</span>')
-                .replace(/⚡/g, '<span class="lightning">⚡</span>')
-                .replace(/💥\d+/g, m => `<span class="crit">${m}</span>`)
-                .replace(/❌/g, '<span class="miss">❌</span>')
-                .replace(/💨/g, '<span class="miss">💨</span>')
-                .replace(/🛡/g, '<span class="miss">🛡</span>');
-        }
     </script>
 </body>
 </html>
