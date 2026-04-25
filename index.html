@@ -3,1408 +3,654 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>DnD Статистика</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body { 
-    font-family: 'Segoe UI', 'Arial', sans-serif; 
-    background: 
-        radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
-        radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
-        linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-    color: #e6edf3; 
-    min-height: 100vh;
-    padding: 20px;
-}
-
-h1 { 
-    color: #ffd700; 
-    text-align: center; 
-    margin: 15px 0 25px; 
-    font-size: 2.5em;
-    font-weight: 700;
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
-    letter-spacing: 2px;
-    position: relative;
-    display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-    padding-bottom: 10px;
-}
-
-h2 { 
-    color: #ffd700; 
-    margin: 10px 0; 
-    border-bottom: none; 
-}
-
-h3 { 
-    color: #ffd700; 
-    font-size: 16px; 
-    margin-bottom: 15px; 
-}
-
-/* ==================== НАВИГАЦИЯ ==================== */
-.nav-wrapper { 
-    margin-bottom: 30px; 
-    border-bottom: 1px solid #30363d;
-}
-
-.nav-toggle {
-    display: none;
-    width: 100%;
-    padding: 12px 20px;
-    background: #21262d;
-    border: 1px solid #30363d;
-    border-radius: 25px;
-    color: #ffd700;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: left;
-}
-
-.page-nav {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.page-nav a {
-    color: #8b949e;
-    text-decoration: none;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-    white-space: nowrap;
-    border-bottom: 3px solid transparent;
-    background: transparent;
-}
-
-.page-nav a:hover { 
-    color: #ffd700; 
-    border-bottom-color: #ffd70080;
-}
-
-.page-nav a.active { 
-    color: #ffd700; 
-    font-weight: bold; 
-    border-bottom-color: #ffd700;
-}
-
-/* ==================== КНОПКИ ==================== */
-.fixed-buttons {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    display: flex;
-    gap: 8px;
-    z-index: 1000;
-    opacity: 0.85;
-    transition: opacity 0.2s;
-}
-
-.fixed-buttons:hover { opacity: 1; }
-
-.action-btn {
-    background: #21262d;
-    color: #c9d1d9;
-    border: 1px solid #30363d;
-    border-radius: 30px;
-    padding: 8px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: all 0.2s;
-    text-decoration: none;
-    backdrop-filter: blur(5px);
-}
-
-.action-btn:hover { 
-    background: #30363d; 
-    color: white; 
-    transform: scale(1.02); 
-}
-
-.beer-btn { 
-    background: #daa520; 
-    color: white; 
-    border-color: #ffd700; 
-}
-
-.beer-btn:hover { 
-    background: #ffd700; 
-    color: #0d1117; 
-}
-
-/* ==================== СТАТ-КАРТОЧКИ ==================== */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.stat-card {
-    background: linear-gradient(145deg, #21262d, #161b22);
-    border-radius: 15px;
-    padding: 25px;
-    text-align: center;
-    border: 1px solid #30363d;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    transition: transform 0.2s;
-}
-
-.stat-card:hover { transform: translateY(-3px); }
-
-.stat-value { 
-    font-size: 42px; 
-    font-weight: bold; 
-    color: #ffd700; 
-}
-
-.stat-label { 
-    color: #8b949e; 
-    font-size: 14px; 
-    text-transform: uppercase; 
-    margin-top: 8px; 
-}
-
-/* ==================== ВКЛАДКИ ==================== */
-.nav-tabs {
-    display: flex;
-    gap: 5px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-    background: #161b22;
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid #30363d;
-}
-
-.tab-btn {
-    background: transparent;
-    border: none;
-    color: #8b949e;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.tab-btn:hover { 
-    background: #21262d; 
-    color: #c9d1d9; 
-}
-
-.tab-btn.active { 
-    background: #ffd700; 
-    color: #0d1117; 
-    font-weight: bold; 
-}
-
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* ==================== ТАБЛИЦЫ ==================== */
-.tables-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: 20px;
-}
-
-.table-container {
-    background: #161b22;
-    border-radius: 12px;
-    padding: 18px;
-    border: 1px solid #30363d;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    font-size: 13px; 
-}
-
-th, td { 
-    border: 1px solid #30363d; 
-    padding: 8px 10px; 
-    text-align: left; 
-}
-
-th { 
-    background: #21262d; 
-    color: #ffd700; 
-    font-weight: bold; 
-}
-
-.number { text-align: right; }
-
-.faction-light { color: #ffd700; }
-.faction-dark { color: #a371f7; }
-
-/* ==================== СОРТИРОВКА ТАБЛИЦ ==================== */
-.sortable-header {
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-    padding-right: 20px !important;
-}
-
-.sortable-header:hover { background: #30363d !important; }
-
-.sortable-header::after {
-    content: '⇅';
-    position: absolute;
-    right: 5px;
-    opacity: 0.5;
-    font-size: 12px;
-}
-
-.sortable-header.asc::after { content: '↑'; opacity: 1; color: #ffd700; }
-.sortable-header.desc::after { content: '↓'; opacity: 1; color: #ffd700; }
-
-/* ==================== ПОИСК ==================== */
-.search-box {
-    margin: 15px 0;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.search-input {
-    padding: 8px 12px;
-    background: #21262d;
-    border: 1px solid #30363d;
-    border-radius: 20px;
-    color: white;
-    font-size: 14px;
-    width: 250px;
-}
-
-.search-input:focus { 
-    outline: none; 
-    border-color: #ffd700; 
-}
-
-.search-input::placeholder { color: #8b949e; }
-
-.search-clear {
-    background: none;
-    border: none;
-    color: #8b949e;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 5px 10px;
-}
-
-.search-clear:hover { color: #ffd700; }
-
-.highlight { 
-    background: rgba(255, 215, 0, 0.2); 
-    padding: 0 2px; 
-    border-radius: 3px; 
-}
-
-/* ==================== ТИТУЛЫ ==================== */
-.titles-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-    margin-bottom: 30px;
-}
-
-.title-card {
-    background: #161b22;
-    border-radius: 8px;
-    padding: 15px;
-    border: 1px solid #30363d;
-    transition: transform 0.2s;
-}
-
-.title-card:hover { 
-    transform: translateY(-3px); 
-    border-color: #ffd700; 
-}
-
-.title-emoji { font-size: 24px; }
-.title-name { color: #ffd700; font-weight: bold; margin: 5px 0; }
-.title-cond { color: #8b949e; font-size: 11px; margin-bottom: 10px; }
-
-.title-progress {
-    background: #21262d;
-    height: 6px;
-    border-radius: 3px;
-    margin: 8px 0;
-}
-
-.title-progress-fill {
-    background: #ffd700;
-    height: 6px;
-    border-radius: 3px;
-    width: 0%;
-}
-
-.title-holders {
-    color: #8b949e;
-    font-size: 11px;
-}
-
-/* ==================== ТОП ОХОТНИКИ ==================== */
-.hunters-top {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.hunter-card {
-    background: linear-gradient(145deg, #2a2230, #1a1520);
-    border: 2px solid #ffd700;
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-}
-
-.hunter-medal { font-size: 32px; }
-.hunter-name { font-size: 20px; color: #ffd700; font-weight: bold; }
-.hunter-count { color: #8b949e; margin: 5px 0; }
-.hunter-titles { font-size: 12px; color: #ffd700; }
-
-/* ==================== ПРОГРЕСС ИГРОКА ==================== */
-.player-progress {
-    margin-top: 30px;
-    background: #161b22;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #30363d;
-}
-
-/* ==================== РЕКОРДЫ ==================== */
-.records-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.record-item {
-    background: #21262d;
-    border-radius: 10px;
-    padding: 15px;
-    border-left: 4px solid #ffd700;
-}
-
-.record-value { 
-    font-size: 22px; 
-    color: #ffd700; 
-    font-weight: bold; 
-}
-
-.record-label { 
-    color: #8b949e; 
-    font-size: 12px; 
-}
-
-/* ==================== ЧЕМПИОНЫ ==================== */
-.champion-block {
-    background: linear-gradient(145deg, #2a2230, #1a1520);
-    border: 2px solid #ffd700;
-    border-radius: 12px;
-    padding: 25px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.champion-emoji { font-size: 48px; }
-.champion-name { font-size: 24px; color: #ffd700; font-weight: bold; }
-.champion-class { font-size: 16px; color: #8b949e; }
-
-/* ==================== РЕЙТИНГ ==================== */
-.rating-card {
-    background: linear-gradient(145deg, #21262d, #161b22);
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    border: 1px solid #30363d;
-}
-
-.rating-medal {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-
-.rating-name {
-    font-size: 18px;
-    color: #ffd700;
-    font-weight: bold;
-}
-
-.rating-skill {
-    font-size: 28px;
-    color: #ffd700;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-/* ==================== ЗАГРУЗКА ==================== */
-.loading { 
-    text-align: center; 
-    padding: 60px; 
-    color: #8b949e; 
-    font-size: 18px; 
-}
-
-/* ==================== МОБИЛЬНАЯ ВЕРСИЯ ==================== */
-@media (max-width: 768px) {
-    body { padding: 10px; }
-    h1 { font-size: 1.6em; margin-top: 45px; }
-    
-    /* Меню */
-    .nav-wrapper { border-bottom: none !important; }
-    .nav-toggle { display: block; }
-    .page-nav { 
-        display: none; 
-        flex-direction: column; 
-        gap: 8px; 
-        margin-top: 10px; 
-    }
-    .page-nav.show { display: flex; }
-    .page-nav a { 
-        text-align: center; 
-        padding: 10px;
-        background: #21262d;
-        border: 1px solid #30363d;
-        border-radius: 20px;
-    }
-    .page-nav a.active { 
-        background: #ffd700; 
-        color: #0d1117; 
-        border-color: #ffd700;
-    }
-    
-    /* Кнопки */
-    .fixed-buttons { top: 10px; right: 10px; }
-    .action-btn { padding: 6px 10px; font-size: 11px; }
-    
-    /* Стат-карточки */
-    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .stat-card { padding: 15px; }
-    .stat-value { font-size: 28px; }
-    .stat-label { font-size: 11px; }
-    
-    /* Вкладки */
-    .nav-tabs { overflow-x: auto; flex-wrap: nowrap; padding: 8px 5px; }
-    .tab-btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
-    
-    /* Таблицы */
-    .table-container { 
-        overflow-x: auto; 
-        -webkit-overflow-scrolling: touch; 
-        padding: 12px; 
-    }
-    .tables-grid { grid-template-columns: 1fr; }
-    table { min-width: 480px; font-size: 11px; }
-    th, td { padding: 4px 5px; white-space: nowrap; }
-    td:first-child { white-space: normal; word-break: break-word; }
-    
-    /* Таблица топов */
-    #tab-tops table { min-width: 320px; }
-    #tab-tops table th:nth-child(1) { width: 30px; }
-    #tab-tops table th:nth-child(2) { width: 95px; }
-    #tab-tops table th:nth-child(3) { width: 85px; }
-    #tab-tops table th:nth-child(4) { width: 55px; }
-    #tab-tops table td:nth-child(2) {
-        max-width: 95px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    /* Таблицы с white-space */
-    #classes-table th:nth-child(1), #classes-table td:nth-child(1),
-    #combos-table th:nth-child(1), #combos-table td:nth-child(1),
-    #shards-table th:nth-child(2), #shards-table td:nth-child(2),
-    #shards-table th:nth-child(3), #shards-table td:nth-child(3),
-    #players-table th:nth-child(3), #players-table td:nth-child(3),
-    #players-table th:nth-child(4), #players-table td:nth-child(4) { 
-        white-space: nowrap; 
-    }
-    
-    /* Титулы */
-    .titles-gallery { 
-        grid-template-columns: repeat(2, 1fr) !important; 
-        gap: 8px;
-    }
-    .title-card { padding: 10px; }
-    .title-emoji { font-size: 20px; }
-    .title-name { font-size: 13px; }
-    .title-cond { font-size: 9px; }
-    .title-holders { font-size: 10px; }
-    
-    /* Рекорды */
-    #tab-records .titles-gallery { 
-        grid-template-columns: repeat(2, 1fr) !important; 
-    }
-    .records-grid { grid-template-columns: repeat(2, 1fr); }
-    
-    /* Топ-3 охотников */
-    .hunters-top {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        overflow-x: visible;
-    }
-    .hunter-card { padding: 12px 8px; }
-    .hunter-medal { font-size: 24px; }
-    .hunter-name { font-size: 14px; }
-    .hunter-count { font-size: 12px; }
-    .hunter-titles { font-size: 10px; }
-    
-    /* Разное */
-    .calc-mode-btn { padding: 8px 16px; font-size: 13px; }
-    .reasons-list { padding-left: 18px; font-size: 10px; }
-	
-	/* Чемпионы */
-	.champion-block {
-		padding: 20px 15px;
-	}
-	.champion-emoji {
-		font-size: 40px;
-	}
-	.champion-name {
-		font-size: 20px;
-	}
-	.champion-class {
-		font-size: 14px;
-	}
-	.champion-block > div:last-child {
-		display: flex;
-		justify-content: space-around;
-		gap: 5px;
-		margin-top: 15px;
-	}
-	.champion-block > div:last-child > div {
-		flex: 1;
-		text-align: center;
-	}
-	.champion-block > div:last-child span[style*="color: #8b949e"] {
-		display: block;
-		min-height: 30px;
-		font-size: 10px !important;
-		line-height: 1.3;
-	}
-	.champion-block > div:last-child span[style*="font-size: 28px"] {
-		font-size: 22px !important;
-	}
-}
-</style>
+    <title>Статистика</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e14; --bg-secondary: #11161d; --bg-card: #161c24; --bg-elevated: #1c2330;
+            --border-subtle: #252d38; --text-primary: #e8edf4; --text-secondary: #8b95a5; --text-muted: #5c6675;
+            --gold: #ffd700; --purple: #a371f7; --red: #e5534b; --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px;
+            --shadow-gold: 0 0 20px rgba(255,215,0,0.15); --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%);
+            color: var(--text-primary); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px 24px 40px; }
+        .header { text-align: center; padding: 30px 0 20px; }
+        .header-title { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(255,215,0,0.3)); margin-bottom: 4px; }
+        .header-subtitle { font-size: 0.9rem; color: var(--text-secondary); font-weight: 400; }
+
+        .nav-wrapper { margin-bottom: 28px; }
+        .nav-toggle { display: none; width: 100%; padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--gold); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; transition: var(--transition); }
+        .nav-toggle:hover { background: var(--bg-elevated); }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; box-shadow: var(--shadow-gold); }
+
+        .fixed-buttons { position: fixed; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 1000; opacity: 0.85; transition: opacity 0.2s; }
+        .fixed-buttons:hover { opacity: 1; }
+        .action-btn { background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: 25px; padding: 8px 14px; font-size: 0.78rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 6px; transition: var(--transition); text-decoration: none; font-family: inherit; font-weight: 600; }
+        .action-btn:hover { background: #252d38; color: #fff; }
+        .beer-btn { background: #c49600; color: #1a1a1a; border-color: var(--gold); font-weight: 700; }
+        .beer-btn:hover { background: var(--gold); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px 14px; text-align: center; transition: var(--transition); position: relative; overflow: hidden; }
+        .stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.4; }
+        .stat-card:hover { transform: translateY(-2px); border-color: rgba(255,215,0,0.3); }
+        .stat-value { font-size: 2rem; font-weight: 800; color: var(--gold); }
+        .stat-label { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+        .faction-light { color: var(--gold); }
+        .faction-dark { color: var(--purple); }
+
+        .nav-tabs { display: flex; gap: 6px; margin: 20px 0; padding: 6px; background: var(--bg-secondary); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); overflow-x: auto; }
+        .tab-btn { background: transparent; border: none; color: var(--text-secondary); padding: 10px 16px; border-radius: var(--radius-md); cursor: pointer; font-size: 0.82rem; font-weight: 600; font-family: inherit; transition: var(--transition); white-space: nowrap; }
+        .tab-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
+        .tab-btn.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tables-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; }
+
+        .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; position: relative; overflow: hidden; margin-bottom: 16px; }
+        .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
+        .card-title { font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 12px; }
+
+        .table-container { border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: auto; }
+        th { background: var(--bg-elevated); color: var(--gold); font-weight: 700; padding: 8px 10px; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--border-subtle); white-space: nowrap; }
+        td { padding: 7px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        .number { text-align: right; font-variant-numeric: tabular-nums; }
+        td:first-child { font-weight: 600; color: var(--gold); }
+
+        .sortable-header { cursor: pointer; user-select: none; position: relative; padding-right: 20px !important; }
+        .sortable-header:hover { background: #252d38 !important; }
+        .sortable-header::after { content: '⇅'; position: absolute; right: 5px; opacity: 0.4; font-size: 10px; }
+        .sortable-header.asc::after { content: '↑'; opacity: 1; color: var(--gold); }
+        .sortable-header.desc::after { content: '↓'; opacity: 1; color: var(--gold); }
+
+        .search-box { margin-bottom: 12px; display: flex; gap: 8px; align-items: center; }
+        .search-input { padding: 8px 14px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 20px; color: var(--text-primary); font-size: 0.82rem; font-family: inherit; width: 220px; }
+        .search-input:focus { outline: none; border-color: var(--gold); }
+        .search-input::placeholder { color: var(--text-muted); }
+        .search-clear { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 4px 8px; }
+        .search-clear:hover { color: var(--gold); }
+        .highlight { background: rgba(255,215,0,0.2); padding: 0 2px; border-radius: 3px; }
+
+        /* Titles */
+        .titles-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+        .title-card { background: var(--bg-elevated); border-radius: var(--radius-sm); padding: 14px; border: 1px solid var(--border-subtle); transition: var(--transition); }
+        .title-card:hover { transform: translateY(-2px); border-color: var(--gold); }
+        .title-emoji { font-size: 1.3rem; }
+        .title-name { color: var(--gold); font-weight: 700; margin: 4px 0; font-size: 0.85rem; }
+        .title-cond { color: var(--text-muted); font-size: 0.68rem; margin-bottom: 8px; }
+        .title-progress { background: var(--bg-card); height: 5px; border-radius: 3px; margin: 6px 0; }
+        .title-progress-fill { background: var(--gold); height: 5px; border-radius: 3px; }
+        .title-holders { color: var(--text-muted); font-size: 0.7rem; }
+
+        /* Hunters */
+        .hunters-top { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+        .hunter-card { background: var(--bg-elevated); border: 1px solid rgba(255,215,0,0.3); border-radius: var(--radius-md); padding: 18px 12px; text-align: center; }
+        .hunter-medal { font-size: 1.8rem; }
+        .hunter-name { font-size: 1rem; color: var(--gold); font-weight: 700; }
+        .hunter-count { color: var(--text-muted); font-size: 0.78rem; margin: 4px 0; }
+        .hunter-titles { font-size: 0.7rem; color: var(--gold); }
+
+        /* Records */
+        .records-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 16px 0; }
+        .record-item { background: var(--bg-elevated); border-radius: var(--radius-sm); padding: 14px; border-left: 3px solid var(--gold); }
+        .record-value { font-size: 1.3rem; color: var(--gold); font-weight: 800; }
+        .record-label { color: var(--text-muted); font-size: 0.7rem; margin-top: 2px; }
+
+        /* Champion */
+        .champion-block { background: var(--bg-elevated); border: 1px solid rgba(255,215,0,0.3); border-radius: var(--radius-md); padding: 22px; text-align: center; margin-bottom: 16px; }
+        .champion-emoji { font-size: 2.5rem; }
+        .champion-name { font-size: 1.3rem; color: var(--gold); font-weight: 800; }
+        .champion-class { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* Rating */
+        .rating-card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 18px; text-align: center; border: 1px solid var(--border-subtle); }
+        .rating-medal { font-size: 1.8rem; margin-bottom: 6px; }
+        .rating-name { font-size: 1rem; color: var(--gold); font-weight: 700; }
+        .rating-skill { font-size: 1.5rem; color: var(--gold); font-weight: 800; margin: 8px 0; }
+
+        .status-message { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 32px; }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
+            .header-title { font-size: 1.8rem; }
+
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stat-card { padding: 14px 10px; }
+            .stat-value { font-size: 1.5rem; }
+
+            .tables-grid { grid-template-columns: 1fr; }
+
+            table { font-size: 0.72rem; }
+            th, td { padding: 6px 8px; white-space: normal; word-break: break-word; }
+
+            .titles-gallery { grid-template-columns: repeat(2, 1fr); }
+            .hunters-top { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .hunter-card { padding: 12px 6px; }
+            .hunter-name { font-size: 0.8rem; }
+
+            .fixed-buttons { top: 8px; right: 8px; }
+            .action-btn { padding: 6px 10px; font-size: 0.7rem; }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header class="header"><h1 class="header-title">СТАТИСТИКА</h1><p class="header-subtitle">1 Сезон - Эра Раскола</p></header>
 
-<h1>Эра Раскола — Статистика</h1>
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link active">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+            </nav>
+        </div>
 
-<div class="nav-wrapper">
-    <button class="nav-toggle">☰ Меню</button>
-	<div class="page-nav">
-		<a href="index.html" class="active">📊 Статистика</a>
-		<a href="logs.html">📜 Логи</a>
-		<a href="calc.html">🎲 Калькулятор</a>
-		<a href="balance.html">⚖️ Баланс</a>
-		<a href="simulator.html">🧪 Симулятор</a>
-		<a href="gradient.html">📈 Градиент</a>
-		<a href="guide.html">⚔️ Гайд</a>
-		<a href="hall.html">🏆 Зал Славы</a>
-		<a href="lore.html">📜 Лор Этерниса</a>
-		<a href="tavern.html">🍺 Таверна</a>
-		<a href="dungeon.html">🏔 Подземелье</a>
-	</div>
-</div>
+        <div class="fixed-buttons">
+            <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="action-btn beer-btn">🍺 НА ПИВО</a>
+        </div>
 
-<div class="fixed-buttons">
-    <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="action-btn beer-btn">🍺 НА ПИВО</a>
-</div>
+        <div id="content"><div class="status-message"><div class="spinner"></div><p>Загрузка статистики...</p></div></div>
+    </div>
 
-<div id="content"><div class="loading">⏳ Загрузка статистики...</div></div>
-
-<script>
-    const navToggle = document.querySelector('.nav-toggle');
-    const pageNav = document.querySelector('.page-nav');
-    navToggle.addEventListener('click', () => {
-        pageNav.classList.toggle('show');
-        navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-    });
-
-    // ==================== АВТО-ДЕТЕКЦИЯ RAW/CDN ====================
-    const JSON_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-    const DATA_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-    const JSON_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
-    const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
-
-    function fetchWithTimeout(url, timeout = 3000) {
-        return Promise.race([
-            fetch(url).then(r => {
-                if (!r.ok) throw new Error('Status ' + r.status);
-                return r;
-            }),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
-        ]);
-    }
-
-    let classesData = [];
-    let racesData = [];
-    let classEmojis = {};
-    let raceEmojis = {};
-    let players = [];
-	let achievements = [];
-
-    fetchWithTimeout(DATA_URL_RAW)
-        .catch(() => {
-            console.warn('⚠️ Raw GitHub не отвечает, переключаемся на CDN');
-            return fetch(DATA_URL_CDN);
-        })
-        .then(r => r.json())
-        .then(data => {
-            classesData = data.classes;
-            racesData = data.races;
-            classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
-            raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
-            return fetchWithTimeout(JSON_URL_RAW).catch(() => fetch(JSON_URL_CDN));
-        })
-        .then(r => r.json())
-        .then(data => {
-            players = data.players.filter(p => p.name && p.name !== 'Unknown');
-            renderFullStats(data);
-        })
-        .catch(err => {
-            console.error('Ошибка загрузки:', err);
-            document.getElementById('content').innerHTML = `<div class="loading">❌ Ошибка загрузки данных<br><span style="color:#ff6b6b;">${err.message}</span></div>`;
-        });
-
-    // ==================== РЕНДЕР СТАТИСТИКИ ====================
-    function renderFullStats(data) {
-        const totalPlayers = players.length;
-        const totalFights = Math.floor(players.reduce((sum, p) => sum + p.wins + p.losses, 0) / 2);
-        const lightCount = players.filter(p => p.faction === 'Орден Света').length;
-        const darkCount = players.filter(p => p.faction === 'Культ Тьмы').length;
-        
-        let html = '';
-        
-        // Стат-карточки
-        html += '<div class="stats-grid">';
-        html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
-        html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
-        html += `<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
-        html += `<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
-		const fs = data.factionScore || {};
-		const factionLight = fs.battleLight || 0;
-		const factionDark = fs.battleDark || 0;
-        html += `<div class="stat-card" style="grid-column: span 1;"><div class="stat-value">${factionLight} : ${factionDark}</div><div class="stat-label">🌝 Свет vs Тьма 🌚</div></div>`;
-        html += '</div>';
-        
-        // Вкладки
-		html += '<div class="nav-tabs">';
-		html += '<button class="tab-btn active" onclick="switchTab(\'tops\')">🏆 Топы</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'classes\')">⚔️ Классы</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'races\')">🌍 Расы</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'combos\')">🔄 Комбинации</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'records\')">🏅 Рекорды</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'champions\')">👑 Чемпионы</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'titles\')">🏅 Титулы</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'shards\')">💎 Осколки</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'rating\')">🏆 Рейтинг</button>';
-		html += '<button class="tab-btn" onclick="switchTab(\'allplayers\')">👥 Игроки</button>';
-		html += '</div>';
-        
-        // ТОПЫ
-        html += '<div id="tab-tops" class="tab-content active"><div class="tables-grid">';
-        const topWins = [...players].sort((a,b) => b.wins - a.wins).slice(0,15);
-        html += '<div class="table-container"><h3>🏆 Топ-15 по победам</h3><table><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Победы</th></tr>';
-        topWins.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}</td></tr>`);
-        html += '</table></div>';
-        
-        const topWinrate = players.filter(p => p.wins+p.losses >= 20).map(p => ({...p, wr: p.wins*100/(p.wins+p.losses)})).sort((a,b) => b.wr - a.wr).slice(0,15);
-        html += '<div class="table-container"><h3>📈 Топ-15 по винрейту</h3><table><tr><th>#</th><th>Игрок</th><th>W/L</th><th>Винрейт</th></tr>';
-        topWinrate.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${p.wr.toFixed(1)}%</td></tr>`);
-        html += '</table></div>';
-        
-        const topFights = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses)).slice(0,15);
-        html += '<div class="table-container"><h3>⚔️ Топ-15 по боям</h3><table><tr><th>#</th><th>Игрок</th><th>Боёв</th><th>W/L</th></tr>';
-        topFights.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins+p.losses}</td><td class="number">${p.wins}-${p.losses}</td></tr>`);
-        html += '</table></div>';
-        
-        const topStreak = [...players].sort((a,b) => b.best - a.best).slice(0,15);
-        html += '<div class="table-container"><h3>🔥 Топ-15 по стрику</h3><table><tr><th>#</th><th>Игрок</th><th>Стрик</th></tr>';
-        topStreak.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.best}</td></tr>`);
-        html += '</table></div></div></div>';
-        
-        // КЛАССЫ
-        html += '<div id="tab-classes" class="tab-content">';
-        const classStats = {};
-        players.forEach(p => {
-            const className = p.name.split('-')[1] || p.name;
-            if (!classStats[className]) classStats[className] = { wins:0, losses:0, players:0, shards:0, best:0 };
-            classStats[className].wins += p.wins;
-            classStats[className].losses += p.losses;
-            classStats[className].players++;
-            classStats[className].shards += p.shards;
-            classStats[className].best = Math.max(classStats[className].best, p.best);
-        });
-        const classArray = Object.entries(classStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses}));
-        html += '<div class="table-container"><h3>⚔️ Статистика по классам</h3><table id="classes-table"><thead><tr>';
-        html += '<th class="sortable-header" data-sort="name">Класс</th><th class="sortable-header" data-sort="players">Игроков</th><th class="sortable-header" data-sort="wins">Победы</th><th class="sortable-header" data-sort="losses">Поражения</th><th class="sortable-header" data-sort="total">Всего</th><th class="sortable-header" data-sort="winrate">Винрейт</th><th class="sortable-header" data-sort="shards">Ср.осколки</th><th class="sortable-header" data-sort="streak">Стрик</th>';
-        html += '</tr></thead><tbody id="classes-tbody">';
-        classArray.sort((a,b) => b.total - a.total).forEach(c => {
-            const emoji = classEmojis[c.name] || '⚔️';
-            const wr = c.total>0 ? (c.wins*100/c.total).toFixed(1) : '0.0';
-            const avgShards = Math.round(c.shards/c.players);
-            html += `<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-shards="${avgShards}" data-streak="${c.best}">`;
-            html += `<td>${emoji} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${wr}%</td><td class="number">${avgShards}</td><td class="number">${c.best}</td></tr>`;
-        });
-        html += '</tbody></table></div></div>';
-        
-		// РАСЫ
-		html += '<div id="tab-races" class="tab-content">';
-		const raceStats = {};
-		const raceChamps = {};
-		players.forEach(p => {
-			const raceName = p.name.split('-')[0];
-			if (!raceName) return;
-			
-			if (!raceStats[raceName]) {
-				raceStats[raceName] = { wins: 0, losses: 0, players: 0 };
-				raceChamps[raceName] = 0;
-			}
-			raceStats[raceName].wins += p.wins;
-			raceStats[raceName].losses += p.losses;
-			raceStats[raceName].players++;
-			
-			if (p.tournamentWins > 0) raceChamps[raceName]++;
-		});
-
-		const raceArray = Object.entries(raceStats).map(([n, s]) => ({
-			name: n,
-			...s,
-			total: s.wins + s.losses,
-			champs: raceChamps[n] || 0
-		}));
-
-		html += '<div class="table-container"><h3>🌍 Статистика по расам</h3><table id="races-table"><thead><tr>';
-		html += '<th class="sortable-header" data-sort="name">Раса</th>';
-		html += '<th class="sortable-header" data-sort="players">Игроков</th>';
-		html += '<th class="sortable-header" data-sort="wins">Победы</th>';
-		html += '<th class="sortable-header" data-sort="losses">Поражения</th>';
-		html += '<th class="sortable-header" data-sort="total">Боёв</th>';
-		html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
-		html += '<th class="sortable-header" data-sort="champs">👑</th>';
-		html += '</tr></thead><tbody id="races-tbody">';
-
-		raceArray.sort((a, b) => b.total - a.total).forEach(r => {
-			const emoji = raceEmojis[r.name] || '🌍';
-			const wr = r.total > 0 ? (r.wins * 100 / r.total).toFixed(1) : '0.0';
-			html += `<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}" data-champs="${r.champs}">`;
-			html += `<td>${emoji} ${r.name}</td>`;
-			html += `<td class="number">${r.players}</td>`;
-			html += `<td class="number">${r.wins}</td>`;
-			html += `<td class="number">${r.losses}</td>`;
-			html += `<td class="number">${r.total}</td>`;
-			html += `<td class="number">${wr}%</td>`;
-			html += `<td class="number">${r.champs || '-'}</td>`;
-			html += `</tr>`;
-		});
-		html += '</tbody></table></div></div>';
-        
-        // КОМБИНАЦИИ
-        html += '<div id="tab-combos" class="tab-content">';
-        const comboStats = {};
-        players.forEach(p => {
-            if (!comboStats[p.name]) comboStats[p.name] = { wins:0, losses:0, players:0 };
-            comboStats[p.name].wins += p.wins;
-            comboStats[p.name].losses += p.losses;
-            comboStats[p.name].players++;
-        });
-        const comboArray = Object.entries(comboStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses})).filter(c => c.total >= 10);
-        html += '<div class="table-container"><h3>🔄 Комбинации (10+ боёв)</h3><table id="combos-table"><thead><tr>';
-        html += '<th class="sortable-header" data-sort="name">Комбинация</th><th class="sortable-header" data-sort="players">Игроков</th><th class="sortable-header" data-sort="wins">Победы</th><th class="sortable-header" data-sort="losses">Поражения</th><th class="sortable-header" data-sort="total">Всего</th><th class="sortable-header" data-sort="winrate">Винрейт</th>';
-        html += '</tr></thead><tbody id="combos-tbody">';
-        comboArray.sort((a,b) => (b.wins/b.total) - (a.wins/a.total)).forEach(c => {
-            const parts = c.name.split('-');
-            const raceEm = raceEmojis[parts[0]] || '';
-            const classEm = classEmojis[parts[1]] || '';
-            const wr = (c.wins*100/c.total).toFixed(1);
-            html += `<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}">`;
-            html += `<td>${raceEm}${classEm} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${wr}%</td></tr>`;
-        });
-        html += '</tbody></table></div></div>';
-        
-        // РЕКОРДЫ
-        html += '<div id="tab-records" class="tab-content">';
-        
-        const maxWins = players.reduce((max,p) => p.wins > max.wins ? p : max, players[0]);
-        const maxStreak = players.reduce((max,p) => p.best > max.best ? p : max, players[0]);
-        const maxShards = players.reduce((max,p) => p.shards > max.shards ? p : max, players[0]);
-        const maxFights = players.reduce((max,p) => (p.wins+p.losses) > (max.wins+max.losses) ? p : max, players[0]);
-        const maxFaction = players.reduce((max,p) => p.factionWins > max.factionWins ? p : max, players[0]);
-        const maxTournament = players.reduce((max,p) => p.tournamentWins > max.tournamentWins ? p : max, players[0]);
-        const maxLevel = players.reduce((max,p) => p.level > max.level ? p : max, players[0]);
-        const maxWinrate = players.filter(p => p.wins+p.losses >= 20).reduce((max,p) => {
-            const wr = p.wins/(p.wins+p.losses);
-            const maxWr = max.wins/(max.wins+max.losses);
-            return wr > maxWr ? p : max;
-        }, players[0]);
-        
-        html += '<div style="text-align: center; margin-bottom: 30px;">';
-        html += '<div style="font-size: 48px; color: #ffd700;">👑</div>';
-        html += '<h2 style="color: #ffd700; margin: 10px 0; border-bottom: none;">РЕКОРДСМЕНЫ ЭТЕРНИСА</h2>';
-        html += '<p style="color: #8b949e;">Величайшие герои, вписавшие свои имена в историю</p>';
-        html += '</div>';
-        
-        const recordCounts = {};
-        [maxWins, maxStreak, maxShards, maxFights, maxFaction, maxTournament, maxLevel, maxWinrate].forEach(p => {
-            if (p) recordCounts[p.display] = (recordCounts[p.display] || 0) + 1;
-        });
-        const topRecorder = Object.entries(recordCounts).sort((a,b) => b[1] - a[1])[0];
-        
-        html += '<div class="champion-block" style="margin-bottom: 30px;">';
-        html += '<div style="font-size: 24px; color: #ffd700; margin-bottom: 10px;">🏆 ЛЕГЕНДА ЭТЕРНИСА</div>';
-        html += `<div class="champion-emoji">${players.find(p => p.display === topRecorder[0])?.emoji || '🏆'}</div>`;
-        html += `<div class="champion-name">${topRecorder[0]}</div>`;
-        html += `<div class="champion-class">${topRecorder[1]} рекордов</div>`;
-        html += '</div>';
-        
-        html += '<div class="titles-gallery" style="grid-template-columns: repeat(4, 1fr);">';
-        
-        const records = [
-            { icon: '🏆', name: 'ПОБЕДЫ', value: maxWins.wins, player: maxWins.display, emoji: maxWins.emoji, desc: 'побед' },
-            { icon: '🔥', name: 'СТРИК', value: maxStreak.best, player: maxStreak.display, emoji: maxStreak.emoji, desc: 'побед подряд' },
-            { icon: '💎', name: 'ОСКОЛКИ', value: maxShards.shards, player: maxShards.display, emoji: maxShards.emoji, desc: 'осколков' },
-            { icon: '⚔️', name: 'БОИ', value: maxFights.wins+maxFights.losses, player: maxFights.display, emoji: maxFights.emoji, desc: 'боёв' },
-            { icon: '🌍', name: 'ФРАКЦИЯ', value: maxFaction.factionWins, player: maxFaction.display, emoji: maxFaction.emoji, desc: 'побед за фракцию' },
-            { icon: '👑', name: 'ЧЕМПИОН', value: maxTournament.tournamentWins, player: maxTournament.display, emoji: maxTournament.emoji, desc: 'побед в турнирах' },
-            { icon: '📊', name: 'УРОВЕНЬ', value: maxLevel.level, player: maxLevel.display, emoji: maxLevel.emoji, desc: 'уровень' },
-            { icon: '📈', name: 'ВИНРЕЙТ', value: (maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1), player: maxWinrate.display, emoji: maxWinrate.emoji, desc: '% побед (20+ боёв)' }
-        ];
-        
-        records.forEach(r => {
-            html += `<div class="title-card" style="text-align: center;">`;
-            html += `<div style="font-size: 32px; margin-bottom: 10px;">${r.icon}</div>`;
-            html += `<div style="color: #8b949e; font-size: 12px; margin-bottom: 5px;">${r.name}</div>`;
-            html += `<div style="font-size: 28px; color: #ffd700; font-weight: bold;">${r.value}</div>`;
-            html += `<div style="color: #8b949e; font-size: 11px; margin: 5px 0;">${r.desc}</div>`;
-            html += `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #30363d;">`;
-            html += `<span style="font-size: 14px;">${r.emoji} ${r.player}</span>`;
-            html += `</div></div>`;
-        });
-        
-        html += '</div>';
-        
-        html += '<div style="margin-top: 30px;">';
-        html += '<h3 style="color: #ffd700; margin-bottom: 15px;">📜 Другие достижения</h3>';
-        html += '<div class="records-grid">';
-        
-        const oldestPlayer = [...players].sort((a,b) => (a.wins+a.losses) - (b.wins+b.losses))[0];
-        const newestPlayer = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses))[0];
-        const mostLosses = players.reduce((max,p) => p.losses > max.losses ? p : max, players[0]);
-        const perfectWinrate = players.filter(p => p.wins+p.losses >= 10 && p.wins/(p.wins+p.losses) === 1)[0];
-        
-        html += `<div class="record-item"><div class="record-value">${oldestPlayer.wins+oldestPlayer.losses}</div><div class="record-label">⚔️ Меньше всего боёв — ${oldestPlayer.display}</div></div>`;
-        html += `<div class="record-item"><div class="record-value">${mostLosses.losses}</div><div class="record-label">💔 Больше всего поражений — ${mostLosses.display}</div></div>`;
-        if (perfectWinrate) {
-            html += `<div class="record-item"><div class="record-value">100%</div><div class="record-label">💯 Идеальный винрейт (10+) — ${perfectWinrate.display}</div></div>`;
+    <script>
+        function toggleNav() {
+            const nav = document.getElementById('pageNav'), btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show'); btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         }
-        html += `<div class="record-item"><div class="record-value">${new Date().toLocaleDateString('ru-RU')}</div><div class="record-label">📅 Статистика актуальна на</div></div>`;
-        
-        html += '</div></div>';
-        html += '</div>';
+        document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
+            document.getElementById('pageNav').classList.remove('show');
+            document.querySelector('.nav-toggle').textContent = '☰ Меню';
+        }));
 
-        // ЧЕМПИОНЫ
-        html += '<div id="tab-champions" class="tab-content">';
-        
-        const currentChampion = players.find(p => p.champion === true);
-        const topChampions = players.filter(p => p.tournamentWins > 0).sort((a,b) => b.tournamentWins - a.tournamentWins);
-        
-        if (currentChampion) {
-            html += '<div class="champion-block" style="margin-bottom: 30px;">';
-            html += '<div style="font-size: 14px; color: #8b949e; letter-spacing: 3px; margin-bottom: 10px;">ХРАНИТЕЛЬ РАСКОЛА</div>';
-            html += `<div class="champion-emoji">${currentChampion.emoji}</div>`;
-            html += `<div class="champion-name">${currentChampion.display}</div>`;
-            html += `<div class="champion-class">${currentChampion.name}</div>`;
-            html += `<div style="margin-top: 20px; display: flex; justify-content: center; gap: 40px;">`;
-            html += `<div><span style="color: #8b949e; font-size: 12px;">Турнирные победы</span><br><span style="color: #ffd700; font-size: 28px; font-weight: bold;">${currentChampion.tournamentWins}</span></div>`;
-            html += `<div><span style="color: #8b949e; font-size: 12px;">Всего побед</span><br><span style="color: #c9d1d9; font-size: 28px; font-weight: bold;">${currentChampion.wins}</span></div>`;
-            html += `<div><span style="color: #8b949e; font-size: 12px;">Винрейт</span><br><span style="color: #c9d1d9; font-size: 28px; font-weight: bold;">${(currentChampion.wins*100/(currentChampion.wins+currentChampion.losses)).toFixed(1)}%</span></div>`;
-            html += `</div></div>`;
-        } else {
-            html += '<div class="champion-block"><div style="font-size: 14px; color: #8b949e; letter-spacing: 3px; margin-bottom: 10px;">ХРАНИТЕЛЬ РАСКОЛА</div><div style="font-size: 64px; margin: 20px 0; opacity: 0.5;">👑</div><div style="color: #8b949e;">Титул ждёт своего героя</div></div>';
+        // ==================== АВТО-ДЕТЕКЦИЯ RAW/CDN ====================
+        const JSON_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        const DATA_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+        const JSON_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+        const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
+
+        function fetchWithTimeout(url, timeout = 3000) {
+            return Promise.race([
+                fetch(url).then(r => { if (!r.ok) throw new Error('Status ' + r.status); return r; }),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+            ]);
         }
-        
-        if (topChampions.length > 0) {
-            html += '<div class="table-container">';
-            html += '<h3>🏆 ЧЕМПИОНЫ</h3>';
-            html += '<table id="champions-table"><thead><tr>';
-            html += '<th class="sortable-header" data-sort="rank">#</th>';
-            html += '<th class="sortable-header" data-sort="name">Игрок</th>';
-            html += '<th class="sortable-header" data-sort="class">Класс</th>';
-            html += '<th class="sortable-header" data-sort="wins">🏆</th>';
-            html += '<th class="sortable-header" data-sort="faction">Фракция</th>';
-            html += '</tr></thead><tbody id="champions-tbody">';
-            
-            topChampions.forEach((p, i) => {
-                const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
-                const isCurrent = p.champion;
-                
-                html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${isCurrent ? 'style="background: rgba(255, 215, 0, 0.08);"' : ''}>`;
-                html += `<td>${i+1}</td>`;
-                html += `<td>${p.emoji} ${p.display} ${isCurrent ? '<span style="color: #ffd700; margin-left: 5px;">👑</span>' : ''}</td>`;
-                html += `<td>${p.name}</td>`;
-                html += `<td class="number" style="color: #ffd700; font-weight: bold;">${p.tournamentWins}</td>`;
-                html += `<td>${fi}</td>`;
-                html += `</tr>`;
+
+        let classesData = [];
+        let racesData = [];
+        let classEmojis = {};
+        let raceEmojis = {};
+        let players = [];
+        let achievements = [];
+
+        fetchWithTimeout(DATA_URL_RAW)
+            .catch(() => { console.warn('⚠️ Raw GitHub не отвечает, переключаемся на CDN'); return fetch(DATA_URL_CDN); })
+            .then(r => r.json())
+            .then(data => {
+                classesData = data.classes; racesData = data.races;
+                classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
+                raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
+                return fetchWithTimeout(JSON_URL_RAW).catch(() => fetch(JSON_URL_CDN));
+            })
+            .then(r => r.json())
+            .then(data => { players = data.players.filter(p => p.name && p.name !== 'Unknown'); renderFullStats(data); })
+            .catch(err => { console.error('Ошибка загрузки:', err); document.getElementById('content').innerHTML = `<div class="status-message" style="color:var(--red);">❌ Ошибка загрузки данных<br>${err.message}</div>`; });
+
+        // ==================== РЕНДЕР СТАТИСТИКИ ====================
+        function renderFullStats(data) {
+            const totalPlayers = players.length;
+            const totalFights = Math.floor(players.reduce((sum, p) => sum + p.wins + p.losses, 0) / 2);
+            const lightCount = players.filter(p => p.faction === 'Орден Света').length;
+            const darkCount = players.filter(p => p.faction === 'Культ Тьмы').length;
+
+            let html = '';
+
+            // Стат-карточки
+            html += '<div class="stats-grid">';
+            html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
+            const fs = data.factionScore || {};
+            const factionLight = fs.battleLight || 0;
+            const factionDark = fs.battleDark || 0;
+            html += `<div class="stat-card"><div class="stat-value">${factionLight} : ${factionDark}</div><div class="stat-label">🌝 Свет vs Тьма 🌚</div></div>`;
+            html += '</div>';
+
+            // Вкладки
+            html += '<div class="nav-tabs">';
+            html += '<button class="tab-btn active" onclick="switchTab(\'tops\')">🏆 Топы</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'classes\')">⚔️ Классы</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'races\')">🌍 Расы</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'combos\')">🔄 Комбинации</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'records\')">🏅 Рекорды</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'champions\')">👑 Чемпионы</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'titles\')">🏅 Титулы</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'shards\')">💎 Осколки</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'rating\')">🏆 Рейтинг</button>';
+            html += '<button class="tab-btn" onclick="switchTab(\'allplayers\')">👥 Игроки</button>';
+            html += '</div>';
+
+            // TОПЫ
+            html += '<div id="tab-tops" class="tab-content active"><div class="tables-grid">';
+            const topWins = [...players].sort((a,b) => b.wins - a.wins).slice(0,15);
+            html += '<div class="card"><div class="card-title">🏆 Топ-15 по победам</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Победы</th></tr>';
+            topWins.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}</td></tr>`);
+            html += '</table></div></div>';
+
+            const topWinrate = players.filter(p => p.wins+p.losses >= 20).map(p => ({...p, wr: p.wins*100/(p.wins+p.losses)})).sort((a,b) => b.wr - a.wr).slice(0,15);
+            html += '<div class="card"><div class="card-title">📈 Топ-15 по винрейту</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>W/L</th><th>Винрейт</th></tr>';
+            topWinrate.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${p.wr.toFixed(1)}%</td></tr>`);
+            html += '</table></div></div>';
+
+            const topFights = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses)).slice(0,15);
+            html += '<div class="card"><div class="card-title">⚔️ Топ-15 по боям</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Боёв</th><th>W/L</th></tr>';
+            topFights.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins+p.losses}</td><td class="number">${p.wins}-${p.losses}</td></tr>`);
+            html += '</table></div></div>';
+
+            const topStreak = [...players].sort((a,b) => b.best - a.best).slice(0,15);
+            html += '<div class="card"><div class="card-title">🔥 Топ-15 по стрику</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Стрик</th></tr>';
+            topStreak.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.best}</td></tr>`);
+            html += '</table></div></div></div></div>';
+
+            // КЛАССЫ
+            html += '<div id="tab-classes" class="tab-content">';
+            const classStats = {};
+            players.forEach(p => {
+                const className = p.name.split('-')[1] || p.name;
+                if (!classStats[className]) classStats[className] = { wins:0, losses:0, players:0, shards:0, best:0 };
+                classStats[className].wins += p.wins; classStats[className].losses += p.losses;
+                classStats[className].players++; classStats[className].shards += p.shards;
+                classStats[className].best = Math.max(classStats[className].best, p.best);
             });
-            
-            html += '</tbody></table></div>';
-        }
-        
-        html += '</div>';
-
-		// ТИТУЛЫ
-		html += '<div id="tab-titles" class="tab-content">';
-
-		achievements = [
-			// =========================================================================
-			// ЛЕГЕНДАРНЫЕ ТИТУЛЫ (priority 1200-800)
-			// =========================================================================
-			{ emoji:"🌟", name:"Легенда Этерниса", type:"level", value:150, priority:1200 },
-			{ emoji:"👑", name:"Король арены", type:"tournament", value:10, priority:1150 },
-			{ emoji:"👑", name:"Властелин Раскола", type:"tournament", value:5, priority:1100 },
-			{ emoji:"💫", name:"Властелин осколков", type:"level", value:100, priority:1050 },
-			{ emoji:"👑", name:"Бессмертный", type:"level", value:50, priority:1000 },
-			{ emoji:"☠️", name:"Бог войны", type:"best", value:20, priority:950 },
-			{ emoji:"✨", name:"Мифический", type:"level", value:40, priority:900 },
-			{ emoji:"🤖", name:"Читер", type:"winrate", value:90, minFights:50, priority:880 },
-			{ emoji:"🤪", name:"Безумный", type:"fights", value:1000, priority:850 },
-			{ emoji:"⚡", name:"Живая легенда", type:"level", value:30, priority:800 },
-
-			// =========================================================================
-			// ЭЛИТНЫЕ ТИТУЛЫ (priority 750-550)
-			// =========================================================================
-			{ emoji:"💎", name:"Элита", type:"winrate", value:80, minFights:30, priority:750 },
-			{ emoji:"🗡️", name:"Мастер клинка", type:"level", value:20, priority:700 },
-			{ emoji:"🏆", name:"Триумфатор", type:"wins", value:200, priority:660 },
-			{ emoji:"👑", name:"Легенда", type:"wins", value:100, priority:650 },
-			{ emoji:"⚔️", name:"Ветеран", type:"fights", value:500, priority:620 },
-			{ emoji:"🛡️", name:"Хранитель", type:"level", value:15, priority:600 },
-			{ emoji:"⚡", name:"Непобедимый", type:"best", value:10, priority:580 },
-			{ emoji:"🏹", name:"Мастер", type:"winrate", value:70, minFights:30, priority:560 },
-			{ emoji:"📿", name:"Собиратель", type:"level", value:10, priority:550 },
-
-			// =========================================================================
-			// ФРАКЦИОННЫЕ ТИТУЛЫ (priority 510-340)
-			// =========================================================================
-			{ emoji:"🔱", name:"Избранный светом", type:"faction", value:150, faction:"Орден Света", priority:510 },
-			{ emoji:"🌋", name:"Владыка тьмы", type:"faction", value:150, faction:"Культ Тьмы", priority:510 },
-			{ emoji:"⚜️", name:"Аэлион", type:"faction", value:100, faction:"Орден Света", priority:500 },
-			{ emoji:"🌑", name:"Повествователь", type:"faction", value:100, faction:"Культ Тьмы", priority:500 },
-			{ emoji:"🏆", name:"Хранитель Вечности", type:"tournament", value:1, priority:450 },
-			{ emoji:"👑", name:"Чемпион", type:"champion", priority:420 },
-			{ emoji:"🛡️", name:"Рыцарь Света", type:"faction", value:50, faction:"Орден Света", priority:380 },
-			{ emoji:"🗡️", name:"Теневой клинок", type:"faction", value:50, faction:"Культ Тьмы", priority:380 },
-			{ emoji:"✨", name:"Страж порядка", type:"faction", value:25, faction:"Орден Света", priority:340 },
-			{ emoji:"🌙", name:"Глас тьмы", type:"faction", value:25, faction:"Культ Тьмы", priority:340 },
-
-			// =========================================================================
-			// ВОИНСКИЕ ТИТУЛЫ (priority 280-180)
-			// =========================================================================
-			{ emoji:"🛡️", name:"Воитель", type:"wins", value:50, priority:280 },
-			{ emoji:"🛡️", name:"Гладиатор", type:"losses", value:200, priority:260 },
-			{ emoji:"🔥", name:"Неудержимый", type:"best", value:5, priority:240 },
-			{ emoji:"🎯", name:"Профессионал", type:"winrate", value:60, minFights:30, priority:220 },
-			{ emoji:"⚔️", name:"Опытный", type:"wins", value:10, priority:200 },
-			{ emoji:"⚙️", name:"Трудяга", type:"fights", value:100, priority:180 },
-
-			// =========================================================================
-			// НАЧИНАЮЩИЕ ТИТУЛЫ (priority 160-110)
-			// =========================================================================
-			{ emoji:"🔥", name:"Задира", type:"best", value:3, priority:160 },
-			{ emoji:"🌱", name:"Новичок", type:"wins", value:1, priority:150 },
-			{ emoji:"👀", name:"Любопытный", type:"fights", value:50, priority:140 },
-			{ emoji:"⚖️", name:"Ровный", type:"winrate", value:50, minFights:10, priority:130 },
-			{ emoji:"🥊", name:"Боец", type:"losses", value:10, priority:120 },
-			{ emoji:"☯️", name:"Инь-Янь", type:"balance", minFights:20, priority:110 },
-
-			// =========================================================================
-			// ОСОБЫЕ ТИТУЛЫ (priority 90-70)
-			// =========================================================================
-			{ emoji:"⚙️", name:"Железный", type:"losses", value:100, priority:90 },
-			{ emoji:"🪀", name:"Груша для битья", type:"losses", value:50, priority:70 }
-		];
-
-		function checkAchievement(ach, p) {
-			const total = p.wins + p.losses;
-			if (ach.minFights && total < ach.minFights) return false;
-			switch (ach.type) {
-				case "level": return p.level >= ach.value;
-				case "wins": return p.wins >= ach.value;
-				case "losses": return p.losses >= ach.value;
-				case "best": return p.best >= ach.value;
-				case "fights": return total >= ach.value;
-				case "tournament": return p.tournamentWins >= ach.value;
-				case "faction": return p.faction === ach.faction && p.factionWins >= ach.value;
-				case "winrate": return total > 0 && (p.wins * 100 / total) >= ach.value;
-				case "balance": return p.wins === p.losses && total >= (ach.minFights || 20);
-				case "champion": return p.champion === true;
-				default: return false;
-			}
-		}
-
-		function getConditionText(ach) {
-			if (ach.type === 'level') return `${ach.value} уровень`;
-			if (ach.type === 'wins') return `${ach.value} побед`;
-			if (ach.type === 'losses') return `${ach.value} поражений`;
-			if (ach.type === 'best') return `Стрик ${ach.value}`;
-			if (ach.type === 'fights') return `${ach.value} боёв`;
-			if (ach.type === 'tournament') return `${ach.value} турнирных побед`;
-			if (ach.type === 'faction') return `${ach.value} побед за ${ach.faction}`;
-			if (ach.type === 'winrate') return `Винрейт ${ach.value}%`;
-			if (ach.type === 'balance') return `Побед = Поражений (${ach.minFights || 20}+ боёв)`;
-			if (ach.type === 'champion') return `Текущий чемпион`;
-			return '';
-		}
-
-		const playerTitles = {};
-		const titleCounts = {};
-
-		players.forEach(p => {
-			const titles = achievements
-				.filter(ach => checkAchievement(ach, p))
-				.map(ach => ach.emoji + " " + ach.name);
-			if (titles.length > 0) {
-				playerTitles[p.display] = titles;
-				titles.forEach(t => titleCounts[t] = (titleCounts[t] || 0) + 1);
-			}
-		});
-
-		const topHunters = Object.entries(playerTitles)
-			.sort((a, b) => b[1].length - a[1].length)
-			.slice(0, 3);
-
-		html += '<div class="hunters-top">';
-		const medals = ['🥇', '🥈', '🥉'];
-		topHunters.forEach(([name, titles], idx) => {
-			html += `<div class="hunter-card">`;
-			html += `<div class="hunter-medal">${medals[idx]}</div>`;
-			html += `<div class="hunter-name">${name}</div>`;
-			html += `<div class="hunter-count">${titles.length} титулов</div>`;
-			html += `<div class="hunter-titles">${titles.slice(0, 3).join(', ')}${titles.length > 3 ? ' +' + (titles.length - 3) : ''}</div>`;
-			html += `</div>`;
-		});
-		html += '</div>';
-
-		html += '<h3 style="color: #ffd700; margin: 20px 0 15px;">🏅 Все титулы</h3>';
-		html += '<div class="titles-gallery">';
-
-		const sortedAchievements = [...achievements].sort((a, b) => {
-			const countA = titleCounts[a.emoji + " " + a.name] || 0;
-			const countB = titleCounts[b.emoji + " " + b.name] || 0;
-			return countA - countB;
-		});
-
-		sortedAchievements.forEach(ach => {
-			const fullName = ach.emoji + " " + ach.name;
-			const holders = titleCounts[fullName] || 0;
-			const percent = (holders / players.length) * 100;
-			const condText = getConditionText(ach);
-			
-			html += `<div class="title-card">`;
-			html += `<div class="title-emoji">${ach.emoji}</div>`;
-			html += `<div class="title-name">${ach.name}</div>`;
-			html += `<div class="title-cond">${condText}</div>`;
-			html += `<div class="title-progress"><div class="title-progress-fill" style="width: ${percent}%;"></div></div>`;
-			html += `<div class="title-holders">👤 ${holders} игроков</div>`;
-			html += `</div>`;
-		});
-		html += '</div>';
-
-		html += '<div class="player-progress">';
-		html += '<h3 style="color: #ffd700; margin-bottom: 15px;">🔍 Прогресс игрока</h3>';
-		html += '<input type="text" id="title-player-search" class="search-input" placeholder="Введите ник..." style="width: 100%; margin-bottom: 15px;" oninput="showPlayerProgress(this.value)">';
-		html += '<div id="player-progress-result" style="display: grid; gap: 10px;">';
-		html += '<span style="color: #8b949e;">Введите ник, чтобы увидеть прогресс</span>';
-		html += '</div></div>';
-
-		html += '</div>';
-				
-        // РЕЙТИНГ (SEASON TOP)
-        html += '<div id="tab-rating" class="tab-content">';
-        html += '<div class="table-container"><h3>🏆 Сезонный рейтинг (SKILL)</h3>';
-        
-        const seasonTop = data.seasonTop || [];
-        if (seasonTop.length > 0) {
-            html += '<table id="rating-table"><thead><tr>';
-            html += '<th class="sortable-header" data-sort="rank">#</th>';
-            html += '<th class="sortable-header" data-sort="name">Игрок</th>';
-            html += '<th class="sortable-header" data-sort="class">Класс</th>';
-            html += '<th class="sortable-header" data-sort="skill">Skill</th>';
-            html += '<th class="sortable-header" data-sort="wl">W/L</th>';
-            html += '<th class="sortable-header" data-sort="winrate">Винрейт</th>';
-            html += '</tr></thead><tbody id="rating-tbody">';
-            
-            seasonTop.forEach((p, i) => {
-                const player = players.find(pl => pl.display === p.display) || {};
-                const total = p.wins + p.losses;
-                const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
-                const rank = i + 1;
-                const medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : rank));
-                
-                html += `<tr data-rank="${rank}" data-name="${p.display}" data-class="${player.name || ''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
-                html += `<td style="color: ${rank <= 3 ? '#ffd700' : '#8b949e'}; font-weight: ${rank <= 3 ? 'bold' : 'normal'};">${medal}</td>`;
-                html += `<td>${p.emoji || '🏆'} ${p.display}</td>`;
-                html += `<td>${player.name || '—'}</td>`;
-                html += `<td class="number" style="color: #ffd700; font-weight: bold;">${p.skill}</td>`;
-                html += `<td class="number">${p.wins}-${p.losses}</td>`;
-                html += `<td class="number">${wr}%</td>`;
-                html += `</tr>`;
+            const classArray = Object.entries(classStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses}));
+            html += '<div class="card"><div class="card-title">⚔️ Статистика по классам</div><div class="table-container"><table id="classes-table"><thead><tr>';
+            html += '<th class="sortable-header" data-sort="name">Класс</th><th class="sortable-header" data-sort="players">Игроков</th><th class="sortable-header" data-sort="wins">Победы</th><th class="sortable-header" data-sort="losses">Поражения</th><th class="sortable-header" data-sort="total">Всего</th><th class="sortable-header" data-sort="winrate">Винрейт</th><th class="sortable-header" data-sort="shards">Ср.осколки</th><th class="sortable-header" data-sort="streak">Стрик</th>';
+            html += '</tr></thead><tbody id="classes-tbody">';
+            classArray.sort((a,b) => b.total - a.total).forEach(c => {
+                const emoji = classEmojis[c.name] || '⚔️';
+                const wr = c.total>0 ? (c.wins*100/c.total).toFixed(1) : '0.0';
+                const avgShards = Math.round(c.shards/c.players);
+                html += `<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-shards="${avgShards}" data-streak="${c.best}">`;
+                html += `<td>${emoji} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${wr}%</td><td class="number">${avgShards}</td><td class="number">${c.best}</td></tr>`;
             });
-            html += '</tbody></table>';
-            
-            html += `<div style="margin-top: 15px; padding: 12px 15px; background: #1a1f26; border-radius: 10px; border: 1px solid #30363d; font-size: 12px; color: #8b949e; line-height: 1.6;">`;
-            html += `<span style="color: #ffd700;">📐 Как считается рейтинг:</span><br>`;
-            html += `<code style="color: #c9d1d9;">Skill ≈ (Победы × Винрейт × 10 + Стрик × 5 + Уровень × 3) ÷ √(Боёв / 100 + 1)</code><br>`;
-            html += `</div>`;
-        } else {
-            html += '<div style="text-align:center;padding:40px;color:#8b949e;">Нет данных рейтинга</div>';
-        }
-        html += '</div></div>';
-        
-        // ОСКОЛКИ
-        html += '<div id="tab-shards" class="tab-content">';
-        html += '<div class="table-container"><h3>💎 Топ коллекционеров осколков</h3><table id="shards-table"><thead><tr>';
-        html += '<th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="shards">Осколки</th><th class="sortable-header" data-sort="level">Уровень</th><th class="sortable-header" data-sort="faction">Фракция</th>';
-        html += '</tr></thead><tbody id="shards-tbody">';
-        const topShardsAll = [...players].sort((a,b) => b.shards - a.shards);
-        topShardsAll.forEach((p, i) => {
-            const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
-            html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}">`;
-            html += `<td>${i+1}</td><td>${p.emoji} ${p.display}</td><td>${p.name}</td><td class="number">${p.shards}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
-        });
-        html += '</tbody></table></div></div>';
-        
-		// ВСЕ ИГРОКИ
-		html += '<div id="tab-allplayers" class="tab-content">';
-		html += '<div class="table-container"><h3>👥 Все игроки (' + totalPlayers + ')</h3>';
-		html += '<div class="search-box"><input type="text" id="player-search" class="search-input" placeholder="🔍 Поиск по имени или классу..."><button id="clear-search" class="search-clear">✕</button><span id="search-result" style="color:#8b949e;margin-left:auto;"></span></div>';
-		html += '<table id="players-table"><thead><tr>';
-		html += '<th class="sortable-header" data-sort="index">#</th><th class="sortable-header" data-sort="name">Name</th><th class="sortable-header" data-sort="class">Class</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Winrate</th><th class="sortable-header" data-sort="streak">Streak</th><th class="sortable-header" data-sort="worst">Worst</th><th class="sortable-header" data-sort="level">Level</th><th class="sortable-header" data-sort="faction">Faction</th>';
-		html += '</tr></thead><tbody id="players-tbody">';
-		const sortedPlayers = [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses));
-		sortedPlayers.forEach((p,i) => {
-			const total = p.wins + p.losses;
-			const wr = total>0 ? (p.wins*100/total).toFixed(1) : '0.0';
-			const fi = p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');
-			const originalIdx = players.indexOf(p) + 1;
-			html += `<tr data-index="${originalIdx}" data-name="${p.display}" data-class="${p.name}" data-wl="${total}" data-winrate="${wr}" data-streak="${p.best}" data-worst="${p.worst || 0}" data-level="${p.level}" data-faction="${fi}">`;
-			html += `<td>${originalIdx}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td><td class="number">${p.best}</td><td class="number" style="color:#ff6b6b;">${p.worst || 0}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
-		});
-		html += '</tbody></table></div></div>';
+            html += '</tbody></table></div></div></div>';
 
-		document.getElementById('content').innerHTML = html;
+            // РАСЫ
+            html += '<div id="tab-races" class="tab-content">';
+            const raceStats = {}; const raceChamps = {};
+            players.forEach(p => {
+                const raceName = p.name.split('-')[0]; if (!raceName) return;
+                if (!raceStats[raceName]) { raceStats[raceName] = { wins:0, losses:0, players:0 }; raceChamps[raceName] = 0; }
+                raceStats[raceName].wins += p.wins; raceStats[raceName].losses += p.losses; raceStats[raceName].players++;
+                if (p.tournamentWins > 0) raceChamps[raceName]++;
+            });
+            const raceArray = Object.entries(raceStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses, champs:raceChamps[n]||0}));
+            html += '<div class="card"><div class="card-title">🌍 Статистика по расам</div><div class="table-container"><table id="races-table"><thead><tr>';
+            html += '<th class="sortable-header" data-sort="name">Раса</th><th class="sortable-header" data-sort="players">Игроков</th><th class="sortable-header" data-sort="wins">Победы</th><th class="sortable-header" data-sort="losses">Поражения</th><th class="sortable-header" data-sort="total">Боёв</th><th class="sortable-header" data-sort="winrate">Винрейт</th><th class="sortable-header" data-sort="champs">👑</th>';
+            html += '</tr></thead><tbody id="races-tbody">';
+            raceArray.sort((a,b) => b.total - a.total).forEach(r => {
+                const emoji = raceEmojis[r.name] || '🌍';
+                const wr = r.total>0 ? (r.wins*100/r.total).toFixed(1) : '0.0';
+                html += `<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}" data-champs="${r.champs}">`;
+                html += `<td>${emoji} ${r.name}</td><td class="number">${r.players}</td><td class="number">${r.wins}</td><td class="number">${r.losses}</td><td class="number">${r.total}</td><td class="number">${wr}%</td><td class="number">${r.champs||'-'}</td></tr>`;
+            });
+            html += '</tbody></table></div></div></div>';
 
-		initSortableTable('classes-table', 'total', 'desc');
-		initSortableTable('races-table', 'total', 'desc');
-		initSortableTable('combos-table', 'winrate', 'desc');
-		initSortableTable('rating-table', 'skill', 'desc');
-		initSortableTable('shards-table', 'shards', 'desc');
-		initSortableTable('champions-table', 'wins', 'desc');
-		initPlayersTable();
+            // КОМБИНАЦИИ
+            html += '<div id="tab-combos" class="tab-content">';
+            const comboStats = {};
+            players.forEach(p => { if (!comboStats[p.name]) comboStats[p.name] = { wins:0, losses:0, players:0 }; comboStats[p.name].wins += p.wins; comboStats[p.name].losses += p.losses; comboStats[p.name].players++; });
+            const comboArray = Object.entries(comboStats).map(([n,s]) => ({name:n, ...s, total:s.wins+s.losses})).filter(c => c.total >= 10);
+            html += '<div class="card"><div class="card-title">🔄 Комбинации (10+ боёв)</div><div class="table-container"><table id="combos-table"><thead><tr>';
+            html += '<th class="sortable-header" data-sort="name">Комбинация</th><th class="sortable-header" data-sort="players">Игроков</th><th class="sortable-header" data-sort="wins">Победы</th><th class="sortable-header" data-sort="losses">Поражения</th><th class="sortable-header" data-sort="total">Всего</th><th class="sortable-header" data-sort="winrate">Винрейт</th>';
+            html += '</tr></thead><tbody id="combos-tbody">';
+            comboArray.sort((a,b) => (b.wins/b.total) - (a.wins/a.total)).forEach(c => {
+                const parts = c.name.split('-');
+                const raceEm = raceEmojis[parts[0]] || '', classEm = classEmojis[parts[1]] || '';
+                const wr = (c.wins*100/c.total).toFixed(1);
+                html += `<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}">`;
+                html += `<td>${raceEm}${classEm} ${c.name}</td><td class="number">${c.players}</td><td class="number">${c.wins}</td><td class="number">${c.losses}</td><td class="number">${c.total}</td><td class="number">${wr}%</td></tr>`;
+            });
+            html += '</tbody></table></div></div></div>';
 
-		setTimeout(() => {
-			const hash = window.location.hash.substring(1);
-			const validTabs = ['tops', 'classes', 'races', 'combos', 'rating', 'shards', 'records', 'champions', 'titles', 'allplayers'];
-			if (hash && validTabs.includes(hash)) switchTab(hash);
-		}, 100);
+            // РЕКОРДЫ
+            html += '<div id="tab-records" class="tab-content">';
+            const maxWins = players.reduce((max,p) => p.wins > max.wins ? p : max, players[0]);
+            const maxStreak = players.reduce((max,p) => p.best > max.best ? p : max, players[0]);
+            const maxShards = players.reduce((max,p) => p.shards > max.shards ? p : max, players[0]);
+            const maxFights = players.reduce((max,p) => (p.wins+p.losses) > (max.wins+max.losses) ? p : max, players[0]);
+            const maxFaction = players.reduce((max,p) => p.factionWins > max.factionWins ? p : max, players[0]);
+            const maxTournament = players.reduce((max,p) => p.tournamentWins > max.tournamentWins ? p : max, players[0]);
+            const maxLevel = players.reduce((max,p) => p.level > max.level ? p : max, players[0]);
+            const maxWinrate = players.filter(p => p.wins+p.losses >= 20).reduce((max,p) => { const wr = p.wins/(p.wins+p.losses); const maxWr = max.wins/(max.wins+max.losses); return wr > maxWr ? p : max; }, players[0]);
 
-	window.showPlayerProgress = function(nickname) {
-			const container = document.getElementById('player-progress-result');
-			if (!nickname) {
-				container.innerHTML = '<span style="color: #8b949e;">Введите ник, чтобы увидеть прогресс</span>';
-				return;
-			}
-			
-			const player = players.find(p => p.display.toLowerCase() === nickname.toLowerCase());
-			if (!player) {
-				container.innerHTML = '<span style="color: #ff6b6b;">Игрок не найден</span>';
-				return;
-			}
-			
-			const total = player.wins + player.losses;
-			const winrate = total > 0 ? (player.wins * 100 / total) : 0;
-			const faction = player.faction || '';
-			
-			const nextLevel = achievements.filter(a => a.type === 'level' && a.value > player.level).sort((a,b) => a.value - b.value)[0];
-			const nextTournament = achievements.filter(a => a.type === 'tournament' && a.value > player.tournamentWins).sort((a,b) => a.value - b.value)[0];
-			const nextWins = achievements.filter(a => a.type === 'wins' && a.value > player.wins).sort((a,b) => a.value - b.value)[0];
-			const nextBest = achievements.filter(a => a.type === 'best' && a.value > player.best).sort((a,b) => a.value - b.value)[0];
-			const nextFaction = achievements.filter(a => a.type === 'faction' && a.faction === faction && a.value > player.factionWins).sort((a,b) => a.value - b.value)[0];
-			const nextWinrate = achievements.filter(a => a.type === 'winrate' && a.value > winrate && (!a.minFights || total >= a.minFights)).sort((a,b) => a.value - b.value)[0];
-			
-			let html = '';
-						
-			function renderBar(label, current, max, nextTitle) {
-				const percent = Math.min(100, (current / max) * 100);
-				const completed = current >= max;
-				return `
-					<div style="margin-bottom: 20px;">
-						<div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-							<span style="color: #c9d1d9;">${label}</span>
-							<span style="color: #8b949e; font-size: 11px;">${current}/${max}</span>
-						</div>
-						<div style="background: #21262d; height: 8px; border-radius: 4px;">
-							<div style="width: ${percent}%; background: ${completed ? '#ffd700' : '#a371f7'}; height: 8px; border-radius: 4px;"></div>
-						</div>
-						<div style="margin-top: 5px; color: #ffd700; font-size: 12px;">
-							${nextTitle ? '⏩️ ' + nextTitle.emoji + ' ' + nextTitle.name : '✅ Максимум!'}
-						</div>
-					</div>
-				`;
-			}
-			
-			if (nextLevel) html += renderBar('📈 Уровень', player.level, nextLevel.value, nextLevel);
-			if (nextTournament) html += renderBar('🏆 Турнирные победы', player.tournamentWins, nextTournament.value, nextTournament);
-			if (nextWins) html += renderBar('⚔️ Всего побед', player.wins, nextWins.value, nextWins);
-			if (nextBest) html += renderBar('🔥 Лучший стрик', player.best, nextBest.value, nextBest);
-			if (nextFaction && faction) {
-				const factionIcon = faction === 'Орден Света' ? '🌝' : '🌚';
-				html += renderBar(`${factionIcon} ${faction}`, player.factionWins, nextFaction.value, nextFaction);
-			}
-			if (nextWinrate) html += renderBar('📊 Винрейт', winrate.toFixed(1), nextWinrate.value, nextWinrate);
-			
-			if (html === '') html = '<span style="color: #ffd700;">🏆 Все титулы получены! Ты легенда!</span>';
-			
-			container.innerHTML = html;
-		};
-	}
+            const recordCounts = {};
+            [maxWins, maxStreak, maxShards, maxFights, maxFaction, maxTournament, maxLevel, maxWinrate].forEach(p => { if(p) recordCounts[p.display] = (recordCounts[p.display]||0)+1; });
+            const topRecorder = Object.entries(recordCounts).sort((a,b) => b[1]-a[1])[0];
 
-    function initSortableTable(tableId, defaultSort, defaultDir) {
-        setTimeout(() => {
-            const table = document.getElementById(tableId);
-            if (!table) return;
-            const tbody = table.querySelector('tbody');
-            const headers = table.querySelectorAll('.sortable-header');
-            let currentSort = defaultSort, currentDir = defaultDir;
-            function sortTable(sortBy) {
-                const rows = Array.from(tbody.querySelectorAll('tr'));
-                rows.sort((a,b) => {
-                    let valA = a.dataset[sortBy], valB = b.dataset[sortBy];
-                    if (sortBy === 'name' || sortBy === 'class' || sortBy === 'faction') {
-                        return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-                    }
-                    valA = parseFloat(valA) || 0; valB = parseFloat(valB) || 0;
-                    return currentDir === 'asc' ? valA - valB : valB - valA;
-                });
-                rows.forEach(row => tbody.appendChild(row));
+            html += '<div style="text-align:center;margin-bottom:20px;"><div style="font-size:2.5rem;color:var(--gold);">👑</div><h2 style="color:var(--gold);margin:8px 0;">РЕКОРДСМЕНЫ ЭТЕРНИСА</h2></div>';
+            html += `<div class="champion-block"><div style="font-size:1.2rem;color:var(--gold);margin-bottom:8px;">🏆 ЛЕГЕНДА ЭТЕРНИСА</div><div class="champion-emoji">${players.find(p=>p.display===topRecorder[0])?.emoji||'🏆'}</div><div class="champion-name">${topRecorder[0]}</div><div class="champion-class">${topRecorder[1]} рекордов</div></div>`;
+
+            html += '<div class="titles-gallery" style="grid-template-columns:repeat(4,1fr);">';
+            const records = [
+                { icon:'🏆', name:'ПОБЕДЫ', value:maxWins.wins, player:maxWins.display, emoji:maxWins.emoji, desc:'побед' },
+                { icon:'🔥', name:'СТРИК', value:maxStreak.best, player:maxStreak.display, emoji:maxStreak.emoji, desc:'побед подряд' },
+                { icon:'💎', name:'ОСКОЛКИ', value:maxShards.shards, player:maxShards.display, emoji:maxShards.emoji, desc:'осколков' },
+                { icon:'⚔️', name:'БОИ', value:maxFights.wins+maxFights.losses, player:maxFights.display, emoji:maxFights.emoji, desc:'боёв' },
+                { icon:'🌍', name:'ФРАКЦИЯ', value:maxFaction.factionWins, player:maxFaction.display, emoji:maxFaction.emoji, desc:'побед за фракцию' },
+                { icon:'👑', name:'ЧЕМПИОН', value:maxTournament.tournamentWins, player:maxTournament.display, emoji:maxTournament.emoji, desc:'побед в турнирах' },
+                { icon:'📊', name:'УРОВЕНЬ', value:maxLevel.level, player:maxLevel.display, emoji:maxLevel.emoji, desc:'уровень' },
+                { icon:'📈', name:'ВИНРЕЙТ', value:(maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1), player:maxWinrate.display, emoji:maxWinrate.emoji, desc:'% побед (20+ боёв)' }
+            ];
+            records.forEach(r => {
+                html += `<div class="title-card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:6px;">${r.icon}</div><div style="color:var(--text-muted);font-size:0.7rem;">${r.name}</div><div style="font-size:1.5rem;color:var(--gold);font-weight:800;">${r.value}</div><div style="color:var(--text-muted);font-size:0.68rem;">${r.desc}</div><div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border-subtle);font-size:0.8rem;">${r.emoji} ${r.player}</div></div>`;
+            });
+            html += '</div>';
+
+            const oldestPlayer = [...players].sort((a,b) => (a.wins+a.losses)-(b.wins+b.losses))[0];
+            const mostLosses = players.reduce((max,p) => p.losses > max.losses ? p : max, players[0]);
+            const perfectWinrate = players.filter(p => p.wins+p.losses >= 10 && p.wins/(p.wins+p.losses) === 1)[0];
+            html += '<div style="margin-top:20px;"><div class="card-title">📜 Другие достижения</div><div class="records-grid">';
+            html += `<div class="record-item"><div class="record-value">${oldestPlayer.wins+oldestPlayer.losses}</div><div class="record-label">⚔️ Меньше всего боёв — ${oldestPlayer.display}</div></div>`;
+            html += `<div class="record-item"><div class="record-value">${mostLosses.losses}</div><div class="record-label">💔 Больше всего поражений — ${mostLosses.display}</div></div>`;
+            if(perfectWinrate) html += `<div class="record-item"><div class="record-value">100%</div><div class="record-label">💯 Идеальный винрейт (10+) — ${perfectWinrate.display}</div></div>`;
+            html += `<div class="record-item"><div class="record-value">${new Date().toLocaleDateString('ru-RU')}</div><div class="record-label">📅 Статистика актуальна на</div></div></div></div></div>`;
+
+            // ЧЕМПИОНЫ
+            html += '<div id="tab-champions" class="tab-content">';
+            const currentChampion = players.find(p => p.champion === true);
+            const topChampions = players.filter(p => p.tournamentWins > 0).sort((a,b) => b.tournamentWins - a.tournamentWins);
+            if(currentChampion){
+                html += `<div class="champion-block"><div style="font-size:0.8rem;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;">ХРАНИТЕЛЬ РАСКОЛА</div><div class="champion-emoji">${currentChampion.emoji}</div><div class="champion-name">${currentChampion.display}</div><div class="champion-class">${currentChampion.name}</div><div style="margin-top:16px;display:flex;justify-content:center;gap:32px;"><div><span style="color:var(--text-muted);font-size:0.7rem;">Турнирные победы</span><br><span style="color:var(--gold);font-size:1.5rem;font-weight:800;">${currentChampion.tournamentWins}</span></div><div><span style="color:var(--text-muted);font-size:0.7rem;">Всего побед</span><br><span style="color:var(--text-primary);font-size:1.5rem;font-weight:800;">${currentChampion.wins}</span></div><div><span style="color:var(--text-muted);font-size:0.7rem;">Винрейт</span><br><span style="color:var(--text-primary);font-size:1.5rem;font-weight:800;">${(currentChampion.wins*100/(currentChampion.wins+currentChampion.losses)).toFixed(1)}%</span></div></div></div>`;
+            } else {
+                html += '<div class="champion-block"><div style="font-size:0.8rem;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;">ХРАНИТЕЛЬ РАСКОЛА</div><div style="font-size:4rem;opacity:0.4;">👑</div><div style="color:var(--text-muted);">Титул ждёт своего героя</div></div>';
             }
-            headers.forEach(th => {
-                th.addEventListener('click', () => {
-                    const sortBy = th.dataset.sort;
-                    headers.forEach(h => h.classList.remove('asc','desc'));
-                    if (currentSort === sortBy) currentDir = currentDir === 'asc' ? 'desc' : 'asc';
-                    else { currentSort = sortBy; currentDir = 'desc'; }
-                    th.classList.add(currentDir);
-                    sortTable(currentSort);
+            if(topChampions.length > 0){
+                html += '<div class="card"><div class="card-title">🏆 Чемпионы</div><div class="table-container"><table id="champions-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="wins">🏆</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="champions-tbody">';
+                topChampions.forEach((p,i) => {
+                    const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
+                    html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${p.champion?'style="background:rgba(255,215,0,0.06);"':''}>`;
+                    html += `<td>${i+1}</td><td>${p.emoji} ${p.display} ${p.champion?'<span style="color:var(--gold);">👑</span>':''}</td><td>${p.name}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.tournamentWins}</td><td>${fi}</td></tr>`;
                 });
-            });
-            const defaultHeader = table.querySelector(`[data-sort="${defaultSort}"]`);
-            if (defaultHeader) { defaultHeader.classList.add(defaultDir); sortTable(defaultSort); }
-        }, 200);
-    }
+                html += '</tbody></table></div></div>';
+            }
+            html += '</div>';
 
-    function initPlayersTable() {
-        setTimeout(() => {
-            const tbody = document.getElementById('players-tbody');
-            const searchInput = document.getElementById('player-search');
-            const clearBtn = document.getElementById('clear-search');
-            const resultSpan = document.getElementById('search-result');
-            const headers = document.querySelectorAll('#players-table .sortable-header');
-            if (!tbody) return;
-            let currentSort = 'wl', currentDir = 'desc';
-            const allRows = Array.from(tbody.querySelectorAll('tr'));
-            function filterAndSort() {
-                const searchText = searchInput?.value.toLowerCase() || '';
-                let filtered = allRows.filter(row => {
-                    if (!searchText) return true;
-                    const name = row.dataset.name?.toLowerCase() || '';
-                    const cls = row.dataset.class?.toLowerCase() || '';
-                    return name.includes(searchText) || cls.includes(searchText);
-                });
-                filtered.sort((a,b) => {
-                    let valA = a.dataset[currentSort], valB = b.dataset[currentSort];
-                    if (currentSort === 'name' || currentSort === 'class' || currentSort === 'faction') {
-                        return currentDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-                    }
-                    valA = parseFloat(valA) || 0; valB = parseFloat(valB) || 0;
-                    return currentDir === 'asc' ? valA - valB : valB - valA;
-                });
-                filtered.forEach((row, idx) => { row.cells[0].textContent = idx + 1; });
-                tbody.innerHTML = '';
-                filtered.forEach(row => tbody.appendChild(row));
-                if (resultSpan) resultSpan.textContent = searchText ? `Найдено: ${filtered.length}` : '';
-                if (searchText) {
-                    tbody.querySelectorAll('tr').forEach(row => {
-                        const nameCell = row.cells[1], classCell = row.cells[2];
-                        if (nameCell) nameCell.innerHTML = nameCell.textContent.replace(new RegExp(`(${searchText})`,'gi'), '<span class="highlight">$1</span>');
-                        if (classCell) classCell.innerHTML = classCell.textContent.replace(new RegExp(`(${searchText})`,'gi'), '<span class="highlight">$1</span>');
-                    });
+            // ТИТУЛЫ
+            html += '<div id="tab-titles" class="tab-content">';
+            achievements = [
+                { emoji:"🌟", name:"Легенда Этерниса", type:"level", value:150 },{ emoji:"👑", name:"Король арены", type:"tournament", value:10 },
+                { emoji:"👑", name:"Властелин Раскола", type:"tournament", value:5 },{ emoji:"💫", name:"Властелин осколков", type:"level", value:100 },
+                { emoji:"👑", name:"Бессмертный", type:"level", value:50 },{ emoji:"☠️", name:"Бог войны", type:"best", value:20 },
+                { emoji:"✨", name:"Мифический", type:"level", value:40 },{ emoji:"🤖", name:"Читер", type:"winrate", value:90, minFights:50 },
+                { emoji:"🤪", name:"Безумный", type:"fights", value:1000 },{ emoji:"⚡", name:"Живая легенда", type:"level", value:30 },
+                { emoji:"💎", name:"Элита", type:"winrate", value:80, minFights:30 },{ emoji:"🗡️", name:"Мастер клинка", type:"level", value:20 },
+                { emoji:"🏆", name:"Триумфатор", type:"wins", value:200 },{ emoji:"👑", name:"Легенда", type:"wins", value:100 },
+                { emoji:"⚔️", name:"Ветеран", type:"fights", value:500 },{ emoji:"🛡️", name:"Хранитель", type:"level", value:15 },
+                { emoji:"⚡", name:"Непобедимый", type:"best", value:10 },{ emoji:"🏹", name:"Мастер", type:"winrate", value:70, minFights:30 },
+                { emoji:"📿", name:"Собиратель", type:"level", value:10 },{ emoji:"🔱", name:"Избранный светом", type:"faction", value:150, faction:"Орден Света" },
+                { emoji:"🌋", name:"Владыка тьмы", type:"faction", value:150, faction:"Культ Тьмы" },{ emoji:"⚜️", name:"Аэлион", type:"faction", value:100, faction:"Орден Света" },
+                { emoji:"🌑", name:"Повествователь", type:"faction", value:100, faction:"Культ Тьмы" },{ emoji:"🏆", name:"Хранитель Вечности", type:"tournament", value:1 },
+                { emoji:"👑", name:"Чемпион", type:"champion" },{ emoji:"🛡️", name:"Рыцарь Света", type:"faction", value:50, faction:"Орден Света" },
+                { emoji:"🗡️", name:"Теневой клинок", type:"faction", value:50, faction:"Культ Тьмы" },{ emoji:"✨", name:"Страж порядка", type:"faction", value:25, faction:"Орден Света" },
+                { emoji:"🌙", name:"Глас тьмы", type:"faction", value:25, faction:"Культ Тьмы" },{ emoji:"🛡️", name:"Воитель", type:"wins", value:50 },
+                { emoji:"🛡️", name:"Гладиатор", type:"losses", value:200 },{ emoji:"🔥", name:"Неудержимый", type:"best", value:5 },
+                { emoji:"🎯", name:"Профессионал", type:"winrate", value:60, minFights:30 },{ emoji:"⚔️", name:"Опытный", type:"wins", value:10 },
+                { emoji:"⚙️", name:"Трудяга", type:"fights", value:100 },{ emoji:"🔥", name:"Задира", type:"best", value:3 },
+                { emoji:"🌱", name:"Новичок", type:"wins", value:1 },{ emoji:"👀", name:"Любопытный", type:"fights", value:50 },
+                { emoji:"⚖️", name:"Ровный", type:"winrate", value:50, minFights:10 },{ emoji:"🥊", name:"Боец", type:"losses", value:10 },
+                { emoji:"☯️", name:"Инь-Янь", type:"balance", minFights:20 },{ emoji:"⚙️", name:"Железный", type:"losses", value:100 },
+                { emoji:"🪀", name:"Груша для битья", type:"losses", value:50 }
+            ];
+
+            function checkAchievement(ach, p) {
+                const total = p.wins + p.losses;
+                if (ach.minFights && total < ach.minFights) return false;
+                switch(ach.type){
+                    case "level": return p.level >= ach.value;
+                    case "wins": return p.wins >= ach.value;
+                    case "losses": return p.losses >= ach.value;
+                    case "best": return p.best >= ach.value;
+                    case "fights": return total >= ach.value;
+                    case "tournament": return p.tournamentWins >= ach.value;
+                    case "faction": return p.faction === ach.faction && p.factionWins >= ach.value;
+                    case "winrate": return total > 0 && (p.wins*100/total) >= ach.value;
+                    case "balance": return p.wins === p.losses && total >= (ach.minFights||20);
+                    case "champion": return p.champion === true;
+                    default: return false;
                 }
             }
-            headers.forEach(th => {
-                th.addEventListener('click', () => {
-                    const sortBy = th.dataset.sort;
-                    headers.forEach(h => h.classList.remove('asc','desc'));
-                    if (currentSort === sortBy) currentDir = currentDir === 'asc' ? 'desc' : 'asc';
-                    else { currentSort = sortBy; currentDir = 'desc'; }
-                    th.classList.add(currentDir);
-                    filterAndSort();
-                });
-            });
-            if (searchInput) searchInput.addEventListener('input', filterAndSort);
-            if (clearBtn) clearBtn.addEventListener('click', () => { searchInput.value = ''; filterAndSort(); });
-            const wlHeader = document.querySelector('[data-sort="wl"]');
-            if (wlHeader) { wlHeader.classList.add('desc'); filterAndSort(); }
-        }, 200);
-    }
 
-    window.switchTab = function(tabName) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-' + tabName).classList.add('active');
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            if (btn.textContent.toLowerCase().includes(tabName) || 
-                (tabName === 'tops' && btn.textContent.includes('Топы')) ||
-                (tabName === 'classes' && btn.textContent.includes('Классы')) ||
-                (tabName === 'races' && btn.textContent.includes('Расы')) ||
-                (tabName === 'combos' && btn.textContent.includes('Комбинации')) ||
-                (tabName === 'rating' && btn.textContent.includes('Рейтинг')) ||
-                (tabName === 'shards' && btn.textContent.includes('Осколки')) ||
-                (tabName === 'records' && btn.textContent.includes('Рекорды')) ||
-                (tabName === 'champions' && btn.textContent.includes('Чемпионы')) ||
-                (tabName === 'titles' && btn.textContent.includes('Титулы')) ||
-                (tabName === 'allplayers' && btn.textContent.includes('Игроки'))) {
-                btn.classList.add('active');
+            const playerTitles = {}; const titleCounts = {};
+            players.forEach(p => {
+                const titles = achievements.filter(a => checkAchievement(a,p)).map(a => a.emoji+" "+a.name);
+                if(titles.length > 0){ playerTitles[p.display] = titles; titles.forEach(t => titleCounts[t] = (titleCounts[t]||0)+1); }
+            });
+
+            const topHunters = Object.entries(playerTitles).sort((a,b) => b[1].length - a[1].length).slice(0,3);
+            html += '<div class="hunters-top">';
+            ['🥇','🥈','🥉'].forEach((medal, idx) => {
+                if(!topHunters[idx]) return;
+                const [name, titles] = topHunters[idx];
+                html += `<div class="hunter-card"><div class="hunter-medal">${medal}</div><div class="hunter-name">${name}</div><div class="hunter-count">${titles.length} титулов</div><div class="hunter-titles">${titles.slice(0,3).join(', ')}${titles.length>3?' +'+(titles.length-3):''}</div></div>`;
+            });
+            html += '</div>';
+
+            html += '<div class="card-title">🏅 Все титулы</div><div class="titles-gallery">';
+            [...achievements].sort((a,b) => (titleCounts[a.emoji+" "+a.name]||0) - (titleCounts[b.emoji+" "+b.name]||0)).forEach(ach => {
+                const fullName = ach.emoji+" "+ach.name;
+                const holders = titleCounts[fullName]||0;
+                const percent = (holders/players.length)*100;
+                html += `<div class="title-card"><div class="title-emoji">${ach.emoji}</div><div class="title-name">${ach.name}</div><div class="title-cond">${ach.type==='level'?ach.value+' уровень':ach.type==='wins'?ach.value+' побед':ach.type==='losses'?ach.value+' поражений':ach.type==='best'?'Стрик '+ach.value:ach.type==='fights'?ach.value+' боёв':ach.type==='tournament'?ach.value+' турнирных побед':ach.type==='faction'?ach.value+' побед за '+ach.faction:ach.type==='winrate'?'Винрейт '+ach.value+'%':ach.type==='balance'?'Побед = Поражений':'Текущий чемпион'}</div><div class="title-progress"><div class="title-progress-fill" style="width:${percent}%;"></div></div><div class="title-holders">👤 ${holders} игроков</div></div>`;
+            });
+            html += '</div>';
+
+            html += '<div class="card"><div class="card-title">🔍 Прогресс игрока</div><input type="text" id="title-player-search" class="search-input" placeholder="Введите ник..." style="width:100%;margin-bottom:12px;" oninput="showPlayerProgress(this.value)"><div id="player-progress-result" style="display:grid;gap:10px;"><span style="color:var(--text-muted);">Введите ник, чтобы увидеть прогресс</span></div></div>';
+            html += '</div>';
+
+            // РЕЙТИНГ
+            html += '<div id="tab-rating" class="tab-content">';
+            const seasonTop = data.seasonTop || [];
+            html += '<div class="card"><div class="card-title">🏆 Сезонный рейтинг (SKILL)</div>';
+            if(seasonTop.length > 0){
+                html += '<div class="table-container"><table id="rating-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="skill">Skill</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Винрейт</th></tr></thead><tbody id="rating-tbody">';
+                seasonTop.forEach((p,i) => {
+                    const player = players.find(pl => pl.display === p.display) || {};
+                    const total = p.wins + p.losses;
+                    const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
+                    const rank = i + 1;
+                    const medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : rank));
+                    html += `<tr data-rank="${rank}" data-name="${p.display}" data-class="${player.name||''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}">`;
+                    html += `<td style="color:${rank<=3?'var(--gold)':'var(--text-muted)'};font-weight:${rank<=3?'700':'400'};">${medal}</td><td>${p.emoji||'🏆'} ${p.display}</td><td>${player.name||'—'}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.skill}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td></tr>`;
+                });
+                html += '</tbody></table></div>';
+                html += '<div style="margin-top:12px;padding:12px;background:var(--bg-elevated);border-radius:var(--radius-sm);border:1px solid var(--border-subtle);font-size:0.75rem;color:var(--text-muted);line-height:1.6;"><span style="color:var(--gold);">📐 Как считается рейтинг:</span><br><code style="color:var(--text-secondary);">Skill ≈ (Победы × Винрейт × 10 + Стрик × 5 + Уровень × 3) ÷ √(Боёв / 100 + 1)</code></div>';
+            } else {
+                html += '<div style="text-align:center;padding:40px;color:var(--text-muted);">Нет данных рейтинга</div>';
             }
-        });
-        history.replaceState(null, null, '#' + tabName);
-    };
-</script>
+            html += '</div></div>';
+
+            // ОСКОЛКИ
+            html += '<div id="tab-shards" class="tab-content"><div class="card"><div class="card-title">💎 Топ коллекционеров осколков</div><div class="table-container"><table id="shards-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="shards">Осколки</th><th class="sortable-header" data-sort="level">Уровень</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="shards-tbody">';
+            [...players].sort((a,b) => b.shards - a.shards).forEach((p,i) => {
+                const fi = p.faction === 'Орден Света' ? '🌝' : (p.faction === 'Культ Тьмы' ? '🌚' : '');
+                html += `<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}"><td>${i+1}</td><td>${p.emoji} ${p.display}</td><td>${p.name}</td><td class="number">${p.shards}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
+            });
+            html += '</tbody></table></div></div></div>';
+
+            // ВСЕ ИГРОКИ
+            html += '<div id="tab-allplayers" class="tab-content"><div class="card"><div class="card-title">👥 Все игроки ('+totalPlayers+')</div><div class="search-box"><input type="text" id="player-search" class="search-input" placeholder="🔍 Поиск по имени или классу..."><button id="clear-search" class="search-clear">✕</button><span id="search-result" style="color:var(--text-muted);margin-left:auto;"></span></div><div class="table-container"><table id="players-table"><thead><tr><th class="sortable-header" data-sort="index">#</th><th class="sortable-header" data-sort="name">Name</th><th class="sortable-header" data-sort="class">Class</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Winrate</th><th class="sortable-header" data-sort="streak">Streak</th><th class="sortable-header" data-sort="worst">Worst</th><th class="sortable-header" data-sort="level">Level</th><th class="sortable-header" data-sort="faction">Faction</th></tr></thead><tbody id="players-tbody">';
+            [...players].sort((a,b) => (b.wins+b.losses) - (a.wins+a.losses)).forEach((p,i) => {
+                const total = p.wins + p.losses;
+                const wr = total>0 ? (p.wins*100/total).toFixed(1) : '0.0';
+                const fi = p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');
+                html += `<tr data-index="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wl="${total}" data-winrate="${wr}" data-streak="${p.best}" data-worst="${p.worst||0}" data-level="${p.level}" data-faction="${fi}"><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td><td class="number">${p.best}</td><td class="number" style="color:var(--red);">${p.worst||0}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
+            });
+            html += '</tbody></table></div></div></div>';
+
+            document.getElementById('content').innerHTML = html;
+
+            initSortableTable('classes-table', 'total', 'desc');
+            initSortableTable('races-table', 'total', 'desc');
+            initSortableTable('combos-table', 'winrate', 'desc');
+            initSortableTable('rating-table', 'skill', 'desc');
+            initSortableTable('shards-table', 'shards', 'desc');
+            initSortableTable('champions-table', 'wins', 'desc');
+            initPlayersTable();
+
+            setTimeout(() => {
+                const hash = window.location.hash.substring(1);
+                const validTabs = ['tops', 'classes', 'races', 'combos', 'rating', 'shards', 'records', 'champions', 'titles', 'allplayers'];
+                if (hash && validTabs.includes(hash)) switchTab(hash);
+            }, 100);
+
+            window.showPlayerProgress = function(nickname) {
+                const container = document.getElementById('player-progress-result');
+                if (!nickname) { container.innerHTML = '<span style="color:var(--text-muted);">Введите ник, чтобы увидеть прогресс</span>'; return; }
+                const player = players.find(p => p.display.toLowerCase() === nickname.toLowerCase());
+                if (!player) { container.innerHTML = '<span style="color:var(--red);">Игрок не найден</span>'; return; }
+                const total = player.wins + player.losses;
+                const winrate = total > 0 ? (player.wins * 100 / total) : 0;
+                const faction = player.faction || '';
+                const nextLevel = achievements.filter(a => a.type === 'level' && a.value > player.level).sort((a,b) => a.value - b.value)[0];
+                const nextTournament = achievements.filter(a => a.type === 'tournament' && a.value > player.tournamentWins).sort((a,b) => a.value - b.value)[0];
+                const nextWins = achievements.filter(a => a.type === 'wins' && a.value > player.wins).sort((a,b) => a.value - b.value)[0];
+                const nextBest = achievements.filter(a => a.type === 'best' && a.value > player.best).sort((a,b) => a.value - b.value)[0];
+                const nextFaction = achievements.filter(a => a.type === 'faction' && a.faction === faction && a.value > player.factionWins).sort((a,b) => a.value - b.value)[0];
+                const nextWinrate = achievements.filter(a => a.type === 'winrate' && a.value > winrate && (!a.minFights || total >= a.minFights)).sort((a,b) => a.value - b.value)[0];
+                let html = '';
+                function bar(label, current, max, nextTitle){
+                    const pct = Math.min(100, (current/max)*100);
+                    const done = current >= max;
+                    return `<div style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>${label}</span><span style="color:var(--text-muted);font-size:0.7rem;">${current}/${max}</span></div><div style="background:var(--bg-card);height:6px;border-radius:3px;"><div style="width:${pct}%;background:${done?'var(--gold)':'var(--purple)'};height:6px;border-radius:3px;"></div></div><div style="margin-top:4px;color:var(--gold);font-size:0.7rem;">${nextTitle ? '⏩️ '+nextTitle.emoji+' '+nextTitle.name : '✅ Максимум!'}</div></div>`;
+                }
+                if(nextLevel) html += bar('📈 Уровень', player.level, nextLevel.value, nextLevel);
+                if(nextTournament) html += bar('🏆 Турнирные победы', player.tournamentWins, nextTournament.value, nextTournament);
+                if(nextWins) html += bar('⚔️ Всего побед', player.wins, nextWins.value, nextWins);
+                if(nextBest) html += bar('🔥 Лучший стрик', player.best, nextBest.value, nextBest);
+                if(nextFaction && faction){ const fi = faction === 'Орден Света' ? '🌝' : '🌚'; html += bar(`${fi} ${faction}`, player.factionWins, nextFaction.value, nextFaction); }
+                if(nextWinrate) html += bar('📊 Винрейт', winrate.toFixed(1), nextWinrate.value, nextWinrate);
+                if(html === '') html = '<span style="color:var(--gold);">🏆 Все титулы получены! Ты легенда!</span>';
+                container.innerHTML = html;
+            };
+        }
+
+        function initSortableTable(tableId, defaultSort, defaultDir) {
+            setTimeout(() => {
+                const table = document.getElementById(tableId); if (!table) return;
+                const tbody = table.querySelector('tbody');
+                const headers = table.querySelectorAll('.sortable-header');
+                let currentSort = defaultSort, currentDir = defaultDir;
+                function sortTable(sortBy){
+                    const rows = Array.from(tbody.querySelectorAll('tr'));
+                    rows.sort((a,b) => {
+                        let va = a.dataset[sortBy], vb = b.dataset[sortBy];
+                        if (sortBy === 'name' || sortBy === 'class' || sortBy === 'faction') return currentDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+                        va = parseFloat(va) || 0; vb = parseFloat(vb) || 0;
+                        return currentDir === 'asc' ? va - vb : vb - va;
+                    });
+                    rows.forEach(row => tbody.appendChild(row));
+                }
+                headers.forEach(th => {
+                    th.addEventListener('click', () => {
+                        const sortBy = th.dataset.sort;
+                        headers.forEach(h => h.classList.remove('asc','desc'));
+                        if (currentSort === sortBy) currentDir = currentDir === 'asc' ? 'desc' : 'asc';
+                        else { currentSort = sortBy; currentDir = 'desc'; }
+                        th.classList.add(currentDir);
+                        sortTable(currentSort);
+                    });
+                });
+                const defaultHeader = table.querySelector(`[data-sort="${defaultSort}"]`);
+                if (defaultHeader) { defaultHeader.classList.add(defaultDir); sortTable(defaultSort); }
+            }, 200);
+        }
+
+        function initPlayersTable(){
+            setTimeout(() => {
+                const tbody = document.getElementById('players-tbody');
+                const searchInput = document.getElementById('player-search');
+                const clearBtn = document.getElementById('clear-search');
+                const resultSpan = document.getElementById('search-result');
+                const headers = document.querySelectorAll('#players-table .sortable-header');
+                if (!tbody) return;
+                let currentSort = 'wl', currentDir = 'desc';
+                const allRows = Array.from(tbody.querySelectorAll('tr'));
+                function filterAndSort(){
+                    const searchText = searchInput?.value.toLowerCase() || '';
+                    let filtered = allRows.filter(row => {
+                        if (!searchText) return true;
+                        const name = row.dataset.name?.toLowerCase() || '';
+                        const cls = row.dataset.class?.toLowerCase() || '';
+                        return name.includes(searchText) || cls.includes(searchText);
+                    });
+                    filtered.sort((a,b) => {
+                        let va = a.dataset[currentSort], vb = b.dataset[currentSort];
+                        if (currentSort === 'name' || currentSort === 'class' || currentSort === 'faction') return currentDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+                        va = parseFloat(va) || 0; vb = parseFloat(vb) || 0;
+                        return currentDir === 'asc' ? va - vb : vb - va;
+                    });
+                    filtered.forEach((row, idx) => { row.cells[0].textContent = idx + 1; });
+                    tbody.innerHTML = '';
+                    filtered.forEach(row => tbody.appendChild(row));
+                    if (resultSpan) resultSpan.textContent = searchText ? `Найдено: ${filtered.length}` : '';
+                    if (searchText){ tbody.querySelectorAll('tr').forEach(row => { const nc = row.cells[1], cc = row.cells[2]; if(nc) nc.innerHTML = nc.textContent.replace(new RegExp(`(${searchText})`,'gi'), '<span class="highlight">$1</span>'); if(cc) cc.innerHTML = cc.textContent.replace(new RegExp(`(${searchText})`,'gi'), '<span class="highlight">$1</span>'); }); }
+                }
+                headers.forEach(th => { th.addEventListener('click', () => { const sortBy = th.dataset.sort; headers.forEach(h => h.classList.remove('asc','desc')); if (currentSort === sortBy) currentDir = currentDir === 'asc' ? 'desc' : 'asc'; else { currentSort = sortBy; currentDir = 'desc'; } th.classList.add(currentDir); filterAndSort(); }); });
+                if (searchInput) searchInput.addEventListener('input', filterAndSort);
+                if (clearBtn) clearBtn.addEventListener('click', () => { searchInput.value = ''; filterAndSort(); });
+                const wlHeader = document.querySelector('[data-sort="wl"]');
+                if (wlHeader) { wlHeader.classList.add('desc'); filterAndSort(); }
+            }, 200);
+        }
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(tabName) || 
+                    (tabName === 'tops' && btn.textContent.includes('Топы')) ||
+                    (tabName === 'classes' && btn.textContent.includes('Классы')) ||
+                    (tabName === 'races' && btn.textContent.includes('Расы')) ||
+                    (tabName === 'combos' && btn.textContent.includes('Комбинации')) ||
+                    (tabName === 'rating' && btn.textContent.includes('Рейтинг')) ||
+                    (tabName === 'shards' && btn.textContent.includes('Осколки')) ||
+                    (tabName === 'records' && btn.textContent.includes('Рекорды')) ||
+                    (tabName === 'champions' && btn.textContent.includes('Чемпионы')) ||
+                    (tabName === 'titles' && btn.textContent.includes('Титулы')) ||
+                    (tabName === 'allplayers' && btn.textContent.includes('Игроки'))) {
+                    btn.classList.add('active');
+                }
+            });
+            history.replaceState(null, null, '#' + tabName);
+        };
+    </script>
 </body>
 </html>
