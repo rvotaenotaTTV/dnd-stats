@@ -141,58 +141,49 @@
 			.stat-value { font-size: 1.5rem; }
 			.tables-grid { grid-template-columns: 1fr; }
 
-			/* Таблицы без скролла */
-			#tab-tops .table-container { overflow-x: visible; }
-			#tab-tops table { min-width: auto; }
-			#tab-tops td { white-space: normal; word-break: break-word; }
-			#tab-tops td:first-child { min-width: auto; width: 30px; }
-			#tab-tops th:first-child { min-width: auto; width: 30px; }
+			.nav-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 6px; }
+			.tab-btn { text-align: center; padding: 8px 6px; font-size: 0.75rem; white-space: nowrap; }
 
-			/* Таблицы со скроллом */
-			#classes-table, #races-table, #combos-table, #champions-table, #shards-table, #rating-table, #players-table { min-width: 550px; font-size: 0.7rem; }
+			/* Топы — без скролла */
+			#tab-tops .table-container { overflow-x: visible; }
+			#tab-tops table { min-width: auto; font-size: 0.68rem; }
+			#tab-tops td { white-space: normal; word-break: break-word; padding: 5px 6px; }
+			#tab-tops td:first-child { min-width: auto; width: 28px; }
+			#tab-tops th:first-child { min-width: auto; width: 28px; }
+
+			/* Широкие таблицы */
+			#classes-table, #races-table, #combos-table, #champions-table, #shards-table, #rating-table, #players-table { min-width: 480px; font-size: 0.7rem; }
 			th, td { padding: 6px 8px; }
 			th { white-space: nowrap; }
 			td { white-space: nowrap; }
-			td:first-child { white-space: normal; word-break: break-word; min-width: 120px; }
-			th:first-child { min-width: 120px; }
 
-			/* Комбинации — без переносов в названии */
-			#combos-table td:first-child { white-space: nowrap; min-width: 140px; }
+			/* Классы, Расы, Комбинации — первая колонка 120px */
+			#classes-table td:first-child, #races-table td:first-child, #combos-table td:first-child { white-space: normal; word-break: break-word; min-width: 120px; }
+			#classes-table th:first-child, #races-table th:first-child, #combos-table th:first-child { min-width: 120px; }
 
-			/* Титулы и Рекорды 2 колонки */
+			/* Чемпионы, Осколки, Рейтинг, Игроки — первая колонка уже */
+			#champions-table td:first-child, #shards-table td:first-child, #rating-table td:first-child, #players-table td:first-child { min-width: 80px; font-size: 0.65rem; }
+			#champions-table th:first-child, #shards-table th:first-child, #rating-table th:first-child, #players-table th:first-child { min-width: 80px; }
+
+			/* Комбинации — без переносов */
+			#combos-table td:first-child { white-space: nowrap; min-width: 130px; }
+
 			.titles-gallery { grid-template-columns: repeat(2, 1fr) !important; }
-
-			/* Охотники */
 			.hunters-top { grid-template-columns: repeat(3, 1fr); gap: 6px; }
 			.hunter-card { padding: 12px 6px; }
 			.hunter-name { font-size: 0.8rem; }
 
-			/* Чемпион */
 			.champion-block > div:last-child {
-				display: flex !important;
-				justify-content: space-around;
-				gap: 8px;
-				margin-top: 12px;
-				flex-wrap: nowrap;
+				display: flex !important; justify-content: space-around; gap: 8px;
+				margin-top: 12px; flex-wrap: nowrap;
 			}
 			.champion-block > div:last-child > div {
-				flex: 1;
-				text-align: center;
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				min-height: 52px;
+				flex: 1; text-align: center; display: flex;
+				flex-direction: column; justify-content: space-between; min-height: 52px;
 			}
-			.champion-block > div:last-child span[style*="font-size: 1.5rem"] {
-				font-size: 1.2rem !important;
-				white-space: nowrap;
-			}
-			.champion-block > div:last-child span[style*="color: var(--text-muted)"] {
-				font-size: 0.6rem !important;
-				line-height: 1.3;
-			}
+			.champion-block > div:last-child span[style*="font-size: 1.5rem"] { font-size: 1.2rem !important; white-space: nowrap; }
+			.champion-block > div:last-child span[style*="color: var(--text-muted)"] { font-size: 0.6rem !important; line-height: 1.3; }
 
-			/* Кнопки */
 			.fixed-buttons { top: 8px; right: 8px; }
 			.action-btn { padding: 6px 10px; font-size: 0.7rem; }
 			.search-input { width: 100%; }
