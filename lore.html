@@ -222,13 +222,15 @@
         .faction-card.dark .faction-quote { border-color: var(--purple); color: var(--purple); }
 
         /* World table — без скролла */
-		.world-table {
-			width: 100%;
-			border-collapse: collapse;
-			font-size: 0.85rem;
-			border-radius: var(--radius-sm);
-			border: 1px solid var(--border-subtle);
-		}
+        .world-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            min-width: auto;
+            table-layout: auto;
+        }
 
 		.world-table th {
 			background: var(--bg-elevated);
@@ -263,12 +265,12 @@
             margin-top: 12px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            min-width: 400px;
-        }
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 0.8rem;
+			min-width: auto;
+		}
 
         th {
             background: var(--bg-elevated);
