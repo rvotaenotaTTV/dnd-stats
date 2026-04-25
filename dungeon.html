@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏔 Подземелье — Этернис</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Подземелье</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -86,7 +86,31 @@
             letter-spacing: 0.04em;
         }
 
-        /* Navigation */
+        /* Navigation Wrapper */
+        .nav-wrapper {
+            margin-bottom: 28px;
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 14px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            color: var(--gold);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .nav-toggle:hover {
+            background: var(--bg-elevated);
+        }
+
         .nav-bar {
             display: flex;
             flex-wrap: wrap;
@@ -96,7 +120,6 @@
             background: var(--bg-secondary);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border-subtle);
-            margin-bottom: 28px;
         }
 
         .nav-link {
@@ -365,7 +388,7 @@
         /* Records Grid */
         .records-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-bottom: 24px;
         }
@@ -532,6 +555,29 @@
                 border-radius: var(--radius-md);
             }
 
+            /* Burger menu */
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-bar {
+                display: none;
+                flex-direction: column;
+                gap: 2px;
+                margin-top: 8px;
+                padding: 4px;
+            }
+
+            .nav-bar.show {
+                display: flex;
+            }
+
+            .nav-link {
+                padding: 12px 16px;
+                border-radius: var(--radius-sm);
+                justify-content: center;
+            }
+
             .podium {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 8px;
@@ -557,16 +603,12 @@
                 font-size: 0.65rem;
             }
 
-            .nav-link {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-            }
-
             .tab-btn {
                 padding: 10px 14px;
                 font-size: 0.8rem;
             }
 
+            /* Records 2x2 */
             .records-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
@@ -592,16 +634,7 @@
             }
 
             .records-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-bar {
-                gap: 2px;
-            }
-
-            .nav-link {
-                padding: 6px 10px;
-                font-size: 0.75rem;
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -615,24 +648,27 @@
         </header>
 
         <!-- Page Navigation -->
-        <nav class="nav-bar" id="pageNav">
-            <a href="index.html" class="nav-link">📊 Статистика</a>
-            <a href="logs.html" class="nav-link">📜 Логи</a>
-            <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-            <a href="balance.html" class="nav-link">⚖️ Баланс</a>
-            <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-            <a href="gradient.html" class="nav-link">📈 Градиент</a>
-            <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-            <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-            <a href="lore.html" class="nav-link">📜 Лор</a>
-            <a href="tavern.html" class="nav-link">🍺 Таверна</a>
-            <a href="dungeon.html" class="nav-link active">🏔 Подземелье</a>
-        </nav>
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link">📊 Статистика</a>
+                <a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+                <a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a>
+                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link active">🏔 Подземелье</a>
+            </nav>
+        </div>
 
         <!-- Tabs -->
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('stats')">📊 Статистика</button>
-            <button class="tab-btn" onclick="switchTab('rules')">📜 Правила</button>
+            <button class="tab-btn active" onclick="switchTab('stats', this)">📊 Статистика</button>
+            <button class="tab-btn" onclick="switchTab('rules', this)">📜 Правила</button>
         </div>
 
         <!-- Stats Tab -->
@@ -758,23 +794,36 @@
     </div>
 
     <script>
-        // Tab switching
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            const targetTab = document.getElementById('tab-' + tabName);
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
-            
-            // Find and activate the clicked button
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => {
-                if (btn.textContent.toLowerCase().includes(tabName)) {
-                    btn.classList.add('active');
-                }
+        // Burger menu toggle
+        function toggleNav() {
+            const nav = document.getElementById('pageNav');
+            const btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show');
+            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        }
+
+        // Close nav when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const nav = document.getElementById('pageNav');
+                const btn = document.querySelector('.nav-toggle');
+                nav.classList.remove('show');
+                if (btn) btn.textContent = '☰ Меню';
             });
+        });
+
+        // Tab switching (fixed)
+        function switchTab(tabName, clickedBtn) {
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            // Activate clicked button
+            if (clickedBtn) clickedBtn.classList.add('active');
+            
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            // Show target content
+            const targetTab = document.getElementById('tab-' + tabName);
+            if (targetTab) targetTab.classList.add('active');
         }
 
         // Fetch and render stats
@@ -880,7 +929,7 @@
             });
             html += '</div>';
 
-            // Records Grid
+            // Records Grid (4 columns desktop, 2x2 mobile)
             const bestRecord = sorted[0];
             const bestDamage = [...playersArr].sort((a, b) => b.damage - a.damage)[0];
             const bestCrits = [...playersArr].sort((a, b) => b.crits - a.crits)[0];
