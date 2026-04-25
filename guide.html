@@ -2,332 +2,389 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Гайд</title>
-<style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-        font-family: 'Segoe UI', 'Arial', sans-serif;
-        background: 
-            radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
-            radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
-            linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-        color: #e6edf3;
-        min-height: 100vh;
-        padding: 20px;
-    }
-
-	h1 {
-		color: #ffd700;
-		text-align: center;
-		margin: 15px 0 25px;
-		font-size: 2.5em;
-		font-weight: 700;
-		text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
-		letter-spacing: 2px;
-		position: relative;
-		display: inline-block;
-		left: 50%;
-		transform: translateX(-50%);
-		white-space: nowrap;
-		border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-		padding-bottom: 10px;
-	}
-
-    /* ===== НАВИГАЦИЯ ===== */
-    .nav-wrapper { margin-bottom: 30px; }
-    .nav-toggle {
-        display: none;
-        width: 100%;
-        padding: 14px 20px;
-        background: #21262d;
-        border: 1px solid #30363d;
-        border-radius: 25px;
-        color: #ffd700;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        text-align: left;
-    }
-    .page-nav {
-        display: flex;
-        gap: 5px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-	.page-nav a {
-		color: #8b949e;
-		text-decoration: none;
-		padding: 12px 20px;
-		font-size: 14px;
-		font-weight: 500;
-		transition: all 0.2s;
-		white-space: nowrap;
-		border-bottom: 3px solid transparent;
-		background: transparent;
-	}
-
-	.page-nav a:hover { 
-		color: #ffd700; 
-		border-bottom-color: #ffd70080;
-	}
-
-	.page-nav a.active { 
-		color: #ffd700; 
-		font-weight: bold; 
-		border-bottom-color: #ffd700;
-	}
-
-    /* ===== КОНТЕЙНЕР ===== */
-    .guide-container { max-width: 900px; margin: 0 auto; }
-
-    /* ===== КАРТОЧКИ ===== */
-    .card {
-        background: linear-gradient(145deg, #1a1f26, #0d1117);
-        border: 2px solid #8b5e2e;
-        border-radius: 20px;
-        padding: 25px;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        position: relative;
-        overflow: hidden;
-    }
-    .card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
-        opacity: 0.6;
-    }
-    .card h2 {
-        color: #ffd700;
-        margin: 0 0 20px 0;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #30363d;
-        font-size: 1.3em;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .card h3 {
-        color: #ffd700;
-        font-size: 16px;
-        margin: 15px 0 10px;
-    }
-    .card p {
-        line-height: 1.8;
-        margin-bottom: 12px;
-        color: #c9d1d9;
-    }
-    .card ol {
-        margin-left: 25px;
-        line-height: 1.8;
-    }
-    .card li {
-        margin-bottom: 8px;
-    }
-
-    /* ===== КОМАНДЫ ===== */
-    .command-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        margin-top: 15px;
-    }
-    .command-item {
-        background: #21262d;
-        padding: 14px 16px;
-        border-radius: 10px;
-        border-left: 4px solid #ffd700;
-    }
-    .command-name {
-        color: #ffd700;
-        font-weight: bold;
-        font-family: 'Consolas', 'Courier New', monospace;
-        font-size: 15px;
-    }
-    .command-desc {
-        color: #8b949e;
-        font-size: 13px;
-        margin-top: 5px;
-        line-height: 1.5;
-    }
-
-    /* ===== ШАГИ ===== */
-    .step-box {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 15px;
-        align-items: center;
-    }
-    .step-number {
-        background: #ffd700;
-        color: #0d1117;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 16px;
-        flex-shrink: 0;
-    }
-
-    /* ===== ЦВЕТА ===== */
-    .highlight { color: #ffd700; font-weight: bold; }
-    .faction-light { color: #ffd700; font-weight: bold; }
-    .faction-dark { color: #a371f7; font-weight: bold; }
-    .text-muted { color: #8b949e; }
-
-    /* ===== ТАБЛИЦЫ ===== */
-    .table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-        font-size: 14px;
-    }
-    th {
-        background: #21262d;
-        color: #ffd700;
-        font-weight: bold;
-        padding: 12px;
-        border: 1px solid #30363d;
-        text-align: left;
-    }
-    td {
-        border: 1px solid #30363d;
-        padding: 10px 12px;
-        text-align: left;
-    }
-    tr:hover td { background: rgba(255,215,0,0.03); }
-
-    /* Таблица обозначений */
-    .symbol-table td:first-child {
-        text-align: center;
-        font-size: 20px;
-        width: 60px;
-    }
-
-    /* Таблица осколков */
-    .shards-table td:first-child { width: auto; }
-    .shards-table td:last-child {
-        color: #ffd700;
-        font-weight: bold;
-        text-align: center;
-        width: 100px;
-    }
-
-    /* Таблица фракций */
-    .faction-table {
-        table-layout: fixed;
-        width: 100%;
-    }
-    .faction-table th {
-        text-align: center;
-        width: 50%;
-    }
-    .faction-table td {
-        padding: 10px 14px;
-        vertical-align: top;
-    }
-    .faction-table td:first-child { color: #ffd700; }
-    .faction-table td:last-child { color: #a371f7; }
-
-    /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
-    @media (max-width: 768px) {
-        body { padding: 10px; }
-        h1 { font-size: 1.6em; }
-
-        .nav-toggle { display: block; }
-        .page-nav {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 10px;
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #11161d;
+            --bg-card: #161c24;
+            --bg-elevated: #1c2330;
+            --border-subtle: #252d38;
+            --text-primary: #e8edf4;
+            --text-secondary: #8b95a5;
+            --text-muted: #5c6675;
+            --gold: #ffd700;
+            --purple: #a371f7;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --shadow-gold: 0 0 20px rgba(255,215,0,0.15);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .page-nav.show { display: flex; }
-		.page-nav a { 
-			text-align: center; 
-			padding: 10px;
-			background: #21262d;
-			border: 1px solid #30363d;
-			border-radius: 20px;
-		}
-		.page-nav a.active { 
-			background: #ffd700; 
-			color: #0d1117; 
-			border-color: #ffd700;
-		}
 
-        .card { padding: 18px; }
-        .command-grid { grid-template-columns: 1fr; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        table { font-size: 12px; }
-        th, td { padding: 8px; }
-    }
-</style>
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            background-image: 
+                radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(255,215,0,0.02) 0%, transparent 40%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 40px; }
+
+        .header { text-align: center; padding: 30px 0 20px; }
+
+        .header-title {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+
+        .nav-wrapper { margin-bottom: 28px; }
+
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 14px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            color: var(--gold);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .nav-toggle:hover { background: var(--bg-elevated); }
+
+        .nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+
+        .nav-link.active {
+            background: var(--gold);
+            color: var(--bg-primary);
+            font-weight: 700;
+            box-shadow: var(--shadow-gold);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0.5;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .card h3 {
+            color: var(--gold);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 16px 0 10px;
+        }
+
+        .card p {
+            line-height: 1.7;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .card ol {
+            margin-left: 22px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .card li { margin-bottom: 8px; }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg-elevated);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .step-num {
+            background: var(--gold);
+            color: #1a1a1a;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .command-item {
+            background: var(--bg-elevated);
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--gold);
+        }
+
+        .command-name {
+            color: var(--gold);
+            font-weight: 700;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        .command-desc {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+
+        .highlight { color: var(--gold); font-weight: 600; }
+        .text-light { color: var(--gold); font-weight: 600; }
+        .text-dark { color: var(--purple); font-weight: 600; }
+        .text-muted { color: var(--text-muted); }
+        .text-italic { font-style: italic; color: var(--gold); }
+
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            margin-top: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 400px;
+        }
+
+        th {
+            background: var(--bg-elevated);
+            color: var(--gold);
+            font-weight: 700;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 2px solid var(--border-subtle);
+        }
+
+        td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+        }
+
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        .symbol-table td:first-child {
+            text-align: center;
+            font-size: 1.2rem;
+            width: 60px;
+        }
+
+        .shards-table td:last-child {
+            color: var(--gold);
+            font-weight: 700;
+            text-align: center;
+            width: 100px;
+        }
+
+        .faction-table th { text-align: center; }
+        .faction-table td:first-child { color: var(--gold); }
+        .faction-table td:last-child { color: var(--purple); }
+
+        .dungeon-link {
+            color: var(--gold);
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .dungeon-link:hover { color: #fff; }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 32px; }
+            .card { padding: 18px 14px; border-radius: var(--radius-md); }
+
+            .nav-toggle { display: block; }
+
+            .nav-bar {
+                display: none;
+                flex-direction: column;
+                gap: 2px;
+                margin-top: 8px;
+                padding: 4px;
+            }
+
+            .nav-bar.show { display: flex; }
+
+            .nav-link {
+                padding: 12px 16px;
+                border-radius: var(--radius-sm);
+                justify-content: center;
+            }
+
+            .command-grid { grid-template-columns: 1fr; }
+            .header-title { font-size: 1.8rem; }
+            table { font-size: 0.78rem; min-width: 350px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
 </head>
 <body>
-    <h1>ГАЙД</h1>
-    
-    <div class="nav-wrapper">
-        <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
-        <div class="page-nav" id="pageNav">
-            <a href="index.html">📊 Статистика</a>
-            <a href="logs.html">📜 Логи</a>
-            <a href="calc.html">🎲 Калькулятор</a>
-            <a href="balance.html">⚖️ Баланс</a>
-            <a href="simulator.html">🧪 Симулятор</a>
-            <a href="gradient.html">📈 Градиент</a>
-            <a href="guide.html" class="active">⚔️ Гайд</a>
-            <a href="hall.html">🏆 Зал Славы</a>
-            <a href="lore.html">📜 Лор</a>
-            <a href="tavern.html">🍺 Таверна</a>
-            <a href="dungeon.html">🏔 Подземелье</a>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title">ГАЙД</h1>
+            <p class="header-subtitle">Всё об игре в одном месте</p>
+        </header>
+
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link">📊 Статистика</a>
+                <a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+                <a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link active">⚔️ Гайд</a>
+                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a>
+                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+            </nav>
         </div>
-    </div>
-    
-    <div class="guide-container">
-        
-        <!-- ЧТО ЭТО -->
+
+        <!-- Что это -->
         <div class="card">
-            <h2>🎲 ЧТО ЭТО?</h2>
-            <p>Бот для D&D-дуэлей в чате Twitch. Создай своего героя, выбери расу и класс, сражайся с другими игроками, собирай осколки и стань чемпионом арены!</p>
+            <h2 class="card-title">🎲 Что это?</h2>
+            <p>Бот для D&D-дуэлей в чате Twitch. Создай героя, выбери расу и класс, сражайся с другими игроками, собирай осколки и стань чемпионом арены!</p>
         </div>
-        
-        <!-- КАК НАЧАТЬ -->
+
+        <!-- Старт -->
         <div class="card">
-            <h2>🚀 КАК НАЧАТЬ?</h2>
-            <div class="step-box">
-                <div class="step-number">1</div>
-                <div>Активируй награду канала <span class="highlight">«Создать героя»</span></div>
-            </div>
-            <div class="step-box">
-                <div class="step-number">2</div>
-                <div>Бот предложит 3 случайные комбинации (раса + класс)</div>
-            </div>
-            <div class="step-box">
-                <div class="step-number">3</div>
-                <div>Напиши в чат <span class="highlight">!1</span>, <span class="highlight">!2</span> или <span class="highlight">!3</span> чтобы выбрать героя</div>
-            </div>
-            <div class="step-box">
-                <div class="step-number">4</div>
-                <div>Готово! Твой герой создан. Проверь <span class="highlight">!инфо</span></div>
+            <h2 class="card-title">🚀 Как начать?</h2>
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div>Активируй награду канала <span class="highlight">«Создать героя»</span></div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div>Бот предложит 3 случайные комбинации (раса + класс)</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div>Напиши в чат <span class="highlight">!1</span>, <span class="highlight">!2</span> или <span class="highlight">!3</span> чтобы выбрать героя</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">4</div>
+                    <div>Готово! Твой герой создан. Проверь <span class="highlight">!инфо</span></div>
+                </div>
             </div>
         </div>
-        
-        <!-- ОСНОВНЫЕ КОМАНДЫ -->
+
+        <!-- Команды -->
         <div class="card">
-            <h2>📊 ОСНОВНЫЕ КОМАНДЫ</h2>
+            <h2 class="card-title">📋 Основные команды</h2>
             <div class="command-grid">
                 <div class="command-item">
                     <div class="command-name">!инфо</div>
@@ -335,11 +392,7 @@
                 </div>
                 <div class="command-item">
                     <div class="command-name">!бой</div>
-                    <div class="command-desc">Случайный бой с другим игроком</div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!бой @игрок</div>
-                    <div class="command-desc">Вызвать конкретного игрока</div>
+                    <div class="command-desc">Случайный бой с другим игроком / !бой @игрок</div>
                 </div>
                 <div class="command-item">
                     <div class="command-name">!харакири</div>
@@ -351,10 +404,10 @@
                 </div>
             </div>
         </div>
-        
-        <!-- ТУРНИР -->
+
+        <!-- Турнир -->
         <div class="card">
-            <h2>👑 ТУРНИР</h2>
+            <h2 class="card-title">👑 Турнир</h2>
             <div class="command-grid">
                 <div class="command-item">
                     <div class="command-name">!рега</div>
@@ -369,62 +422,66 @@
                     <div class="command-desc">Текущие пары турнира</div>
                 </div>
             </div>
-            <p style="margin-top:15px;" class="text-muted">Турнир запускается когда набирается 16 участников или командой админа <span class="highlight">!старт</span>.</p>
-        </div>
-        
-        <!-- КАК ПРОХОДИТ БОЙ -->
-        <div class="card">
-            <h2>⚔️ КАК ПРОХОДИТ БОЙ?</h2>
-            <ol>
-                <li><span class="highlight">Инициатива:</span> d20 + Атака + d3. Кто больше — ходит первым ⚡</li>
-                <li><span class="highlight">Атака:</span> d20 + твоя Атака ≥ 10 + Защита врага</li>
-                <li><span class="highlight">Попадание:</span> случайный урон от MIN до MAX</li>
-                <li><span class="highlight">Крит (20):</span> двойной урон 💥</li>
-                <li><span class="highlight">Промах (1):</span> урон 0 ❌</li>
-                <li><span class="highlight">Блок:</span> атака не прошла, кубик > 4 → 🛡️</li>
-                <li><span class="highlight">Уклонение:</span> кубик ≤ 4 → 💨</li>
-                <li>Бой идёт до 0 HP (макс. 20 раундов, потом по HP)</li>
-            </ol>
-        </div>
-        
-        <!-- ОБОЗНАЧЕНИЯ В ЛОГАХ -->
-        <div class="card">
-            <h2>📝 ОБОЗНАЧЕНИЯ В ЛОГАХ</h2>
-            <div class="table-wrapper">
-                <table class="symbol-table">
-                    <tr><th>Символ</th><th>Значение</th></tr>
-                    <tr><td>❌</td><td>Критический промах (выпало 1)</td></tr>
-                    <tr><td>💨</td><td>Уклонение / промах (выпало 2–4)</td></tr>
-                    <tr><td>🛡️</td><td>Блок (атака не пробила броню)</td></tr>
-                    <tr><td>💥X</td><td>Критический удар (выпало 20, X = урон)</td></tr>
-                    <tr><td>X</td><td>Обычный урон (число)</td></tr>
-                    <tr><td>0</td><td>Не атаковал (бой уже завершён)</td></tr>
-                </table>
-            </div>
+            <p style="margin-top: 14px;" class="text-muted">Турнир запускается когда набирается 16 участников или командой админа <span class="highlight">!старт</span></p>
         </div>
 
-        <!-- ОСКОЛКИ -->
+        <!-- Бой -->
+		<div class="card">
+			<h2 class="card-title">⚔️ Как проходит бой?</h2>
+			<ol>
+				<li><span class="highlight">Инициатива:</span> d20 + Атака + (0–2). Кто больше — ходит первым ⚡</li>
+				<li><span class="highlight">Атака:</span> d20 + Атака ≥ 10 + Защита врага</li>
+				<li><span class="highlight">Попадание:</span> случайный урон от MIN до MAX</li>
+				<li><span class="highlight">Защита:</span> снижает урон на 5% за каждую единицу DEF</li>
+				<li><span class="highlight">Крит (20):</span> два броска урона, сумма, затем снижение от защиты 💥</li>
+				<li><span class="highlight">Промах (1):</span> урон 0 ❌</li>
+				<li><span class="highlight">Непопадание:</span> d20 ≤ 4 → 💨 уклонение | d20 > 4 → 🛡️ блок</li>
+				<li>Бой идёт до 0 HP (макс. 20 раундов, потом по остатку HP)</li>
+			</ol>
+		</div>
+
+        <!-- Обозначения -->
+		<div class="card">
+			<h2 class="card-title">📝 Обозначения в логах</h2>
+			<div class="table-container">
+				<table class="symbol-table">
+					<thead><tr><th>Символ</th><th>Значение</th></tr></thead>
+					<tbody>
+						<tr><td>❌</td><td>Критический промах (выпало 1)</td></tr>
+						<tr><td>💨</td><td>Промах / уклонение (выпало 2–4, атака не прошла)</td></tr>
+						<tr><td>🛡️</td><td>Блок (выпало 5+, но атака не пробила броню)</td></tr>
+						<tr><td>💥X</td><td>Крит (выпало 20). X = сумма двух бросков урона</td></tr>
+						<tr><td>X</td><td>Обычный урон (число)</td></tr>
+						<tr><td>0</td><td>Не атаковал (бой уже завершён)</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+        <!-- Осколки -->
         <div class="card">
-            <h2>💎 ЗА ЧТО ДАЮТ ОСКОЛКИ?</h2>
-            <div class="table-wrapper">
+            <h2 class="card-title">💎 За что дают осколки?</h2>
+            <div class="table-container">
                 <table class="shards-table">
-                    <tr><th>Действие</th><th>Награда</th></tr>
-                    <tr><td>🏆 Победа в дуэли</td><td>+2 💎</td></tr>
-                    <tr><td>💔 Поражение в дуэли</td><td>+1 💎</td></tr>
-                    <tr><td>⚔️ Победа в турнирном бою</td><td>+4 💎</td></tr>
-                    <tr><td>💔 Поражение в турнире</td><td>+2 💎</td></tr>
-                    <tr><td>👑 Чемпион турнира</td><td>+10 💎</td></tr>
-                    <tr><td>🌝🌚 Победа над врагом</td><td>×2 💎 (другая фракция)</td></tr>
+                    <thead><tr><th>Действие</th><th>Награда</th></tr></thead>
+                    <tbody>
+                        <tr><td>🏆 Победа в дуэли</td><td>+2 💎</td></tr>
+                        <tr><td>💔 Поражение в дуэли</td><td>+1 💎</td></tr>
+                        <tr><td>⚔️ Победа в турнирном бою</td><td>+4 💎</td></tr>
+                        <tr><td>💔 Поражение в турнирном бою</td><td>+2 💎</td></tr>
+                        <tr><td>👑 Чемпион турнира</td><td>+10 💎</td></tr>
+                        <tr><td>🌝🌚 Победа над вражеской фракцией</td><td>+2 💎</td></tr>
+                    </tbody>
                 </table>
             </div>
-            <p style="margin-top:15px;" class="text-muted">Осколки повышают уровень. Каждые 5 💎 = новый уровень (после 10-го — каждые 10 💎).</p>
+            <p style="margin-top: 14px;" class="text-muted">Осколки повышают уровень. Каждые 5 💎 = новый уровень (после 10-го — каждые 10 💎)</p>
         </div>
-        
-        <!-- ФРАКЦИОННАЯ БИТВА -->
+
+        <!-- Фракционная битва -->
         <div class="card">
-            <h2>⚔️ ФРАКЦИОННАЯ БИТВА</h2>
-            <p>Командное сражение <span class="highlight">5 на 5</span> между <span class="faction-light">🌝 Орденом Света</span> и <span class="faction-dark">🌚 Культом Тьмы</span>.</p>
-            
+            <h2 class="card-title">⚔️ Фракционная битва</h2>
+            <p>Командное сражение <span class="highlight">5 на 5</span> между <span class="text-light">🌝 Орденом Света</span> и <span class="text-dark">🌚 Культом Тьмы</span>.</p>
+
             <div class="command-grid">
                 <div class="command-item">
                     <div class="command-name">!фрега</div>
@@ -435,7 +492,7 @@
                     <div class="command-desc">Список записавшихся бойцов</div>
                 </div>
             </div>
-            
+
             <h3>Как работает:</h3>
             <ol>
                 <li>Админ запускает: <span class="highlight">!битва</span></li>
@@ -445,53 +502,46 @@
                 <li>Случайная <span class="highlight">локация</span> даёт бонусы всем</li>
                 <li>5 боёв 1 на 1 — фракция с большим счётом побеждает</li>
             </ol>
-            
-            <p class="text-muted">🏆 Победители: <span style="color:#ffd700;">+5💎</span> | Проигравшие: <span style="color:#ffd700;">+2💎</span></p>
-        </div>
-        
-        <!-- ПОДЗЕМЕЛЬЕ -->
-		<div class="card">
-			<h2>🏔 ПОДЗЕМЕЛЬЕ</h2>
-			<p>Одиночное PvE-приключение. Сражайся с волнами мобов, убивай боссов, собирай трофеи для фракции!</p>
-			
-			<div class="command-grid">
-				<div class="command-item">
-					<div class="command-name">!данж</div>
-					<div class="command-desc">Отправиться в подземелье</div>
-				</div>
-			</div>
-			
-			<h3>🌍 Фракционные пассивки (случайные):</h3>
-			<div class="table-wrapper">
-				<table class="faction-table">
-					<tr><th>🌝 Орден Света</th><th>🌚 Культ Тьмы</th></tr>
-					<tr><td>🔥 Очищение (+4 HP/волна)</td><td>💀 Вампиризм (+4 HP/волна)</td></tr>
-					<tr><td>⚡ Благословение (20% пропуск волны)</td><td>🕳️ Теневой шаг (20% пропуск волны)</td></tr>
-					<tr><td>💫 Сияние (-20% HP боссам)</td><td>🩸 Кровавая жатва (+урон от потери HP)</td></tr>
-					<tr><td>🛡️ Святая защита (первый урон = 0)</td><td>👻 Призрачный щит (25% шанс не получить урон)</td></tr>
-					<tr><td>✨ Вдохновение (+1 MIN, +1 MAX)</td><td>🖤 Проклятие (-1 ATK всем мобам)</td></tr>
-				</table>
-			</div>
-			
-			<h3>🐉 Боссы:</h3>
-			<p>Каждые 5 волн — усиленный моб. Победа = <span class="highlight">+1 трофей</span> в кассу фракции.</p>
-			<p class="text-muted">Трофеи влияют на Корону Раскола. Следи на странице <a href="dungeon.html" style="color:#ffd700;">Подземелья</a>!</p>
-		</div>
 
-        <!-- ЛОР -->
+            <p class="text-muted">🏆 Победители: <span class="highlight">+5💎</span> | Проигравшие: <span class="highlight">+2💎</span></p>
+        </div>
+
+        <!-- Подземелье -->
         <div class="card">
-            <h2>📜 ЛОР</h2>
+            <h2 class="card-title">🏔 Подземелье</h2>
+            <p>Одиночное PvE-приключение. Сражайся с волнами мобов, убивай боссов, собирай трофеи для фракции!</p>
+
+            <h3>🐉 Боссы каждые 5 волн:</h3>
+            <p>HP ×1.5 | ATK +2 | DEF +1. Победа = <span class="highlight">+1 трофей</span> в копилку фракции</p>
+
+            <h3>🌍 Фракционные пассивки (случайные):</h3>
+            <div class="table-container">
+                <table class="faction-table">
+                    <thead><tr><th>🌝 Орден Света</th><th>🌚 Культ Тьмы</th></tr></thead>
+                    <tbody>
+                        <tr><td>🔥 Очищение (+4 HP/волна)</td><td>💀 Вампиризм (+4 HP/волна)</td></tr>
+                        <tr><td>⚡ Благословение (20% пропуск)</td><td>🕳️ Теневой шаг (20% пропуск)</td></tr>
+                        <tr><td>💫 Сияние (-20% HP боссам)</td><td>🩸 Кровавая жатва (+урон от потери HP)</td></tr>
+                        <tr><td>🛡️ Святая защита (первый урон = 0)</td><td>👻 Призрачный щит (25% избежать урон)</td></tr>
+                        <tr><td>✨ Вдохновение (+1 MIN, +1 MAX)</td><td>🖤 Проклятие (-1 ATK мобам)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Лор -->
+        <div class="card">
+            <h2 class="card-title">📜 Лор</h2>
             <p>Мир раскололся на две фракции:</p>
             <p>
-                <span class="faction-light">🌝 ОРДЕН СВЕТА</span> — верят, что осколки вернут порядок.<br>
-                <span class="faction-dark">🌚 КУЛЬТ ТЬМЫ</span> — хотят погрузить мир в хаос.
+                <span class="text-light">🌝 ОРДЕН СВЕТА</span> — верят, что осколки вернут порядок.<br>
+                <span class="text-dark">🌚 КУЛЬТ ТЬМЫ</span> — хотят погрузить мир в хаос.
             </p>
-            <p style="margin-top:15px;">Каждый боец выбирает сторону случайно при создании героя. Побеждая врагов из другой фракции, ты приносишь очки своей стороне и получаешь дополнительные осколки.</p>
-            <p style="margin-top:15px; font-style: italic; color: #ffd700;">Кто соберёт все осколки — восстановит Клинок и изменит судьбу мира.</p>
+            <p style="margin-top: 14px;">Каждый боец выбирает сторону случайно при создании героя. Побеждая врагов из другой фракции, ты приносишь очки своей стороне и получаешь дополнительные осколки.</p>
+            <p style="margin-top: 14px;" class="text-italic">Кто соберёт все осколки — восстановит Клинок и изменит судьбу мира.</p>
         </div>
-        
     </div>
-    
+
     <script>
         function toggleNav() {
             const nav = document.getElementById('pageNav');
@@ -499,6 +549,15 @@
             nav.classList.toggle('show');
             btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         }
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const nav = document.getElementById('pageNav');
+                const btn = document.querySelector('.nav-toggle');
+                nav.classList.remove('show');
+                if (btn) btn.textContent = '☰ Меню';
+            });
+        });
     </script>
 </body>
 </html>
