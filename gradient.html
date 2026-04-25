@@ -2,387 +2,354 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Градиент баланса</title>
-<style>
-	* { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Градиент</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #11161d;
+            --bg-card: #161c24;
+            --bg-elevated: #1c2330;
+            --border-subtle: #252d38;
+            --text-primary: #e8edf4;
+            --text-secondary: #8b95a5;
+            --text-muted: #5c6675;
+            --gold: #ffd700;
+            --green: #3fb950;
+            --red: #e5534b;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --shadow-gold: 0 0 20px rgba(255,215,0,0.15);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-	body { 
-		font-family: 'Segoe UI', 'Arial', sans-serif; 
-		background: 
-			radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 40%),
-			radial-gradient(circle at 80% 30%, rgba(163, 113, 247, 0.08), transparent 40%),
-			linear-gradient(135deg, #0b0f14 0%, #0d1117 40%, #0a0d12 100%);
-		color: #e6edf3; 
-		min-height: 100vh;
-		padding: 20px;
-	}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-	h1 { 
-		color: #ffd700; 
-		text-align: center; 
-		margin: 15px 0 25px; 
-		font-size: 2.5em;
-		font-weight: 700;
-		text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
-		letter-spacing: 2px;
-		position: relative;
-		display: inline-block;
-		left: 50%;
-		transform: translateX(-50%);
-		white-space: nowrap;
-		border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-		padding-bottom: 10px;
-	}
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            background-image: 
+                radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
 
-	.subtitle { 
-		text-align: center; 
-		color: #8b949e; 
-		margin-bottom: 25px; 
-		font-size: 14px; 
-	}
+        .container { max-width: 900px; margin: 0 auto; padding: 20px 24px 40px; }
 
-	/* ==================== НАВИГАЦИЯ ==================== */
-	.nav-wrapper { 
-		margin-bottom: 30px; 
-		border-bottom: 1px solid #30363d; 
-	}
+        .header { text-align: center; padding: 30px 0 20px; }
 
-	.nav-toggle {
-		display: none;
-		width: 100%;
-		padding: 12px 20px;
-		background: #21262d;
-		border: 1px solid #30363d;
-		border-radius: 25px;
-		color: #ffd700;
-		font-size: 16px;
-		font-weight: bold;
-		cursor: pointer;
-		text-align: left;
-	}
+        .header-title {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+            margin-bottom: 4px;
+        }
 
-	.page-nav { 
-		display: flex; 
-		gap: 5px; 
-		justify-content: center; 
-		flex-wrap: wrap; 
-	}
+        .header-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
 
-	.page-nav a {
-		color: #8b949e;
-		text-decoration: none;
-		padding: 12px 20px;
-		font-size: 14px;
-		font-weight: 500;
-		transition: all 0.2s;
-		white-space: nowrap;
-		border-bottom: 3px solid transparent;
-		background: transparent;
-	}
+        .nav-wrapper { margin-bottom: 28px; }
 
-	.page-nav a:hover { 
-		color: #ffd700; 
-		border-bottom-color: #ffd70080; 
-	}
+        .nav-toggle {
+            display: none;
+            width: 100%;
+            padding: 14px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            color: var(--gold);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            transition: var(--transition);
+        }
 
-	.page-nav a.active { 
-		color: #ffd700; 
-		font-weight: bold; 
-		border-bottom-color: #ffd700; 
-	}
+        .nav-toggle:hover { background: var(--bg-elevated); }
 
-	/* ==================== КОНТЕЙНЕР ==================== */
-	.container { 
-		max-width: 1000px; 
-		margin: 0 auto; 
-	}
+        .nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-subtle);
+        }
 
-	/* ==================== СЕЛЕКТОР КЛАССА ==================== */
-	.class-selector {
-		background: #161b22;
-		border-radius: 16px;
-		padding: 20px;
-		border: 1px solid #30363d;
-		margin-bottom: 25px;
-	}
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
 
-	.selector-row {
-		display: flex;
-		gap: 20px;
-		align-items: center;
-		flex-wrap: wrap;
-		margin-bottom: 20px;
-	}
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
 
-	.class-select, .race-select {
-		background: #21262d;
-		border: 1px solid #30363d;
-		color: white;
-		padding: 12px 20px;
-		border-radius: 12px;
-		font-size: 16px;
-		cursor: pointer;
-	}
+        .nav-link.active {
+            background: var(--gold);
+            color: var(--bg-primary);
+            font-weight: 700;
+            box-shadow: var(--shadow-gold);
+        }
 
-	.class-select { min-width: 250px; }
-	.race-select { min-width: 200px; }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
 
-	/* ==================== КНОПКИ ==================== */
-	.btn {
-		background: #21262d;
-		border: 1px solid #ffd700;
-		color: #ffd700;
-		padding: 12px 30px;
-		border-radius: 25px;
-		cursor: pointer;
-		font-size: 16px;
-		font-weight: bold;
-		transition: all 0.2s;
-	}
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0.5;
+        }
 
-	.btn:hover { 
-		background: #ffd700; 
-		color: #0d1117; 
-	}
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-	.btn:disabled { 
-		opacity: 0.5; 
-		cursor: not-allowed; 
-	}
+        .selector-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
 
-	.reset-btn {
-		background: transparent;
-		border: 1px solid #30363d;
-		color: #8b949e;
-		padding: 8px 16px;
-		border-radius: 20px;
-		cursor: pointer;
-		font-size: 13px;
-		transition: all 0.2s;
-	}
+        select {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            min-width: 200px;
+        }
 
-	.reset-btn:hover { 
-		border-color: #ffd700; 
-		color: #ffd700; 
-	}
+        .btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 22px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: inherit;
+            transition: var(--transition);
+        }
 
-	/* ==================== ПАНЕЛЬ СТАТОВ ==================== */
-	.stats-panel {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		gap: 15px;
-		margin: 20px 0;
-	}
+        .btn:hover { background: var(--gold); color: var(--bg-primary); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-	.stat-card {
-		background: #21262d;
-		border-radius: 12px;
-		padding: 15px;
-		text-align: center;
-		border: 1px solid #30363d;
-	}
+        .btn-reset {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-family: inherit;
+        }
 
-	.stat-emoji { 
-		font-size: 20px; 
-		margin-bottom: 5px; 
-	}
+        .btn-reset:hover { border-color: var(--gold); color: var(--gold); }
 
-	.stat-name { 
-		color: #8b949e; 
-		font-size: 12px; 
-		margin-bottom: 8px; 
-	}
+        .progress { color: var(--gold); font-size: 0.8rem; margin-left: 8px; }
 
-	.stat-value { 
-		color: #ffd700; 
-		font-size: 24px; 
-		font-weight: bold; 
-		margin-bottom: 10px; 
-	}
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
 
-	.stat-input {
-		width: 70px;
-		background: #0d1117;
-		border: 1px solid #30363d;
-		color: #ffd700;
-		font-size: 14px;
-		font-weight: bold;
-		text-align: center;
-		padding: 5px;
-		border-radius: 6px;
-		margin: 0 auto;
-	}
+        .stat-card {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            padding: 14px 10px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+        }
 
-	/* ==================== ПАНЕЛЬ РЕЗУЛЬТАТА ==================== */
-	.result-panel {
-		background: linear-gradient(145deg, #1a1f26, #161b22);
-		border-radius: 20px;
-		padding: 30px;
-		border: 1px solid #30363d;
-		text-align: center;
-		margin-top: 25px;
-	}
+        .stat-emoji { font-size: 1.1rem; margin-bottom: 4px; }
+        .stat-name { color: var(--text-muted); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .stat-value { color: var(--gold); font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
 
-	.winrate-display {
-		display: flex;
-		gap: 30px;
-		justify-content: center;
-		align-items: center;
-		flex-wrap: wrap;
-	}
+        .stat-input {
+            width: 60px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            color: var(--gold);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 4px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
 
-	.winrate-box {
-		text-align: center;
-		padding: 20px 30px;
-		background: #21262d;
-		border-radius: 16px;
-		border: 1px solid #30363d;
-	}
+        .result-panel {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            border: 1px solid var(--border-subtle);
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
 
-	.winrate-label { 
-		color: #8b949e; 
-		font-size: 14px; 
-		margin-bottom: 10px; 
-	}
+        .winrate-display {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-	.winrate-value { 
-		font-size: 42px; 
-		font-weight: bold; 
-		color: #ffd700; 
-	}
+        .winrate-box {
+            text-align: center;
+            padding: 18px 24px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
 
-	.winrate-arrow { 
-		font-size: 32px; 
-		color: #ffd700; 
-	}
+        .winrate-label { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 8px; text-transform: uppercase; }
+        .winrate-value { font-size: 2rem; font-weight: 800; color: var(--gold); }
+        .winrate-arrow { font-size: 1.5rem; color: var(--gold); }
 
-	.diff-badge {
-		display: inline-block;
-		padding: 6px 16px;
-		border-radius: 30px;
-		font-size: 16px;
-		font-weight: bold;
-		margin-top: 10px;
-	}
+        .diff-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
 
-	.diff-positive { background: #1a4d1a; color: #90ee90; }
-	.diff-negative { background: #4d1a1a; color: #ff9090; }
-	.diff-neutral { background: #4d4d1a; color: #ffff90; }
+        .diff-positive { background: rgba(63,185,80,0.15); color: var(--green); }
+        .diff-negative { background: rgba(229,83,75,0.15); color: var(--red); }
+        .diff-neutral { background: var(--bg-elevated); color: var(--text-muted); }
 
-	.progress { 
-		color: #ffd700; 
-		font-size: 14px; 
-		margin-left: 15px; 
-	}
+        .sim-details { margin-top: 14px; color: var(--text-muted); font-size: 0.78rem; }
 
-	.sim-details { 
-		margin-top: 20px; 
-		color: #8b949e; 
-		font-size: 13px; 
-	}
+        .info-block {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border-left: 3px solid var(--gold);
+            line-height: 1.7;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
 
-	/* ==================== ИНФО-БЛОК ==================== */
-	.info-box {
-		background: #161b22;
-		border-radius: 12px;
-		padding: 20px;
-		border: 1px solid #30363d;
-		margin-top: 30px;
-	}
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 32px; }
+            .card { padding: 18px 14px; border-radius: var(--radius-md); }
 
-	.info-title { 
-		color: #ffd700; 
-		margin-bottom: 15px; 
-		font-size: 16px; 
-	}
+            .nav-toggle { display: block; }
 
-	.info-text { 
-		color: #8b949e; 
-		font-size: 13px; 
-		line-height: 1.6; 
-	}
+            .nav-bar {
+                display: none;
+                flex-direction: column;
+                gap: 2px;
+                margin-top: 8px;
+                padding: 4px;
+            }
 
-	.info-text span { color: #ffd700; }
+            .nav-bar.show { display: flex; }
 
-	/* ==================== МОБИЛЬНАЯ ВЕРСИЯ ==================== */
-	@media (max-width: 768px) {
-		body { padding: 10px; }
-		h1 { font-size: 1.6em; margin: 15px 0 25px; }
-		
-		/* Меню */
-		.nav-wrapper { border-bottom: none; }
-		.nav-toggle { display: block; }
-		.page-nav { 
-			display: none; 
-			flex-direction: column; 
-			margin-top: 10px; 
-		}
-		.page-nav.show { display: flex; }
-		.page-nav a { 
-			text-align: center; 
-			padding: 10px;
-			background: #21262d;
-			border: 1px solid #30363d;
-			border-radius: 20px;
-		}
-		.page-nav a.active { 
-			background: #ffd700; 
-			color: #0d1117; 
-			border-color: #ffd700;
-		}
-		
-		/* Селекторы */
-		.selector-row { 
-			flex-direction: column; 
-			align-items: stretch; 
-		}
-		.class-select, .race-select { 
-			min-width: auto; 
-			width: 100%; 
-		}
-		.btn { width: 100%; }
-		
-		/* Статы */
-		.stats-panel { grid-template-columns: repeat(2, 1fr); }
-		
-		/* Винрейт */
-		.winrate-value { font-size: 32px; }
-		.winrate-arrow { transform: rotate(90deg); }
-	}
-</style>
+            .nav-link {
+                padding: 12px 16px;
+                border-radius: var(--radius-sm);
+                justify-content: center;
+            }
+
+            .header-title { font-size: 1.8rem; }
+            .selector-row { flex-direction: column; align-items: stretch; }
+            select { width: 100%; min-width: auto; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .winrate-value { font-size: 1.5rem; }
+        }
+    </style>
 </head>
 <body>
-    <h1>ГРАДИЕНТ БАЛАНСА v3</h1>
-    <div class="subtitle">Живая статистика • Честная симуляция • Умная калибровка</div>
-    
-    <div class="nav-wrapper">
-        <button class="nav-toggle">☰ Меню</button>
-        <div class="page-nav">
-            <a href="index.html">📊 Статистика</a>
-			<a href="logs.html">📜 Логи</a>
-            <a href="calc.html">🎲 Калькулятор</a>
-            <a href="balance.html">⚖️ Баланс</a>
-			<a href="simulator.html">🧪 Симулятор</a>
-			<a href="gradient.html" class="active">📈 Градиент</a>
-			<a href="guide.html">⚔️ Гайд</a>
-			<a href="hall.html">🏆 Зал Славы</a>
-			<a href="lore.html">📜 Лор Этерниса</a>
-			<a href="tavern.html">🍺 Таверна</a>
-        </div>
-    </div>
-    
     <div class="container">
-        <div class="class-selector">
+        <header class="header">
+            <h1 class="header-title">ГРАДИЕНТ БАЛАНСА</h1>
+            <p class="header-subtitle">Прогноз винрейта при изменении статов</p>
+        </header>
+
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link">📊 Статистика</a>
+                <a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+                <a href="gradient.html" class="nav-link active">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a>
+                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+            </nav>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">🔮 Прогноз винрейта</h2>
             <div class="selector-row">
-                <select id="classSelect" class="class-select"></select>
-                <select id="raceSelect" class="race-select"></select>
-                <button class="btn" id="simulateBtn" onclick="runGradient()">🔮 ПРОГНОЗ</button>
-                <button class="reset-btn" onclick="resetToOriginal()">🔄 Сбросить</button>
+                <select id="classSelect"></select>
+                <select id="raceSelect"></select>
+                <button class="btn" id="simulateBtn" onclick="runGradient()">🔮 Прогноз</button>
+                <button class="btn-reset" onclick="resetToOriginal()">🔄 Сброс</button>
                 <span class="progress" id="progress"></span>
             </div>
-            
-            <div class="stats-panel">
+
+            <div class="stats-grid">
                 <div class="stat-card"><div class="stat-emoji">❤️</div><div class="stat-name">HP</div><div class="stat-value" id="hpDisplay">24</div><input type="number" id="hpInput" class="stat-input" min="10" max="50" value="24"></div>
                 <div class="stat-card"><div class="stat-emoji">⚔️</div><div class="stat-name">ATK</div><div class="stat-value" id="atkDisplay">6</div><input type="number" id="atkInput" class="stat-input" min="0" max="15" value="6"></div>
                 <div class="stat-card"><div class="stat-emoji">🛡️</div><div class="stat-name">DEF</div><div class="stat-value" id="defDisplay">0</div><input type="number" id="defInput" class="stat-input" min="0" max="5" value="0"></div>
@@ -390,191 +357,197 @@
                 <div class="stat-card"><div class="stat-emoji">⬆️</div><div class="stat-name">MAX</div><div class="stat-value" id="maxDisplay">10</div><input type="number" id="maxInput" class="stat-input" min="2" max="20" value="10"></div>
             </div>
         </div>
-        
-        <div class="result-panel" id="resultCard" style="display:none;">
+
+        <div class="result-panel" id="resultCard">
             <div class="winrate-display">
-                <div class="winrate-box"><div class="winrate-label">Реальный (база)</div><div class="winrate-value" id="currentWinrate">46.5%</div></div>
+                <div class="winrate-box"><div class="winrate-label">Реальный (база)</div><div class="winrate-value" id="currentWinrate">50%</div></div>
                 <div class="winrate-arrow">→</div>
-                <div class="winrate-box" style="border-color:#ffd700;"><div class="winrate-label">Прогноз</div><div class="winrate-value" id="predictedWinrate">—</div><div id="winrateDiff" class="diff-badge diff-neutral">—</div></div>
+                <div class="winrate-box" style="border-color:var(--gold);"><div class="winrate-label">Прогноз</div><div class="winrate-value" id="predictedWinrate">—</div><div id="winrateDiff" class="diff-badge diff-neutral">—</div></div>
             </div>
             <div class="sim-details" id="simulationDetails"></div>
         </div>
-        
-        <div class="info-box">
-            <div class="info-title">Как работает эта машина</div>
-            <div class="info-text">
-                <span>1 Данные:</span> Статы классов берутся из <span>data.json</span>. Реальные винрейты (<span id="liveStatsInfo">загрузка...</span>) высчитываются автоматически из <span>stats_data.json</span> при каждой загрузке<br>
-                <span>2 Боевка:</span> Точная копия C# кода. Симулируется <span>500 боёв</span> против каждого из 13 других классов<br>
-                <span>3 Калибровка:</span> <span>Коэффициент = Реальный_Винрейт / Симулированный_Винрейт</span><br>
-                <span>4 Итог:</span> Прогноз = Симуляция_Новых_Статов × Коэффициент. Разница показывает <span>реальный эффект</span> от правок
+
+        <div class="card" style="margin-top:20px;">
+            <h2 class="card-title">📐 Как работает</h2>
+            <div class="info-block">
+                <p><strong>1. Данные:</strong> статы классов из data.json, реальные винрейты из stats_data.json (<span id="liveStatsInfo">загрузка...</span>)</p>
+                <p><strong>2. Симуляция:</strong> точная копия C# боя, 500 боёв против каждого класса</p>
+                <p><strong>3. Коэффициент:</strong> Реальный / Симулированный = поправка на реальность</p>
+                <p><strong>4. Прогноз:</strong> Симуляция новых статов × Коэффициент</p>
             </div>
         </div>
     </div>
 
-<script>
-const navToggle = document.querySelector('.nav-toggle');
-const pageNav = document.querySelector('.page-nav');
-navToggle.addEventListener('click', () => {
-    pageNav.classList.toggle('show');
-    navToggle.textContent = pageNav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-});
-
-const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-
-let CONFIG = {};
-let classesData = [];
-let racesData = [];
-let players = [];
-let originalStats = {};
-let currentClass = 'Некромант';
-let currentRace = '';
-let isRunning = false;
-let REAL_WINRATES = {};
-
-async function loadData() {
-    const [dataResp, statsResp] = await Promise.all([fetch(DATA_URL), fetch(STATS_URL)]);
-    const data = await dataResp.json();
-    const stats = await statsResp.json();
-    
-    CONFIG = data.config || { defReduction: 0.05, baseAC: 10, critMultiplier: 2, maxRounds: 20, blockThreshold: 4 };
-    classesData = data.classes;
-    racesData = data.races;
-    
-    // Проверяем структуру: stats может быть объектом с полем players
-    players = Array.isArray(stats) ? stats : (stats.players || []);
-    players = players.filter(p => p.name && p.name !== 'Unknown');
-    
-    // === ИСПРАВЛЕННЫЙ СБОР ЖИВЫХ ВИНРЕЙТОВ (ключи wins/losses с маленькой буквы) ===
-    const classStats = {};
-    let totalBattles = 0;
-    
-    players.forEach(p => {
-        // Вытаскиваем класс (например "Следопыт" из "Нежить-Следопыт")
-        const parts = p.name.split('-');
-        let className = parts.length > 1 ? parts[1] : p.name;
-        // Приводим к стандартному виду (вдруг "следопыт")
-        className = className.charAt(0).toUpperCase() + className.slice(1).toLowerCase();
-        
-        if (!classStats[className]) {
-            classStats[className] = { wins: 0, losses: 0 };
+    <script>
+        function toggleNav() {
+            const nav = document.getElementById('pageNav');
+            const btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show');
+            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         }
-        // ВАЖНО: поля называются wins и losses (маленькие буквы)
-        classStats[className].wins += (p.wins || 0);
-        classStats[className].losses += (p.losses || 0);
-    });
-    
-    console.log('📊 Собранная статистика:', classStats);
-    
-    // Заполняем REAL_WINRATES
-    classesData.forEach(cls => {
-        const stats = classStats[cls.Name];
-        if (stats) {
-            const total = stats.wins + stats.losses;
-            REAL_WINRATES[cls.Name] = total > 0 ? (stats.wins / total) * 100 : 50.0;
-            totalBattles += total;
-        } else {
-            REAL_WINRATES[cls.Name] = 50.0;
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const nav = document.getElementById('pageNav');
+                const btn = document.querySelector('.nav-toggle');
+                nav.classList.remove('show');
+                if (btn) btn.textContent = '☰ Меню';
+            });
+        });
+
+        const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+
+        let CONFIG = {}, classesData = [], racesData = [], originalStats = {}, currentClass = 'Некромант', currentRace = '';
+        let isRunning = false, REAL_WINRATES = {};
+
+        async function loadData() {
+            const [dr, sr] = await Promise.all([fetch(DATA_URL), fetch(STATS_URL)]);
+            const data = await dr.json(), stats = await sr.json();
+            CONFIG = data.config || { defReduction: 0.05, baseAC: 10, maxRounds: 20 };
+            classesData = data.classes; racesData = data.races;
+
+            const players = Array.isArray(stats) ? stats : (stats.players || []);
+            const classStats = {};
+            players.filter(p => p.name && p.name !== 'Unknown').forEach(p => {
+                const parts = p.name.split('-');
+                let cn = parts.length > 1 ? parts[1] : p.name;
+                cn = cn.charAt(0).toUpperCase() + cn.slice(1).toLowerCase();
+                if (!classStats[cn]) classStats[cn] = { wins: 0, losses: 0 };
+                classStats[cn].wins += (p.wins || 0);
+                classStats[cn].losses += (p.losses || 0);
+            });
+
+            let totalBattles = 0;
+            classesData.forEach(cls => {
+                const s = classStats[cls.Name];
+                REAL_WINRATES[cls.Name] = s ? (s.wins + s.losses > 0 ? (s.wins / (s.wins + s.losses)) * 100 : 50) : 50;
+                if (s) totalBattles += s.wins + s.losses;
+            });
+
+            document.getElementById('liveStatsInfo').textContent = `на основе ${totalBattles} реальных боёв`;
+
+            const cs = document.getElementById('classSelect');
+            cs.innerHTML = '';
+            classesData.sort((a,b) => a.Name.localeCompare(b.Name)).forEach(cls => {
+                const o = document.createElement('option'); o.value = cls.Name;
+                o.textContent = `${cls.Emoji} ${cls.Name}`; cs.appendChild(o);
+            });
+
+            const rs = document.getElementById('raceSelect');
+            rs.innerHTML = '<option value="">🚫 Без расы</option>';
+            racesData.forEach(r => {
+                const o = document.createElement('option'); o.value = r.Name;
+                o.textContent = `${r.Emoji} ${r.Name}`; rs.appendChild(o);
+            });
+
+            cs.value = currentClass;
+            cs.addEventListener('change', () => { currentClass = cs.value; setOptimalRace(); loadClassStats(); });
+            rs.addEventListener('change', () => { currentRace = rs.value; loadClassStats(); });
+            setOptimalRace();
+            loadClassStats();
         }
-    });
-    
-    document.getElementById('liveStatsInfo').innerHTML = `на основе ${totalBattles} реальных боёв`;
-    console.log('✅ Финальные винрейты:', REAL_WINRATES);
-    
-    // Заполнение селектов
-    const classSelect = document.getElementById('classSelect');
-    classSelect.innerHTML = '';
-    classesData.sort((a,b) => a.Name.localeCompare(b.Name)).forEach(cls => {
-        const opt = document.createElement('option'); opt.value = cls.Name;
-        opt.textContent = `${cls.Emoji} ${cls.Name}`; classSelect.appendChild(opt);
-    });
-    
-    const raceSelect = document.getElementById('raceSelect');
-    raceSelect.innerHTML = '<option value="">🚫 Без расы (голый класс)</option>';
-    racesData.forEach(r => {
-        const opt = document.createElement('option'); opt.value = r.Name;
-        opt.textContent = `${r.Emoji} ${r.Name}`; raceSelect.appendChild(opt);
-    });
-    
-    classSelect.value = currentClass;
-    classSelect.addEventListener('change', onClassChange);
-    raceSelect.addEventListener('change', onRaceChange);
-    setOptimalRace(currentClass);
-    loadClassStats();
-}
 
-function setOptimalRace(className) {
-    const optimal = {'Варвар':'Орк','Следопыт':'Эльф','Бард':'Человек','Паладин':'Дворф','Колдун':'Нежить','Чародей':'Нежить','Изобретатель':'Эльф','Воин':'Дворф','Жрец':'Человек','Друид':'Эльф','Плут':'Орк','Некромант':'Дворф','Монах':'Человек','Волшебница':'Эльф'};
-    currentRace = optimal[className] || '';
-    document.getElementById('raceSelect').value = currentRace;
-}
-
-function onClassChange() { currentClass = document.getElementById('classSelect').value; setOptimalRace(currentClass); loadClassStats(); }
-function onRaceChange() { currentRace = document.getElementById('raceSelect').value; loadClassStats(); }
-
-function loadClassStats() {
-    const cls = classesData.find(c => c.Name === currentClass); if (!cls) return;
-    const race = currentRace ? racesData.find(r => r.Name === currentRace) : null;
-    originalStats = { hp: cls.Hp + (race?.BonusHp || 0), atk: cls.Atk + (race?.BonusAtk || 0), def: cls.Def + (race?.BonusDef || 0), min: cls.Min + (race?.BonusMin || 0), max: cls.Max + (race?.BonusMax || 0) };
-    
-    ['hp','atk','def','min','max'].forEach(s => {
-        document.getElementById(`${s}Display`).textContent = originalStats[s];
-        document.getElementById(`${s}Input`).value = originalStats[s];
-    });
-    const realCur = REAL_WINRATES[currentClass] || 50;
-    document.getElementById('currentWinrate').textContent = realCur.toFixed(1) + '%';
-}
-window.resetToOriginal = function() { loadClassStats(); };
-
-function simulateSingleFight(s1, s2) {
-    const rnd = () => Math.floor(Math.random() * 20) + 1, d3 = () => Math.floor(Math.random() * 3);
-    const init1 = rnd() + Math.floor(s1.atk) + d3(), init2 = rnd() + Math.floor(s2.atk) + d3();
-    const first = init1 !== init2 ? init1 > init2 : Math.random() < 0.5;
-    let hp1 = s1.hp, hp2 = s2.hp, rounds = 0;
-    
-    while (hp1 > 0 && hp2 > 0 && rounds < CONFIG.maxRounds) {
-        rounds++;
-        if (first) {
-            const r1 = rnd(); if (r1 !== 1 && r1 + s1.atk >= CONFIG.baseAC + s2.def) { let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction))); hp2 = Math.max(0, hp2 - d); } if (hp2 <= 0) break;
-            const r2 = rnd(); if (r2 !== 1 && r2 + s2.atk >= CONFIG.baseAC + s1.def) { let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction))); hp1 = Math.max(0, hp1 - d); }
-        } else {
-            const r2 = rnd(); if (r2 !== 1 && r2 + s2.atk >= CONFIG.baseAC + s1.def) { let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction))); hp1 = Math.max(0, hp1 - d); } if (hp1 <= 0) break;
-            const r1 = rnd(); if (r1 !== 1 && r1 + s1.atk >= CONFIG.baseAC + s2.def) { let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction))); hp2 = Math.max(0, hp2 - d); }
+        function setOptimalRace() {
+            const opt = {'Варвар':'Орк','Следопыт':'Эльф','Бард':'Человек','Паладин':'Дворф','Колдун':'Нежить','Чародей':'Нежить','Изобретатель':'Эльф','Воин':'Дворф','Жрец':'Человек','Друид':'Эльф','Плут':'Орк','Некромант':'Дворф','Монах':'Человек','Волшебница':'Эльф'};
+            currentRace = opt[currentClass] || '';
+            document.getElementById('raceSelect').value = currentRace;
         }
-    }
-    return hp1 > hp2 ? 1 : 0;
-}
 
-async function runGradient() {
-    if (isRunning) return; isRunning = true;
-    const btn = document.getElementById('simulateBtn'), progress = document.getElementById('progress');
-    btn.disabled = true; if (classesData.length === 0) { progress.textContent = 'Загрузка...'; await loadData(); }
-    
-    const fightsPerClass = 500, classes = classesData.map(c => c.Name), n = classes.length;
-    const currentStats = { ...originalStats };
-    const newStats = { hp: +document.getElementById('hpInput').value || originalStats.hp, atk: +document.getElementById('atkInput').value || originalStats.atk, def: +document.getElementById('defInput').value || originalStats.def, min: +document.getElementById('minInput').value || originalStats.min, max: +document.getElementById('maxInput').value || originalStats.max };
-    
-    progress.textContent = 'Симуляция текущих...'; let currentWins = 0;
-    for (const other of classes) { if (other === currentClass) continue; const o = classesData.find(c => c.Name === other); if (!o) continue; const s = { hp: o.Hp, atk: o.Atk, def: o.Def, min: o.Min, max: o.Max }; for (let i=0; i<fightsPerClass; i++) currentWins += simulateSingleFight(currentStats, s); await new Promise(r => setTimeout(r, 5)); }
-    
-    progress.textContent = 'Симуляция новых...'; let newWins = 0;
-    for (const other of classes) { if (other === currentClass) continue; const o = classesData.find(c => c.Name === other); if (!o) continue; const s = { hp: o.Hp, atk: o.Atk, def: o.Def, min: o.Min, max: o.Max }; for (let i=0; i<fightsPerClass; i++) newWins += simulateSingleFight(newStats, s); await new Promise(r => setTimeout(r, 5)); }
-    
-    const total = (n - 1) * fightsPerClass, simCur = (currentWins / total) * 100, simNew = (newWins / total) * 100;
-    const realCur = REAL_WINRATES[currentClass] || 50, coef = simCur > 0 ? realCur / simCur : 1;
-    const pred = simNew * coef, diff = pred - realCur;
-    
-    document.getElementById('resultCard').style.display = 'block';
-    document.getElementById('currentWinrate').textContent = realCur.toFixed(1) + '%';
-    document.getElementById('predictedWinrate').textContent = pred.toFixed(1) + '%';
-    const diffEl = document.getElementById('winrateDiff'), sign = diff >= 0 ? '+' : '';
-    diffEl.textContent = `${sign}${diff.toFixed(1)}%`; diffEl.className = 'diff-badge ' + (diff > 0.5 ? 'diff-positive' : (diff < -0.5 ? 'diff-negative' : 'diff-neutral'));
-    document.getElementById('simulationDetails').innerHTML = `Симулировано: ${simCur.toFixed(1)}% → ${simNew.toFixed(1)}% | Коэф: ${coef.toFixed(3)} | Боёв: ${total}`;
-    
-    btn.disabled = false; isRunning = false; progress.textContent = '✅ Готово!';
-}
-window.runGradient = runGradient;
-loadData();
-</script>
+        function loadClassStats() {
+            const cls = classesData.find(c => c.Name === currentClass); if (!cls) return;
+            const race = currentRace ? racesData.find(r => r.Name === currentRace) : null;
+            originalStats = {
+                hp: cls.Hp + (race?.BonusHp || 0), atk: cls.Atk + (race?.BonusAtk || 0),
+                def: cls.Def + (race?.BonusDef || 0), min: cls.Min + (race?.BonusMin || 0),
+                max: cls.Max + (race?.BonusMax || 0)
+            };
+            ['hp','atk','def','min','max'].forEach(s => {
+                document.getElementById(`${s}Display`).textContent = originalStats[s];
+                document.getElementById(`${s}Input`).value = originalStats[s];
+            });
+        }
+
+        window.resetToOriginal = loadClassStats;
+
+        function simulateFight(s1, s2) {
+            const rnd = () => Math.floor(Math.random() * 20) + 1;
+            const d3 = () => Math.floor(Math.random() * 3);
+            const i1 = rnd() + s1.atk + d3(), i2 = rnd() + s2.atk + d3();
+            const first = i1 !== i2 ? i1 > i2 : Math.random() < 0.5;
+            let hp1 = s1.hp, hp2 = s2.hp, rounds = 0;
+
+            while (hp1 > 0 && hp2 > 0 && rounds < CONFIG.maxRounds) {
+                rounds++;
+                if (first) {
+                    const r1 = rnd(); if (r1 !== 1 && r1 + s1.atk >= 10 + s2.def) { let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction))); hp2 = Math.max(0, hp2 - d); }
+                    if (hp2 <= 0) break;
+                    const r2 = rnd(); if (r2 !== 1 && r2 + s2.atk >= 10 + s1.def) { let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction))); hp1 = Math.max(0, hp1 - d); }
+                } else {
+                    const r2 = rnd(); if (r2 !== 1 && r2 + s2.atk >= 10 + s1.def) { let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min; d = Math.max(1, Math.round(d * (1 - s1.def * CONFIG.defReduction))); hp1 = Math.max(0, hp1 - d); }
+                    if (hp1 <= 0) break;
+                    const r1 = rnd(); if (r1 !== 1 && r1 + s1.atk >= 10 + s2.def) { let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min; d = Math.max(1, Math.round(d * (1 - s2.def * CONFIG.defReduction))); hp2 = Math.max(0, hp2 - d); }
+                }
+            }
+            return hp1 > hp2 ? 1 : 0;
+        }
+
+        async function runGradient() {
+            if (isRunning) return; isRunning = true;
+            const btn = document.getElementById('simulateBtn'), progress = document.getElementById('progress');
+            btn.disabled = true;
+            if (classesData.length === 0) { progress.textContent = 'Загрузка...'; await loadData(); }
+
+            const fps = 500, classes = classesData.map(c => c.Name), n = classes.length;
+            const cur = { ...originalStats };
+            const nxt = {
+                hp: +document.getElementById('hpInput').value || originalStats.hp,
+                atk: +document.getElementById('atkInput').value || originalStats.atk,
+                def: +document.getElementById('defInput').value || originalStats.def,
+                min: +document.getElementById('minInput').value || originalStats.min,
+                max: +document.getElementById('maxInput').value || originalStats.max
+            };
+
+            let cw = 0, nw = 0;
+            progress.textContent = 'Симуляция текущих...';
+            for (const o of classes) {
+                if (o === currentClass) continue;
+                const oc = classesData.find(c => c.Name === o); if (!oc) continue;
+                const s = { hp: oc.Hp, atk: oc.Atk, def: oc.Def, min: oc.Min, max: oc.Max };
+                for (let i = 0; i < fps; i++) cw += simulateFight(cur, s);
+                await new Promise(r => setTimeout(r, 5));
+            }
+
+            progress.textContent = 'Симуляция новых...';
+            for (const o of classes) {
+                if (o === currentClass) continue;
+                const oc = classesData.find(c => c.Name === o); if (!oc) continue;
+                const s = { hp: oc.Hp, atk: oc.Atk, def: oc.Def, min: oc.Min, max: oc.Max };
+                for (let i = 0; i < fps; i++) nw += simulateFight(nxt, s);
+                await new Promise(r => setTimeout(r, 5));
+            }
+
+            const total = (n - 1) * fps;
+            const simCur = (cw / total) * 100, simNew = (nw / total) * 100;
+            const real = REAL_WINRATES[currentClass] || 50;
+            const coef = simCur > 0 ? real / simCur : 1;
+            const pred = simNew * coef, diff = pred - real;
+
+            const rc = document.getElementById('resultCard');
+            rc.style.display = 'block';
+            document.getElementById('currentWinrate').textContent = real.toFixed(1) + '%';
+            document.getElementById('predictedWinrate').textContent = pred.toFixed(1) + '%';
+            const de = document.getElementById('winrateDiff');
+            de.textContent = `${diff >= 0 ? '+' : ''}${diff.toFixed(1)}%`;
+            de.className = 'diff-badge ' + (diff > 0.5 ? 'diff-positive' : diff < -0.5 ? 'diff-negative' : 'diff-neutral');
+            document.getElementById('simulationDetails').textContent = `Симулировано: ${simCur.toFixed(1)}% → ${simNew.toFixed(1)}% | Коэф: ${coef.toFixed(3)} | Боёв: ${total}`;
+
+            btn.disabled = false; isRunning = false;
+            progress.textContent = '✅ Готово!';
+        }
+
+        window.runGradient = runGradient;
+        loadData();
+    </script>
 </body>
 </html>
