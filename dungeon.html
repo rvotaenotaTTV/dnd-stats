@@ -184,10 +184,30 @@
 		.territory-light, .territory-dark { font-size: 11px; }
 		.territory-title { font-size: 15px; }
 
-		/* Все таблицы: скролл если не помещаются */
+		/* Таблицы общее */
 		.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 		table { font-size: 11px; }
-		th, td { padding: 6px 4px; white-space: nowrap; }
+		th, td { padding: 6px 4px; }
+
+		/* Таблица лидеров (7 колонок) — скролл */
+		#leaderTable { min-width: 550px; }
+		#leaderTable th, #leaderTable td { white-space: nowrap; }
+
+		/* Таблица фракций — ПЕРЕНОС, не скролл */
+		.faction-table { table-layout: auto !important; }
+		.faction-table th, .faction-table td {
+			white-space: normal !important;
+			word-break: break-word;
+			font-size: 10px;
+			line-height: 1.4;
+		}
+
+		/* Таблица мобов */
+		.mob-table { min-width: 280px; }
+		.mob-table th, .mob-table td { white-space: nowrap; }
+
+		/* Таблица событий */
+		.event-table th, .event-table td { white-space: normal; font-size: 10px; }
 
 		.rule-item p { font-size: 12px; }
 		.rule-item h4 { font-size: 13px; }
