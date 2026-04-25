@@ -182,30 +182,38 @@
     .loading { text-align: center; padding: 60px; color: #8b949e; font-size: 18px; }
 
 	@media (max-width: 768px) {
-
-		.container {
-			width: 100%;
-			max-width: 100%;
-		}
-
 		.table-wrapper {
-			width: 100%;
 			overflow-x: auto;
 			-webkit-overflow-scrolling: touch;
+			margin: 0 -15px;           /* немного расширяет область скролла */
+			padding: 0 15px;
 		}
 
 		table {
-			width: 100%;
-			table-layout: fixed;
-			border-collapse: collapse;
-			font-size: 11px;
+			min-width: 620px;          /* фиксируем минимальную ширину, чтобы не сжималась слишком сильно */
+			font-size: 13px;           /* чуть крупнее, чем было */
 		}
 
 		th, td {
-			padding: 6px 4px;
-			font-size: 10px;
-			word-break: break-word;
-			text-align: center;
+			padding: 8px 6px;
+			font-size: 12px;
+			white-space: nowrap;       /* не переносим текст в ячейках */
+		}
+
+		/* Делаем колонку "Игрок" чуть шире и позволяем перенос */
+		td:nth-child(2) {              /* вторая колонка — игрок */
+			white-space: normal;
+			min-width: 110px;
+		}
+
+		/* Опционально: скрываем менее важные колонки на очень маленьких экранах */
+		@media (max-width: 480px) {
+			table th:nth-child(6),   /* ❌ misses */
+			table td:nth-child(6),
+			table th:nth-child(7),   /* 🛡 blocks */
+			table td:nth-child(7) {
+				display: none;
+			}
 		}
 	}
 </style>
