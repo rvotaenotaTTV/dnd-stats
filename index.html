@@ -369,48 +369,51 @@
             });
             html += '</tbody></table></div></div></div>';
 
-            // РЕКОРДЫ
-            html += '<div id="tab-records" class="tab-content">';
-            const maxWins = players.reduce((max,p) => p.wins > max.wins ? p : max, players[0]);
-            const maxStreak = players.reduce((max,p) => p.best > max.best ? p : max, players[0]);
-            const maxShards = players.reduce((max,p) => p.shards > max.shards ? p : max, players[0]);
-            const maxFights = players.reduce((max,p) => (p.wins+p.losses) > (max.wins+max.losses) ? p : max, players[0]);
-            const maxFaction = players.reduce((max,p) => p.factionWins > max.factionWins ? p : max, players[0]);
-            const maxTournament = players.reduce((max,p) => p.tournamentWins > max.tournamentWins ? p : max, players[0]);
-            const maxLevel = players.reduce((max,p) => p.level > max.level ? p : max, players[0]);
-            const maxWinrate = players.filter(p => p.wins+p.losses >= 20).reduce((max,p) => { const wr = p.wins/(p.wins+p.losses); const maxWr = max.wins/(max.wins+max.losses); return wr > maxWr ? p : max; }, players[0]);
+			// РЕКОРДЫ
+			html += '<div id="tab-records" class="tab-content">';
+			const maxWins = players.reduce((max,p) => p.wins > max.wins ? p : max, players[0]);
+			const maxStreak = players.reduce((max,p) => p.best > max.best ? p : max, players[0]);
+			const maxShards = players.reduce((max,p) => p.shards > max.shards ? p : max, players[0]);
+			const maxFights = players.reduce((max,p) => (p.wins+p.losses) > (max.wins+max.losses) ? p : max, players[0]);
+			const maxFaction = players.reduce((max,p) => p.factionWins > max.factionWins ? p : max, players[0]);
+			const maxTournament = players.reduce((max,p) => p.tournamentWins > max.tournamentWins ? p : max, players[0]);
+			const maxLevel = players.reduce((max,p) => p.level > max.level ? p : max, players[0]);
+			const maxWinrate = players.filter(p => p.wins+p.losses >= 20).reduce((max,p) => { const wr = p.wins/(p.wins+p.losses); const maxWr = max.wins/(max.wins+max.losses); return wr > maxWr ? p : max; }, players[0]);
+			const worstStreak = players.reduce((max,p) => p.worst > max.worst ? p : max, players[0]);
+			const topLight = players.filter(p=>p.faction==='Орден Света').sort((a,b)=>b.factionWins-a.factionWins)[0];
+			const topDark = players.filter(p=>p.faction==='Культ Тьмы').sort((a,b)=>b.factionWins-a.factionWins)[0];
+			const mostLossesPlayer = players.reduce((max,p) => p.losses > max.losses ? p : max, players[0]);
 
-            const recordCounts = {};
-            [maxWins, maxStreak, maxShards, maxFights, maxFaction, maxTournament, maxLevel, maxWinrate].forEach(p => { if(p) recordCounts[p.display] = (recordCounts[p.display]||0)+1; });
-            const topRecorder = Object.entries(recordCounts).sort((a,b) => b[1]-a[1])[0];
+			const recordCounts = {};
+			[maxWins, maxStreak, maxShards, maxFights, maxFaction, maxTournament, maxLevel, maxWinrate].forEach(p => { if(p) recordCounts[p.display] = (recordCounts[p.display]||0)+1; });
+			const topRecorder = Object.entries(recordCounts).sort((a,b) => b[1]-a[1])[0];
 
-            html += '<div style="text-align:center;margin-bottom:20px;"><div style="font-size:2.5rem;color:var(--gold);">👑</div><h2 style="color:var(--gold);margin:8px 0;">РЕКОРДСМЕНЫ ЭТЕРНИСА</h2></div>';
-            html += `<div class="champion-block"><div style="font-size:1.2rem;color:var(--gold);margin-bottom:8px;">🏆 ЛЕГЕНДА ЭТЕРНИСА</div><div class="champion-emoji">${players.find(p=>p.display===topRecorder[0])?.emoji||'🏆'}</div><div class="champion-name">${topRecorder[0]}</div><div class="champion-class">${topRecorder[1]} рекордов</div></div>`;
+			html += '<div style="text-align:center;margin-bottom:20px;"><div style="font-size:2.5rem;color:var(--gold);">👑</div><h2 style="color:var(--gold);margin:8px 0;">РЕКОРДСМЕНЫ ЭТЕРНИСА</h2></div>';
+			html += `<div class="champion-block"><div style="font-size:1.2rem;color:var(--gold);margin-bottom:8px;">🏆 ЛЕГЕНДА ЭТЕРНИСА</div><div class="champion-emoji">${players.find(p=>p.display===topRecorder[0])?.emoji||'🏆'}</div><div class="champion-name">${topRecorder[0]}</div><div class="champion-class">${topRecorder[1]} рекордов</div></div>`;
 
-            html += '<div class="titles-gallery" style="grid-template-columns:repeat(4,1fr);">';
-            const records = [
-                { icon:'🏆', name:'ПОБЕДЫ', value:maxWins.wins, player:maxWins.display, emoji:maxWins.emoji, desc:'побед' },
-                { icon:'🔥', name:'СТРИК', value:maxStreak.best, player:maxStreak.display, emoji:maxStreak.emoji, desc:'побед подряд' },
-                { icon:'💎', name:'ОСКОЛКИ', value:maxShards.shards, player:maxShards.display, emoji:maxShards.emoji, desc:'осколков' },
-                { icon:'⚔️', name:'БОИ', value:maxFights.wins+maxFights.losses, player:maxFights.display, emoji:maxFights.emoji, desc:'боёв' },
-                { icon:'🌍', name:'ФРАКЦИЯ', value:maxFaction.factionWins, player:maxFaction.display, emoji:maxFaction.emoji, desc:'побед за фракцию' },
-                { icon:'👑', name:'ЧЕМПИОН', value:maxTournament.tournamentWins, player:maxTournament.display, emoji:maxTournament.emoji, desc:'побед в турнирах' },
-                { icon:'📊', name:'УРОВЕНЬ', value:maxLevel.level, player:maxLevel.display, emoji:maxLevel.emoji, desc:'уровень' },
-                { icon:'📈', name:'ВИНРЕЙТ', value:(maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1), player:maxWinrate.display, emoji:maxWinrate.emoji, desc:'% побед (20+ боёв)' }
-            ];
-            records.forEach(r => {
-                html += `<div class="title-card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:6px;">${r.icon}</div><div style="color:var(--text-muted);font-size:0.7rem;">${r.name}</div><div style="font-size:1.5rem;color:var(--gold);font-weight:800;">${r.value}</div><div style="color:var(--text-muted);font-size:0.68rem;">${r.desc}</div><div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border-subtle);font-size:0.8rem;">${r.emoji} ${r.player}</div></div>`;
-            });
-            html += '</div>';
+			const records = [
+				{ icon:'🏆', name:'ПОБЕДЫ', value:maxWins.wins, player:maxWins.display, emoji:maxWins.emoji, desc:'побед' },
+				{ icon:'🔥', name:'СТРИК', value:maxStreak.best, player:maxStreak.display, emoji:maxStreak.emoji, desc:'побед подряд' },
+				{ icon:'💎', name:'ОСКОЛКИ', value:maxShards.shards, player:maxShards.display, emoji:maxShards.emoji, desc:'осколков' },
+				{ icon:'⚔️', name:'БОИ', value:maxFights.wins+maxFights.losses, player:maxFights.display, emoji:maxFights.emoji, desc:'боёв' },
+				{ icon:'🌍', name:'ФРАКЦИЯ', value:maxFaction.factionWins, player:maxFaction.display, emoji:maxFaction.emoji, desc:'побед за фракцию' },
+				{ icon:'👑', name:'ЧЕМПИОН', value:maxTournament.tournamentWins, player:maxTournament.display, emoji:maxTournament.emoji, desc:'побед в турнирах' },
+				{ icon:'📊', name:'УРОВЕНЬ', value:maxLevel.level, player:maxLevel.display, emoji:maxLevel.emoji, desc:'уровень' },
+				{ icon:'📈', name:'ВИНРЕЙТ', value:(maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1), player:maxWinrate.display, emoji:maxWinrate.emoji, desc:'% побед (20+ боёв)' },
+				{ icon:'💀', name:'АНТИСТРИК', value:worstStreak.worst, player:worstStreak.display, emoji:worstStreak.emoji, desc:'поражений подряд' },
+				{ icon:'🌝', name:'СВЕТ', value:topLight?.factionWins||0, player:topLight?.display||'—', emoji:topLight?.emoji||'', desc:'побед за Свет' },
+				{ icon:'🌚', name:'ТЬМА', value:topDark?.factionWins||0, player:topDark?.display||'—', emoji:topDark?.emoji||'', desc:'побед за Тьму' },
+				{ icon:'💔', name:'ПОРАЖЕНИЯ', value:mostLossesPlayer.losses, player:mostLossesPlayer.display, emoji:mostLossesPlayer.emoji, desc:'поражений' }
+			];
 
-            const oldestPlayer = [...players].sort((a,b) => (a.wins+a.losses)-(b.wins+b.losses))[0];
-            const mostLosses = players.reduce((max,p) => p.losses > max.losses ? p : max, players[0]);
-            const perfectWinrate = players.filter(p => p.wins+p.losses >= 10 && p.wins/(p.wins+p.losses) === 1)[0];
-            html += '<div style="margin-top:20px;"><div class="card-title">📜 Другие достижения</div><div class="records-grid">';
-            html += `<div class="record-item"><div class="record-value">${oldestPlayer.wins+oldestPlayer.losses}</div><div class="record-label">⚔️ Меньше всего боёв — ${oldestPlayer.display}</div></div>`;
-            html += `<div class="record-item"><div class="record-value">${mostLosses.losses}</div><div class="record-label">💔 Больше всего поражений — ${mostLosses.display}</div></div>`;
-            if(perfectWinrate) html += `<div class="record-item"><div class="record-value">100%</div><div class="record-label">💯 Идеальный винрейт (10+) — ${perfectWinrate.display}</div></div>`;
-            html += `<div class="record-item"><div class="record-value">${new Date().toLocaleDateString('ru-RU')}</div><div class="record-label">📅 Статистика актуальна на</div></div></div></div></div>`;
+			// 3 ряда по 4 карточки
+			html += '<div class="titles-gallery" style="grid-template-columns:repeat(4,1fr);">';
+			records.forEach(r => {
+				html += `<div class="title-card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:6px;">${r.icon}</div><div style="color:var(--text-muted);font-size:0.7rem;">${r.name}</div><div style="font-size:1.5rem;color:var(--gold);font-weight:800;">${r.value}</div><div style="color:var(--text-muted);font-size:0.68rem;">${r.desc}</div><div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border-subtle);font-size:0.8rem;">${r.emoji} ${r.player}</div></div>`;
+			});
+			html += '</div>';
+
+			html += '</div>';
 
             // ЧЕМПИОНЫ
             html += '<div id="tab-champions" class="tab-content">';
