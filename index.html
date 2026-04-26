@@ -293,7 +293,7 @@
             topWins.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td>${p.name}</td><td class="number">${p.wins}</td></tr>`);
             html += '</table></div></div>';
 
-            const topWinrate = players.filter(p => p.wins+p.losses >= 20).map(p => ({...p, wr: p.wins*100/(p.wins+p.losses)})).sort((a,b) => b.wr - a.wr).slice(0,15);
+            const topWinrate = players.filter(p => p.wins+p.losses >= 30).map(p => ({...p, wr: p.wins*100/(p.wins+p.losses)})).sort((a,b) => b.wr - a.wr).slice(0,15);
             html += '<div class="card"><div class="card-title">📈 Топ-15 по винрейту</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>W/L</th><th>Винрейт</th></tr>';
             topWinrate.forEach((p,i) => html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${p.wr.toFixed(1)}%</td></tr>`);
             html += '</table></div></div>';
@@ -378,7 +378,7 @@
 			const maxFaction = players.reduce((max,p) => p.factionWins > max.factionWins ? p : max, players[0]);
 			const maxTournament = players.reduce((max,p) => p.tournamentWins > max.tournamentWins ? p : max, players[0]);
 			const maxLevel = players.reduce((max,p) => p.level > max.level ? p : max, players[0]);
-			const maxWinrate = players.filter(p => p.wins+p.losses >= 20).reduce((max,p) => { const wr = p.wins/(p.wins+p.losses); const maxWr = max.wins/(max.wins+max.losses); return wr > maxWr ? p : max; }, players[0]);
+			const maxWinrate = players.filter(p => p.wins+p.losses >= 50).reduce((max,p) => { const wr = p.wins/(p.wins+p.losses); const maxWr = max.wins/(max.wins+max.losses); return wr > maxWr ? p : max; }, players[0]);
 			const worstStreak = players.reduce((max,p) => p.worst > max.worst ? p : max, players[0]);
 			const topLight = players.filter(p=>p.faction==='Орден Света').sort((a,b)=>b.factionWins-a.factionWins)[0];
 			const topDark = players.filter(p=>p.faction==='Культ Тьмы').sort((a,b)=>b.factionWins-a.factionWins)[0];
@@ -399,7 +399,7 @@
 				{ icon:'🌍', name:'ФРАКЦИЯ', value:maxFaction.factionWins, player:maxFaction.display, emoji:maxFaction.emoji, desc:'побед за фракцию' },
 				{ icon:'👑', name:'ЧЕМПИОН', value:maxTournament.tournamentWins, player:maxTournament.display, emoji:maxTournament.emoji, desc:'побед в турнирах' },
 				{ icon:'📊', name:'УРОВЕНЬ', value:maxLevel.level, player:maxLevel.display, emoji:maxLevel.emoji, desc:'уровень' },
-				{ icon:'📈', name:'ВИНРЕЙТ', value:(maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1), player:maxWinrate.display, emoji:maxWinrate.emoji, desc:'% побед (20+ боёв)' },
+				{ icon:'📈', name:'ВИНРЕЙТ', value:(maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1), player:maxWinrate.display, emoji:maxWinrate.emoji, desc:'% побед (50+ боёв)' },
 				{ icon:'💀', name:'АНТИСТРИК', value:worstStreak.worst, player:worstStreak.display, emoji:worstStreak.emoji, desc:'поражений подряд' },
 				{ icon:'🌝', name:'СВЕТ', value:topLight?.factionWins||0, player:topLight?.display||'—', emoji:topLight?.emoji||'', desc:'побед за Свет' },
 				{ icon:'🌚', name:'ТЬМА', value:topDark?.factionWins||0, player:topDark?.display||'—', emoji:topDark?.emoji||'', desc:'побед за Тьму' },
