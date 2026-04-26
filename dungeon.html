@@ -328,18 +328,18 @@
 			html += '</div>';
 
 			// Таблица 1 — Топ-10 лидеров
-			html += `<div class="card"><h3 class="card-title">📊 Топ-10 лидеров</h3><div class="table-container"><table id="leaderboard-table"><thead><tr><th class="sortable-header" data-sort="record">Волн</th><th class="sortable-header" data-sort="display">Имя</th><th>Класс</th><th class="sortable-header" data-sort="damage">Урон</th><th class="sortable-header" data-sort="crits">💥</th><th class="sortable-header" data-sort="misses">❌</th><th class="sortable-header" data-sort="blocks">🛡</th></tr></thead><tbody id="leaderboard-tbody">`;
+			html += `<div class="card"><h3 class="card-title">📊 Топ-10 лидеров</h3><div class="table-container"><table id="leaderboard-table"><thead><tr><th class="sortable-header" data-sort="record">Волн</th><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="damage">Урон</th><th class="sortable-header" data-sort="crits">💥</th><th class="sortable-header" data-sort="misses">❌</th><th class="sortable-header" data-sort="blocks">🛡</th></tr></thead><tbody id="leaderboard-tbody">`;
 			sorted.slice(0, 10).forEach(p => {
-				html += `<tr data-record="${p.record}" data-display="${p.display||''}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}"><td class="highlight">${p.record}</td><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td></tr>`;
+				html += `<tr data-record="${p.record}" data-display="${p.display||''}" data-class="${p.name||''}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}"><td class="highlight">${p.record}</td><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td></tr>`;
 			});
 			html += '</tbody></table></div></div>';
 
 			// Таблица 2 — Все участники
 			const byTrophies = [...players].sort((a,b)=>(b.trophies||0)-(a.trophies||0)||(b.bosses||0)-(a.bosses||0));
-			html += `<div class="card"><h3 class="card-title">👥 Все участники</h3><div class="table-container"><table id="all-table"><thead><tr><th class="sortable-header" data-sort="display">Имя</th><th>Класс</th><th class="sortable-header" data-sort="waves">🌊 Заходы</th><th class="sortable-header" data-sort="trophies">👑 Трофеи</th><th class="sortable-header" data-sort="bosses">🐉 Боссы</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="all-tbody">`;
+			html += `<div class="card"><h3 class="card-title">👥 Все участники</h3><div class="table-container"><table id="all-table"><thead><tr><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="waves">🌊 Заходы</th><th class="sortable-header" data-sort="trophies">👑 Трофеи</th><th class="sortable-header" data-sort="bosses">🐉 Боссы</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="all-tbody">`;
 			byTrophies.forEach(p => {
 				const fi = p.faction === 'Орден Света' ? '🌝 Свет' : (p.faction === 'Культ Тьмы' ? '🌚 Тьма' : '');
-				html += `<tr data-display="${p.display||''}" data-waves="${p.totalWaves||0}" data-trophies="${p.trophies||0}" data-bosses="${p.bosses||0}" data-faction="${fi}"><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.totalWaves||0}</td><td class="highlight">${p.trophies||0}</td><td>${p.bosses||0}</td><td>${fi}</td></tr>`;
+				html += `<tr data-display="${p.display||''}" data-class="${p.name||''}" data-waves="${p.totalWaves||0}" data-trophies="${p.trophies||0}" data-bosses="${p.bosses||0}" data-faction="${fi}"><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.totalWaves||0}</td><td class="highlight">${p.trophies||0}</td><td>${p.bosses||0}</td><td>${fi}</td></tr>`;
 			});
 			html += '</tbody></table></div></div>';
 
@@ -358,7 +358,7 @@
                     const rows = Array.from(tbody.querySelectorAll('tr'));
                     rows.sort((a, b) => {
                         let va = a.dataset[sortBy], vb = b.dataset[sortBy];
-                        if (sortBy === 'display') return currentDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+                        if (sortBy === 'display' || sortBy === 'faction' || sortBy === 'class') return currentDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
                         va = parseFloat(va) || 0; vb = parseFloat(vb) || 0;
                         return currentDir === 'asc' ? va - vb : vb - va;
                     });
