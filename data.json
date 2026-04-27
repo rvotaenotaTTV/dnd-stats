@@ -17,28 +17,29 @@
     "blockThreshold": 4
   },
   "classes": [
-    {"Name": "Воин", "Emoji": "⚔️", "Hp": 29, "Atk": 5, "Def": 2, "Min": 3, "Max": 9},
-    {"Name": "Паладин", "Emoji": "🛡️", "Hp": 34, "Atk": 4, "Def": 3, "Min": 3, "Max": 7},
-    {"Name": "Плут", "Emoji": "🗡️", "Hp": 21, "Atk": 9, "Def": 1, "Min": 4, "Max": 10},
-    {"Name": "Монах", "Emoji": "🥋", "Hp": 24, "Atk": 6, "Def": 2, "Min": 4, "Max": 9},
-    {"Name": "Следопыт", "Emoji": "🏹", "Hp": 26, "Atk": 6, "Def": 1, "Min": 4, "Max": 10},
-    {"Name": "Чародей", "Emoji": "🔮", "Hp": 20, "Atk": 8, "Def": 0, "Min": 4, "Max": 13},
-    {"Name": "Бард", "Emoji": "🎸", "Hp": 25, "Atk": 6, "Def": 1, "Min": 4, "Max": 10},
-    {"Name": "Друид", "Emoji": "🌿", "Hp": 28, "Atk": 6, "Def": 1, "Min": 4, "Max": 8},
-    {"Name": "Изобретатель", "Emoji": "⚙️", "Hp": 22, "Atk": 5, "Def": 1, "Min": 4, "Max": 12},
-    {"Name": "Варвар", "Emoji": "🪓", "Hp": 31, "Atk": 4, "Def": 2, "Min": 4, "Max": 8},
-    {"Name": "Волшебница", "Emoji": "✨", "Hp": 22, "Atk": 7, "Def": 0, "Min": 5, "Max": 11},
-    {"Name": "Некромант", "Emoji": "🦴", "Hp": 24, "Atk": 7, "Def": 0, "Min": 5, "Max": 10},
-    {"Name": "Жрец", "Emoji": "✝️", "Hp": 25, "Atk": 5, "Def": 1, "Min": 5, "Max": 9},
-    {"Name": "Колдун", "Emoji": "👁️", "Hp": 24, "Atk": 5, "Def": 0, "Min": 6, "Max": 12}
+    {"Name": "Воин", "Emoji": "⚔️", "Hp": 29, "Atk": 5, "Def": 2, "Dex": 3, "Min": 3, "Max": 9},
+    {"Name": "Паладин", "Emoji": "🛡️", "Hp": 34, "Atk": 4, "Def": 3, "Dex": 2, "Min": 3, "Max": 7},
+    {"Name": "Плут", "Emoji": "🗡️", "Hp": 21, "Atk": 9, "Def": 1, "Dex": 5, "Min": 4, "Max": 10},
+    {"Name": "Монах", "Emoji": "🥋", "Hp": 24, "Atk": 6, "Def": 2, "Dex": 4, "Min": 4, "Max": 9},
+    {"Name": "Следопыт", "Emoji": "🏹", "Hp": 26, "Atk": 6, "Def": 1, "Dex": 4, "Min": 4, "Max": 10},
+    {"Name": "Чародей", "Emoji": "🔮", "Hp": 20, "Atk": 8, "Def": 0, "Dex": 5, "Min": 4, "Max": 13},
+    {"Name": "Бард", "Emoji": "🎸", "Hp": 25, "Atk": 6, "Def": 1, "Dex": 4, "Min": 4, "Max": 10},
+    {"Name": "Друид", "Emoji": "🌿", "Hp": 28, "Atk": 6, "Def": 1, "Dex": 4, "Min": 4, "Max": 8},
+    {"Name": "Изобретатель", "Emoji": "⚙️", "Hp": 22, "Atk": 5, "Def": 1, "Dex": 4, "Min": 4, "Max": 12},
+    {"Name": "Варвар", "Emoji": "🪓", "Hp": 31, "Atk": 4, "Def": 2, "Dex": 2, "Min": 4, "Max": 8},
+    {"Name": "Волшебница", "Emoji": "✨", "Hp": 22, "Atk": 7, "Def": 0, "Dex": 4, "Min": 5, "Max": 11},
+    {"Name": "Некромант", "Emoji": "🦴", "Hp": 24, "Atk": 7, "Def": 0, "Dex": 4, "Min": 5, "Max": 10},
+    {"Name": "Жрец", "Emoji": "✝️", "Hp": 25, "Atk": 5, "Def": 1, "Dex": 3, "Min": 5, "Max": 9},
+    {"Name": "Колдун", "Emoji": "👁️", "Hp": 24, "Atk": 5, "Def": 0, "Dex": 3, "Min": 6, "Max": 12}
   ],
   "races": [
-    {"Name": "Человек", "Emoji": "🧑", "BonusHp": 1, "BonusAtk": 0, "BonusDef": 0, "BonusMin": 0, "BonusMax": 0},
-    {"Name": "Орк", "Emoji": "👹", "BonusHp": 0, "BonusAtk": 1, "BonusDef": 0, "BonusMin": 0, "BonusMax": 0},
-    {"Name": "Дворф", "Emoji": "🧔", "BonusHp": 0, "BonusAtk": 0, "BonusDef": 1, "BonusMin": 0, "BonusMax": 0},
-    {"Name": "Эльф", "Emoji": "🧝", "BonusHp": 0, "BonusAtk": 0, "BonusDef": 0, "BonusMin": 1, "BonusMax": 0},
-    {"Name": "Нежить", "Emoji": "💀", "BonusHp": 0, "BonusAtk": 0, "BonusDef": 0, "BonusMin": 0, "BonusMax": 1}
-  ],
+    {"Name": "Человек", "Emoji": "🧑", "BonusHp": 1, "BonusAtk": 0, "BonusDef": 0, "BonusDex": 0, "BonusMin": 0, "BonusMax": 0},
+    {"Name": "Орк", "Emoji": "👹", "BonusHp": 0, "BonusAtk": 1, "BonusDef": 0, "BonusDex": 0, "BonusMin": 0, "BonusMax": 0},
+    {"Name": "Дворф", "Emoji": "🧔", "BonusHp": 0, "BonusAtk": 0, "BonusDef": 1, "BonusDex": 0, "BonusMin": 0, "BonusMax": 0},
+    {"Name": "Эльф", "Emoji": "🧝", "BonusHp": 0, "BonusAtk": 0, "BonusDef": 0, "BonusDex": 0, "BonusMin": 1, "BonusMax": 0},
+    {"Name": "Нежить", "Emoji": "💀", "BonusHp": 0, "BonusAtk": 0, "BonusDef": 0, "BonusDex": 0, "BonusMin": 0, "BonusMax": 1},
+    {"Name": "Табакси", "Emoji": "🐱", "BonusHp": 0, "BonusAtk": 0, "BonusDef": 0, "BonusDex": 1, "BonusMin": 0, "BonusMax": 0}
+  ]
     "power": {
     "Чародей": 109.7,
     "Плут": 109.7,

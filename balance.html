@@ -9,273 +9,99 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0e14;
-            --bg-secondary: #11161d;
-            --bg-card: #161c24;
-            --bg-elevated: #1c2330;
-            --border-subtle: #252d38;
-            --text-primary: #e8edf4;
-            --text-secondary: #8b95a5;
-            --text-muted: #5c6675;
-            --gold: #ffd700;
-            --red: #e5534b;
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
-            --shadow-gold: 0 0 20px rgba(255,215,0,0.15);
-            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-primary: #0a0e14; --bg-secondary: #11161d; --bg-card: #161c24; --bg-elevated: #1c2330;
+            --border-subtle: #252d38; --text-primary: #e8edf4; --text-secondary: #8b95a5; --text-muted: #5c6675;
+            --gold: #ffd700; --red: #e5534b; --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px;
+            --shadow-gold: 0 0 20px rgba(255,215,0,0.15); --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             background: var(--bg-primary);
-            background-image: 
-                radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%),
-                radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(255,215,0,0.02) 0%, transparent 40%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+            background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%);
+            color: var(--text-primary); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased;
         }
-
         .container { max-width: 1100px; margin: 0 auto; padding: 20px 24px 40px; }
-
         .header { text-align: center; padding: 30px 0 20px; }
-
-        .header-title {
-            font-size: clamp(2rem, 5vw, 2.8rem);
-            font-weight: 900;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
-        }
-
+        .header-title { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(255,215,0,0.3)); }
         .nav-wrapper { margin-bottom: 28px; }
-
-        .nav-toggle {
-            display: none;
-            width: 100%;
-            padding: 14px 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            color: var(--gold);
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: left;
-            font-family: inherit;
-            transition: var(--transition);
-        }
-
+        .nav-toggle { display: none; width: 100%; padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--gold); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; transition: var(--transition); }
         .nav-toggle:hover { background: var(--bg-elevated); }
-
-        .nav-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: center;
-            padding: 8px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .nav-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 18px;
-            border-radius: 20px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
         .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; box-shadow: var(--shadow-gold); }
 
-        .nav-link.active {
-            background: var(--gold);
-            color: var(--bg-primary);
-            font-weight: 700;
-            box-shadow: var(--shadow-gold);
-        }
+        .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
+        .card-title { font-size: 1.15rem; font-weight: 700; color: var(--gold); margin-bottom: 16px; }
 
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            opacity: 0.5;
-        }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 16px;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-subtle);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-            min-width: 900px;
-        }
-
-        th {
-            background: var(--bg-elevated);
-            color: var(--gold);
-            font-weight: 700;
-            padding: 10px 12px;
-            text-align: center;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            border-bottom: 2px solid var(--border-subtle);
-            white-space: nowrap;
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-            padding-right: 22px !important;
-        }
-
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 950px; }
+        th { background: var(--bg-elevated); color: var(--gold); font-weight: 700; padding: 8px 10px; text-align: center; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--border-subtle); white-space: nowrap; cursor: pointer; user-select: none; position: relative; padding-right: 20px !important; }
         th:hover { background: #252d38; }
-
-        th::after {
-            content: '⇅';
-            position: absolute;
-            right: 6px;
-            opacity: 0.4;
-            font-size: 10px;
-        }
-
+        th::after { content: '⇅'; position: absolute; right: 5px; opacity: 0.4; font-size: 10px; }
         th.asc::after { content: '↑'; opacity: 1; color: var(--gold); }
         th.desc::after { content: '↓'; opacity: 1; color: var(--gold); }
-
-        td {
-            padding: 8px 12px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-        }
-
+        td { padding: 7px 10px; text-align: center; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
         tr:hover td { background: rgba(255,255,255,0.02); }
-
         td:first-child { font-weight: 600; color: var(--gold); }
         .number { text-align: right; }
 
-        .formula-box {
-            background: var(--bg-elevated);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 3px solid var(--gold);
-        }
-
-        .formula-box p {
-            font-family: 'SF Mono', 'Consolas', monospace;
-            font-size: 0.85rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
-
+        .formula-box { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; border-left: 3px solid var(--gold); }
+        .formula-box p { font-family: 'SF Mono', 'Consolas', monospace; font-size: 0.85rem; line-height: 1.8; color: var(--text-secondary); }
         .formula-box p span { color: var(--gold); }
         .text-muted { color: var(--text-muted); font-size: 0.75rem; }
-
         .status-message { text-align: center; padding: 40px; color: var(--text-secondary); }
         .status-message.error { color: var(--red); }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
             .card { padding: 18px 14px; border-radius: var(--radius-md); }
-
             .nav-toggle { display: block; }
-
-            .nav-bar {
-                display: none;
-                flex-direction: column;
-                gap: 2px;
-                margin-top: 8px;
-                padding: 4px;
-            }
-
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
-
-            .nav-link {
-                padding: 12px 16px;
-                border-radius: var(--radius-sm);
-                justify-content: center;
-            }
-
+            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
             .header-title { font-size: 1.8rem; }
-            table { font-size: 0.72rem; min-width: 750px; }
-            th, td { padding: 6px 8px; }
+            table { font-size: 0.68rem; min-width: 780px; }
+            th, td { padding: 5px 7px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1 class="header-title">БАЛАНС</h1>
-        </header>
+        <header class="header"><h1 class="header-title">БАЛАНС</h1></header>
 
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
-                <a href="index.html" class="nav-link">📊 Статистика</a>
-                <a href="logs.html" class="nav-link">📜 Логи</a>
-                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-                <a href="balance.html" class="nav-link active">⚖️ Баланс</a>
-                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-                <a href="gradient.html" class="nav-link">📈 Градиент</a>
-                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-                <a href="lore.html" class="nav-link">📜 Лор</a>
-                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
-                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                <a href="index.html" class="nav-link">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link active">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a><a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
             </nav>
         </div>
 
         <div class="card">
             <h2 class="card-title">📊 Классы</h2>
-            <div class="table-wrapper">
+			<div class="table-wrapper">
                 <table id="classes-balance-table">
                     <thead>
                         <tr>
-                            <th data-sort="name">Name</th><th>Emoji</th>
-                            <th data-sort="hp">HP  </th><th data-sort="atk">ATK </th><th data-sort="def">DEF </th>
-                            <th data-sort="min">MIN </th><th data-sort="max">MAX </th><th data-sort="avg">AVG </th>
-                            <th data-sort="acc">ACC </th><th data-sort="surv">SUR </th><th data-sort="dmg5">DMG </th>
-                            <th data-sort="power">PWR </th><th data-sort="cpi">CPI </th>
+                            <th data-sort="name">Класс</th><th>Эм</th>
+                            <th data-sort="hp" title="❤️ Здоровье">HP</th>
+                            <th data-sort="atk" title="⚔️ Атака — влияет на попадание">ATK</th>
+                            <th data-sort="def" title="🛡️ Защита — снижает урон на 5% за единицу">DEF</th>
+                            <th data-sort="dex" title="🏃 Ловкость — влияет на инициативу (d20 + DEX)">DEX</th>
+                            <th data-sort="min" title="⬇️ Минимальный урон">MIN</th>
+                            <th data-sort="max" title="⬆️ Максимальный урон">MAX</th>
+                            <th data-sort="avg" title="Средний урон = (MIN + MAX) / 2">AVG</th>
+                            <th data-sort="acc" title="Точность попадания">ACC</th>
+                            <th data-sort="surv" title="Живучесть">SUR</th>
+                            <th data-sort="dmg5" title="Урон за 5 ходов">DMG</th>
+                            <th data-sort="power" title="Общая боевая мощь">PWR</th>
+                            <th data-sort="cpi" title="Индекс силы">CPI</th>
                         </tr>
                     </thead>
                     <tbody id="classes-balance-tbody"></tbody>
@@ -289,9 +115,13 @@
                 <table id="races-balance-table">
                     <thead>
                         <tr>
-                            <th data-sort="name">Name</th><th>Emoji</th>
-                            <th data-sort="hp">HP </th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th>
-                            <th data-sort="min">MIN</th><th data-sort="max">MAX</th>
+                            <th data-sort="name">Раса</th><th>Эм</th>
+                            <th data-sort="hp" title="❤️ Бонус к здоровью">HP</th>
+                            <th data-sort="atk" title="⚔️ Бонус к атаке">ATK</th>
+                            <th data-sort="def" title="🛡️ Бонус к защите">DEF</th>
+                            <th data-sort="dex" title="🏃 Бонус к ловкости">DEX</th>
+                            <th data-sort="min" title="⬇️ Бонус к мин. урону">MIN</th>
+                            <th data-sort="max" title="⬆️ Бонус к макс. урону">MAX</th>
                         </tr>
                     </thead>
                     <tbody id="races-balance-tbody"></tbody>
@@ -299,52 +129,30 @@
             </div>
         </div>
 
-		<div class="card">
-			<h2 class="card-title">📐 Формулы баланса</h2>
-			<div id="formula-text"></div>
-		</div>
+        <div class="card">
+            <h2 class="card-title">📐 Формулы баланса</h2>
+            <div id="formula-text"></div>
+        </div>
     </div>
 
     <script>
         function toggleNav() {
-            const nav = document.getElementById('pageNav');
-            const btn = document.querySelector('.nav-toggle');
-            nav.classList.toggle('show');
-            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+            const nav = document.getElementById('pageNav'), btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show'); btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
         }
-
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                document.getElementById('pageNav').classList.remove('show');
-                document.querySelector('.nav-toggle').textContent = '☰ Меню';
-            });
-        });
+        document.querySelectorAll('.nav-link').forEach(link => { link.addEventListener('click', () => { document.getElementById('pageNav').classList.remove('show'); document.querySelector('.nav-toggle').textContent = '☰ Меню'; }); });
 
         const DATA_URL_RAW = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
         const DATA_URL_CDN = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
-
         let CONFIG = {};
 
         function fetchWithTimeout(url, timeout = 3000) {
-            return Promise.race([
-                fetch(url).then(r => { if (!r.ok) throw new Error(); return r; }),
-                new Promise((_, reject) => setTimeout(() => reject(new Error()), timeout))
-            ]);
+            return Promise.race([fetch(url).then(r => { if (!r.ok) throw new Error(); return r; }), new Promise((_, reject) => setTimeout(() => reject(new Error()), timeout))]);
         }
 
-        fetchWithTimeout(DATA_URL_RAW)
-            .catch(() => fetch(DATA_URL_CDN))
-            .then(r => r.json())
-            .then(data => {
-                CONFIG = data.config;
-                renderClasses(data.classes);
-				renderFormulaText();
-                renderRaces(data.races);
-                initSort();
-            })
-            .catch(() => {
-                document.getElementById('classes-balance-tbody').innerHTML = '<tr><td colspan="13" style="text-align:center;color:var(--red);">Ошибка загрузки</td></tr>';
-            });
+        fetchWithTimeout(DATA_URL_RAW).catch(() => fetch(DATA_URL_CDN)).then(r => r.json()).then(data => {
+            CONFIG = data.config; renderClasses(data.classes); renderFormulaText(); renderRaces(data.races); initSort();
+        }).catch(() => { document.getElementById('classes-balance-tbody').innerHTML = '<tr><td colspan="14" style="text-align:center;color:var(--red);">Ошибка загрузки</td></tr>'; });
 
         function calc(cls) {
             const avg = (cls.Min + cls.Max) / 2;
@@ -357,11 +165,7 @@
             if (cls.Atk > 8) { cpi -= (cls.Atk - 8) * 0.8; if (cls.Atk > 9) cpi -= (cls.Atk - 9) * 0.5; }
             if (cls.Min > 5) cpi += (cls.Min - 5) * 0.4;
             if (cls.Hp > 28) cpi += (cls.Hp - 28) * 0.2;
-            return {
-                avg: Math.round(avg*10)/10, acc: Math.round(accDisplay*100),
-                surv: Math.round(surv), dmg5: Math.round(avg*accDisplay*5),
-                cpi: Math.round(cpi*100)/100, power: Math.round(cpi*CONFIG.powerMultiplier*10)/10
-            };
+            return { avg: Math.round(avg*10)/10, acc: Math.round(accDisplay*100), surv: Math.round(surv), dmg5: Math.round(avg*accDisplay*5), cpi: Math.round(cpi*100)/100, power: Math.round(cpi*CONFIG.powerMultiplier*10)/10 };
         }
 
         function renderClasses(classes) {
@@ -369,12 +173,8 @@
             classes.forEach(cls => {
                 const d = calc(cls);
                 const tr = document.createElement('tr');
-                Object.assign(tr.dataset, { name:cls.Name, hp:cls.Hp, atk:cls.Atk, def:cls.Def, min:cls.Min, max:cls.Max, avg:d.avg, acc:d.acc, surv:d.surv, dmg5:d.dmg5, power:d.power, cpi:d.cpi });
-                tr.innerHTML = `<td>${cls.Name}</td><td>${cls.Emoji}</td>
-                    <td class="number">${cls.Hp}</td><td class="number">${cls.Atk}</td><td class="number">${cls.Def}</td>
-                    <td class="number">${cls.Min}</td><td class="number">${cls.Max}</td><td class="number">${d.avg.toFixed(1)}</td>
-                    <td class="number">${d.acc}%</td><td class="number">${d.surv}</td><td class="number">${d.dmg5}</td>
-                    <td class="number">${d.power.toFixed(1)}</td><td class="number">${d.cpi}</td>`;
+                Object.assign(tr.dataset, { name:cls.Name, hp:cls.Hp, atk:cls.Atk, def:cls.Def, dex:cls.Dex, min:cls.Min, max:cls.Max, avg:d.avg, acc:d.acc, surv:d.surv, dmg5:d.dmg5, power:d.power, cpi:d.cpi });
+                tr.innerHTML = `<td>${cls.Name}</td><td>${cls.Emoji}</td><td class="number">${cls.Hp}</td><td class="number">${cls.Atk}</td><td class="number">${cls.Def}</td><td class="number">${cls.Dex}</td><td class="number">${cls.Min}</td><td class="number">${cls.Max}</td><td class="number">${d.avg.toFixed(1)}</td><td class="number">${d.acc}%</td><td class="number">${d.surv}</td><td class="number">${d.dmg5}</td><td class="number">${d.power.toFixed(1)}</td><td class="number">${d.cpi}</td>`;
                 tbody.appendChild(tr);
             });
             sort('classes-balance-table', 'power', 'desc');
@@ -384,79 +184,37 @@
             const tbody = document.getElementById('races-balance-tbody');
             races.forEach(r => {
                 const tr = document.createElement('tr');
-                Object.assign(tr.dataset, { name:r.Name, hp:r.BonusHp, atk:r.BonusAtk, def:r.BonusDef, min:r.BonusMin, max:r.BonusMax });
-                tr.innerHTML = `<td>${r.Name}</td><td>${r.Emoji}</td>
-                    <td class="number">${r.BonusHp}</td><td class="number">${r.BonusAtk}</td><td class="number">${r.BonusDef}</td>
-                    <td class="number">${r.BonusMin}</td><td class="number">${r.BonusMax}</td>`;
+                Object.assign(tr.dataset, { name:r.Name, hp:r.BonusHp, atk:r.BonusAtk, def:r.BonusDef, dex:r.BonusDex, min:r.BonusMin, max:r.BonusMax });
+                tr.innerHTML = `<td>${r.Name}</td><td>${r.Emoji}</td><td class="number">${r.BonusHp}</td><td class="number">${r.BonusAtk}</td><td class="number">${r.BonusDef}</td><td class="number">${r.BonusDex}</td><td class="number">${r.BonusMin}</td><td class="number">${r.BonusMax}</td>`;
                 tbody.appendChild(tr);
             });
             sort('races-balance-table', 'name', 'asc');
         }
 
-		function sort(tableId, key, dir) {
-			const rows = Array.from(document.getElementById(tableId).querySelectorAll('tbody tr'));
-			rows.sort((a, b) => {
-				const va = key === 'name' ? a.dataset[key] : parseFloat(a.dataset[key]);
-				const vb = key === 'name' ? b.dataset[key] : parseFloat(b.dataset[key]);
-				return dir === 'asc' ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
-			});
-			const tbody = document.getElementById(tableId).querySelector('tbody');
-			rows.forEach(r => tbody.appendChild(r));
-		}
+        function sort(tableId, key, dir) {
+            const rows = Array.from(document.getElementById(tableId).querySelectorAll('tbody tr'));
+            rows.sort((a, b) => { const va = key === 'name' ? a.dataset[key] : parseFloat(a.dataset[key]); const vb = key === 'name' ? b.dataset[key] : parseFloat(b.dataset[key]); return dir === 'asc' ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1); });
+            const tbody = document.getElementById(tableId).querySelector('tbody'); rows.forEach(r => tbody.appendChild(r));
+        }
 
-		function initSort() {
-			document.querySelectorAll('th[data-sort]').forEach(th => {
-				th.addEventListener('click', () => {
-					const table = th.closest('table');
-					const key = th.dataset.sort;
-					const dir = th.classList.contains('asc') ? 'desc' : 'asc';
-					
-					table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc'));
-					th.classList.add(dir);
-					
-					sort(table.id, key, dir);
-				});
-			});
-		}
-		
-		function renderFormulaText() {
-		const c = CONFIG;
-		document.getElementById('formula-text').innerHTML = `
-			<div class="formula-box" style="margin-bottom:12px;">
-				<p style="color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:8px;">📊 POWER — общая боевая мощь класса</p>
-				<p>Чем выше POWER, тем сильнее класс в среднестатистическом бою.</p>
-			</div>
-			<div class="formula-box"><p><span>POWER = CPI × ${c.powerMultiplier}</span></p></div>
-			<div class="formula-box">
-				<p><span>CPI складывается из двух частей:</span></p>
-				<p style="margin-top:4px;">• <strong>Живучесть</strong> — сколько урона класс может выдержать</p>
-				<p>• <strong>Атака</strong> — сколько урона класс наносит</p>
-			</div>
-			<div class="formula-box"><p><span>CPI = Живучесть<sup>${c.cpiHpPower}</sup> × Атака<sup>${c.cpiDmgPower}</sup></span></p></div>
-			<div class="formula-box">
-				<p><span>Живучесть</span> = HP × (1 + DEF × ${c.effHpDefMult})</p>
-				<p class="text-muted">Каждое очко защиты (DEF) увеличивает эффективное здоровье на ${(c.effHpDefMult*100).toFixed(0)}%.</p>
-			</div>
-			<div class="formula-box">
-				<p><span>Атака</span> = Средний урон × Точность × Бонус атаки × ${c.cpiFixedReduction}</p>
-				<p class="text-muted" style="margin-top:4px;">• Средний урон = (MIN + MAX) / 2</p>
-				<p class="text-muted">• Точность = (${c.accBaseCPI} + ATK) / 20</p>
-				<p class="text-muted">• Бонус атаки = 1 + ATK × ${c.cpiAtkBonus}</p>
-			</div>
-			<div class="formula-box">
-				<p><span>🎯 Точность в бою:</span></p>
-				<p class="text-muted">• Базовая: ${c.hitChanceBase} + ATK</p>
-				<p class="text-muted">• Против DEF: (${c.hitChanceBase} + ATK − DEF) / 20</p>
-				<p class="text-muted">• Ограничена: ${(c.hitChanceMin*100).toFixed(0)}% − ${(c.hitChanceMax*100).toFixed(0)}%</p>
-			</div>
-			<div class="formula-box">
-				<p><span>⚙️ Скрытые поправки:</span></p>
-				<p class="text-muted">• ATK > 8 — штраф (потолок точности 95%)</p>
-				<p class="text-muted">• MIN > 5 — бонус (стабильность, нет слабых ударов)</p>
-				<p class="text-muted">• HP > 28 — бонус (запас здоровья)</p>
-			</div>
-		`;
-	}
+        function initSort() {
+            document.querySelectorAll('th[data-sort]').forEach(th => { th.addEventListener('click', () => { const table = th.closest('table'); const key = th.dataset.sort; const dir = th.classList.contains('asc') ? 'desc' : 'asc'; table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc')); th.classList.add(dir); sort(table.id, key, dir); }); });
+        }
+
+        function renderFormulaText() {
+            const c = CONFIG;
+            document.getElementById('formula-text').innerHTML = `
+                <div class="formula-box" style="margin-bottom:12px;"><p style="color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:8px;">📊 POWER — общая боевая мощь класса</p><p>Чем выше POWER, тем сильнее класс в среднестатистическом бою.</p></div>
+                <div class="formula-box"><p><span>POWER = CPI × ${c.powerMultiplier}</span></p></div>
+                <div class="formula-box"><p><span>CPI складывается из двух частей:</span></p><p style="margin-top:4px;">• <strong>Живучесть</strong> — сколько урона класс может выдержать</p><p>• <strong>Атака</strong> — сколько урона класс наносит</p></div>
+                <div class="formula-box"><p><span>CPI = Живучесть<sup>${c.cpiHpPower}</sup> × Атака<sup>${c.cpiDmgPower}</sup></span></p></div>
+                <div class="formula-box"><p><span>Живучесть</span> = HP × (1 + DEF × ${c.effHpDefMult})</p><p class="text-muted">Каждое очко защиты (DEF) увеличивает эффективное здоровье на ${(c.effHpDefMult*100).toFixed(0)}%.</p></div>
+                <div class="formula-box"><p><span>Атака</span> = Средний урон × Точность × Бонус атаки × ${c.cpiFixedReduction}</p><p class="text-muted" style="margin-top:4px;">• Средний урон = (MIN + MAX) / 2</p><p class="text-muted">• Точность = (${c.accBaseCPI} + ATK) / 20</p><p class="text-muted">• Бонус атаки = 1 + ATK × ${c.cpiAtkBonus}</p></div>
+                <div class="formula-box"><p><span>🎯 Точность в бою:</span></p><p class="text-muted">• Базовая: ${c.hitChanceBase} + ATK</p><p class="text-muted">• Против DEF: (${c.hitChanceBase} + ATK − DEF) / 20</p><p class="text-muted">• Ограничена: ${(c.hitChanceMin*100).toFixed(0)}% − ${(c.hitChanceMax*100).toFixed(0)}%</p></div>
+                <div class="formula-box"><p><span>⚙️ Скрытые поправки:</span></p><p class="text-muted">• ATK > 8 — штраф (потолок точности 95%)</p><p class="text-muted">• MIN > 5 — бонус (стабильность, нет слабых ударов)</p><p class="text-muted">• HP > 28 — бонус (запас здоровья)</p></div>
+                <div class="formula-box"><p><span>🏃 DEX (ловкость):</span></p><p class="text-muted">• Влияет только на инициативу: d20 + DEX</p><p class="text-muted">• Не влияет на POWER, CPI, точность или урон</p></div>
+            `;
+        }
     </script>
 </body>
 </html>
