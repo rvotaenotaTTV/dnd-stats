@@ -60,38 +60,19 @@
         .total-trophies { font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; }
 
         .podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-        .podium-card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 20px 14px; text-align: center; border: 1px solid var(--border-subtle); transition: var(--transition); }
+        .podium-card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 20px 14px; text-align: center; border: 1px solid var(--border-subtle); transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 6px; }
         .podium-card:hover { transform: translateY(-4px); }
-		.podium-card.gold {
-			border-color: rgba(255,215,0,1);
-			box-shadow: 0 0 25px rgba(255,215,0,0.2), 0 4px 12px rgba(0,0,0,0.3);
-			background: linear-gradient(180deg, rgba(255,215,0,0.15) 0%, rgba(255,180,0,0.05) 30%, var(--bg-elevated) 100%);
-		}
-		.podium-card.silver {
-			border-color: rgba(192,192,192,1);
-			box-shadow: 0 0 20px rgba(192,192,192,0.15), 0 4px 12px rgba(0,0,0,0.3);
-			background: linear-gradient(180deg, rgba(192,192,192,0.12) 0%, rgba(160,160,160,0.04) 30%, var(--bg-elevated) 100%);
-		}
-		.podium-card.bronze {
-			border-color: rgba(205,127,50,1);
-			box-shadow: 0 0 20px rgba(205,127,50,0.15), 0 4px 12px rgba(0,0,0,0.3);
-			background: linear-gradient(180deg, rgba(205,127,50,0.12) 0%, rgba(180,100,30,0.04) 30%, var(--bg-elevated) 100%);
-		}
-        .podium-medal { font-size: 2.4rem; margin-bottom: 4px; }
+        .podium-card.gold { border-color: rgba(255,215,0,1); box-shadow: 0 0 25px rgba(255,215,0,0.2), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(255,215,0,0.15) 0%, rgba(255,180,0,0.05) 30%, var(--bg-elevated) 100%); }
+        .podium-card.silver { border-color: rgba(192,192,192,1); box-shadow: 0 0 20px rgba(192,192,192,0.15), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(192,192,192,0.12) 0%, rgba(160,160,160,0.04) 30%, var(--bg-elevated) 100%); }
+        .podium-card.bronze { border-color: rgba(205,127,50,1); box-shadow: 0 0 20px rgba(205,127,50,0.15), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(205,127,50,0.12) 0%, rgba(180,100,30,0.04) 30%, var(--bg-elevated) 100%); }
+        .podium-medal { font-size: 2.4rem; }
+        .podium-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
         .podium-emoji { font-size: 1.2rem; margin-right: 4px; vertical-align: middle; }
-        .podium-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); word-break: break-word; display: inline; }
-        .podium-class { font-size: 0.75rem; color: var(--text-secondary); margin: 2px 0 8px; }
         .podium-record { font-size: 1.8rem; font-weight: 800; color: var(--gold); }
-        .podium-detail { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+        .podium-detail { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        .podium-class { display: none; }
 
-        .records-grid {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			gap: 10px;
-			margin-bottom: 24px;
-			padding-top: 20px;
-			border-top: 1px solid var(--border-subtle);
-		}
+        .records-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; padding-top: 20px; border-top: 1px solid var(--border-subtle); }
         .record-item { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; border: 1px solid var(--border-subtle); }
         .record-icon { font-size: 1.6rem; margin-bottom: 4px; }
         .record-value { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
@@ -99,7 +80,7 @@
         .record-player { font-size: 0.8rem; color: var(--text-secondary); margin-top: 6px; font-weight: 500; word-break: break-word; }
 
         .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 500px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         th { background: var(--bg-elevated); color: var(--gold); font-weight: 700; padding: 10px 12px; text-align: center; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--border-subtle); white-space: nowrap; }
         td { padding: 8px 12px; text-align: center; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
         tr:hover td { background: rgba(255,255,255,0.02); }
@@ -110,17 +91,6 @@
         .sortable-header.asc::after { content: '↑'; opacity: 1; color: var(--gold); }
         .sortable-header.desc::after { content: '↓'; opacity: 1; color: var(--gold); }
 
-        .rule-block { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; border-left: 3px solid var(--gold); }
-        .rule-block p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.7; }
-        .rule-block code { background: var(--bg-primary); padding: 2px 8px; border-radius: 4px; color: var(--gold); font-size: 0.9rem; font-weight: 600; border: 1px solid var(--border-subtle); }
-        .highlight-text { color: var(--gold); font-weight: 600; }
-
-        .passive-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
-        .passive-item { background: var(--bg-elevated); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-secondary); border-left: 3px solid var(--border-subtle); }
-        .passive-item strong { color: var(--text-primary); }
-        .mini-table { width: 100%; min-width: auto; font-size: 0.75rem; border-collapse: collapse; }
-        .mini-table th, .mini-table td { padding: 6px 8px; }
-		
 		#leaderboard-table th:nth-child(2),
 		#leaderboard-table td:nth-child(2),
 		#leaderboard-table th:nth-child(3),
@@ -133,56 +103,57 @@
 			padding-left: 14px;
 		}
 
+        .rule-block { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; border-left: 3px solid var(--gold); }
+        .rule-block p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.7; }
+        .rule-block code { background: var(--bg-primary); padding: 2px 8px; border-radius: 4px; color: var(--gold); font-size: 0.9rem; font-weight: 600; border: 1px solid var(--border-subtle); }
+        .highlight-text { color: var(--gold); font-weight: 600; }
+
+        .passive-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+        .passive-item { background: var(--bg-elevated); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-secondary); border-left: 3px solid var(--border-subtle); }
+        .passive-item strong { color: var(--text-primary); }
+        .mini-table { width: 100%; min-width: auto; font-size: 0.75rem; border-collapse: collapse; }
+        .mini-table th, .mini-table td { padding: 6px 8px; }
+
         .status-message { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
         .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-		@media (max-width: 768px) {
-			.container { padding: 12px 14px 32px; }
-			.card { padding: 18px 14px; border-radius: var(--radius-md); }
-			.nav-toggle { display: block; }
-			.nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
-			.nav-bar.show { display: flex; }
-			.nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
-			.header-title { font-size: 1.8rem; }   
-			.podium { display: flex; flex-direction: column; gap: 10px; }
-			.podium-card { 
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				text-align: center;
-				padding: 14px 12px;
-				gap: 4px;
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 32px; }
+            .card { padding: 18px 14px; border-radius: var(--radius-md); }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
+            .header-title { font-size: 1.8rem; }
+            .podium { display: flex; flex-direction: column; gap: 10px; }
+            .podium-card { padding: 14px 12px; gap: 4px; }
+            .podium-medal { font-size: 2rem; }
+            .podium-emoji { font-size: 1rem; }
+            .podium-name { font-size: 0.9rem; }
+            .podium-record { font-size: 1.4rem; }
+            .podium-detail { font-size: 0.7rem; padding-top: 6px; border-top: 1px solid var(--border-subtle); width: 100%; }
+            .tab-btn { padding: 10px 14px; font-size: 0.8rem; }
+            .records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            table { font-size: 0.72rem; }
+            th, td { padding: 6px 6px; }
+			
+			#leaderboard-table th:nth-child(2),
+			#leaderboard-table td:nth-child(2),
+			#leaderboard-table th:nth-child(3),
+			#leaderboard-table td:nth-child(3) {
+				min-width: 70px;
+				white-space: nowrap;
 			}
-			.podium-medal { font-size: 2rem; }
-			.podium-emoji { 
-				font-size: 1rem;
-				margin-right: 4px;
-				vertical-align: middle;
+
+			#all-table th:first-child,
+			#all-table td:first-child,
+			#all-table th:nth-child(2),
+			#all-table td:nth-child(2) {
+				min-width: 70px;
+				white-space: nowrap;
 			}
-			.podium-name { 
-				font-size: 0.9rem;
-				font-weight: 700;
-			}
-			.podium-class { display: none; }
-			.podium-record { 
-				font-size: 1.4rem;
-				font-weight: 800;
-				color: var(--gold);
-			}
-			.podium-detail { 
-				font-size: 0.7rem;
-				color: var(--text-muted);
-				padding-top: 6px;
-				border-top: 1px solid var(--border-subtle);
-				width: 100%;
-				text-align: center;
-			}
-			.tab-btn { padding: 10px 14px; font-size: 0.8rem; }
-			.records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-			table { font-size: 0.72rem; min-width: 450px; }
-			th, td { padding: 6px 8px; }
-		}
+        }
     </style>
 </head>
 <body>
@@ -234,45 +205,41 @@
                 </table>
             </div>
 
-			<div class="card">
-				<h3 class="card-title">🌍 Фракционные пассивки (случайная при входе)</h3>
-				
-				<h4 class="card-subtitle">🌝 Орден Света</h4>
-				<div class="passive-list">
-					<div class="passive-item">🔥 <strong>Очищение</strong> — священный огонь даёт дополнительные +4 HP к обычному восстановлению после каждой волны</div>
-					<div class="passive-item">⚡ <strong>Благословение</strong> — 20% шанс пропустить волну (счётчик волн растёт, но волна не засчитывается как пройденная)</div>
-					<div class="passive-item">💫 <strong>Сияние</strong> — все боссы теряют 20% здоровья (множитель ×1.5 снижается до ×1.2)</div>
-					<div class="passive-item">🛡️ <strong>Святая защита</strong> — первый удар в каждой волне полностью блокируется (0 урона)</div>
-					<div class="passive-item">✨ <strong>Вдохновение</strong> — вера придаёт сил: +1 к MIN и +1 к MAX урона на весь забег</div>
-					<div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс отразить 50% вражеского урона обратно в моба</div>
-					<div class="passive-item">⚔️ <strong>Святая ярость</strong> — +2 к MIN и MAX урона против боссов</div>
-					<div class="passive-item">💖 <strong>Искупление</strong> — один раз за данж: получив урон меньше 5 HP, полностью восстановить здоровье</div>
-				</div>
-
-				<h4 class="card-subtitle" style="color: var(--purple);">🌚 Культ Тьмы</h4>
-				<div class="passive-list">
-					<div class="passive-item">💀 <strong>Вампиризм</strong> — высасываешь жизнь из врагов: дополнительные +4 HP к обычному восстановлению после каждой волны</div>
-					<div class="passive-item">🕳️ <strong>Теневой шаг</strong> — 20% шанс раствориться во тьме и пропустить волну (счётчик растёт, но волна не очищена)</div>
-					<div class="passive-item">🩸 <strong>Кровавая жатва</strong> — каждая атака получает бонус к урону: (потерянное HP за эту волну) ÷ 4</div>
-					<div class="passive-item">👻 <strong>Призрачный щит</strong> — 25% шанс стать бесплотным и полностью избежать вражеского удара</div>
-					<div class="passive-item">🖤 <strong>Проклятие</strong> — аура тьмы ослабляет мобов: -1 ATK всем врагам (минимум 1 ATK)</div>
-					<div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс отразить 50% вражеского урона обратно в моба</div>
-					<div class="passive-item">🗡️ <strong>Казнь</strong> — если у моба меньше 25% HP, удар добивает его мгновенно</div>
-					<div class="passive-item">🎁 <strong>Тёмный дар</strong> — после убийства босса случайный бонус: +2 ATK, +1 MAX или +10 HP</div>
-				</div>
-			</div>
+            <div class="card">
+                <h3 class="card-title">🌍 Фракционные пассивки (случайная при входе)</h3>
+                <h4 class="card-subtitle">🌝 Орден Света</h4>
+                <div class="passive-list">
+                    <div class="passive-item">🔥 <strong>Очищение</strong> — священный огонь даёт дополнительные +4 HP к обычному восстановлению после каждой волны</div>
+                    <div class="passive-item">⚡ <strong>Благословение</strong> — 20% шанс пропустить волну (счётчик волн растёт, но волна не засчитывается как пройденная)</div>
+                    <div class="passive-item">💫 <strong>Сияние</strong> — все боссы теряют 20% здоровья (множитель ×1.5 снижается до ×1.2)</div>
+                    <div class="passive-item">🛡️ <strong>Святая защита</strong> — первый удар в каждой волне полностью блокируется (0 урона)</div>
+                    <div class="passive-item">✨ <strong>Вдохновение</strong> — вера придаёт сил: +1 к MIN и +1 к MAX урона на весь забег</div>
+                    <div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс отразить 50% вражеского урона обратно в моба</div>
+                    <div class="passive-item">⚔️ <strong>Святая ярость</strong> — +2 к MIN и MAX урона против боссов</div>
+                    <div class="passive-item">💖 <strong>Искупление</strong> — один раз за данж: получив урон меньше 5 HP, полностью восстановить здоровье</div>
+                </div>
+                <h4 class="card-subtitle" style="color: var(--purple);">🌚 Культ Тьмы</h4>
+                <div class="passive-list">
+                    <div class="passive-item">💀 <strong>Вампиризм</strong> — высасываешь жизнь из врагов: дополнительные +4 HP к обычному восстановлению после каждой волны</div>
+                    <div class="passive-item">🕳️ <strong>Теневой шаг</strong> — 20% шанс раствориться во тьме и пропустить волну (счётчик растёт, но волна не очищена)</div>
+                    <div class="passive-item">🩸 <strong>Кровавая жатва</strong> — каждая атака получает бонус к урону: (потерянное HP за эту волну) ÷ 4</div>
+                    <div class="passive-item">👻 <strong>Призрачный щит</strong> — 25% шанс стать бесплотным и полностью избежать вражеского удара</div>
+                    <div class="passive-item">🖤 <strong>Проклятие</strong> — аура тьмы ослабляет мобов: -1 ATK всем врагам (минимум 1 ATK)</div>
+                    <div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс отразить 50% вражеского урона обратно в моба</div>
+                    <div class="passive-item">🗡️ <strong>Казнь</strong> — если у моба меньше 25% HP, удар добивает его мгновенно</div>
+                    <div class="passive-item">🎁 <strong>Тёмный дар</strong> — после убийства босса случайный бонус: +2 ATK, +1 MAX или +10 HP</div>
+                </div>
+            </div>
 
             <div class="card">
                 <h3 class="card-title">🐉 Боссы (каждые 5 волн)</h3>
                 <div class="rule-block"><p>На волнах <span class="highlight-text">5, 10, 15, 20...</span> появляется босс:</p><p style="margin-top:10px;">🩸 HP ×1.5 от обычного<br>⚔️ ATK +2 к базовому<br>🛡️ DEF +1 к базовому</p></div>
             </div>
 
-			<div class="card">
-				<h3 class="card-title">🏰 Корона Раскола</h3>
-				<div class="rule-block">
-					<p>Каждый убитый босс приносит <span class="highlight-text">от 1 до 3 трофеев</span> в копилку фракции.<br> У какой фракции больше — та владеет Короной. При равенстве — равновесие ⚖️.</p>
-				</div>
-			</div>
+            <div class="card">
+                <h3 class="card-title">🏰 Корона Раскола</h3>
+                <div class="rule-block"><p>Каждый убитый босс приносит <span class="highlight-text">от 1 до 3 трофеев</span> в копилку фракции.<br> У какой фракции больше — та владеет Короной. При равенстве — равновесие ⚖️.</p></div>
+            </div>
 
             <div class="card">
                 <h3 class="card-title">👾 Статы мобов</h3>
@@ -330,63 +297,61 @@
             }
         }
 
-		function renderStats(players, territory) {
-			const sorted = [...players].sort((a, b) => b.record - a.record || b.damage - a.damage);
-			const total = territory.light + territory.dark;
-			const lp = total > 0 ? (territory.light * 100 / total) : 50;
-			const owner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
+        function renderStats(players, territory) {
+            const sorted = [...players].sort((a, b) => b.record - a.record || b.damage - a.damage);
+            const total = territory.light + territory.dark;
+            const lp = total > 0 ? (territory.light * 100 / total) : 50;
+            const owner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
 
-			let html = '';
-			html += `<div class="card"><div class="crown-section"><span class="crown-icon">👑</span><div class="crown-title">КОРОНА РАСКОЛА</div><div class="crown-owner">Владелец: ${owner}</div><div class="score-row"><span class="score-light">🌝 Свет: ${territory.light}</span><span class="score-dark">${territory.dark} :Тьма 🌚</span></div><div class="progress-bar"><div class="progress-fill progress-light" style="width:${lp}%">${lp>10?Math.round(lp)+'%':''}</div><div class="progress-fill progress-dark" style="width:${100-lp}%">${(100-lp)>10?Math.round(100-lp)+'%':''}</div></div><div class="total-trophies">Всего трофеев: ${total}</div></div></div>`;
+            let html = '';
+            html += `<div class="card"><div class="crown-section"><span class="crown-icon">👑</span><div class="crown-title">КОРОНА РАСКОЛА</div><div class="crown-owner">Владелец: ${owner}</div><div class="score-row"><span class="score-light">🌝 Свет: ${territory.light}</span><span class="score-dark">${territory.dark} :Тьма 🌚</span></div><div class="progress-bar"><div class="progress-fill progress-light" style="width:${lp}%">${lp>10?Math.round(lp)+'%':''}</div><div class="progress-fill progress-dark" style="width:${100-lp}%">${(100-lp)>10?Math.round(100-lp)+'%':''}</div></div><div class="total-trophies">Всего трофеев: ${total}</div></div></div>`;
 
-			const top3 = sorted.slice(0, 3);
-			html += '<div class="podium">';
-			top3.forEach((p, i) => {
-				html += `<div class="podium-card ${['gold','silver','bronze'][i]}"><div class="podium-medal">${['🥇','🥈','🥉'][i]}</div><div class="podium-name"><span class="podium-emoji">${p.emoji||'⚔️'}</span>${p.display||'???'}</div><div class="podium-record">${p.record}</div><div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses} · 🛡${p.blocks}</div></div>`;
-			});
-			html += '</div>';
+            const top3 = sorted.slice(0, 3);
+            html += '<div class="podium">';
+            top3.forEach((p, i) => {
+                html += `<div class="podium-card ${['gold','silver','bronze'][i]}"><div class="podium-medal">${['🥇','🥈','🥉'][i]}</div><div class="podium-name"><span class="podium-emoji">${p.emoji||'⚔️'}</span>${p.display||'???'}</div><div class="podium-record">${p.record}</div><div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses} · 🛡${p.blocks}</div></div>`;
+            });
+            html += '</div>';
 
-			const br = sorted[0];
-			const bd = [...players].sort((a,b)=>b.damage-a.damage)[0];
-			const bc = [...players].sort((a,b)=>b.crits-a.crits)[0];
-			const bb = [...players].sort((a,b)=>b.blocks-a.blocks)[0];
-			const bt = [...players].sort((a,b)=>(b.trophies||0)-(a.trophies||0))[0];
-			const bw = [...players].sort((a,b)=>(b.totalWaves||0)-(a.totalWaves||0))[0];
+            const br = sorted[0];
+            const bd = [...players].sort((a,b)=>b.damage-a.damage)[0];
+            const bc = [...players].sort((a,b)=>b.crits-a.crits)[0];
+            const bb = [...players].sort((a,b)=>b.blocks-a.blocks)[0];
+            const bt = [...players].sort((a,b)=>(b.trophies||0)-(a.trophies||0))[0];
+            const bw = [...players].sort((a,b)=>(b.totalWaves||0)-(a.totalWaves||0))[0];
 
-			html += '<div class="records-grid">';
-			const recs = [
-				['🏆', br.record, 'Рекорд волн', br],
-				['💥', bd.damage, 'Рекорд урона', bd],
-				['🎯', bc.crits, 'Рекорд критов', bc],
-				['🛡', bb.blocks, 'Рекорд блоков', bb],
-				['👑', bt?.trophies||0, 'Рекорд трофеев', bt],
-				['🌊', bw?.totalWaves||0, 'Всего волн', bw]
-			];
-			recs.forEach(([icon, val, label, p]) => {
-				html += `<div class="record-item"><div class="record-icon">${icon}</div><div class="record-value">${val}</div><div class="record-label">${label}</div><div class="record-player">${p?.emoji||''} ${p?.display||'???'}</div></div>`;
-			});
-			html += '</div>';
+            html += '<div class="records-grid">';
+            const recs = [
+                ['🏆', br.record, 'Рекорд волн', br],
+                ['💥', bd.damage, 'Рекорд урона', bd],
+                ['🎯', bc.crits, 'Рекорд критов', bc],
+                ['🛡', bb.blocks, 'Рекорд блоков', bb],
+                ['👑', bt?.trophies||0, 'Рекорд трофеев', bt],
+                ['🌊', bw?.totalWaves||0, 'Всего волн', bw]
+            ];
+            recs.forEach(([icon, val, label, p]) => {
+                html += `<div class="record-item"><div class="record-icon">${icon}</div><div class="record-value">${val}</div><div class="record-label">${label}</div><div class="record-player">${p?.emoji||''} ${p?.display||'???'}</div></div>`;
+            });
+            html += '</div>';
 
-			// Таблица 1 — Топ-10 лидеров
-			html += `<div class="card"><h3 class="card-title">📊 Топ-10 лидеров</h3><div class="table-container"><table id="leaderboard-table"><thead><tr><th class="sortable-header" data-sort="record">Волн</th><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="damage">Урон</th><th class="sortable-header" data-sort="crits">💥</th><th class="sortable-header" data-sort="misses">❌</th><th class="sortable-header" data-sort="blocks">🛡</th></tr></thead><tbody id="leaderboard-tbody">`;
-			sorted.slice(0, 10).forEach(p => {
-				html += `<tr data-record="${p.record}" data-display="${p.display||''}" data-class="${p.name||''}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}"><td class="highlight">${p.record}</td><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td></tr>`;
-			});
-			html += '</tbody></table></div></div>';
+            html += `<div class="card"><h3 class="card-title">📊 Топ-10 лидеров</h3><div class="table-container"><table id="leaderboard-table" class="table-left"><thead><tr><th class="sortable-header" data-sort="record">Волн</th><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="damage">Урон</th><th class="sortable-header" data-sort="crits">💥</th><th class="sortable-header" data-sort="misses">❌</th><th class="sortable-header" data-sort="blocks">🛡</th></tr></thead><tbody id="leaderboard-tbody">`;
+            sorted.slice(0, 10).forEach(p => {
+                html += `<tr data-record="${p.record}" data-display="${p.display||''}" data-class="${p.name||''}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}"><td class="highlight">${p.record}</td><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td></tr>`;
+            });
+            html += '</tbody></table></div></div>';
 
-			// Таблица 2 — Все участники
-			const byTrophies = [...players].sort((a,b)=>(b.trophies||0)-(a.trophies||0)||(b.bosses||0)-(a.bosses||0));
-			html += `<div class="card"><h3 class="card-title">👥 Все участники</h3><div class="table-container"><table id="all-table"><thead><tr><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="waves">🌊 Заходы</th><th class="sortable-header" data-sort="trophies">👑 Трофеи</th><th class="sortable-header" data-sort="bosses">🐉 Боссы</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="all-tbody">`;
-			byTrophies.forEach(p => {
-				const fi = p.faction === 'Орден Света' ? '🌝 Свет' : (p.faction === 'Культ Тьмы' ? '🌚 Тьма' : '');
-				html += `<tr data-display="${p.display||''}" data-class="${p.name||''}" data-waves="${p.totalWaves||0}" data-trophies="${p.trophies||0}" data-bosses="${p.bosses||0}" data-faction="${fi}"><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.totalWaves||0}</td><td class="highlight">${p.trophies||0}</td><td>${p.bosses||0}</td><td>${fi}</td></tr>`;
-			});
-			html += '</tbody></table></div></div>';
+            const byTrophies = [...players].sort((a,b)=>(b.trophies||0)-(a.trophies||0)||(b.bosses||0)-(a.bosses||0));
+            html += `<div class="card"><h3 class="card-title">👥 Все участники</h3><div class="table-container"><table id="all-table" class="table-left"><thead><tr><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="waves">🌊 Заходы</th><th class="sortable-header" data-sort="trophies">👑 Трофеи</th><th class="sortable-header" data-sort="bosses">🐉 Боссы</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="all-tbody">`;
+            byTrophies.forEach(p => {
+                const fi = p.faction === 'Орден Света' ? '🌝 Свет' : (p.faction === 'Культ Тьмы' ? '🌚 Тьма' : '');
+                html += `<tr data-display="${p.display||''}" data-class="${p.name||''}" data-waves="${p.totalWaves||0}" data-trophies="${p.trophies||0}" data-bosses="${p.bosses||0}" data-faction="${fi}"><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.totalWaves||0}</td><td class="highlight">${p.trophies||0}</td><td>${p.bosses||0}</td><td>${fi}</td></tr>`;
+            });
+            html += '</tbody></table></div></div>';
 
-			document.getElementById('stats-loading').innerHTML = html;
-			initSortable('leaderboard-table', 'record', 'desc');
-			initSortable('all-table', 'trophies', 'desc');
-		}
+            document.getElementById('stats-loading').innerHTML = html;
+            initSortable('leaderboard-table', 'record', 'desc');
+            initSortable('all-table', 'trophies', 'desc');
+        }
 
         function initSortable(tableId, defaultSort, defaultDir) {
             setTimeout(() => {
