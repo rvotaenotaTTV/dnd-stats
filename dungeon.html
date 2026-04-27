@@ -78,8 +78,8 @@
 			background: linear-gradient(180deg, rgba(205,127,50,0.12) 0%, rgba(180,100,30,0.04) 30%, var(--bg-elevated) 100%);
 		}
         .podium-medal { font-size: 2.4rem; margin-bottom: 4px; }
-        .podium-emoji { font-size: 2.2rem; margin-bottom: 4px; }
-        .podium-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); word-break: break-word; }
+        .podium-emoji { font-size: 1.2rem; margin-right: 4px; vertical-align: middle; }
+        .podium-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); word-break: break-word; display: inline; }
         .podium-class { font-size: 0.75rem; color: var(--text-secondary); margin: 2px 0 8px; }
         .podium-record { font-size: 1.8rem; font-weight: 800; color: var(--gold); }
         .podium-detail { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
@@ -120,6 +120,18 @@
         .passive-item strong { color: var(--text-primary); }
         .mini-table { width: 100%; min-width: auto; font-size: 0.75rem; border-collapse: collapse; }
         .mini-table th, .mini-table td { padding: 6px 8px; }
+		
+		#leaderboard-table th:nth-child(2),
+		#leaderboard-table td:nth-child(2),
+		#leaderboard-table th:nth-child(3),
+		#leaderboard-table td:nth-child(3),
+		#all-table th:first-child,
+		#all-table td:first-child,
+		#all-table th:nth-child(2),
+		#all-table td:nth-child(2) {
+			text-align: left;
+			padding-left: 14px;
+		}
 
         .status-message { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
         .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
@@ -135,40 +147,30 @@
 			.header-title { font-size: 1.8rem; }   
 			.podium { display: flex; flex-direction: column; gap: 10px; }
 			.podium-card { 
-				display: grid;
-				grid-template-columns: 1fr 1fr 1fr;
-				grid-template-rows: auto auto auto;
+				display: flex;
+				flex-direction: column;
 				align-items: center;
-				justify-items: center;
 				text-align: center;
 				padding: 14px 12px;
 				gap: 4px;
 			}
-			.podium-medal { 
-				font-size: 2rem; 
-				grid-column: 2;
-				grid-row: 1;
-			}
+			.podium-medal { font-size: 2rem; }
 			.podium-emoji { 
-				font-size: 1.5rem; 
-				grid-column: 1;
-				grid-row: 2;
-				justify-self: end;
-				margin-right: 2px;
+				font-size: 1rem;
+				margin-right: 4px;
+				vertical-align: middle;
 			}
 			.podium-name { 
-				font-size: 0.9rem; 
-				grid-column: 2;
-				grid-row: 2;
+				font-size: 0.9rem;
+				font-weight: 700;
 			}
 			.podium-class { display: none; }
 			.podium-record { 
-				font-size: 1.4rem; 
-				grid-column: 2;
-				grid-row: 3;
+				font-size: 1.4rem;
+				font-weight: 800;
+				color: var(--gold);
 			}
 			.podium-detail { 
-				grid-column: 1 / -1;
 				font-size: 0.7rem;
 				color: var(--text-muted);
 				padding-top: 6px;
@@ -340,7 +342,7 @@
 			const top3 = sorted.slice(0, 3);
 			html += '<div class="podium">';
 			top3.forEach((p, i) => {
-				html += `<div class="podium-card ${['gold','silver','bronze'][i]}"><div class="podium-medal">${['🥇','🥈','🥉'][i]}</div><div class="podium-emoji">${p.emoji||'⚔️'}</div><div class="podium-name">${p.display||'???'}</div><div class="podium-class">${p.name||''}</div><div class="podium-record">${p.record}</div><div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses} · 🛡${p.blocks}</div></div>`;
+				html += `<div class="podium-card ${['gold','silver','bronze'][i]}"><div class="podium-medal">${['🥇','🥈','🥉'][i]}</div><div class="podium-name"><span class="podium-emoji">${p.emoji||'⚔️'}</span>${p.display||'???'}</div><div class="podium-record">${p.record}</div><div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses} · 🛡${p.blocks}</div></div>`;
 			});
 			html += '</div>';
 
