@@ -2,475 +2,176 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Таверна</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0e14;
-            --bg-secondary: #11161d;
-            --bg-card: #161c24;
-            --bg-elevated: #1c2330;
-            --border-subtle: #252d38;
-            --text-primary: #e8edf4;
-            --text-secondary: #8b95a5;
-            --text-muted: #5c6675;
-            --gold: #ffd700;
-            --brown: #8b5e2e;
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
-            --shadow-gold: 0 0 20px rgba(255,215,0,0.15);
-            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-primary: #0a0e14; --bg-secondary: #11161d; --bg-card: #161c24; --bg-elevated: #1c2330;
+            --border-subtle: #252d38; --text-primary: #e8edf4; --text-secondary: #8b95a5; --text-muted: #5c6675;
+            --gold: #ffd700; --red: #e5534b; --green: #3fb950; --orange: #ff8c00;
+            --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px;
+            --shadow-gold: 0 0 20px rgba(255,215,0,0.15); --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             background: var(--bg-primary);
-            background-image: 
-                radial-gradient(ellipse at 15% 10%, rgba(255,140,0,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 85% 20%, rgba(139,69,19,0.08) 0%, transparent 50%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+            background-image: radial-gradient(ellipse at 15% 10%, rgba(255,140,0,0.06) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(139,69,19,0.08) 0%, transparent 50%);
+            color: var(--text-primary); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased;
         }
-
         .container { max-width: 800px; margin: 0 auto; padding: 20px 24px 40px; }
-
         .header { text-align: center; padding: 30px 0 20px; }
-
-        .header-title {
-            font-size: clamp(1.8rem, 5vw, 2.4rem);
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ffd700 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 15px rgba(255,140,0,0.4));
-        }
-
-        .header-subtitle {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            margin-top: 4px;
-        }
-
+        .header-title { font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -0.02em; background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 15px rgba(255,140,0,0.4)); }
+        .header-subtitle { font-size: 0.9rem; color: var(--text-secondary); font-weight: 400; margin-top: 4px; }
         .nav-wrapper { margin-bottom: 28px; }
-
-        .nav-toggle {
-            display: none;
-            width: 100%;
-            padding: 14px 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            color: var(--gold);
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: left;
-            font-family: inherit;
-            transition: var(--transition);
-        }
-
+        .nav-toggle { display: none; width: 100%; padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--gold); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; transition: var(--transition); }
         .nav-toggle:hover { background: var(--bg-elevated); }
-
-        .nav-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: center;
-            padding: 8px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .nav-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 18px;
-            border-radius: 20px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
         .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; box-shadow: var(--shadow-gold); }
 
-        .nav-link.active {
-            background: var(--gold);
-            color: var(--bg-primary);
-            font-weight: 700;
-            box-shadow: var(--shadow-gold);
-        }
-
-        .tavern-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tavern-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ff8c00, var(--gold), #ff8c00, transparent);
-            opacity: 0.6;
-        }
-
+        .tavern-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .tavern-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #ff8c00, var(--gold), #ff8c00, transparent); opacity: 0.6; }
         .tavern-card.flash-win { animation: winFlash 0.5s; }
+        @keyframes winFlash { 0%{box-shadow:0 0 0 rgba(255,215,0,0)} 50%{box-shadow:0 0 30px rgba(255,215,0,0.6)} 100%{box-shadow:0 0 0 rgba(255,215,0,0)} }
 
-        @keyframes winFlash {
-            0% { box-shadow: 0 0 0 rgba(255,215,0,0); }
-            50% { box-shadow: 0 0 30px rgba(255,215,0,0.6); }
-            100% { box-shadow: 0 0 0 rgba(255,215,0,0); }
-        }
-
-        .innkeeper {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: var(--bg-elevated);
-            border-radius: var(--radius-md);
-            padding: 16px 18px;
-            margin-bottom: 20px;
-            border-left: 3px solid var(--gold);
-        }
-
-        .innkeeper-avatar { font-size: 2.5rem; }
-        .innkeeper-text { flex: 1; }
+        .innkeeper { display: flex; align-items: center; gap: 14px; background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px 18px; margin-bottom: 20px; border-left: 3px solid var(--gold); }
+        .innkeeper-avatar { font-size: 2.5rem; } .innkeeper-text { flex: 1; }
         .innkeeper-name { color: var(--gold); font-weight: 700; font-size: 1rem; }
         .innkeeper-quote { color: var(--text-secondary); font-style: italic; font-size: 0.85rem; }
-
-        .balance-badge {
-            background: var(--bg-elevated);
-            border: 1px solid var(--gold);
-            border-radius: 25px;
-            padding: 6px 16px;
-            color: var(--gold);
-            font-weight: 700;
-            font-size: 0.9rem;
-            transition: transform 0.2s;
-        }
-
+        .balance-badge { background: var(--bg-elevated); border: 1px solid var(--gold); border-radius: 25px; padding: 6px 16px; color: var(--gold); font-weight: 700; font-size: 0.9rem; }
         .balance-badge.shake { animation: shake 0.3s; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
 
-        @keyframes shake {
-            0%,100% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            75% { transform: translateX(3px); }
-        }
-
-        .game-select {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-        }
-
-        .game-option {
-            flex: 1;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 24px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .game-option:hover {
-            border-color: var(--gold);
-            transform: translateY(-2px);
-        }
-
-        .game-option-emoji { font-size: 2.5rem; margin-bottom: 8px; }
-        .game-option-name { color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
-        .game-option-desc { color: var(--text-muted); font-size: 0.8rem; }
-
+        .game-select { display: flex; gap: 12px; justify-content: center; }
+        .game-option { flex: 1; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px 12px; text-align: center; cursor: pointer; transition: var(--transition); }
+        .game-option:hover { border-color: var(--gold); transform: translateY(-2px); }
+        .game-option-emoji { font-size: 2rem; margin-bottom: 6px; }
+        .game-option-name { color: var(--gold); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+        .game-option-desc { color: var(--text-muted); font-size: 0.7rem; }
         .game-panel { display: none; }
         .game-panel.active { display: block; animation: fadeIn 0.3s ease; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .game-area {
-            background: var(--bg-elevated);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            border: 1px solid var(--border-subtle);
-        }
-
+        @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        .game-area { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border-subtle); }
         .game-area h3 { color: var(--gold); font-size: 1rem; text-align: center; margin-bottom: 16px; }
 
-        .cards-container {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin: 12px 0;
-            min-height: 100px;
-        }
-
-        .card {
-            width: 65px;
-            height: 95px;
-            background: linear-gradient(145deg, #fff, #e6e6e6);
-            border-radius: 10px;
-            border: 1px solid #999;
-            box-shadow: 0 5px 0 #999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            font-weight: 800;
-            color: #0d1117;
-            animation: deal 0.3s ease;
-            transform: rotate(var(--rot, 0deg));
-        }
-
-        @keyframes deal {
-            from { transform: translateY(-20px) scale(0.8) rotate(var(--rot)); opacity: 0; }
-            to { transform: translateY(0) scale(1) rotate(var(--rot)); opacity: 1; }
-        }
-
-        .card.red { color: #c0392b; }
-        .card.back {
-            background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 5px, #34495e 5px, #34495e 10px);
-            color: transparent;
-            box-shadow: 0 5px 0 #1a252f;
-        }
-
-        .card-suit { font-size: 22px; }
-
-        .score { text-align: center; font-size: 0.9rem; margin: 10px 0; color: var(--text-secondary); }
-        .score-value { color: var(--gold); font-size: 1.5rem; font-weight: 800; }
-
-        .bet-info { text-align: center; margin: 12px 0; font-size: 0.9rem; color: var(--text-secondary); }
+        .cards-container { display: flex; justify-content: center; gap: 10px; margin: 12px 0; min-height: 90px; }
+        .card-el { width: 55px; height: 80px; background: linear-gradient(145deg,#fff,#e6e6e6); border-radius: 8px; border: 1px solid #999; box-shadow: 0 4px 0 #999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #0d1117; animation: deal 0.3s ease; transform: rotate(var(--rot,0deg)); }
+        @keyframes deal { from{transform:translateY(-20px) scale(0.8) rotate(var(--rot));opacity:0} to{transform:translateY(0) scale(1) rotate(var(--rot));opacity:1} }
+        .card-el.red { color: #c0392b; }
+        .card-el.back { background: repeating-linear-gradient(45deg,#2c3e50,#2c3e50 5px,#34495e 5px,#34495e 10px); color: transparent; box-shadow: 0 4px 0 #1a252f; }
+        .card-suit { font-size: 18px; }
+        .score { text-align: center; font-size: 0.85rem; margin: 8px 0; color: var(--text-secondary); }
+        .score-value { color: var(--gold); font-size: 1.3rem; font-weight: 800; }
+        .bet-info { text-align: center; margin: 10px 0; font-size: 0.85rem; color: var(--text-secondary); }
         .bet-info span { color: var(--gold); font-weight: 700; }
-
         .game-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-
-        .btn {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: 25px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            font-size: 0.9rem;
-            font-family: inherit;
-        }
-
-        .btn-primary {
-            background: var(--gold);
-            color: #1a1a1a;
-            box-shadow: 0 4px 0 #b8860b;
-        }
-
+        .btn { flex: 1; padding: 11px 14px; border-radius: 25px; font-weight: 700; cursor: pointer; transition: var(--transition); border: none; font-size: 0.85rem; font-family: inherit; position: relative; overflow: hidden; }
+        .btn-primary { background: var(--gold); color: #1a1a1a; box-shadow: 0 4px 0 #b8860b; }
         .btn-primary:hover { background: #ffe44d; transform: translateY(-2px); box-shadow: 0 6px 0 #b8860b; }
         .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 #b8860b; }
-
-        .btn-secondary {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-        }
-
+        .btn-secondary { background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-primary); }
         .btn-secondary:hover { border-color: var(--gold); background: #252d38; }
-
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
-
-        .back-btn {
-            display: block;
-            text-align: center;
-            margin-top: 14px;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; transform: none !important; box-shadow: none !important; }
+        .back-btn { display: block; text-align: center; margin-top: 14px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; }
         .back-btn:hover { color: var(--gold); }
 
-        .drawn-cards {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            margin: 12px 0;
-            min-height: 120px;
-        }
-
-        .pig-card {
-            width: 80px;
-            height: 115px;
-            background: linear-gradient(145deg, #fff, #e6e6e6);
-            border-radius: 10px;
-            border: 1px solid #999;
-            box-shadow: 0 5px 0 #999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 800;
-            color: #0d1117;
-            animation: deal 0.3s ease;
-            transform: rotate(var(--rot, 0deg));
-        }
-
-        .pig-card.red { color: #c0392b; }
-        .pig-card-suit { font-size: 24px; }
-
-        .last-card-info { color: var(--gold); font-size: 0.9rem; margin: 8px 0; min-height: 22px; text-align: center; }
-
-        .multiplier-box {
-            display: inline-block;
-            background: var(--bg-elevated);
-            border: 1px solid var(--gold);
-            border-radius: 20px;
-            padding: 8px 18px;
-            margin: 8px 0;
-            text-align: center;
-        }
-
-        .multiplier-value { font-size: 1.5rem; color: var(--gold); font-weight: 800; }
-
-        .history-box {
-            margin-top: 16px;
-            padding: 12px;
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-subtle);
-            max-height: 140px;
-            overflow-y: auto;
-        }
-
-        .history-item {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            padding: 4px 0;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
+        .drawn-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 10px 0; min-height: 100px; }
+        .pig-card { width: 65px; height: 95px; background: linear-gradient(145deg,#fff,#e6e6e6); border-radius: 8px; border: 1px solid #999; box-shadow: 0 4px 0 #999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: #0d1117; animation: deal 0.3s ease; transform: rotate(var(--rot,0deg)); }
+        .pig-card.red { color: #c0392b; } .pig-card-suit { font-size: 20px; }
+        .last-card-info { color: var(--gold); font-size: 0.85rem; margin: 6px 0; min-height: 20px; text-align: center; }
+        .multiplier-box { display: inline-block; background: var(--bg-elevated); border: 1px solid var(--gold); border-radius: 20px; padding: 6px 16px; margin: 6px 0; text-align: center; }
+        .multiplier-value { font-size: 1.3rem; color: var(--gold); font-weight: 800; }
+        .history-box { margin-top: 14px; padding: 10px; background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); max-height: 120px; overflow-y: auto; }
+        .history-item { color: var(--text-secondary); font-size: 0.72rem; padding: 3px 0; border-bottom: 1px solid var(--border-subtle); }
         .history-item:last-child { border-bottom: none; }
+
+        /* SUDOKU 2.0 */
+        .sudoku-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 16px 0; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid var(--border-subtle); }
+        .sudoku-cell { aspect-ratio: 1; background: var(--bg-card); border: 2px solid var(--border-subtle); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; cursor: pointer; transition: all 0.15s; color: var(--text-primary); user-select: none; position: relative; }
+        .sudoku-cell:hover { border-color: var(--gold); background: #252d38; transform: scale(1.03); z-index: 1; }
+        .sudoku-cell.fixed { color: var(--gold); cursor: default; background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,140,0,0.06)); border-color: rgba(255,215,0,0.3); font-size: 1.5rem; text-shadow: 0 0 8px rgba(255,215,0,0.3); }
+        .sudoku-cell.selected { border-color: var(--gold); box-shadow: 0 0 14px rgba(255,215,0,0.4), inset 0 0 8px rgba(255,215,0,0.1); background: #252d38; transform: scale(1.05); z-index: 1; }
+        .sudoku-cell.same-row-col { background: rgba(255,215,0,0.04); }
+        .sudoku-cell.player-filled { color: #fff; font-weight: 700; }
+        .sudoku-cell.error { color: var(--red); border-color: var(--red); animation: shake 0.3s; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
+        
+        .num-pad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 12px 0; }
+        .num-btn { padding: 14px 8px; border-radius: 10px; border: 2px solid var(--border-subtle); background: var(--bg-elevated); color: var(--text-primary); font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: var(--transition); font-family: inherit; }
+        .num-btn:hover { border-color: var(--gold); background: #252d38; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .num-btn:active { transform: scale(0.95); }
+        .num-btn.clear-btn { color: var(--red); border-color: rgba(229,83,75,0.3); font-size: 0.85rem; font-weight: 600; }
+        .num-btn.clear-btn:hover { border-color: var(--red); background: rgba(229,83,75,0.1); }
+        .win-message { text-align: center; padding: 16px; color: var(--gold); font-size: 1.2rem; font-weight: 800; animation: fadeIn 0.5s ease; text-shadow: 0 0 10px rgba(255,215,0,0.4); }
+
+        .sudoku-timer { text-align: center; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px; }
+        .sudoku-timer span { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
-
             .nav-toggle { display: block; }
-
-            .nav-bar {
-                display: none;
-                flex-direction: column;
-                gap: 2px;
-                margin-top: 8px;
-                padding: 4px;
-            }
-
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
-
-            .nav-link {
-                padding: 12px 16px;
-                border-radius: var(--radius-sm);
-                justify-content: center;
-            }
-
+            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
             .header-title { font-size: 1.5rem; }
             .tavern-card { padding: 16px 12px; }
-
             .game-select { flex-direction: column; }
-            .game-option { padding: 16px; }
-            .game-option-emoji { font-size: 2rem; }
-
-            .card { width: 50px; height: 72px; font-size: 20px; }
-            .card-suit { font-size: 16px; }
-            .pig-card { width: 60px; height: 88px; font-size: 24px; }
-            .pig-card-suit { font-size: 18px; }
-
+            .game-option { padding: 14px; }
+            .game-option-emoji { font-size: 1.6rem; }
+            .card-el { width: 42px; height: 60px; font-size: 16px; }
+            .card-suit { font-size: 14px; }
+            .pig-card { width: 50px; height: 72px; font-size: 20px; }
+            .pig-card-suit { font-size: 16px; }
             .innkeeper { padding: 12px 14px; }
             .innkeeper-avatar { font-size: 2rem; }
             .innkeeper-quote { font-size: 0.78rem; }
+            .sudoku-cell { font-size: 1.1rem; }
+            .num-btn { font-size: 1rem; padding: 12px 6px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1 class="header-title">ТАВЕРНА «ОЧКО ЭТЕРНИСА»</h1>
-            <p class="header-subtitle">ГуангГуанг ждёт тебя, странник</p>
-        </header>
+        <header class="header"><h1 class="header-title">ТАВЕРНА «ОЧКО ЭТЕРНИСА»</h1><p class="header-subtitle">ГуангГуанг ждёт тебя, странник</p></header>
 
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
-                <a href="index.html" class="nav-link">📊 Статистика</a>
-                <a href="logs.html" class="nav-link">📜 Логи</a>
-                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
-                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-                <a href="gradient.html" class="nav-link">📈 Градиент</a>
-                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-                <a href="lore.html" class="nav-link">📜 Лор</a>
-                <a href="tavern.html" class="nav-link active">🍺 Таверна</a>
-                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                <a href="index.html" class="nav-link">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link active">🍺 Таверна</a><a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
             </nav>
         </div>
 
         <div class="tavern-card" id="tavernCard">
             <div class="innkeeper">
                 <div class="innkeeper-avatar">🐼🍺</div>
-                <div class="innkeeper-text">
-                    <div class="innkeeper-name">Трактирщик ГуангГуанг</div>
-                    <div class="innkeeper-quote" id="innkeeperQuote">Сыграем в очко, странник? Или, может, в пьяную свинью?</div>
-                </div>
+                <div class="innkeeper-text"><div class="innkeeper-name">Трактирщик ГуангГуанг</div><div class="innkeeper-quote" id="innkeeperQuote">Сыграем в очко, странник?</div></div>
                 <div class="balance-badge" id="balance">💎 100</div>
             </div>
 
             <div id="panel-select" class="game-panel active">
                 <div class="game-select">
-                    <div class="game-option" onclick="selectGame('ochko')">
-                        <div class="game-option-emoji">🃏</div>
-                        <div class="game-option-name">Двадцать одно</div>
-                        <div class="game-option-desc">Набери 21, не перебери</div>
-                    </div>
-                    <div class="game-option" onclick="selectGame('pig')">
-                        <div class="game-option-emoji">🐷</div>
-                        <div class="game-option-name">Пьяная свинья</div>
-                        <div class="game-option-desc">Тяни карты — множитель растёт. Повторил масть — всё сгорело</div>
-                    </div>
+                    <div class="game-option" onclick="selectGame('ochko')"><div class="game-option-emoji">🃏</div><div class="game-option-name">Двадцать одно</div><div class="game-option-desc">Набери 21, не перебери</div></div>
+                    <div class="game-option" onclick="selectGame('pig')"><div class="game-option-emoji">🐷</div><div class="game-option-name">Пьяная свинья</div><div class="game-option-desc">Тяни карты — множитель растёт</div></div>
+                    <div class="game-option" onclick="selectGame('sudoku')"><div class="game-option-emoji">🧩</div><div class="game-option-name">Судоку</div><div class="game-option-desc">Сетка 5×5, таймер, бонус</div></div>
                 </div>
             </div>
 
+            <!-- Очко -->
             <div id="panel-ochko" class="game-panel">
                 <div class="game-area">
                     <h3>🃏 Двадцать одно</h3>
-                    <div style="text-align:center;color:var(--text-muted);">Карты ГуангГуанга</div>
-                    <div class="cards-container" id="dealerCards"></div>
+                    <div style="text-align:center;color:var(--text-muted);">Карты ГуангГуанга</div><div class="cards-container" id="dealerCards"></div>
                     <div class="score">Сумма: <span class="score-value" id="dealerScore">0</span></div>
-                    <div style="text-align:center;color:var(--text-muted);margin-top:16px;">Твои карты</div>
-                    <div class="cards-container" id="playerCards"></div>
+                    <div style="text-align:center;color:var(--text-muted);margin-top:14px;">Твои карты</div><div class="cards-container" id="playerCards"></div>
                     <div class="score">Сумма: <span class="score-value" id="playerScore">0</span></div>
                     <div class="bet-info">🎲 Ставка: <span>10 💎</span></div>
                     <div class="game-buttons">
@@ -478,197 +179,230 @@
                         <button class="btn btn-secondary" id="hitBtn" onclick="ochko.hit()" disabled>➕ Ещё</button>
                         <button class="btn btn-secondary" id="standBtn" onclick="ochko.stand()" disabled>✋ Я всё</button>
                     </div>
-                    <div class="back-btn" onclick="backToSelect()">← Назад к выбору</div>
+                    <div class="back-btn" onclick="backToSelect()">← Назад</div>
                 </div>
             </div>
 
+            <!-- Свинья -->
             <div id="panel-pig" class="game-panel">
                 <div class="game-area">
                     <h3>🐷 Пьяная свинья</h3>
-                    <div class="last-card-info" id="lastCardInfo"></div>
-                    <div class="drawn-cards" id="drawnCards"></div>
-                    <div style="text-align:center;">
-                        <div class="multiplier-box">
-                            <span style="color:var(--text-muted);">Множитель </span>
-                            <span class="multiplier-value" id="multiplier">x1</span>
-                            <span style="color:var(--text-muted);font-size:0.8rem;"> → <span id="nextMultiplier">x2</span></span>
-                        </div>
-                    </div>
+                    <div class="last-card-info" id="lastCardInfo"></div><div class="drawn-cards" id="drawnCards"></div>
+                    <div style="text-align:center;"><div class="multiplier-box"><span style="color:var(--text-muted);">Множитель </span><span class="multiplier-value" id="multiplier">x1</span><span style="color:var(--text-muted);font-size:0.8rem;"> → <span id="nextMultiplier">x2</span></span></div></div>
                     <div class="bet-info">🎲 Ставка: <span>5 💎</span></div>
                     <div class="game-buttons">
-                        <button class="btn btn-primary" id="pigStartBtn" onclick="pigGame.start()">🐷 Новая игра</button>
+                        <button class="btn btn-primary" id="pigStartBtn" onclick="pigGame.start()">🐷 Новая</button>
                         <button class="btn btn-secondary" id="pigDrawBtn" onclick="pigGame.draw()" disabled>🃏 Тянуть</button>
                         <button class="btn btn-secondary" id="pigStopBtn" onclick="pigGame.stop()" disabled>✋ Хватит</button>
                     </div>
-                    <div class="history-box" id="historyBox">
-                        <div class="history-item" style="color:var(--text-muted);">История игр...</div>
+                    <div class="history-box" id="historyBox"><div class="history-item" style="color:var(--text-muted);">История...</div></div>
+                    <div class="back-btn" onclick="backToSelect()">← Назад</div>
+                </div>
+            </div>
+
+            <!-- Судоку -->
+            <div id="panel-sudoku" class="game-panel">
+                <div class="game-area">
+                    <h3>🧩 Судоку ГуангГуанга</h3>
+                    <div class="sudoku-timer">⏱ <span id="sudokuTimer">00:00</span></div>
+                    <div class="sudoku-grid" id="sudokuGrid"></div>
+                    <div class="num-pad">
+                        <button class="num-btn" onclick="window.sudokuPlace(1)">1</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(2)">2</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(3)">3</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(4)">4</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(5)">5</button>
+                        <button class="num-btn clear-btn" onclick="window.sudokuPlace(0)" style="grid-column:span 5;">✕ Очистить</button>
                     </div>
-                    <div class="back-btn" onclick="backToSelect()">← Назад к выбору</div>
+                    <div class="bet-info">🎲 Ставка: <span>5 💎</span> | 🏆 Выигрыш: <span id="sudokuMulti">×3</span></div>
+                    <div class="game-buttons">
+                        <button class="btn btn-primary" onclick="window.sudokuNewGame()">🆕 Новая</button>
+                        <button class="btn btn-secondary" id="sudokuCheckBtn" onclick="window.sudokuCheck()" disabled>✅ Проверить</button>
+                    </div>
+                    <div id="sudokuMessage"></div>
+                    <div class="back-btn" onclick="backToSelect()">← Назад</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function toggleNav() {
-            const nav = document.getElementById('pageNav');
-            const btn = document.querySelector('.nav-toggle');
-            nav.classList.toggle('show');
-            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        }
-
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                const nav = document.getElementById('pageNav');
-                const btn = document.querySelector('.nav-toggle');
-                nav.classList.remove('show');
-                if (btn) btn.textContent = '☰ Меню';
-            });
-        });
+        function toggleNav() { const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle'); nav.classList.toggle('show'); btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню'; }
+        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{ document.getElementById('pageNav').classList.remove('show'); document.querySelector('.nav-toggle').textContent='☰ Меню'; }));
 
         let balance = parseInt(localStorage.getItem('tavernBalance')) || 100;
         function updateBalance() { document.getElementById('balance').textContent = `💎 ${balance}`; localStorage.setItem('tavernBalance', balance); }
-        function setQuote(text) { document.getElementById('innkeeperQuote').textContent = text; }
-        function flashWin() { const card = document.getElementById('tavernCard'); card.classList.add('flash-win'); setTimeout(() => card.classList.remove('flash-win'), 500); }
-        function shakeBalance() { const el = document.getElementById('balance'); el.classList.add('shake'); setTimeout(() => el.classList.remove('shake'), 300); }
+        function setQuote(t) { document.getElementById('innkeeperQuote').textContent = t; }
+        function flashWin() { const c=document.getElementById('tavernCard'); c.classList.add('flash-win'); setTimeout(()=>c.classList.remove('flash-win'),500); }
+        function shakeBalance() { const e=document.getElementById('balance'); e.classList.add('shake'); setTimeout(()=>e.classList.remove('shake'),300); }
+        const quotes = ["Сыграем в очко?","ГуангГуанг верит в твою удачу!","Бамбук шепчет: бери ещё!","Очко — игра смелых!","Перебор? Бывает!","Блэкджек! Ты великий воин!","Осколки приходят и уходят...","Ставки сделаны!"];
+        function randomQuote() { return quotes[Math.floor(Math.random()*quotes.length)]; }
 
-        const quotes = [
-            "Сыграем в очко, странник? Ставка — 10 осколков.",
-            "ГуангГуанг верит в твою удачу!",
-            "Сегодня карты говорят со мной...",
-            "Не бойся, перебор — это не конец!",
-            "Бамбук шепчет: бери ещё!",
-            "В прошлый раз один эльф всё спустил, но ты не он!",
-            "Очко — игра смелых!",
-            "У ГуангГуанга сегодня карта валит!",
-            "Панда удачи с тобой!",
-            "Перебор? Бывает, друг, бывает...",
-            "Блэкджек! Ты великий воин!",
-            "Сами леса Лордерона прошептали мне это имя… Настя_ВТФ",
-            "ГуангГуанг слышал, rvotaenota сегодня в ударе!",
-            "Осколки приходят и уходят, а ГуангГуанг остаётся.",
-            "Ставки сделаны, ставок больше нет!"
-        ];
+        let spamLock = false;
+        function antiSpam() { if(spamLock) return true; spamLock = true; setTimeout(()=>spamLock=false, 300); return false; }
 
-        function randomQuote() { return quotes[Math.floor(Math.random() * quotes.length)]; }
+		function backToSelect() {
+			clearInterval(sTimerInterval);
+			sActive = false; // игра остановлена
+			document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
+			document.getElementById('panel-select').classList.add('active');
+			setQuote('Во что сыграем? ' + randomQuote());
+		}
 
-        function selectGame(game) {
-            document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(`panel-${game}`).classList.add('active');
-            if (game === 'ochko') setQuote('🃏 Двадцать одно! Набери 21, не перебери. ' + randomQuote());
-            else if (game === 'pig') { setQuote('🐷 Пьяная свинья! Тяни карты, но не повторяй масть. ' + randomQuote()); pigGame.renderHistory(); }
-        }
+		function selectGame(g) {
+			clearInterval(sTimerInterval);
+			sActive = false;
+			document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
+			document.getElementById(`panel-${g}`).classList.add('active');
+			if(g==='ochko') setQuote('🃏 '+randomQuote());
+			else if(g==='pig') { setQuote('🐷 '+randomQuote()); pigGame.renderHistory(); }
+			else if(g==='sudoku') { 
+				setQuote('🧩 '+randomQuote()); 
+				sGen(); sActive = true; sSel = null;
+				document.getElementById('sudokuCheckBtn').disabled = true;
+				document.getElementById('sudokuMessage').innerHTML = '';
+				sudokuRender();
+			}
+		}
+        window.selectGame=selectGame; window.backToSelect=backToSelect;
 
-        function backToSelect() {
-            document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('panel-select').classList.add('active');
-            setQuote('Во что сыграем, странник? ' + randomQuote());
-        }
-
-        window.selectGame = selectGame;
-        window.backToSelect = backToSelect;
-
+        // Очко
         const ochko = {
-            deck: [], playerCards: [], dealerCards: [], gameActive: false, bet: 10,
-            suits: ['♥','♦','♠','♣'], values: ['2','3','4','5','6','7','8','9','10','J','Q','K','A'],
+            deck:[],playerCards:[],dealerCards:[],gameActive:false,bet:10,
+            suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],
             createDeck(){ const d=[]; for(let s of this.suits) for(let v of this.values) d.push({suit:s,value:v,rot:Math.random()*6-3}); return d.sort(()=>Math.random()-0.5); },
             cardValue(c){ if(c.value==='A') return 11; if(['K','Q','J'].includes(c.value)) return 10; return parseInt(c.value); },
-            calcScore(cards){ let s=0, a=0; for(let c of cards){ s+=this.cardValue(c); if(c.value==='A') a++; } while(s>21 && a>0){ s-=10; a--; } return s; },
-            renderCard(c,back){ if(back) return '<div class="card back"></div>'; const red=c.suit==='♥'||c.suit==='♦'; return `<div class="card ${red?'red':''}" style="--rot:${c.rot}deg"><span>${c.value}</span><span class="card-suit">${c.suit}</span></div>`; },
-            render(){
-                const d=document.getElementById('dealerCards'), p=document.getElementById('playerCards');
-                d.innerHTML=this.gameActive? this.renderCard(this.dealerCards[0])+this.renderCard(null,true) : this.dealerCards.map(c=>this.renderCard(c)).join('');
-                p.innerHTML=this.playerCards.map(c=>this.renderCard(c)).join('');
-                document.getElementById('dealerScore').textContent=this.gameActive?'?':this.calcScore(this.dealerCards);
-                document.getElementById('playerScore').textContent=this.calcScore(this.playerCards);
-            },
-            startGame(){
-                if(balance<this.bet){ setQuote('Недостаточно осколков!'); return; }
-                this.deck=this.createDeck(); this.playerCards=[this.deck.pop(),this.deck.pop()]; this.dealerCards=[this.deck.pop(),this.deck.pop()];
-                this.gameActive=true; document.getElementById('startBtn').disabled=true; document.getElementById('hitBtn').disabled=false; document.getElementById('standBtn').disabled=false;
-                setQuote('Твой ход. Ещё или Я всё?'); if(this.calcScore(this.playerCards)===21) this.stand(); this.render();
-            },
-            hit(){
-                if(!this.gameActive) return; this.playerCards.push(this.deck.pop()); this.render();
-                if(this.calcScore(this.playerCards)>21) this.endGame();
-                else if(this.calcScore(this.playerCards)===21) this.stand();
-                else setQuote('Ещё? Или Я всё?');
-            },
-            stand(){
-                if(!this.gameActive) return; this.gameActive=false; document.getElementById('hitBtn').disabled=true; document.getElementById('standBtn').disabled=true;
-                setQuote('🐼 ГуангГуанг думает...');
-                setTimeout(()=>{
-                    while(this.calcScore(this.dealerCards)<17 || (this.calcScore(this.dealerCards)<19 && Math.random()<0.3)) this.dealerCards.push(this.deck.pop());
-                    this.render(); this.resolve();
-                },1000);
-            },
-            resolve(){
-                const p=this.calcScore(this.playerCards), d=this.calcScore(this.dealerCards); let r, w;
-                if(p>21){ r='lose'; w=-this.bet; } else if(d>21){ r='win'; w=this.bet; } else if(p>d){ r='win'; w=this.bet; } else if(p<d){ r='lose'; w=-this.bet; } else { r='push'; w=0; }
-                if(p===21 && this.playerCards.length===2 && r!=='lose'){ w=Math.floor(this.bet*1.5); setQuote('🔥 БЛЭКДЖЕК! Поздравляю, воин!'); flashWin(); }
-                else if(r==='win'){ setQuote('😡 ГуангГуанг злится... но платит!'); flashWin(); }
-                else if(r==='lose'){ setQuote('😏 Хе-хе... сегодня удача не с тобой.'); shakeBalance(); }
-                else setQuote('🤝 Ничья. Сыграем ещё?');
-                balance+=w; updateBalance(); document.getElementById('startBtn').disabled=false;
-            },
-            endGame(){ this.gameActive=false; document.getElementById('hitBtn').disabled=true; document.getElementById('standBtn').disabled=true; document.getElementById('startBtn').disabled=false; balance-=this.bet; updateBalance(); setQuote('💔 ПЕРЕБОР! Не повезло...'); shakeBalance(); this.render(); }
+            calcScore(cards){ let s=0,a=0; for(let c of cards){ s+=this.cardValue(c); if(c.value==='A') a++; } while(s>21&&a>0){ s-=10; a--; } return s; },
+            renderCard(c,back){ if(back) return '<div class="card-el back"></div>'; const red=c.suit==='♥'||c.suit==='♦'; return `<div class="card-el ${red?'red':''}" style="--rot:${c.rot}deg"><span>${c.value}</span><span class="card-suit">${c.suit}</span></div>`; },
+            render(){ const d=document.getElementById('dealerCards'),p=document.getElementById('playerCards'); d.innerHTML=this.gameActive?this.renderCard(this.dealerCards[0])+this.renderCard(null,true):this.dealerCards.map(c=>this.renderCard(c)).join(''); p.innerHTML=this.playerCards.map(c=>this.renderCard(c)).join(''); document.getElementById('dealerScore').textContent=this.gameActive?'?':this.calcScore(this.dealerCards); document.getElementById('playerScore').textContent=this.calcScore(this.playerCards); },
+            startGame(){ if(antiSpam()||balance<this.bet){ if(balance<this.bet) setQuote('Недостаточно осколков!'); return; } this.deck=this.createDeck(); this.playerCards=[this.deck.pop(),this.deck.pop()]; this.dealerCards=[this.deck.pop(),this.deck.pop()]; this.gameActive=true; document.getElementById('startBtn').disabled=true; document.getElementById('hitBtn').disabled=false; document.getElementById('standBtn').disabled=false; if(this.calcScore(this.playerCards)===21) this.stand(); this.render(); },
+            hit(){ if(antiSpam()||!this.gameActive) return; this.playerCards.push(this.deck.pop()); this.render(); if(this.calcScore(this.playerCards)>21) this.endGame(); else if(this.calcScore(this.playerCards)===21) this.stand(); },
+            stand(){ if(!this.gameActive) return; this.gameActive=false; document.getElementById('hitBtn').disabled=true; document.getElementById('standBtn').disabled=true; setQuote('🐼 ГуангГуанг думает...'); setTimeout(()=>{ while(this.calcScore(this.dealerCards)<17) this.dealerCards.push(this.deck.pop()); this.render(); this.resolve(); },800); },
+            resolve(){ const p=this.calcScore(this.playerCards),d=this.calcScore(this.dealerCards); let w; if(p>21) w=-this.bet; else if(d>21) w=this.bet; else if(p>d) w=this.bet; else if(p<d) w=-this.bet; else w=0; if(p===21&&this.playerCards.length===2&&w>=0) w=Math.floor(this.bet*1.5); if(w>0){ setQuote('🔥 Победа! Мой ученик!'); flashWin(); } else if(w<0){ setQuote('😏 ЛООООХ!'); shakeBalance(); } else setQuote('🤝 Ничья.'); balance+=w; updateBalance(); document.getElementById('startBtn').disabled=false; },
+            endGame(){ this.gameActive=false; document.getElementById('hitBtn').disabled=true; document.getElementById('standBtn').disabled=true; document.getElementById('startBtn').disabled=false; balance-=this.bet; updateBalance(); setQuote('💔 ПЕРЕБОР! ЛООООХ!'); shakeBalance(); this.render(); }
         };
 
+        // Свинья
         const pigGame = {
-            deck: [], drawnCards: [], suits: ['♥','♦','♠','♣'], values: ['2','3','4','5','6','7','8','9','10','J','Q','K','A'],
-            active: false, bet: 5, multiplier: 1, history: JSON.parse(localStorage.getItem('pigHistory')) || [],
+            deck:[],drawnCards:[],suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],active:false,bet:5,multiplier:1,history:JSON.parse(localStorage.getItem('pigHistory'))||[],
             createDeck(){ const d=[]; for(let s of this.suits) for(let v of this.values) d.push({suit:s,value:v,rot:Math.random()*6-3}); return d.sort(()=>Math.random()-0.5); },
-            addHistory(text, amount){
-                const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                this.history.unshift({ text, amount, time }); if (this.history.length > 8) this.history.pop();
-                localStorage.setItem('pigHistory', JSON.stringify(this.history)); this.renderHistory();
-            },
-            renderHistory(){
-                const box = document.getElementById('historyBox');
-                if (this.history.length === 0) { box.innerHTML = '<div class="history-item" style="color:var(--text-muted);">История игр...</div>'; return; }
-                box.innerHTML = this.history.map(h => `<div class="history-item">${h.time} — ${h.text} ${h.amount > 0 ? '+' : ''}${h.amount} 💎</div>`).join('');
-            },
-            start(){
-                if(balance < this.bet){ setQuote('Недостаточно осколков!'); return; }
-                balance -= this.bet; updateBalance();
-                this.deck = this.createDeck(); this.drawnCards = []; this.multiplier = 1; this.active = true;
-                document.getElementById('pigStartBtn').disabled = true; document.getElementById('pigDrawBtn').disabled = false; document.getElementById('pigStopBtn').disabled = false;
-                document.getElementById('drawnCards').innerHTML = ''; document.getElementById('lastCardInfo').innerHTML = '';
-                document.getElementById('multiplier').textContent = 'x1'; document.getElementById('nextMultiplier').textContent = 'x2';
-                setQuote('Игра началась! Тяни или остановись!');
-            },
-            draw(){
-                if (!this.active) return;
-                const card = this.deck.pop(); this.drawnCards.push(card);
-                const suitsDrawn = this.drawnCards.map(c => c.suit); const hasDuplicate = suitsDrawn.length !== new Set(suitsDrawn).size;
-                const container = document.getElementById('drawnCards');
-                container.innerHTML = this.drawnCards.map(c => { const red = c.suit === '♥' || c.suit === '♦'; return `<div class="pig-card ${red ? 'red' : ''}" style="--rot:${c.rot}deg">${c.value}<span class="pig-card-suit">${c.suit}</span></div>`; }).join('');
-                if (hasDuplicate) {
-                    this.active = false; document.getElementById('pigStartBtn').disabled = false; document.getElementById('pigDrawBtn').disabled = true; document.getElementById('pigStopBtn').disabled = true;
-                    setQuote(`💔 ПОВТОР МАСТИ! Всё сгорело! -${this.bet} 💎`); shakeBalance(); this.addHistory(`Проигрыш (${this.drawnCards.length} карт)`, -this.bet);
-                } else {
-                    this.multiplier++; document.getElementById('multiplier').textContent = `x${this.multiplier}`; document.getElementById('nextMultiplier').textContent = `x${this.multiplier + 1}`;
-                    setQuote(`Хорошо! Множитель x${this.multiplier}. Ещё или хватит?`);
-                    if (this.drawnCards.length === 4) { setQuote('🎉 ВСЕ 4 МАСТИ! Супер бонус!'); this.stop(true); }
-                }
-            },
-            stop(isBonus = false){
-                if (!this.active) return;
-                this.active = false; document.getElementById('pigStartBtn').disabled = false; document.getElementById('pigDrawBtn').disabled = true; document.getElementById('pigStopBtn').disabled = true;
-                let winAmount = this.bet * this.multiplier; if (isBonus) winAmount = Math.floor(winAmount * 1.5);
-                balance += winAmount; updateBalance();
-                setQuote(`🏆 Выигрыш x${this.multiplier}${isBonus ? ' (БОНУС x1.5!)' : ''}! +${winAmount} 💎`); flashWin();
-                this.addHistory(`Победа x${this.multiplier} (${this.drawnCards.length} карт)`, winAmount - this.bet);
-            }
+            addHistory(t,a){ const time=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}); this.history.unshift({text:t,amount:a,time}); if(this.history.length>8) this.history.pop(); localStorage.setItem('pigHistory',JSON.stringify(this.history)); this.renderHistory(); },
+            renderHistory(){ const b=document.getElementById('historyBox'); if(this.history.length===0){ b.innerHTML='<div class="history-item" style="color:var(--text-muted);">История...</div>'; return; } b.innerHTML=this.history.map(h=>`<div class="history-item">${h.time} — ${h.text} ${h.amount>0?'+':''}${h.amount} 💎</div>`).join(''); },
+            start(){ if(antiSpam()||balance<this.bet){ if(balance<this.bet) setQuote('Недостаточно осколков!'); return; } balance-=this.bet; updateBalance(); this.deck=this.createDeck(); this.drawnCards=[]; this.multiplier=1; this.active=true; document.getElementById('pigStartBtn').disabled=true; document.getElementById('pigDrawBtn').disabled=false; document.getElementById('pigStopBtn').disabled=false; document.getElementById('drawnCards').innerHTML=''; document.getElementById('lastCardInfo').innerHTML=''; document.getElementById('multiplier').textContent='x1'; document.getElementById('nextMultiplier').textContent='x2'; },
+            draw(){ if(antiSpam()||!this.active) return; const c=this.deck.pop(); this.drawnCards.push(c); const suits=this.drawnCards.map(x=>x.suit); const values=this.drawnCards.map(x=>x.value); const dupSuit=suits.length!==new Set(suits).size; const dupValue=values.length!==new Set(values).size; const failChance=0.15; const randomFail=Math.random()<failChance; document.getElementById('drawnCards').innerHTML=this.drawnCards.map(x=>`<div class="pig-card ${x.suit==='♥'||x.suit==='♦'?'red':''}" style="--rot:${x.rot}deg">${x.value}<span class="pig-card-suit">${x.suit}</span></div>`).join(''); if(dupSuit||dupValue||randomFail){ this.active=false; document.getElementById('pigStartBtn').disabled=false; document.getElementById('pigDrawBtn').disabled=true; document.getElementById('pigStopBtn').disabled=true; const reason=dupSuit?'Повтор масти':dupValue?'Повтор значения':'Рандом'; setQuote(`💔 ${reason}! -${this.bet} 💎`); shakeBalance(); this.addHistory('Проигрыш',-this.bet); } else { this.multiplier++; document.getElementById('multiplier').textContent='x'+this.multiplier; document.getElementById('nextMultiplier').textContent='x'+(this.multiplier+1); setQuote(`Множитель x${this.multiplier}. Ещё?`); if(this.drawnCards.length===4){ this.stop(true); } } },
+            stop(bonus=false){ if(!this.active) return; this.active=false; document.getElementById('pigStartBtn').disabled=false; document.getElementById('pigDrawBtn').disabled=true; document.getElementById('pigStopBtn').disabled=true; let w=this.bet*this.multiplier; if(bonus) w=Math.floor(w*1.5); balance+=w; updateBalance(); setQuote('🏆 +'+w+' 💎 Мой ученик!'); flashWin(); this.addHistory('Победа x'+this.multiplier,w-this.bet); }
         };
         pigGame.renderHistory();
 
-        window.ochko = ochko; window.pigGame = pigGame;
-        updateBalance();
-        setQuote(randomQuote());
+        // Судоку
+        const SZ = 5;
+        let sGrid = [], sSol = [], sFixed = [], sSel = null, sActive = false;
+        let sTimerInterval = null, sSeconds = 0;
 
-        if (window.location.hash === '#pig') selectGame('pig');
-        else if (window.location.hash === '#ochko') selectGame('ochko');
+        function sGen() {
+            const base = [[1,2,3,4,5],[3,4,5,1,2],[5,1,2,3,4],[2,3,4,5,1],[4,5,1,2,3]];
+            const s = base.map(r => [...r]);
+            if (Math.random()<0.5) [s[0],s[1]]=[s[1],s[0]];
+            if (Math.random()<0.5) [s[3],s[4]]=[s[4],s[3]];
+            if (Math.random()<0.5) for (let r of s) [r[0],r[1]]=[r[1],r[0]];
+            if (Math.random()<0.5) for (let r of s) [r[3],r[4]]=[r[4],r[3]];
+            sSol = s;
+            const puzzle = s.map(r => [...r]);
+            const cells = [];
+            for (let r=0;r<SZ;r++) for (let c=0;c<SZ;c++) cells.push([r,c]);
+            cells.sort(()=>Math.random()-0.5);
+            const hide = 25 - (10 + Math.floor(Math.random()*4));
+            for (let i=0;i<hide;i++){ const [r,c]=cells[i]; puzzle[r][c]=0; }
+            sGrid = puzzle;
+            sFixed = puzzle.map(row => row.map(cell => cell !== 0));
+            // Таймер
+            sSeconds = 0;
+            clearInterval(sTimerInterval);
+            updateTimerDisplay();
+            sTimerInterval = setInterval(()=>{ sSeconds++; updateTimerDisplay(); }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const el = document.getElementById('sudokuTimer');
+            if(!el) return;
+            const m = Math.floor(sSeconds/60).toString().padStart(2,'0');
+            const s = (sSeconds%60).toString().padStart(2,'0');
+            el.textContent = `${m}:${s}`;
+            // Бонус за скорость: <2 мин = ×5, <5 мин = ×3
+            const multEl = document.getElementById('sudokuMulti');
+            if(sSeconds < 120) multEl.textContent = '×5 ⚡';
+            else if(sSeconds < 300) multEl.textContent = '×3';
+            else multEl.textContent = '×2';
+        }
+
+        function sudokuRender() {
+            const container = document.getElementById('sudokuGrid');
+            container.innerHTML = '';
+            for (let r=0;r<SZ;r++){
+                for (let c=0;c<SZ;c++){
+                    const el = document.createElement('div');
+                    el.className = 'sudoku-cell';
+                    if (sGrid[r][c] !== 0) el.textContent = sGrid[r][c];
+                    if (sFixed[r][c]) el.classList.add('fixed');
+                    else if (sGrid[r][c] !== 0) el.classList.add('player-filled');
+                    if (sSel && sSel.r===r && sSel.c===c) el.classList.add('selected');
+                    if (sSel && (sSel.r===r || sSel.c===c)) el.classList.add('same-row-col');
+                    el.onclick = () => { if (!sActive) return; if (sFixed[r][c]) return; sSel = {r,c}; sudokuRender(); };
+                    container.appendChild(el);
+                }
+            }
+        }
+
+        window.sudokuPlace = function(num) {
+            if (!sActive || !sSel) return;
+            if (sFixed[sSel.r][sSel.c]) return;
+            sGrid[sSel.r][sSel.c] = num;
+            sudokuRender();
+            document.getElementById('sudokuCheckBtn').disabled = false;
+        };
+
+        window.sudokuCheck = function() {
+            if (!sActive) return;
+            let ok = true;
+            for (let r=0;r<SZ;r++) for (let c=0;c<SZ;c++) if (sGrid[r][c] !== sSol[r][c]) ok = false;
+            if (ok) {
+                sActive = false;
+                clearInterval(sTimerInterval);
+                document.getElementById('sudokuCheckBtn').disabled = true;
+                let mult = 3;
+                if (sSeconds < 120) mult = 5;
+                else if (sSeconds < 300) mult = 3;
+                else mult = 2;
+                const win = 5 * mult;
+                balance += win; updateBalance();
+                const m = Math.floor(sSeconds/60); const s = sSeconds%60;
+                const timeStr = m>0 ? `${m}м ${s}с` : `${s}с`;
+                document.getElementById('sudokuMessage').innerHTML = `<div class="win-message">🎉 +${win} 💎 (×${mult}, ${timeStr})</div>`;
+                flashWin();
+                setQuote('🧩 ГуангГуанг уважает!');
+            } else {
+                document.getElementById('sudokuMessage').innerHTML = `<div style="text-align:center;color:var(--red);padding:8px;">❌ Ошибки</div>`;
+                setTimeout(()=>{ document.getElementById('sudokuMessage').innerHTML=''; },1500);
+            }
+        };
+
+        window.sudokuNewGame = function() {
+            if (antiSpam() || balance < 5) { if(balance<5) setQuote('Нет осколков!'); return; }
+            balance -= 5; updateBalance();
+            sGen(); sActive = true; sSel = null;
+            document.getElementById('sudokuCheckBtn').disabled = true;
+            document.getElementById('sudokuMessage').innerHTML = '';
+            sudokuRender();
+            setQuote('🧩 Новая партия. Время пошло!');
+        };
+
+        sGen(); sActive = true;
+
+        window.ochko=ochko; window.pigGame=pigGame;
+        updateBalance(); setQuote(randomQuote());
+        if(window.location.hash==='#pig') selectGame('pig');
+        else if(window.location.hash==='#ochko') selectGame('ochko');
+        else if(window.location.hash==='#sudoku') selectGame('sudoku');
     </script>
 </body>
 </html>
