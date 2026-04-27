@@ -1289,8 +1289,8 @@
     }
   ],
   "factionScore": {
-    "duelLight": 40,
-    "duelDark": 39,
+    "duelLight": 43,
+    "duelDark": 43,
     "battleLight": 3,
     "battleDark": 3
   },
@@ -1351,7 +1351,7 @@
         "blocks": 4,
         "trophies": 2,
         "bosses": 2,
-        "totalWaves": 24
+        "totalWaves": 28
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -1363,9 +1363,9 @@
         "crits": 13,
         "misses": 6,
         "blocks": 18,
-        "trophies": 21,
-        "bosses": 21,
-        "totalWaves": 183
+        "trophies": 24,
+        "bosses": 22,
+        "totalWaves": 192
       },
       "skufenberg": {
         "display": "skufenberg",
@@ -1653,13 +1653,13 @@
         "name": "Эльф-Варвар",
         "faction": "Культ Тьмы",
         "record": 4,
-        "damage": 246,
-        "crits": 1,
+        "damage": 259,
+        "crits": 4,
         "misses": 4,
-        "blocks": 13,
+        "blocks": 17,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 4
+        "totalWaves": 12
       },
       "luiza_lon": {
         "display": "luiza_lon",
@@ -1744,43 +1744,71 @@
         "trophies": 1,
         "bosses": 1,
         "totalWaves": 6
+      },
+      "phili4pok": {
+        "display": "phili4pok",
+        "emoji": "👹✝️",
+        "name": "Орк-Жрец",
+        "faction": "Культ Тьмы",
+        "record": 2,
+        "damage": 119,
+        "crits": 1,
+        "misses": 2,
+        "blocks": 0,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 2
+      },
+      "new_wave_japanoise": {
+        "display": "new_wave_japanoise",
+        "emoji": "💀🦴",
+        "name": "Нежить-Некромант",
+        "faction": "Культ Тьмы",
+        "record": 4,
+        "damage": 290,
+        "crits": 3,
+        "misses": 3,
+        "blocks": 0,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 4
       }
     },
     "territory": {
       "light": 38,
-      "dark": 80
+      "dark": 83
     }
   },
   "fights": [
     {
-      "FullLog": "⚡🧝🌿 luiza_lon 17:29 🏆🧑🌿 rabizza | 💨:7 | 7:5 | 5:4 | 💨:6 | 5:7"
-    },
-    {
-      "FullLog": "🧝🪓 kot02 22:36 ⚡🏆👹🦴 razor7296 | 8:8 | 9:❌ | 6:6 | 7:8 | 6:0"
-    },
-    {
-      "FullLog": "⚡🏆🧔🦴 verdoga 27:0 🧝✝️ ashen_di | 7:💨 | 7:💨 | 💥13:0"
-    },
-    {
-      "FullLog": "⚡🏆👹🔮 velitar_game 20:18 💀🔮 fxxe6 | 10:💥18 | 10:0"
-    },
-    {
-      "FullLog": "⚡👹✝️ phili4pok 27:26 🏆🧔🪓 sirlarson | 5:6 | 🛡:6 | 💥14:4 | 8:4 | ❌:6"
-    },
-    {
-      "FullLog": "⚡🏆🧔🦴 verdoga 36:12 💀🪓 september4444 | 4:4 | 6:💨 | 9:🛡 | 8:8 | 9:0"
-    },
-    {
-      "FullLog": "🏆🧔🎸 kotshiroyama 29:15 ⚡👹🗡️ ded_evgenius | 4:9 | 4:7 | 7:💥13"
-    },
-    {
-      "FullLog": "⚡👹🔮 velitar_game 18:20 🏆🧑✨ tkm228 | 12:9 | 6:11"
-    },
-    {
-      "FullLog": "⚡🧝🌿 luiza_lon 19:32 🏆💀🥋 fiotonik | 6:9 | 7:6 | 💨:8 | 🛡:💨 | 6:9"
-    },
-    {
       "FullLog": "💀🎸 rattge 20:32 ⚡🏆🧔🦴 verdoga | 6:10 | 8:10 | 💥18:0"
+    },
+    {
+      "FullLog": "⚡🏆🧝🪓 kot02 26:16 🧑🎸 neplana | 8:8 | 🛡:💨 | 💨:8 | 💥11:💨 | 7:0"
+    },
+    {
+      "FullLog": "🧝👁️ milyvolk 19:26 ⚡🏆🧝✨ insadge | 11:💨 | 9:11 | 💨:8 | 6:0"
+    },
+    {
+      "FullLog": "👹🗡️ ded_evgenius 15:25 ⚡🏆🧝✨ insadge | 9:5 | 9:10 | 7:0"
+    },
+    {
+      "FullLog": "🧝🪓 kot02 14:33 ⚡🏆🧝✝️ ashen_di | 7:8 | 5:6 | 💥14:🛡 | 7:0"
+    },
+    {
+      "FullLog": "⚡🏆💀🦴 new_wave_japanoise 25:15 💀🔮 milk_mom2 | 9:9 | 10:6 | 6:0"
+    },
+    {
+      "FullLog": "⚡👹✝️ phili4pok 13:27 🏆🧝✨ e2edinor06 | 8:10 | 5:💥17"
+    },
+    {
+      "FullLog": "🏆🧔🦴 verdoga 22:16 ⚡🧑🗡️ realvoland | 6:9 | 6:5 | 4:8"
+    },
+    {
+      "FullLog": "⚡👹🔮 velitar_game 21:22 🏆🧔✨ arkhamdc | 6:9 | 11:8 | 4:5"
+    },
+    {
+      "FullLog": "⚡🏆🧝👁️ milyvolk 40:14 👹🛡️ longdayforcat | 8:6 | 10:8 | 8:❌ | 💥14:0"
     }
   ]
 }
