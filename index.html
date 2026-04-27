@@ -248,7 +248,16 @@
                 return fetchWithTimeout(JSON_URL_RAW).catch(() => fetch(JSON_URL_CDN));
             })
             .then(r => r.json())
-            .then(data => { players = data.players.filter(p => p.name && p.name !== 'Unknown'); renderFullStats(data); })
+            .then(data => {
+				players = data.players.filter(p => p.name && p.name !== 'Unknown');
+				if (data.dungeon?.players) {
+					window._dungeonPlayers = {};
+					Object.values(data.dungeon.players).forEach(dp => {
+						window._dungeonPlayers[dp.display] = dp;
+					});
+				}
+				renderFullStats(data);
+			})
             .catch(err => { console.error('Ошибка загрузки:', err); document.getElementById('content').innerHTML = `<div class="status-message" style="color:var(--red);">❌ Ошибка загрузки данных<br>${err.message}</div>`; });
 
         // ==================== РЕНДЕР СТАТИСТИКИ ====================
@@ -406,7 +415,6 @@
 				{ icon:'💔', name:'ПОРАЖЕНИЯ', value:mostLossesPlayer.losses, player:mostLossesPlayer.display, emoji:mostLossesPlayer.emoji, desc:'поражений' }
 			];
 
-			// 3 ряда по 4 карточки
 			html += '<div class="titles-gallery" style="grid-template-columns:repeat(4,1fr);">';
 			records.forEach(r => {
 				html += `<div class="title-card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:6px;">${r.icon}</div><div style="color:var(--text-muted);font-size:0.7rem;">${r.name}</div><div style="font-size:1.5rem;color:var(--gold);font-weight:800;">${r.value}</div><div style="color:var(--text-muted);font-size:0.68rem;">${r.desc}</div><div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border-subtle);font-size:0.8rem;">${r.emoji} ${r.player}</div></div>`;
@@ -447,7 +455,13 @@
                 { emoji:"🏆", name:"Триумфатор", type:"wins", value:200 },{ emoji:"👑", name:"Легенда", type:"wins", value:100 },
                 { emoji:"⚔️", name:"Ветеран", type:"fights", value:500 },{ emoji:"🛡️", name:"Хранитель", type:"level", value:15 },
                 { emoji:"⚡", name:"Непобедимый", type:"best", value:10 },{ emoji:"🏹", name:"Мастер", type:"winrate", value:70, minFights:30 },
-                { emoji:"📿", name:"Собиратель", type:"level", value:10 },{ emoji:"🔱", name:"Избранный светом", type:"faction", value:150, faction:"Орден Света" },
+                { emoji:"📿", name:"Собиратель", type:"level", value:10 },
+                { emoji:"🐉", name:"Король Подземелья", type:"dungeon_record", value:15 },
+                { emoji:"🏔", name:"Покоритель глубин", type:"dungeon_record", value:10 },
+                { emoji:"👑", name:"Трофейный магнат", type:"dungeon_trophies", value:30 },
+                { emoji:"💀", name:"Охотник на боссов", type:"dungeon_bosses", value:10 },
+                { emoji:"🌊", name:"Волнорез", type:"dungeon_waves", value:100 },
+                { emoji:"🔱", name:"Избранный светом", type:"faction", value:150, faction:"Орден Света" },
                 { emoji:"🌋", name:"Владыка тьмы", type:"faction", value:150, faction:"Культ Тьмы" },{ emoji:"⚜️", name:"Аэлион", type:"faction", value:100, faction:"Орден Света" },
                 { emoji:"🌑", name:"Повествователь", type:"faction", value:100, faction:"Культ Тьмы" },{ emoji:"🏆", name:"Хранитель Вечности", type:"tournament", value:1 },
                 { emoji:"👑", name:"Чемпион", type:"champion" },{ emoji:"🛡️", name:"Рыцарь Света", type:"faction", value:50, faction:"Орден Света" },
@@ -476,12 +490,20 @@
                     case "winrate": return total > 0 && (p.wins*100/total) >= ach.value;
                     case "balance": return p.wins === p.losses && total >= (ach.minFights||20);
                     case "champion": return p.champion === true;
+                    case "dungeon_record": return (p.dungeonRecord || 0) >= ach.value;
+                    case "dungeon_trophies": return (p.dungeonTrophies || 0) >= ach.value;
+                    case "dungeon_bosses": return (p.dungeonBosses || 0) >= ach.value;
+                    case "dungeon_waves": return (p.dungeonTotalWaves || 0) >= ach.value;
                     default: return false;
                 }
             }
 
             const playerTitles = {}; const titleCounts = {};
             players.forEach(p => {
+                if (!p.dungeonRecord && window._dungeonPlayers) {
+                    const dp = window._dungeonPlayers[p.display];
+                    if (dp) { p.dungeonRecord = dp.record; p.dungeonTrophies = dp.trophies; p.dungeonBosses = dp.bosses; p.dungeonTotalWaves = dp.totalWaves; }
+                }
                 const titles = achievements.filter(a => checkAchievement(a,p)).map(a => a.emoji+" "+a.name);
                 if(titles.length > 0){ playerTitles[p.display] = titles; titles.forEach(t => titleCounts[t] = (titleCounts[t]||0)+1); }
             });
@@ -491,7 +513,7 @@
             ['🥇','🥈','🥉'].forEach((medal, idx) => {
                 if(!topHunters[idx]) return;
                 const [name, titles] = topHunters[idx];
-                html += `<div class="hunter-card"><div class="hunter-medal">${medal}</div><div class="hunter-name">${name}</div><div class="hunter-count">${titles.length} титулов</div><div class="hunter-titles">${titles.slice(0,3).join(', ')}${titles.length>3?' +'+(titles.length-3):''}</div></div>`;
+                html += `<div class="hunter-card"><div class="hunter-medal">${medal}</div><div class="hunter-name">${name}</div><div class="hunter-count">${titles.length} титулов</div></div>`;
             });
             html += '</div>';
 
@@ -500,7 +522,8 @@
                 const fullName = ach.emoji+" "+ach.name;
                 const holders = titleCounts[fullName]||0;
                 const percent = (holders/players.length)*100;
-                html += `<div class="title-card"><div class="title-emoji">${ach.emoji}</div><div class="title-name">${ach.name}</div><div class="title-cond">${ach.type==='level'?ach.value+' уровень':ach.type==='wins'?ach.value+' побед':ach.type==='losses'?ach.value+' поражений':ach.type==='best'?'Стрик '+ach.value:ach.type==='fights'?ach.value+' боёв':ach.type==='tournament'?ach.value+' турнирных побед':ach.type==='faction'?ach.value+' побед за '+ach.faction:ach.type==='winrate'?'Винрейт '+ach.value+'%':ach.type==='balance'?'Побед = Поражений':'Текущий чемпион'}</div><div class="title-progress"><div class="title-progress-fill" style="width:${percent}%;"></div></div><div class="title-holders">👤 ${holders} игроков</div></div>`;
+                const condText = ach.type==='level'?ach.value+' уровень':ach.type==='wins'?ach.value+' побед':ach.type==='losses'?ach.value+' поражений':ach.type==='best'?'Стрик '+ach.value:ach.type==='fights'?ach.value+' боёв':ach.type==='tournament'?ach.value+' турнирных побед':ach.type==='faction'?ach.value+' побед за '+ach.faction:ach.type==='winrate'?'Винрейт '+ach.value+'%':ach.type==='balance'?'Побед = Поражений':ach.type==='dungeon_record'?ach.value+' волн в данже':ach.type==='dungeon_trophies'?ach.value+' трофеев':ach.type==='dungeon_bosses'?ach.value+' боссов':ach.type==='dungeon_waves'?ach.value+' волн всего':'Текущий чемпион';
+                html += `<div class="title-card"><div class="title-emoji">${ach.emoji}</div><div class="title-name">${ach.name}</div><div class="title-cond">${condText}</div><div class="title-progress"><div class="title-progress-fill" style="width:${percent}%;"></div></div><div class="title-holders">👤 ${holders} игроков</div></div>`;
             });
             html += '</div>';
 
