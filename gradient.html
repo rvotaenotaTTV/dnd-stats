@@ -459,8 +459,8 @@
             const race = currentRace ? racesData.find(r => r.Name === currentRace) : null;
             originalStats = {
                 hp: cls.Hp + (race?.BonusHp || 0), atk: cls.Atk + (race?.BonusAtk || 0),
-                def: cls.Def + (race?.BonusDef || 0), min: cls.Min + (race?.BonusMin || 0),
-                max: cls.Max + (race?.BonusMax || 0)
+                dex: (cls.Dex||0) + (race?.BonusDex||0), def: cls.Def + (race?.BonusDef || 0), 
+				min: cls.Min + (race?.BonusMin || 0), max: cls.Max + (race?.BonusMax || 0)
             };
             ['hp','atk','def','min','max'].forEach(s => {
                 document.getElementById(`${s}Display`).textContent = originalStats[s];
@@ -471,9 +471,8 @@
         window.resetToOriginal = loadClassStats;
 
         function simulateFight(s1, s2) {
-            const rnd = () => Math.floor(Math.random() * 20) + 1;
-            const d3 = () => Math.floor(Math.random() * 3);
-            const i1 = rnd() + s1.atk + d3(), i2 = rnd() + s2.atk + d3();
+			const rnd = () => Math.floor(Math.random() * 20) + 1;
+			const i1 = rnd() + (s1.dex || 0), i2 = rnd() + (s2.dex || 0);
             const first = i1 !== i2 ? i1 > i2 : Math.random() < 0.5;
             let hp1 = s1.hp, hp2 = s2.hp, rounds = 0;
 

@@ -305,11 +305,11 @@
         }
         window.setMode = setMode;
 
-        function getStats(className, raceName) {
-            const cls = classesData.find(c=>c.Name===className) || {Hp:20,Atk:5,Def:0,Min:3,Max:8};
-            const race = racesData.find(r=>r.Name===raceName) || {BonusHp:0,BonusAtk:0,BonusDef:0,BonusMin:0,BonusMax:0};
-            return { hp:cls.Hp+race.BonusHp, atk:cls.Atk+race.BonusAtk, def:cls.Def+race.BonusDef, min:cls.Min+race.BonusMin, max:cls.Max+race.BonusMax };
-        }
+		function getStats(className, raceName) {
+			const cls = classesData.find(c=>c.Name===className) || {Hp:20,Atk:5,Def:0,Dex:0,Min:3,Max:8};
+			const race = racesData.find(r=>r.Name===raceName) || {BonusHp:0,BonusAtk:0,BonusDef:0,BonusDex:0,BonusMin:0,BonusMax:0};
+			return { hp:cls.Hp+race.BonusHp, atk:cls.Atk+race.BonusAtk, def:cls.Def+race.BonusDef, dex:(cls.Dex||0)+(race.BonusDex||0), min:cls.Min+race.BonusMin, max:cls.Max+race.BonusMax };
+		}
 
         function getFighter(isP1) {
             if (currentMode === 'players') {
@@ -337,7 +337,7 @@
         function fight(p1,p2) {
             const s1=p1.stats, s2=p2.stats;
             const rnd=()=>Math.floor(Math.random()*20)+1, d3=()=>Math.floor(Math.random()*3);
-            const first = rnd()+s1.atk+d3() > rnd()+s2.atk+d3();
+            const first = rnd()+s1.dex > rnd()+s2.dex;
             let hp1=s1.hp, hp2=s2.hp, d1=0, d2=0, rounds=0;
             const log=[];
             while(hp1>0 && hp2>0 && rounds<CONFIG.maxRounds){
