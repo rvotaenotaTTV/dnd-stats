@@ -47,7 +47,7 @@
         .balance-badge.shake { animation: shake 0.3s; }
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
 
-        .game-select { display: flex; gap: 12px; justify-content: center; }
+        .game-select { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; justify-content: center; }
         .game-option { flex: 1; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px 12px; text-align: center; cursor: pointer; transition: var(--transition); }
         .game-option:hover { border-color: var(--gold); transform: translateY(-2px); }
         .game-option-emoji { font-size: 2rem; margin-bottom: 6px; }
@@ -89,182 +89,73 @@
         .history-box { margin-top: 14px; padding: 10px; background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); max-height: 120px; overflow-y: auto; }
         .history-item { color: var(--text-secondary); font-size: 0.72rem; padding: 3px 0; border-bottom: 1px solid var(--border-subtle); }
         .history-item:last-child { border-bottom: none; }
-		
-		/* SUDOKU 9x9 */
-		.sudoku-grid {
-			display: grid;
-			grid-template-columns: repeat(9, 1fr);
-			gap: 1px;
-			margin: 16px 0;
-			padding: 2px;
-			background: var(--border-subtle);
-			border-radius: 12px;
-			border: 2px solid rgba(255,255,255,0.3);
-			box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
-		}
 
-		.sudoku-cell {
-			aspect-ratio: 1;
-			background: var(--bg-card);
-			border: 1px solid rgba(37,45,56,0.3);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 1rem;
-			font-weight: 700;
-			cursor: pointer;
-			transition: all 0.15s;
-			color: var(--text-primary);
-			user-select: none;
-			position: relative;
-		}
+        /* SUDOKU 9x9 */
+        .sudoku-grid {
+            display: grid; grid-template-columns: repeat(9, 1fr); gap: 1px; margin: 16px 0;
+            padding: 2px; background: var(--border-subtle); border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+        }
+        .sudoku-cell {
+            aspect-ratio: 1; background: var(--bg-card); border: 1px solid rgba(37,45,56,0.3);
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+            font-weight: 700; cursor: pointer; transition: all 0.15s; color: var(--text-primary);
+            user-select: none; position: relative;
+        }
+        .sudoku-cell:hover { background: #252d38; z-index: 1; }
+        .sudoku-cell.fixed {
+            color: var(--gold); cursor: default; font-size: 1.05rem;
+            background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,140,0,0.06));
+            text-shadow: 0 0 6px rgba(255,215,0,0.3);
+        }
+        .sudoku-cell.selected {
+            border: 2px solid var(--gold); box-shadow: 0 0 12px rgba(255,215,0,0.5), inset 0 0 8px rgba(255,215,0,0.15);
+            background: #252d38; z-index: 2; transform: scale(1.08);
+        }
+        .sudoku-cell.same-row-col { background: rgba(255,215,0,0.05); }
+        .sudoku-cell.same-number { background: rgba(255,215,0,0.1); box-shadow: inset 0 0 8px rgba(255,215,0,0.1); }
+        .sudoku-cell.player-filled { color: #fff; font-weight: 700; }
+        .sudoku-cell.error { color: var(--red); border-color: var(--red); animation: shake 0.3s; }
 
-		.sudoku-cell:hover {
-			background: #252d38;
-			z-index: 1;
-		}
+        .sudoku-cell:nth-child(9n+3),
+        .sudoku-cell:nth-child(9n+6) { border-right: 2px solid rgba(255,255,255,0.4) !important; }
+        .sudoku-cell:nth-child(n+19):nth-child(-n+27),
+        .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid rgba(255,255,255,0.4) !important; }
 
-		.sudoku-cell.fixed {
-			color: var(--gold);
-			cursor: default;
-			background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,140,0,0.06));
-			font-size: 1.05rem;
-			text-shadow: 0 0 6px rgba(255,215,0,0.3);
-		}
+        .num-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin: 12px 0; }
+        .num-btn {
+            padding: 12px 4px; border-radius: 8px; border: 2px solid var(--border-subtle);
+            background: var(--bg-elevated); color: var(--text-primary); font-size: 1rem;
+            font-weight: 700; cursor: pointer; transition: var(--transition); font-family: inherit;
+        }
+        .num-btn:hover { border-color: var(--gold); background: #252d38; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .num-btn:active { transform: scale(0.95); }
+        .num-btn.clear-btn { color: var(--red); border-color: rgba(229,83,75,0.3); font-size: 0.85rem; font-weight: 600; grid-column: span 3; }
+        .num-btn.clear-btn:hover { border-color: var(--red); background: rgba(229,83,75,0.1); }
+        .win-message { text-align: center; padding: 16px; color: var(--gold); font-size: 1.2rem; font-weight: 800; animation: fadeIn 0.5s ease; text-shadow: 0 0 10px rgba(255,215,0,0.4); }
+        .sudoku-timer { text-align: center; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px; }
+        .sudoku-timer span { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
 
-		.sudoku-cell.selected {
-			border: 2px solid var(--gold);
-			box-shadow: 0 0 12px rgba(255,215,0,0.5), inset 0 0 8px rgba(255,215,0,0.15);
-			background: #252d38;
-			z-index: 2;
-			transform: scale(1.08);
-		}
-
-		.sudoku-cell.same-row-col {
-			background: rgba(255,215,0,0.05);
-		}
-
-		.sudoku-cell.same-number {
-			background: rgba(255,215,0,0.1);
-			box-shadow: inset 0 0 8px rgba(255,215,0,0.1);
-		}
-
-		.sudoku-cell.player-filled {
-			color: #fff;
-			font-weight: 700;
-		}
-
-		.sudoku-cell.error {
-			color: var(--red);
-			border-color: var(--red);
-			animation: shake 0.3s;
-		}
-
-		/* Жирные линии между квадратами 3x3 — вертикальные */
-		.sudoku-cell:nth-child(9n+3),
-		.sudoku-cell:nth-child(9n+6) {
-			border-right: 2px solid rgba(255,255,255,0.4) !important;
-		}
-
-		/* Жирные линии между квадратами 3x3 — горизонтальные */
-		.sudoku-cell:nth-child(n+19):nth-child(-n+27),
-		.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
-			border-bottom: 2px solid rgba(255,255,255,0.4) !important;
-		}
-
-		.num-pad {
-			display: grid;
-			grid-template-columns: repeat(9, 1fr);
-			gap: 6px;
-			margin: 12px 0;
-		}
-
-		.num-btn {
-			padding: 12px 4px;
-			border-radius: 8px;
-			border: 2px solid var(--border-subtle);
-			background: var(--bg-elevated);
-			color: var(--text-primary);
-			font-size: 1rem;
-			font-weight: 700;
-			cursor: pointer;
-			transition: var(--transition);
-			font-family: inherit;
-		}
-
-		.num-btn:hover {
-			border-color: var(--gold);
-			background: #252d38;
-			transform: translateY(-2px);
-			box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-		}
-
-		.num-btn:active {
-			transform: scale(0.95);
-		}
-
-		.num-btn.clear-btn {
-			color: var(--red);
-			border-color: rgba(229,83,75,0.3);
-			font-size: 0.85rem;
-			font-weight: 600;
-			grid-column: span 3;
-		}
-
-		.num-btn.clear-btn:hover {
-			border-color: var(--red);
-			background: rgba(229,83,75,0.1);
-		}
-
-		.win-message {
-			text-align: center;
-			padding: 16px;
-			color: var(--gold);
-			font-size: 1.2rem;
-			font-weight: 800;
-			animation: fadeIn 0.5s ease;
-			text-shadow: 0 0 10px rgba(255,215,0,0.4);
-		}
-
-		.sudoku-timer {
-			text-align: center;
-			font-size: 0.85rem;
-			color: var(--text-secondary);
-			margin-bottom: 4px;
-		}
-
-		.sudoku-timer span {
-			color: var(--gold);
-			font-weight: 700;
-			font-variant-numeric: tabular-nums;
-		}
-
-		@keyframes shake {
-			0%,100% { transform: translateX(0); }
-			25% { transform: translateX(-3px); }
-			75% { transform: translateX(3px); }
-		}
-
-		@media (max-width: 768px) {
-			.sudoku-cell {
-				font-size: 0.75rem;
-			}
-			.sudoku-cell.fixed {
-				font-size: 0.8rem;
-			}
-			.num-btn {
-				font-size: 0.85rem;
-				padding: 10px 2px;
-			}
-			.sudoku-cell:nth-child(9n+3),
-			.sudoku-cell:nth-child(9n+6) {
-				border-right: 2px solid rgba(255,255,255,0.4) !important;
-			}
-			.sudoku-cell:nth-child(n+19):nth-child(-n+27),
-			.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
-				border-bottom: 2px solid rgba(255,255,255,0.4) !important;
-			}
-		}
+        /* RUNES */
+        .combo-overlay { text-align: center; font-size: 1.1rem; font-weight: 900; color: var(--gold); min-height: 28px; line-height: 28px; margin-bottom: 4px; text-shadow: 0 0 10px rgba(255,215,0,0.5); transition: 0.2s; }
+        .combo-overlay.big { font-size: 1.4rem; text-shadow: 0 0 20px rgba(255,215,0,0.8); }
+        .runes-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 12px; }
+        .rune-cell {
+            aspect-ratio: 1; background: var(--bg-elevated); border: 2px solid var(--border-subtle);
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            user-select: none; position: relative;
+        }
+        .rune-cell:hover { transform: scale(1.06); z-index: 1; }
+        .rune-cell.selected { border-color: var(--gold); box-shadow: 0 0 16px rgba(255,215,0,0.5); transform: scale(1.08); }
+        .rune-cell.hint { border-color: rgba(255,215,0,0.6); box-shadow: 0 0 10px rgba(255,215,0,0.3); animation: hintPulse 0.8s ease-in-out infinite; }
+        @keyframes hintPulse { 0%,100%{box-shadow:0 0 6px rgba(255,215,0,0.2)} 50%{box-shadow:0 0 16px rgba(255,215,0,0.5)} }
+        .rune-cell.glowing { border-color: var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.7); animation: glowPop 0.35s ease-out; }
+        @keyframes glowPop { 0%{transform:scale(1);box-shadow:0 0 0 rgba(255,215,0,0)} 50%{transform:scale(1.15);box-shadow:0 0 25px rgba(255,215,0,0.8)} 100%{transform:scale(0.9);box-shadow:0 0 5px rgba(255,215,0,0.3)} }
+        .rune-cell.matched { animation: pop 0.35s ease-out; }
+        @keyframes pop { 0%{transform:scale(1);opacity:1} 40%{transform:scale(1.25);opacity:0.7} 100%{transform:scale(0);opacity:0} }
+        .rune-cell.drop { animation: drop 0.35s ease-out; }
+        @keyframes drop { from{transform:translateY(-70px);opacity:0} to{transform:translateY(0);opacity:1} }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
@@ -274,7 +165,7 @@
             .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
             .header-title { font-size: 1.5rem; }
             .tavern-card { padding: 16px 12px; }
-            .game-select { flex-direction: column; }
+            .game-select { grid-template-columns: 1fr 1fr; }
             .game-option { padding: 14px; }
             .game-option-emoji { font-size: 1.6rem; }
             .card-el { width: 42px; height: 60px; font-size: 16px; }
@@ -284,28 +175,14 @@
             .innkeeper { padding: 12px 14px; }
             .innkeeper-avatar { font-size: 2rem; }
             .innkeeper-quote { font-size: 0.78rem; }
-			.sudoku-cell {
-					font-size: 0.75rem;
-				}
-			.sudoku-cell.fixed {
-					font-size: 0.8rem;
-				}
-			.num-btn {
-					font-size: 0.85rem;
-					padding: 10px 2px;
-				}
-			.sudoku-cell:nth-child(9n+3),
-			.sudoku-cell:nth-child(9n+6) {
-					border-right: 2px solid var(--gold);
-				}
-			.sudoku-cell:nth-child(n+19):nth-child(-n+27),
-			.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
-					border-bottom: 2px solid var(--gold);
-			}
-			.sudoku-grid {
-				border: 2px solid rgba(255,255,255,0.3);
-				box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
-			}
+            .sudoku-cell { font-size: 0.75rem; }
+            .sudoku-cell.fixed { font-size: 0.8rem; }
+            .num-btn { font-size: 0.85rem; padding: 10px 2px; }
+            .sudoku-cell:nth-child(9n+3),
+            .sudoku-cell:nth-child(9n+6) { border-right: 2px solid rgba(255,255,255,0.4) !important; }
+            .sudoku-cell:nth-child(n+19):nth-child(-n+27),
+            .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid rgba(255,255,255,0.4) !important; }
+            .rune-cell { font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -333,16 +210,17 @@
 
             <div id="panel-select" class="game-panel active">
                 <div class="game-select">
-                    <div class="game-option" onclick="selectGame('ochko')"><div class="game-option-emoji">🃏</div><div class="game-option-name">Двадцать одно</div><div class="game-option-desc">Очко по-пандовски</div></div>
-                    <div class="game-option" onclick="selectGame('pig')"><div class="game-option-emoji">🐷</div><div class="game-option-name">Пьяная свинья</div><div class="game-option-desc">Хрюкающий банк</div></div>
-                    <div class="game-option" onclick="selectGame('sudoku')"><div class="game-option-emoji">🧩</div><div class="game-option-name">Судоку</div><div class="game-option-desc">Девять кругов бамбука</div></div>
+                    <div class="game-option" onclick="selectGame('ochko')"><div class="game-option-emoji">🃏</div><div class="game-option-name">Не лопни!</div><div class="game-option-desc">Очко по-пандовски</div></div>
+                    <div class="game-option" onclick="selectGame('pig')"><div class="game-option-emoji">🐷</div><div class="game-option-name">Сало или золото?</div><div class="game-option-desc">Хрюкающий банк</div></div>
+                    <div class="game-option" onclick="selectGame('sudoku')"><div class="game-option-emoji">🧩</div><div class="game-option-name">Мозголомка</div><div class="game-option-desc">Девять кругов бамбука</div></div>
+                    <div class="game-option" onclick="selectGame('runes')"><div class="game-option-emoji">🔮</div><div class="game-option-name">Руны Раскола</div><div class="game-option-desc">Собери 3 в ряд</div></div>
                 </div>
             </div>
 
             <!-- Очко -->
             <div id="panel-ochko" class="game-panel">
                 <div class="game-area">
-                    <h3>🃏 Двадцать одно</h3>
+                    <h3>🃏 Не лопни!</h3>
                     <div style="text-align:center;color:var(--text-muted);">Карты ГуангГуанга</div><div class="cards-container" id="dealerCards"></div>
                     <div class="score">Сумма: <span class="score-value" id="dealerScore">0</span></div>
                     <div style="text-align:center;color:var(--text-muted);margin-top:14px;">Твои карты</div><div class="cards-container" id="playerCards"></div>
@@ -360,7 +238,7 @@
             <!-- Свинья -->
             <div id="panel-pig" class="game-panel">
                 <div class="game-area">
-                    <h3>🐷 Пьяная свинья</h3>
+                    <h3>🐷 Сало или золото?</h3>
                     <div class="last-card-info" id="lastCardInfo"></div><div class="drawn-cards" id="drawnCards"></div>
                     <div style="text-align:center;"><div class="multiplier-box"><span style="color:var(--text-muted);">Множитель </span><span class="multiplier-value" id="multiplier">x1</span><span style="color:var(--text-muted);font-size:0.8rem;"> → <span id="nextMultiplier">x2</span></span></div></div>
                     <div class="bet-info">🎲 Ставка: <span>5 💎</span></div>
@@ -377,27 +255,48 @@
             <!-- Судоку -->
             <div id="panel-sudoku" class="game-panel">
                 <div class="game-area">
-                    <h3>🧩 Судоку ГуангГуанга</h3>
+                    <h3>🧩 Мозголомка</h3>
                     <div class="sudoku-timer">⏱ <span id="sudokuTimer">00:00</span></div>
                     <div class="sudoku-grid" id="sudokuGrid"></div>
-						<div class="num-pad">
-							<button class="num-btn" onclick="window.sudokuPlace(1)">1</button>
-							<button class="num-btn" onclick="window.sudokuPlace(2)">2</button>
-							<button class="num-btn" onclick="window.sudokuPlace(3)">3</button>
-							<button class="num-btn" onclick="window.sudokuPlace(4)">4</button>
-							<button class="num-btn" onclick="window.sudokuPlace(5)">5</button>
-							<button class="num-btn" onclick="window.sudokuPlace(6)">6</button>
-							<button class="num-btn" onclick="window.sudokuPlace(7)">7</button>
-							<button class="num-btn" onclick="window.sudokuPlace(8)">8</button>
-							<button class="num-btn" onclick="window.sudokuPlace(9)">9</button>
-							<button class="num-btn clear-btn" onclick="window.sudokuPlace(0)" style="grid-column:span 9;">✕ Очистить</button>
-						</div>
+                    <div class="num-pad">
+                        <button class="num-btn" onclick="window.sudokuPlace(1)">1</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(2)">2</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(3)">3</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(4)">4</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(5)">5</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(6)">6</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(7)">7</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(8)">8</button>
+                        <button class="num-btn" onclick="window.sudokuPlace(9)">9</button>
+                        <button class="num-btn clear-btn" onclick="window.sudokuPlace(0)" style="grid-column:span 9;">✕ Очистить</button>
+                    </div>
                     <div class="bet-info">🎲 Ставка: <span>5 💎</span> | 🏆 Выигрыш: <span id="sudokuMulti">×3</span></div>
                     <div class="game-buttons">
                         <button class="btn btn-primary" onclick="window.sudokuNewGame()">🆕 Новая</button>
                         <button class="btn btn-secondary" id="sudokuCheckBtn" onclick="window.sudokuCheck()" disabled>✅ Проверить</button>
                     </div>
                     <div id="sudokuMessage"></div>
+                    <div class="back-btn" onclick="backToSelect()">← Назад</div>
+                </div>
+            </div>
+
+            <!-- Руны Раскола -->
+            <div id="panel-runes" class="game-panel">
+                <div class="game-area">
+                    <h3>🔮 Руны Раскола</h3>
+                    <div class="combo-overlay" id="comboOverlay"></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+                        <div style="text-align:center;"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);">Ходов</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold);" id="movesLeft">30</div></div>
+                        <div style="text-align:center;"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);">Комбо</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold);" id="comboCount">×1</div></div>
+                        <div style="text-align:center;"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);">Очки</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold);" id="score">0</div></div>
+                        <div style="text-align:center;"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);">Выигрыш</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold);" id="earned">0 💎</div></div>
+                    </div>
+                    <div class="runes-grid" id="runesGrid"></div>
+                    <div class="bet-info">🎲 Ставка: <span>10 💎</span></div>
+                    <div class="game-buttons">
+                        <button class="btn btn-primary" id="runesNewBtn" onclick="runesNewGame()">🆕 Новая игра</button>
+                        <button class="btn btn-secondary" id="runesCashBtn" onclick="runesCashOut()" disabled>💰 Забрать</button>
+                    </div>
                     <div class="back-btn" onclick="backToSelect()">← Назад</div>
                 </div>
             </div>
@@ -413,38 +312,39 @@
         function setQuote(t) { document.getElementById('innkeeperQuote').textContent = t; }
         function flashWin() { const c=document.getElementById('tavernCard'); c.classList.add('flash-win'); setTimeout(()=>c.classList.remove('flash-win'),500); }
         function shakeBalance() { const e=document.getElementById('balance'); e.classList.add('shake'); setTimeout(()=>e.classList.remove('shake'),300); }
-        const quotes = ["Сыграем в очко?","ГуангГуанг верит в твою удачу!","Бамбук шепчет: бери ещё!","Очко — игра смелых!","Перебор? Бывает!","Блэкджек! Ты великий воин!","Осколки приходят и уходят...","Ставки сделаны!"];
+        const quotes = ["Сыграем в очко?","ГуангГуанг верит в твою удачу!","Бамбук шепчет: бери ещё!","Очко — игра смелых!","Перебор? Бывает!","Блэкджек! Ты великий воин!","Осколки приходят и уходят...","Ставки сделаны!","Руны не врут!","Три в ряд — и ты богач!"];
         function randomQuote() { return quotes[Math.floor(Math.random()*quotes.length)]; }
 
         let spamLock = false;
         function antiSpam() { if(spamLock) return true; spamLock = true; setTimeout(()=>spamLock=false, 300); return false; }
 
-		function backToSelect() {
-			clearInterval(sTimerInterval);
-			sActive = false; // игра остановлена
-			document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
-			document.getElementById('panel-select').classList.add('active');
-			setQuote('Во что сыграем? ' + randomQuote());
-		}
+        function backToSelect() {
+            clearInterval(sTimerInterval);
+            sActive = false; runesActive = false;
+            document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
+            document.getElementById('panel-select').classList.add('active');
+            setQuote('Во что сыграем? ' + randomQuote());
+        }
 
-		function selectGame(g) {
-			clearInterval(sTimerInterval);
-			sActive = false;
-			document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
-			document.getElementById(`panel-${g}`).classList.add('active');
-			if(g==='ochko') setQuote('🃏 '+randomQuote());
-			else if(g==='pig') { setQuote('🐷 '+randomQuote()); pigGame.renderHistory(); }
-			else if(g==='sudoku') { 
-				setQuote('🧩 '+randomQuote()); 
-				sGen(); sActive = true; sSel = null;
-				document.getElementById('sudokuCheckBtn').disabled = true;
-				document.getElementById('sudokuMessage').innerHTML = '';
-				sudokuRender();
-			}
-		}
+        function selectGame(g) {
+            clearInterval(sTimerInterval);
+            sActive = false; runesActive = false;
+            document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
+            document.getElementById(`panel-${g}`).classList.add('active');
+            if(g==='ochko') setQuote('🃏 '+randomQuote());
+            else if(g==='pig') { setQuote('🐷 '+randomQuote()); pigGame.renderHistory(); }
+            else if(g==='sudoku') { 
+                setQuote('🧩 '+randomQuote()); 
+                sGen(); sActive = true; sSel = null;
+                document.getElementById('sudokuCheckBtn').disabled = true;
+                document.getElementById('sudokuMessage').innerHTML = '';
+                sudokuRender();
+            }
+            else if(g==='runes') { setQuote('🔮 '+randomQuote()); runesNewGame(); }
+        }
         window.selectGame=selectGame; window.backToSelect=backToSelect;
 
-        // Очко
+        // === ОЧКО ===
         const ochko = {
             deck:[],playerCards:[],dealerCards:[],gameActive:false,bet:10,
             suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],
@@ -460,7 +360,7 @@
             endGame(){ this.gameActive=false; document.getElementById('hitBtn').disabled=true; document.getElementById('standBtn').disabled=true; document.getElementById('startBtn').disabled=false; balance-=this.bet; updateBalance(); setQuote('💔 ПЕРЕБОР! ЛООООХ!'); shakeBalance(); this.render(); }
         };
 
-        // Свинья
+        // === СВИНЬЯ ===
         const pigGame = {
             deck:[],drawnCards:[],suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],active:false,bet:5,multiplier:1,history:JSON.parse(localStorage.getItem('pigHistory'))||[],
             createDeck(){ const d=[]; for(let s of this.suits) for(let v of this.values) d.push({suit:s,value:v,rot:Math.random()*6-3}); return d.sort(()=>Math.random()-0.5); },
@@ -472,176 +372,267 @@
         };
         pigGame.renderHistory();
 
-		// Судоку 9x9
-		const SZ = 9;
-		const BOX = 3;
-		let sGrid = [], sSol = [], sFixed = [], sSel = null, sActive = false;
-		let sTimerInterval = null, sSeconds = 0;
+        // === СУДОКУ 9x9 ===
+        const SZ = 9, BOX = 3;
+        let sGrid = [], sSol = [], sFixed = [], sSel = null, sActive = false;
+        let sTimerInterval = null, sSeconds = 0;
 
-		function sGen() {
-			// Генерируем решённую сетку
-			sSol = Array.from({length: SZ}, () => Array(SZ).fill(0));
-			fillGrid(sSol);
-			
-			// Копируем как пазл и прячем часть клеток
-			sGrid = sSol.map(r => [...r]);
-			const cells = [];
-			for (let r = 0; r < SZ; r++) for (let c = 0; c < SZ; c++) cells.push([r, c]);
-			cells.sort(() => Math.random() - 0.5);
-			
-			// Сложность: 40-50 открытых клеток из 81 (31-41 скрыто)
-			const toHide = 31 + Math.floor(Math.random() * 11);
-			for (let i = 0; i < toHide; i++) {
-				const [r, c] = cells[i];
-				sGrid[r][c] = 0;
-			}
-			
-			sFixed = sGrid.map(row => row.map(cell => cell !== 0));
-			
-			// Таймер
-			sSeconds = 0;
-			clearInterval(sTimerInterval);
-			updateTimerDisplay();
-			sTimerInterval = setInterval(() => { sSeconds++; updateTimerDisplay(); }, 1000);
-		}
+        function sGen() {
+            sSol = Array.from({length: SZ}, () => Array(SZ).fill(0));
+            fillGrid(sSol);
+            sGrid = sSol.map(r => [...r]);
+            const cells = [];
+            for (let r = 0; r < SZ; r++) for (let c = 0; c < SZ; c++) cells.push([r, c]);
+            cells.sort(() => Math.random() - 0.5);
+            const toHide = 31 + Math.floor(Math.random() * 11);
+            for (let i = 0; i < toHide; i++) { const [r, c] = cells[i]; sGrid[r][c] = 0; }
+            sFixed = sGrid.map(row => row.map(cell => cell !== 0));
+            sSeconds = 0; clearInterval(sTimerInterval);
+            updateTimerDisplay();
+            sTimerInterval = setInterval(() => { sSeconds++; updateTimerDisplay(); }, 1000);
+        }
 
-		function fillGrid(grid) {
-			const nums = [1,2,3,4,5,6,7,8,9];
-			
-			function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
-			
-			function isValid(grid, r, c, n) {
-				for (let i = 0; i < SZ; i++) if (grid[r][i] === n || grid[i][c] === n) return false;
-				const br = Math.floor(r / BOX) * BOX, bc = Math.floor(c / BOX) * BOX;
-				for (let i = 0; i < BOX; i++) for (let j = 0; j < BOX; j++) if (grid[br + i][bc + j] === n) return false;
-				return true;
-			}
-			
-			function solve(grid) {
-				for (let r = 0; r < SZ; r++) {
-					for (let c = 0; c < SZ; c++) {
-						if (grid[r][c] === 0) {
-							const tries = [...nums]; shuffle(tries);
-							for (const n of tries) {
-								if (isValid(grid, r, c, n)) {
-									grid[r][c] = n;
-									if (solve(grid)) return true;
-									grid[r][c] = 0;
-								}
-							}
-							return false;
-						}
-					}
-				}
-				return true;
-			}
-			
-			// Заполняем диагональные блоки (независимы)
-			for (let b = 0; b < SZ; b += BOX) {
-				const tries = [...nums];
-				shuffle(tries);
-				let idx = 0;
-				for (let i = 0; i < BOX; i++) for (let j = 0; j < BOX; j++) grid[b + i][b + j] = tries[idx++];
-			}
-			
-			solve(grid);
-		}
+        function fillGrid(grid) {
+            const nums = [1,2,3,4,5,6,7,8,9];
+            function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
+            function isValid(grid, r, c, n) {
+                for (let i = 0; i < SZ; i++) if (grid[r][i] === n || grid[i][c] === n) return false;
+                const br = Math.floor(r / BOX) * BOX, bc = Math.floor(c / BOX) * BOX;
+                for (let i = 0; i < BOX; i++) for (let j = 0; j < BOX; j++) if (grid[br + i][bc + j] === n) return false;
+                return true;
+            }
+            function solve(grid) {
+                for (let r = 0; r < SZ; r++) { for (let c = 0; c < SZ; c++) { if (grid[r][c] === 0) {
+                    const tries = [...nums]; shuffle(tries);
+                    for (const n of tries) { if (isValid(grid, r, c, n)) { grid[r][c] = n; if (solve(grid)) return true; grid[r][c] = 0; } }
+                    return false;
+                } } }
+                return true;
+            }
+            for (let b = 0; b < SZ; b += BOX) { const tries = [...nums]; shuffle(tries); let idx = 0; for (let i = 0; i < BOX; i++) for (let j = 0; j < BOX; j++) grid[b + i][b + j] = tries[idx++]; }
+            solve(grid);
+        }
 
-		function updateTimerDisplay() {
-			const el = document.getElementById('sudokuTimer');
-			if (!el) return;
-			const m = Math.floor(sSeconds / 60).toString().padStart(2, '0');
-			const s = (sSeconds % 60).toString().padStart(2, '0');
-			el.textContent = `${m}:${s}`;
-			const multEl = document.getElementById('sudokuMulti');
-			if (sSeconds < 180) multEl.textContent = '×5 ⚡';
-			else if (sSeconds < 600) multEl.textContent = '×3';
-			else multEl.textContent = '×2';
-		}
+        function updateTimerDisplay() {
+            const el = document.getElementById('sudokuTimer'); if (!el) return;
+            const m = Math.floor(sSeconds / 60).toString().padStart(2, '0');
+            const s = (sSeconds % 60).toString().padStart(2, '0');
+            el.textContent = `${m}:${s}`;
+            const multEl = document.getElementById('sudokuMulti');
+            if (sSeconds < 180) multEl.textContent = '×5 ⚡';
+            else if (sSeconds < 600) multEl.textContent = '×3';
+            else multEl.textContent = '×2';
+        }
 
-		function sudokuRender() {
-			const container = document.getElementById('sudokuGrid');
-			container.innerHTML = '';
-			const selectedNum = sSel && sGrid[sSel.r][sSel.c] !== 0 ? sGrid[sSel.r][sSel.c] : null;
-			
-			// Вычисляем границы квадрата 3x3 для выбранной клетки
-			let boxRStart = -1, boxREnd = -1, boxCStart = -1, boxCEnd = -1;
-			if (sSel) {
-				boxRStart = Math.floor(sSel.r / BOX) * BOX;
-				boxREnd = boxRStart + BOX;
-				boxCStart = Math.floor(sSel.c / BOX) * BOX;
-				boxCEnd = boxCStart + BOX;
-			}
-			
-			for (let r = 0; r < SZ; r++) {
-				for (let c = 0; c < SZ; c++) {
-					const el = document.createElement('div');
-					el.className = 'sudoku-cell';
-					if (sGrid[r][c] !== 0) el.textContent = sGrid[r][c];
-					if (sFixed[r][c]) el.classList.add('fixed');
-					else if (sGrid[r][c] !== 0) el.classList.add('player-filled');
-					if (sSel && sSel.r === r && sSel.c === c) el.classList.add('selected');
-					if (sSel && (sSel.r === r || sSel.c === c)) el.classList.add('same-row-col');
-					// Подсветка квадрата 3x3
-					if (sSel && r >= boxRStart && r < boxREnd && c >= boxCStart && c < boxCEnd) el.classList.add('same-row-col');
-					if (selectedNum && sGrid[r][c] === selectedNum && !(sSel && sSel.r === r && sSel.c === c)) el.classList.add('same-number');
-					el.onclick = () => { if (!sActive) return; if (sFixed[r][c]) return; sSel = { r, c }; sudokuRender(); };
-					container.appendChild(el);
-				}
-			}
-		}
+        function sudokuRender() {
+            const container = document.getElementById('sudokuGrid'); container.innerHTML = '';
+            const selectedNum = sSel && sGrid[sSel.r][sSel.c] !== 0 ? sGrid[sSel.r][sSel.c] : null;
+            let boxRStart = -1, boxREnd = -1, boxCStart = -1, boxCEnd = -1;
+            if (sSel) { boxRStart = Math.floor(sSel.r / BOX) * BOX; boxREnd = boxRStart + BOX; boxCStart = Math.floor(sSel.c / BOX) * BOX; boxCEnd = boxCStart + BOX; }
+            for (let r = 0; r < SZ; r++) { for (let c = 0; c < SZ; c++) {
+                const el = document.createElement('div'); el.className = 'sudoku-cell';
+                if (sGrid[r][c] !== 0) el.textContent = sGrid[r][c];
+                if (sFixed[r][c]) el.classList.add('fixed');
+                else if (sGrid[r][c] !== 0) el.classList.add('player-filled');
+                if (sSel && sSel.r === r && sSel.c === c) el.classList.add('selected');
+                if (sSel && (sSel.r === r || sSel.c === c)) el.classList.add('same-row-col');
+                if (sSel && r >= boxRStart && r < boxREnd && c >= boxCStart && c < boxCEnd) el.classList.add('same-row-col');
+                if (selectedNum && sGrid[r][c] === selectedNum && !(sSel && sSel.r === r && sSel.c === c)) el.classList.add('same-number');
+                el.onclick = () => { if (!sActive) return; if (sFixed[r][c]) return; sSel = { r, c }; sudokuRender(); };
+                container.appendChild(el);
+            } }
+        }
 
-		window.sudokuPlace = function(num) {
-			if (!sActive || !sSel) return;
-			if (sFixed[sSel.r][sSel.c]) return;
-			sGrid[sSel.r][sSel.c] = num;
-			sudokuRender();
-			document.getElementById('sudokuCheckBtn').disabled = false;
-		};
+        window.sudokuPlace = function(num) {
+            if (!sActive || !sSel) return; if (sFixed[sSel.r][sSel.c]) return;
+            sGrid[sSel.r][sSel.c] = num; sudokuRender();
+            document.getElementById('sudokuCheckBtn').disabled = false;
+        };
 
-		window.sudokuCheck = function() {
-			if (!sActive) return;
-			let ok = true;
-			for (let r = 0; r < SZ; r++) for (let c = 0; c < SZ; c++) if (sGrid[r][c] !== sSol[r][c]) ok = false;
-			
-			if (ok) {
-				sActive = false;
-				clearInterval(sTimerInterval);
-				document.getElementById('sudokuCheckBtn').disabled = true;
-				let mult = 3;
-				if (sSeconds < 180) mult = 5;
-				else if (sSeconds < 600) mult = 3;
-				else mult = 2;
-				const win = 10 * mult;
-				balance += win; updateBalance();
-				const m = Math.floor(sSeconds / 60); const s = sSeconds % 60;
-				const timeStr = m > 0 ? `${m}м ${s}с` : `${s}с`;
-				document.getElementById('sudokuMessage').innerHTML = `<div class="win-message">🎉 +${win} 💎 (×${mult}, ${timeStr})</div>`;
-				flashWin();
-				setQuote('🧩 ГуангГуанг уважает!');
-			} else {
-				document.getElementById('sudokuMessage').innerHTML = `<div style="text-align:center;color:var(--red);padding:8px;">❌ Есть ошибки</div>`;
-				setTimeout(() => { document.getElementById('sudokuMessage').innerHTML = ''; }, 1500);
-			}
-		};
+        window.sudokuCheck = function() {
+            if (!sActive) return; let ok = true;
+            for (let r = 0; r < SZ; r++) for (let c = 0; c < SZ; c++) if (sGrid[r][c] !== sSol[r][c]) ok = false;
+            if (ok) {
+                sActive = false; clearInterval(sTimerInterval);
+                document.getElementById('sudokuCheckBtn').disabled = true;
+                let mult = 3; if (sSeconds < 180) mult = 5; else if (sSeconds < 600) mult = 3; else mult = 2;
+                const win = 10 * mult; balance += win; updateBalance();
+                const m = Math.floor(sSeconds / 60); const s = sSeconds % 60;
+                const timeStr = m > 0 ? `${m}м ${s}с` : `${s}с`;
+                document.getElementById('sudokuMessage').innerHTML = `<div class="win-message">🎉 +${win} 💎 (×${mult}, ${timeStr})</div>`;
+                flashWin(); setQuote('🧩 ГуангГуанг уважает!');
+            } else {
+                document.getElementById('sudokuMessage').innerHTML = `<div style="text-align:center;color:var(--red);padding:8px;">❌ Есть ошибки</div>`;
+                setTimeout(() => { document.getElementById('sudokuMessage').innerHTML = ''; }, 1500);
+            }
+        };
 
-		window.sudokuNewGame = function() {
-			if (antiSpam() || balance < 5) { if (balance < 5) setQuote('Нет осколков!'); return; }
-			balance -= 5; updateBalance();
-			sGen(); sActive = true; sSel = null;
-			document.getElementById('sudokuCheckBtn').disabled = true;
-			document.getElementById('sudokuMessage').innerHTML = '';
-			sudokuRender();
-			setQuote('🧩 Новая партия. Время пошло!');
-		};
+        window.sudokuNewGame = function() {
+            if (antiSpam() || balance < 5) { if (balance < 5) setQuote('Нет осколков!'); return; }
+            balance -= 5; updateBalance(); sGen(); sActive = true; sSel = null;
+            document.getElementById('sudokuCheckBtn').disabled = true;
+            document.getElementById('sudokuMessage').innerHTML = '';
+            sudokuRender(); setQuote('🧩 Новая партия. Время пошло!');
+        };
+        sGen(); sActive = true;
 
-		sGen(); sActive = true;
+        // === РУНЫ РАСКОЛА ===
+        const ROWS = 6, COLS = 6, RUNES_BET = 10, MAX_MOVES = 30;
+        const RUNES = ['🔥','💧','🌿','⚡','💀','✨'];
+        let runesGrid = [], runesSelected = null, runesScore = 0, runesEarned = 0, runesCombo = 1;
+        let runesActive = false, runesProcessing = false, runesMovesLeft = MAX_MOVES;
+        let hintTimeout = null, hintCells = [];
+
+        function runesNewGame() {
+            if (balance < RUNES_BET) { setQuote('Недостаточно осколков!'); return; }
+            balance -= RUNES_BET; updateBalance();
+            runesGrid = []; runesSelected = null; runesScore = 0; runesEarned = 0; runesCombo = 1; runesMovesLeft = MAX_MOVES;
+            runesActive = true; runesProcessing = false; clearHints();
+            for (let r = 0; r < ROWS; r++) { runesGrid[r] = []; for (let c = 0; c < COLS; c++) runesGrid[r][c] = randomRune(); }
+            removeInitialMatches(); updateRunesUI(); runesRender();
+            setQuote('🔮 Руны ждут, странник!');
+            document.getElementById('comboOverlay').textContent = '';
+            document.getElementById('runesNewBtn').disabled = true;
+            document.getElementById('runesCashBtn').disabled = false;
+            scheduleHint();
+        }
+
+        function runesCashOut() {
+            if (!runesActive) return;
+            runesActive = false; runesProcessing = false; clearHints();
+            runesEarned = calcRunesEarned(); balance += runesEarned; updateBalance(); updateRunesUI();
+            document.getElementById('runesNewBtn').disabled = false;
+            document.getElementById('runesCashBtn').disabled = true;
+            document.getElementById('comboOverlay').textContent = '';
+            if (runesEarned > RUNES_BET) { setQuote(`🏆 Мудрое решение! +${runesEarned}💎`); flashWin(); }
+            else if (runesEarned === 0) { setQuote('💔 Ушёл с пустыми руками...'); }
+            else { setQuote(`🤝 +${runesEarned}💎. Почти отбил своё...`); }
+        }
+
+        function calcRunesEarned() { return Math.floor(runesScore * (0.8 + runesCombo * 0.1)); }
+        function randomRune() { return RUNES[Math.floor(Math.random() * RUNES.length)]; }
+
+        function removeInitialMatches() {
+            let hasMatch = true, iterations = 0;
+            while (hasMatch && iterations < 100) { hasMatch = false; iterations++;
+                const matches = findRunesMatches(); if (matches.length > 0) { hasMatch = true; for (const m of matches) runesGrid[m.r][m.c] = randomRune(); } }
+        }
+
+        function updateRunesUI() {
+            document.getElementById('movesLeft').textContent = runesMovesLeft;
+            document.getElementById('comboCount').textContent = '×' + runesCombo;
+            document.getElementById('score').textContent = runesScore;
+            document.getElementById('earned').textContent = runesEarned + ' 💎';
+        }
+
+        function runesRender() {
+            const gridEl = document.getElementById('runesGrid'); gridEl.innerHTML = '';
+            for (let r = 0; r < ROWS; r++) { for (let c = 0; c < COLS; c++) {
+                const cell = document.createElement('div'); cell.className = 'rune-cell';
+                cell.textContent = runesGrid[r][c] || '';
+                if (runesSelected && runesSelected.r === r && runesSelected.c === c) cell.classList.add('selected');
+                if (hintCells.some(h => h.r === r && h.c === c)) cell.classList.add('hint');
+                cell.addEventListener('click', () => runeClick(r, c));
+                gridEl.appendChild(cell);
+            } }
+        }
+
+        function runeClick(r, c) {
+            if (!runesActive || runesProcessing) return; clearHints();
+            if (!runesSelected) { runesSelected = { r, c }; runesRender(); scheduleHint(); return; }
+            if (runesSelected.r === r && runesSelected.c === c) { runesSelected = null; runesRender(); scheduleHint(); return; }
+            if (!isRuneAdjacent(runesSelected.r, runesSelected.c, r, c)) { runesSelected = { r, c }; runesRender(); scheduleHint(); return; }
+            const sr = runesSelected.r, sc = runesSelected.c; swapRunes(sr, sc, r, c);
+            const matches = findRunesMatches();
+            if (matches.length === 0) {
+                const cell1 = document.querySelector(`#runesGrid .rune-cell:nth-child(${sr*COLS+sc+1})`);
+                const cell2 = document.querySelector(`#runesGrid .rune-cell:nth-child(${r*COLS+c+1})`);
+                if (cell1) cell1.classList.add('shake'); if (cell2) cell2.classList.add('shake');
+                setTimeout(() => { swapRunes(sr, sc, r, c); runesRender(); scheduleHint(); }, 150);
+                runesSelected = null; setQuote('Эти руны не хотят дружить...'); runesMovesLeft--; updateRunesUI();
+                if (runesMovesLeft <= 0) { endRunesGame(); return; } return;
+            }
+            runesSelected = null; runesMovesLeft--; updateRunesUI();
+            processRunesMatches(matches);
+        }
+
+        function isRuneAdjacent(r1, c1, r2, c2) { return Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1; }
+        function swapRunes(r1, c1, r2, c2) { [runesGrid[r1][c1], runesGrid[r2][c2]] = [runesGrid[r2][c2], runesGrid[r1][c1]]; }
+
+        function findRunesMatches() {
+            const matched = new Set();
+            for (let r = 0; r < ROWS; r++) { for (let c = 0; c < COLS - 2; c++) { if (runesGrid[r][c] && runesGrid[r][c] === runesGrid[r][c+1] && runesGrid[r][c] === runesGrid[r][c+2]) { let end = c + 2; while (end + 1 < COLS && runesGrid[r][end + 1] === runesGrid[r][c]) end++; for (let i = c; i <= end; i++) matched.add(r * COLS + i); } } }
+            for (let c = 0; c < COLS; c++) { for (let r = 0; r < ROWS - 2; r++) { if (runesGrid[r][c] && runesGrid[r][c] === runesGrid[r+1][c] && runesGrid[r][c] === runesGrid[r+2][c]) { let end = r + 2; while (end + 1 < ROWS && runesGrid[end + 1][c] === runesGrid[r][c]) end++; for (let i = r; i <= end; i++) matched.add(i * COLS + c); } } }
+            return [...matched].map(i => ({ r: Math.floor(i / COLS), c: i % COLS }));
+        }
+
+        function findAnyRuneMove() {
+            for (let r = 0; r < ROWS; r++) { for (let c = 0; c < COLS; c++) {
+                if (c + 1 < COLS) { swapRunes(r, c, r, c + 1); if (findRunesMatches().length > 0) { swapRunes(r, c, r, c + 1); return [{r,c},{r,c: c+1}]; } swapRunes(r, c, r, c + 1); }
+                if (r + 1 < ROWS) { swapRunes(r, c, r + 1, c); if (findRunesMatches().length > 0) { swapRunes(r, c, r + 1, c); return [{r,c},{r: r+1,c}]; } swapRunes(r, c, r + 1, c); }
+            } } return null;
+        }
+
+        function clearHints() { hintCells = []; if (hintTimeout) { clearTimeout(hintTimeout); hintTimeout = null; } }
+        function scheduleHint() { clearHints(); if (!runesActive || runesProcessing) return; hintTimeout = setTimeout(() => { const move = findAnyRuneMove(); if (move && runesActive && !runesProcessing) { hintCells = move; runesRender(); setQuote('🐼 ГуангГуанг шепчет: смотри внимательнее...'); } }, 60000); }
+
+        function shuffleRunesGrid() {
+            const all = []; for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) all.push(runesGrid[r][c]);
+            all.sort(() => Math.random() - 0.5); let idx = 0;
+            for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) runesGrid[r][c] = all[idx++];
+            removeInitialMatches();
+        }
+
+        async function processRunesMatches(matches) {
+            runesProcessing = true; clearHints(); let cascadeCount = 0;
+            while (matches.length > 0 && runesActive) {
+                if (matches.length >= 5) runesMovesLeft += 2; else if (matches.length === 4) runesMovesLeft += 1;
+                for (const m of matches) { const idx = m.r * COLS + m.c + 1; const cell = document.querySelector(`#runesGrid .rune-cell:nth-child(${idx})`); if (cell) cell.classList.add('glowing'); }
+                await sleepRunes(250);
+                if (cascadeCount > 0) runesCombo++;
+                const points = matches.length === 3 ? 1 : matches.length === 4 ? 3 : matches.length >= 5 ? 5 : 1;
+                runesScore += points * runesCombo;
+                for (const m of matches) runesGrid[m.r][m.c] = null; runesRender();
+                await sleepRunes(200); collapseRunesGrid(); runesRender();
+                await sleepRunes(200); for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (!runesGrid[r][c]) runesGrid[r][c] = randomRune();
+                runesRender(); await sleepRunes(350); matches = findRunesMatches(); cascadeCount++;
+            }
+            if (cascadeCount > 2) { document.getElementById('comboOverlay').textContent = `🔥 КОМБО ×${runesCombo}!`; document.getElementById('comboOverlay').className = 'combo-overlay big'; setQuote(`Каскад ×${cascadeCount}!`); }
+            else if (cascadeCount > 0) { document.getElementById('comboOverlay').textContent = `✨ Комбо ×${runesCombo}`; document.getElementById('comboOverlay').className = 'combo-overlay'; setQuote('Руны сложились!'); }
+            else { runesCombo = Math.max(1, runesCombo - 1); document.getElementById('comboOverlay').textContent = ''; document.getElementById('comboOverlay').className = 'combo-overlay'; }
+            updateRunesUI(); setTimeout(() => { document.getElementById('comboOverlay').textContent = ''; document.getElementById('comboOverlay').className = 'combo-overlay'; }, 1500);
+            if (!findAnyRuneMove()) {
+                document.getElementById('comboOverlay').textContent = '🔄 Перемешивание...'; shuffleRunesGrid(); runesRender();
+                await sleepRunes(400); runesCombo = 1; setQuote('✨ Руны перемешались! Продолжай!'); updateRunesUI();
+                document.getElementById('comboOverlay').textContent = ''; const newMatches = findRunesMatches();
+                if (newMatches.length > 0) { await processRunesMatches(newMatches); return; }
+            }
+            if (runesMovesLeft <= 0) { endRunesGame(); return; }
+            runesProcessing = false; scheduleHint();
+        }
+
+        function collapseRunesGrid() {
+            for (let c = 0; c < COLS; c++) { let writeRow = ROWS - 1; for (let r = ROWS - 1; r >= 0; r--) { if (runesGrid[r][c] !== null && runesGrid[r][c] !== undefined) { runesGrid[writeRow][c] = runesGrid[r][c]; writeRow--; } } for (let r = writeRow; r >= 0; r--) runesGrid[r][c] = null; }
+        }
+
+        function endRunesGame() {
+            runesActive = false; runesProcessing = false; clearHints();
+            runesEarned = calcRunesEarned(); balance += runesEarned; updateBalance(); updateRunesUI();
+            document.getElementById('runesNewBtn').disabled = false; document.getElementById('runesCashBtn').disabled = true;
+            document.getElementById('comboOverlay').textContent = '';
+            if (runesEarned > RUNES_BET) { setQuote(`🏆 Игра окончена! +${runesEarned}💎`); flashWin(); }
+            else if (runesEarned === 0) { setQuote('💔 Ходы кончились. Пусто...'); }
+            else { setQuote(`⏰ Ходы кончились. +${runesEarned}💎`); }
+        }
+
+        function sleepRunes(ms) { return new Promise(r => setTimeout(r, ms)); }
 
         window.ochko=ochko; window.pigGame=pigGame;
         updateBalance(); setQuote(randomQuote());
         if(window.location.hash==='#pig') selectGame('pig');
         else if(window.location.hash==='#ochko') selectGame('ochko');
         else if(window.location.hash==='#sudoku') selectGame('sudoku');
+        else if(window.location.hash==='#runes') selectGame('runes');
     </script>
 </body>
 </html>
