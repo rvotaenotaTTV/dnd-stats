@@ -564,6 +564,15 @@
 			container.innerHTML = '';
 			const selectedNum = sSel && sGrid[sSel.r][sSel.c] !== 0 ? sGrid[sSel.r][sSel.c] : null;
 			
+			// Вычисляем границы квадрата 3x3 для выбранной клетки
+			let boxRStart = -1, boxREnd = -1, boxCStart = -1, boxCEnd = -1;
+			if (sSel) {
+				boxRStart = Math.floor(sSel.r / BOX) * BOX;
+				boxREnd = boxRStart + BOX;
+				boxCStart = Math.floor(sSel.c / BOX) * BOX;
+				boxCEnd = boxCStart + BOX;
+			}
+			
 			for (let r = 0; r < SZ; r++) {
 				for (let c = 0; c < SZ; c++) {
 					const el = document.createElement('div');
@@ -573,6 +582,8 @@
 					else if (sGrid[r][c] !== 0) el.classList.add('player-filled');
 					if (sSel && sSel.r === r && sSel.c === c) el.classList.add('selected');
 					if (sSel && (sSel.r === r || sSel.c === c)) el.classList.add('same-row-col');
+					// Подсветка квадрата 3x3
+					if (sSel && r >= boxRStart && r < boxREnd && c >= boxCStart && c < boxCEnd) el.classList.add('same-row-col');
 					if (selectedNum && sGrid[r][c] === selectedNum && !(sSel && sSel.r === r && sSel.c === c)) el.classList.add('same-number');
 					el.onclick = () => { if (!sActive) return; if (sFixed[r][c]) return; sSel = { r, c }; sudokuRender(); };
 					container.appendChild(el);
