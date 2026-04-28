@@ -89,29 +89,182 @@
         .history-box { margin-top: 14px; padding: 10px; background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); max-height: 120px; overflow-y: auto; }
         .history-item { color: var(--text-secondary); font-size: 0.72rem; padding: 3px 0; border-bottom: 1px solid var(--border-subtle); }
         .history-item:last-child { border-bottom: none; }
-
+		
 		/* SUDOKU 9x9 */
-		.sudoku-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 1px; margin: 16px 0; padding: 2px; background: var(--border-subtle); border-radius: 12px; border: 2px solid var(--border-subtle); }
-		.sudoku-cell { aspect-ratio: 1; background: var(--bg-card); border: 1px solid rgba(37,45,56,0.5); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.15s; color: var(--text-primary); user-select: none; position: relative; }
-		.sudoku-cell:hover { background: #252d38; z-index: 1; }
-		.sudoku-cell.fixed { color: var(--gold); cursor: default; background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,140,0,0.06)); font-size: 1.05rem; text-shadow: 0 0 6px rgba(255,215,0,0.3); }
-		.sudoku-cell.selected { border: 2px solid var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.4), inset 0 0 6px rgba(255,215,0,0.1); background: #252d38; z-index: 1; }
-		.sudoku-cell.same-row-col { background: rgba(255,215,0,0.04); }
-		.sudoku-cell.same-number { background: rgba(255,215,0,0.08); }
-		.sudoku-cell.player-filled { color: #fff; font-weight: 700; }
-		.sudoku-cell.error { color: var(--red); border-color: var(--red); animation: shake 0.3s; }
-		/* жирные линии между квадратами 3x3 */
-		.sudoku-cell:nth-child(3n) { border-right: 2px solid var(--border-subtle); }
-		.sudoku-cell:nth-child(9n) { border-right: 1px solid rgba(37,45,56,0.5); }
-		.sudoku-grid .sudoku-cell:nth-child(n+19):nth-child(-n+27),
-		.sudoku-grid .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--border-subtle); }
+		.sudoku-grid {
+			display: grid;
+			grid-template-columns: repeat(9, 1fr);
+			gap: 1px;
+			margin: 16px 0;
+			padding: 2px;
+			background: var(--border-subtle);
+			border-radius: 12px;
+			border: 2px solid rgba(255,255,255,0.3);
+			box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+		}
 
-		.num-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin: 12px 0; }
-		.num-btn { padding: 12px 4px; border-radius: 8px; border: 2px solid var(--border-subtle); background: var(--bg-elevated); color: var(--text-primary); font-size: 1rem; font-weight: 700; cursor: pointer; transition: var(--transition); font-family: inherit; }
-		.num-btn:hover { border-color: var(--gold); background: #252d38; transform: translateY(-2px); }
-		.num-btn:active { transform: scale(0.95); }
-		.num-btn.clear-btn { color: var(--red); border-color: rgba(229,83,75,0.3); font-size: 0.8rem; font-weight: 600; grid-column: span 3; }
-		.num-btn.clear-btn:hover { border-color: var(--red); background: rgba(229,83,75,0.1); }
+		.sudoku-cell {
+			aspect-ratio: 1;
+			background: var(--bg-card);
+			border: 1px solid rgba(37,45,56,0.3);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.15s;
+			color: var(--text-primary);
+			user-select: none;
+			position: relative;
+		}
+
+		.sudoku-cell:hover {
+			background: #252d38;
+			z-index: 1;
+		}
+
+		.sudoku-cell.fixed {
+			color: var(--gold);
+			cursor: default;
+			background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,140,0,0.06));
+			font-size: 1.05rem;
+			text-shadow: 0 0 6px rgba(255,215,0,0.3);
+		}
+
+		.sudoku-cell.selected {
+			border: 2px solid var(--gold);
+			box-shadow: 0 0 12px rgba(255,215,0,0.5), inset 0 0 8px rgba(255,215,0,0.15);
+			background: #252d38;
+			z-index: 2;
+			transform: scale(1.08);
+		}
+
+		.sudoku-cell.same-row-col {
+			background: rgba(255,215,0,0.05);
+		}
+
+		.sudoku-cell.same-number {
+			background: rgba(255,215,0,0.1);
+			box-shadow: inset 0 0 8px rgba(255,215,0,0.1);
+		}
+
+		.sudoku-cell.player-filled {
+			color: #fff;
+			font-weight: 700;
+		}
+
+		.sudoku-cell.error {
+			color: var(--red);
+			border-color: var(--red);
+			animation: shake 0.3s;
+		}
+
+		/* Жирные линии между квадратами 3x3 — вертикальные */
+		.sudoku-cell:nth-child(9n+3),
+		.sudoku-cell:nth-child(9n+6) {
+			border-right: 2px solid rgba(255,255,255,0.4) !important;
+		}
+
+		/* Жирные линии между квадратами 3x3 — горизонтальные */
+		.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+		.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+			border-bottom: 2px solid rgba(255,255,255,0.4) !important;
+		}
+
+		.num-pad {
+			display: grid;
+			grid-template-columns: repeat(9, 1fr);
+			gap: 6px;
+			margin: 12px 0;
+		}
+
+		.num-btn {
+			padding: 12px 4px;
+			border-radius: 8px;
+			border: 2px solid var(--border-subtle);
+			background: var(--bg-elevated);
+			color: var(--text-primary);
+			font-size: 1rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: var(--transition);
+			font-family: inherit;
+		}
+
+		.num-btn:hover {
+			border-color: var(--gold);
+			background: #252d38;
+			transform: translateY(-2px);
+			box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+		}
+
+		.num-btn:active {
+			transform: scale(0.95);
+		}
+
+		.num-btn.clear-btn {
+			color: var(--red);
+			border-color: rgba(229,83,75,0.3);
+			font-size: 0.85rem;
+			font-weight: 600;
+			grid-column: span 3;
+		}
+
+		.num-btn.clear-btn:hover {
+			border-color: var(--red);
+			background: rgba(229,83,75,0.1);
+		}
+
+		.win-message {
+			text-align: center;
+			padding: 16px;
+			color: var(--gold);
+			font-size: 1.2rem;
+			font-weight: 800;
+			animation: fadeIn 0.5s ease;
+			text-shadow: 0 0 10px rgba(255,215,0,0.4);
+		}
+
+		.sudoku-timer {
+			text-align: center;
+			font-size: 0.85rem;
+			color: var(--text-secondary);
+			margin-bottom: 4px;
+		}
+
+		.sudoku-timer span {
+			color: var(--gold);
+			font-weight: 700;
+			font-variant-numeric: tabular-nums;
+		}
+
+		@keyframes shake {
+			0%,100% { transform: translateX(0); }
+			25% { transform: translateX(-3px); }
+			75% { transform: translateX(3px); }
+		}
+
+		@media (max-width: 768px) {
+			.sudoku-cell {
+				font-size: 0.75rem;
+			}
+			.sudoku-cell.fixed {
+				font-size: 0.8rem;
+			}
+			.num-btn {
+				font-size: 0.85rem;
+				padding: 10px 2px;
+			}
+			.sudoku-cell:nth-child(9n+3),
+			.sudoku-cell:nth-child(9n+6) {
+				border-right: 2px solid rgba(255,255,255,0.4) !important;
+			}
+			.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+			.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+				border-bottom: 2px solid rgba(255,255,255,0.4) !important;
+			}
+		}
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
@@ -131,9 +284,28 @@
             .innkeeper { padding: 12px 14px; }
             .innkeeper-avatar { font-size: 2rem; }
             .innkeeper-quote { font-size: 0.78rem; }
-			.sudoku-cell { font-size: 0.7rem; }
-			.sudoku-cell.fixed { font-size: 0.75rem; }
-			.num-btn { font-size: 0.85rem; padding: 10px 2px; }
+			.sudoku-cell {
+					font-size: 0.75rem;
+				}
+			.sudoku-cell.fixed {
+					font-size: 0.8rem;
+				}
+			.num-btn {
+					font-size: 0.85rem;
+					padding: 10px 2px;
+				}
+			.sudoku-cell:nth-child(9n+3),
+			.sudoku-cell:nth-child(9n+6) {
+					border-right: 2px solid var(--gold);
+				}
+			.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+			.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+					border-bottom: 2px solid var(--gold);
+			}
+			.sudoku-grid {
+				border: 2px solid rgba(255,255,255,0.3);
+				box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+			}
         }
     </style>
 </head>
@@ -208,18 +380,18 @@
                     <h3>🧩 Судоку ГуангГуанга</h3>
                     <div class="sudoku-timer">⏱ <span id="sudokuTimer">00:00</span></div>
                     <div class="sudoku-grid" id="sudokuGrid"></div>
-<div class="num-pad">
-    <button class="num-btn" onclick="window.sudokuPlace(1)">1</button>
-    <button class="num-btn" onclick="window.sudokuPlace(2)">2</button>
-    <button class="num-btn" onclick="window.sudokuPlace(3)">3</button>
-    <button class="num-btn" onclick="window.sudokuPlace(4)">4</button>
-    <button class="num-btn" onclick="window.sudokuPlace(5)">5</button>
-    <button class="num-btn" onclick="window.sudokuPlace(6)">6</button>
-    <button class="num-btn" onclick="window.sudokuPlace(7)">7</button>
-    <button class="num-btn" onclick="window.sudokuPlace(8)">8</button>
-    <button class="num-btn" onclick="window.sudokuPlace(9)">9</button>
-    <button class="num-btn clear-btn" onclick="window.sudokuPlace(0)" style="grid-column:span 9;">✕ Очистить</button>
-</div>
+						<div class="num-pad">
+							<button class="num-btn" onclick="window.sudokuPlace(1)">1</button>
+							<button class="num-btn" onclick="window.sudokuPlace(2)">2</button>
+							<button class="num-btn" onclick="window.sudokuPlace(3)">3</button>
+							<button class="num-btn" onclick="window.sudokuPlace(4)">4</button>
+							<button class="num-btn" onclick="window.sudokuPlace(5)">5</button>
+							<button class="num-btn" onclick="window.sudokuPlace(6)">6</button>
+							<button class="num-btn" onclick="window.sudokuPlace(7)">7</button>
+							<button class="num-btn" onclick="window.sudokuPlace(8)">8</button>
+							<button class="num-btn" onclick="window.sudokuPlace(9)">9</button>
+							<button class="num-btn clear-btn" onclick="window.sudokuPlace(0)" style="grid-column:span 9;">✕ Очистить</button>
+						</div>
                     <div class="bet-info">🎲 Ставка: <span>5 💎</span> | 🏆 Выигрыш: <span id="sudokuMulti">×3</span></div>
                     <div class="game-buttons">
                         <button class="btn btn-primary" onclick="window.sudokuNewGame()">🆕 Новая</button>
