@@ -139,16 +139,16 @@
       "display": "luiza_lon",
       "emoji": "🧝🌿",
       "name": "Эльф-Друид",
-      "wins": 197,
+      "wins": 198,
       "losses": 198,
       "best": 8,
       "worst": 4,
       "champion": false,
-      "shards": 947,
+      "shards": 951,
       "level": 77,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 137
+      "factionWins": 138
     },
     {
       "display": "aimion",
@@ -320,11 +320,11 @@
       "emoji": "👹✨",
       "name": "Орк-Волшебница",
       "wins": 54,
-      "losses": 63,
+      "losses": 64,
       "best": 10,
       "worst": 4,
       "champion": false,
-      "shards": 245,
+      "shards": 246,
       "level": 9,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -380,11 +380,11 @@
       "emoji": "🧝👁️",
       "name": "Эльф-Колдун",
       "wins": 202,
-      "losses": 199,
+      "losses": 200,
       "best": 7,
       "worst": 3,
       "champion": false,
-      "shards": 1050,
+      "shards": 1051,
       "level": 87,
       "faction": "Культ Тьмы",
       "tournamentWins": 2,
@@ -964,12 +964,12 @@
       "display": "berlina4ka",
       "emoji": "💀🎸",
       "name": "Нежить-Бард",
-      "wins": 40,
+      "wins": 41,
       "losses": 31,
       "best": 6,
       "worst": 1,
       "champion": false,
-      "shards": 187,
+      "shards": 189,
       "level": 8,
       "faction": "Культ Тьмы",
       "tournamentWins": 1,
@@ -1248,9 +1248,16 @@
     {
       "display": "milyvolk",
       "emoji": "🧝👁️",
-      "skill": 586,
+      "skill": 585,
       "wins": 202,
-      "losses": 199
+      "losses": 200
+    },
+    {
+      "display": "luiza_lon",
+      "emoji": "🧝🌿",
+      "skill": 566,
+      "wins": 198,
+      "losses": 198
     },
     {
       "display": "anacrean_",
@@ -1258,13 +1265,6 @@
       "skill": 564,
       "wins": 155,
       "losses": 114
-    },
-    {
-      "display": "luiza_lon",
-      "emoji": "🧝🌿",
-      "skill": 563,
-      "wins": 197,
-      "losses": 198
     },
     {
       "display": "t1ssar",
@@ -1517,9 +1517,9 @@
         "crits": 6,
         "misses": 5,
         "blocks": 16,
-        "trophies": 5,
-        "bosses": 4,
-        "totalWaves": 56
+        "trophies": 8,
+        "bosses": 5,
+        "totalWaves": 61
       },
       "realvoland": {
         "display": "realvoland",
@@ -1687,7 +1687,7 @@
         "blocks": 15,
         "trophies": 56,
         "bosses": 24,
-        "totalWaves": 177
+        "totalWaves": 185
       },
       "retardedbird": {
         "display": "retardedbird",
@@ -1814,20 +1814,28 @@
         "trophies": 0,
         "bosses": 0,
         "totalWaves": 6
+      },
+      "berlina4ka": {
+        "display": "berlina4ka",
+        "emoji": "💀🎸",
+        "name": "Нежить-Бард",
+        "faction": "Культ Тьмы",
+        "record": 3,
+        "damage": 179,
+        "crits": 1,
+        "misses": 2,
+        "blocks": 6,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 3
       }
     },
     "territory": {
-      "light": 90,
+      "light": 93,
       "dark": 184
     }
   },
   "fights": [
-    {
-      "FullLog": "👹✝️ phili4pok 29:30 ⚡🏆🧝🪓 kot02 | 5:8 | 8:💥11 | 5:4 | 💨:6 | 💥12:0"
-    },
-    {
-      "FullLog": "⚡🧝🏹 equa4ka 27:30 🏆🧔🪓 taosblunt | 4:8 | 4:🛡 | 🛡:💨 | 5:7 | 💨:6 | 5:4 | 5:❌ | 4:5"
-    },
     {
       "FullLog": "👹⚙️ shenok07 20:27 ⚡🏆🧔🪓 sirlarson | ❌:9 | 💥11:8 | 🛡:3 | 8:💨 | 8:0"
     },
@@ -1851,6 +1859,12 @@
     },
     {
       "FullLog": "⚡🏆🧝🌿 luiza_lon 31:17 👹✨ cinetra_ | 6:6 | 6:6 | 8:5 | 💥11:0"
+    },
+    {
+      "FullLog": "⚡🏆💀🎸 berlina4ka 30:17 🧝👁️ milyvolk | 11:10 | 💨:7 | 9:💨 | 10:0"
+    },
+    {
+      "FullLog": "⚡🏆🧝🏹 equa4ka 25:6 🧝✝️ ashen_di | 10:6 | 💥15:0"
     }
   ]
 }
