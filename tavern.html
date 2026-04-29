@@ -365,6 +365,11 @@
 			</div>
 			<div class="collection" style="margin-top:20px;">
 				<h3>📦 Коллекция (<span id="gachaCollectionCount">0</span>)</h3>
+				<div style="display:flex;gap:6px;margin-bottom:8px;">
+					<button class="btn btn-secondary" style="flex:0;padding:6px 12px;font-size:0.7rem;" onclick="gachaSortCollection('newest')">🕐 Новые</button>
+					<button class="btn btn-secondary" style="flex:0;padding:6px 12px;font-size:0.7rem;" onclick="gachaSortCollection('rarity')">💎 Редкость</button>
+					<button class="btn btn-secondary" style="flex:0;padding:6px 12px;font-size:0.7rem;" onclick="gachaSortCollection('name')">🔤 Имя</button>
+				</div>
 				<div class="collection-grid" id="gachaCollectionGrid"></div>
 			</div>
 			<div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;
@@ -1112,6 +1117,7 @@
 	let gachaPool = [], gachaReady = false;
 	let gachaCollection = JSON.parse(localStorage.getItem('gachaCollection')) || [];
 	let gachaRecent = JSON.parse(localStorage.getItem('gachaRecent')) || [];
+	let gachaSort = 'newest'; // newest | rarity | name
 
 	async function gachaInit() {
 		document.getElementById('gachaResultArea').innerHTML = '<div style="color:var(--text-muted);text-align:center;">Данные загружаются...</div>';
@@ -1225,14 +1231,33 @@
 		}, 800);
 	}
 
+	function gachaSortCollection(sort) {
+		gachaSort = sort;
+		gachaRenderCollection();
+	}
+
+	function gachaGetSortedCollection() {
+		const sorted = [...gachaCollection];
+		if (gachaSort === 'rarity') {
+			const rank = r => ['legendary', 'epic', 'rare', 'uncommon', 'common'].indexOf(r.rarity);
+			sorted.sort((a, b) => rank(a) - rank(b));
+		} else if (gachaSort === 'name') {
+			sorted.sort((a, b) => a.name.localeCompare(b.name));
+		}
+		// newest — без сортировки, оригинальный порядок
+		return sorted;
+	}
+
 	function gachaRenderCollection() {
 		const grid = document.getElementById('gachaCollectionGrid');
 		const count = document.getElementById('gachaCollectionCount');
 		if (!grid || !count) return;
 		count.textContent = gachaCollection.length;
-		const recent = gachaCollection.slice(-40).reverse();
-		grid.innerHTML = recent.map((item, idx) => {
-			const actualIdx = gachaCollection.length - 1 - idx;
+
+		const sorted = gachaGetSortedCollection();
+		const recent = sorted.slice(-40).reverse();
+		grid.innerHTML = recent.map((item) => {
+			const actualIdx = gachaCollection.indexOf(item);
 			const rarityColor = item.rarity === 'legendary' ? '#ffaa00' : item.rarity === 'epic' ? '#c471ed' : item.rarity === 'rare' ? '#4a90d9' : item.rarity === 'uncommon' ? '#3fb950' : 'var(--text-muted)';
 			return `<div class="collection-item" style="border-color:${rarityColor};" title="${item.name}" onclick="gachaShowItem(${actualIdx})">${item.emoji}</div>`;
 		}).join('');
@@ -1248,9 +1273,28 @@
 		).join('');
 	}
 
+	function gachaSellItem(index) {
+		const item = gachaCollection[index];
+		if (!item) return;
+		const prices = { legendary: 50, epic: 20, rare: 8, uncommon: 3, common: 1 };
+		const price = prices[item.rarity] || 1;
+		gachaCollection.splice(index, 1);
+		localStorage.setItem('gachaCollection', JSON.stringify(gachaCollection));
+		balance += price;
+		updateBalance();
+		setQuote(`💰 Продано за ${price}💎`);
+		flashWin();
+		gachaRenderCollection();
+		// Закрываем модалку если открыта
+		const overlay = document.querySelector('.modal-overlay');
+		if (overlay) overlay.remove();
+	}
+
 	function gachaShowItem(index) {
 		const item = gachaCollection[index];
 		if (!item) return;
+		const prices = { legendary: 50, epic: 20, rare: 8, uncommon: 3, common: 1 };
+		const price = prices[item.rarity] || 1;
 		const rarityLabel = item.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : item.rarity === 'epic' ? 'Эпический' : item.rarity === 'rare' ? 'Редкий' : item.rarity === 'uncommon' ? 'Необычный' : 'Обычный';
 		const overlay = document.createElement('div');
 		overlay.className = 'modal-overlay';
@@ -1260,7 +1304,10 @@
 			<div class="drop-name">${item.name}</div>
 			${item.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${item.desc}</div>` : ''}
 			<div class="drop-rarity rarity-${item.rarity}">${rarityLabel}</div>
-			<button class="btn btn-primary" style="margin-top:16px;" onclick="this.parentElement.parentElement.remove()">Закрыть</button>
+			<div style="display:flex;gap:8px;margin-top:16px;">
+				<button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать (${price}💎)</button>
+				<button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Закрыть</button>
+			</div>
 		</div>`;
 		document.body.appendChild(overlay);
 	}
