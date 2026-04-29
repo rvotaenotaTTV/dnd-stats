@@ -114,7 +114,6 @@
 			border-radius: 12px;
 			width: 100%;
 			max-width: 100%;
-			/* убрать aspect-ratio */
 		}
 
 		.sudoku-cell {
@@ -131,10 +130,9 @@
 			position: relative;
 			z-index: 1;
 			border: 1px solid var(--border-subtle);
-			padding: clamp(6px, 3vw, 20px); /* адаптивная высота */
+			padding: clamp(6px, 3vw, 20px);
 		}
 
-		/* Жирные линии каждые 3 клетки */
 		.sudoku-cell:nth-child(3n) {
 			border-right: 2px solid var(--border-strong);
 		}
@@ -152,7 +150,6 @@
 			border-top: 2px solid var(--border-strong);
 		}
 
-		/* Подсветка */
 		.sudoku-cell:hover { background: var(--bg-elevated); z-index: 2; }
 		.sudoku-cell.fixed {
 			color: var(--gold); cursor: default; font-size: 1.05rem;
@@ -167,6 +164,44 @@
 		.sudoku-cell.player-filled { color: var(--text-primary); font-weight: 700; }
 		.sudoku-cell.error {
 			color: white; background: var(--red); outline: none;
+		}
+		
+		.num-pad {
+			display: grid;
+			grid-template-columns: repeat(9, 1fr);
+			gap: 6px;
+			margin: 12px 0;
+		}
+
+		.num-btn {
+			padding: 14px 8px;
+			border-radius: 10px;
+			border: 2px solid var(--border-subtle);
+			background: var(--bg-elevated);
+			color: var(--text-primary);
+			font-size: 1rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: var(--transition);
+			font-family: inherit;
+		}
+
+		.num-btn:hover {
+			border-color: var(--gold);
+			background: var(--cell-selected-bg);
+			transform: translateY(-2px);
+		}
+		.num-btn:active { transform: scale(0.95); }
+		.num-btn.clear-btn {
+			color: var(--red);
+			border-color: rgba(229,83,75,0.3);
+			font-size: 0.85rem;
+			font-weight: 600;
+			grid-column: span 3;
+		}
+		.num-btn.clear-btn:hover {
+			border-color: var(--red);
+			background: rgba(229,83,75,0.1);
 		}
 
         /* RUNES */
