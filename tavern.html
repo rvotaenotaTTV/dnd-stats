@@ -17,7 +17,7 @@
             --shadow-card: 0 2px 8px rgba(0,0,0,0.4); --shadow-gold: 0 0 20px rgba(230,184,0,0.2);
             --grid-line: #3a4555; --grid-line-bold: #5c6675;
             --cell-bg: #151b24; --cell-hover: #1e2733;
-            --cell-selected: rgba(230,184,0,0.15); --cell-same: rgba(230,184,0,0.06);
+            --cell-selected: rgba(184,134,11,0.25); --cell-same: rgba(230,184,0,0.06);
             --cell-fixed-bg: linear-gradient(135deg, rgba(230,184,0,0.1), rgba(200,150,0,0.04));
             --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px;
             --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -155,7 +155,8 @@
 		.sudoku-cell.selected {
 			border: 2px solid var(--gold) !important;
 			box-shadow: 0 0 14px rgba(255,215,0,0.5);
-			background: var(--bg-elevated); z-index: 3; transform: scale(1.05);
+			background: var(--cell-selected);
+			z-index: 3;
 		}
 		.sudoku-cell.same-row-col { background: rgba(255,215,0,0.06); }
 		.sudoku-cell.same-number { background: rgba(255,215,0,0.12); }
@@ -308,8 +309,97 @@
 
         // Судоку 9x9
         const SZ=9,BOX=3;let sGrid=[],sSol=[],sFixed=[],sSel=null,sActive=false;let sTimerInterval=null,sSeconds=0;
-        function sGen(){sSol=Array.from({length:SZ},()=>Array(SZ).fill(0));fillGrid(sSol);sGrid=sSol.map(r=>[...r]);const cells=[];for(let r=0;r<SZ;r++)for(let c=0;c<SZ;c++)cells.push([r,c]);cells.sort(()=>Math.random()-0.5);const toHide=31+Math.floor(Math.random()*11);for(let i=0;i<toHide;i++){const[r,c]=cells[i];sGrid[r][c]=0;}sFixed=sGrid.map(row=>row.map(cell=>cell!==0));sSeconds=0;clearInterval(sTimerInterval);updateTimerDisplay();sTimerInterval=setInterval(()=>{sSeconds++;updateTimerDisplay();},1000);}
-        function fillGrid(grid){const nums=[1,2,3,4,5,6,7,8,9];function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}function isValid(grid,r,c,n){for(let i=0;i<SZ;i++)if(grid[r][i]===n||grid[i][c]===n)return false;const br=Math.floor(r/BOX)*BOX,bc=Math.floor(c/BOX)*BOX;for(let i=0;i<BOX;i++)for(let j=0;j<BOX;j++)if(grid[br+i][bc+j]===n)return false;return true;}function solve(grid){for(let r=0;r<SZ;r++){for(let c=0;c<SZ;c++){if(grid[r][c]===0){const tries=[...nums];shuffle(tries);for(const n of tries){if(isValid(grid,r,c,n)){grid[r][c]=n;if(solve(grid))return true;grid[r][c]=0;}}return false;}}}return true;}for(let b=0;b<SZ;b+=BOX){const tries=[...nums];shuffle(tries);let idx=0;for(let i=0;i<BOX;i++)for(let j=0;j<BOX;j++)grid[b+i][b+j]=tries[idx++];}solve(grid);}
+        function sGen() {
+			sSol = Array.from({length: SZ}, () => Array(SZ).fill(0));
+			fillGrid(sSol);
+			// Проверка что решение валидное
+			let valid = true;
+			for (let r = 0; r < SZ; r++) {
+				for (let c = 0; c < SZ; c++) {
+					if (sSol[r][c] === 0) { valid = false; break; }
+				}
+				if (!valid) break;
+			}
+			if (!valid) {
+				// Перегенерируем
+				sSol = Array.from({length: SZ}, () => Array(SZ).fill(0));
+				fillGrid(sSol);
+			}
+			sGrid = sSol.map(r => [...r]);
+			const cells = [];
+			for (let r = 0; r < SZ; r++) for (let c = 0; c < SZ; c++) cells.push([r, c]);
+			cells.sort(() => Math.random() - 0.5);
+			const toHide = 31 + Math.floor(Math.random() * 11);
+			for (let i = 0; i < toHide; i++) { const [r, c] = cells[i]; sGrid[r][c] = 0; }
+			sFixed = sGrid.map(row => row.map(cell => cell !== 0));
+			sSeconds = 0; clearInterval(sTimerInterval);
+			updateTimerDisplay();
+			sTimerInterval = setInterval(() => { sSeconds++; updateTimerDisplay(); }, 1000);
+		}
+        function fillGrid(grid) {
+			const nums = [1,2,3,4,5,6,7,8,9];
+			function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
+			function isValid(grid, r, c, n) {
+				for (let i = 0; i < SZ; i++) if (grid[r][i] === n || grid[i][c] === n) return false;
+				const br = Math.floor(r / BOX) * BOX, bc = Math.floor(c / BOX) * BOX;
+				for (let i = 0; i < BOX; i++) for (let j = 0; j < BOX; j++) if (grid[br + i][bc + j] === n) return false;
+				return true;
+			}
+			function solve(grid) {
+				for (let r = 0; r < SZ; r++) {
+					for (let c = 0; c < SZ; c++) {
+						if (grid[r][c] === 0) {
+							const tries = [...nums]; shuffle(tries);
+							for (const n of tries) {
+								if (isValid(grid, r, c, n)) {
+									grid[r][c] = n;
+									if (solve(grid)) return true;
+									grid[r][c] = 0;
+								}
+							}
+							return false;
+						}
+					}
+				}
+				return true;
+			}
+			
+			// Заполняем диагональные блоки с проверкой валидности
+			for (let b = 0; b < SZ; b += BOX) {
+				const tries = [...nums];
+				shuffle(tries);
+				let idx = 0;
+				for (let i = 0; i < BOX; i++) {
+					for (let j = 0; j < BOX; j++) {
+						let placed = false;
+						for (let k = idx; k < tries.length; k++) {
+							if (isValid(grid, b + i, b + j, tries[k])) {
+								grid[b + i][b + j] = tries[k];
+								[tries[idx], tries[k]] = [tries[k], tries[idx]];
+								idx++;
+								placed = true;
+								break;
+							}
+						}
+						if (!placed) {
+							// Если не смогли разместить — заполняем случайно и надеемся на solve
+							grid[b + i][b + j] = tries[idx++];
+						}
+					}
+				}
+			}
+			
+			const solved = solve(grid);
+			if (!solved) {
+				// Если не решилось — заполняем заново (редко, но бывает)
+				for (let r = 0; r < SZ; r++) for (let c = 0; c < SZ; c++) grid[r][c] = 0;
+				for (let b = 0; b < SZ; b += BOX) {
+					const tries = [...nums]; shuffle(tries);
+					for (let i = 0; i < BOX; i++) for (let j = 0; j < BOX; j++) grid[b + i][b + j] = tries[i * BOX + j];
+				}
+				solve(grid);
+			}
+		}
         function updateTimerDisplay(){const el=document.getElementById('sudokuTimer');if(!el)return;const m=Math.floor(sSeconds/60).toString().padStart(2,'0');const s=(sSeconds%60).toString().padStart(2,'0');el.textContent=`${m}:${s}`;const multEl=document.getElementById('sudokuMulti');if(sSeconds<180)multEl.textContent='×5 ⚡';else if(sSeconds<600)multEl.textContent='×3';else multEl.textContent='×2';}
         function sudokuRender(){const container=document.getElementById('sudokuGrid');container.innerHTML='';const selectedNum=sSel&&sGrid[sSel.r][sSel.c]!==0?sGrid[sSel.r][sSel.c]:null;let boxRStart=-1,boxREnd=-1,boxCStart=-1,boxCEnd=-1;if(sSel){boxRStart=Math.floor(sSel.r/BOX)*BOX;boxREnd=boxRStart+BOX;boxCStart=Math.floor(sSel.c/BOX)*BOX;boxCEnd=boxCStart+BOX;}for(let r=0;r<SZ;r++){for(let c=0;c<SZ;c++){const el=document.createElement('div');el.className='sudoku-cell';if(sGrid[r][c]!==0)el.textContent=sGrid[r][c];if(sFixed[r][c])el.classList.add('fixed');else if(sGrid[r][c]!==0)el.classList.add('player-filled');if(sSel&&sSel.r===r&&sSel.c===c)el.classList.add('selected');if(sSel&&(sSel.r===r||sSel.c===c))el.classList.add('same-row-col');if(sSel&&r>=boxRStart&&r<boxREnd&&c>=boxCStart&&c<boxCEnd)el.classList.add('same-row-col');if(selectedNum&&sGrid[r][c]===selectedNum&&!(sSel&&sSel.r===r&&sSel.c===c))el.classList.add('same-number');el.onclick=()=>{if(!sActive)return;if(sFixed[r][c])return;sSel={r,c};sudokuRender();};container.appendChild(el);}}}
         window.sudokuPlace=function(num){if(!sActive||!sSel)return;if(sFixed[sSel.r][sSel.c])return;sGrid[sSel.r][sSel.c]=num;sudokuRender();document.getElementById('sudokuCheckBtn').disabled=false;};
