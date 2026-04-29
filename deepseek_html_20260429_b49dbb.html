@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Профиль игрока</title>
+    <link rel="stylesheet" href="theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary); min-height: 100vh; line-height: 1.6;
+        }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 40px; }
+        .header { text-align: center; padding: 30px 0 20px; }
+        .header-title {
+            font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 50%, var(--gold) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .header-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
+        .nav-wrapper { margin-bottom: 28px; }
+        .nav-toggle { display: none; width: 100%; padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 28px; color: var(--gold); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px; background: var(--bg-secondary); border-radius: 28px; border: 1px solid var(--border-subtle); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: 0.2s; white-space: nowrap; }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; }
+
+        .search-row { display: flex; gap: 10px; margin-bottom: 24px; align-items: center; flex-wrap: wrap; }
+        .search-input { flex: 1; padding: 12px 16px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 25px; color: var(--text-primary); font-size: 0.9rem; font-family: inherit; min-width: 200px; }
+        .search-input:focus { outline: none; border-color: var(--gold); }
+        .btn { padding: 12px 20px; border-radius: 25px; font-weight: 700; cursor: pointer; border: none; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
+        .btn-primary { background: var(--gold); color: #1a1a1a; }
+        .btn-primary:hover { filter: brightness(1.1); }
+
+        .profile-hero { background: var(--bg-card); border-radius: 20px; padding: 28px; border: 1px solid var(--border-subtle); margin-bottom: 20px; text-align: center; position: relative; overflow: hidden; }
+        .profile-hero::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.6; }
+        .profile-emoji { font-size: 4rem; margin-bottom: 8px; }
+        .profile-name { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
+        .profile-class { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 4px; }
+        .profile-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+        .badge { padding: 4px 12px; border-radius: 15px; font-size: 0.7rem; font-weight: 700; }
+        .badge-gold { background: var(--gold); color: #1a1a1a; }
+        .badge-light { background: rgba(255,215,0,0.15); color: var(--gold); }
+        .badge-dark { background: rgba(163,113,247,0.2); color: var(--purple); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
+        .stat-card { background: var(--bg-elevated); border-radius: 14px; padding: 14px 10px; text-align: center; border: 1px solid var(--border-subtle); }
+        .stat-num { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-top: 2px; }
+
+        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+        .rank-card { background: var(--bg-elevated); border-radius: 14px; padding: 14px 10px; text-align: center; border: 1px solid var(--border-subtle); }
+        .rank-pos { font-size: 1.6rem; font-weight: 800; }
+        .rank-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-top: 2px; }
+
+        .compare-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; padding: 14px; background: var(--bg-elevated); border-radius: 14px; border: 1px solid var(--border-subtle); flex-wrap: wrap; }
+        .compare-bar select { padding: 8px 14px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; color: var(--text-primary); font-family: inherit; font-size: 0.85rem; cursor: pointer; flex: 1; min-width: 150px; }
+
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .compare-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .compare-table th { background: var(--bg-elevated); color: var(--gold); padding: 8px 10px; text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-subtle); }
+        .compare-table td { padding: 6px 10px; text-align: center; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
+        .compare-table th:first-child, .compare-table td:first-child { text-align: left; color: var(--text-muted); font-weight: 500; }
+        .td-better { color: var(--green) !important; font-weight: 700; }
+        .td-worse { color: var(--red) !important; }
+        .status-message { text-align: center; padding: 40px; color: var(--text-secondary); }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 32px; }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 12px 16px; border-radius: 8px; justify-content: center; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .ranks-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header"><h1 class="header-title">ПРОФИЛЬ ИГРОКА</h1><p class="header-subtitle">Полная статистика героя</p></header>
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                <a href="player.html" class="nav-link active">👤 Профиль</a>
+            </nav>
+        </div>
+
+        <div class="search-row">
+            <input type="text" class="search-input" id="playerSearch" placeholder="Введи ник игрока..." onchange="loadProfile()">
+            <button class="btn btn-primary" onclick="loadProfile()">🔍 Найти</button>
+        </div>
+        <div id="profileContent"><div class="status-message">Введи имя игрока для просмотра профиля</div></div>
+    </div>
+    <script src="theme.js"></script>
+    <script>
+        function toggleNav(){const nav=document.getElementById('pageNav');nav.classList.toggle('show');document.querySelector('.nav-toggle').textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+        let allPlayers=[],dungeonPlayers={},seasonTop=[];
+
+        async function loadData(){
+            const urls=['https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json','https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'];
+            for(const url of urls){try{const r=await fetch(url);if(r.ok){const d=await r.json();allPlayers=(d.players||[]).filter(p=>p.name&&p.name!=='Unknown');if(d.dungeon?.players)dungeonPlayers=d.dungeon.players;seasonTop=d.seasonTop||[];return}}catch{}}
+        }
+
+        function findPlayer(name){if(!name)return null;const lower=name.toLowerCase().trim();return allPlayers.find(p=>p.display.toLowerCase()===lower||p.display.toLowerCase().includes(lower));}
+
+        function getRank(player,by){
+            const sorted=[...allPlayers].sort((a,b)=>(b[by]||0)-(a[by]||0));
+            return sorted.findIndex(p=>p.display===player.display)+1;
+        }
+        function getWinrateRank(player){
+            const sorted=[...allPlayers].filter(p=>(p.wins||0)+(p.losses||0)>=20).sort((a,b)=>{const wa=(a.wins||0)/((a.wins||0)+(a.losses||0)),wb=(b.wins||0)/((b.wins||0)+(b.losses||0));return wb-wa;});
+            return sorted.findIndex(p=>p.display===player.display)+1;
+        }
+
+        function renderProfile(p){
+            if(!p)return'<div class="status-message">Игрок не найден</div>';
+            const total=(p.wins||0)+(p.losses||0);const wr=total>0?(p.wins*100/total).toFixed(1):'0.0';
+            const faction=p.faction||'';const fi=faction==='Орден Света'?'🌝':'🌚';
+            const dungeon=dungeonPlayers[p.display];const seasonRank=seasonTop.findIndex(s=>s.display===p.display)+1;
+            const rankWins=getRank(p,'wins'),rankFights=getRank(p,p=>(p.wins||0)+(p.losses||0)), rankWR=getWinrateRank(p),rankShards=getRank(p,'shards'),rankDungeon=allPlayers.map(x=>dungeonPlayers[x.display]?.record||0).sort((a,b)=>b-a).indexOf(dungeon?.record||0)+1;
+
+            let html=`<div class="profile-hero"><div class="profile-emoji">${p.emoji||'⚔️'}</div><div class="profile-name">${p.display}${p.champion?' 👑':''}</div><div class="profile-class">${p.name||''} ${fi}</div><div class="profile-badges">`;
+            if(p.champion)html+='<span class="badge badge-gold">👑 Хранитель</span>';
+            html+=`<span class="badge ${faction==='Орден Света'?'badge-light':'badge-dark'}">${fi} ${faction}</span>`;
+            if(seasonRank>0)html+=`<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
+            html+=`</div></div>`;
+
+            html+='<div class="stats-grid">';
+            html+=`<div class="stat-card"><div class="stat-num">${p.wins||0}</div><div class="stat-label">⚔️ Победы</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${p.losses||0}</div><div class="stat-label">💀 Поражения</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${wr}%</div><div class="stat-label">📊 Винрейт</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">⚡ Всего боёв</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${p.best||0}</div><div class="stat-label">🔥 Лучший стрик</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${p.worst||0}</div><div class="stat-label">💔 Худший стрик</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${p.shards||0}</div><div class="stat-label">💎 Осколки</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${p.level||0}</div><div class="stat-label">📈 Уровень</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${p.tournamentWins||0}</div><div class="stat-label">👑 Турниры</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${p.factionWins||0}</div><div class="stat-label">🌍 Фракция</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${dungeon?dungeon.record:'-'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-num">${dungeon?dungeon.trophies:'-'}</div><div class="stat-label">🐉 Трофеев</div></div></div>`;
+
+            html+='<div class="ranks-grid">';
+            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankWins<=3?'var(--gold)':rankWins<=10?'var(--green)':'var(--text-muted)'};">#${rankWins}</div><div class="rank-label">По победам</div></div>`;
+            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankWR<=3?'var(--gold)':rankWR<=10?'var(--green)':'var(--text-muted)'};">#${rankWR}</div><div class="rank-label">По винрейту</div></div>`;
+            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankShards<=3?'var(--gold)':rankShards<=10?'var(--green)':'var(--text-muted)'};">#${rankShards}</div><div class="rank-label">По осколкам</div></div>`;
+            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankDungeon<=3?'var(--gold)':rankDungeon<=10?'var(--green)':'var(--text-muted)'};">#${rankDungeon||'-'}</div><div class="rank-label">По данжу</div></div>`;
+            html+=`<div class="rank-card"><div class="rank-pos" style="color:${seasonRank<=3?'var(--gold)':seasonRank<=10?'var(--green)':'var(--text-muted)'};">#${seasonRank||'-'}</div><div class="rank-label">Сезонный топ</div></div>`;
+            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankFights<=3?'var(--gold)':rankFights<=10?'var(--green)':'var(--text-muted)'};">#${rankFights}</div><div class="rank-label">По боям</div></div></div>`;
+
+            html+=`<div class="compare-bar"><span>⚔️ Сравнить с:</span><select id="compareSelect" onchange="compareWith(this.value)"><option value="">— Выбери игрока —</option>${allPlayers.filter(x=>x.display!==p.display).map(x=>`<option value="${x.display}">${x.emoji||'⚔️'} ${x.display}</option>`).join('')}</select></div><div id="compareResult"></div>`;
+            return html;
+        }
+
+        function renderCompare(p1,p2){
+            if(!p1||!p2)return'';
+            const d1=dungeonPlayers[p1.display],d2=dungeonPlayers[p2.display];
+            const rows=[
+                ['Победы',p1.wins||0,p2.wins||0,true],['Поражения',p1.losses||0,p2.losses||0,false],
+                ['Винрейт',((p1.wins||0)/((p1.wins||0)+(p1.losses||0)||1)*100).toFixed(1)+'%',((p2.wins||0)/((p2.wins||0)+(p2.losses||0)||1)*100).toFixed(1)+'%',true],
+                ['Всего боёв',(p1.wins||0)+(p1.losses||0),(p2.wins||0)+(p2.losses||0),true],
+                ['Лучший стрик',p1.best||0,p2.best||0,true],['Худший стрик',p1.worst||0,p2.worst||0,false],
+                ['Осколки',p1.shards||0,p2.shards||0,true],['Уровень',p1.level||0,p2.level||0,true],
+                ['Турниры',p1.tournamentWins||0,p2.tournamentWins||0,true],['Фракция',p1.factionWins||0,p2.factionWins||0,true],
+                ['Рекорд данжа',d1?d1.record:'-',d2?d2.record:'-',true],['Трофеев',d1?d1.trophies:'-',d2?d2.trophies:'-',true],
+            ];
+            let table='<table class="compare-table"><thead><tr><th>Стат</th><th>'+p1.display+'</th><th>'+p2.display+'</th></tr></thead><tbody>';
+            rows.forEach(([label,v1,v2,higherBetter])=>{
+                let c1='',c2='';
+                if(typeof v1==='number'&&typeof v2==='number'){
+                    if(v1>v2){c1=higherBetter?'td-better':'td-worse';c2=higherBetter?'td-worse':'td-better';}
+                    else if(v2>v1){c1=higherBetter?'td-worse':'td-better';c2=higherBetter?'td-better':'td-worse';}
+                }
+                table+=`<tr><td>${label}</td><td class="${c1}">${v1}</td><td class="${c2}">${v2}</td></tr>`;
+            });
+            table+='</tbody></table>';
+            return table;
+        }
+
+        function compareWith(name){
+            const p1=findPlayer(document.getElementById('playerSearch').value.trim());
+            const p2=findPlayer(name);
+            document.getElementById('compareResult').innerHTML=p2?renderCompare(p1,p2):'';
+        }
+
+        async function loadProfile(){
+            if(allPlayers.length===0)await loadData();
+            const p=findPlayer(document.getElementById('playerSearch').value.trim());
+            document.getElementById('profileContent').innerHTML=p?renderProfile(p):'<div class="status-message">Игрок не найден</div>';
+        }
+
+        loadData().then(()=>{
+            const params=new URLSearchParams(window.location.search);
+            const name=params.get('name');
+            if(name){document.getElementById('playerSearch').value=name;loadProfile();}
+        });
+    </script>
+</body>
+</html>
