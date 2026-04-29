@@ -227,7 +227,6 @@
                 { emoji: '🕯️', name: 'Огарок свечи', rarity: 'common' },
                 { emoji: '🧦', name: 'Носок', rarity: 'common' },
                 { emoji: '🗑️', name: 'Мусор', rarity: 'common' },
-                { emoji: '🪵', name: 'Палка', rarity: 'common' },
                 { emoji: '🍄', name: 'Гриб', rarity: 'common' },
             ];
             junk.forEach(item => { for (let i = 0; i < 15; i++) addUnique(item); });
@@ -365,7 +364,7 @@
 
 			const recent = collection.slice(-40).reverse();
 			grid.innerHTML = recent.map((item, idx) => {
-				const actualIdx = collection.length - 1 - (recent.length - 1 - idx);
+				const actualIdx = collection.length - 1 - idx;
 				const rarityColor = item.rarity === 'legendary' ? '#ffaa00' : item.rarity === 'epic' ? '#c471ed' : item.rarity === 'rare' ? '#4a90d9' : item.rarity === 'uncommon' ? '#3fb950' : 'var(--text-muted)';
 				return `<div class="collection-item" style="border-color:${rarityColor};" title="${item.name}" onclick="showItem(${actualIdx})">${item.emoji}</div>`;
 			}).join('');
