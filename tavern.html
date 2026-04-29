@@ -73,7 +73,14 @@
         .game-panel { display: none; }
         .game-panel.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-        .game-area { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border-subtle); }
+        .game-area {
+			background: var(--bg-elevated);
+			border-radius: var(--radius-md);
+			padding: 20px;
+			border: 1px solid var(--border-subtle);
+			overflow-x: auto; /* ← добавить */
+			-webkit-overflow-scrolling: touch;
+		}
         .game-area h3 { color: var(--gold); font-size: 1rem; text-align: center; margin-bottom: 16px; }
         .cards-container { display: flex; justify-content: center; gap: 10px; margin: 12px 0; min-height: 90px; }
         .card-el { width: 55px; height: 80px; background: linear-gradient(145deg,#fff,#e6e6e6); border-radius: 8px; border: 1px solid #999; box-shadow: 0 4px 0 #999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #0d1117; animation: deal 0.3s ease; transform: rotate(var(--rot,0deg)); }
@@ -96,58 +103,71 @@
         .back-btn { display: block; text-align: center; margin-top: 14px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; }
         .back-btn:hover { color: var(--gold); }
 
-        /* SUDOKU */
-        .sudoku-grid {
-            display: grid; grid-template-columns: repeat(9, 1fr);
-            margin: 16px 0; background: var(--border-strong);
-            border-radius: 12px; border: 3px solid var(--border-strong);
-            gap: 1px; padding: 0;
-        }
-        .sudoku-cell {
-            aspect-ratio: 1; background: var(--bg-card);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; font-weight: 700; cursor: pointer;
-            transition: all 0.1s; color: var(--text-primary);
-            user-select: none; position: relative; z-index: 1;
-        }
-        .sudoku-cell:nth-child(9n+3),
-        .sudoku-cell:nth-child(9n+6) { margin-right: 2px; }
-        .sudoku-cell:nth-child(9n+4),
-        .sudoku-cell:nth-child(9n+7) { margin-left: 1px; }
-        .sudoku-cell:nth-child(n+19):nth-child(-n+27),
-        .sudoku-cell:nth-child(n+46):nth-child(-n+54) { margin-bottom: 2px; }
-        .sudoku-cell:nth-child(n+28):nth-child(-n+30),
-        .sudoku-cell:nth-child(n+55):nth-child(-n+57) { margin-top: 1px; }
+		/* SUDOKU */
+		.sudoku-grid {
+			display: grid;
+			grid-template-columns: repeat(9, 1fr);
+			margin: 16px 0;
+			gap: 1px;
+			background: var(--border-strong);
+			border: 3px solid var(--border-strong);
+			border-radius: 12px;
+			width: 100%;
+			max-width: 100%;
+			/* убрать aspect-ratio */
+		}
 
-        .sudoku-cell:hover { background: var(--bg-elevated); z-index: 2; }
-        .sudoku-cell.fixed {
-            color: var(--gold); cursor: default; font-size: 1.05rem;
-            background: var(--bg-secondary);
-        }
-        .sudoku-cell.selected {
-            outline: 3px solid var(--gold); outline-offset: -2px;
-            background: var(--cell-selected-bg); z-index: 3; transform: scale(1.05);
-        }
-        .sudoku-cell.same-row-col { background: var(--cell-same-bg); }
-        .sudoku-cell.same-number { background: var(--cell-same-bg); }
-        .sudoku-cell.player-filled { color: var(--text-primary); font-weight: 700; }
-        .sudoku-cell.error {
-            color: white; background: var(--red); outline: none;
-        }
+		.sudoku-cell {
+			background: var(--bg-card);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.1s;
+			color: var(--text-primary);
+			user-select: none;
+			position: relative;
+			z-index: 1;
+			border: 1px solid var(--border-subtle);
+			padding: clamp(6px, 3vw, 20px); /* адаптивная высота */
+		}
 
-        .num-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin: 12px 0; }
-        .num-btn {
-            padding: 12px 4px; border-radius: 8px; border: 2px solid var(--border-subtle);
-            background: var(--bg-elevated); color: var(--text-primary);
-            font-size: 1rem; font-weight: 700; cursor: pointer;
-            transition: var(--transition); font-family: inherit;
-        }
-        .num-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
-        .num-btn:active { transform: scale(0.95); }
-        .num-btn.clear-btn { color: var(--red); border-color: rgba(229,83,75,0.3); font-size: 0.85rem; font-weight: 600; grid-column: span 3; }
-        .win-message { text-align: center; padding: 16px; color: var(--gold); font-size: 1.2rem; font-weight: 800; }
-        .sudoku-timer { text-align: center; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px; }
-        .sudoku-timer span { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
+		/* Жирные линии каждые 3 клетки */
+		.sudoku-cell:nth-child(3n) {
+			border-right: 2px solid var(--border-strong);
+		}
+		.sudoku-cell:nth-child(9n + 1) {
+			border-left: 2px solid var(--border-strong);
+		}
+		.sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
+		.sudoku-cell:nth-child(n + 46):nth-child(-n + 54),
+		.sudoku-cell:nth-child(n + 73):nth-child(-n + 81) {
+			border-bottom: 2px solid var(--border-strong);
+		}
+		.sudoku-cell:nth-child(-n + 9),
+		.sudoku-cell:nth-child(n + 28):nth-child(-n + 36),
+		.sudoku-cell:nth-child(n + 55):nth-child(-n + 63) {
+			border-top: 2px solid var(--border-strong);
+		}
+
+		/* Подсветка */
+		.sudoku-cell:hover { background: var(--bg-elevated); z-index: 2; }
+		.sudoku-cell.fixed {
+			color: var(--gold); cursor: default; font-size: 1.05rem;
+			background: var(--bg-secondary);
+		}
+		.sudoku-cell.selected {
+			outline: 3px solid var(--gold); outline-offset: -2px;
+			background: var(--cell-selected-bg); z-index: 3; transform: scale(1.05);
+		}
+		.sudoku-cell.same-row-col { background: var(--cell-same-bg); }
+		.sudoku-cell.same-number { background: var(--cell-same-bg); }
+		.sudoku-cell.player-filled { color: var(--text-primary); font-weight: 700; }
+		.sudoku-cell.error {
+			color: white; background: var(--red); outline: none;
+		}
 
         /* RUNES */
         .combo-overlay { text-align: center; font-size: 1.1rem; font-weight: 900; color: var(--gold); min-height: 28px; line-height: 28px; margin-bottom: 4px; }
@@ -168,6 +188,9 @@
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
+			.game-area {
+				padding: 12px 8px;
+			}
             .nav-toggle { display: block; }
             .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
