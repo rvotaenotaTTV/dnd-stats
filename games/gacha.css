@@ -1,0 +1,124 @@
+/* gacha.css — стили для игры «Крутки Раскола» */
+
+.result-area {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.drop-card {
+    background: var(--bg-elevated);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    animation: dropIn 0.5s ease;
+    max-width: 350px;
+    width: 100%;
+    border: 3px solid var(--border-subtle);
+}
+.drop-card.legendary {
+    border-color: #ffaa00;
+    box-shadow: 0 0 40px rgba(255,170,0,0.6), 0 0 80px rgba(255,215,0,0.3);
+    animation: dropIn 0.5s ease, legendaryPulse 1s ease infinite alternate;
+}
+.drop-card.epic {
+    border-color: #c471ed;
+    box-shadow: 0 0 30px rgba(196,113,237,0.5);
+    animation: dropIn 0.5s ease, epicPulse 1.5s ease infinite alternate;
+}
+.drop-card.rare {
+    border-color: #4a90d9;
+    box-shadow: 0 0 20px rgba(74,144,217,0.4);
+}
+.drop-card.uncommon { border-color: #3fb950; }
+.drop-card.common { border-color: var(--border-subtle); opacity: 0.7; }
+
+@keyframes dropIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+@keyframes legendaryPulse {
+    from { box-shadow: 0 0 40px rgba(255,170,0,0.6), 0 0 80px rgba(255,215,0,0.3); }
+    to { box-shadow: 0 0 60px rgba(255,170,0,0.9), 0 0 100px rgba(255,215,0,0.6); }
+}
+@keyframes epicPulse {
+    from { box-shadow: 0 0 30px rgba(196,113,237,0.5); }
+    to { box-shadow: 0 0 45px rgba(196,113,237,0.8); }
+}
+
+.drop-emoji { font-size: 4rem; margin-bottom: 10px; }
+.drop-name { font-size: 1.3rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+.drop-rarity { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+.rarity-legendary { color: #ffaa00; }
+.rarity-epic { color: #c471ed; }
+.rarity-rare { color: #4a90d9; }
+.rarity-uncommon { color: #3fb950; }
+.rarity-common { color: var(--text-muted); }
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 8px;
+}
+.collection-item {
+    background: var(--bg-elevated);
+    border-radius: 12px;
+    padding: 8px;
+    text-align: center;
+    font-size: 1.5rem;
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.collection-item:hover { border-color: var(--gold); transform: scale(1.1); }
+
+.recent-log {
+    margin-top: 16px;
+    padding: 10px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    max-height: 120px;
+    overflow-y: auto;
+}
+.recent-log h4 { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 6px; }
+.recent-item { color: var(--text-secondary); font-size: 0.72rem; padding: 2px 0; }
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+.modal-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    max-width: 350px;
+    width: 90%;
+    border: 3px solid var(--border-subtle);
+    animation: dropIn 0.3s ease;
+}
+.modal-card.legendary { border-color: #ffaa00; box-shadow: 0 0 40px rgba(255,170,0,0.6); }
+.modal-card.epic { border-color: #c471ed; box-shadow: 0 0 30px rgba(196,113,237,0.5); }
+.modal-card.rare { border-color: #4a90d9; box-shadow: 0 0 20px rgba(74,144,217,0.4); }
+.modal-card.uncommon { border-color: #3fb950; }
+.modal-card.common { border-color: var(--border-subtle); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.spin-animation { animation: spin 0.1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+@media (max-width: 768px) {
+    .drop-card { padding: 20px; }
+    .drop-emoji { font-size: 3rem; }
+}
