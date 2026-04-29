@@ -1305,7 +1305,7 @@
 			${item.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${item.desc}</div>` : ''}
 			<div class="drop-rarity rarity-${item.rarity}">${rarityLabel}</div>
 			<div style="display:flex;gap:8px;margin-top:16px;">
-				<button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать (${price}💎)</button>
+				<button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать<br>(${price}💎)</button>
 				<button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Закрыть</button>
 			</div>
 		</div>`;
