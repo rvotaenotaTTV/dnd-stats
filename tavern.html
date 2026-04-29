@@ -15,7 +15,7 @@
             --gold: #ffd700; --red: #e5534b; --green: #3fb950; --orange: #ff8c00;
             --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px;
             --shadow-gold: 0 0 20px rgba(255,215,0,0.15); --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --cell-selected-bg: rgba(255,215,0,0.3); --cell-same-bg: rgba(255,215,0,0.06);
+            --cell-selected-bg: rgba(255,215,0,0.3); --cell-same-bg: rgba(255,215,0,0.06); --cell-same-num-bg: rgba(255,215,0,0.12);
         }
         .light-theme {
             --bg-primary: #f5f0e8; --bg-secondary: #ede4d3; --bg-card: #fffbf5; --bg-elevated: #faf7f2;
@@ -23,7 +23,7 @@
             --text-primary: #2c2416; --text-secondary: #6b5d4f; --text-muted: #9b8b78;
             --gold: #b8860b; --red: #c0392b; --green: #27ae60; --orange: #e67e22;
             --shadow-gold: 0 0 20px rgba(184,134,11,0.2);
-            --cell-selected-bg: rgba(184,134,11,0.35); --cell-same-bg: rgba(184,134,11,0.12);
+            --cell-selected-bg: rgba(184,134,11,0.35); --cell-same-bg: rgba(184,134,11,0.10); --cell-same-num-bg: rgba(184,134,11,0.18);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -73,14 +73,7 @@
         .game-panel { display: none; }
         .game-panel.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-        .game-area {
-			background: var(--bg-elevated);
-			border-radius: var(--radius-md);
-			padding: 20px;
-			border: 1px solid var(--border-subtle);
-			overflow-x: auto; /* ← добавить */
-			-webkit-overflow-scrolling: touch;
-		}
+        .game-area { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border-subtle); overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .game-area h3 { color: var(--gold); font-size: 1rem; text-align: center; margin-bottom: 16px; }
         .cards-container { display: flex; justify-content: center; gap: 10px; margin: 12px 0; min-height: 90px; }
         .card-el { width: 55px; height: 80px; background: linear-gradient(145deg,#fff,#e6e6e6); border-radius: 8px; border: 1px solid #999; box-shadow: 0 4px 0 #999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #0d1117; animation: deal 0.3s ease; transform: rotate(var(--rot,0deg)); }
@@ -103,106 +96,46 @@
         .back-btn { display: block; text-align: center; margin-top: 14px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; }
         .back-btn:hover { color: var(--gold); }
 
-		/* SUDOKU */
-		.sudoku-grid {
-			display: grid;
-			grid-template-columns: repeat(9, 1fr);
-			margin: 16px 0;
-			gap: 1px;
-			background: var(--border-strong);
-			border: 3px solid var(--border-strong);
-			border-radius: 12px;
-			width: 100%;
-			max-width: 100%;
-		}
+        /* SUDOKU */
+        .sudoku-grid {
+            display: grid; grid-template-columns: repeat(9, 1fr);
+            margin: 16px 0; gap: 1px; background: var(--border-strong);
+            border: 3px solid var(--border-strong); border-radius: 12px;
+            width: 100%; max-width: 100%;
+        }
+        .sudoku-cell {
+            aspect-ratio: 1; background: var(--bg-card);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+            transition: all 0.1s; color: var(--text-primary);
+            user-select: none; position: relative; z-index: 1;
+            border: 1px solid var(--border-subtle);
+        }
+        .sudoku-cell:nth-child(3n) { border-right: 2px solid var(--border-strong); }
+        .sudoku-cell:nth-child(9n+1) { border-left: 2px solid var(--border-strong); }
+        .sudoku-cell:nth-child(n+19):nth-child(-n+27),
+        .sudoku-cell:nth-child(n+46):nth-child(-n+54),
+        .sudoku-cell:nth-child(n+73):nth-child(-n+81) { border-bottom: 2px solid var(--border-strong); }
+        .sudoku-cell:nth-child(-n+9),
+        .sudoku-cell:nth-child(n+28):nth-child(-n+36),
+        .sudoku-cell:nth-child(n+55):nth-child(-n+63) { border-top: 2px solid var(--border-strong); }
+        .sudoku-cell:hover { background: var(--bg-elevated); z-index: 2; }
+        .sudoku-cell.fixed { color: var(--gold); cursor: default; font-size: 1.05rem; background: var(--bg-secondary); }
+        .sudoku-cell.selected { outline: 3px solid var(--gold); outline-offset: -2px; background: var(--cell-selected-bg); z-index: 3; transform: scale(1.05); }
+        .sudoku-cell.same-row-col { background: var(--cell-same-bg); }
+        .sudoku-cell.same-number { background: var(--cell-same-num-bg); filter: brightness(1.1); }
+        .sudoku-cell.player-filled { color: var(--text-primary); font-weight: 700; }
+        .sudoku-cell.error { color: var(--red); background: rgba(229,83,75,0.25); outline: 2px solid var(--red); outline-offset: -2px; }
 
-		.sudoku-cell {
-			background: var(--bg-card);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 1rem;
-			font-weight: 700;
-			cursor: pointer;
-			transition: all 0.1s;
-			color: var(--text-primary);
-			user-select: none;
-			position: relative;
-			z-index: 1;
-			border: 1px solid var(--border-subtle);
-			padding: clamp(6px, 3vw, 20px);
-		}
-
-		.sudoku-cell:nth-child(3n) {
-			border-right: 2px solid var(--border-strong);
-		}
-		.sudoku-cell:nth-child(9n + 1) {
-			border-left: 2px solid var(--border-strong);
-		}
-		.sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
-		.sudoku-cell:nth-child(n + 46):nth-child(-n + 54),
-		.sudoku-cell:nth-child(n + 73):nth-child(-n + 81) {
-			border-bottom: 2px solid var(--border-strong);
-		}
-		.sudoku-cell:nth-child(-n + 9),
-		.sudoku-cell:nth-child(n + 28):nth-child(-n + 36),
-		.sudoku-cell:nth-child(n + 55):nth-child(-n + 63) {
-			border-top: 2px solid var(--border-strong);
-		}
-
-		.sudoku-cell:hover { background: var(--bg-elevated); z-index: 2; }
-		.sudoku-cell.fixed {
-			color: var(--gold); cursor: default; font-size: 1.05rem;
-			background: var(--bg-secondary);
-		}
-		.sudoku-cell.selected {
-			outline: 3px solid var(--gold); outline-offset: -2px;
-			background: var(--cell-selected-bg); z-index: 3; transform: scale(1.05);
-		}
-		.sudoku-cell.same-row-col { background: var(--cell-same-bg); }
-		.sudoku-cell.same-number { background: var(--cell-same-bg); }
-		.sudoku-cell.player-filled { color: var(--text-primary); font-weight: 700; }
-		.sudoku-cell.error {
-			color: white; background: var(--red); outline: none;
-		}
-		
-		.num-pad {
-			display: grid;
-			grid-template-columns: repeat(9, 1fr);
-			gap: 6px;
-			margin: 12px 0;
-		}
-
-		.num-btn {
-			padding: 14px 8px;
-			border-radius: 10px;
-			border: 2px solid var(--border-subtle);
-			background: var(--bg-elevated);
-			color: var(--text-primary);
-			font-size: 1rem;
-			font-weight: 700;
-			cursor: pointer;
-			transition: var(--transition);
-			font-family: inherit;
-		}
-
-		.num-btn:hover {
-			border-color: var(--gold);
-			background: var(--cell-selected-bg);
-			transform: translateY(-2px);
-		}
-		.num-btn:active { transform: scale(0.95); }
-		.num-btn.clear-btn {
-			color: var(--red);
-			border-color: rgba(229,83,75,0.3);
-			font-size: 0.85rem;
-			font-weight: 600;
-			grid-column: span 3;
-		}
-		.num-btn.clear-btn:hover {
-			border-color: var(--red);
-			background: rgba(229,83,75,0.1);
-		}
+        .num-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin: 12px 0; }
+        .num-btn { padding: 14px 8px; border-radius: 10px; border: 2px solid var(--border-subtle); background: var(--bg-elevated); color: var(--text-primary); font-size: 1rem; font-weight: 700; cursor: pointer; transition: var(--transition); font-family: inherit; }
+        .num-btn:hover { border-color: var(--gold); background: var(--cell-selected-bg); transform: translateY(-2px); }
+        .num-btn:active { transform: scale(0.95); }
+        .num-btn.clear-btn { color: var(--red); border-color: rgba(229,83,75,0.3); font-size: 0.85rem; font-weight: 600; grid-column: span 3; }
+        .num-btn.clear-btn:hover { border-color: var(--red); background: rgba(229,83,75,0.1); }
+        .win-message { text-align: center; padding: 16px; color: var(--gold); font-size: 1.2rem; font-weight: 800; }
+        .sudoku-timer { text-align: center; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px; }
+        .sudoku-timer span { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
 
         /* RUNES */
         .combo-overlay { text-align: center; font-size: 1.1rem; font-weight: 900; color: var(--gold); min-height: 28px; line-height: 28px; margin-bottom: 4px; }
@@ -211,7 +144,11 @@
         .rune-cell:hover { transform: scale(1.06); z-index: 1; }
         .rune-cell.selected { border-color: var(--gold); box-shadow: 0 0 16px rgba(255,215,0,0.6); transform: scale(1.1); }
         .rune-cell.glowing { border-color: #fff; box-shadow: 0 0 24px rgba(255,255,255,0.8), 0 0 40px rgba(255,215,0,0.4); animation: glowPop 0.4s ease-out; }
+        .rune-cell.shake { animation: cellShake 0.3s; }
+        .rune-cell.hint { border-color: rgba(255,215,0,0.6); box-shadow: 0 0 10px rgba(255,215,0,0.3); animation: hintPulse 0.8s ease-in-out infinite; }
         @keyframes glowPop { 0%{transform:scale(1)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
+        @keyframes cellShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
+        @keyframes hintPulse { 0%,100%{box-shadow:0 0 6px rgba(255,215,0,0.2)} 50%{box-shadow:0 0 16px rgba(255,215,0,0.5)} }
         .drawn-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 10px 0; min-height: 100px; }
         .pig-card { width: 65px; height: 95px; background: linear-gradient(145deg,#fff,#e6e6e6); border-radius: 8px; border: 1px solid #999; box-shadow: 0 4px 0 #999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: #0d1117; animation: deal 0.3s ease; }
         .pig-card.red { color: #c0392b; } .pig-card-suit { font-size: 20px; }
@@ -223,9 +160,6 @@
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
-			.game-area {
-				padding: 12px 8px;
-			}
             .nav-toggle { display: block; }
             .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
@@ -242,6 +176,7 @@
             .sudoku-cell.fixed { font-size: 0.75rem; }
             .num-btn { font-size: 0.8rem; padding: 10px 2px; }
             .rune-cell { font-size: 1.3rem; }
+            .game-area { padding: 12px 8px; }
         }
     </style>
 </head>
@@ -272,7 +207,7 @@
             <div id="panel-ochko" class="game-panel"><div class="game-area"><h3>🃏 Не лопни!</h3><div style="text-align:center;color:var(--text-muted)">Карты ГуангГуанга</div><div class="cards-container" id="dealerCards"></div><div class="score">Сумма: <span class="score-value" id="dealerScore">0</span></div><div style="text-align:center;color:var(--text-muted);margin-top:14px">Твои карты</div><div class="cards-container" id="playerCards"></div><div class="score">Сумма: <span class="score-value" id="playerScore">0</span></div><div class="bet-info">🎲 Ставка: <span>10 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="startBtn" onclick="ochko.startGame()">🃏 Играем</button><button class="btn btn-secondary" id="hitBtn" onclick="ochko.hit()" disabled>➕ Ещё</button><button class="btn btn-secondary" id="standBtn" onclick="ochko.stand()" disabled>✋ Я всё</button></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div></div>
             <div id="panel-pig" class="game-panel"><div class="game-area"><h3>🐷 Сало или золото?</h3><div class="last-card-info" id="lastCardInfo"></div><div class="drawn-cards" id="drawnCards"></div><div style="text-align:center"><div class="multiplier-box"><span style="color:var(--text-muted)">Множитель </span><span class="multiplier-value" id="multiplier">x1</span><span style="color:var(--text-muted);font-size:0.8rem"> → <span id="nextMultiplier">x2</span></span></div></div><div class="bet-info">🎲 Ставка: <span>5 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="pigStartBtn" onclick="pigGame.start()">🐷 Новая</button><button class="btn btn-secondary" id="pigDrawBtn" onclick="pigGame.draw()" disabled>🃏 Тянуть</button><button class="btn btn-secondary" id="pigStopBtn" onclick="pigGame.stop()" disabled>✋ Хватит</button></div><div class="history-box" id="historyBox"></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div></div>
             <div id="panel-sudoku" class="game-panel"><div class="game-area"><h3>🧩 Мозголомка</h3><div class="sudoku-timer">⏱ <span id="sudokuTimer">00:00</span></div><div class="sudoku-grid" id="sudokuGrid"></div><div class="num-pad"><button class="num-btn" onclick="window.sudokuPlace(1)">1</button><button class="num-btn" onclick="window.sudokuPlace(2)">2</button><button class="num-btn" onclick="window.sudokuPlace(3)">3</button><button class="num-btn" onclick="window.sudokuPlace(4)">4</button><button class="num-btn" onclick="window.sudokuPlace(5)">5</button><button class="num-btn" onclick="window.sudokuPlace(6)">6</button><button class="num-btn" onclick="window.sudokuPlace(7)">7</button><button class="num-btn" onclick="window.sudokuPlace(8)">8</button><button class="num-btn" onclick="window.sudokuPlace(9)">9</button><button class="num-btn clear-btn" onclick="window.sudokuPlace(0)" style="grid-column:span 9">✕ Очистить</button></div><div class="bet-info">🎲 Ставка: <span>5 💎</span> | 🏆 Выигрыш: <span id="sudokuMulti">×3</span></div><div class="game-buttons"><button class="btn btn-primary" onclick="window.sudokuNewGame()">🆕 Новая</button><button class="btn btn-secondary" id="sudokuCheckBtn" onclick="window.sudokuCheck()" disabled>✅ Проверить</button></div><div id="sudokuMessage"></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div></div>
-            <div id="panel-runes" class="game-panel"><div class="game-area"><h3>🔮 Руны Раскола</h3><div class="combo-overlay" id="comboOverlay"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Ходов</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="movesLeft">30</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Комбо</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="comboCount">×1</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Очки</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="score">0</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Выигрыш</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="earned">0 💎</div></div></div><div class="runes-grid" id="runesGrid"></div><div class="bet-info">🎲 Ставка: <span>10 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="runesNewBtn" onclick="runesNewGame()">🆕 Новая игра</button><button class="btn btn-secondary" id="runesCashBtn" onclick="runesCashOut()" disabled>💰 Забрать</button></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div></div>
+            <div id="panel-runes" class="game-panel"><div class="game-area"><h3>🔮 Руны Раскола</h3><div class="combo-overlay" id="comboOverlay"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Ходов</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="movesLeft">30</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Комбо</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="comboCount">×1</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Очки</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="runesScore">0</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Выигрыш</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="earned">0 💎</div></div></div><div class="runes-grid" id="runesGrid"></div><div class="bet-info">🎲 Ставка: <span>10 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="runesNewBtn" onclick="runesNewGame()">🆕 Новая игра</button><button class="btn btn-secondary" id="runesCashBtn" onclick="runesCashOut()" disabled>💰 Забрать</button></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div></div>
         </div>
     </div>
     <script>
@@ -305,7 +240,6 @@
         window.sudokuPlace=function(num){if(!sActive||!sSel)return;if(sFixed[sSel.r][sSel.c])return;sGrid[sSel.r][sSel.c]=num;sudokuRender();const hasEmpty=sGrid.some(row=>row.some(cell=>cell===0));document.getElementById('sudokuCheckBtn').disabled=hasEmpty;};
         window.sudokuCheck=function(){if(!sActive)return;let ok=true,hasEmpty=false;const errors=[];for(let r=0;r<SZ;r++){for(let c=0;c<SZ;c++){if(sGrid[r][c]===0){hasEmpty=true;}else if(sGrid[r][c]!==sSol[r][c]){ok=false;errors.push({r,c});}}}if(ok&&!hasEmpty){sActive=false;clearInterval(sTimerInterval);document.getElementById('sudokuCheckBtn').disabled=true;let mult=3;if(sSeconds<180)mult=5;else if(sSeconds<600)mult=3;else mult=2;const win=10*mult;balance+=win;updateBalance();const m=Math.floor(sSeconds/60),s=sSeconds%60;const timeStr=m>0?`${m}м ${s}с`:`${s}с`;document.getElementById('sudokuMessage').innerHTML=`<div class="win-message">🎉 +${win} 💎 (×${mult}, ${timeStr})</div>`;flashWin();setQuote('🧩 ГуангГуанг уважает!');}else if(hasEmpty){document.getElementById('sudokuMessage').innerHTML=`<div style="text-align:center;color:var(--orange);padding:8px">⚠️ Заполни всё поле!</div>`;setTimeout(()=>{document.getElementById('sudokuMessage').innerHTML='';},2000);}else{const cells=document.querySelectorAll('.sudoku-cell');errors.forEach(({r,c})=>{const idx=r*SZ+c;if(cells[idx])cells[idx].classList.add('error');});document.getElementById('sudokuMessage').innerHTML=`<div style="text-align:center;color:var(--red);padding:8px">❌ Ошибки подсвечены красным</div>`;setTimeout(()=>{document.querySelectorAll('.sudoku-cell.error').forEach(el=>el.classList.remove('error'));document.getElementById('sudokuMessage').innerHTML='';},2000);}};
         window.sudokuNewGame=function(){if(antiSpam()||balance<5){if(balance<5)setQuote('Нет осколков!');return;}balance-=5;updateBalance();sGen();sActive=true;sSel=null;document.getElementById('sudokuCheckBtn').disabled=true;document.getElementById('sudokuMessage').innerHTML='';sudokuRender();setQuote('🧩 Новая партия. Время пошло!');};
-        sGen();sActive=true;
 
         const ROWS=6,COLS=6,RUNES_BET=10,MAX_MOVES=30,RUNES=['🔥','💧','🌿','⚡','💀','✨'];let runesGrid=[],runesSelected=null,runesScore=0,runesEarned=0,runesCombo=1,runesActive=false,runesProcessing=false,runesMovesLeft=MAX_MOVES,hintTimeout=null,hintCells=[];
         function runesNewGame(){if(balance<RUNES_BET){setQuote('Недостаточно осколков!');return;}balance-=RUNES_BET;updateBalance();runesGrid=[];runesSelected=null;runesScore=0;runesEarned=0;runesCombo=1;runesMovesLeft=MAX_MOVES;runesActive=true;runesProcessing=false;clearHints();for(let r=0;r<ROWS;r++){runesGrid[r]=[];for(let c=0;c<COLS;c++)runesGrid[r][c]=randomRune();}removeInitialMatches();updateRunesUI();runesRender();setQuote('🔮 Руны ждут, странник!');document.getElementById('comboOverlay').textContent='';document.getElementById('runesNewBtn').disabled=true;document.getElementById('runesCashBtn').disabled=false;scheduleHint();}
@@ -313,7 +247,7 @@
         function calcRunesEarned(){return Math.floor(runesScore*(0.8+runesCombo*0.1));}
         function randomRune(){return RUNES[Math.floor(Math.random()*RUNES.length)];}
         function removeInitialMatches(){let hasMatch=true,iterations=0;while(hasMatch&&iterations<100){hasMatch=false;iterations++;const matches=findRunesMatches();if(matches.length>0){hasMatch=true;for(const m of matches)runesGrid[m.r][m.c]=randomRune();}}}
-        function updateRunesUI(){document.getElementById('movesLeft').textContent=runesMovesLeft;document.getElementById('comboCount').textContent='×'+runesCombo;document.getElementById('score').textContent=runesScore;document.getElementById('earned').textContent=runesEarned+' 💎';}
+        function updateRunesUI(){document.getElementById('movesLeft').textContent=runesMovesLeft;document.getElementById('comboCount').textContent='×'+runesCombo;document.getElementById('runesScore').textContent=runesScore;document.getElementById('earned').textContent=runesEarned+' 💎';}
         function runesRender(){const gridEl=document.getElementById('runesGrid');gridEl.innerHTML='';for(let r=0;r<ROWS;r++){for(let c=0;c<COLS;c++){const cell=document.createElement('div');cell.className='rune-cell';cell.textContent=runesGrid[r][c]||'';if(runesSelected&&runesSelected.r===r&&runesSelected.c===c)cell.classList.add('selected');if(hintCells.some(h=>h.r===r&&h.c===c))cell.classList.add('hint');cell.addEventListener('click',()=>runeClick(r,c));gridEl.appendChild(cell);}}}
         function runeClick(r,c){if(!runesActive||runesProcessing)return;clearHints();if(!runesSelected){runesSelected={r,c};runesRender();scheduleHint();return;}if(runesSelected.r===r&&runesSelected.c===c){runesSelected=null;runesRender();scheduleHint();return;}if(!isRuneAdjacent(runesSelected.r,runesSelected.c,r,c)){runesSelected={r,c};runesRender();scheduleHint();return;}const sr=runesSelected.r,sc=runesSelected.c;swapRunes(sr,sc,r,c);const matches=findRunesMatches();if(matches.length===0){const cell1=document.querySelector(`#runesGrid .rune-cell:nth-child(${sr*COLS+sc+1})`),cell2=document.querySelector(`#runesGrid .rune-cell:nth-child(${r*COLS+c+1})`);if(cell1)cell1.classList.add('shake');if(cell2)cell2.classList.add('shake');setTimeout(()=>{swapRunes(sr,sc,r,c);runesRender();scheduleHint();},150);runesSelected=null;setQuote('Эти руны не хотят дружить...');runesMovesLeft--;updateRunesUI();if(runesMovesLeft<=0){endRunesGame();return;}return;}runesSelected=null;runesMovesLeft--;updateRunesUI();processRunesMatches(matches);}
         function isRuneAdjacent(r1,c1,r2,c2){return Math.abs(r1-r2)+Math.abs(c1-c2)===1;}
