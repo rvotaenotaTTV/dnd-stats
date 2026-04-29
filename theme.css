@@ -1,4 +1,4 @@
-/* theme.css — общие стили и переменные для светлой/тёмной темы */
+/* theme.css */
 :root {
     --bg-primary: #0a0e14; --bg-secondary: #11161d; --bg-card: #161c24; --bg-elevated: #1c2330;
     --border-subtle: #252d38; --border-strong: #3a4555;
@@ -23,22 +23,8 @@ body {
     min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased;
 }
 #fixed-buttons {
-    position: fixed !important;
-    top: 12px !important;
-    right: 12px !important;
-    z-index: 9999 !important;
-    display: flex !important;
-    gap: 6px !important;
-    pointer-events: auto !important;
-}
-
-/* Добавьте это для мобильных, чтобы перебить возможные конфликты */
-@media (max-width: 768px) {
-    #fixed-buttons {
-        top: 8px !important;
-        right: 8px !important;
-        position: fixed !important;
-    }
+    position: fixed; top: 12px; right: 12px; z-index: 1000;
+    display: flex; gap: 6px;
 }
 .fixed-btn {
     width: 38px; height: 38px; border-radius: 50%;
@@ -49,6 +35,6 @@ body {
     display: flex; align-items: center; justify-content: center;
     transition: var(--transition); text-decoration: none;
 }
-.fixed-btn:hover { border-color: var(--gold); transform: scale(1.1); }
+.fixed-btn:hover { border-color: var(--gold); }
 .beer-btn { background: #c49600; border-color: var(--gold); color: #1a1a1a; }
 .beer-btn:hover { background: var(--gold); }
