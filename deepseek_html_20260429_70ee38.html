@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Крутки Раскола</title>
+    <link rel="stylesheet" href="theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary); min-height: 100vh; line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px 24px 40px; }
+        .header { text-align: center; padding: 30px 0 20px; }
+        .header-title {
+            font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 50%, var(--gold) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .header-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
+
+        .nav-wrapper { margin-bottom: 28px; }
+        .nav-toggle { display: none; width: 100%; padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 28px; color: var(--gold); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px; background: var(--bg-secondary); border-radius: 28px; border: 1px solid var(--border-subtle); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: 0.2s; white-space: nowrap; }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; }
+
+        .gacha-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; }
+        .gacha-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold), transparent); opacity: 0.6; }
+
+        .balance-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .balance-badge { background: var(--bg-elevated); border: 1px solid var(--gold); border-radius: 25px; padding: 8px 20px; color: var(--gold); font-weight: 700; font-size: 1rem; }
+        .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 14px 24px; border-radius: 25px; font-weight: 700; cursor: pointer; border: none; font-size: 0.9rem; font-family: inherit; transition: 0.2s; }
+        .btn-primary { background: var(--gold); color: #1a1a1a; }
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-secondary { background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-primary); }
+        .btn-secondary:hover { border-color: var(--gold); }
+
+        .result-area { min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px 0; }
+        .drop-card {
+            background: var(--bg-elevated); border-radius: 20px; padding: 30px; text-align: center;
+            animation: dropIn 0.5s ease; max-width: 350px; width: 100%;
+            border: 3px solid var(--border-subtle);
+        }
+        .drop-card.legendary { border-color: #ffaa00; box-shadow: 0 0 40px rgba(255,170,0,0.6), 0 0 80px rgba(255,215,0,0.3); }
+        .drop-card.epic { border-color: #c471ed; box-shadow: 0 0 30px rgba(196,113,237,0.5); }
+        .drop-card.rare { border-color: #4a90d9; box-shadow: 0 0 20px rgba(74,144,217,0.4); }
+        .drop-card.uncommon { border-color: #3fb950; }
+        .drop-card.common { border-color: var(--border-subtle); opacity: 0.7; }
+        @keyframes dropIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .drop-emoji { font-size: 4rem; margin-bottom: 10px; }
+        .drop-name { font-size: 1.3rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+        .drop-rarity { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+        .rarity-legendary { color: #ffaa00; }
+        .rarity-epic { color: #c471ed; }
+        .rarity-rare { color: #4a90d9; }
+        .rarity-uncommon { color: #3fb950; }
+        .rarity-common { color: var(--text-muted); }
+
+        .collection { margin-top: 30px; }
+        .collection h3 { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
+        .collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
+        .collection-item {
+            background: var(--bg-elevated); border-radius: 12px; padding: 8px; text-align: center;
+            font-size: 1.5rem; border: 1px solid var(--border-subtle); cursor: pointer; transition: 0.2s;
+        }
+        .collection-item:hover { border-color: var(--gold); transform: scale(1.1); }
+
+        .innkeeper { display: flex; align-items: center; gap: 14px; background: var(--bg-elevated); border-radius: 14px; padding: 16px 18px; margin-bottom: 20px; border-left: 3px solid var(--gold); }
+        .innkeeper-avatar { font-size: 2.5rem; }
+        .innkeeper-quote { color: var(--text-secondary); font-style: italic; font-size: 0.85rem; flex: 1; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 32px; }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 12px 16px; border-radius: 8px; justify-content: center; }
+            .drop-card { padding: 20px; }
+            .drop-emoji { font-size: 3rem; }
+            .header-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title">🎰 КРУТКИ РАСКОЛА</h1>
+            <p class="header-subtitle">ГуангГуанг продаёт — ГуангГуанг забирает</p>
+        </header>
+
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                <a href="gacha.html" class="nav-link active">🎰 Крутки</a>
+            </nav>
+        </div>
+
+        <div class="gacha-card" id="gachaCard">
+            <div class="innkeeper">
+                <div class="innkeeper-avatar">🐼</div>
+                <div class="innkeeper-quote" id="innkeeperQuote">Крутани разок, странник... Может, повезёт!</div>
+            </div>
+
+            <div class="balance-row">
+                <div class="balance-badge">💎 <span id="balance">100</span></div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="pull(1)">🎰 Крутка (10💎)</button>
+                    <button class="btn btn-secondary" onclick="pull(10)">🔥 ×10 (90💎)</button>
+                </div>
+            </div>
+
+            <div class="result-area" id="resultArea">
+                <div style="color:var(--text-muted);text-align:center;">Нажми на крутку, странник...</div>
+            </div>
+
+            <div class="collection">
+                <h3>📦 Коллекция (<span id="collectionCount">0</span>)</h3>
+                <div class="collection-grid" id="collectionGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="theme.js"></script>
+    <script>
+        function toggleNav() {
+            const nav = document.getElementById('pageNav');
+            nav.classList.toggle('show');
+            document.querySelector('.nav-toggle').textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        }
+
+        let balance = parseInt(localStorage.getItem('gachaBalance')) || 100;
+        let collection = JSON.parse(localStorage.getItem('gachaCollection')) || [];
+
+        function updateBalance() {
+            document.getElementById('balance').textContent = balance;
+            localStorage.setItem('gachaBalance', balance);
+        }
+
+        function setQuote(t) {
+            document.getElementById('innkeeperQuote').textContent = t;
+        }
+
+        // ==================== ГЕНЕРАЦИЯ ДАННЫХ ====================
+        async function loadData() {
+            const url = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+            const cdn = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+            try {
+                const r = await fetch(url); if (!r.ok) throw new Error();
+                return await r.json();
+            } catch {
+                const r = await fetch(cdn);
+                return await r.json();
+            }
+        }
+
+        async function buildPool() {
+            const data = await loadData();
+            const players = data.players.filter(p => p.name && p.name !== 'Unknown');
+            const pool = [];
+
+            // 🟫 Мусор (60%)
+            const junk = [
+                { emoji: '🦴', name: 'Кость', rarity: 'common' },
+                { emoji: '🍂', name: 'Лист', rarity: 'common' },
+                { emoji: '🍺', name: 'Кружка ГуангГуанга', rarity: 'common' },
+                { emoji: '🪨', name: 'Камень', rarity: 'common' },
+                { emoji: '🕯️', name: 'Огарок свечи', rarity: 'common' },
+                { emoji: '🧦', name: 'Носок', rarity: 'common' },
+                { emoji: '🪶', name: 'Перо', rarity: 'common' },
+                { emoji: '🗑️', name: 'Мусор', rarity: 'common' },
+            ];
+            junk.forEach(item => { for (let i = 0; i < 15; i++) pool.push(item); });
+
+            // 🟩 Зелень (25%) — зелья, расходники
+            const uncommon = [
+                { emoji: '🧪', name: 'Зелье силы', rarity: 'uncommon' },
+                { emoji: '🛡️', name: 'Благословение', rarity: 'uncommon' },
+                { emoji: '✨', name: 'Чудо', rarity: 'uncommon' },
+                { emoji: '📜', name: 'Свиток', rarity: 'uncommon' },
+                { emoji: '💎', name: 'Осколок', rarity: 'uncommon' },
+                { emoji: '⚗️', name: 'Эликсир', rarity: 'uncommon' },
+                { emoji: '🗡️', name: 'Кинжал', rarity: 'uncommon' },
+                { emoji: '🔮', name: 'Кристалл', rarity: 'uncommon' },
+            ];
+            uncommon.forEach(item => { for (let i = 0; i < 6; i++) pool.push(item); });
+
+            // 🟦 Синька (10%) — редкие предметы, оружие
+            const rare = [
+                { emoji: '⚔️', name: 'Меч Аэлиона', rarity: 'rare' },
+                { emoji: '🏹', name: 'Лук Следопыта', rarity: 'rare' },
+                { emoji: '🪓', name: 'Топор Варвара', rarity: 'rare' },
+                { emoji: '🗡️', name: 'Клинок Тени', rarity: 'rare' },
+                { emoji: '🛡️', name: 'Щит Паладина', rarity: 'rare' },
+                { emoji: '💎💎', name: 'Двойной осколок', rarity: 'rare' },
+            ];
+            rare.forEach(item => { for (let i = 0; i < 3; i++) pool.push(item); });
+
+            // 🟪 Фиол (4%) — эпики, локации, топ-игроки
+            const epic = [
+                { emoji: '🏰', name: 'Сияющий Шпиль', rarity: 'epic' },
+                { emoji: '🌑', name: 'Эпицентр Раскола', rarity: 'epic' },
+                { emoji: '🎭', name: 'Арена Тысячи Эхо', rarity: 'epic' },
+                { emoji: '🔥', name: 'Кузня Расколотых', rarity: 'epic' },
+                { emoji: '🌫️', name: 'Зал Повествователя', rarity: 'epic' },
+                { emoji: '👑', name: 'Корона Раскола', rarity: 'epic' },
+            ];
+            epic.forEach(item => pool.push(item));
+            // Игроки топ-10 — фиол
+            const top10 = players.sort((a, b) => (b.wins || 0) - (a.wins || 0)).slice(0, 10);
+            top10.forEach(p => {
+                pool.push({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'epic', desc: p.name });
+            });
+
+            // 🟨 Лега (1%) — легендарки
+            const legendary = [
+                { emoji: '🐼', name: 'ГуангГуанг', rarity: 'legendary', desc: 'Трактирщик' },
+                { emoji: '🔮', name: 'Осколок Клинка', rarity: 'legendary' },
+                { emoji: '🌞', name: 'Солнечный Клинок', rarity: 'legendary', desc: 'Артефакт' },
+            ];
+            legendary.forEach(item => pool.push(item));
+            // Чемпионы турниров — лега
+            const champions = players.filter(p => p.tournamentWins > 0 || p.champion);
+            champions.forEach(p => {
+                pool.push({ emoji: p.emoji || '👑', name: p.display, rarity: 'legendary', desc: p.name + ' | Чемпион' });
+            });
+
+            return pool;
+        }
+
+        let itemPool = [];
+        loadData().then(() => buildPool().then(pool => { itemPool = pool; }));
+
+        // ==================== КРУТКА ====================
+        function pull(count) {
+            const cost = count === 10 ? 90 : 10;
+            if (balance < cost) { setQuote('Недостаточно осколков!'); return; }
+            balance -= cost;
+            updateBalance();
+
+            const area = document.getElementById('resultArea');
+            area.innerHTML = '<div style="text-align:center;color:var(--gold);font-size:2rem;">🎰 Крутим...</div>';
+
+            setTimeout(() => {
+                if (itemPool.length === 0) {
+                    area.innerHTML = '<div style="text-align:center;color:var(--red);">Данные загружаются...</div>';
+                    return;
+                }
+
+                const drops = [];
+                for (let i = 0; i < count; i++) {
+                    drops.push(itemPool[Math.floor(Math.random() * itemPool.length)]);
+                }
+
+                // Показываем последний (самый крутой)
+                const best = drops.reduce((a, b) => {
+                    const order = ['legendary', 'epic', 'rare', 'uncommon', 'common'];
+                    return order.indexOf(a.rarity) < order.indexOf(b.rarity) ? a : b;
+                });
+
+                // Добавляем в коллекцию
+                drops.forEach(d => collection.push(d));
+                if (collection.length > 200) collection = collection.slice(-200);
+                localStorage.setItem('gachaCollection', JSON.stringify(collection));
+
+                // Показываем результат
+                const rarityClass = best.rarity === 'legendary' ? 'legendary' : best.rarity === 'epic' ? 'epic' : best.rarity === 'rare' ? 'rare' : best.rarity === 'uncommon' ? 'uncommon' : 'common';
+                const rarityLabel = best.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : best.rarity === 'epic' ? 'Эпический' : best.rarity === 'rare' ? 'Редкий' : best.rarity === 'uncommon' ? 'Необычный' : 'Обычный';
+
+                area.innerHTML = `
+                    <div class="drop-card ${rarityClass}">
+                        <div class="drop-emoji">${best.emoji}</div>
+                        <div class="drop-name">${best.name}</div>
+                        ${best.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${best.desc}</div>` : ''}
+                        <div class="drop-rarity rarity-${best.rarity}">${rarityLabel}</div>
+                        ${count > 1 ? `<div style="color:var(--text-muted);font-size:0.75rem;margin-top:8px;">+ ещё ${count - 1} предметов</div>` : ''}
+                    </div>
+                `;
+
+                if (best.rarity === 'legendary') {
+                    setQuote('🐼 БАМБУК ПОТРЯСЁН! ЛЕГЕНДАРКА!!!');
+                } else if (best.rarity === 'epic') {
+                    setQuote('✨ Эпик! ГуангГуанг одобряет!');
+                } else if (best.rarity === 'rare') {
+                    setQuote('👀 Ого, редкая штука!');
+                } else if (best.rarity === 'uncommon') {
+                    setQuote('🙂 Неплохо, странник.');
+                } else {
+                    setQuote('🗑️ Мусор... но ты заходи ещё!');
+                }
+
+                renderCollection();
+            }, 800);
+        }
+
+        // ==================== КОЛЛЕКЦИЯ ====================
+        function renderCollection() {
+            const grid = document.getElementById('collectionGrid');
+            const count = document.getElementById('collectionCount');
+            count.textContent = collection.length;
+
+            const recent = collection.slice(-40).reverse();
+            grid.innerHTML = recent.map(item => {
+                const rarityColor = item.rarity === 'legendary' ? '#ffaa00' : item.rarity === 'epic' ? '#c471ed' : item.rarity === 'rare' ? '#4a90d9' : item.rarity === 'uncommon' ? '#3fb950' : 'var(--text-muted)';
+                return `<div class="collection-item" style="border-color:${rarityColor};" title="${item.name} (${item.rarity})">${item.emoji}</div>`;
+            }).join('');
+        }
+
+        updateBalance();
+        renderCollection();
+    </script>
+</body>
+</html>
