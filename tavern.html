@@ -194,26 +194,345 @@
         </div>
     </div>
     <script>
-        function toggleTheme(){document.documentElement.classList.toggle('light-theme');const isLight=document.documentElement.classList.contains('light-theme');document.getElementById('themeBtn').textContent=isLight?'🌚 Культ Тьмы':'🌝 Орден Света';localStorage.setItem('theme',isLight?'light':'dark');}
-        if(localStorage.getItem('theme')==='light'){document.documentElement.classList.add('light-theme');document.getElementById('themeBtn').textContent='🌚 Культ Тьмы';}
-        function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
-        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
-        let balance=parseInt(localStorage.getItem('tavernBalance'))||100;
-        function updateBalance(){document.getElementById('balance').textContent=`💎 ${balance}`;localStorage.setItem('tavernBalance',balance);}
-        function setQuote(t){document.getElementById('innkeeperQuote').textContent=t;}
-        function flashWin(){const c=document.getElementById('tavernCard');c.classList.add('flash-win');setTimeout(()=>c.classList.remove('flash-win'),500);}
-        function shakeBalance(){const e=document.getElementById('balance');e.classList.add('shake');setTimeout(()=>e.classList.remove('shake'),300);}
-        const quotes=["Сыграем в очко?","ГуангГуанг верит в твою удачу!","Бамбук шепчет: бери ещё!","Очко — игра смелых!","Перебор? Бывает!","Блэкджек! Ты великий воин!","Осколки приходят и уходят...","Ставки сделаны!","Руны не врут!","Три в ряд — и ты богач!","Сало или золото — вот в чём вопрос!","Девять кругов бамбука ждут тебя!","Не лопни, странник!","ГуангГуанг шепчет: бери ещё карту!","Бамбук не прощает жадности!","Свинья любит смелых!","Мозголомка для избранных!","Руны шепчут твоё имя...","Панда сдаёт — панда забирает!","Кто не рискует — не пьёт бамбуковое пиво!","🌲 Сами леса Лордерона прошептали это имя — Настя ВТФ!"];
-        function randomQuote(){return quotes[Math.floor(Math.random()*quotes.length)];}
-        let spamLock=false;
-        function antiSpam(){if(spamLock)return true;spamLock=true;setTimeout(()=>spamLock=false,300);return false;}
-        function backToSelect(){clearInterval(sTimerInterval);sActive=false;runesActive=false;document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-select').classList.add('active');setQuote('Во что сыграем? '+randomQuote());}
-        function selectGame(g){clearInterval(sTimerInterval);sActive=false;runesActive=false;document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));document.getElementById(`panel-${g}`).classList.add('active');if(g==='ochko')setQuote('🃏 '+randomQuote());else if(g==='pig'){setQuote('🐷 '+randomQuote());pigGame.renderHistory();}else if(g==='sudoku'){setQuote('🧩 '+randomQuote());sGen();sActive=true;sSel=null;document.getElementById('sudokuCheckBtn').disabled=true;document.getElementById('sudokuMessage').innerHTML='';sudokuRender();}else if(g==='runes'){setQuote('🔮 '+randomQuote());runesNewGame();}}
-        window.selectGame=selectGame;window.backToSelect=backToSelect;
+		function toggleNav() {
+			const nav = document.getElementById('pageNav');
+			const btn = document.querySelector('.nav-toggle');
+			nav.classList.toggle('show');
+			btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+		}
 
-        const ochko={deck:[],playerCards:[],dealerCards:[],gameActive:false,bet:10,suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],createDeck(){const d=[];for(let s of this.suits)for(let v of this.values)d.push({suit:s,value:v,rot:Math.random()*6-3});return d.sort(()=>Math.random()-0.5);},cardValue(c){if(c.value==='A')return 11;if(['K','Q','J'].includes(c.value))return 10;return parseInt(c.value);},calcScore(cards){let s=0,a=0;for(let c of cards){s+=this.cardValue(c);if(c.value==='A')a++;}while(s>21&&a>0){s-=10;a--;}return s;},renderCard(c,back){if(back)return'<div class="card-el back"></div>';const red=c.suit==='♥'||c.suit==='♦';return`<div class="card-el ${red?'red':''}" style="--rot:${c.rot}deg"><span>${c.value}</span><span class="card-suit">${c.suit}</span></div>`;},render(){const d=document.getElementById('dealerCards'),p=document.getElementById('playerCards');d.innerHTML=this.gameActive?this.renderCard(this.dealerCards[0])+this.renderCard(null,true):this.dealerCards.map(c=>this.renderCard(c)).join('');p.innerHTML=this.playerCards.map(c=>this.renderCard(c)).join('');document.getElementById('dealerScore').textContent=this.gameActive?'?':this.calcScore(this.dealerCards);document.getElementById('playerScore').textContent=this.calcScore(this.playerCards);},startGame(){if(antiSpam()||balance<this.bet){if(balance<this.bet)setQuote('Недостаточно осколков!');return;}balance-=this.bet;updateBalance();this.deck=this.createDeck();this.playerCards=[this.deck.pop(),this.deck.pop()];this.dealerCards=[this.deck.pop(),this.deck.pop()];this.gameActive=true;document.getElementById('startBtn').disabled=true;document.getElementById('hitBtn').disabled=false;document.getElementById('standBtn').disabled=false;if(this.calcScore(this.playerCards)===21)this.stand();this.render();},hit(){if(antiSpam()||!this.gameActive)return;this.playerCards.push(this.deck.pop());this.render();if(this.calcScore(this.playerCards)>21)this.endGame();else if(this.calcScore(this.playerCards)===21)this.stand();},stand(){if(!this.gameActive)return;this.gameActive=false;document.getElementById('hitBtn').disabled=true;document.getElementById('standBtn').disabled=true;setQuote('🐼 ГуангГуанг думает...');setTimeout(()=>{while(this.calcScore(this.dealerCards)<17)this.dealerCards.push(this.deck.pop());this.render();this.resolve();},800);},resolve(){const p=this.calcScore(this.playerCards),d=this.calcScore(this.dealerCards);let w;if(p>21)w=0;else if(d>21)w=this.bet*2;else if(p>d)w=this.bet*2;else if(p<d)w=0;else w=this.bet;if(p===21&&this.playerCards.length===2&&w>0)w=Math.floor(this.bet*2.5);if(w>this.bet){setQuote('🔥 Победа! Мой ученик!');flashWin();}else if(w===0){setQuote('😏 ЛООООХ!');shakeBalance();}else setQuote('🤝 Ничья.');balance+=w;updateBalance();document.getElementById('startBtn').disabled=false;},endGame(){this.gameActive=false;document.getElementById('hitBtn').disabled=true;document.getElementById('standBtn').disabled=true;document.getElementById('startBtn').disabled=false;setQuote('💔 ПЕРЕБОР! ЛООООХ!');shakeBalance();this.render();}};
-        const pigGame={deck:[],drawnCards:[],suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],active:false,bet:5,multiplier:1,history:JSON.parse(localStorage.getItem('pigHistory'))||[],createDeck(){const d=[];for(let s of this.suits)for(let v of this.values)d.push({suit:s,value:v,rot:Math.random()*6-3});return d.sort(()=>Math.random()-0.5);},addHistory(t,a){const time=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});this.history.unshift({text:t,amount:a,time});if(this.history.length>8)this.history.pop();localStorage.setItem('pigHistory',JSON.stringify(this.history));this.renderHistory();},renderHistory(){const b=document.getElementById('historyBox');if(!this.history.length){b.innerHTML='<div class="history-item" style="color:var(--text-muted)">История...</div>';return;}b.innerHTML=this.history.map(h=>`<div class="history-item">${h.time} — ${h.text} ${h.amount>0?'+':''}${h.amount} 💎</div>`).join('');},start(){if(antiSpam()||balance<this.bet){if(balance<this.bet)setQuote('Недостаточно осколков!');return;}balance-=this.bet;updateBalance();this.deck=this.createDeck();this.drawnCards=[];this.multiplier=1;this.active=true;document.getElementById('pigStartBtn').disabled=true;document.getElementById('pigDrawBtn').disabled=false;document.getElementById('pigStopBtn').disabled=false;document.getElementById('drawnCards').innerHTML='';document.getElementById('lastCardInfo').innerHTML='';document.getElementById('multiplier').textContent='x1';document.getElementById('nextMultiplier').textContent='x2';},draw(){if(antiSpam()||!this.active)return;const c=this.deck.pop();this.drawnCards.push(c);const suits=this.drawnCards.map(x=>x.suit);const values=this.drawnCards.map(x=>x.value);const dupSuit=suits.length!==new Set(suits).size;const dupValue=values.length!==new Set(values).size;const failChance=0.15;const randomFail=Math.random()<failChance;document.getElementById('drawnCards').innerHTML=this.drawnCards.map(x=>`<div class="pig-card ${x.suit==='♥'||x.suit==='♦'?'red':''}" style="--rot:${x.rot}deg">${x.value}<span class="pig-card-suit">${x.suit}</span></div>`).join('');if(dupSuit||dupValue||randomFail){this.active=false;document.getElementById('pigStartBtn').disabled=false;document.getElementById('pigDrawBtn').disabled=true;document.getElementById('pigStopBtn').disabled=true;const reason=dupSuit?'Повтор масти':dupValue?'Повтор значения':'Рандом';setQuote(`💔 ${reason}! -${this.bet} 💎`);shakeBalance();this.addHistory('Проигрыш',-this.bet);}else{this.multiplier++;document.getElementById('multiplier').textContent='x'+this.multiplier;document.getElementById('nextMultiplier').textContent='x'+(this.multiplier+1);setQuote(`Множитель x${this.multiplier}. Ещё?`);if(this.drawnCards.length===4)this.stop(true);}},stop(bonus=false){if(!this.active)return;this.active=false;document.getElementById('pigStartBtn').disabled=false;document.getElementById('pigDrawBtn').disabled=true;document.getElementById('pigStopBtn').disabled=true;let w=this.bet*this.multiplier;if(bonus)w=Math.floor(w*1.5);balance+=w;updateBalance();setQuote('🏆 +'+w+' 💎 Мой ученик!');flashWin();this.addHistory('Победа x'+this.multiplier,w-this.bet);}};
-        pigGame.renderHistory();
+		document.querySelectorAll('.nav-link').forEach(link => {
+			link.addEventListener('click', () => {
+				document.getElementById('pageNav').classList.remove('show');
+				document.querySelector('.nav-toggle').textContent = '☰ Меню';
+			});
+		});
+
+		let balance = parseInt(localStorage.getItem('tavernBalance')) || 100;
+
+		function updateBalance() {
+			document.getElementById('balance').textContent = `💎 ${balance}`;
+			localStorage.setItem('tavernBalance', balance);
+		}
+
+		function setQuote(t) {
+			document.getElementById('innkeeperQuote').textContent = t;
+		}
+
+		function flashWin() {
+			const card = document.getElementById('tavernCard');
+			card.classList.add('flash-win');
+			setTimeout(() => card.classList.remove('flash-win'), 500);
+		}
+
+		function shakeBalance() {
+			const badge = document.getElementById('balance');
+			badge.classList.add('shake');
+			setTimeout(() => badge.classList.remove('shake'), 300);
+		}
+
+		const quotes = [
+			"Сыграем в очко?",
+			"ГуангГуанг верит в твою удачу!",
+			"Бамбук шепчет: бери ещё!",
+			"Очко — игра смелых!",
+			"Перебор? Бывает!",
+			"Блэкджек! Ты великий воин!",
+			"Осколки приходят и уходят...",
+			"Ставки сделаны!",
+			"Руны не врут!",
+			"Три в ряд — и ты богач!",
+			"Сало или золото — вот в чём вопрос!",
+			"Девять кругов бамбука ждут тебя!",
+			"Не лопни, странник!",
+			"ГуангГуанг шепчет: бери ещё карту!",
+			"Бамбук не прощает жадности!",
+			"Свинья любит смелых!",
+			"Мозголомка для избранных!",
+			"Руны шепчут твоё имя...",
+			"Панда сдаёт — панда забирает!",
+			"Кто не рискует — не пьёт бамбуковое пиво!",
+			"Сами леса Лордерона прошептали это имя — Настя ВТФ!"
+		];
+
+		function randomQuote() {
+			return quotes[Math.floor(Math.random() * quotes.length)];
+		}
+
+		let spamLock = false;
+
+		function antiSpam() {
+			if (spamLock) return true;
+			spamLock = true;
+			setTimeout(() => spamLock = false, 300);
+			return false;
+		}
+
+		function backToSelect() {
+			clearInterval(sTimerInterval);
+			sActive = false;
+			runesActive = false;
+			document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+			document.getElementById('panel-select').classList.add('active');
+			setQuote('Во что сыграем? ' + randomQuote());
+		}
+
+		function selectGame(g) {
+			clearInterval(sTimerInterval);
+			sActive = false;
+			runesActive = false;
+			document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+			document.getElementById(`panel-${g}`).classList.add('active');
+			
+			if (g === 'ochko') setQuote('🃏 ' + randomQuote());
+			else if (g === 'pig') { setQuote('🐷 ' + randomQuote()); pigGame.renderHistory(); }
+			else if (g === 'sudoku') {
+				setQuote('🧩 ' + randomQuote());
+				sGen();
+				sActive = true;
+				sSel = null;
+				document.getElementById('sudokuCheckBtn').disabled = true;
+				document.getElementById('sudokuMessage').innerHTML = '';
+				sudokuRender();
+			}
+			else if (g === 'runes') { setQuote('🔮 ' + randomQuote()); runesNewGame(); }
+		}
+
+		window.selectGame = selectGame;
+		window.backToSelect = backToSelect;
+
+		const ochko = {
+			deck: [],
+			playerCards: [],
+			dealerCards: [],
+			gameActive: false,
+			bet: 10,
+			suits: ['♥', '♦', '♠', '♣'],
+			values: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
+
+			createDeck() {
+				const d = [];
+				for (const s of this.suits)
+					for (const v of this.values)
+						d.push({ suit: s, value: v, rot: Math.random() * 6 - 3 });
+				return d.sort(() => Math.random() - 0.5);
+			},
+
+			cardValue(c) {
+				if (c.value === 'A') return 11;
+				if (['K', 'Q', 'J'].includes(c.value)) return 10;
+				return parseInt(c.value);
+			},
+
+			calcScore(cards) {
+				let score = 0, aces = 0;
+				for (const c of cards) {
+					score += this.cardValue(c);
+					if (c.value === 'A') aces++;
+				}
+				while (score > 21 && aces > 0) { score -= 10; aces--; }
+				return score;
+			},
+
+			renderCard(c, back) {
+				if (back) return '<div class="card-el back"></div>';
+				const red = c.suit === '♥' || c.suit === '♦';
+				return `<div class="card-el ${red ? 'red' : ''}" style="--rot:${c.rot}deg">
+					<span>${c.value}</span><span class="card-suit">${c.suit}</span>
+				</div>`;
+			},
+
+			render() {
+				const d = document.getElementById('dealerCards');
+				const p = document.getElementById('playerCards');
+				d.innerHTML = this.gameActive
+					? this.renderCard(this.dealerCards[0]) + this.renderCard(null, true)
+					: this.dealerCards.map(c => this.renderCard(c)).join('');
+				p.innerHTML = this.playerCards.map(c => this.renderCard(c)).join('');
+				document.getElementById('dealerScore').textContent = this.gameActive ? '?' : this.calcScore(this.dealerCards);
+				document.getElementById('playerScore').textContent = this.calcScore(this.playerCards);
+			},
+
+			startGame() {
+				if (antiSpam() || balance < this.bet) {
+					if (balance < this.bet) setQuote('Недостаточно осколков!');
+					return;
+				}
+				balance -= this.bet;
+				updateBalance();
+				this.deck = this.createDeck();
+				this.playerCards = [this.deck.pop(), this.deck.pop()];
+				this.dealerCards = [this.deck.pop(), this.deck.pop()];
+				this.gameActive = true;
+				document.getElementById('startBtn').disabled = true;
+				document.getElementById('hitBtn').disabled = false;
+				document.getElementById('standBtn').disabled = false;
+				if (this.calcScore(this.playerCards) === 21) this.stand();
+				this.render();
+			},
+
+			hit() {
+				if (antiSpam() || !this.gameActive) return;
+				this.playerCards.push(this.deck.pop());
+				this.render();
+				if (this.calcScore(this.playerCards) > 21) this.endGame();
+				else if (this.calcScore(this.playerCards) === 21) this.stand();
+			},
+
+			stand() {
+				if (!this.gameActive) return;
+				this.gameActive = false;
+				document.getElementById('hitBtn').disabled = true;
+				document.getElementById('standBtn').disabled = true;
+				setQuote('🐼 ГуангГуанг думает...');
+				setTimeout(() => {
+					while (this.calcScore(this.dealerCards) < 17) this.dealerCards.push(this.deck.pop());
+					this.render();
+					this.resolve();
+				}, 800);
+			},
+
+			resolve() {
+				const p = this.calcScore(this.playerCards);
+				const d = this.calcScore(this.dealerCards);
+				let w;
+				if (p > 21) w = 0;
+				else if (d > 21) w = this.bet * 2;
+				else if (p > d) w = this.bet * 2;
+				else if (p < d) w = 0;
+				else w = this.bet; // ничья — возврат ставки
+				if (p === 21 && this.playerCards.length === 2 && w > 0) w = Math.floor(this.bet * 2.5); // блэкджек
+				if (w > this.bet) { setQuote('🔥 Победа! Мой ученик!'); flashWin(); }
+				else if (w === 0) { setQuote('😏 ЛООООХ!'); shakeBalance(); }
+				else setQuote('🤝 Ничья.');
+				balance += w;
+				updateBalance();
+				document.getElementById('startBtn').disabled = false;
+			},
+
+			endGame() {
+				this.gameActive = false;
+				document.getElementById('hitBtn').disabled = true;
+				document.getElementById('standBtn').disabled = true;
+				document.getElementById('startBtn').disabled = false;
+				setQuote('💔 ПЕРЕБОР! ЛООООХ!');
+				shakeBalance();
+				this.render();
+			}
+		};
+		
+		const pigGame = {
+			deck: [],
+			drawnCards: [],
+			suits: ['♥', '♦', '♠', '♣'],
+			values: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
+			active: false,
+			bet: 5,
+			multiplier: 1,
+			history: JSON.parse(localStorage.getItem('pigHistory')) || [],
+
+			createDeck() {
+				const d = [];
+				for (const s of this.suits)
+					for (const v of this.values)
+						d.push({ suit: s, value: v, rot: Math.random() * 6 - 3 });
+				return d.sort(() => Math.random() - 0.5);
+			},
+
+			addHistory(text, amount) {
+				const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+				this.history.unshift({ text, amount, time });
+				if (this.history.length > 8) this.history.pop();
+				localStorage.setItem('pigHistory', JSON.stringify(this.history));
+				this.renderHistory();
+			},
+
+			renderHistory() {
+				const box = document.getElementById('historyBox');
+				if (!this.history.length) {
+					box.innerHTML = '<div class="history-item" style="color:var(--text-muted)">История...</div>';
+					return;
+				}
+				box.innerHTML = this.history.map(h =>
+					`<div class="history-item">${h.time} — ${h.text} ${h.amount > 0 ? '+' : ''}${h.amount} 💎</div>`
+				).join('');
+			},
+
+			start() {
+				if (antiSpam() || balance < this.bet) {
+					if (balance < this.bet) setQuote('Недостаточно осколков!');
+					return;
+				}
+				balance -= this.bet;
+				updateBalance();
+				this.deck = this.createDeck();
+				this.drawnCards = [];
+				this.multiplier = 1;
+				this.active = true;
+				document.getElementById('pigStartBtn').disabled = true;
+				document.getElementById('pigDrawBtn').disabled = false;
+				document.getElementById('pigStopBtn').disabled = false;
+				document.getElementById('drawnCards').innerHTML = '';
+				document.getElementById('lastCardInfo').innerHTML = '';
+				document.getElementById('multiplier').textContent = 'x1';
+				document.getElementById('nextMultiplier').textContent = 'x2';
+			},
+
+			draw() {
+				if (antiSpam() || !this.active) return;
+
+				const card = this.deck.pop();
+				this.drawnCards.push(card);
+
+				const suits = this.drawnCards.map(c => c.suit);
+				const dupSuit = suits.length !== new Set(suits).size;
+
+				const randomFail = Math.random() < 0.15;
+
+				document.getElementById('drawnCards').innerHTML = this.drawnCards.map(c =>
+					`<div class="pig-card ${c.suit === '♥' || c.suit === '♦' ? 'red' : ''}" style="--rot:${c.rot}deg">
+						${c.value}<span class="pig-card-suit">${c.suit}</span>
+					</div>`
+				).join('');
+
+				if (dupSuit || randomFail) {
+					this.active = false;
+					document.getElementById('pigStartBtn').disabled = false;
+					document.getElementById('pigDrawBtn').disabled = true;
+					document.getElementById('pigStopBtn').disabled = true;
+					const reason = dupSuit ? 'Повтор масти' : 'Рандом';
+					setQuote(`💔 ${reason}! -${this.bet} 💎`);
+					shakeBalance();
+					this.addHistory('Проигрыш', -this.bet);
+				} else {
+					this.multiplier++;
+					document.getElementById('multiplier').textContent = 'x' + this.multiplier;
+					document.getElementById('nextMultiplier').textContent = 'x' + (this.multiplier + 1);
+					setQuote(`Множитель x${this.multiplier}. Ещё?`);
+
+					if (this.drawnCards.length === 4) this.stop(true);
+				}
+			},
+
+			stop(bonus = false) {
+				if (!this.active) return;
+				this.active = false;
+				document.getElementById('pigStartBtn').disabled = false;
+				document.getElementById('pigDrawBtn').disabled = true;
+				document.getElementById('pigStopBtn').disabled = true;
+
+				let win = this.bet * this.multiplier;
+				if (bonus) win = Math.floor(win * 1.5);
+
+				balance += win;
+				updateBalance();
+				setQuote('🏆 +' + win + ' 💎 Мой ученик!');
+				flashWin();
+				this.addHistory('Победа x' + this.multiplier, win - this.bet);
+			}
+		};
+
+		pigGame.renderHistory();
 
         const SZ=9,BOX=3;let sGrid=[],sSol=[],sFixed=[],sSel=null,sActive=false,sTimerInterval=null,sSeconds=0;
         function sGen(){sSol=Array.from({length:SZ},()=>Array(SZ).fill(0));fillGrid(sSol);sGrid=sSol.map(r=>[...r]);const cells=[];for(let r=0;r<SZ;r++)for(let c=0;c<SZ;c++)cells.push([r,c]);cells.sort(()=>Math.random()-0.5);const toHide=31+Math.floor(Math.random()*11);for(let i=0;i<toHide;i++){const[r,c]=cells[i];sGrid[r][c]=0;}sFixed=sGrid.map(row=>row.map(cell=>cell!==0));sSeconds=0;clearInterval(sTimerInterval);updateTimerDisplay();sTimerInterval=setInterval(()=>{sSeconds++;updateTimerDisplay();},1000);}
