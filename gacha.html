@@ -50,12 +50,33 @@
             animation: dropIn 0.5s ease; max-width: 350px; width: 100%;
             border: 3px solid var(--border-subtle);
         }
-        .drop-card.legendary { border-color: #ffaa00; box-shadow: 0 0 40px rgba(255,170,0,0.6), 0 0 80px rgba(255,215,0,0.3); }
-        .drop-card.epic { border-color: #c471ed; box-shadow: 0 0 30px rgba(196,113,237,0.5); }
+        .drop-card.legendary { border-color: #ffaa00; box-shadow: 0 0 40px rgba(255,170,0,0.6), 0 0 80px rgba(255,215,0,0.3); animation: dropIn 0.5s ease, legendaryPulse 1s ease infinite alternate; }
+        .drop-card.epic { border-color: #c471ed; box-shadow: 0 0 30px rgba(196,113,237,0.5); animation: dropIn 0.5s ease, epicPulse 1.5s ease infinite alternate; }
         .drop-card.rare { border-color: #4a90d9; box-shadow: 0 0 20px rgba(74,144,217,0.4); }
         .drop-card.uncommon { border-color: #3fb950; }
         .drop-card.common { border-color: var(--border-subtle); opacity: 0.7; }
         @keyframes dropIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes legendaryPulse { from { box-shadow: 0 0 40px rgba(255,170,0,0.6), 0 0 80px rgba(255,215,0,0.3); } to { box-shadow: 0 0 60px rgba(255,170,0,0.9), 0 0 100px rgba(255,215,0,0.6); } }
+        @keyframes epicPulse { from { box-shadow: 0 0 30px rgba(196,113,237,0.5); } to { box-shadow: 0 0 45px rgba(196,113,237,0.8); } }
+		
+		.modal-overlay {
+			position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+			background: rgba(0,0,0,0.8); z-index: 9999;
+			display: flex; align-items: center; justify-content: center;
+			animation: fadeIn 0.2s ease;
+		}
+		.modal-card {
+			background: var(--bg-card); border-radius: 20px; padding: 30px;
+			text-align: center; max-width: 350px; width: 90%;
+			border: 3px solid var(--border-subtle);
+			animation: dropIn 0.3s ease;
+		}
+		.modal-card.legendary { border-color: #ffaa00; box-shadow: 0 0 40px rgba(255,170,0,0.6); }
+		.modal-card.epic { border-color: #c471ed; box-shadow: 0 0 30px rgba(196,113,237,0.5); }
+		.modal-card.rare { border-color: #4a90d9; box-shadow: 0 0 20px rgba(74,144,217,0.4); }
+		.modal-card.uncommon { border-color: #3fb950; }
+		.modal-card.common { border-color: var(--border-subtle); }
+		@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .drop-emoji { font-size: 4rem; margin-bottom: 10px; }
         .drop-name { font-size: 1.3rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
@@ -66,6 +87,9 @@
         .rarity-uncommon { color: #3fb950; }
         .rarity-common { color: var(--text-muted); }
 
+        .spin-animation { text-align: center; font-size: 3rem; animation: spin 0.1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .collection { margin-top: 30px; }
         .collection h3 { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
         .collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
@@ -75,11 +99,13 @@
         }
         .collection-item:hover { border-color: var(--gold); transform: scale(1.1); }
 
+        .recent-log { margin-top: 16px; padding: 10px; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-subtle); max-height: 120px; overflow-y: auto; }
+        .recent-log h4 { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 6px; }
+        .recent-item { color: var(--text-secondary); font-size: 0.72rem; padding: 2px 0; }
+
         .innkeeper { display: flex; align-items: center; gap: 14px; background: var(--bg-elevated); border-radius: 14px; padding: 16px 18px; margin-bottom: 20px; border-left: 3px solid var(--gold); }
         .innkeeper-avatar { font-size: 2.5rem; }
         .innkeeper-quote { color: var(--text-secondary); font-style: italic; font-size: 0.85rem; flex: 1; }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
@@ -122,13 +148,18 @@
             <div class="balance-row">
                 <div class="balance-badge">💎 <span id="balance">100</span></div>
                 <div class="btn-row">
-                    <button class="btn btn-primary" onclick="pull(1)">🎰 Крутка (10💎)</button>
-                    <button class="btn btn-secondary" onclick="pull(10)">🔥 ×10 (90💎)</button>
+                    <button class="btn btn-primary" id="btn1" onclick="pull(1)">🎰 Крутка (10💎)</button>
+                    <button class="btn btn-secondary" id="btn10" onclick="pull(10)">🔥 ×10 (90💎, -10%)</button>
                 </div>
             </div>
 
             <div class="result-area" id="resultArea">
-                <div style="color:var(--text-muted);text-align:center;">Нажми на крутку, странник...</div>
+                <div style="color:var(--text-muted);text-align:center;">Данные загружаются...</div>
+            </div>
+
+            <div class="recent-log" id="recentLog">
+                <h4>📋 Последние дропы</h4>
+                <div id="recentList" style="color:var(--text-muted);">Пока ничего...</div>
             </div>
 
             <div class="collection">
@@ -148,6 +179,9 @@
 
         let balance = parseInt(localStorage.getItem('gachaBalance')) || 100;
         let collection = JSON.parse(localStorage.getItem('gachaCollection')) || [];
+        let recentDrops = JSON.parse(localStorage.getItem('gachaRecent')) || [];
+        let itemPool = [];
+        let isReady = false;
 
         function updateBalance() {
             document.getElementById('balance').textContent = balance;
@@ -158,108 +192,124 @@
             document.getElementById('innkeeperQuote').textContent = t;
         }
 
-        // ==================== ГЕНЕРАЦИЯ ДАННЫХ ====================
+        // ==================== ЗАГРУЗКА ДАННЫХ ====================
         async function loadData() {
-            const url = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-            const cdn = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
-            try {
-                const r = await fetch(url); if (!r.ok) throw new Error();
-                return await r.json();
-            } catch {
-                const r = await fetch(cdn);
-                return await r.json();
+            const urls = [
+                'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
+                'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'
+            ];
+            for (const url of urls) {
+                try {
+                    const r = await fetch(url);
+                    if (r.ok) return await r.json();
+                } catch {}
             }
+            throw new Error('No data source available');
         }
 
         async function buildPool() {
             const data = await loadData();
             const players = data.players.filter(p => p.name && p.name !== 'Unknown');
             const pool = [];
+            const seen = new Set();
+
+            function addUnique(item) {
+                if (seen.has(item.name)) return;
+                seen.add(item.name);
+                pool.push(item);
+            }
 
             // 🟫 Мусор (60%)
             const junk = [
-				{ emoji: '🦴', name: 'Кость', rarity: 'common' },
-				{ emoji: '🍂', name: 'Лист', rarity: 'common' },
-				{ emoji: '🍺', name: 'Кружка ГуангГуанга', rarity: 'common' },
-				{ emoji: '🕯️', name: 'Огарок свечи', rarity: 'common' },
-				{ emoji: '🧦', name: 'Носок', rarity: 'common' },
-				{ emoji: '🗑️', name: 'Мусор', rarity: 'common' },
-				{ emoji: '🍄', name: 'Гриб', rarity: 'common' },
+                { emoji: '🦴', name: 'Кость', rarity: 'common' },
+                { emoji: '🍂', name: 'Лист', rarity: 'common' },
+                { emoji: '🍺', name: 'Кружка ГуангГуанга', rarity: 'common' },
+                { emoji: '🕯️', name: 'Огарок свечи', rarity: 'common' },
+                { emoji: '🧦', name: 'Носок', rarity: 'common' },
+                { emoji: '🗑️', name: 'Мусор', rarity: 'common' },
+                { emoji: '🪵', name: 'Палка', rarity: 'common' },
+                { emoji: '🍄', name: 'Гриб', rarity: 'common' },
             ];
-            junk.forEach(item => { for (let i = 0; i < 15; i++) pool.push(item); });
+            junk.forEach(item => { for (let i = 0; i < 15; i++) addUnique(item); });
 
-            // 🟩 Зелень (25%) — зелья, расходники
+            // 🟩 Зелень (25%)
             const uncommon = [
-				{ emoji: '🧪', name: 'Зелье силы', rarity: 'uncommon' },
-				{ emoji: '🛡️', name: 'Благословение', rarity: 'uncommon' },
-				{ emoji: '✨', name: 'Чудо', rarity: 'uncommon' },
-				{ emoji: '📜', name: 'Свиток', rarity: 'uncommon' },
-				{ emoji: '💎', name: 'Осколок', rarity: 'uncommon' },
-				{ emoji: '🔮', name: 'Кристалл', rarity: 'uncommon' },
-				{ emoji: '🗡️', name: 'Кинжал', rarity: 'uncommon' },
-				{ emoji: '🧿', name: 'Амулет', rarity: 'uncommon' },
+                { emoji: '🧪', name: 'Зелье силы', rarity: 'uncommon' },
+                { emoji: '🛡️', name: 'Благословение', rarity: 'uncommon' },
+                { emoji: '✨', name: 'Чудо', rarity: 'uncommon' },
+                { emoji: '📜', name: 'Свиток', rarity: 'uncommon' },
+                { emoji: '💎', name: 'Осколок', rarity: 'uncommon' },
+                { emoji: '🔮', name: 'Кристалл', rarity: 'uncommon' },
+                { emoji: '🗡️', name: 'Кинжал', rarity: 'uncommon' },
+                { emoji: '🧿', name: 'Амулет', rarity: 'uncommon' },
             ];
-            uncommon.forEach(item => { for (let i = 0; i < 6; i++) pool.push(item); });
+            uncommon.forEach(item => { for (let i = 0; i < 6; i++) addUnique(item); });
 
-            // 🟦 Синька (10%) — редкие предметы, оружие
+            // 🟦 Синька (10%)
             const rare = [
-				{ emoji: '⚔️', name: 'Меч Аэлиона', rarity: 'rare' },
-				{ emoji: '🏹', name: 'Лук Следопыта', rarity: 'rare' },
-				{ emoji: '🪓', name: 'Топор Варвара', rarity: 'rare' },
-				{ emoji: '🗡️', name: 'Клинок Тени', rarity: 'rare' },
-				{ emoji: '🛡️', name: 'Щит Паладина', rarity: 'rare' },
-				{ emoji: '💎', name: 'Двойной осколок', rarity: 'rare' },
+                { emoji: '⚔️', name: 'Меч Аэлиона', rarity: 'rare' },
+                { emoji: '🏹', name: 'Лук Следопыта', rarity: 'rare' },
+                { emoji: '🪓', name: 'Топор Варвара', rarity: 'rare' },
+                { emoji: '🗡️', name: 'Клинок Тени', rarity: 'rare' },
+                { emoji: '🛡️', name: 'Щит Паладина', rarity: 'rare' },
+                { emoji: '💎', name: 'Двойной осколок', rarity: 'rare' },
             ];
-            rare.forEach(item => { for (let i = 0; i < 3; i++) pool.push(item); });
+            rare.forEach(item => { for (let i = 0; i < 3; i++) addUnique(item); });
 
-            // 🟪 Фиол (4%) — эпики, локации, топ-игроки
+            // 🟪 Фиол (4%)
             const epic = [
-				{ emoji: '🏰', name: 'Сияющий Шпиль', rarity: 'epic' },
-				{ emoji: '🌑', name: 'Эпицентр Раскола', rarity: 'epic' },
-				{ emoji: '🎭', name: 'Арена Тысячи Эхо', rarity: 'epic' },
-				{ emoji: '🔥', name: 'Кузня Расколотых', rarity: 'epic' },
-				{ emoji: '🌫️', name: 'Зал Повествователя', rarity: 'epic' },
-				{ emoji: '👑', name: 'Корона Раскола', rarity: 'epic' },
+                { emoji: '🏰', name: 'Сияющий Шпиль', rarity: 'epic' },
+                { emoji: '🌑', name: 'Эпицентр Раскола', rarity: 'epic' },
+                { emoji: '🎭', name: 'Арена Тысячи Эхо', rarity: 'epic' },
+                { emoji: '🔥', name: 'Кузня Расколотых', rarity: 'epic' },
+                { emoji: '🌫️', name: 'Зал Повествователя', rarity: 'epic' },
+                { emoji: '👑', name: 'Корона Раскола', rarity: 'epic' },
             ];
-            epic.forEach(item => pool.push(item));
-            // Игроки топ-10 — фиол
+            epic.forEach(item => addUnique(item));
+
             const top10 = players.sort((a, b) => (b.wins || 0) - (a.wins || 0)).slice(0, 10);
             top10.forEach(p => {
-                pool.push({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'epic', desc: p.name });
+                addUnique({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'epic', desc: p.name });
             });
 
-            // 🟨 Лега (1%) — легендарки
+            // 🟨 Лега (1%)
             const legendary = [
-				{ emoji: '🐼', name: 'ГуангГуанг', rarity: 'legendary' },
-				{ emoji: '🔮', name: 'Осколок Клинка', rarity: 'legendary' },
-				{ emoji: '☀️', name: 'Солнечный Клинок', rarity: 'legendary' },
+                { emoji: '🐼', name: 'ГуангГуанг', rarity: 'legendary', desc: 'Трактирщик' },
+                { emoji: '🔮', name: 'Осколок Клинка', rarity: 'legendary' },
+                { emoji: '☀️', name: 'Солнечный Клинок', rarity: 'legendary', desc: 'Артефакт' },
             ];
-            legendary.forEach(item => pool.push(item));
-            // Чемпионы турниров — лега
+            legendary.forEach(item => addUnique(item));
+
             const champions = players.filter(p => p.tournamentWins > 0 || p.champion);
             champions.forEach(p => {
-                pool.push({ emoji: p.emoji || '👑', name: p.display, rarity: 'legendary', desc: p.name + ' | Чемпион' });
+                addUnique({ emoji: p.emoji || '👑', name: p.display, rarity: 'legendary', desc: p.name + ' | Чемпион' });
             });
 
             return pool;
         }
 
-        let itemPool = [];
-        loadData().then(() => buildPool().then(pool => { itemPool = pool; }));
+        loadData().then(() => buildPool().then(pool => {
+            itemPool = pool;
+            isReady = true;
+            document.getElementById('resultArea').innerHTML = '<div style="color:var(--text-muted);text-align:center;">Нажми на крутку, странник...</div>';
+        })).catch(() => {
+            document.getElementById('resultArea').innerHTML = '<div style="color:var(--red);text-align:center;">❌ Не удалось загрузить данные</div>';
+        });
 
         // ==================== КРУТКА ====================
         function pull(count) {
+            if (!isReady) { setQuote('Данные ещё грузятся, не спеши...'); return; }
             const cost = count === 10 ? 90 : 10;
             if (balance < cost) { setQuote('Недостаточно осколков!'); return; }
             balance -= cost;
             updateBalance();
 
             const area = document.getElementById('resultArea');
-            area.innerHTML = '<div style="text-align:center;color:var(--gold);font-size:2rem;">🎰 Крутим...</div>';
+            area.innerHTML = '<div class="spin-animation">🎰</div>';
 
             setTimeout(() => {
                 if (itemPool.length === 0) {
-                    area.innerHTML = '<div style="text-align:center;color:var(--red);">Данные загружаются...</div>';
+                    area.innerHTML = '<div style="text-align:center;color:var(--red);">Пусто...</div>';
                     return;
                 }
 
@@ -268,18 +318,21 @@
                     drops.push(itemPool[Math.floor(Math.random() * itemPool.length)]);
                 }
 
-                // Показываем последний (самый крутой)
-                const best = drops.reduce((a, b) => {
-                    const order = ['legendary', 'epic', 'rare', 'uncommon', 'common'];
-                    return order.indexOf(a.rarity) < order.indexOf(b.rarity) ? a : b;
-                });
+                const rank = r => ['legendary', 'epic', 'rare', 'uncommon', 'common'].indexOf(r.rarity);
+                const best = drops.reduce((a, b) => rank(a) < rank(b) ? a : b);
 
-                // Добавляем в коллекцию
                 drops.forEach(d => collection.push(d));
-                if (collection.length > 200) collection = collection.slice(-200);
+                if (collection.length > 200) {
+                    collection = collection.slice(-200);
+                    setQuote('📦 Коллекция переполнена! Старые предметы удалены.');
+                }
                 localStorage.setItem('gachaCollection', JSON.stringify(collection));
 
-                // Показываем результат
+                best.time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                recentDrops.unshift(best);
+                if (recentDrops.length > 5) recentDrops.pop();
+                localStorage.setItem('gachaRecent', JSON.stringify(recentDrops));
+
                 const rarityClass = best.rarity === 'legendary' ? 'legendary' : best.rarity === 'epic' ? 'epic' : best.rarity === 'rare' ? 'rare' : best.rarity === 'uncommon' ? 'uncommon' : 'common';
                 const rarityLabel = best.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : best.rarity === 'epic' ? 'Эпический' : best.rarity === 'rare' ? 'Редкий' : best.rarity === 'uncommon' ? 'Необычный' : 'Обычный';
 
@@ -293,37 +346,68 @@
                     </div>
                 `;
 
-                if (best.rarity === 'legendary') {
-                    setQuote('🐼 БАМБУК ПОТРЯСЁН! ЛЕГЕНДАРКА!!!');
-                } else if (best.rarity === 'epic') {
-                    setQuote('✨ Эпик! ГуангГуанг одобряет!');
-                } else if (best.rarity === 'rare') {
-                    setQuote('👀 Ого, редкая штука!');
-                } else if (best.rarity === 'uncommon') {
-                    setQuote('🙂 Неплохо, странник.');
-                } else {
-                    setQuote('🗑️ Мусор... но ты заходи ещё!');
-                }
+                if (best.rarity === 'legendary') setQuote('🐼 БАМБУК ПОТРЯСЁН! ЛЕГЕНДАРКА!!!');
+                else if (best.rarity === 'epic') setQuote('✨ Эпик! ГуангГуанг одобряет!');
+                else if (best.rarity === 'rare') setQuote('👀 Ого, редкая штука!');
+                else if (best.rarity === 'uncommon') setQuote('🙂 Неплохо, странник.');
+                else setQuote('🗑️ Мусор... но ты заходи ещё!');
 
                 renderCollection();
+                renderRecent();
             }, 800);
         }
 
         // ==================== КОЛЛЕКЦИЯ ====================
-        function renderCollection() {
-            const grid = document.getElementById('collectionGrid');
-            const count = document.getElementById('collectionCount');
-            count.textContent = collection.length;
+		function renderCollection() {
+			const grid = document.getElementById('collectionGrid');
+			const count = document.getElementById('collectionCount');
+			count.textContent = collection.length;
 
-            const recent = collection.slice(-40).reverse();
-            grid.innerHTML = recent.map(item => {
-                const rarityColor = item.rarity === 'legendary' ? '#ffaa00' : item.rarity === 'epic' ? '#c471ed' : item.rarity === 'rare' ? '#4a90d9' : item.rarity === 'uncommon' ? '#3fb950' : 'var(--text-muted)';
-                return `<div class="collection-item" style="border-color:${rarityColor};" title="${item.name} (${item.rarity})">${item.emoji}</div>`;
-            }).join('');
+			const recent = collection.slice(-40).reverse();
+			grid.innerHTML = recent.map((item, idx) => {
+				const actualIdx = collection.length - 1 - (recent.length - 1 - idx);
+				const rarityColor = item.rarity === 'legendary' ? '#ffaa00' : item.rarity === 'epic' ? '#c471ed' : item.rarity === 'rare' ? '#4a90d9' : item.rarity === 'uncommon' ? '#3fb950' : 'var(--text-muted)';
+				return `<div class="collection-item" style="border-color:${rarityColor};" title="${item.name}" onclick="showItem(${actualIdx})">${item.emoji}</div>`;
+			}).join('');
+		}
+
+        function renderRecent() {
+            const list = document.getElementById('recentList');
+            if (!recentDrops.length) {
+                list.innerHTML = '<span style="color:var(--text-muted);">Пока ничего...</span>';
+                return;
+            }
+            const colors = { legendary: '#ffaa00', epic: '#c471ed', rare: '#4a90d9', uncommon: '#3fb950', common: 'var(--text-muted)' };
+            list.innerHTML = recentDrops.map(d =>
+                `<div class="recent-item"><span style="color:${colors[d.rarity] || 'var(--text-muted)'};">${d.emoji} ${d.name}</span> <span style="color:var(--text-muted);">${d.time || ''}</span></div>`
+            ).join('');
         }
+		
+		function showItem(index) {
+			const item = collection[index];
+			if (!item) return;
+			
+			const rarityClass = item.rarity;
+			const rarityLabel = item.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : item.rarity === 'epic' ? 'Эпический' : item.rarity === 'rare' ? 'Редкий' : item.rarity === 'uncommon' ? 'Необычный' : 'Обычный';
+			
+			const overlay = document.createElement('div');
+			overlay.className = 'modal-overlay';
+			overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+			overlay.innerHTML = `
+				<div class="modal-card ${rarityClass}">
+					<div class="drop-emoji">${item.emoji}</div>
+					<div class="drop-name">${item.name}</div>
+					${item.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${item.desc}</div>` : ''}
+					<div class="drop-rarity rarity-${item.rarity}">${rarityLabel}</div>
+					<button class="btn btn-primary" style="margin-top:16px;" onclick="this.parentElement.parentElement.remove()">Закрыть</button>
+				</div>
+			`;
+			document.body.appendChild(overlay);
+		}
 
         updateBalance();
         renderCollection();
+        renderRecent();
     </script>
 </body>
 </html>
