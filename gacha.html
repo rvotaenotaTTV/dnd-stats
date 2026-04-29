@@ -178,49 +178,48 @@
 
             // 🟫 Мусор (60%)
             const junk = [
-                { emoji: '🦴', name: 'Кость', rarity: 'common' },
-                { emoji: '🍂', name: 'Лист', rarity: 'common' },
-                { emoji: '🍺', name: 'Кружка ГуангГуанга', rarity: 'common' },
-                { emoji: '🪨', name: 'Камень', rarity: 'common' },
-                { emoji: '🕯️', name: 'Огарок свечи', rarity: 'common' },
-                { emoji: '🧦', name: 'Носок', rarity: 'common' },
-                { emoji: '🪶', name: 'Перо', rarity: 'common' },
-                { emoji: '🗑️', name: 'Мусор', rarity: 'common' },
+				{ emoji: '🦴', name: 'Кость', rarity: 'common' },
+				{ emoji: '🍂', name: 'Лист', rarity: 'common' },
+				{ emoji: '🍺', name: 'Кружка ГуангГуанга', rarity: 'common' },
+				{ emoji: '🕯️', name: 'Огарок свечи', rarity: 'common' },
+				{ emoji: '🧦', name: 'Носок', rarity: 'common' },
+				{ emoji: '🗑️', name: 'Мусор', rarity: 'common' },
+				{ emoji: '🍄', name: 'Гриб', rarity: 'common' },
             ];
             junk.forEach(item => { for (let i = 0; i < 15; i++) pool.push(item); });
 
             // 🟩 Зелень (25%) — зелья, расходники
             const uncommon = [
-                { emoji: '🧪', name: 'Зелье силы', rarity: 'uncommon' },
-                { emoji: '🛡️', name: 'Благословение', rarity: 'uncommon' },
-                { emoji: '✨', name: 'Чудо', rarity: 'uncommon' },
-                { emoji: '📜', name: 'Свиток', rarity: 'uncommon' },
-                { emoji: '💎', name: 'Осколок', rarity: 'uncommon' },
-                { emoji: '⚗️', name: 'Эликсир', rarity: 'uncommon' },
-                { emoji: '🗡️', name: 'Кинжал', rarity: 'uncommon' },
-                { emoji: '🔮', name: 'Кристалл', rarity: 'uncommon' },
+				{ emoji: '🧪', name: 'Зелье силы', rarity: 'uncommon' },
+				{ emoji: '🛡️', name: 'Благословение', rarity: 'uncommon' },
+				{ emoji: '✨', name: 'Чудо', rarity: 'uncommon' },
+				{ emoji: '📜', name: 'Свиток', rarity: 'uncommon' },
+				{ emoji: '💎', name: 'Осколок', rarity: 'uncommon' },
+				{ emoji: '🔮', name: 'Кристалл', rarity: 'uncommon' },
+				{ emoji: '🗡️', name: 'Кинжал', rarity: 'uncommon' },
+				{ emoji: '🧿', name: 'Амулет', rarity: 'uncommon' },
             ];
             uncommon.forEach(item => { for (let i = 0; i < 6; i++) pool.push(item); });
 
             // 🟦 Синька (10%) — редкие предметы, оружие
             const rare = [
-                { emoji: '⚔️', name: 'Меч Аэлиона', rarity: 'rare' },
-                { emoji: '🏹', name: 'Лук Следопыта', rarity: 'rare' },
-                { emoji: '🪓', name: 'Топор Варвара', rarity: 'rare' },
-                { emoji: '🗡️', name: 'Клинок Тени', rarity: 'rare' },
-                { emoji: '🛡️', name: 'Щит Паладина', rarity: 'rare' },
-                { emoji: '💎💎', name: 'Двойной осколок', rarity: 'rare' },
+				{ emoji: '⚔️', name: 'Меч Аэлиона', rarity: 'rare' },
+				{ emoji: '🏹', name: 'Лук Следопыта', rarity: 'rare' },
+				{ emoji: '🪓', name: 'Топор Варвара', rarity: 'rare' },
+				{ emoji: '🗡️', name: 'Клинок Тени', rarity: 'rare' },
+				{ emoji: '🛡️', name: 'Щит Паладина', rarity: 'rare' },
+				{ emoji: '💎', name: 'Двойной осколок', rarity: 'rare' },
             ];
             rare.forEach(item => { for (let i = 0; i < 3; i++) pool.push(item); });
 
             // 🟪 Фиол (4%) — эпики, локации, топ-игроки
             const epic = [
-                { emoji: '🏰', name: 'Сияющий Шпиль', rarity: 'epic' },
-                { emoji: '🌑', name: 'Эпицентр Раскола', rarity: 'epic' },
-                { emoji: '🎭', name: 'Арена Тысячи Эхо', rarity: 'epic' },
-                { emoji: '🔥', name: 'Кузня Расколотых', rarity: 'epic' },
-                { emoji: '🌫️', name: 'Зал Повествователя', rarity: 'epic' },
-                { emoji: '👑', name: 'Корона Раскола', rarity: 'epic' },
+				{ emoji: '🏰', name: 'Сияющий Шпиль', rarity: 'epic' },
+				{ emoji: '🌑', name: 'Эпицентр Раскола', rarity: 'epic' },
+				{ emoji: '🎭', name: 'Арена Тысячи Эхо', rarity: 'epic' },
+				{ emoji: '🔥', name: 'Кузня Расколотых', rarity: 'epic' },
+				{ emoji: '🌫️', name: 'Зал Повествователя', rarity: 'epic' },
+				{ emoji: '👑', name: 'Корона Раскола', rarity: 'epic' },
             ];
             epic.forEach(item => pool.push(item));
             // Игроки топ-10 — фиол
@@ -231,9 +230,9 @@
 
             // 🟨 Лега (1%) — легендарки
             const legendary = [
-                { emoji: '🐼', name: 'ГуангГуанг', rarity: 'legendary', desc: 'Трактирщик' },
-                { emoji: '🔮', name: 'Осколок Клинка', rarity: 'legendary' },
-                { emoji: '🌞', name: 'Солнечный Клинок', rarity: 'legendary', desc: 'Артефакт' },
+				{ emoji: '🐼', name: 'ГуангГуанг', rarity: 'legendary' },
+				{ emoji: '🔮', name: 'Осколок Клинка', rarity: 'legendary' },
+				{ emoji: '☀️', name: 'Солнечный Клинок', rarity: 'legendary' },
             ];
             legendary.forEach(item => pool.push(item));
             // Чемпионы турниров — лега
