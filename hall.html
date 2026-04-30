@@ -117,7 +117,10 @@
         document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
         document.querySelectorAll('#season-tabs .tab-btn').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('#season-tabs .tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+this.dataset.season).classList.add('active');});});
 
+        let dungeonPlayers = {};
+
         function renderSeason(data, seasonName, seasonSubtitle, isCurrent) {
+            if (data.dungeon && data.dungeon.players) dungeonPlayers = data.dungeon.players;
             const players = data.players || [];
             const seasonTop = data.seasonTop || [];
             const totalPlayers = players.length;
@@ -131,6 +134,11 @@
             const champions = players.filter(p => (p.tournamentWins || 0) > 0).sort((a,b) => (b.tournamentWins||0) - (a.tournamentWins||0));
             const champCount = champions.length;
 
+            // PvE статистика
+            const maxDungeonRecord = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.record > m ? d.record : m; }, 0);
+            const maxDungeonTrophies = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.trophies > m ? d.trophies : m; }, 0);
+            const topDungeon = players.map(p => { const d = dungeonPlayers[p.display]; return { ...p, record: d?.record || 0, trophies: d?.trophies || 0 }; }).filter(p => p.record > 0).sort((a,b) => b.record - a.record || b.trophies - a.trophies);
+
             let html = `<div class="season-frame ${isCurrent ? 'live' : 'ended'}">`;
             html += `<div class="season-title">${seasonName} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'В РАЗГАРЕ' : 'ЗАВЕРШЁН'}</span></div>`;
             html += `<div class="season-subtitle">${seasonSubtitle}</div>`;
@@ -140,9 +148,11 @@
             html += `<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
             html += `<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Макс. осколков</div></div>`;
             html += `<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Макс. стрик</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxDungeonRecord || '—'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxDungeonTrophies || '—'}</div><div class="stat-label">🐉 Трофеев данжа</div></div>`;
             html += `<div class="stat-card"><div class="stat-value">${maxWinrate ? (maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1)+'%' : '—'}</div><div class="stat-label">📈 Лучший винрейт</div></div>`;
             html += `<div class="stat-card"><div class="stat-value">${champCount || '—'}</div><div class="stat-label">👑 Чемпионов</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
             html += '</div>';
 
             if (champions.length > 0) {
@@ -174,6 +184,14 @@
             html += '<div class="table-card"><h3>📈 Винрейт (30+ боёв)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>WR</th><th>W/L</th></tr></thead><tbody>';
             topWR.slice(0,5).forEach((p,i)=>{html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${((p.wins||0)*100/((p.wins||0)+(p.losses||0))).toFixed(1)}%</td><td class="number">${p.wins||0}-${p.losses||0}</td></tr>`;});
             html += '</tbody></table></div></div>';
+            if (topDungeon.length > 0) {
+                html += '<div class="table-card"><h3>🏔 Рекордсмены данжа</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Волн</th></tr></thead><tbody>';
+                topDungeon.slice(0,5).forEach((p,i)=>html+=`<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.record}</td></tr>`);
+                html += '</tbody></table></div></div>';
+                html += '<div class="table-card"><h3>🐉 Охотники на боссов</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Трофеев</th></tr></thead><tbody>';
+                [...topDungeon].sort((a,b)=>(b.trophies||0)-(a.trophies||0)).slice(0,5).forEach((p,i)=>html+=`<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.trophies||0}</td></tr>`);
+                html += '</tbody></table></div></div>';
+            }
             html += '</div></div>';
             return html;
         }

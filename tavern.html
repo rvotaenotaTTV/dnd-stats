@@ -431,7 +431,9 @@
 
 		cardValue(c) {
 			if (c.value === 'A') return 11;
-			if (['K', 'Q', 'J'].includes(c.value)) return 10;
+			if (c.value === 'J') return 2;
+			if (c.value === 'Q') return 3;
+			if (c.value === 'K') return 4;
 			return parseInt(c.value);
 		},
 
@@ -441,6 +443,8 @@
 				score += this.cardValue(c);
 				if (c.value === 'A') aces++;
 			}
+			// Два туза = очко = 21
+			if (aces === 2 && cards.length === 2) return 21;
 			while (score > 21 && aces > 0) { score -= 10; aces--; }
 			return score;
 		},
@@ -506,16 +510,35 @@
 		resolve() {
 			const p = this.calcScore(this.playerCards);
 			const d = this.calcScore(this.dealerCards);
+			
+			// Проверка на "Очко" (два туза)
+			const hasOchko = this.playerCards.length === 2 && 
+							 this.playerCards[0].value === 'A' && 
+							 this.playerCards[1].value === 'A';
+			
 			let w;
 			if (p > 21) w = 0;
 			else if (d > 21) w = this.bet * 2;
 			else if (p > d) w = this.bet * 2;
 			else if (p < d) w = 0;
 			else w = this.bet;
-			if (p === 21 && this.playerCards.length === 2 && w > 0) w = Math.floor(this.bet * 2.5);
-			if (w > this.bet) { setQuote('🔥 Победа! Мой ученик!'); flashWin(); }
-			else if (w === 0) { setQuote('😏 ЛООООХ!'); shakeBalance(); }
-			else setQuote('🤝 Ничья.');
+			
+			if (hasOchko && w > 0) {
+				w = Math.floor(this.bet * 2.5);
+				setQuote('🎯 ОЧКО! Два туза! ГуангГуанг в шоке!');
+			} else if (p === 21 && this.playerCards.length === 2 && w > 0) {
+				w = Math.floor(this.bet * 2.5);
+				setQuote('🔥 Победа! Мой ученик!');
+			} else if (w > this.bet) {
+				setQuote('🔥 Победа! Мой ученик!');
+			} else if (w === 0) {
+				setQuote('😏 ЛООООХ!');
+				shakeBalance();
+			} else {
+				setQuote('🤝 Ничья.');
+			}
+			
+			if (w > 0) flashWin();
 			balance += w;
 			updateBalance();
 			document.getElementById('startBtn').disabled = false;
