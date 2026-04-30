@@ -1119,7 +1119,12 @@
 	let gachaPool = [], gachaReady = false;
 	let gachaCollection = JSON.parse(localStorage.getItem('gachaCollection')) || [];
 	let gachaRecent = JSON.parse(localStorage.getItem('gachaRecent')) || [];
-	let gachaSort = 'newest';
+	let gachaSort = 'newest', gachaSortDir = 'desc';
+	let gachaSelected = new Set();
+
+	function gachaSaveCollection() {
+		localStorage.setItem('gachaCollection', JSON.stringify(gachaCollection));
+	}
 
 	async function gachaInit() {
 		document.getElementById('gachaResultArea').innerHTML = '<div style="color:var(--text-muted);text-align:center;">Данные загружаются...</div>';
@@ -1129,9 +1134,7 @@
 				'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'
 			];
 			let data;
-			for (const url of urls) {
-				try { const r = await fetch(url); if (r.ok) { data = await r.json(); break; } } catch {}
-			}
+			for (const url of urls) { try { const r = await fetch(url); if (r.ok) { data = await r.json(); break; } } catch {} }
 			if (!data) throw new Error('No data');
 
 			const players = data.players.filter(p => p.name && p.name !== 'Unknown');
@@ -1139,61 +1142,47 @@
 			const seen = new Set();
 			const addUnique = item => { if (seen.has(item.name + item.rarity)) return; seen.add(item.name + item.rarity); pool.push(item); };
 
-			// 🟫 Мусор
 			const junk = [
-				{ emoji: '🦴', name: 'Кость', rarity: 'common' }, { emoji: '🍂', name: 'Лист', rarity: 'common' },
-				{ emoji: '🍺', name: 'Кружка ГуангГуанга', rarity: 'common' }, { emoji: '🕯️', name: 'Огарок свечи', rarity: 'common' },
-				{ emoji: '🧦', name: 'Носок', rarity: 'common' }, { emoji: '🗑️', name: 'Мусор', rarity: 'common' },
-				{ emoji: '🍭', name: 'Леденец', rarity: 'common' }, { emoji: '🍄', name: 'Гриб', rarity: 'common' },
+				{ emoji: '🦴', name: 'Кость', rarity: 'common' },{ emoji: '🍂', name: 'Лист', rarity: 'common' },
+				{ emoji: '🍺', name: 'Кружка ГуангГуанга', rarity: 'common' },{ emoji: '🕯️', name: 'Огарок свечи', rarity: 'common' },
+				{ emoji: '🧦', name: 'Носок', rarity: 'common' },{ emoji: '🗑️', name: 'Мусор', rarity: 'common' },
+				{ emoji: '🍭', name: 'Леденец', rarity: 'common' },{ emoji: '🍄', name: 'Гриб', rarity: 'common' },
 			];
 			junk.forEach(item => { for (let i = 0; i < 15; i++) addUnique(item); });
 
-			// 🟩 Зелень + все активные игроки
 			const uncommon = [
-				{ emoji: '🧪', name: 'Зелье силы', rarity: 'uncommon' }, { emoji: '🛡️', name: 'Благословение', rarity: 'uncommon' },
-				{ emoji: '✨', name: 'Чудо', rarity: 'uncommon' }, { emoji: '📜', name: 'Свиток', rarity: 'uncommon' },
-				{ emoji: '💎', name: 'Осколок', rarity: 'uncommon' }, { emoji: '🔮', name: 'Кристалл', rarity: 'uncommon' },
-				{ emoji: '🗡️', name: 'Кинжал', rarity: 'uncommon' }, { emoji: '🧿', name: 'Амулет', rarity: 'uncommon' },
+				{ emoji: '🧪', name: 'Зелье силы', rarity: 'uncommon' },{ emoji: '🛡️', name: 'Благословение', rarity: 'uncommon' },
+				{ emoji: '✨', name: 'Чудо', rarity: 'uncommon' },{ emoji: '📜', name: 'Свиток', rarity: 'uncommon' },
+				{ emoji: '💎', name: 'Осколок', rarity: 'uncommon' },{ emoji: '🔮', name: 'Кристалл', rarity: 'uncommon' },
+				{ emoji: '🗡️', name: 'Кинжал', rarity: 'uncommon' },{ emoji: '🧿', name: 'Амулет', rarity: 'uncommon' },
 			];
 			uncommon.forEach(item => { for (let i = 0; i < 6; i++) addUnique(item); });
-			players.forEach(p => {
-				addUnique({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'uncommon', desc: p.name });
-			});
+			players.forEach(p => addUnique({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'uncommon', desc: p.name }));
 
-			// 🟦 Синька + игроки с 50+ боёв
 			const rare = [
-				{ emoji: '⚔️', name: 'Меч Аэлиона', rarity: 'rare' }, { emoji: '🏹', name: 'Лук Следопыта', rarity: 'rare' },
-				{ emoji: '🪓', name: 'Топор Варвара', rarity: 'rare' }, { emoji: '🗡️', name: 'Клинок Тени', rarity: 'rare' },
-				{ emoji: '🛡️', name: 'Щит Паладина', rarity: 'rare' }, { emoji: '💎', name: 'Двойной осколок', rarity: 'rare' },
+				{ emoji: '⚔️', name: 'Меч Аэлиона', rarity: 'rare' },{ emoji: '🏹', name: 'Лук Следопыта', rarity: 'rare' },
+				{ emoji: '🪓', name: 'Топор Варвара', rarity: 'rare' },{ emoji: '🗡️', name: 'Клинок Тени', rarity: 'rare' },
+				{ emoji: '🛡️', name: 'Щит Паладина', rarity: 'rare' },{ emoji: '💎', name: 'Двойной осколок', rarity: 'rare' },
 			];
 			rare.forEach(item => { for (let i = 0; i < 3; i++) addUnique(item); });
-			players.filter(p => (p.wins || 0) + (p.losses || 0) >= 50).forEach(p => {
-				addUnique({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'rare', desc: p.name });
-			});
+			players.filter(p => (p.wins || 0) + (p.losses || 0) >= 50).forEach(p => addUnique({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'rare', desc: p.name }));
 
-			// 🟪 Фиол: топ-15 PvP + топ-10 PvE + локации (дубли разрешены!)
 			const epicItems = [
-				{ emoji: '🏰', name: 'Сияющий Шпиль', rarity: 'epic' }, { emoji: '🌑', name: 'Эпицентр Раскола', rarity: 'epic' },
-				{ emoji: '🎭', name: 'Арена Тысячи Эхо', rarity: 'epic' }, { emoji: '🔥', name: 'Кузня Расколотых', rarity: 'epic' },
-				{ emoji: '🌫️', name: 'Зал Повествователя', rarity: 'epic' }, { emoji: '👑', name: 'Корона Раскола', rarity: 'epic' },
+				{ emoji: '🏰', name: 'Сияющий Шпиль', rarity: 'epic' },{ emoji: '🌑', name: 'Эпицентр Раскола', rarity: 'epic' },
+				{ emoji: '🎭', name: 'Арена Тысячи Эхо', rarity: 'epic' },{ emoji: '🔥', name: 'Кузня Расколотых', rarity: 'epic' },
+				{ emoji: '🌫️', name: 'Зал Повествователя', rarity: 'epic' },{ emoji: '👑', name: 'Корона Раскола', rarity: 'epic' },
 			];
 			epicItems.forEach(item => pool.push(item));
 			const top15 = players.sort((a, b) => (b.wins || 0) - (a.wins || 0)).slice(0, 15);
-			top15.forEach(p => {
-				pool.push({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'epic', desc: p.name });
-			});
+			top15.forEach(p => pool.push({ emoji: p.emoji || '⚔️', name: p.display, rarity: 'epic', desc: p.name }));
 			if (data.dungeon && data.dungeon.players) {
-				const dungeonPlayers = Object.values(data.dungeon.players);
-				const topDungeon = dungeonPlayers.sort((a, b) => (b.record || 0) - (a.record || 0)).slice(0, 10);
-				topDungeon.forEach(dp => {
-					const player = players.find(p => p.display === dp.display);
-					if (player) {
-						pool.push({ emoji: player.emoji || '🏔', name: player.display, rarity: 'epic', desc: `Рекорд данжа: ${dp.record} волн` });
-					}
+				const dp = Object.values(data.dungeon.players).sort((a, b) => (b.record || 0) - (a.record || 0)).slice(0, 10);
+				dp.forEach(d => {
+					const player = players.find(p => p.display === d.display);
+					if (player) pool.push({ emoji: player.emoji || '🏔', name: player.display, rarity: 'epic', desc: `Рекорд данжа: ${d.record} волн` });
 				});
 			}
 
-			// 🟨 Лега: чемпионы + уникальные легендарки (дубли разрешены!)
 			const legendary = [
 				{ emoji: '🐼', name: 'ГуангГуанг', rarity: 'legendary', desc: 'Трактирщик' },
 				{ emoji: '🔮', name: 'Осколок Клинка', rarity: 'legendary' },
@@ -1201,9 +1190,7 @@
 			];
 			legendary.forEach(item => pool.push(item));
 			const champions = players.filter(p => p.tournamentWins > 0 || p.champion);
-			champions.forEach(p => {
-				pool.push({ emoji: p.emoji || '👑', name: p.display, rarity: 'legendary', desc: p.name + ' | Чемпион' });
-			});
+			champions.forEach(p => pool.push({ emoji: p.emoji || '👑', name: p.display, rarity: 'legendary', desc: p.name + ' | Чемпион' }));
 
 			gachaPool = pool;
 			gachaReady = true;
@@ -1219,8 +1206,7 @@
 		if (!gachaReady) { setQuote('Данные ещё грузятся, не спеши...'); return; }
 		const cost = count === 10 ? 90 : 10;
 		if (balance < cost) { setQuote('Недостаточно осколков!'); return; }
-		balance -= cost;
-		updateBalance();
+		balance -= cost; updateBalance();
 		const area = document.getElementById('gachaResultArea');
 		area.innerHTML = '<div class="spin-animation" style="text-align:center;font-size:3rem;">🎰</div>';
 		setTimeout(() => {
@@ -1229,35 +1215,26 @@
 			const rank = r => ['legendary', 'epic', 'rare', 'uncommon', 'common'].indexOf(r.rarity);
 			const best = drops.reduce((a, b) => rank(a) < rank(b) ? a : b);
 			drops.forEach(d => gachaCollection.push(d));
-			if (gachaCollection.length > 200) {
-				gachaCollection = gachaCollection.slice(-200);
-				setQuote('📦 Коллекция переполнена! Старые предметы удалены.');
-			}
-			localStorage.setItem('gachaCollection', JSON.stringify(gachaCollection));
+			if (gachaCollection.length > 200) { gachaCollection = gachaCollection.slice(-200); setQuote('📦 Коллекция переполнена! Старые предметы удалены.'); }
+			gachaSaveCollection();
 			best.time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 			gachaRecent.unshift(best);
 			if (gachaRecent.length > 5) gachaRecent.pop();
 			localStorage.setItem('gachaRecent', JSON.stringify(gachaRecent));
 			const rarityLabel = best.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : best.rarity === 'epic' ? 'Эпический' : best.rarity === 'rare' ? 'Редкий' : best.rarity === 'uncommon' ? 'Необычный' : 'Обычный';
-			area.innerHTML = `<div class="drop-card ${best.rarity}">
-				<div class="drop-emoji">${best.emoji}</div>
-				<div class="drop-name">${best.name}</div>
-				${best.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${best.desc}</div>` : ''}
-				<div class="drop-rarity rarity-${best.rarity}">${rarityLabel}</div>
-				${count > 1 ? `<div style="color:var(--text-muted);font-size:0.75rem;margin-top:8px;">+ ещё ${count - 1} предметов</div>` : ''}
-			</div>`;
+			area.innerHTML = `<div class="drop-card ${best.rarity}"><div class="drop-emoji">${best.emoji}</div><div class="drop-name">${best.name}</div>${best.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${best.desc}</div>` : ''}<div class="drop-rarity rarity-${best.rarity}">${rarityLabel}</div>${count > 1 ? `<div style="color:var(--text-muted);font-size:0.75rem;margin-top:8px;">+ ещё ${count - 1} предметов</div>` : ''}</div>`;
 			if (best.rarity === 'legendary') setQuote('🐼 БАМБУК ПОТРЯСЁН! ЛЕГЕНДАРКА!!!');
 			else if (best.rarity === 'epic') setQuote('✨ Эпик! ГуангГуанг одобряет!');
 			else if (best.rarity === 'rare') setQuote('👀 Ого, редкая штука!');
 			else if (best.rarity === 'uncommon') setQuote('🙂 Неплохо, странник.');
 			else setQuote('🗑️ Мусор... но ты заходи ещё!');
-			gachaRenderCollection();
-			gachaRenderRecent();
+			gachaRenderCollection(); gachaRenderRecent();
 		}, 800);
 	}
 
 	function gachaSortCollection(sort) {
-		gachaSort = sort;
+		if (gachaSort === sort) { gachaSortDir = gachaSortDir === 'desc' ? 'asc' : 'desc'; }
+		else { gachaSort = sort; gachaSortDir = 'desc'; }
 		gachaRenderCollection();
 	}
 
@@ -1265,9 +1242,11 @@
 		const sorted = [...gachaCollection];
 		if (gachaSort === 'rarity') {
 			const rank = r => ['legendary', 'epic', 'rare', 'uncommon', 'common'].indexOf(r.rarity);
-			sorted.sort((a, b) => rank(a) - rank(b));
+			sorted.sort((a, b) => gachaSortDir === 'desc' ? rank(b) - rank(a) : rank(a) - rank(b));
 		} else if (gachaSort === 'name') {
-			sorted.sort((a, b) => a.name.localeCompare(b.name));
+			sorted.sort((a, b) => gachaSortDir === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name));
+		} else if (gachaSort === 'newest' && gachaSortDir === 'asc') {
+			sorted.reverse();
 		}
 		return sorted;
 	}
@@ -1277,14 +1256,107 @@
 		const count = document.getElementById('gachaCollectionCount');
 		if (!grid || !count) return;
 		count.textContent = gachaCollection.length;
-
 		const sorted = gachaGetSortedCollection();
-		const recent = sorted.slice(-40).reverse();
-		grid.innerHTML = recent.map((item) => {
-			const actualIdx = gachaCollection.indexOf(item);
+		grid.innerHTML = sorted.map((item) => {
+			const actualIdx = gachaCollection.findIndex((x, i) => x === item);
 			const rarityColor = item.rarity === 'legendary' ? '#ffaa00' : item.rarity === 'epic' ? '#c471ed' : item.rarity === 'rare' ? '#4a90d9' : item.rarity === 'uncommon' ? '#3fb950' : 'var(--text-muted)';
-			return `<div class="collection-item" style="border-color:${rarityColor};" title="${item.name}" onclick="gachaShowItem(${actualIdx})">${item.emoji}</div>`;
+			const isSelected = gachaSelected.has(actualIdx);
+			return `<div class="collection-item" style="border-color:${rarityColor};${isSelected ? 'box-shadow:0 0 10px rgba(255,215,0,0.6);transform:scale(1.1);' : ''}" title="${item.name}" onclick="gachaToggleSelect(${actualIdx}, event)">
+				${item.emoji}
+				${isSelected ? '<div style="position:absolute;top:2px;right:4px;font-size:0.6rem;color:var(--gold);">✓</div>' : ''}
+			</div>`;
 		}).join('');
+		// Обновляем кнопку мульти-продажи
+		const sellBtn = document.getElementById('gachaSellSelected');
+		if (sellBtn) sellBtn.textContent = `💰 Продать (${gachaSelected.size})`;
+	}
+
+	function gachaToggleSelect(index, event) {
+		if (event.ctrlKey || event.metaKey) {
+			// Ctrl+клик — множественный выбор
+			if (gachaSelected.has(index)) gachaSelected.delete(index);
+			else gachaSelected.add(index);
+			gachaRenderCollection();
+		} else {
+			// Обычный клик — показать карточку
+			gachaShowItem(index);
+		}
+	}
+
+	function gachaSellSelected() {
+		if (gachaSelected.size === 0) return;
+		const prices = { legendary: 50, epic: 20, rare: 8, uncommon: 3, common: 1 };
+		let total = 0;
+		const sorted = [...gachaSelected].sort((a, b) => b - a);
+		sorted.forEach(idx => {
+			const item = gachaCollection[idx];
+			if (item) total += prices[item.rarity] || 1;
+		});
+		sorted.forEach(idx => gachaCollection.splice(idx, 1));
+		gachaSelected.clear();
+		gachaSaveCollection();
+		balance += total; updateBalance();
+		setQuote(`💰 Продано ${sorted.length} предметов за ${total}💎`); flashWin();
+		gachaRenderCollection();
+	}
+
+	function gachaSellItem(index) {
+		const item = gachaCollection[index];
+		if (!item) return;
+		const prices = { legendary: 50, epic: 20, rare: 8, uncommon: 3, common: 1 };
+		const price = prices[item.rarity] || 1;
+		gachaCollection.splice(index, 1);
+		gachaSelected.delete(index);
+		gachaSaveCollection();
+		balance += price; updateBalance();
+		setQuote(`💰 Продано за ${price}💎`); flashWin();
+		gachaRenderCollection();
+		const overlay = document.querySelector('.modal-overlay');
+		if (overlay) overlay.remove();
+	}
+
+	function gachaTradeUp(index) {
+		const item = gachaCollection[index];
+		if (!item) return;
+		if (item.rarity === 'legendary') { setQuote('⚠️ Легендарки не обмениваются!'); return; }
+
+		const sameItems = gachaCollection.filter((it, i) =>
+			it.name === item.name && it.rarity === item.rarity
+		);
+
+		if (sameItems.length < 5) {
+			setQuote(`⚠️ Нужно 5× ${item.name}, у тебя ${sameItems.length}`);
+			return;
+		}
+
+		let removed = 0;
+		for (let i = gachaCollection.length - 1; i >= 0; i--) {
+			if (removed >= 5) break;
+			if (gachaCollection[i].name === item.name && gachaCollection[i].rarity === item.rarity) {
+				gachaCollection.splice(i, 1);
+				removed++;
+			}
+		}
+
+		const nextRarity = { common: 'uncommon', uncommon: 'rare', rare: 'epic', epic: 'legendary' };
+		const newRarity = nextRarity[item.rarity];
+		const upgradePool = gachaPool.filter(it => it.rarity === newRarity);
+		const reward = upgradePool.length > 0
+			? upgradePool[Math.floor(Math.random() * upgradePool.length)]
+			: { emoji: '✨', name: 'Случайный апгрейд', rarity: newRarity };
+
+		gachaCollection.push(reward);
+		gachaSaveCollection();
+
+		const rarityLabel = newRarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : newRarity === 'epic' ? 'Эпический' : newRarity === 'rare' ? 'Редкий' : 'Необычный';
+		setQuote(`🔄 Обмен! 5× ${item.name} → ${reward.emoji} ${reward.name} (${rarityLabel})`);
+		flashWin();
+		gachaRenderCollection();
+
+		const overlay = document.querySelector('.modal-overlay');
+		if (overlay) overlay.remove();
+
+		setTimeout(() => { gachaShowItem(gachaCollection.length - 1); }, 300);
 	}
 
 	function gachaRenderRecent() {
@@ -1297,28 +1369,16 @@
 		).join('');
 	}
 
-	function gachaSellItem(index) {
-		const item = gachaCollection[index];
-		if (!item) return;
-		const prices = { legendary: 50, epic: 20, rare: 8, uncommon: 3, common: 1 };
-		const price = prices[item.rarity] || 1;
-		gachaCollection.splice(index, 1);
-		localStorage.setItem('gachaCollection', JSON.stringify(gachaCollection));
-		balance += price;
-		updateBalance();
-		setQuote(`💰 Продано за ${price}💎`);
-		flashWin();
-		gachaRenderCollection();
-		const overlay = document.querySelector('.modal-overlay');
-		if (overlay) overlay.remove();
-	}
-
 	function gachaShowItem(index) {
 		const item = gachaCollection[index];
 		if (!item) return;
 		const prices = { legendary: 50, epic: 20, rare: 8, uncommon: 3, common: 1 };
 		const price = prices[item.rarity] || 1;
 		const rarityLabel = item.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : item.rarity === 'epic' ? 'Эпический' : item.rarity === 'rare' ? 'Редкий' : item.rarity === 'uncommon' ? 'Необычный' : 'Обычный';
+
+		const sameNameCount = gachaCollection.filter(it => it.name === item.name && it.rarity === item.rarity).length;
+		const canTrade = item.rarity !== 'legendary' && sameNameCount >= 5;
+
 		const overlay = document.createElement('div');
 		overlay.className = 'modal-overlay';
 		overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
@@ -1327,8 +1387,10 @@
 			<div class="drop-name">${item.name}</div>
 			${item.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${item.desc}</div>` : ''}
 			<div class="drop-rarity rarity-${item.rarity}">${rarityLabel}</div>
+			${canTrade ? `<div style="color:var(--text-muted);font-size:0.7rem;margin-top:4px;">${sameNameCount}/5 для обмена</div>` : ''}
 			<div style="display:flex;gap:8px;margin-top:16px;">
-				<button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать<br>(${price}💎)</button>
+				<button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать (${price}💎)</button>
+				${canTrade ? `<button class="btn btn-secondary" onclick="gachaTradeUp(${index})">🔄 Обменять 5→1</button>` : ''}
 				<button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Закрыть</button>
 			</div>
 		</div>`;
