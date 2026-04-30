@@ -154,32 +154,33 @@
 			// === АРЕНА (PvP) ===
 			html += '<div class="section-title">Арена</div>';
 			html += '<div class="stats-grid">';
-			// Общее
 			html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value">${champCount || '—'}</div><div class="stat-label">👑 Чемпионов</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value">${maxSkill}</div><div class="stat-label">⭐ Макс. SKILL</div></div>`;
-			// Прогресс
 			html += `<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Макс. осколков</div></div>`;
-			// Винрейт и стрики
 			html += `<div class="stat-card"><div class="stat-value">${maxWinrate ? (maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1)+'%' : '—'}</div><div class="stat-label">📈 Лучший винрейт</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Макс. стрик</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${players.reduce((m, p) => p.worst > m ? p.worst : m, 0) || '—'}</div><div class="stat-label">💔 Худший стрик</div></div>`;
-			// Фракции
-			html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${duelLight} : ${duelDark}</div><div class="stat-label">⚔️ Дуэли Свет vs Тьма</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
+
+			// Эти карточки — только если данные есть (не для бета-теста)
+			const worstStreak = players.reduce((m, p) => p.worst > m ? p.worst : m, 0);
+			if (worstStreak > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${worstStreak || '—'}</div><div class="stat-label">💔 Худший стрик</div></div>`;
+			if (maxFactionWins > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
+			if (duelLight + duelDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${duelLight} : ${duelDark}</div><div class="stat-label">⚔️ Дуэли Свет vs Тьма</div></div>`;
+			if (battleLight + battleDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
 			html += '</div>';
 
 			// === ПОДЗЕМЕЛЬЕ (PvE) ===
-			html += '<div class="section-title">Подземелье</div>';
-			html += '<div class="stats-grid">';
-			html += `<div class="stat-card"><div class="stat-value">${Object.keys(dungeonPlayers).length || '—'}</div><div class="stat-label">👥 Игроков</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${maxDungeonRecord || '—'}</div><div class="stat-label">🏆 Рекорд волн</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${maxDungeonBosses || '—'}</div><div class="stat-label">💀 Боссов убито</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${maxDungeonTrophies || '—'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
-			html += '</div>';
+			if (isCurrent || Object.keys(dungeonPlayers).length > 0) {
+				html += '<div class="section-title">Подземелье</div>';
+				html += '<div class="stats-grid">';
+				html += `<div class="stat-card"><div class="stat-value">${Object.keys(dungeonPlayers).length || '—'}</div><div class="stat-label">👥 Игроков</div></div>`;
+				html += `<div class="stat-card"><div class="stat-value">${maxDungeonRecord || '—'}</div><div class="stat-label">🏆 Рекорд волн</div></div>`;
+				html += `<div class="stat-card"><div class="stat-value">${maxDungeonBosses || '—'}</div><div class="stat-label">💀 Боссов убито</div></div>`;
+				html += `<div class="stat-card"><div class="stat-value">${maxDungeonTrophies || '—'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
+				html += '</div>';
+			}
 
             if (champions.length > 0) {
                 html += `<div class="champion-section"><div class="champion-section-title">👑 Чемпионы сезона</div><div class="champion-grid">`;
