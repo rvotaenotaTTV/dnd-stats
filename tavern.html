@@ -1229,25 +1229,11 @@
 		area.innerHTML = '<div class="spin-animation" style="text-align:center;font-size:3rem;">🎰</div>';
 		setTimeout(() => {
 			const drops = [];
-			for (let i = 0; i < count; i++) {
-				// Чистый рандом: 1% лег, 4% эпик, 10% синь, 25% зелень, 60% мусор
-				const roll = Math.random();
-				let rarity;
-				if (roll < 0.01) rarity = 'legendary';
-				else if (roll < 0.05) rarity = 'epic';
-				else if (roll < 0.15) rarity = 'rare';
-				else if (roll < 0.40) rarity = 'uncommon';
-				else rarity = 'common';
-				
-				const pool = gachaPool.filter(item => item.rarity === rarity);
-				const drop = pool.length > 0 
-					? pool[Math.floor(Math.random() * pool.length)]
-					: gachaPool[Math.floor(Math.random() * gachaPool.length)];
-				drops.push(drop);
-			}
+			for (let i = 0; i < count; i++) drops.push(gachaPool[Math.floor(Math.random() * gachaPool.length)]);
 			
 			const rank = r => ['legendary', 'epic', 'rare', 'uncommon', 'common'].indexOf(r.rarity);
 			const best = drops.reduce((a, b) => rank(a) < rank(b) ? a : b);
+			
 			drops.forEach(d => gachaCollection.push(d));
 			if (gachaCollection.length > 200) { gachaCollection = gachaCollection.slice(-200); setQuote('📦 Коллекция переполнена! Старые предметы удалены.'); }
 			gachaSaveCollection();
@@ -1255,8 +1241,19 @@
 			gachaRecent.unshift(best);
 			if (gachaRecent.length > 5) gachaRecent.pop();
 			localStorage.setItem('gachaRecent', JSON.stringify(gachaRecent));
-			const rarityLabel = best.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : best.rarity === 'epic' ? 'Эпический' : best.rarity === 'rare' ? 'Редкий' : best.rarity === 'uncommon' ? 'Необычный' : 'Обычный';
-			area.innerHTML = `<div class="drop-card ${best.rarity}"><div class="drop-emoji">${best.emoji}</div><div class="drop-name">${best.name}</div>${best.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${best.desc}</div>` : ''}<div class="drop-rarity rarity-${best.rarity}">${rarityLabel}</div>${count > 1 ? `<div style="color:var(--text-muted);font-size:0.75rem;margin-top:8px;">+ ещё ${count - 1} предметов</div>` : ''}</div>`;
+			
+			if (count === 1) {
+				const rarityLabel = best.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : best.rarity === 'epic' ? 'Эпический' : best.rarity === 'rare' ? 'Редкий' : best.rarity === 'uncommon' ? 'Необычный' : 'Обычный';
+				area.innerHTML = `<div class="drop-card ${best.rarity}"><div class="drop-emoji">${best.emoji}</div><div class="drop-name">${best.name}</div>${best.desc ? `<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${best.desc}</div>` : ''}<div class="drop-rarity rarity-${best.rarity}">${rarityLabel}</div></div>`;
+			} else {
+				// ×10 — показываем все 10
+				const colors = { legendary: '#ffaa00', epic: '#c471ed', rare: '#4a90d9', uncommon: '#3fb950', common: 'var(--text-muted)' };
+				area.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px;">` +
+					drops.map(d => `<div style="background:var(--bg-elevated);border-radius:10px;padding:6px 8px;text-align:center;border:1px solid ${colors[d.rarity]};font-size:1.2rem;" title="${d.name} (${d.rarity})">${d.emoji}</div>`).join('') +
+					`</div>` +
+					`<div class="drop-card ${best.rarity}" style="margin-top:8px;"><div class="drop-emoji" style="font-size:2rem;">${best.emoji}</div><div class="drop-name" style="font-size:1rem;">Лучшее: ${best.name}</div><div class="drop-rarity rarity-${best.rarity}">${best.rarity === 'legendary' ? 'ЛЕГЕНДАРНЫЙ' : best.rarity === 'epic' ? 'Эпический' : best.rarity === 'rare' ? 'Редкий' : best.rarity === 'uncommon' ? 'Необычный' : 'Обычный'}</div></div>`;
+			}
+			
 			if (best.rarity === 'legendary') setQuote('🐼 БАМБУК ПОТРЯСЁН! ЛЕГЕНДАРКА!!!');
 			else if (best.rarity === 'epic') setQuote('✨ Эпик! ГуангГуанг одобряет!');
 			else if (best.rarity === 'rare') setQuote('👀 Ого, редкая штука!');
