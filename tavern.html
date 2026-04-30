@@ -135,7 +135,14 @@
         .drop-name { font-size: 1.3rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
         .drop-rarity { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
         .rarity-legendary { color: #ffaa00; } .rarity-epic { color: #c471ed; } .rarity-rare { color: #4a90d9; } .rarity-uncommon { color: #3fb950; } .rarity-common { color: var(--text-muted); }
-        .collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
+        .collection-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+			gap: 8px;
+			max-height: 400px;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
         .collection-item { background: var(--bg-elevated); border-radius: 12px; padding: 8px; text-align: center; font-size: 1.5rem; border: 1px solid var(--border-subtle); cursor: pointer; transition: 0.2s; }
         .collection-item:hover { border-color: var(--gold); transform: scale(1.1); }
         .recent-log { margin-top: 16px; padding: 10px; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-subtle); max-height: 120px; overflow-y: auto; }
