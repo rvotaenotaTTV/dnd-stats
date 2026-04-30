@@ -367,12 +367,14 @@
 			</div>
 			<div class="collection" style="margin-top:20px;">
 				<h3>📦 Коллекция (<span id="gachaCollectionCount">0</span>)</h3>
-				<div style="display:flex;gap:6px;margin-bottom:8px;">
+				<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
 					<button class="btn btn-secondary" style="flex:0;padding:6px 12px;font-size:0.7rem;" onclick="gachaSortCollection('newest')">🕐 Новые</button>
 					<button class="btn btn-secondary" style="flex:0;padding:6px 12px;font-size:0.7rem;" onclick="gachaSortCollection('rarity')">💎 Редкость</button>
 					<button class="btn btn-secondary" style="flex:0;padding:6px 12px;font-size:0.7rem;" onclick="gachaSortCollection('name')">🔤 Имя</button>
+					<button class="btn btn-primary" id="gachaSellSelected" style="flex:0;padding:6px 12px;font-size:0.7rem;" onclick="gachaSellSelected()">💰 Продать (0)</button>
 				</div>
-				<div class="collection-grid" id="gachaCollectionGrid"></div>
+				<div class="collection-grid" id="gachaCollectionGrid" style="max-height:400px;overflow-y:auto;"></div>
+				<div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px;">Ctrl+клик для выбора нескольких</div>
 			</div>
 			<div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;
 	}
@@ -1292,11 +1294,15 @@
 			const item = gachaCollection[idx];
 			if (item) total += prices[item.rarity] || 1;
 		});
-		sorted.forEach(idx => gachaCollection.splice(idx, 1));
+		sorted.forEach(idx => {
+			gachaCollection.splice(idx, 1);
+		});
 		gachaSelected.clear();
 		gachaSaveCollection();
-		balance += total; updateBalance();
-		setQuote(`💰 Продано ${sorted.length} предметов за ${total}💎`); flashWin();
+		balance += total;
+		updateBalance();
+		setQuote(`💰 Продано ${sorted.length} предметов за ${total}💎`);
+		flashWin();
 		gachaRenderCollection();
 	}
 
@@ -1389,7 +1395,7 @@
 			<div class="drop-rarity rarity-${item.rarity}">${rarityLabel}</div>
 			${canTrade ? `<div style="color:var(--text-muted);font-size:0.7rem;margin-top:4px;">${sameNameCount}/5 для обмена</div>` : ''}
 			<div style="display:flex;gap:8px;margin-top:16px;">
-				<button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать (${price}💎)</button>
+				<button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать<br>(${price}💎)</button>
 				${canTrade ? `<button class="btn btn-secondary" onclick="gachaTradeUp(${index})">🔄 Обменять 5→1</button>` : ''}
 				<button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Закрыть</button>
 			</div>
