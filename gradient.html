@@ -181,7 +181,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 10px;
             margin: 16px 0;
         }
@@ -291,7 +291,7 @@
             .header-title { font-size: 1.8rem; }
             .selector-row { flex-direction: column; align-items: stretch; }
             select { width: 100%; min-width: auto; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
             .winrate-value { font-size: 1.5rem; }
         }
     </style>
@@ -334,6 +334,7 @@
                 <div class="stat-card"><div class="stat-emoji">❤️</div><div class="stat-name">HP</div><div class="stat-value" id="hpDisplay">24</div><input type="number" id="hpInput" class="stat-input" min="10" max="50" value="24"></div>
                 <div class="stat-card"><div class="stat-emoji">⚔️</div><div class="stat-name">ATK</div><div class="stat-value" id="atkDisplay">6</div><input type="number" id="atkInput" class="stat-input" min="0" max="15" value="6"></div>
                 <div class="stat-card"><div class="stat-emoji">🛡️</div><div class="stat-name">DEF</div><div class="stat-value" id="defDisplay">0</div><input type="number" id="defInput" class="stat-input" min="0" max="5" value="0"></div>
+                <div class="stat-card"><div class="stat-emoji">🏃</div><div class="stat-name">DEX</div><div class="stat-value" id="dexDisplay">4</div><input type="number" id="dexInput" class="stat-input" min="0" max="15" value="4"></div>
                 <div class="stat-card"><div class="stat-emoji">⬇️</div><div class="stat-name">MIN</div><div class="stat-value" id="minDisplay">5</div><input type="number" id="minInput" class="stat-input" min="1" max="15" value="5"></div>
                 <div class="stat-card"><div class="stat-emoji">⬆️</div><div class="stat-name">MAX</div><div class="stat-value" id="maxDisplay">10</div><input type="number" id="maxInput" class="stat-input" min="2" max="20" value="10"></div>
             </div>
@@ -441,9 +442,9 @@
             originalStats = {
                 hp: cls.Hp + (race?.BonusHp || 0), atk: cls.Atk + (race?.BonusAtk || 0),
                 dex: (cls.Dex||0) + (race?.BonusDex||0), def: cls.Def + (race?.BonusDef || 0), 
-				min: cls.Min + (race?.BonusMin || 0), max: cls.Max + (race?.BonusMax || 0)
+                min: cls.Min + (race?.BonusMin || 0), max: cls.Max + (race?.BonusMax || 0)
             };
-            ['hp','atk','def','min','max'].forEach(s => {
+            ['hp','atk','def','dex','min','max'].forEach(s => {
                 document.getElementById(`${s}Display`).textContent = originalStats[s];
                 document.getElementById(`${s}Input`).value = originalStats[s];
             });
@@ -452,8 +453,8 @@
         window.resetToOriginal = loadClassStats;
 
         function simulateFight(s1, s2) {
-			const rnd = () => Math.floor(Math.random() * 20) + 1;
-			const i1 = rnd() + (s1.dex || 0), i2 = rnd() + (s2.dex || 0);
+            const rnd = () => Math.floor(Math.random() * 20) + 1;
+            const i1 = rnd() + (s1.dex || 0), i2 = rnd() + (s2.dex || 0);
             const first = i1 !== i2 ? i1 > i2 : Math.random() < 0.5;
             let hp1 = s1.hp, hp2 = s2.hp, rounds = 0;
 
@@ -484,6 +485,7 @@
                 hp: +document.getElementById('hpInput').value || originalStats.hp,
                 atk: +document.getElementById('atkInput').value || originalStats.atk,
                 def: +document.getElementById('defInput').value || originalStats.def,
+                dex: +document.getElementById('dexInput').value || originalStats.dex,
                 min: +document.getElementById('minInput').value || originalStats.min,
                 max: +document.getElementById('maxInput').value || originalStats.max
             };
@@ -493,7 +495,7 @@
             for (const o of classes) {
                 if (o === currentClass) continue;
                 const oc = classesData.find(c => c.Name === o); if (!oc) continue;
-                const s = { hp: oc.Hp, atk: oc.Atk, def: oc.Def, min: oc.Min, max: oc.Max };
+                const s = { hp: oc.Hp, atk: oc.Atk, def: oc.Def, dex: (oc.Dex||0), min: oc.Min, max: oc.Max };
                 for (let i = 0; i < fps; i++) cw += simulateFight(cur, s);
                 await new Promise(r => setTimeout(r, 5));
             }
@@ -502,7 +504,7 @@
             for (const o of classes) {
                 if (o === currentClass) continue;
                 const oc = classesData.find(c => c.Name === o); if (!oc) continue;
-                const s = { hp: oc.Hp, atk: oc.Atk, def: oc.Def, min: oc.Min, max: oc.Max };
+                const s = { hp: oc.Hp, atk: oc.Atk, def: oc.Def, dex: (oc.Dex||0), min: oc.Min, max: oc.Max };
                 for (let i = 0; i < fps; i++) nw += simulateFight(nxt, s);
                 await new Promise(r => setTimeout(r, 5));
             }
