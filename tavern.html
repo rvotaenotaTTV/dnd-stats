@@ -1220,7 +1220,23 @@
 		area.innerHTML = '<div class="spin-animation" style="text-align:center;font-size:3rem;">🎰</div>';
 		setTimeout(() => {
 			const drops = [];
-			for (let i = 0; i < count; i++) drops.push(gachaPool[Math.floor(Math.random() * gachaPool.length)]);
+			for (let i = 0; i < count; i++) {
+				// Чистый рандом: 1% лег, 4% эпик, 10% синь, 25% зелень, 60% мусор
+				const roll = Math.random();
+				let rarity;
+				if (roll < 0.01) rarity = 'legendary';
+				else if (roll < 0.05) rarity = 'epic';
+				else if (roll < 0.15) rarity = 'rare';
+				else if (roll < 0.40) rarity = 'uncommon';
+				else rarity = 'common';
+				
+				const pool = gachaPool.filter(item => item.rarity === rarity);
+				const drop = pool.length > 0 
+					? pool[Math.floor(Math.random() * pool.length)]
+					: gachaPool[Math.floor(Math.random() * gachaPool.length)];
+				drops.push(drop);
+			}
+			
 			const rank = r => ['legendary', 'epic', 'rare', 'uncommon', 'common'].indexOf(r.rarity);
 			const best = drops.reduce((a, b) => rank(a) < rank(b) ? a : b);
 			drops.forEach(d => gachaCollection.push(d));
