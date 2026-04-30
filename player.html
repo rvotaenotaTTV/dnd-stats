@@ -124,44 +124,72 @@
             return sorted.findIndex(p=>p.display===player.display)+1;
         }
 
-        function renderProfile(p){
-            if(!p)return'<div class="status-message">Игрок не найден</div>';
-            const total=(p.wins||0)+(p.losses||0);const wr=total>0?(p.wins*100/total).toFixed(1):'0.0';
-            const faction=p.faction||'';const fi=faction==='Орден Света'?'🌝':'🌚';
-            const dungeon=dungeonPlayers[p.display];const seasonRank=seasonTop.findIndex(s=>s.display===p.display)+1;
-            const rankWins=getRank(p,'wins'),rankFights=getRank(p,p=>(p.wins||0)+(p.losses||0)), rankWR=getWinrateRank(p),rankShards=getRank(p,'shards'),rankDungeon=allPlayers.map(x=>dungeonPlayers[x.display]?.record||0).sort((a,b)=>b-a).indexOf(dungeon?.record||0)+1;
+		function renderProfile(p) {
+			if (!p) return '<div class="status-message">Игрок не найден</div>';
+			const total = (p.wins || 0) + (p.losses || 0);
+			const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
+			const faction = p.faction || '';
+			const fi = faction === 'Орден Света' ? '🌝' : '🌚';
+			const dungeon = dungeonPlayers[p.display];
+			const seasonRank = seasonTop.findIndex(s => s.display === p.display) + 1;
 
-            let html=`<div class="profile-hero"><div class="profile-emoji">${p.emoji||'⚔️'}</div><div class="profile-name">${p.display}${p.champion?' 👑':''}</div><div class="profile-class">${p.name||''} ${fi}</div><div class="profile-badges">`;
-            if(p.champion)html+='<span class="badge badge-gold">👑 Хранитель</span>';
-            html+=`<span class="badge ${faction==='Орден Света'?'badge-light':'badge-dark'}">${fi} ${faction}</span>`;
-            if(seasonRank>0)html+=`<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
-            html+=`</div></div>`;
+			// Ранги
+			const sortedByWins = [...allPlayers].sort((a, b) => (b.wins || 0) - (a.wins || 0));
+			const rankWins = sortedByWins.findIndex(x => x.display === p.display) + 1;
 
-            html+='<div class="stats-grid">';
-            html+=`<div class="stat-card"><div class="stat-num">${p.wins||0}</div><div class="stat-label">⚔️ Победы</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${p.losses||0}</div><div class="stat-label">💀 Поражения</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${wr}%</div><div class="stat-label">📊 Винрейт</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">⚡ Всего боёв</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${p.best||0}</div><div class="stat-label">🔥 Лучший стрик</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${p.worst||0}</div><div class="stat-label">💔 Худший стрик</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${p.shards||0}</div><div class="stat-label">💎 Осколки</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${p.level||0}</div><div class="stat-label">📈 Уровень</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${p.tournamentWins||0}</div><div class="stat-label">👑 Турниры</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${p.factionWins||0}</div><div class="stat-label">🌍 Фракция</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${dungeon?dungeon.record:'-'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-num">${dungeon?dungeon.trophies:'-'}</div><div class="stat-label">🐉 Трофеев</div></div></div>`;
+			const sortedByFights = [...allPlayers].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0)));
+			const rankFights = sortedByFights.findIndex(x => x.display === p.display) + 1;
 
-            html+='<div class="ranks-grid">';
-            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankWins<=3?'var(--gold)':rankWins<=10?'var(--green)':'var(--text-muted)'};">#${rankWins}</div><div class="rank-label">По победам</div></div>`;
-            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankWR<=3?'var(--gold)':rankWR<=10?'var(--green)':'var(--text-muted)'};">#${rankWR}</div><div class="rank-label">По винрейту</div></div>`;
-            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankShards<=3?'var(--gold)':rankShards<=10?'var(--green)':'var(--text-muted)'};">#${rankShards}</div><div class="rank-label">По осколкам</div></div>`;
-            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankDungeon<=3?'var(--gold)':rankDungeon<=10?'var(--green)':'var(--text-muted)'};">#${rankDungeon||'-'}</div><div class="rank-label">По данжу</div></div>`;
-            html+=`<div class="rank-card"><div class="rank-pos" style="color:${seasonRank<=3?'var(--gold)':seasonRank<=10?'var(--green)':'var(--text-muted)'};">#${seasonRank||'-'}</div><div class="rank-label">Сезонный топ</div></div>`;
-            html+=`<div class="rank-card"><div class="rank-pos" style="color:${rankFights<=3?'var(--gold)':rankFights<=10?'var(--green)':'var(--text-muted)'};">#${rankFights}</div><div class="rank-label">По боям</div></div></div>`;
+			const sortedByWR = [...allPlayers].filter(x => ((x.wins || 0) + (x.losses || 0)) >= 20).sort((a, b) => {
+				const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0));
+				const wb = (b.wins || 0) / ((b.wins || 0) + (b.losses || 0));
+				return wb - wa;
+			});
+			const rankWR = sortedByWR.findIndex(x => x.display === p.display) + 1;
 
-            html+=`<div class="compare-bar"><span>⚔️ Сравнить с:</span><select id="compareSelect" onchange="compareWith(this.value)"><option value="">— Выбери игрока —</option>${allPlayers.filter(x=>x.display!==p.display).map(x=>`<option value="${x.display}">${x.emoji||'⚔️'} ${x.display}</option>`).join('')}</select></div><div id="compareResult"></div>`;
-            return html;
-        }
+			const sortedByShards = [...allPlayers].sort((a, b) => (b.shards || 0) - (a.shards || 0));
+			const rankShards = sortedByShards.findIndex(x => x.display === p.display) + 1;
+
+			const dungeonRecords = allPlayers.map(x => ({ display: x.display, record: dungeonPlayers[x.display]?.record || 0 }));
+			dungeonRecords.sort((a, b) => b.record - a.record);
+			const rankDungeon = dungeonRecords.findIndex(x => x.display === p.display && x.record > 0) + 1;
+
+			let html = `<div class="profile-hero">
+				<div class="profile-emoji">${p.emoji || '⚔️'}</div>
+				<div class="profile-name">${p.display}${p.champion ? ' 👑' : ''}</div>
+				<div class="profile-class">${p.name || ''} ${fi}</div>
+				<div class="profile-badges">`;
+			if (p.champion) html += '<span class="badge badge-gold">👑 Хранитель</span>';
+			html += `<span class="badge ${faction === 'Орден Света' ? 'badge-light' : 'badge-dark'}">${fi} ${faction}</span>`;
+			if (seasonRank > 0) html += `<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
+			html += `</div></div>`;
+
+			html += '<div class="stats-grid">';
+			html += `<div class="stat-card"><div class="stat-num">${p.wins || 0}</div><div class="stat-label">⚔️ Победы</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.losses || 0}</div><div class="stat-label">💀 Поражения</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${wr}%</div><div class="stat-label">📊 Винрейт</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">⚡ Всего боёв</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.best || 0}</div><div class="stat-label">🔥 Лучший стрик</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.worst || 0}</div><div class="stat-label">💔 Худший стрик</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.shards || 0}</div><div class="stat-label">💎 Осколки</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.level || 0}</div><div class="stat-label">📈 Уровень</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.tournamentWins || 0}</div><div class="stat-label">👑 Турниры</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.factionWins || 0}</div><div class="stat-label">🌍 Фракция</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.record : '-'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.trophies : '-'}</div><div class="stat-label">🐉 Трофеев</div></div></div>`;
+
+			html += '<div class="ranks-grid">';
+			const color = n => n <= 3 ? 'var(--gold)' : n <= 10 ? 'var(--green)' : 'var(--text-muted)';
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankWins)};">#${rankWins}</div><div class="rank-label">По победам</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankWR)};">#${rankWR || '-'}</div><div class="rank-label">По винрейту</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankShards)};">#${rankShards}</div><div class="rank-label">По осколкам</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankDungeon)};">#${rankDungeon || '-'}</div><div class="rank-label">По данжу</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(seasonRank)};">#${seasonRank || '-'}</div><div class="rank-label">Сезонный топ</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankFights)};">#${rankFights}</div><div class="rank-label">По боям</div></div></div>`;
+
+			html += `<div class="compare-bar"><span>⚔️ Сравнить с:</span><select id="compareSelect" onchange="compareWith(this.value)"><option value="">— Выбери игрока —</option>${allPlayers.filter(x => x.display !== p.display).map(x => `<option value="${x.display}">${x.emoji || '⚔️'} ${x.display}</option>`).join('')}</select></div><div id="compareResult"></div>`;
+			return html;
+		}
 
         function renderCompare(p1,p2){
             if(!p1||!p2)return'';
