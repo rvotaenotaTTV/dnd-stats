@@ -89,7 +89,9 @@
         .sudoku-cell:nth-child(n+19):nth-child(-n+27), .sudoku-cell:nth-child(n+46):nth-child(-n+54), .sudoku-cell:nth-child(n+73):nth-child(-n+81) { border-bottom: 2px solid var(--border-strong); }
         .sudoku-cell:nth-child(-n+9), .sudoku-cell:nth-child(n+28):nth-child(-n+36), .sudoku-cell:nth-child(n+55):nth-child(-n+63) { border-top: 2px solid var(--border-strong); }
         .sudoku-cell:hover { background: var(--bg-elevated); z-index: 2; }
-        .sudoku-cell.fixed { color: var(--gold); cursor: default; font-size: 1.05rem; background: var(--bg-secondary); }
+        .sudoku-cell.fixed {
+			color: var(--sudoku-fixed);
+		}
         .sudoku-cell.selected { outline: 3px solid var(--gold); outline-offset: -2px; background: var(--cell-selected-bg); z-index: 3; transform: scale(1.05); }
         .sudoku-cell.same-row-col { background: var(--cell-same-bg); }
         .sudoku-cell.same-number { background: var(--cell-same-num-bg); filter: brightness(1.1); }
