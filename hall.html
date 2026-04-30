@@ -36,6 +36,7 @@
         .season-badge.ended { background: var(--bg-elevated); color: var(--text-muted); }
         .season-badge.live { background: var(--gold); color: #1a1a1a; }
         .season-subtitle { color: var(--text-muted); font-size: 0.85rem; font-style: italic; margin-bottom: 20px; }
+        .section-title { color: var(--gold); font-size: 0.9rem; font-weight: 700; margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border-subtle); }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-elevated); border-radius: 14px; padding: 16px 12px; text-align: center; border: 1px solid var(--border-subtle); }
         .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
@@ -123,6 +124,7 @@
             if (data.dungeon && data.dungeon.players) dungeonPlayers = data.dungeon.players;
             const players = data.players || [];
             const seasonTop = data.seasonTop || [];
+            const factionScore = data.factionScore || {};
             const totalPlayers = players.length;
             const totalFights = Math.floor(players.reduce((s, p) => s + (p.wins||0) + (p.losses||0), 0) / 2);
             const maxStreak = players.reduce((m, p) => (p.best||0) > m ? (p.best||0) : m, 0);
@@ -133,27 +135,51 @@
             const maxWinrate = topWR[0];
             const champions = players.filter(p => (p.tournamentWins || 0) > 0).sort((a,b) => (b.tournamentWins||0) - (a.tournamentWins||0));
             const champCount = champions.length;
+			const maxDungeonBosses = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.bosses > m ? d.bosses : m; }, 0);
+			const maxSkill = seasonTop.length > 0 ? seasonTop[0].skill : '—';
 
-            // PvE статистика
             const maxDungeonRecord = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.record > m ? d.record : m; }, 0);
             const maxDungeonTrophies = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.trophies > m ? d.trophies : m; }, 0);
             const topDungeon = players.map(p => { const d = dungeonPlayers[p.display]; return { ...p, record: d?.record || 0, trophies: d?.trophies || 0 }; }).filter(p => p.record > 0).sort((a,b) => b.record - a.record || b.trophies - a.trophies);
 
+            const duelLight = factionScore.duelLight || 0;
+            const duelDark = factionScore.duelDark || 0;
+            const battleLight = factionScore.battleLight || 0;
+            const battleDark = factionScore.battleDark || 0;
+
             let html = `<div class="season-frame ${isCurrent ? 'live' : 'ended'}">`;
             html += `<div class="season-title">${seasonName} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'В РАЗГАРЕ' : 'ЗАВЕРШЁН'}</span></div>`;
             html += `<div class="season-subtitle">${seasonSubtitle}</div>`;
-            html += '<div class="stats-grid">';
-            html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Макс. осколков</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Макс. стрик</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxDungeonRecord || '—'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxDungeonTrophies || '—'}</div><div class="stat-label">🐉 Трофеев данжа</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxWinrate ? (maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1)+'%' : '—'}</div><div class="stat-label">📈 Лучший винрейт</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${champCount || '—'}</div><div class="stat-label">👑 Чемпионов</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
-            html += '</div>';
+
+			// === АРЕНА (PvP) ===
+			html += '<div class="section-title">Арена</div>';
+			html += '<div class="stats-grid">';
+			// Общее
+			html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${champCount || '—'}</div><div class="stat-label">👑 Чемпионов</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${maxSkill}</div><div class="stat-label">⭐ Макс. SKILL</div></div>`;
+			// Прогресс
+			html += `<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Макс. осколков</div></div>`;
+			// Винрейт и стрики
+			html += `<div class="stat-card"><div class="stat-value">${maxWinrate ? (maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1)+'%' : '—'}</div><div class="stat-label">📈 Лучший винрейт</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Макс. стрик</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${players.reduce((m, p) => p.worst > m ? p.worst : m, 0) || '—'}</div><div class="stat-label">💔 Худший стрик</div></div>`;
+			// Фракции
+			html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${duelLight} : ${duelDark}</div><div class="stat-label">⚔️ Дуэли Свет vs Тьма</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
+			html += '</div>';
+
+			// === ПОДЗЕМЕЛЬЕ (PvE) ===
+			html += '<div class="section-title">Подземелье</div>';
+			html += '<div class="stats-grid">';
+			html += `<div class="stat-card"><div class="stat-value">${Object.keys(dungeonPlayers).length || '—'}</div><div class="stat-label">👥 Игроков</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${maxDungeonRecord || '—'}</div><div class="stat-label">🏆 Рекорд волн</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${maxDungeonBosses || '—'}</div><div class="stat-label">💀 Боссов убито</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${maxDungeonTrophies || '—'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
+			html += '</div>';
 
             if (champions.length > 0) {
                 html += `<div class="champion-section"><div class="champion-section-title">👑 Чемпионы сезона</div><div class="champion-grid">`;
@@ -163,6 +189,7 @@
                 html += `<div class="champion-section" style="opacity:0.5;text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">Турниры не проводились — эпоха чистых дуэлей</div>`;
             }
 
+            html += '<div class="section-title">📊 Таблицы лидеров</div>';
             html += '<div class="tables-grid">';
             if (seasonTop.length > 0) {
                 html += '<div class="table-card full-width"><h3>🏆 Сезонный рейтинг (SKILL)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Skill</th><th>Победы</th></tr></thead><tbody>';
@@ -200,15 +227,16 @@
         const SEASON_1_URL = 'https://rvotaenotattv.github.io/dnd-stats/season_1.json';
         const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 
-        async function loadSeason0() {
-            const container = document.getElementById('tab-s0');
-            try {
-                const data = await fetch(SEASON_0_URL + '?v=' + Date.now()).then(r => r.json());
-                container.innerHTML = renderSeason(data, '🏁 Бета-тест', 'Рождение легенд. Первые 93 героя.', false);
-            } catch {
-                container.innerHTML = '<div class="season-frame ended"><div class="season-title">🏁 Бета-тест</div><div class="status-message">❌ Архив недоступен</div></div>';
-            }
-        }
+		async function loadSeason0() {
+			const container = document.getElementById('tab-s0');
+			try {
+				const data = await fetch(SEASON_0_URL + '?v=' + Date.now()).then(r => r.json());
+				data.dungeon = { players: {} };
+				container.innerHTML = renderSeason(data, '🏁 Бета-тест', 'Рождение легенд. Первые 93 героя.', false);
+			} catch {
+				container.innerHTML = '<div class="season-frame ended"><div class="season-title">🏁 Бета-тест</div><div class="status-message">❌ Архив недоступен</div></div>';
+			}
+		}
 
         async function loadSeason1() {
             const container = document.getElementById('tab-s1');
