@@ -456,20 +456,19 @@
 			<div class="lore-block" style="border-left: 3px solid var(--purple);">
 				<p><strong>🌫️ Зал Повествователя</strong> — тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</p>
 			</div>
-			<div class="lore-block" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-epicenter" style="border-left: 3px solid var(--border-subtle);">
 				<p><strong>🎭 Арена Тысячи Эхо</strong> — легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.</p>
 			</div>
-			<div class="lore-block" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-epicenter" style="border-left: 3px solid var(--border-subtle);">
 				<p><strong>🌑 Эпицентр Раскола</strong> — место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул в бездну.</p>
 			</div>
-			<div class="lore-block" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-epicenter" style="border-left: 3px solid var(--border-subtle);">
 				<p><strong>🗡️ Поле Павшего Клинка</strong> — земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.</p>
 			</div>
-			<div class="lore-block" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-epicenter" style="border-left: 3px solid var(--border-subtle);">
 				<p><strong>🔥 Кузня Расколотых</strong> — здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.</p>
 			</div>
-			
-			<div class="lore-block" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-epicenter" style="border-left: 3px solid var(--border-subtle);">
 				<p><strong>⚓ Порт Дрейфующих</strong> — единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Порт не принадлежит ни Свету, ни Тьме. Здесь правят Любопытство и Случай.</p>
 			</div>
 			
@@ -543,6 +542,39 @@
                 if (btn) btn.textContent = '☰ Меню';
             });
         });
+		
+		async function loadTerritory() {
+			const urls = ['https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json','https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'];
+			let data;
+			for (const url of urls) { try { const r = await fetch(url); if (r.ok) { data = await r.json(); break; } } catch {} }
+			if (!data) return;
+
+			const control = data.territoryControl || {};
+			const map = {
+				'🌑 Эпицентр Раскола': 'loc-epicenter',
+				'🗡️ Поле Павшего Клинка': 'loc-field',
+				'🔥 Кузня Расколотых': 'loc-forge',
+				'🎭 Арена Тысячи Эхо': 'loc-arena',
+				'⚓ Порт Дрейфующих': 'loc-port'
+			};
+
+			Object.entries(control).forEach(([name, owner]) => {
+				const elId = map[name];
+				if (elId) {
+					const el = document.getElementById(elId);
+					if (el) {
+						el.style.borderLeft = owner === 'light' 
+							? '3px solid var(--gold)' 
+							: '3px solid var(--purple)';
+						el.style.boxShadow = owner === 'light'
+							? '0 0 12px rgba(255,215,0,0.15)'
+							: '0 0 12px rgba(163,113,247,0.15)';
+					}
+				}
+			});
+		}
+
+		loadTerritory();
     </script>
 <script src="theme.js"></script>
 </body>
