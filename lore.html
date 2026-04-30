@@ -451,10 +451,10 @@
 			<h2 class="card-title">🗺️ Места силы</h2>
 			<p style="margin-bottom: 12px;">Когда Свет и Тьма сходятся в битве, само место сражения дарует бойцам благословение — или проклятие:</p>
 			
-			<div class="lore-block" style="border-left: 3px solid var(--gold);">
+			<div class="lore-block" id="loc-spires" style="border-left: 3px solid var(--gold);">
 				<p><strong>✨ Сияющий Шпиль</strong> — цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё теплый.</p>
 			</div>
-			<div class="lore-block" style="border-left: 3px solid var(--purple);">
+			<div class="lore-block" id="loc-hall" style="border-left: 3px solid var(--purple);">
 				<p><strong>🌫️ Зал Повествователя</strong> — тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</p>
 			</div>
 			<div class="lore-block" id="loc-arena" style="border-left: 3px solid var(--border-subtle);">
@@ -551,27 +551,22 @@
 			if (!data) return;
 
 			const control = data.territoryControl || {};
+			
 			const map = {
-				'🌑 Эпицентр Раскола': 'loc-epicenter',
-				'🗡️ Поле Павшего Клинка': 'loc-field',
-				'🔥 Кузня Расколотых': 'loc-forge',
-				'🎭 Арена Тысячи Эхо': 'loc-arena',
-				'⚓ Порт Дрейфующих': 'loc-port'
+				'🌑 Эпицентр Раскола':     'loc-epicenter',
+				'🗡️ Поле Павшего Клинка':  'loc-field',
+				'🔥 Кузня Расколотых':     'loc-forge',
+				'🎭 Арена Тысячи Эхо':    'loc-arena',
+				'⚓ Порт Дрейфующих':      'loc-port'
 			};
 
 			Object.entries(control).forEach(([name, owner]) => {
-				const elId = map[name];
-				if (elId) {
-					const el = document.getElementById(elId);
-					if (el) {
-						el.style.borderLeft = owner === 'light' 
-							? '3px solid var(--gold)' 
-							: '3px solid var(--purple)';
-						el.style.boxShadow = owner === 'light'
-							? '0 0 12px rgba(255,215,0,0.15)'
-							: '0 0 12px rgba(163,113,247,0.15)';
-					}
-				}
+				const el = document.getElementById(map[name]);
+				if (!el) return;
+				
+				const isLight = owner === 'light';
+				el.style.borderLeft = isLight ? '3px solid var(--gold)' : '3px solid var(--purple)';
+				el.style.boxShadow = isLight ? '0 0 12px rgba(255,215,0,0.2)' : '0 0 12px rgba(163,113,247,0.2)';
 			});
 		}
 
