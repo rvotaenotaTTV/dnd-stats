@@ -170,6 +170,10 @@
             html+=`<span class="badge ${faction==='Орден Света'?'badge-light':'badge-dark'}">${fi} ${faction}</span>`;
             if(seasonRank>0)html+=`<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
             html+=`</div></div>`;
+			
+			html+=`</div>`;
+			html+=`<button id="copyLinkBtn" class="btn btn-secondary" onclick="copyProfileLink()" style="margin-top:12px;">🔗 Копировать ссылку</button>`;
+			html+=`</div></div>`;
 
             html+='<div class="stats-grid">';
             html+=`<div class="stat-card"><div class="stat-num">${p.wins||0}</div><div class="stat-label">⚔️ Победы</div></div>`;
@@ -210,7 +214,31 @@
         }
 
         function compareWith(name){const p1=findPlayer(document.getElementById('playerSearch').value.trim());const p2=findPlayer(name);document.getElementById('compareResult').innerHTML=p2?renderCompare(p1,p2):'';}
-
+		function copyProfileLink() {
+			const name = document.getElementById('playerSearch').value.trim();
+			if (!name) return;
+			const url = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
+			navigator.clipboard.writeText(url).then(() => {
+				const btn = document.getElementById('copyLinkBtn');
+				if (!btn) return;
+				const origHTML = btn.innerHTML;
+				btn.innerHTML = '✅ Скопировано!';
+				btn.style.background = 'var(--green)';
+				btn.style.color = '#fff';
+				setTimeout(() => {
+					btn.innerHTML = origHTML;
+					btn.style.background = '';
+					btn.style.color = '';
+				}, 2000);
+			}).catch(() => {
+				const input = document.createElement('input');
+				input.value = url;
+				document.body.appendChild(input);
+				input.select();
+				document.execCommand('copy');
+				document.body.removeChild(input);
+			});
+		}
         async function loadProfile(){if(allPlayers.length===0)await loadData();const p=findPlayer(document.getElementById('playerSearch').value.trim());document.getElementById('profileContent').innerHTML=p?renderProfile(p):'<div class="status-message">Игрок не найден</div>';}
 
         loadData().then(()=>{const params=new URLSearchParams(window.location.search);const name=params.get('name');if(name){document.getElementById('playerSearch').value=name;loadProfile();}});
