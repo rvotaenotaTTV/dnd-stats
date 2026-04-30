@@ -180,6 +180,15 @@
             .game-area { padding: 12px 8px; }
             .drop-card { padding: 20px; } .drop-emoji { font-size: 3rem; }
         }
+		.collection-grid, .recent-log, .history-box {
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+		.collection-grid::-webkit-scrollbar,
+		.recent-log::-webkit-scrollbar,
+		.history-box::-webkit-scrollbar {
+			display: none;
+		}
     </style>
 </head>
 <body>
