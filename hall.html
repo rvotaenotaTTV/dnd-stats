@@ -233,27 +233,27 @@
 			try {
 				const data = await fetch(SEASON_0_URL + '?v=' + Date.now()).then(r => r.json());
 				data.dungeon = { players: {} };
-				container.innerHTML = renderSeason(data, '🏁 Бета-тест', 'Рождение легенд. Первые 93 героя.', false);
+				container.innerHTML = renderSeason(data, '🏁 Бета-тест', 'Рождение арены. Всё только начиналось.', false);
 			} catch {
 				container.innerHTML = '<div class="season-frame ended"><div class="season-title">🏁 Бета-тест</div><div class="status-message">❌ Архив недоступен</div></div>';
 			}
 		}
 
-        async function loadSeason1() {
-            const container = document.getElementById('tab-s1');
-            try {
-                const data = await fetch(SEASON_1_URL + '?v=' + Date.now()).then(r => r.json());
-                container.innerHTML = renderSeason(data, '🔥 Эра Раскола', 'Битва за осколки завершена. Победители в Зале Славы.', false);
-            } catch {
-                container.innerHTML = '<div class="season-frame ended"><div class="season-title">🔥 Эра Раскола</div><div class="status-message">❌ Архив недоступен</div></div>';
-            }
-        }
+		async function loadSeason1() {
+			const container = document.getElementById('tab-s1');
+			try {
+				const data = await fetch(SEASON_1_URL + '?v=' + Date.now()).then(r => r.json());
+				container.innerHTML = renderSeason(data, '🔥 Эра Раскола', '50 турниров. Бесконечные волны данжа. Эпоха, где родились легенды.', false);
+			} catch {
+				container.innerHTML = '<div class="season-frame ended"><div class="season-title">🔥 Эра Раскола</div><div class="status-message">❌ Архив недоступен</div></div>';
+			}
+		}
 
         async function loadSeason2() {
             const container = document.getElementById('tab-s2');
             try {
                 const data = await fetch(STATS_URL + '?v=' + Date.now()).then(r => r.json());
-                container.innerHTML = renderSeason(data, '💫 Время Перемен', 'Новые расы, новые правила. Табакси вступают в Раскол.', true);
+                container.innerHTML = renderSeason(data, '💫 Время Перемен', 'Табакси вступают в Раскол. История пишется сейчас.', true);
             } catch {
                 container.innerHTML = '<div class="season-frame live"><div class="season-title">💫 Время Перемен</div><div class="status-message">❌ Не удалось загрузить данные</div></div>';
             }
