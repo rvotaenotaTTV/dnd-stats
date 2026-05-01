@@ -52,12 +52,12 @@
       "display": "nastya_wtf",
       "emoji": "👹👁️",
       "name": "Орк-Колдун",
-      "wins": 0,
+      "wins": 1,
       "losses": 5,
-      "best": 0,
+      "best": 1,
       "worst": 5,
       "champion": false,
-      "shards": 7,
+      "shards": 9,
       "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -68,12 +68,12 @@
       "display": "milyvolk",
       "emoji": "👹⚙️",
       "name": "Орк-Изобретатель",
-      "wins": 16,
+      "wins": 17,
       "losses": 23,
       "best": 2,
       "worst": 3,
       "champion": false,
-      "shards": 81,
+      "shards": 83,
       "level": 5,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -213,11 +213,11 @@
       "emoji": "💀🔮",
       "name": "Нежить-Чародей",
       "wins": 13,
-      "losses": 7,
+      "losses": 8,
       "best": 4,
       "worst": 4,
       "champion": false,
-      "shards": 66,
+      "shards": 67,
       "level": 4,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -340,12 +340,12 @@
       "display": "kot02",
       "emoji": "🐱🔮",
       "name": "Табакси-Чародей",
-      "wins": 10,
-      "losses": 4,
+      "wins": 11,
+      "losses": 5,
       "best": 5,
       "worst": 2,
       "champion": false,
-      "shards": 38,
+      "shards": 41,
       "level": 3,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -450,18 +450,18 @@
     },
     {
       "display": "velitar_game",
-      "emoji": "🧝🏹",
-      "name": "Эльф-Следопыт",
-      "wins": 5,
-      "losses": 2,
-      "best": 4,
-      "worst": 1,
+      "emoji": "💀🥋",
+      "name": "Нежить-Монах",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
       "champion": false,
-      "shards": 20,
+      "shards": 21,
       "level": 2,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 4,
+      "factionWins": 0,
       "dex": 4
     },
     {
@@ -554,13 +554,6 @@
       "losses": 27
     },
     {
-      "display": "araxizs",
-      "emoji": "💀🔮",
-      "skill": 106,
-      "wins": 13,
-      "losses": 7
-    },
-    {
       "display": "equa4ka",
       "emoji": "🧔🛡️",
       "skill": 105,
@@ -568,11 +561,18 @@
       "losses": 7
     },
     {
+      "display": "araxizs",
+      "emoji": "💀🔮",
+      "skill": 102,
+      "wins": 13,
+      "losses": 8
+    },
+    {
       "display": "kot02",
       "emoji": "🐱🔮",
-      "skill": 98,
-      "wins": 10,
-      "losses": 4
+      "skill": 101,
+      "wins": 11,
+      "losses": 5
     },
     {
       "display": "rvotaenota",
@@ -580,6 +580,13 @@
       "skill": 89,
       "wins": 10,
       "losses": 9
+    },
+    {
+      "display": "milyvolk",
+      "emoji": "👹⚙️",
+      "skill": 82,
+      "wins": 17,
+      "losses": 23
     },
     {
       "display": "artem_jz",
@@ -596,13 +603,6 @@
       "losses": 24
     },
     {
-      "display": "milyvolk",
-      "emoji": "👹⚙️",
-      "skill": 76,
-      "wins": 16,
-      "losses": 23
-    },
-    {
       "display": "verdoga",
       "emoji": "🐱👁️",
       "skill": 59,
@@ -610,11 +610,11 @@
       "losses": 6
     },
     {
-      "display": "velitar_game",
-      "emoji": "🧝🏹",
-      "skill": 59,
-      "wins": 5,
-      "losses": 2
+      "display": "bardeall",
+      "emoji": "🧑🏹",
+      "skill": 56,
+      "wins": 7,
+      "losses": 6
     }
   ],
   "factionScore": {
@@ -626,7 +626,7 @@
   "tournaments": 2,
   "territory": {
     "light": 34,
-    "dark": 11
+    "dark": 13
   },
   "territoryControl": {
     "🎭 Арена Тысячи Эхо": "dark"
@@ -643,9 +643,9 @@
         "crits": 2,
         "misses": 0,
         "blocks": 0,
-        "trophies": 5,
-        "bosses": 3,
-        "totalWaves": 62
+        "trophies": 7,
+        "bosses": 4,
+        "totalWaves": 71
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -771,7 +771,7 @@
         "blocks": 0,
         "trophies": 2,
         "bosses": 1,
-        "totalWaves": 57
+        "totalWaves": 60
       },
       "skufenberg": {
         "display": "skufenberg",
@@ -785,7 +785,7 @@
         "blocks": 0,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 9
+        "totalWaves": 12
       },
       "gotfat": {
         "display": "gotfat",
@@ -946,14 +946,14 @@
         "emoji": "🐱👁️",
         "name": "Табакси-Колдун",
         "faction": "Культ Тьмы",
-        "record": 3,
-        "damage": 192,
-        "crits": 1,
-        "misses": 0,
-        "blocks": 2,
+        "record": 4,
+        "damage": 281,
+        "crits": 2,
+        "misses": 1,
+        "blocks": 6,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 5
+        "totalWaves": 12
       },
       "k3nn3zy": {
         "display": "k3nn3zy",
@@ -996,13 +996,38 @@
         "trophies": 0,
         "bosses": 0,
         "totalWaves": 4
+      },
+      "elnino7727": {
+        "display": "elnino7727",
+        "emoji": "🧔🛡️",
+        "name": "Дворф-Паладин",
+        "faction": "Орден Света",
+        "record": 3,
+        "damage": 156,
+        "crits": 2,
+        "misses": 3,
+        "blocks": 10,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 3
+      },
+      "velitar_game": {
+        "display": "velitar_game",
+        "emoji": "💀🥋",
+        "name": "Нежить-Монах",
+        "faction": "Культ Тьмы",
+        "record": 4,
+        "damage": 242,
+        "crits": 5,
+        "misses": 1,
+        "blocks": 3,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 4
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "⚡🏆🧔🏹 sirlarson 29:10 💀🌿 lucaser_1337 | 💨:6 | 7:🛡 | 7:💨 | 4:4 | 💥11:0"
-    },
     {
       "FullLog": "🧔🏹 sirlarson 21:30 ⚡🏆💀✨ shenok07 | 10:❌ | 6:7 | 💨:10 | 7:4 | 7:0"
     },
@@ -1029,6 +1054,9 @@
     },
     {
       "FullLog": "🐱🔮 kot02 14:25 ⚡🏆👹👁️ nastya_wtf | 9:9 | 8:5 | 8:0"
+    },
+    {
+      "FullLog": "🧝🏹 velitar_game 6:30 ⚡🏆🐱🔮 kot02 | 8:💨 | 10:6 | 12:0"
     }
   ]
 }
