@@ -299,7 +299,7 @@
                 const data = await r.json();
                 const dungeon = data.dungeon || {};
                 const playersArr = Object.values(dungeon.players || {});
-                const territory = dungeon.territory || { light: 0, dark: 0 };
+                const territory = data.territory || { light: 0, dark: 0 };
 
                 if (!playersArr.length) {
                     container.innerHTML = `<div class="card"><h3 class="card-title">🏔 Подземелье пустует</h3><p style="text-align:center;padding:20px;color:var(--text-secondary);">Напиши <code style="background:var(--bg-elevated);padding:3px 10px;border-radius:4px;color:var(--gold);">!данж</code> в чат и стань первым!</p></div>`;
