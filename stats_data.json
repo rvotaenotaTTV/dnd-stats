@@ -20,12 +20,12 @@
       "display": "sirlarson",
       "emoji": "🧔🏹",
       "name": "Дворф-Следопыт",
-      "wins": 3,
+      "wins": 4,
       "losses": 1,
-      "best": 2,
+      "best": 3,
       "worst": 1,
       "champion": false,
-      "shards": 7,
+      "shards": 9,
       "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -68,16 +68,16 @@
       "display": "milyvolk",
       "emoji": "👹⚙️",
       "name": "Орк-Изобретатель",
-      "wins": 2,
+      "wins": 3,
       "losses": 3,
       "best": 1,
       "worst": 2,
       "champion": false,
-      "shards": 9,
+      "shards": 13,
       "level": 1,
       "faction": "Орден Света",
       "tournamentWins": 0,
-      "factionWins": 1,
+      "factionWins": 2,
       "dex": 4
     },
     {
@@ -101,11 +101,11 @@
       "emoji": "🐱👁️",
       "name": "Табакси-Колдун",
       "wins": 2,
-      "losses": 0,
+      "losses": 1,
       "best": 2,
-      "worst": 0,
+      "worst": 1,
       "champion": false,
-      "shards": 6,
+      "shards": 7,
       "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -117,12 +117,12 @@
       "emoji": "👹🗡️",
       "name": "Орк-Плут",
       "wins": 1,
-      "losses": 0,
+      "losses": 2,
       "best": 1,
-      "worst": 0,
+      "worst": 2,
       "champion": false,
-      "shards": 4,
-      "level": 0,
+      "shards": 6,
+      "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
       "factionWins": 1,
@@ -148,16 +148,16 @@
       "display": "elnino7727",
       "emoji": "🧔🛡️",
       "name": "Дворф-Паладин",
-      "wins": 0,
+      "wins": 1,
       "losses": 0,
-      "best": 0,
+      "best": 1,
       "worst": 0,
       "champion": false,
-      "shards": 0,
+      "shards": 4,
       "level": 0,
       "faction": "Орден Света",
       "tournamentWins": 0,
-      "factionWins": 0,
+      "factionWins": 1,
       "dex": 2
     },
     {
@@ -179,15 +179,22 @@
   ],
   "seasonTop": [
     {
+      "display": "sirlarson",
+      "emoji": "🧔🏹",
+      "skill": 48,
+      "wins": 4,
+      "losses": 1
+    },
+    {
       "display": "milyvolk",
       "emoji": "👹⚙️",
-      "skill": 15,
-      "wins": 2,
+      "skill": 22,
+      "wins": 3,
       "losses": 3
     }
   ],
   "factionScore": {
-    "duelLight": 1,
+    "duelLight": 3,
     "duelDark": 3,
     "battleLight": 0,
     "battleDark": 0
@@ -205,14 +212,14 @@
         "emoji": "🐱🔮",
         "name": "Табакси-Чародей",
         "faction": "Культ Тьмы",
-        "record": 3,
-        "damage": 177,
-        "crits": 1,
-        "misses": 0,
+        "record": 4,
+        "damage": 262,
+        "crits": 3,
+        "misses": 2,
         "blocks": 0,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 3
+        "totalWaves": 7
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -247,24 +254,60 @@
         "emoji": "🐱👁️",
         "name": "Табакси-Колдун",
         "faction": "Культ Тьмы",
-        "record": 3,
-        "damage": 187,
+        "record": 4,
+        "damage": 248,
         "crits": 2,
-        "misses": 1,
+        "misses": 2,
+        "blocks": 5,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 10
+      },
+      "sirlarson": {
+        "display": "sirlarson",
+        "emoji": "🧔🏹",
+        "name": "Дворф-Следопыт",
+        "faction": "Культ Тьмы",
+        "record": 1,
+        "damage": 70,
+        "crits": 0,
+        "misses": 2,
+        "blocks": 3,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 1
+      },
+      "bloodedfuf": {
+        "display": "bloodedfuf",
+        "emoji": "💀🛡️",
+        "name": "Нежить-Паладин",
+        "faction": "Орден Света",
+        "record": 3,
+        "damage": 172,
+        "crits": 3,
+        "misses": 3,
         "blocks": 4,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 6
+        "totalWaves": 3
+      },
+      "longdayforcat": {
+        "display": "longdayforcat",
+        "emoji": "👹🗡️",
+        "name": "Орк-Плут",
+        "faction": "Культ Тьмы",
+        "record": 4,
+        "damage": 229,
+        "crits": 0,
+        "misses": 0,
+        "blocks": 0,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 4
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "⚡🏆🧔🏹 sirlarson 27:14 🐱🔮 rvotaenota | 8:4 | 10:10 | 9:0"
-    },
-    {
-      "FullLog": "⚡🧔🏹 sirlarson 20:30 🏆👹⚙️ milyvolk | 10:9 | 5:7 | 💨:🛡 | 💨:8 | 5:6"
-    },
     {
       "FullLog": "⚡👹⚙️ milyvolk 17:24 🏆🐱👁️ aimion | 10:8 | ❌:6 | 7:10"
     },
@@ -285,6 +328,15 @@
     },
     {
       "FullLog": "⚡🏆🧔🏹 sirlarson 22:10 🐱🔮 rvotaenota | 9:10 | 💥13:0"
+    },
+    {
+      "FullLog": "⚡🏆🧔🏹 sirlarson 23:6 👹🗡️ longdayforcat | 💥13:6 | 10:0"
+    },
+    {
+      "FullLog": "🏆🧔🛡️ elnino7727 37:20 ⚡🐱👁️ aimion | 6:6 | 8:6 | 🛡:💨 | 6:5 | 💨:6 | 🛡:💥14"
+    },
+    {
+      "FullLog": "⚡🏆👹⚙️ milyvolk 27:17 👹🗡️ longdayforcat | 10:7 | 9:10 | 8:0"
     }
   ]
 }
