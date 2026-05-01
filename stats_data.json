@@ -578,8 +578,8 @@
     },
     {
       "display": "rattge",
-      "emoji": "👹🪓",
-      "name": "Орк-Варвар",
+      "emoji": "🧔🎸",
+      "name": "Дворф-Бард",
       "wins": 0,
       "losses": 0,
       "best": 0,
@@ -590,7 +590,23 @@
       "faction": "Орден Света",
       "tournamentWins": 0,
       "factionWins": 0,
-      "dex": 2
+      "dex": 4
+    },
+    {
+      "display": "wild_blaze",
+      "emoji": "🧔👁️",
+      "name": "Дворф-Колдун",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
+      "champion": false,
+      "shards": 0,
+      "level": 0,
+      "faction": "Орден Света",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 3
     }
   ],
   "seasonTop": [
@@ -667,7 +683,7 @@
   ],
   "factionScore": {
     "duelLight": 54,
-    "duelDark": 72,
+    "duelDark": 73,
     "battleLight": 0,
     "battleDark": 1
   },
@@ -693,7 +709,7 @@
         "blocks": 0,
         "trophies": 10,
         "bosses": 5,
-        "totalWaves": 84
+        "totalWaves": 92
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -707,7 +723,7 @@
         "blocks": 4,
         "trophies": 5,
         "bosses": 4,
-        "totalWaves": 71
+        "totalWaves": 79
       },
       "nastya_wtf": {
         "display": "nastya_wtf",
@@ -715,13 +731,13 @@
         "name": "Орк-Колдун",
         "faction": "Культ Тьмы",
         "record": 4,
-        "damage": 263,
-        "crits": 5,
-        "misses": 0,
+        "damage": 282,
+        "crits": 1,
+        "misses": 1,
         "blocks": 3,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 4
+        "totalWaves": 8
       },
       "aimion": {
         "display": "aimion",
@@ -875,7 +891,7 @@
         "blocks": 4,
         "trophies": 1,
         "bosses": 1,
-        "totalWaves": 39
+        "totalWaves": 43
       },
       "equa4ka": {
         "display": "equa4ka",
@@ -1100,13 +1116,24 @@
         "trophies": 0,
         "bosses": 0,
         "totalWaves": 4
+      },
+      "rattge": {
+        "display": "rattge",
+        "emoji": "👹🪓",
+        "name": "Орк-Варвар",
+        "faction": "Орден Света",
+        "record": 2,
+        "damage": 87,
+        "crits": 1,
+        "misses": 0,
+        "blocks": 3,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 2
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "⚡💀🛡️ bloodedfuf 20:35 🏆👹🥋 kekstant1n | 💨:8 | 3:3 | 5:3 | 4:🛡 | 🛡:💨 | 3:6 | 5:7 | ❌:8"
-    },
     {
       "FullLog": "⚡🐱🔮 rvotaenota 17:29 🏆👹⚙️ milyvolk | 7:9 | 10:💥20"
     },
@@ -1133,6 +1160,9 @@
     },
     {
       "FullLog": "⚡🏆🧔🏹 sirlarson 27:6 👹👁️ vaizerd65 | 4:💨 | 5:6 | 7:❌ | 5:💨 | 6:0"
+    },
+    {
+      "FullLog": "⚡💀✨ shenok07 13:24 🏆🧔🏹 sirlarson | 5:10 | 💨:7 | 8:7"
     }
   ]
 }
