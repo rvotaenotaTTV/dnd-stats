@@ -5,11 +5,11 @@
       "emoji": "🐱🔮",
       "name": "Табакси-Чародей",
       "wins": 0,
-      "losses": 1,
+      "losses": 2,
       "best": 0,
-      "worst": 1,
+      "worst": 2,
       "champion": false,
-      "shards": 1,
+      "shards": 2,
       "level": 0,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -20,13 +20,13 @@
       "display": "sirlarson",
       "emoji": "🧔🏹",
       "name": "Дворф-Следопыт",
-      "wins": 1,
-      "losses": 0,
+      "wins": 2,
+      "losses": 1,
       "best": 1,
-      "worst": 0,
+      "worst": 1,
       "champion": false,
-      "shards": 2,
-      "level": 0,
+      "shards": 5,
+      "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
       "factionWins": 0,
@@ -37,11 +37,11 @@
       "emoji": "💀🌿",
       "name": "Нежить-Друид",
       "wins": 0,
-      "losses": 0,
+      "losses": 1,
       "best": 0,
-      "worst": 0,
+      "worst": 1,
       "champion": false,
-      "shards": 0,
+      "shards": 1,
       "level": 0,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -68,6 +68,70 @@
       "display": "milyvolk",
       "emoji": "👹⚙️",
       "name": "Орк-Изобретатель",
+      "wins": 1,
+      "losses": 1,
+      "best": 1,
+      "worst": 1,
+      "champion": false,
+      "shards": 5,
+      "level": 1,
+      "faction": "Орден Света",
+      "tournamentWins": 0,
+      "factionWins": 1,
+      "dex": 4
+    },
+    {
+      "display": "verdoga",
+      "emoji": "",
+      "name": "Unknown",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
+      "champion": false,
+      "shards": 0,
+      "level": 0,
+      "faction": "",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 0
+    },
+    {
+      "display": "aimion",
+      "emoji": "🐱👁️",
+      "name": "Табакси-Колдун",
+      "wins": 2,
+      "losses": 0,
+      "best": 2,
+      "worst": 0,
+      "champion": false,
+      "shards": 6,
+      "level": 1,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 1,
+      "dex": 4
+    },
+    {
+      "display": "longdayforcat",
+      "emoji": "👹🗡️",
+      "name": "Орк-Плут",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
+      "champion": false,
+      "shards": 0,
+      "level": 0,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 5
+    },
+    {
+      "display": "viskarec",
+      "emoji": "🧝👁️",
+      "name": "Эльф-Колдун",
       "wins": 0,
       "losses": 0,
       "best": 0,
@@ -78,13 +142,13 @@
       "faction": "Орден Света",
       "tournamentWins": 0,
       "factionWins": 0,
-      "dex": 4
+      "dex": 3
     }
   ],
   "seasonTop": [],
   "factionScore": {
-    "duelLight": 0,
-    "duelDark": 0,
+    "duelLight": 1,
+    "duelDark": 1,
     "battleLight": 0,
     "battleDark": 0
   },
@@ -137,12 +201,38 @@
         "trophies": 0,
         "bosses": 0,
         "totalWaves": 4
+      },
+      "aimion": {
+        "display": "aimion",
+        "emoji": "🐱👁️",
+        "name": "Табакси-Колдун",
+        "faction": "Культ Тьмы",
+        "record": 3,
+        "damage": 181,
+        "crits": 1,
+        "misses": 3,
+        "blocks": 1,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 3
       }
     }
   },
   "fights": [
     {
       "FullLog": "⚡🏆🧔🏹 sirlarson 27:14 🐱🔮 rvotaenota | 8:4 | 10:10 | 9:0"
+    },
+    {
+      "FullLog": "⚡🧔🏹 sirlarson 20:30 🏆👹⚙️ milyvolk | 10:9 | 5:7 | 💨:🛡 | 💨:8 | 5:6"
+    },
+    {
+      "FullLog": "⚡👹⚙️ milyvolk 17:24 🏆🐱👁️ aimion | 10:8 | ❌:6 | 7:10"
+    },
+    {
+      "FullLog": "🐱🔮 rvotaenota 7:22 ⚡🏆🐱👁️ aimion | 11:7 | 11:0"
+    },
+    {
+      "FullLog": "🏆🧔🏹 sirlarson 31:20 ⚡💀🌿 lucaser_1337 | 5:❌ | 6:6 | 5:10 | 💨:💨 | 4:💥15"
     }
   ]
 }
