@@ -69,11 +69,11 @@
       "emoji": "👹⚙️",
       "name": "Орк-Изобретатель",
       "wins": 20,
-      "losses": 27,
+      "losses": 28,
       "best": 2,
       "worst": 3,
       "champion": false,
-      "shards": 99,
+      "shards": 100,
       "level": 5,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -116,16 +116,16 @@
       "display": "longdayforcat",
       "emoji": "👹🗡️",
       "name": "Орк-Плут",
-      "wins": 11,
+      "wins": 12,
       "losses": 15,
       "best": 5,
       "worst": 8,
       "champion": false,
-      "shards": 49,
-      "level": 3,
+      "shards": 53,
+      "level": 4,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 6,
+      "factionWins": 7,
       "dex": 5
     },
     {
@@ -530,19 +530,19 @@
     },
     {
       "display": "jed1master",
-      "emoji": "👹👁️",
-      "name": "Орк-Колдун",
-      "wins": 2,
-      "losses": 1,
-      "best": 2,
-      "worst": 1,
+      "emoji": "🧑🛡️",
+      "name": "Человек-Паладин",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
       "champion": false,
       "shards": 16,
       "level": 2,
-      "faction": "Культ Тьмы",
+      "faction": "Орден Света",
       "tournamentWins": 0,
-      "factionWins": 1,
-      "dex": 3
+      "factionWins": 0,
+      "dex": 2
     },
     {
       "display": "t1ssar",
@@ -646,18 +646,25 @@
       "losses": 11
     },
     {
-      "display": "milyvolk",
-      "emoji": "👹⚙️",
-      "skill": 90,
-      "wins": 20,
-      "losses": 27
-    },
-    {
       "display": "artem_jz",
       "emoji": "🧔🎸",
       "skill": 89,
       "wins": 7,
       "losses": 2
+    },
+    {
+      "display": "milyvolk",
+      "emoji": "👹⚙️",
+      "skill": 89,
+      "wins": 20,
+      "losses": 28
+    },
+    {
+      "display": "longdayforcat",
+      "emoji": "👹🗡️",
+      "skill": 80,
+      "wins": 12,
+      "losses": 15
     },
     {
       "display": "ded_evgenius",
@@ -672,25 +679,18 @@
       "skill": 74,
       "wins": 6,
       "losses": 1
-    },
-    {
-      "display": "longdayforcat",
-      "emoji": "👹🗡️",
-      "skill": 71,
-      "wins": 11,
-      "losses": 15
     }
   ],
   "factionScore": {
     "duelLight": 59,
-    "duelDark": 81,
+    "duelDark": 82,
     "battleLight": 0,
     "battleDark": 1
   },
   "tournaments": 2,
   "territory": {
     "light": 39,
-    "dark": 25
+    "dark": 31
   },
   "territoryControl": {
     "🎭 Арена Тысячи Эхо": "dark"
@@ -707,9 +707,9 @@
         "crits": 4,
         "misses": 3,
         "blocks": 1,
-        "trophies": 12,
-        "bosses": 7,
-        "totalWaves": 127
+        "trophies": 15,
+        "bosses": 8,
+        "totalWaves": 135
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -723,7 +723,7 @@
         "blocks": 7,
         "trophies": 6,
         "bosses": 5,
-        "totalWaves": 100
+        "totalWaves": 104
       },
       "nastya_wtf": {
         "display": "nastya_wtf",
@@ -842,14 +842,14 @@
         "emoji": "🧑🗡️",
         "name": "Человек-Плут",
         "faction": "Культ Тьмы",
-        "record": 4,
-        "damage": 287,
+        "record": 5,
+        "damage": 329,
         "crits": 2,
-        "misses": 1,
+        "misses": 2,
         "blocks": 0,
-        "trophies": 0,
-        "bosses": 0,
-        "totalWaves": 25
+        "trophies": 3,
+        "bosses": 1,
+        "totalWaves": 30
       },
       "gotfat": {
         "display": "gotfat",
@@ -1045,7 +1045,7 @@
         "blocks": 5,
         "trophies": 2,
         "bosses": 1,
-        "totalWaves": 18
+        "totalWaves": 22
       },
       "jed1master": {
         "display": "jed1master",
@@ -1059,7 +1059,7 @@
         "blocks": 1,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 4
+        "totalWaves": 8
       },
       "elnino7727": {
         "display": "elnino7727",
@@ -1135,9 +1135,6 @@
   },
   "fights": [
     {
-      "FullLog": "💀✨ shenok07 9:24 ⚡🏆👹👁️ nastya_wtf | 12:9 | 12:0"
-    },
-    {
       "FullLog": "👹🗡️ longdayforcat 23:24 ⚡🏆👹👁️ jed1master | 💨:8 | 8:7 | 6:8 | 10:0"
     },
     {
@@ -1163,6 +1160,9 @@
     },
     {
       "FullLog": "👹⚙️ milyvolk 18:26 ⚡🏆👹🗡️ longdayforcat | 9:8 | 10:10 | 7:0"
+    },
+    {
+      "FullLog": "⚡🏆👹🗡️ longdayforcat 37:17 🧑🛡️ jed1master | ❌:5 | 8:🛡 | 6:🛡 | 8:3 | 7:💥9 | 8:0"
     }
   ]
 }
