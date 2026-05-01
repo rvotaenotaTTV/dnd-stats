@@ -21,11 +21,11 @@
       "emoji": "🧔🏹",
       "name": "Дворф-Следопыт",
       "wins": 56,
-      "losses": 30,
+      "losses": 31,
       "best": 12,
       "worst": 3,
       "champion": false,
-      "shards": 195,
+      "shards": 196,
       "level": 8,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -116,12 +116,12 @@
       "display": "longdayforcat",
       "emoji": "👹🗡️",
       "name": "Орк-Плут",
-      "wins": 10,
+      "wins": 11,
       "losses": 15,
       "best": 5,
       "worst": 8,
       "champion": false,
-      "shards": 47,
+      "shards": 49,
       "level": 3,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -181,11 +181,11 @@
       "emoji": "🐱🎸",
       "name": "Табакси-Бард",
       "wins": 9,
-      "losses": 21,
+      "losses": 22,
       "best": 2,
       "worst": 7,
       "champion": false,
-      "shards": 45,
+      "shards": 46,
       "level": 3,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -388,16 +388,16 @@
       "display": "kotshiroyama",
       "emoji": "👹🪓",
       "name": "Орк-Варвар",
-      "wins": 0,
+      "wins": 1,
       "losses": 0,
-      "best": 0,
+      "best": 1,
       "worst": 0,
       "champion": false,
-      "shards": 21,
+      "shards": 25,
       "level": 2,
       "faction": "Орден Света",
       "tournamentWins": 0,
-      "factionWins": 0,
+      "factionWins": 1,
       "dex": 2
     },
     {
@@ -613,9 +613,9 @@
     {
       "display": "sirlarson",
       "emoji": "🧔🏹",
-      "skill": 328,
+      "skill": 325,
       "wins": 56,
-      "losses": 30
+      "losses": 31
     },
     {
       "display": "equa4ka",
@@ -667,22 +667,22 @@
       "losses": 25
     },
     {
+      "display": "longdayforcat",
+      "emoji": "👹🗡️",
+      "skill": 71,
+      "wins": 11,
+      "losses": 15
+    },
+    {
       "display": "verdoga",
       "emoji": "🐱👁️",
       "skill": 68,
       "wins": 9,
       "losses": 9
-    },
-    {
-      "display": "longdayforcat",
-      "emoji": "👹🗡️",
-      "skill": 66,
-      "wins": 10,
-      "losses": 15
     }
   ],
   "factionScore": {
-    "duelLight": 57,
+    "duelLight": 58,
     "duelDark": 79,
     "battleLight": 0,
     "battleDark": 1
@@ -709,7 +709,7 @@
         "blocks": 1,
         "trophies": 12,
         "bosses": 7,
-        "totalWaves": 111
+        "totalWaves": 115
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -787,13 +787,13 @@
         "name": "Орк-Плут",
         "faction": "Культ Тьмы",
         "record": 4,
-        "damage": 229,
-        "crits": 0,
+        "damage": 254,
+        "crits": 3,
         "misses": 0,
         "blocks": 0,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 10
+        "totalWaves": 16
       },
       "runolfr": {
         "display": "runolfr",
@@ -863,7 +863,7 @@
         "blocks": 3,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 17
+        "totalWaves": 21
       },
       "ded_evgenius": {
         "display": "ded_evgenius",
@@ -1045,7 +1045,7 @@
         "blocks": 1,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 7
+        "totalWaves": 11
       },
       "jed1master": {
         "display": "jed1master",
@@ -1135,9 +1135,6 @@
   },
   "fights": [
     {
-      "FullLog": "⚡🏆👹🗡️ longdayforcat 24:12 👹⚙️ milyvolk | 10:7 | 7:5 | 7:0"
-    },
-    {
       "FullLog": "⚡🧔🥋 fxxe6 13:30 🏆👹👁️ jed1master | 8:5 | ❌:10 | 💨:8 | 💨:💨 | 5:7"
     },
     {
@@ -1163,6 +1160,9 @@
     },
     {
       "FullLog": "🧔🏹 sirlarson 15:32 ⚡🏆👹🗡️ longdayforcat | 7:❌ | 8:8 | 8:7 | 9:0"
+    },
+    {
+      "FullLog": "⚡🐱🎸 runolfr 22:28 🏆👹🪓 kotshiroyama | 🛡:7 | 8:6 | 💥10:7 | 4:8"
     }
   ]
 }
