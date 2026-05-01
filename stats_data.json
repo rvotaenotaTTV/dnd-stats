@@ -20,16 +20,16 @@
       "display": "sirlarson",
       "emoji": "🧔🏹",
       "name": "Дворф-Следопыт",
-      "wins": 7,
+      "wins": 8,
       "losses": 3,
       "best": 3,
       "worst": 1,
       "champion": false,
-      "shards": 17,
+      "shards": 21,
       "level": 2,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 0,
+      "factionWins": 1,
       "dex": 4
     },
     {
@@ -260,13 +260,13 @@
       "display": "ded_evgenius",
       "emoji": "🧝🗡️",
       "name": "Эльф-Плут",
-      "wins": 1,
+      "wins": 2,
       "losses": 0,
-      "best": 1,
+      "best": 2,
       "worst": 0,
       "champion": false,
-      "shards": 4,
-      "level": 0,
+      "shards": 6,
+      "level": 1,
       "faction": "Орден Света",
       "tournamentWins": 0,
       "factionWins": 1,
@@ -274,8 +274,8 @@
     },
     {
       "display": "gotfat",
-      "emoji": "",
-      "name": "Unknown",
+      "emoji": "🧔🥋",
+      "name": "Дворф-Монах",
       "wins": 0,
       "losses": 0,
       "best": 0,
@@ -283,10 +283,10 @@
       "champion": false,
       "shards": 0,
       "level": 0,
-      "faction": "",
+      "faction": "Орден Света",
       "tournamentWins": 0,
       "factionWins": 0,
-      "dex": 0
+      "dex": 4
     },
     {
       "display": "ded_evgenius2",
@@ -309,24 +309,40 @@
       "emoji": "🐱🎸",
       "name": "Табакси-Бард",
       "wins": 0,
+      "losses": 2,
+      "best": 0,
+      "worst": 2,
+      "champion": false,
+      "shards": 2,
+      "level": 0,
+      "faction": "Орден Света",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 5
+    },
+    {
+      "display": "artem_jz",
+      "emoji": "🧔🎸",
+      "name": "Дворф-Бард",
+      "wins": 0,
       "losses": 0,
       "best": 0,
       "worst": 0,
       "champion": false,
       "shards": 0,
       "level": 0,
-      "faction": "Орден Света",
+      "faction": "Культ Тьмы",
       "tournamentWins": 0,
       "factionWins": 0,
-      "dex": 5
+      "dex": 4
     }
   ],
   "seasonTop": [
     {
       "display": "sirlarson",
       "emoji": "🧔🏹",
-      "skill": 66,
-      "wins": 7,
+      "skill": 75,
+      "wins": 8,
       "losses": 3
     },
     {
@@ -366,15 +382,15 @@
     }
   ],
   "factionScore": {
-    "duelLight": 7,
-    "duelDark": 6,
+    "duelLight": 8,
+    "duelDark": 8,
     "battleLight": 0,
     "battleDark": 0
   },
   "tournaments": 0,
   "territory": {
     "light": 0,
-    "dark": 0
+    "dark": 1
   },
   "territoryControl": {},
   "dungeon": {
@@ -391,7 +407,7 @@
         "blocks": 0,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 17
+        "totalWaves": 21
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -405,7 +421,7 @@
         "blocks": 2,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 15
+        "totalWaves": 18
       },
       "nastya_wtf": {
         "display": "nastya_wtf",
@@ -517,7 +533,7 @@
         "blocks": 0,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 4
+        "totalWaves": 7
       },
       "skufenberg": {
         "display": "skufenberg",
@@ -545,40 +561,53 @@
         "blocks": 0,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 4
+        "totalWaves": 8
       },
       "ded_evgenius": {
         "display": "ded_evgenius",
         "emoji": "🧝🗡️",
         "name": "Эльф-Плут",
         "faction": "Орден Света",
-        "record": 3,
-        "damage": 185,
-        "crits": 3,
-        "misses": 1,
+        "record": 4,
+        "damage": 254,
+        "crits": 1,
+        "misses": 0,
         "blocks": 0,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 3
+        "totalWaves": 11
+      },
+      "artem_jz": {
+        "display": "artem_jz",
+        "emoji": "🧔🎸",
+        "name": "Дворф-Бард",
+        "faction": "Культ Тьмы",
+        "record": 5,
+        "damage": 340,
+        "crits": 2,
+        "misses": 0,
+        "blocks": 4,
+        "trophies": 1,
+        "bosses": 1,
+        "totalWaves": 5
+      },
+      "equa4ka": {
+        "display": "equa4ka",
+        "emoji": "🐱🎸",
+        "name": "Табакси-Бард",
+        "faction": "Орден Света",
+        "record": 4,
+        "damage": 223,
+        "crits": 3,
+        "misses": 2,
+        "blocks": 2,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 4
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "🏆🧔🏹 sirlarson 33:23 ⚡🧝🪓 new_wave_japanoise | 4:💥15 | 5:💨 | ❌:4 | 7:6 | 7:8"
-    },
-    {
-      "FullLog": "⚡🏆🧔🛡️ elnino7727 35:27 🐱🛡️ bloodedfuf | 💨:5 | 6:4 | 6:6 | 6:2 | 💨:3 | 3:5 | 5:2 | 3:💨 | 6:0"
-    },
-    {
-      "FullLog": "🐱🎸 runolfr 11:42 ⚡🏆🐱👁️ aimion | 11:💨 | 💨:6 | 💨:❌ | 10:5 | 💥21:0"
-    },
-    {
-      "FullLog": "⚡👹⚙️ milyvolk 0:22 🏆🐱🔮 rvotaenota | ❌:10 | 💨:12"
-    },
-    {
-      "FullLog": "🏆🧝🗡️ ded_evgenius 36:17 ⚡🐱🛡️ bloodedfuf | 🛡:4 | 4:❌ | 🛡:4 | 7:8 | ❌:4 | 6:8 | 🛡:8"
-    },
     {
       "FullLog": "🧔🏹 sirlarson 10:27 ⚡🏆💀🌿 lucaser_1337 | 8:💨 | 7:5 | 8:5 | 4:0"
     },
@@ -593,6 +622,21 @@
     },
     {
       "FullLog": "🏆🧔🏹 sirlarson 27:8 ⚡🐱🎸 equa4ka | 8:9 | 💨:6 | 💨:8 | ❌:4"
+    },
+    {
+      "FullLog": "🏆🧔🏹 sirlarson 41:25 ⚡🐱🛡️ bloodedfuf | 💨:5 | 6:3 | 3:4 | 🛡:5 | 4:7 | 6:4 | 6:💥13"
+    },
+    {
+      "FullLog": "🧔🛡️ elnino7727 19:39 ⚡🏆🐱🔮 rvotaenota | 4:💨 | 3:5 | 8:3 | 10:6 | 4:5 | 10:0"
+    },
+    {
+      "FullLog": "⚡🏆🐱🛡️ bloodedfuf 26:29 🧔🎸 artem_jz | 5:🛡 | 3:8 | 4:❌ | 4:7 | 🛡:6 | 6:8 | 4:0"
+    },
+    {
+      "FullLog": "⚡🏆🧔🏹 sirlarson 27:19 🧝🗡️ ded_evgenius | 10:💥14 | 7:5 | 10:0"
+    },
+    {
+      "FullLog": "⚡🏆👹⚙️ milyvolk 27:7 🧔🏹 sirlarson | 11:7 | 9:💨 | 7:0"
     }
   ]
 }
