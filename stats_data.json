@@ -20,12 +20,12 @@
       "display": "sirlarson",
       "emoji": "🧔🏹",
       "name": "Дворф-Следопыт",
-      "wins": 4,
+      "wins": 5,
       "losses": 2,
       "best": 3,
       "worst": 1,
       "champion": false,
-      "shards": 10,
+      "shards": 12,
       "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -181,11 +181,11 @@
       "emoji": "🐱🎸",
       "name": "Табакси-Бард",
       "wins": 0,
-      "losses": 0,
+      "losses": 1,
       "best": 0,
-      "worst": 0,
+      "worst": 1,
       "champion": false,
-      "shards": 0,
+      "shards": 1,
       "level": 0,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -196,6 +196,22 @@
       "display": "new_wave_japanoise",
       "emoji": "🧝🪓",
       "name": "Эльф-Варвар",
+      "wins": 1,
+      "losses": 1,
+      "best": 1,
+      "worst": 1,
+      "champion": false,
+      "shards": 3,
+      "level": 0,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 2
+    },
+    {
+      "display": "araxizs",
+      "emoji": "🧝✝️",
+      "name": "Эльф-Жрец",
       "wins": 0,
       "losses": 0,
       "best": 0,
@@ -206,15 +222,15 @@
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
       "factionWins": 0,
-      "dex": 2
+      "dex": 3
     }
   ],
   "seasonTop": [
     {
       "display": "sirlarson",
       "emoji": "🧔🏹",
-      "skill": 43,
-      "wins": 4,
+      "skill": 51,
+      "wins": 5,
       "losses": 2
     },
     {
@@ -258,7 +274,7 @@
         "blocks": 0,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 7
+        "totalWaves": 9
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -272,7 +288,7 @@
         "blocks": 2,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 4
+        "totalWaves": 11
       },
       "nastya_wtf": {
         "display": "nastya_wtf",
@@ -294,13 +310,13 @@
         "name": "Табакси-Колдун",
         "faction": "Культ Тьмы",
         "record": 4,
-        "damage": 248,
-        "crits": 2,
-        "misses": 2,
-        "blocks": 5,
+        "damage": 277,
+        "crits": 3,
+        "misses": 1,
+        "blocks": 2,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 10
+        "totalWaves": 16
       },
       "sirlarson": {
         "display": "sirlarson",
@@ -362,15 +378,6 @@
   },
   "fights": [
     {
-      "FullLog": "🏆👹⚙️ milyvolk 30:18 ⚡🧝👁️ viskarec | 10:12 | 💨:9 | 8:9"
-    },
-    {
-      "FullLog": "⚡🏆🐱🔮 rvotaenota 26:18 👹⚙️ milyvolk | 12:8 | 💨:5 | 9:5 | 5:0"
-    },
-    {
-      "FullLog": "⚡🏆🧔🏹 sirlarson 22:10 🐱🔮 rvotaenota | 9:10 | 💥13:0"
-    },
-    {
       "FullLog": "⚡🏆🧔🏹 sirlarson 23:6 👹🗡️ longdayforcat | 💥13:6 | 10:0"
     },
     {
@@ -390,6 +397,15 @@
     },
     {
       "FullLog": "🏆🧝🪓 new_wave_japanoise 27:28 ⚡🐱🎸 runolfr | 💨:🛡 | 4:💨 | 8:💨 | ❌:💨 | 💨:8 | 💨:6 | ❌:5 | 💨:💨 | 9:🛡 | 7:🛡 | ❌:8"
+    },
+    {
+      "FullLog": "⚡🏆🧔🏹 sirlarson 30:13 🧝🪓 new_wave_japanoise | ❌:💨 | 💨:💨 | 8:🛡 | 5:💥13 | 💥13:💨 | 4:0"
+    },
+    {
+      "FullLog": "⚡🏆🐱🎸 runolfr 23:6 👹🗡️ longdayforcat | 6:6 | 8:❌ | 9:0"
+    },
+    {
+      "FullLog": "⚡🏆🧔🏹 sirlarson 31:14 🧝✝️ araxizs | 5:🛡 | 7:8 | 9:6 | 10:0"
     }
   ]
 }
