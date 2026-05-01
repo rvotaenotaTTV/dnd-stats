@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Арена Карт</title>
+    <link rel="stylesheet" href="theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px 24px 40px; }
+        .header { text-align: center; padding: 30px 0 20px; }
+        .header-title { font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -0.02em; background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 50%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
+        .nav-wrapper { margin-bottom: 28px; }
+        .nav-toggle { display: none; width: 100%; padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 28px; color: var(--gold); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px; background: var(--bg-secondary); border-radius: 28px; border: 1px solid var(--border-subtle); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: 0.2s; white-space: nowrap; }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
+        .card h2 { color: var(--gold); font-size: 1.1rem; margin-bottom: 12px; }
+        .btn { padding: 12px 20px; border-radius: 25px; font-weight: 700; cursor: pointer; border: none; font-size: 0.85rem; font-family: inherit; transition: 0.2s; width:100%; }
+        .btn-primary { background: var(--gold); color: #1a1a1a; }
+        .btn-primary:hover { filter: brightness(1.1); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-secondary { background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-primary); }
+        .hero-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .hero-card { background: var(--bg-elevated); border: 2px solid var(--border-subtle); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .hero-card:hover { border-color: var(--gold); }
+        .hero-card.selected { border-color: var(--gold); box-shadow: 0 0 12px rgba(255,215,0,0.3); }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+        .cards-grid::-webkit-scrollbar { width: 4px; }
+        .cards-grid::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 2px; }
+        .card-mini { background: var(--bg-elevated); border: 2px solid var(--border-subtle); border-radius: 10px; padding: 10px 6px; text-align: center; cursor: pointer; font-size: 0.75rem; transition: 0.2s; position: relative; }
+        .card-mini:hover { border-color: var(--gold); }
+        .card-mini.selected { border-color: var(--green) !important; box-shadow: 0 0 10px rgba(63,185,80,0.4); background: rgba(63,185,80,0.08); }
+        .card-mini .card-emoji { font-size: 1.5rem; }
+        .card-mini .card-name { color: var(--gold); font-weight: 600; margin: 2px 0; font-size: 0.7rem; }
+        .card-mini .card-bonus { font-size: 0.8rem; color: var(--green); font-weight: 700; }
+        .filter-row { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+        .filter-btn { padding: 6px 12px; border-radius: 15px; border: 1px solid var(--border-subtle); background: var(--bg-elevated); color: var(--text-secondary); cursor: pointer; font-size: 0.7rem; font-family: inherit; transition: 0.2s; }
+        .filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: var(--gold); }
+        .fight-log { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px; max-height: 350px; overflow-y: auto; font-size: 0.85rem; color: var(--text-secondary); margin: 12px 0; line-height: 1.8; white-space: pre-wrap; }
+        .fight-log::-webkit-scrollbar { width: 4px; }
+        .fight-log::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 2px; }
+        .stats-row { display: flex; justify-content: space-around; text-align: center; gap: 8px; margin: 12px 0; }
+        .stat-hero, .stat-enemy { flex: 1; background: var(--bg-elevated); border-radius: 12px; padding: 12px; }
+        .stat-hero { border: 2px solid var(--gold); }
+        .stat-enemy { border: 2px solid var(--red); }
+        .stat-name { font-weight: 700; margin-bottom: 4px; }
+        .stat-hp { font-size: 1.2rem; font-weight: 800; }
+        .stat-detail { font-size: 0.7rem; color: var(--text-muted); }
+        .rarity-legendary { border-color: #ffaa00 !important; }
+        .rarity-epic { border-color: #c471ed !important; }
+        .rarity-rare { border-color: #4a90d9 !important; }
+        .rarity-uncommon { border-color: #3fb950 !important; }
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 32px; }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 12px 16px; border-radius: 8px; justify-content: center; }
+            .hero-options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header"><h1 class="header-title">АРЕНА КАРТ</h1><p class="header-subtitle">Герои прошлого даруют силу</p></header>
+    <div class="nav-wrapper">
+        <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+        <nav class="nav-bar" id="pageNav">
+            <a href="index.html" class="nav-link">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
+            <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link">⚖️ Баланс</a>
+            <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
+            <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+            <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a>
+            <a href="dungeon.html" class="nav-link">🏔 Подземелье</a><a href="player.html" class="nav-link">👤 Профиль</a>
+            <a href="arena.html" class="nav-link active">🃏 Арена</a>
+        </nav>
+    </div>
+
+    <div class="card" id="screen-hero">
+        <h2>🧙 Выбери героя</h2>
+        <div class="hero-options" id="heroOptions"></div>
+        <button class="btn btn-primary" id="heroNextBtn" disabled onclick="selectHero()">Дальше →</button>
+    </div>
+
+    <div class="card" id="screen-cards" style="display:none;">
+        <h2>⚡ Выбери 3 карты духов</h2>
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:8px;">Игроки из архива сезона 1. Редкость = их сила.</p>
+        <div class="filter-row" id="filterRow"></div>
+        <div class="cards-grid" id="cardsGrid"></div>
+        <div style="margin-top:12px;text-align:center;color:var(--gold);font-weight:700;">Выбрано: <span id="selectedCount">0</span>/3</div>
+        <button class="btn btn-primary" id="cardsNextBtn" disabled onclick="startBattle()" style="margin-top:8px;">⚔️ На арену!</button>
+        <button class="btn btn-secondary" onclick="resetAll()" style="margin-top:6px;">🔄 Заново</button>
+    </div>
+
+    <div class="card" id="screen-battle" style="display:none;">
+        <h2>⚔️ Арена</h2>
+        <div class="stats-row">
+            <div class="stat-hero" id="heroStats"></div>
+            <div style="padding-top:20px;text-align:center;"><div style="color:var(--text-muted);font-size:0.7rem;">Волна</div><div style="font-size:1.5rem;font-weight:800;color:var(--gold);" id="waveNum">1</div></div>
+            <div class="stat-enemy" id="enemyStats"></div>
+        </div>
+        <div class="fight-log" id="fightLog"></div>
+        <button class="btn btn-primary" id="fightNextBtn" onclick="nextWave()">▶ Следующая волна</button>
+        <button class="btn btn-secondary" id="fightResetBtn" onclick="resetAll()" style="display:none;margin-top:6px;">🔄 Заново</button>
+    </div>
+</div>
+<script src="theme.js"></script>
+<script>
+function toggleNav(){const n=document.getElementById('pageNav');n.classList.toggle('show');document.querySelector('.nav-toggle').textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+
+let classes=[], races=[], seasonCards=[], filteredCards=[], selectedHero=null, selectedCards=[], hero=null, enemy=null, wave=1, activeFilter='all', totalWaves=0;
+
+async function init(){
+    try{
+        const d=await fetch('https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json').then(r=>r.json());
+        classes=d.classes; races=d.races;
+    }catch(e){console.error(e);}
+    try{
+        const s=await fetch('https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/season_1.json').then(r=>r.json());
+        buildSeasonCards(s.players||[]);
+    }catch(e){console.error(e);}
+    renderHeroOptions();
+}
+
+function buildSeasonCards(players){
+    players.forEach(p=>{
+        if(!p.name||p.name==='Unknown')return;
+        let rarity='common';
+        if(p.tournamentWins>0||p.champion)rarity='legendary';
+        else if(p.wins+p.losses>=30&&p.wins/(p.wins+p.losses)>=0.7)rarity='epic';
+        else if(p.wins>=50)rarity='rare';
+        else if(p.wins+p.losses>=100)rarity='uncommon';
+        const bonus=rarity==='legendary'?5:rarity==='epic'?4:rarity==='rare'?3:rarity==='uncommon'?2:1;
+        seasonCards.push({emoji:p.emoji||'⚔️',name:p.display,rarity,bonus,className:p.name});
+    });
+    seasonCards.sort(()=>Math.random()-0.5);
+    filteredCards=[...seasonCards];
+}
+
+function renderHeroOptions(){
+    const container=document.getElementById('heroOptions');
+    if(!container||!classes.length||!races.length){setTimeout(renderHeroOptions,200);return;}
+    const options=[];
+    for(let i=0;i<3;i++){
+        const r=races[Math.floor(Math.random()*races.length)];
+        const c=classes[Math.floor(Math.random()*classes.length)];
+        options.push({
+            name:`${r.Name}-${c.Name}`,emoji:r.Emoji+c.Emoji,
+            hp:c.Hp+r.BonusHp,atk:c.Atk+r.BonusAtk,def:c.Def+r.BonusDef,
+            dex:c.Dex+r.BonusDex,min:c.Min+r.BonusMin,max:c.Max+r.BonusMax
+        });
+    }
+    container.innerHTML=options.map((o,i)=>`<div class="hero-card" id="hero-${i}" onclick="pickHero(${i})"><div style="font-size:2rem;">${o.emoji}</div><div style="font-size:0.85rem;font-weight:700;color:var(--gold);">${o.name}</div><div style="font-size:0.7rem;color:var(--text-secondary);">❤${o.hp} ⚔${o.atk} 🛡${o.def} 👟${o.dex}</div><div style="font-size:0.65rem;color:var(--text-muted);">Урон ${o.min}-${o.max}</div></div>`).join('');
+    document.getElementById('heroNextBtn').disabled=true;
+}
+
+function pickHero(i){document.querySelectorAll('.hero-card').forEach(c=>c.classList.remove('selected'));document.getElementById('hero-'+i).classList.add('selected');selectedHero=i;document.getElementById('heroNextBtn').disabled=false;}
+
+function selectHero(){
+    if(selectedHero===null)return;
+    const el=document.querySelectorAll('.hero-card')[selectedHero];
+    hero={name:el.querySelector('div:nth-child(2)').textContent,emoji:el.querySelector('div:nth-child(1)').textContent};
+    const [hp,atk,def,dex]=el.querySelector('div:nth-child(3)').textContent.match(/\d+/g).map(Number);
+    const [min,max]=el.querySelector('div:nth-child(4)').textContent.match(/\d+/g).map(Number);
+    Object.assign(hero,{hp,atk,def,dex,min,max});
+    document.getElementById('screen-hero').style.display='none';
+    document.getElementById('screen-cards').style.display='block';
+    renderFilterRow();renderCardsGrid();
+}
+
+function renderFilterRow(){
+    const row=document.getElementById('filterRow');
+    const rarities=['all','legendary','epic','rare','uncommon','common'];
+    const labels={all:'Все',legendary:'Лега',epic:'Эпик',rare:'Рара',uncommon:'Анком',common:'Коммон'};
+    row.innerHTML=rarities.map(r=>`<button class="filter-btn${activeFilter===r?' active':''}" onclick="setFilter('${r}')">${labels[r]}</button>`).join('');
+}
+function setFilter(r){activeFilter=r;filteredCards=r==='all'?[...seasonCards]:seasonCards.filter(c=>c.rarity===r);renderFilterRow();renderCardsGrid();}
+
+function renderCardsGrid(){
+    const grid=document.getElementById('cardsGrid');
+    grid.innerHTML=filteredCards.map((c,i)=>{
+        const sel=selectedCards.includes(i);
+        return `<div class="card-mini ${sel?'selected':''} rarity-${c.rarity}" onclick="pickCard(${i})"><div class="card-emoji">${c.emoji}</div><div class="card-name">${c.name}</div><div style="font-size:0.6rem;color:var(--text-muted);">${c.className}</div><div class="card-bonus">+${c.bonus}</div></div>`;
+    }).join('');
+    document.getElementById('selectedCount').textContent=selectedCards.length;
+    document.getElementById('cardsNextBtn').disabled=selectedCards.length!==3;
+}
+function pickCard(i){if(selectedCards.includes(i))selectedCards=selectedCards.filter(x=>x!==i);else if(selectedCards.length<3)selectedCards.push(i);renderCardsGrid();}
+
+function startBattle(){
+    if(selectedCards.length!==3||!hero)return;
+    const stats=['hp','atk','def','dex','min','max'];
+    selectedCards.forEach(i=>{const card=seasonCards[i];for(let b=0;b<card.bonus;b++){const s=stats[Math.floor(Math.random()*stats.length)];hero[s]+=1;}});
+    document.getElementById('screen-cards').style.display='none';
+    document.getElementById('screen-battle').style.display='block';
+    wave=1;totalWaves=0;
+    buildEnemy();renderBattleStats();
+    document.getElementById('fightLog').textContent='';
+    document.getElementById('fightNextBtn').style.display='block';
+    document.getElementById('fightResetBtn').style.display='none';
+    document.getElementById('waveNum').textContent='1';
+}
+
+function buildEnemy(){
+    const w=wave;
+    enemy={hp:12+w*8,atk:2+Math.floor(w/2),def:Math.floor(w/3),dex:1+Math.floor(w/4),min:1+Math.floor(w/3),max:3+w,name:w%5===0?`👑 БОСС волны ${w}`:`👾 Моб волны ${w}`};
+}
+
+function nextWave(){
+    if(!hero||!enemy)return;
+    const log=document.getElementById('fightLog');
+    const pInit=Math.floor(Math.random()*20)+1+hero.dex;
+    const eInit=Math.floor(Math.random()*20)+1+enemy.dex;
+    const first=pInit>=eInit;
+
+    let text='';
+    text += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    text += `⚔️ ВОЛНА ${wave}\n`;
+    text += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+    let php=hero.hp,ehp=enemy.hp,pdmg=0,edmg=0,rounds=0;
+    const rl=[];
+
+    while(php>0&&ehp>0&&rounds<20){
+        rounds++;
+        const r={p:'',e:''};
+        if(first){
+            r.p=attackRoll(hero,enemy,d=>{ehp-=d;pdmg+=d;});
+            if(ehp<=0){rl.push(r);break;}
+            r.e=attackRoll(enemy,hero,d=>{php-=d;edmg+=d;});
+        }else{
+            r.e=attackRoll(enemy,hero,d=>{php-=d;edmg+=d;});
+            if(php<=0){rl.push(r);break;}
+            r.p=attackRoll(hero,enemy,d=>{ehp-=d;pdmg+=d;});
+        }
+        rl.push(r);
+        if(php<=0||ehp<=0)break;
+    }
+
+    text += `🎲 Инициатива: герой ${pInit} vs ${eInit} враг\n`;
+    text += `   ${first?'🦸 Герой':'👾 Враг'} ходит первым ⚡\n\n`;
+    text += `📜 Ходы:\n`;
+    rl.forEach((r,i)=>text += `   Раунд ${i+1}. ${r.p} : ${r.e}\n`);
+
+    hero.hp=Math.max(0,php);
+    enemy.hp=Math.max(0,ehp);
+    totalWaves++;
+
+    if(ehp<=0){
+        text += `\n🏆 Волна ${wave} пройдена!\n`;
+        text += `   Герой: ❤${hero.hp} | Урон героя: ${pdmg}\n`;
+        wave++;
+        if(enemy.name.includes('БОСС')){const heal=10;hero.hp=Math.min(hero.hp+heal,hero.hp+20);text+=`   💊 Босс повержен! +${heal} HP\n`;}
+        buildEnemy();
+        text += `\n👾 Следующий враг: ${enemy.name}\n`;
+        text += `   ❤${enemy.hp} ⚔${enemy.atk} 🛡${enemy.def} | Урон ${enemy.min}-${enemy.max}\n`;
+    }else if(php<=0){
+        text += `\n💀 Герой пал на волне ${wave}!\n`;
+        text += `   Всего пройдено волн: ${totalWaves}\n`;
+        endBattle(false);
+    }else if(rounds>=20){
+        if(php>=ehp){
+            text += `\n⏰ 20 раундов — победа по HP (${php} vs ${ehp})\n`;
+            wave++;buildEnemy();
+            text += `\n👾 Следующий враг: ${enemy.name}\n`;
+        }else{
+            text += `\n⏰ 20 раундов — поражение по HP (${php} vs ${ehp})\n`;
+            text += `   Всего пройдено волн: ${totalWaves}\n`;
+            endBattle(false);
+        }
+    }
+
+    log.textContent += text;
+    log.scrollTop=log.scrollHeight;
+    renderBattleStats();
+    document.getElementById('waveNum').textContent=wave;
+}
+
+function attackRoll(atk,def,applyDmg){
+    const r=Math.floor(Math.random()*20)+1;
+    if(r===1)return'❌';
+    if(r+atk.atk<10+def.def)return r<=4?'💨':'🛡️';
+    const crit=r===20;
+    let d=Math.floor(Math.random()*(atk.max-atk.min+1))+atk.min;
+    if(crit)d+=Math.floor(Math.random()*(atk.max-atk.min+1))+atk.min;
+    d=Math.max(1,Math.floor(d*(1-def.def*0.05)));
+    applyDmg(d);
+    return crit?`💥${d}`:`${d} `;
+}
+
+function endBattle(won){
+    document.getElementById('fightNextBtn').style.display='none';
+    document.getElementById('fightResetBtn').style.display='block';
+    const log=document.getElementById('fightLog');
+    if(won)log.textContent+=`\n━━━━━━━━━━━━━━━━━━━━━━━\n🏆 АРЕНА ЗАВЕРШЕНА!\n   Пройдено волн: ${totalWaves}\n━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    else log.textContent+=`\n━━━━━━━━━━━━━━━━━━━━━━━\n💀 ПОРАЖЕНИЕ\n   Пройдено волн: ${totalWaves}\n━━━━━━━━━━━━━━━━━━━━━━━\n`;
+}
+
+function renderBattleStats(){
+    document.getElementById('heroStats').innerHTML=`<div style="font-size:2rem;">${hero.emoji}</div><div class="stat-name">${hero.name}</div><div class="stat-hp">❤️ ${hero.hp}</div><div class="stat-detail">⚔${hero.atk} 🛡${hero.def} 👟${hero.dex}</div><div class="stat-detail">Урон ${hero.min}-${hero.max}</div>`;
+    document.getElementById('enemyStats').innerHTML=enemy&&enemy.hp>0?`<div style="font-size:2rem;">👾</div><div class="stat-name" style="color:var(--red);">${enemy.name}</div><div class="stat-hp">❤️ ${enemy.hp}</div><div class="stat-detail">⚔${enemy.atk} 🛡${enemy.def} 👟${enemy.dex}</div><div class="stat-detail">Урон ${enemy.min}-${enemy.max}</div>`:'<div style="color:var(--text-muted);">—</div>';
+}
+
+function resetAll(){hero=null;enemy=null;selectedCards=[];wave=1;totalWaves=0;document.getElementById('screen-hero').style.display='block';document.getElementById('screen-cards').style.display='none';document.getElementById('screen-battle').style.display='none';document.getElementById('heroNextBtn').disabled=true;selectedHero=null;renderHeroOptions();}
+init();
+</script>
+</body>
+</html>
