@@ -1,5 +1,86 @@
 {
-  "players": [],
+  "players": [
+    {
+      "display": "rvotaenota",
+      "emoji": "🐱🔮",
+      "name": "Табакси-Чародей",
+      "wins": 0,
+      "losses": 1,
+      "best": 0,
+      "worst": 1,
+      "champion": false,
+      "shards": 1,
+      "level": 0,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 6
+    },
+    {
+      "display": "sirlarson",
+      "emoji": "🧔🏹",
+      "name": "Дворф-Следопыт",
+      "wins": 1,
+      "losses": 0,
+      "best": 1,
+      "worst": 0,
+      "champion": false,
+      "shards": 2,
+      "level": 0,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 4
+    },
+    {
+      "display": "lucaser_1337",
+      "emoji": "💀🌿",
+      "name": "Нежить-Друид",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
+      "champion": false,
+      "shards": 0,
+      "level": 0,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 4
+    },
+    {
+      "display": "nastya_wtf",
+      "emoji": "👹👁️",
+      "name": "Орк-Колдун",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
+      "champion": false,
+      "shards": 0,
+      "level": 0,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 3
+    },
+    {
+      "display": "milyvolk",
+      "emoji": "👹⚙️",
+      "name": "Орк-Изобретатель",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
+      "champion": false,
+      "shards": 0,
+      "level": 0,
+      "faction": "Орден Света",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 4
+    }
+  ],
   "seasonTop": [],
   "factionScore": {
     "duelLight": 0,
@@ -14,7 +95,26 @@
   },
   "territoryControl": {},
   "dungeon": {
-    "players": {}
+    "players": {
+      "rvotaenota": {
+        "display": "rvotaenota",
+        "emoji": "🐱🔮",
+        "name": "Табакси-Чародей",
+        "faction": "Культ Тьмы",
+        "record": 3,
+        "damage": 177,
+        "crits": 1,
+        "misses": 0,
+        "blocks": 0,
+        "trophies": 0,
+        "bosses": 0,
+        "totalWaves": 3
+      }
+    }
   },
-  "fights": []
+  "fights": [
+    {
+      "FullLog": "⚡🏆🧔🏹 sirlarson 27:14 🐱🔮 rvotaenota | 8:4 | 10:10 | 9:0"
+    }
+  ]
 }
