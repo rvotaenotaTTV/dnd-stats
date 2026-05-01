@@ -21,11 +21,11 @@
       "emoji": "🧔🏹",
       "name": "Дворф-Следопыт",
       "wins": 11,
-      "losses": 4,
+      "losses": 5,
       "best": 3,
       "worst": 1,
       "champion": false,
-      "shards": 30,
+      "shards": 31,
       "level": 3,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -100,12 +100,12 @@
       "display": "aimion",
       "emoji": "🐱👁️",
       "name": "Табакси-Колдун",
-      "wins": 3,
+      "wins": 4,
       "losses": 3,
       "best": 2,
       "worst": 2,
       "champion": false,
-      "shards": 11,
+      "shards": 13,
       "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -335,15 +335,47 @@
       "tournamentWins": 0,
       "factionWins": 0,
       "dex": 4
+    },
+    {
+      "display": "kot02",
+      "emoji": "🐱🔮",
+      "name": "Табакси-Чародей",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
+      "champion": false,
+      "shards": 0,
+      "level": 0,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 6
+    },
+    {
+      "display": "kseshiy",
+      "emoji": "🧑✨",
+      "name": "Человек-Волшебница",
+      "wins": 0,
+      "losses": 0,
+      "best": 0,
+      "worst": 0,
+      "champion": false,
+      "shards": 0,
+      "level": 0,
+      "faction": "Культ Тьмы",
+      "tournamentWins": 0,
+      "factionWins": 0,
+      "dex": 4
     }
   ],
   "seasonTop": [
     {
       "display": "sirlarson",
       "emoji": "🧔🏹",
-      "skill": 97,
+      "skill": 92,
       "wins": 11,
-      "losses": 4
+      "losses": 5
     },
     {
       "display": "rvotaenota",
@@ -362,8 +394,8 @@
     {
       "display": "aimion",
       "emoji": "🐱👁️",
-      "skill": 27,
-      "wins": 3,
+      "skill": 34,
+      "wins": 4,
       "losses": 3
     },
     {
@@ -390,7 +422,7 @@
   ],
   "factionScore": {
     "duelLight": 8,
-    "duelDark": 9,
+    "duelDark": 10,
     "battleLight": 0,
     "battleDark": 0
   },
@@ -540,7 +572,7 @@
         "blocks": 0,
         "trophies": 2,
         "bosses": 1,
-        "totalWaves": 12
+        "totalWaves": 16
       },
       "skufenberg": {
         "display": "skufenberg",
@@ -558,17 +590,17 @@
       },
       "gotfat": {
         "display": "gotfat",
-        "emoji": "👹✨",
-        "name": "Орк-Волшебница",
-        "faction": "Культ Тьмы",
+        "emoji": "🧔🥋",
+        "name": "Дворф-Монах",
+        "faction": "Орден Света",
         "record": 4,
-        "damage": 260,
+        "damage": 282,
         "crits": 5,
-        "misses": 2,
-        "blocks": 0,
+        "misses": 5,
+        "blocks": 3,
         "trophies": 0,
         "bosses": 0,
-        "totalWaves": 10
+        "totalWaves": 14
       },
       "ded_evgenius": {
         "display": "ded_evgenius",
@@ -616,9 +648,6 @@
   },
   "fights": [
     {
-      "FullLog": "🐱🎸 equa4ka 5:31 ⚡🏆🧝🗡️ ded_evgenius | 7:💨 | 6:5 | 8:💨 | 10:0"
-    },
-    {
       "FullLog": "🏆🧔🏹 sirlarson 27:8 ⚡🐱🎸 equa4ka | 8:9 | 💨:6 | 💨:8 | ❌:4"
     },
     {
@@ -644,6 +673,9 @@
     },
     {
       "FullLog": "⚡🧔🏹 sirlarson 20:28 🏆🐱👁️ aimion | 7:8 | 7:5 | ❌:5 | 6:10"
+    },
+    {
+      "FullLog": "🧝🗡️ ded_evgenius 12:24 ⚡🏆🧑✨ kseshiy | 9:5 | 7:7 | 8:0"
     }
   ]
 }
