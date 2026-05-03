@@ -42,7 +42,7 @@
         .profile-emoji { font-size: 4rem; margin-bottom: 8px; }
         .profile-name { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
         .profile-class { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 4px; }
-        .profile-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+        .profile-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 10px 0; }
         .badge { padding: 4px 12px; border-radius: 15px; font-size: 0.7rem; font-weight: 700; }
         .badge-gold { background: var(--gold); color: #1a1a1a; }
         .badge-light { background: rgba(255,215,0,0.15); color: var(--gold); }
@@ -145,25 +145,25 @@ function renderProfile(p){
 
     const sortedByWins=[...allPlayers].sort((a,b)=>(b.wins||0)-(a.wins||0));
     const rankWins=sortedByWins.findIndex(x=>x.display===p.display)+1;
-    const sortedByFights=[...allPlayers].sort((a,b)=>((b.wins||0)+(b.losses||0))-((a.wins||0)+(a.losses||0)));
-    const rankFights=sortedByFights.findIndex(x=>x.display===p.display)+1;
     const sortedByWR=[...allPlayers].filter(x=>((x.wins||0)+(x.losses||0))>=20).sort((a,b)=>{const wa=(a.wins||0)/((a.wins||0)+(a.losses||0)),wb=(b.wins||0)/((b.wins||0)+(b.losses||0));return wb-wa;});
     const rankWR=sortedByWR.findIndex(x=>x.display===p.display)+1;
     const sortedByShards=[...allPlayers].sort((a,b)=>(b.shards||0)-(a.shards||0));
     const rankShards=sortedByShards.findIndex(x=>x.display===p.display)+1;
-    const sortedBySkill=[...allPlayers].filter(x=>x.skill>0).sort((a,b)=>b.skill-a.skill);
-    const rankSkill=sortedBySkill.findIndex(x=>x.display===p.display)+1;
+    const sortedByFights=[...allPlayers].sort((a,b)=>((b.wins||0)+(b.losses||0))-((a.wins||0)+(a.losses||0)));
+    const rankFights=sortedByFights.findIndex(x=>x.display===p.display)+1;
+    const sortedByFaction=[...allPlayers].sort((a,b)=>(b.factionWins||0)-(a.factionWins||0));
+    const rankFaction=sortedByFaction.findIndex(x=>x.display===p.display)+1;
     const dungeonRecords=allPlayers.map(x=>({display:x.display,record:dungeonPlayers[x.display]?.record||0}));
     dungeonRecords.sort((a,b)=>b.record-a.record);
     const rankDungeon=dungeonRecords.findIndex(x=>x.display===p.display&&x.record>0)+1;
 
     const color=n=>n<=3?'var(--gold)':n<=10?'var(--green)':'var(--text-muted)';
 
-    let html=`<div class="profile-hero"><div class="profile-emoji">${p.emoji||'⚔️'}</div><div class="profile-name">${p.display}${p.champion?' 👑':''}</div><div class="profile-class">${p.name||''} ${fi} · SKILL ${p.skill||0}</div><div class="profile-badges">`;
+    let html=`<div class="profile-hero"><div class="profile-emoji">${p.emoji||'⚔️'}</div><div class="profile-name">${p.display}${p.champion?' 👑':''}</div><div class="profile-class">${p.name||''} · SKILL ${p.skill||0}</div><div class="profile-badges">`;
     if(p.champion)html+='<span class="badge badge-gold">👑 Хранитель</span>';
     html+=`<span class="badge ${faction==='Орден Света'?'badge-light':'badge-dark'}">${fi} ${faction}</span>`;
     if(seasonRank>0)html+=`<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
-    html+=`</div><button id="copyLinkBtn" class="btn btn-secondary" onclick="copyProfileLink()" style="margin-top:12px;">🔗 Копировать ссылку</button></div>`;
+    html+=`</div><button id="copyLinkBtn" class="btn btn-secondary" onclick="copyProfileLink()" style="margin-top:8px;">🔗 Копировать ссылку</button></div>`;
 
     html+='<div class="stats-grid">';
     html+=`<div class="stat-card"><div class="stat-num">${p.wins||0}</div><div class="stat-label">⚔️ Победы</div></div>`;
@@ -185,7 +185,7 @@ function renderProfile(p){
     html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankShards)};">#${rankShards}</div><div class="rank-label">По осколкам</div></div>`;
     html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankDungeon)};">#${rankDungeon||'-'}</div><div class="rank-label">По данжу</div></div>`;
     html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(seasonRank)};">#${seasonRank||'-'}</div><div class="rank-label">Сезонный топ</div></div>`;
-    html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankSkill)};">#${rankSkill||'-'}</div><div class="rank-label">По SKILL</div></div></div>`;
+    html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankFaction)};">#${rankFaction||'-'}</div><div class="rank-label">По фракции</div></div></div>`;
 
     html+=`<div class="compare-bar"><span>⚔️ Сравнить с:</span><div class="dropdown-wrap" style="flex:1;min-width:150px;"><input type="text" class="search-input" id="compareInput" placeholder="Введи ник..." oninput="filterCompareList()" style="width:100%;"><div class="dropdown-list" id="compareDropdown"></div></div></div><div id="compareResult"></div>`;
     return html;
