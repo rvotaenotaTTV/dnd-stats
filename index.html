@@ -523,7 +523,7 @@
 
             // РЕЙТИНГ
             html += '<div id="tab-rating" class="tab-content">';
-            const seasonTop = data.seasonTop || [];
+            const seasonTop = (data.players || []).filter(p => p.skill > 0).sort((a,b) => b.skill - a.skill).slice(0, 10);
             html += '<div class="card"><div class="card-title">🏆 Сезонный рейтинг (SKILL)</div>';
             if(seasonTop.length > 0){
                 html += '<div class="table-container"><table id="rating-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="skill">Skill</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Винрейт</th></tr></thead><tbody id="rating-tbody">';
