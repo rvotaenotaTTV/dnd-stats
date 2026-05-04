@@ -165,7 +165,8 @@ function renderPlayoffs(){
     if(light.length<8||dark.length<8){container.innerHTML='<div class="status-message">Нужно минимум по 8 игроков в каждой фракции</div>';return;}
     light.forEach((p,i)=>p.seed=i+1);dark.forEach((p,i)=>p.seed=i+1);
 
-    const pair=(a,b)=>`<div class="match"><div class="p"><span class="seed">#${a.seed}</span><span class="name">${a.emoji} ${a.display}</span></div><div class="divider"></div><div class="p"><span class="seed">#${b.seed}</span><span class="name">${b.emoji} ${b.display}</span></div></div>`;
+	const short = (s) => s.length > 3 ? s.substring(0, 3).toUpperCase() : s.toUpperCase();
+    const pair=(a,b)=>`<div class="match"><div class="p"><span class="seed">#${a.seed}</span><span class="name">${a.emoji} ${short(a.display)}</span></div><div class="divider"></div><div class="p"><span class="seed">#${b.seed}</span><span class="name">${b.emoji} ${short(b.display)}</span></div></div>`;
     const empty=`<div class="match"><div class="p" style="color:var(--text-muted);justify-content:center;">—</div></div>`;
 
     let html='<div class="bracket">';
@@ -188,7 +189,7 @@ function renderPlayoffs(){
     m+=`<div class="mobile-round"><h3 class="dark">1/8 Тьмы</h3>${pair(dark[0],dark[7])}${pair(dark[1],dark[6])}${pair(dark[2],dark[5])}${pair(dark[3],dark[4])}</div>`;
     m+='</div>';
 
-    container.innerHTML=d+m;
+    container.innerHTML=html+m;
 }
 loadData();
 </script>
