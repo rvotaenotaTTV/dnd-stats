@@ -11,7 +11,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; line-height: 1.5; }
-        .container { max-width: 1060px; margin: 0 auto; padding: 16px 20px 40px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 16px 20px 40px; }
         .header { text-align: center; padding: 24px 0 16px; }
         .header-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 900; letter-spacing: -0.02em; background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 16px rgba(255,215,0,0.25)); }
         .nav-wrapper { margin-bottom: 22px; }
@@ -46,41 +46,47 @@
         tr.playoff-row.dark td { background: rgba(163,113,247,0.06); }
         tr.cutoff td { border-bottom: 2px solid var(--gold); }
 
-        /* PLAYOFFS */
-        .bracket-desktop { display: grid; grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1.3fr 24px 1fr 24px 1fr 24px 1fr; gap: 0; align-items: start; }
-        .bracket-col { display: flex; flex-direction: column; }
-        .bracket-col h3 { text-align: center; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px 0; padding: 3px 0; border-radius: 3px; font-weight: 700; }
-        .bracket-col h3.light { color: var(--gold); background: rgba(255,215,0,0.1); }
-        .bracket-col h3.dark { color: var(--purple); background: rgba(163,113,247,0.1); }
-        .bracket-col h3.final-title { color: #fff; background: linear-gradient(90deg, rgba(255,215,0,0.4), rgba(163,113,247,0.4)); }
-        .spacer-col { display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.75rem; padding-top: 22px; }
-        .match { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 5px; margin-bottom: 8px; }
-        .match .p { padding: 3px 5px; border-radius: 3px; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; }
-        .match .p .seed { color: var(--text-muted); font-size: 0.6rem; min-width: 16px; }
+        /* ПЛЕЙ-ОФФ */
+        .bracket-desktop { display: grid; grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1.4fr 28px 1fr 28px 1fr 28px 1fr; gap: 0; align-items: stretch; }
+        .bracket-col { display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+        .bracket-col.start { justify-content: flex-start; gap: 10px; }
+        .bracket-col h3 { text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px 0; padding: 4px 0; border-radius: 4px; font-weight: 700; }
+        .bracket-col h3.light { color: var(--gold); background: rgba(255,215,0,0.15); }
+        .bracket-col h3.dark { color: var(--purple); background: rgba(163,113,247,0.15); }
+        .bracket-col h3.final-title { color: #fff; background: linear-gradient(90deg, rgba(255,215,0,0.5), rgba(163,113,247,0.5)); font-size: 0.75rem; padding: 6px 0; }
+        .spacer-col { display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; }
+
+        .match { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 8px 10px; transition: 0.25s; }
+        .match:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); border-color: var(--gold); }
+        .bracket-col.light .match:hover { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+        .bracket-col.dark .match:hover { box-shadow: 0 0 20px rgba(163,113,247,0.3); }
+        .match .p { padding: 4px 6px; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .match .p:hover { background: rgba(255,255,255,0.04); }
+        .match .p .seed { color: var(--text-muted); font-size: 0.65rem; min-width: 20px; }
         .match .p .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .match .divider { height: 1px; background: var(--border-subtle); margin: 3px 0; }
-        .grand-final { border: 2px solid var(--gold); border-radius: 10px; padding: 12px; text-align: center; background: linear-gradient(145deg, rgba(255,215,0,0.1), rgba(163,113,247,0.05)); }
-        .grand-final .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 6px; }
-        .grand-final .champ { font-size: 0.75rem; font-weight: 800; padding: 3px; }
+        .match .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border-subtle), transparent); margin: 4px 0; }
+        .match.ghost { visibility: hidden; }
+
+        .grand-final { border: 2px solid transparent; border-radius: 14px; padding: 18px; text-align: center; background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box, linear-gradient(135deg, #ffd700, #a371f7) border-box; box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 0 40px rgba(163,113,247,0.15); animation: gfPulse 2.5s infinite; }
+        @keyframes gfPulse { 0% { box-shadow: 0 0 20px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 40px rgba(255,215,0,0.4); } 100% { box-shadow: 0 0 20px rgba(255,215,0,0.2); } }
+        .grand-final .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 8px; }
+        .grand-final .champ { font-size: 0.85rem; font-weight: 800; padding: 4px; }
         .grand-final .champ.light { color: var(--gold); }
         .grand-final .champ.dark { color: var(--purple); }
-        .grand-final .vs { color: var(--text-muted); font-size: 0.65rem; margin: 5px 0; font-weight: 700; }
+        .grand-final .vs { color: var(--text-muted); font-size: 0.7rem; margin: 6px 0; font-weight: 700; }
 
         .playoffs-mobile { display: none; }
-        .mobile-round { margin-bottom: 16px; }
-        .mobile-round h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; padding: 4px 8px; border-radius: 4px; margin-bottom: 6px; display: inline-block; font-weight: 700; }
-        .mobile-round h3.light { color: var(--gold); background: rgba(255,215,0,0.1); }
-        .mobile-round h3.dark { color: var(--purple); background: rgba(163,113,247,0.1); }
-        .mobile-round h3.final-title { color: #fff; background: linear-gradient(90deg, rgba(255,215,0,0.4), rgba(163,113,247,0.4)); }
+        .mobile-round { margin-bottom: 18px; }
+        .mobile-round h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; padding: 5px 10px; border-radius: 5px; margin-bottom: 8px; display: inline-block; font-weight: 700; }
+        .mobile-round h3.light { color: var(--gold); background: rgba(255,215,0,0.15); }
+        .mobile-round h3.dark { color: var(--purple); background: rgba(163,113,247,0.15); }
+        .mobile-round h3.final-title { color: #fff; background: linear-gradient(90deg, rgba(255,215,0,0.5), rgba(163,113,247,0.5)); }
 
         .status-message { text-align: center; padding: 40px; color: var(--text-secondary); }
         .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 10px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (min-width: 769px) {
-            .playoffs-mobile { display: none !important; }
-            .bracket-desktop { display: grid !important; }
-        }
+        @media (min-width: 769px) { .playoffs-mobile { display: none !important; } .bracket-desktop { display: grid !important; } }
         @media (max-width: 768px) {
             .container { padding: 10px 12px 32px; }
             .nav-toggle { display: block; }
@@ -174,27 +180,26 @@ function renderPlayoffs(){
 
     light.forEach((p,i)=>p.seed=i+1); dark.forEach((p,i)=>p.seed=i+1);
     const pair=(a,b)=>`<div class="match"><div class="p"><span class="seed">#${a.seed}</span><span class="name">${a.emoji} ${a.display}</span></div><div class="divider"></div><div class="p"><span class="seed">#${b.seed}</span><span class="name">${b.emoji} ${b.display}</span></div></div>`;
+    const ghost=`<div class="match ghost"><div class="p"><span class="name">—</span></div></div>`;
     const empty=`<div class="match"><div class="p"><span class="name" style="color:var(--text-muted);">—</span></div></div>`;
-    const gf=`<div class="grand-final"><div class="label">👑 ЧЕМПИОН</div><div class="champ light">🌝 Чемпион Света</div><div class="vs">VS</div><div class="champ dark">🌚 Чемпион Тьмы</div></div>`;
+    const gf=`<div class="grand-final"><div class="label">👑 ЧЕМПИОН ЛИГИ</div><div class="champ light">🌝 Чемпион Света</div><div class="vs">VS</div><div class="champ dark">🌚 Чемпион Тьмы</div></div>`;
 
-    // Desktop
     let d='<div class="bracket-desktop">';
-    d+=`<div class="bracket-col"><h3 class="light">1/8 Света</h3>${pair(light[0],light[7])}${pair(light[1],light[6])}${pair(light[2],light[5])}${pair(light[3],light[4])}</div>`;
+    d+=`<div class="bracket-col start light"><h3 class="light">1/8 Света</h3>${pair(light[0],light[7])}${pair(light[1],light[6])}${pair(light[2],light[5])}${pair(light[3],light[4])}</div>`;
     d+=`<div class="spacer-col">→</div>`;
-    d+=`<div class="bracket-col"><h3 class="light">1/4</h3>${empty}${empty}</div>`;
+    d+=`<div class="bracket-col light">${ghost}<h3 class="light">1/4</h3>${empty}${empty}${ghost}</div>`;
     d+=`<div class="spacer-col">→</div>`;
-    d+=`<div class="bracket-col"><h3 class="light">1/2</h3>${empty}</div>`;
+    d+=`<div class="bracket-col light">${ghost}${ghost}<h3 class="light">1/2</h3>${empty}${ghost}${ghost}</div>`;
     d+=`<div class="spacer-col">→</div>`;
-    d+=`<div class="bracket-col"><h3 class="final-title">ГРАНД-ФИНАЛ</h3>${gf}</div>`;
+    d+=`<div class="bracket-col">${ghost}${ghost}<h3 class="final-title">ГРАНД-ФИНАЛ</h3>${gf}${ghost}${ghost}</div>`;
     d+=`<div class="spacer-col">←</div>`;
-    d+=`<div class="bracket-col"><h3 class="dark">1/2</h3>${empty}</div>`;
+    d+=`<div class="bracket-col dark">${ghost}${ghost}<h3 class="dark">1/2</h3>${empty}${ghost}${ghost}</div>`;
     d+=`<div class="spacer-col">←</div>`;
-    d+=`<div class="bracket-col"><h3 class="dark">1/4</h3>${empty}${empty}</div>`;
+    d+=`<div class="bracket-col dark">${ghost}<h3 class="dark">1/4</h3>${empty}${empty}${ghost}</div>`;
     d+=`<div class="spacer-col">←</div>`;
-    d+=`<div class="bracket-col"><h3 class="dark">1/8 Тьмы</h3>${pair(dark[0],dark[7])}${pair(dark[1],dark[6])}${pair(dark[2],dark[5])}${pair(dark[3],dark[4])}</div>`;
+    d+=`<div class="bracket-col start dark"><h3 class="dark">1/8 Тьмы</h3>${pair(dark[0],dark[7])}${pair(dark[1],dark[6])}${pair(dark[2],dark[5])}${pair(dark[3],dark[4])}</div>`;
     d+='</div>';
 
-    // Mobile
     let m='<div class="playoffs-mobile">';
     m+=`<div class="mobile-round"><h3 class="light">1/8 Света</h3>${pair(light[0],light[7])}${pair(light[1],light[6])}${pair(light[2],light[5])}${pair(light[3],light[4])}</div>`;
     m+=`<div class="mobile-round"><h3 class="light">1/4 Света</h3>${empty}${empty}</div>`;
