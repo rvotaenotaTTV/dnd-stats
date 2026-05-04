@@ -537,7 +537,7 @@
                     html += `<td style="color:${rank<=3?'var(--gold)':'var(--text-muted)'};font-weight:${rank<=3?'700':'400'};">${medal}</td><td>${p.emoji||'🏆'} ${p.display}</td><td>${player.name||'—'}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.skill}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td></tr>`;
                 });
                 html += '</tbody></table></div>';
-                html += '<div style="margin-top:12px;padding:12px;background:var(--bg-elevated);border-radius:var(--radius-sm);border:1px solid var(--border-subtle);font-size:0.75rem;color:var(--text-muted);line-height:1.6;"><span style="color:var(--gold);">📐 Как считается рейтинг:</span><br><code style="color:var(--text-secondary);">Skill ≈ (Победы × Винрейт × 10 + Стрик × 5 + Уровень × 3) ÷ √(Боёв / 100 + 1)</code></div>';
+                html += '<div style="margin-top:12px;padding:12px;background:var(--bg-elevated);border-radius:var(--radius-sm);border:1px solid var(--border-subtle);font-size:0.75rem;color:var(--text-muted);line-height:1.6;"><span style="color:var(--gold);">📐 Как считается рейтинг:</span><br><code style="color:var(--text-secondary);">Skill ≈ (Победы × Винрейт × 10 + Стрик × 5 + Уровень × 3 + 🏆 × 25) ÷ √(Боёв / 100 + 1)</code></div>';
             } else {
                 html += '<div style="text-align:center;padding:40px;color:var(--text-muted);">Нет данных рейтинга</div>';
             }

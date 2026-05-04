@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Лига Этерниса</title>
+    <link rel="stylesheet" href="theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; line-height: 1.5; }
+        .container { max-width: 1060px; margin: 0 auto; padding: 16px 20px 40px; }
+        .header { text-align: center; padding: 24px 0 16px; }
+        .header-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 900; letter-spacing: -0.02em; background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 16px rgba(255,215,0,0.25)); }
+        .nav-wrapper { margin-bottom: 22px; }
+        .nav-toggle { display: none; width: 100%; padding: 12px 18px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 24px; color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--bg-secondary); border-radius: 24px; border: 1px solid var(--border-subtle); }
+        .nav-link { display: inline-flex; align-items: center; gap: 5px; padding: 8px 15px; border-radius: 16px; color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: 0.2s; white-space: nowrap; }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
+        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; }
+
+        .tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+        .tab-btn { padding: 8px 18px; border: 1px solid var(--border-subtle); background: var(--bg-elevated); color: var(--text-secondary); border-radius: 20px; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 0.82rem; transition: 0.2s; }
+        .tab-btn.active { background: var(--gold); color: var(--bg-primary); border-color: var(--gold); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .faction-switch { display: flex; gap: 6px; margin-bottom: 6px; }
+        .faction-btn { flex: 1; padding: 10px; border: 2px solid var(--border-subtle); background: var(--bg-elevated); color: var(--text-secondary); border-radius: 12px; cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.85rem; transition: 0.2s; text-align: center; }
+        .faction-btn.light.active { border-color: var(--gold); background: rgba(255,215,0,0.12); color: var(--gold); }
+        .faction-btn.dark.active { border-color: var(--purple); background: rgba(163,113,247,0.12); color: var(--purple); }
+        .faction-icon { font-size: 1.2rem; display: block; margin-bottom: 1px; }
+        .faction-note { text-align: center; color: var(--text-muted); font-size: 0.68rem; margin-bottom: 14px; }
+
+        .standings-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .standings-table th { background: var(--bg-elevated); color: var(--gold); padding: 7px 9px; text-align: left; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--border-subtle); }
+        .standings-table td { padding: 6px 9px; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
+        .standings-table td.name-cell { max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+        .standings-table td.class-cell { max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
+        .standings-table .pos { width: 34px; text-align: center; font-weight: 700; }
+        .standings-table .num { text-align: center; }
+        .standings-table .skill { color: var(--gold); font-weight: 700; }
+        tr.playoff-row.light td { background: rgba(255,215,0,0.06); }
+        tr.playoff-row.dark td { background: rgba(163,113,247,0.06); }
+        tr.cutoff td { border-bottom: 2px solid var(--gold); }
+
+        /* PLAYOFFS */
+        .bracket-desktop { display: grid; grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1.3fr 24px 1fr 24px 1fr 24px 1fr; gap: 0; align-items: start; }
+        .bracket-col { display: flex; flex-direction: column; }
+        .bracket-col h3 { text-align: center; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px 0; padding: 3px 0; border-radius: 3px; font-weight: 700; }
+        .bracket-col h3.light { color: var(--gold); background: rgba(255,215,0,0.1); }
+        .bracket-col h3.dark { color: var(--purple); background: rgba(163,113,247,0.1); }
+        .bracket-col h3.final-title { color: #fff; background: linear-gradient(90deg, rgba(255,215,0,0.4), rgba(163,113,247,0.4)); }
+        .spacer-col { display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.75rem; padding-top: 22px; }
+        .match { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 5px; margin-bottom: 8px; }
+        .match .p { padding: 3px 5px; border-radius: 3px; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; }
+        .match .p .seed { color: var(--text-muted); font-size: 0.6rem; min-width: 16px; }
+        .match .p .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .match .divider { height: 1px; background: var(--border-subtle); margin: 3px 0; }
+        .grand-final { border: 2px solid var(--gold); border-radius: 10px; padding: 12px; text-align: center; background: linear-gradient(145deg, rgba(255,215,0,0.1), rgba(163,113,247,0.05)); }
+        .grand-final .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 6px; }
+        .grand-final .champ { font-size: 0.75rem; font-weight: 800; padding: 3px; }
+        .grand-final .champ.light { color: var(--gold); }
+        .grand-final .champ.dark { color: var(--purple); }
+        .grand-final .vs { color: var(--text-muted); font-size: 0.65rem; margin: 5px 0; font-weight: 700; }
+
+        .playoffs-mobile { display: none; }
+        .mobile-round { margin-bottom: 16px; }
+        .mobile-round h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; padding: 4px 8px; border-radius: 4px; margin-bottom: 6px; display: inline-block; font-weight: 700; }
+        .mobile-round h3.light { color: var(--gold); background: rgba(255,215,0,0.1); }
+        .mobile-round h3.dark { color: var(--purple); background: rgba(163,113,247,0.1); }
+        .mobile-round h3.final-title { color: #fff; background: linear-gradient(90deg, rgba(255,215,0,0.4), rgba(163,113,247,0.4)); }
+
+        .status-message { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (min-width: 769px) {
+            .playoffs-mobile { display: none !important; }
+            .bracket-desktop { display: grid !important; }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 10px 12px 32px; }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 6px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 10px 14px; border-radius: 8px; justify-content: center; font-size: 0.78rem; }
+            .header-title { font-size: 1.5rem; }
+            .standings-table { font-size: 0.7rem; }
+            .standings-table td.name-cell { max-width: 90px; }
+            .standings-table td.class-cell { max-width: 80px; }
+            .bracket-desktop { display: none !important; }
+            .playoffs-mobile { display: block !important; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header"><h1 class="header-title">ЛИГА ЭТЕРНИСА</h1></header>
+    <div class="nav-wrapper">
+        <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+        <nav class="nav-bar" id="pageNav">
+            <a href="index.html" class="nav-link">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
+            <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link">⚖️ Баланс</a>
+            <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
+            <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+            <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a>
+            <a href="dungeon.html" class="nav-link">🏔 Подземелье</a><a href="player.html" class="nav-link">👤 Профиль</a>
+            <a href="league.html" class="nav-link active">🏟 Лига</a>
+        </nav>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('standings', this)">📊 Таблица</button>
+        <button class="tab-btn" onclick="switchTab('playoffs', this)">🏆 Плей-офф</button>
+    </div>
+
+    <div id="tab-standings" class="tab-content active">
+        <div class="faction-switch">
+            <button class="faction-btn light active" onclick="showFaction('light', this)"><span class="faction-icon">🌝</span>Орден Света</button>
+            <button class="faction-btn dark" onclick="showFaction('dark', this)"><span class="faction-icon">🌚</span>Культ Тьмы</button>
+        </div>
+        <div class="faction-note" id="factionNote">Топ-8 выходят в плей-офф</div>
+        <div id="standings-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+    </div>
+    <div id="tab-playoffs" class="tab-content">
+        <div id="playoffs-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+    </div>
+</div>
+<script src="theme.js"></script>
+<script>
+function toggleNav(){const n=document.getElementById('pageNav');n.classList.toggle('show');document.querySelector('.nav-toggle').textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+function switchTab(tab,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+tab).classList.add('active');if(tab==='playoffs')renderPlayoffs();}
+
+const STATS_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+let allPlayers=[];
+
+async function loadData(){
+    try{const r=await fetch(STATS_URL+'?v='+Date.now());if(!r.ok)throw new Error();const d=await r.json();allPlayers=(d.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);allPlayers.sort((a,b)=>b.skill-a.skill);renderStandings();renderPlayoffs();}catch{
+        document.getElementById('standings-content').innerHTML='<div class="status-message" style="color:var(--red);">❌ Ошибка</div>';
+        document.getElementById('playoffs-content').innerHTML='<div class="status-message" style="color:var(--red);">❌ Ошибка</div>';
+    }
+}
+
+function showFaction(faction,btn){
+    document.querySelectorAll('.faction-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderStandings();
+}
+
+function renderStandings(){
+    const container=document.getElementById('standings-content');
+    const activeBtn=document.querySelector('.faction-btn.active');
+    const faction=activeBtn.classList.contains('light')?'light':'dark';
+    const factionName=faction==='light'?'Орден Света':'Культ Тьмы';
+    const players=allPlayers.filter(p=>p.faction===factionName);
+    if(!players.length){container.innerHTML='<div class="status-message">Нет данных по этой фракции.</div>';return;}
+    const rowClass='playoff-row '+faction;
+    let html='<table class="standings-table"><thead><tr><th>#</th><th>Игрок</th><th>Класс</th><th>W</th><th>L</th><th>%</th><th>🌟</th></tr></thead><tbody>';
+    players.forEach((p,i)=>{
+        const total=p.wins+p.losses,wr=total>0?(p.wins*100/total).toFixed(1):'0.0';
+        html+=`<tr class="${i<8?rowClass:''} ${i===7?'cutoff':''}"><td class="pos">${i+1}</td><td class="name-cell">${p.emoji||'⚔️'} ${p.display}</td><td class="class-cell">${p.name||''}</td><td class="num">${p.wins}</td><td class="num">${p.losses}</td><td class="num">${wr}%</td><td class="num skill">${p.skill||0}</td></tr>`;
+    });
+    html+='</tbody></table>'; container.innerHTML=html;
+}
+
+function renderPlayoffs(){
+    const container=document.getElementById('playoffs-content');
+    const light=allPlayers.filter(p=>p.faction==='Орден Света').slice(0,8);
+    const dark=allPlayers.filter(p=>p.faction==='Культ Тьмы').slice(0,8);
+    if(light.length<8||dark.length<8){container.innerHTML='<div class="status-message">Недостаточно игроков. Нужно по 8 в каждой фракции.</div>';return;}
+
+    light.forEach((p,i)=>p.seed=i+1); dark.forEach((p,i)=>p.seed=i+1);
+    const pair=(a,b)=>`<div class="match"><div class="p"><span class="seed">#${a.seed}</span><span class="name">${a.emoji} ${a.display}</span></div><div class="divider"></div><div class="p"><span class="seed">#${b.seed}</span><span class="name">${b.emoji} ${b.display}</span></div></div>`;
+    const empty=`<div class="match"><div class="p"><span class="name" style="color:var(--text-muted);">—</span></div></div>`;
+    const gf=`<div class="grand-final"><div class="label">👑 ЧЕМПИОН</div><div class="champ light">🌝 Чемпион Света</div><div class="vs">VS</div><div class="champ dark">🌚 Чемпион Тьмы</div></div>`;
+
+    // Desktop
+    let d='<div class="bracket-desktop">';
+    d+=`<div class="bracket-col"><h3 class="light">1/8 Света</h3>${pair(light[0],light[7])}${pair(light[1],light[6])}${pair(light[2],light[5])}${pair(light[3],light[4])}</div>`;
+    d+=`<div class="spacer-col">→</div>`;
+    d+=`<div class="bracket-col"><h3 class="light">1/4</h3>${empty}${empty}</div>`;
+    d+=`<div class="spacer-col">→</div>`;
+    d+=`<div class="bracket-col"><h3 class="light">1/2</h3>${empty}</div>`;
+    d+=`<div class="spacer-col">→</div>`;
+    d+=`<div class="bracket-col"><h3 class="final-title">ГРАНД-ФИНАЛ</h3>${gf}</div>`;
+    d+=`<div class="spacer-col">←</div>`;
+    d+=`<div class="bracket-col"><h3 class="dark">1/2</h3>${empty}</div>`;
+    d+=`<div class="spacer-col">←</div>`;
+    d+=`<div class="bracket-col"><h3 class="dark">1/4</h3>${empty}${empty}</div>`;
+    d+=`<div class="spacer-col">←</div>`;
+    d+=`<div class="bracket-col"><h3 class="dark">1/8 Тьмы</h3>${pair(dark[0],dark[7])}${pair(dark[1],dark[6])}${pair(dark[2],dark[5])}${pair(dark[3],dark[4])}</div>`;
+    d+='</div>';
+
+    // Mobile
+    let m='<div class="playoffs-mobile">';
+    m+=`<div class="mobile-round"><h3 class="light">1/8 Света</h3>${pair(light[0],light[7])}${pair(light[1],light[6])}${pair(light[2],light[5])}${pair(light[3],light[4])}</div>`;
+    m+=`<div class="mobile-round"><h3 class="light">1/4 Света</h3>${empty}${empty}</div>`;
+    m+=`<div class="mobile-round"><h3 class="light">1/2 Света</h3>${empty}</div>`;
+    m+=`<div class="mobile-round"><h3 class="final-title">ГРАНД-ФИНАЛ</h3>${gf}</div>`;
+    m+=`<div class="mobile-round"><h3 class="dark">1/2 Тьмы</h3>${empty}</div>`;
+    m+=`<div class="mobile-round"><h3 class="dark">1/4 Тьмы</h3>${empty}${empty}</div>`;
+    m+=`<div class="mobile-round"><h3 class="dark">1/8 Тьмы</h3>${pair(dark[0],dark[7])}${pair(dark[1],dark[6])}${pair(dark[2],dark[5])}${pair(dark[3],dark[4])}</div>`;
+    m+='</div>';
+
+    container.innerHTML=d+m;
+}
+
+loadData();
+</script>
+</body>
+</html>
