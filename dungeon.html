@@ -170,64 +170,106 @@
             <button class="tab-btn" onclick="switchTab('rules', this)">📜 Правила</button>
         </div>
         <div id="tab-stats" class="tab-content active"><div class="status-message" id="stats-loading"><div class="spinner"></div><p>Загрузка...</p></div></div>
-        <div id="tab-rules" class="tab-content">
-            <div class="card"><h3 class="card-title">🏔 Что такое Подземелье?</h3><div class="rule-block"><p>Подземелье — это бесконечные волны мобов, которые становятся сильнее с каждым шагом. Твой герой сражается в одиночку, волна за волной, пока не падёт.</p><p style="margin-top:10px;">Никаких команд, никаких ставок. Просто ты, твой клинок и тьма впереди. <span class="highlight-text">Проверь свою силу. Поставь рекорд. Впиши имя в историю.</span></p></div></div>
-            <div class="card"><h3 class="card-title">⚔️ Как играть?</h3>
-                <div class="rule-block"><p><strong>1️⃣ Команда:</strong> Напиши в чат <code>!данж</code> — твой герой спускается в подземелье. Оригинал остаётся на арене и может драться параллельно.</p></div>
-                <div class="rule-block"><p><strong>2️⃣ Волны:</strong> Бесконечные волны мобов. Каждая 5-я — босс. Мобы становятся сильнее с каждой волной.</p></div>
-                <div class="rule-block"><p><strong>3️⃣ Восстановление:</strong> После победы: <span class="highlight-text">8 + волна × 2</span> HP. Пассивки могут добавить ещё.</p></div>
-                <div class="rule-block"><p><strong>4️⃣ События:</strong> 30% шанс после волны — зелье силы, благословение, порча или чудо.</p></div>
-                <div class="rule-block"><p><strong>5️⃣ Финал:</strong> Проиграл — данж закончен. <span class="highlight-text">Рекорд</span> обновляется если пройдено больше волн или столько же но с большим уроном.</p></div>
-            </div>
-            <div class="card"><h3 class="card-title">🎲 Случайные события (35% после волны)</h3>
-                <table class="mini-table" style="border-radius:var(--radius-sm);border:1px solid var(--border-subtle);"><thead><tr><th>Событие</th><th>Шанс</th><th>Эффект</th></tr></thead><tbody>
-                    <tr><td>🧪 Зелье силы</td><td>8.75%</td><td>+1 ATK (не выше базового +5)</td></tr>
-                    <tr><td>🛡️ Благословение</td><td>8.75%</td><td>+1 DEF (не выше базового +5)</td></tr>
-                    <tr><td>✨ Чудо</td><td>8.75%</td><td>HP до базового + уровень × 2</td></tr>
-                    <tr><td>⚡ Прилив сил</td><td>8.75%</td><td>+1 MIN и +1 MAX (не выше базового +5)</td></tr>
-                </tbody></table>
-            </div>
-            <div class="card"><h3 class="card-title">🌍 Фракционные пассивки (случайная при входе)</h3>
-                <h4 class="card-subtitle">🌝 Орден Света</h4>
-                <div class="passive-list">
-                    <div class="passive-item">🔥 <strong>Очищение</strong> — священный огонь залечивает раны: +4 HP к восстановлению после каждой волны</div>
-                    <div class="passive-item">⚡ <strong>Благословение</strong> — 20% шанс что высшие силы пропустят тебя дальше без боя (волна засчитывается)</div>
-                    <div class="passive-item">💫 <strong>Сияние</strong> — свет ослепляет боссов: -20% к их здоровью</div>
-                    <div class="passive-item">🛡️ <strong>Святая защита</strong> — первый удар в каждой волне уходит в пустоту (0 урона)</div>
-                    <div class="passive-item">✨ <strong>Вдохновение</strong> — вера закаляет клинок: +1 MIN и +1 MAX на весь забег</div>
-                    <div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс: ты получаешь полный урон, но 50% возвращается врагу</div>
-                    <div class="passive-item">⚔️ <strong>Святая ярость</strong> — +2 к урону против боссов (свет режет глубже)</div>
-                    <div class="passive-item">💖 <strong>Искупление</strong> — один раз за данж: получив урон меньше 5 HP, восстанавливаешь HP до базового + уровень × 2</div>
-                </div>
-                <h4 class="card-subtitle" style="color: var(--purple);">🌚 Культ Тьмы</h4>
-                <div class="passive-list">
-                    <div class="passive-item">💀 <strong>Вампиризм</strong> — ты высасываешь жизнь из врагов: +4 HP к восстановлению после каждой волны</div>
-                    <div class="passive-item">🕳️ <strong>Теневой шаг</strong> — 20% шанс раствориться во тьме и пропустить волну</div>
-                    <div class="passive-item">🩸 <strong>Кровавая жатва</strong> — каждая атака получает бонус: (потерянное HP за волну) ÷ 4. Чем больнее — тем злее</div>
-                    <div class="passive-item">👻 <strong>Призрачный щит</strong> — 25% шанс стать бесплотным и полностью избежать вражеского удара</div>
-                    <div class="passive-item">🖤 <strong>Проклятие</strong> — аура тьмы ослабляет мобов: -1 ATK всем врагам</div>
-                    <div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс: ты получаешь полный урон, но 50% возвращается врагу</div>
-                    <div class="passive-item">🗡️ <strong>Казнь</strong> — если у моба меньше 25% HP, твой удар добивает его мгновенно</div>
-                    <div class="passive-item">🎁 <strong>Тёмный дар</strong> — после убийства босса случайный подарок тьмы: +2 ATK, +1 MAX или +10 HP</div>
-                </div>
-            </div>
-            <div class="card"><h3 class="card-title">🐉 Боссы (каждые 5 волн)</h3><div class="rule-block"><p>На волнах <span class="highlight-text">5, 10, 15, 20...</span> из тьмы выходит босс:</p><p style="margin-top:10px;">🩸 HP ×1.5 — жирнее обычного моба<br>⚔️ ATK +2 — бьёт больнее<br>🛡️ DEF +1 — держит удар</p><p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">Убил босса — получил <span class="highlight-text">1-3 трофея</span> в копилку фракции. Трофеи решают кому достанется Корона.</p></div></div>
-            <div class="card"><h3 class="card-title">🏰 Корона Раскола</h3><div class="rule-block"><p>Каждый босс роняет <span class="highlight-text">от 1 до 3 трофеев</span>. Трофеи копятся в казне фракции.</p><p style="margin-top:10px;">У кого больше — тот носит Корону. При равенстве — шаткое равновесие ⚖️.</p><p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">Не забывай: трофеи приносит только <strong>убийство босса</strong>. Прошёл 4 волны и слился — ничего не получил.</p></div></div>
-            <div class="card"><h3 class="card-title">👾 Статы мобов</h3><div class="table-container"><table><thead><tr><th>Волна</th><th>HP</th><th>ATK</th><th>DEF</th><th>Урон</th></tr></thead><tbody>
-                <tr><td>1</td><td>23</td><td>1</td><td>0</td><td>1–4</td></tr>
-                <tr><td>2</td><td>31</td><td>1</td><td>0</td><td>2–5</td></tr>
-                <tr><td>3</td><td>39</td><td>2</td><td>0</td><td>2–6</td></tr>
-                <tr><td>4</td><td>47</td><td>2</td><td>1</td><td>3–7</td></tr>
-                <tr><td>5🐉</td><td>82</td><td>3</td><td>1</td><td>3–8</td></tr>
-                <tr><td>6</td><td>68</td><td>3</td><td>1</td><td>4–9</td></tr>
-                <tr><td>7</td><td>81</td><td>4</td><td>1</td><td>4–10</td></tr>
-                <tr><td>8</td><td>94</td><td>4</td><td>2</td><td>5–11</td></tr>
-                <tr><td>9</td><td>107</td><td>5</td><td>2</td><td>5–12</td></tr>
-                <tr><td>10🐉</td><td>175</td><td>7</td><td>3</td><td>6–14</td></tr>
-                <tr><td>12</td><td>146</td><td>6</td><td>3</td><td>7–16</td></tr>
-                <tr><td>15🐉</td><td>307</td><td>9</td><td>4</td><td>8–21</td></tr>
-            </tbody></table></div></div>
-        </div>
+		<div id="tab-rules" class="tab-content">
+			<div class="card">
+				<h3 class="card-title">🏔 Что такое Подземелье?</h3>
+				<div class="rule-block">
+					<p>Подземелье — это бесконечные волны мобов, которые становятся сильнее с каждым шагом. Твой герой сражается в одиночку, волна за волной, пока не падёт.</p>
+					<p style="margin-top:10px;">Никаких команд, никаких ставок. Просто ты, твой клинок и тьма впереди. <span class="highlight-text">Проверь свою силу. Поставь рекорд. Впиши имя в историю.</span></p>
+				</div>
+			</div>
+
+			<div class="card">
+				<h3 class="card-title">⚔️ Как играть?</h3>
+				<div class="rule-block"><p><strong>1️⃣ Команда:</strong> Напиши в чат <code>!данж</code> — твой герой спускается в подземелье. Оригинал остаётся на арене и может драться параллельно.</p></div>
+				<div class="rule-block"><p><strong>2️⃣ Волны:</strong> Бесконечные волны мобов. Каждая 5-я — босс. Мобы становятся сильнее с каждой волной.</p></div>
+				<div class="rule-block"><p><strong>3️⃣ Восстановление:</strong> После победы: <span class="highlight-text">8 + волна × 2</span> HP. Пассивки могут добавить ещё.</p></div>
+				<div class="rule-block"><p><strong>4️⃣ События:</strong> 35% шанс после волны — +1 ATK, +1 DEF, полное исцеление, или +1 MIN/MAX.</p></div>
+				<div class="rule-block"><p><strong>5️⃣ Финал:</strong> Проиграл — данж закончен. <span class="highlight-text">Рекорд</span> обновляется если пройдено больше волн или столько же но с большим уроном.</p></div>
+			</div>
+
+			<div class="card">
+				<h3 class="card-title">🎲 Случайные события (35% после волны)</h3>
+				<div class="table-container">
+					<table>
+						<thead><tr><th>Событие</th><th style="text-align:center;width:80px;">Шанс</th><th>Эффект</th></tr></thead>
+						<tbody>
+							<tr><td>🧪 Зелье силы</td><td style="text-align:center;">8.75%</td><td>+1 ATK (не выше базового +5)</td></tr>
+							<tr><td>🛡️ Благословение</td><td style="text-align:center;">8.75%</td><td>+1 DEF (не выше базового +5)</td></tr>
+							<tr><td>✨ Чудо</td><td style="text-align:center;">8.75%</td><td>HP до базового + уровень × 2</td></tr>
+							<tr><td>⚡ Прилив сил</td><td style="text-align:center;">8.75%</td><td>+1 MIN и +1 MAX (не выше базового +5)</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="card">
+				<h3 class="card-title">🌍 Фракционные пассивки (случайная при входе)</h3>
+				<h4 class="card-subtitle">🌝 Орден Света</h4>
+				<div class="passive-list">
+					<div class="passive-item">🔥 <strong>Очищение</strong> — священный огонь залечивает раны: +4 HP к восстановлению после каждой волны</div>
+					<div class="passive-item">⚡ <strong>Благословение</strong> — 20% шанс что высшие силы пропустят тебя дальше без боя (волна засчитывается)</div>
+					<div class="passive-item">💫 <strong>Сияние</strong> — свет ослепляет боссов: -20% к их здоровью</div>
+					<div class="passive-item">🛡️ <strong>Святая защита</strong> — первый удар в каждой волне уходит в пустоту (0 урона)</div>
+					<div class="passive-item">✨ <strong>Вдохновение</strong> — вера закаляет клинок: +1 MIN и +1 MAX на весь забег</div>
+					<div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс: ты получаешь полный урон, но 50% возвращается врагу</div>
+					<div class="passive-item">⚔️ <strong>Святая ярость</strong> — +2 к урону против боссов (свет режет глубже)</div>
+					<div class="passive-item">💖 <strong>Искупление</strong> — один раз за данж: получив урон меньше 5 HP, восстанавливаешь HP до базового + уровень × 2</div>
+				</div>
+				<h4 class="card-subtitle" style="color: var(--purple);">🌚 Культ Тьмы</h4>
+				<div class="passive-list">
+					<div class="passive-item">💀 <strong>Вампиризм</strong> — ты высасываешь жизнь из врагов: +4 HP к восстановлению после каждой волны</div>
+					<div class="passive-item">🕳️ <strong>Теневой шаг</strong> — 20% шанс раствориться во тьме и пропустить волну</div>
+					<div class="passive-item">🩸 <strong>Кровавая жатва</strong> — каждая атака получает бонус: (потерянное HP за волну) ÷ 4. Чем больнее — тем злее</div>
+					<div class="passive-item">👻 <strong>Призрачный щит</strong> — 25% шанс стать бесплотным и полностью избежать вражеского удара</div>
+					<div class="passive-item">🖤 <strong>Проклятие</strong> — аура тьмы ослабляет мобов: -1 ATK всем врагам</div>
+					<div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс: ты получаешь полный урон, но 50% возвращается врагу</div>
+					<div class="passive-item">🗡️ <strong>Казнь</strong> — если у моба меньше 25% HP, твой удар добивает его мгновенно</div>
+					<div class="passive-item">🎁 <strong>Тёмный дар</strong> — после убийства босса случайный подарок тьмы: +2 ATK, +1 MAX или +10 HP</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<h3 class="card-title">🐉 Боссы (каждые 5 волн)</h3>
+				<div class="rule-block">
+					<p>На волнах <span class="highlight-text">5, 10, 15, 20...</span> из тьмы выходит босс:</p>
+					<p style="margin-top:10px;">🩸 HP ×1.5 — жирнее обычного моба<br>⚔️ ATK +2 — бьёт больнее<br>🛡️ DEF +1 — держит удар</p>
+					<p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">Убил босса — получил <span class="highlight-text">1-3 трофея</span> в копилку фракции. Трофеи решают кому достанется Корона.</p>
+				</div>
+			</div>
+
+			<div class="card">
+				<h3 class="card-title">🏰 Корона Раскола</h3>
+				<div class="rule-block">
+					<p>Каждый босс роняет <span class="highlight-text">от 1 до 3 трофеев</span>. Трофеи копятся в казне фракции.</p>
+					<p style="margin-top:10px;">У кого больше — тот носит Корону. При равенстве — шаткое равновесие ⚖️.</p>
+					<p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">Не забывай: трофеи приносит только <strong>убийство босса</strong>. Прошёл 4 волны и слился — ничего не получил.</p>
+				</div>
+			</div>
+
+			<div class="card">
+				<h3 class="card-title">👾 Статы мобов</h3>
+				<div class="table-container">
+					<table>
+						<thead><tr><th>Волна</th><th>HP</th><th>ATK</th><th>DEF</th><th>Урон</th></tr></thead>
+						<tbody>
+							<tr><td>1</td><td>23</td><td>1</td><td>0</td><td>1–4</td></tr>
+							<tr><td>2</td><td>31</td><td>1</td><td>0</td><td>2–5</td></tr>
+							<tr><td>3</td><td>39</td><td>2</td><td>0</td><td>2–6</td></tr>
+							<tr><td>4</td><td>47</td><td>2</td><td>1</td><td>3–7</td></tr>
+							<tr><td>5🐉</td><td>82</td><td>3</td><td>1</td><td>3–8</td></tr>
+							<tr><td>6</td><td>68</td><td>3</td><td>1</td><td>4–9</td></tr>
+							<tr><td>7</td><td>81</td><td>4</td><td>1</td><td>4–10</td></tr>
+							<tr><td>8</td><td>94</td><td>4</td><td>2</td><td>5–11</td></tr>
+							<tr><td>9</td><td>107</td><td>5</td><td>2</td><td>5–12</td></tr>
+							<tr><td>10🐉</td><td>175</td><td>7</td><td>3</td><td>6–14</td></tr>
+							<tr><td>12</td><td>146</td><td>6</td><td>3</td><td>7–16</td></tr>
+							<tr><td>15🐉</td><td>307</td><td>9</td><td>4</td><td>8–21</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
     </div>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
     <script>
