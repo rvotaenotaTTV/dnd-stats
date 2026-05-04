@@ -71,14 +71,12 @@
         .table-symbols td:first-child { text-align: center; font-size: 1.2rem; width: 50px; }
         .table-shards td { padding: 12px 14px; }
         .table-shards td:first-child { font-weight: 600; }
-        .table-shards td:last-child { 
-			color: var(--gold); 
-			font-weight: 700; 
+		.table-shards td:last-child, 
+		.table-shards th:last-child { 
 			text-align: center; 
-			width: 120px;
-			min-width: 120px;
+			width: 80px; 
+			min-width: 80px;
 			white-space: nowrap;
-			font-size: 1rem; 
 		}
 
         .loc-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-top: 8px; }
@@ -125,134 +123,144 @@
             </nav>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">🚀 Как начать?</h2>
-            <div class="step-list">
-                <div class="step-item"><div class="step-num">1</div><div>Активируй награду канала <span class="highlight">«Создать героя»</span></div></div>
-                <div class="step-item"><div class="step-num">2</div><div>Бот предложит 3 случайные комбинации (раса + класс)</div></div>
-                <div class="step-item"><div class="step-num">3</div><div>Напиши в чат <span class="highlight">!1</span>, <span class="highlight">!2</span> или <span class="highlight">!3</span> чтобы выбрать героя</div></div>
-                <div class="step-item"><div class="step-num">4</div><div>Готово! Твой герой создан. Проверь <span class="highlight">!инфо</span></div></div>
-            </div>
-        </div>
+		<div class="card">
+			<h2 class="card-title">🚀 Как начать?</h2>
+			<div class="step-list">
+				<div class="step-item"><div class="step-num">1</div><div>Активируй награду канала <span class="highlight">«Создать героя»</span></div></div>
+				<div class="step-item"><div class="step-num">2</div><div>Бот предложит 3 случайные комбинации (раса + класс + фракция)</div></div>
+				<div class="step-item"><div class="step-num">3</div><div>Напиши в чат <span class="highlight">!1</span>, <span class="highlight">!2</span> или <span class="highlight">!3</span> чтобы выбрать героя (есть 3 минуты, иначе бот выберет сам)</div></div>
+				<div class="step-item"><div class="step-num">4</div><div>Готово! Твой герой создан. Проверь <span class="highlight">!инфо</span></div></div>
+			</div>
+		</div>
 
-        <div class="card">
-            <h2 class="card-title">📋 Основные команды</h2>
-            <div class="command-grid">
-                <div class="command-item"><div class="command-name">!инфо</div><div class="command-desc">Статистика твоего героя (или @игрока)</div></div>
-                <div class="command-item"><div class="command-name">!бой</div><div class="command-desc">Случайный бой / !бой @игрок — вызвать конкретного</div></div>
-                <div class="command-item"><div class="command-name">!харакири</div><div class="command-desc">Удалить героя (осколки и уровень сохраняются)</div></div>
-                <div class="command-item"><div class="command-name">!данж</div><div class="command-desc">Отправиться в подземелье</div></div>
-                <div class="command-item"><div class="command-name">!рега / !список / !сетка</div><div class="command-desc">Запись в турнир, участники, пары</div></div>
-                <div class="command-item"><div class="command-name">!фрега / !фрлист</div><div class="command-desc">Запись во фракционную битву, список бойцов</div></div>
-            </div>
-        </div>
+		<div class="card">
+			<h2 class="card-title">📋 Основные команды</h2>
+			<div class="command-grid">
+				<div class="command-item"><div class="command-name">!инфо</div><div class="command-desc">Статистика твоего героя (или !инфо @игрок)</div></div>
+				<div class="command-item"><div class="command-name">!бой</div><div class="command-desc">Случайный бой. !бой @игрок — вызвать конкретного</div></div>
+				<div class="command-item"><div class="command-name">!харакири</div><div class="command-desc">Удалить героя (осколки и уровень сохраняются)</div></div>
+				<div class="command-item"><div class="command-name">!данж</div><div class="command-desc">Отправиться в подземелье</div></div>
+				<div class="command-item"><div class="command-name">!рега / !список / !сетка</div><div class="command-desc">Запись в турнир, участники, пары</div></div>
+				<div class="command-item"><div class="command-name">!фрега / !фрлист</div><div class="command-desc">Запись во фракционную битву, список бойцов</div></div>
+			</div>
+		</div>
 
-        <div class="card">
-            <h2 class="card-title">⚔️ Как проходит бой?</h2>
-            <ol>
-                <li><span class="highlight">Инициатива:</span> d20 + DEX. Кто больше — ходит первым ⚡</li>
-                <li><span class="highlight">Атака:</span> d20 + ATK ≥ 10 + DEF врага</li>
-                <li><span class="highlight">Урон:</span> случайное число от MIN до MAX</li>
-                <li><span class="highlight">Защита:</span> снижает полученный урон на 5% за каждую единицу DEF</li>
-                <li>Выпало <span class="highlight">20</span> → 💥 КРИТ: два броска урона, сумма</li>
-                <li>Выпало <span class="highlight">1</span> → ❌ критический промах, урон 0</li>
-                <li>Атака не прошла: d20 ≤ 4 → 💨 уклонение | d20 > 4 → 🛡️ блок</li>
-                <li>Бой до 0 HP. Максимум 20 раундов — побеждает тот, у кого больше HP</li>
-            </ol>
-        </div>
+		<div class="card">
+			<h2 class="card-title">⚔️ Как проходит бой?</h2>
+			<ol>
+				<li><span class="highlight">Инициатива:</span> d20 + DEX. Кто больше — ходит первым ⚡ (при равенстве — случайно)</li>
+				<li><span class="highlight">Атака:</span> d20 + ATK ≥ 10 + DEF врага</li>
+				<li><span class="highlight">Урон:</span> случайное число от MIN до MAX</li>
+				<li><span class="highlight">Защита:</span> снижает полученный урон на 5% за каждую единицу DEF (минимум 1 урона)</li>
+				<li>Выпало <span class="highlight">20</span> → 💥 КРИТ: два броска урона, сумма</li>
+				<li>Выпало <span class="highlight">1</span> → ❌ критический промах, урон 0</li>
+				<li>Атака не прошла (d20 + ATK < 10 + DEF): d20 ≤ 4 → 💨 уклонение | d20 > 4 → 🛡️ блок</li>
+				<li>Бой до 0 HP. Максимум 20 раундов — при ничье по HP побеждает случайный</li>
+			</ol>
+		</div>
 
-        <div class="card">
-            <h2 class="card-title">📝 Обозначения в логах</h2>
-            <div class="table-container">
-                <table class="table-symbols">
-                    <thead><tr><th>Символ</th><th>Значение</th></tr></thead>
-                    <tbody>
-                        <tr><td>❌</td><td>Критический промах (выпало 1)</td></tr>
-                        <tr><td>💨</td><td>Уклонение (выпало 2–4, атака не прошла)</td></tr>
-                        <tr><td>🛡️</td><td>Блок (выпало 5+, но броня выдержала)</td></tr>
-                        <tr><td>💥X</td><td>Крит (выпало 20). X = сумма двух бросков</td></tr>
-                        <tr><td>X</td><td>Обычный урон</td></tr>
-                        <tr><td>0</td><td>Не атаковал (бой уже завершён)</td></tr>
-                        <tr><td>⚡</td><td>Ходил первым</td></tr>
-                        <tr><td>🏆</td><td>Победитель боя</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+		<div class="card">
+			<h2 class="card-title">📝 Обозначения в логах</h2>
+			<div class="table-container">
+				<table class="table-symbols">
+					<thead><tr><th>Символ</th><th>Значение</th></tr></thead>
+					<tbody>
+						<tr><td>❌</td><td>Критический промах (выпало 1) — урон 0</td></tr>
+						<tr><td>💨</td><td>Уклонение (выпало 2–4, атака не прошла)</td></tr>
+						<tr><td>🛡️</td><td>Блок (выпало 5+, но броня выдержала)</td></tr>
+						<tr><td>💥X</td><td>Крит (выпало 20). Два броска урона, сумма</td></tr>
+						<tr><td>X</td><td>Обычный урон (1–19 на кубике, атака прошла)</td></tr>
+						<tr><td>0</td><td>Не атаковал (бой уже завершён)</td></tr>
+						<tr><td>⚡</td><td>Ходил первым (выиграл инициативу d20 + DEX)</td></tr>
+						<tr><td>🏆</td><td>Победитель боя</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-        <div class="card">
-            <h2 class="card-title">👑 Турнир</h2>
-            <p><span class="highlight">16 участников</span>, олимпийская система (проиграл — вылетел).</p>
-            <div class="command-grid">
-                <div class="command-item"><div class="command-name">!рега</div><div class="command-desc">Записаться в турнир</div></div>
-                <div class="command-item"><div class="command-name">!список</div><div class="command-desc">Список участников</div></div>
-                <div class="command-item"><div class="command-name">!сетка</div><div class="command-desc">Текущие пары и результаты</div></div>
-                <div class="command-item"><div class="command-name" style="font-size:0.75rem;color:var(--text-muted);">Админ: !старт / !добор</div><div class="command-desc">Запуск вручную / автозаполнение до 16</div></div>
-            </div>
-            <p style="margin-top:14px;" class="text-muted">Чемпион получает <span class="highlight">+10💎</span> и титул <span class="highlight">Хранитель Вечности</span>.</p>
-        </div>
+		<div class="card">
+			<h2 class="card-title">👑 Турнир</h2>
+			<p><span class="highlight">16 участников</span>, олимпийская система (проиграл — вылетел).</p>
+			<p style="margin-top:8px;">Бойцы распределяются случайно. Если участников меньше 16 — оставшиеся места заполняются автоматически (<span class="highlight">!добор</span>).</p>
+			<div class="command-grid">
+				<div class="command-item"><div class="command-name">!рега</div><div class="command-desc">Записаться в турнир</div></div>
+				<div class="command-item"><div class="command-name">!список</div><div class="command-desc">Список участников</div></div>
+				<div class="command-item"><div class="command-name">!сетка</div><div class="command-desc">Текущие пары и результаты (✅ = победитель)</div></div>
+				<div class="command-item"><div class="command-name" style="font-size:0.75rem;color:var(--text-muted);">Админ: !старт / !добор</div><div class="command-desc">Запуск вручную / автозаполнение до 16</div></div>
+			</div>
+			<h3>Как проходит:</h3>
+			<ol>
+				<li>Пары объявляются, на каждый бой даётся <span class="highlight">90 секунд</span> ожидания</li>
+				<li>Победитель проходит дальше, проигравший выбывает</li>
+				<li>Победа в турнирном бою: <span class="highlight">+4💎</span>, поражение: <span class="highlight">+2💎</span></li>
+				<li>Если участников нечётное количество — один получает <span class="highlight">BYE</span> (проходит без боя)</li>
+				<li>Перед финалом запускается <span class="highlight">прогноз</span> на победителя</li>
+			</ol>
+			<p style="margin-top:14px;">Чемпион получает <span class="highlight">+10💎</span>, титул <span class="highlight">👑 Хранитель Вечности</span> и SKILL ×25 к рейтингу.</p>
+		</div>
 
-        <div class="card">
-            <h2 class="card-title">⚔️ Фракционная битва и территории</h2>
-            <p>Командный бой <span class="highlight">5 на 5</span> между <span class="text-light">🌝 Орденом Света</span> и <span class="text-dark">🌚 Культом Тьмы</span>.</p>
-            <div class="command-grid">
-                <div class="command-item"><div class="command-name">!фрега</div><div class="command-desc">Записаться в битву</div></div>
-                <div class="command-item"><div class="command-name">!фрлист</div><div class="command-desc">Список записавшихся бойцов</div></div>
-            </div>
-            <h3>Как проходит:</h3>
-            <ol>
-                <li>Админ запускает: <span class="highlight">!битва</span> (таймаут 10 минут на сбор)</li>
-                <li>Нужно по <span class="highlight">5 бойцов</span> от каждой фракции</li>
-                <li>Случайная <span class="highlight">локация</span> даёт бонусы всем участникам</li>
-                <li>5 боёв 1 на 1 — фракция с большим счётом побеждает</li>
-            </ol>
-            <h3>Захват территорий:</h3>
-            <p>Победившая фракция получает контроль над локацией.<br>Фракция с наибольшим контролем в конце сезона забирает <span class="highlight">Корону Раскола</span>.</p>
-            <div class="loc-grid">
-                <div class="loc-item">🌑 Эпицентр Раскола — <span class="loc-bonus">+1 MIN</span></div>
-                <div class="loc-item">🗡️ Поле Павшего Клинка — <span class="loc-bonus">+1 DEF</span></div>
-                <div class="loc-item">🔥 Кузня Расколотых — <span class="loc-bonus">+2 HP</span></div>
-                <div class="loc-item">🎭 Арена Тысячи Эхо — <span class="loc-bonus">+2 ко всему</span></div>
-                <div class="loc-item">⚓ Порт Дрейфующих — <span class="loc-bonus">+1 DEX</span></div>
-                <div class="loc-item locked">✨ Сияющий Шпиль — всегда за Светом</div>
-                <div class="loc-item locked">🌫️ Зал Повествователя — всегда за Тьмой</div>
-            </div>
-        </div>
+		<div class="card">
+			<h2 class="card-title">⚔️ Фракционная битва и территории</h2>
+			<p>Командный бой <span class="highlight">5 на 5</span> между <span class="text-light">🌝 Орденом Света</span> и <span class="text-dark">🌚 Культом Тьмы</span>.</p>
+			<div class="command-grid">
+				<div class="command-item"><div class="command-name">!фрега</div><div class="command-desc">Записаться в битву</div></div>
+				<div class="command-item"><div class="command-name">!фрлист</div><div class="command-desc">Список записавшихся бойцов</div></div>
+			</div>
+			<h3>Как проходит:</h3>
+			<ol>
+				<li>Админ запускает: <span class="highlight">!битва</span> — 10 минут на регистрацию</li>
+				<li>Нужно по <span class="highlight">5 бойцов</span> от каждой фракции</li>
+				<li>Случайная <span class="highlight">локация</span> даёт бонус ко всем статам обоим фракциям</li>
+				<li>5 боёв 1 на 1 — фракция с большим счётом (3+) побеждает</li>
+				<li>Победители получают <span class="highlight">+5💎</span>, проигравшие <span class="highlight">+2💎</span></li>
+			</ol>
+			<h3>Захват территорий:</h3>
+			<p>Победившая фракция получает контроль над локацией (кроме Сияющего Шпиля и Зала Повествователя — они всегда за своей фракцией).<br>Фракция с наибольшим контролем в конце сезона забирает <span class="highlight">Корону Раскола</span>.</p>
+			<div class="loc-grid">
+				<div class="loc-item">🌑 Эпицентр Раскола — <span class="loc-bonus">+1 MIN</span></div>
+				<div class="loc-item">🗡️ Поле Павшего Клинка — <span class="loc-bonus">+1 DEF</span></div>
+				<div class="loc-item">🔥 Кузня Расколотых — <span class="loc-bonus">+2 HP</span></div>
+				<div class="loc-item">🎭 Арена Тысячи Эхо — <span class="loc-bonus">+2 ко всем статам</span></div>
+				<div class="loc-item">⚓ Порт Дрейфующих — <span class="loc-bonus">+1 DEX</span></div>
+				<div class="loc-item" style="opacity:0.45;">✨ Сияющий Шпиль — +2 ATK · всегда за Светом</div>
+				<div class="loc-item" style="opacity:0.45;">🌫️ Зал Повествователя — +1 MAX · всегда за Тьмой</div>
+			</div>
+		</div>
 
-        <div class="card">
-            <h2 class="card-title">🏔 Подземелье</h2>
-            <p>PvE-режим. Твой герой в одиночку сражается с <span class="highlight">бесконечными волнами</span> мобов.</p>
-            <ol>
-                <li>Команда: <span class="highlight">!данж</span></li>
-                <li>Каждая <span class="highlight">5-я волна — босс</span> (больше HP, больше урона)</li>
-                <li>После каждой волны — <span class="highlight">восстановление HP</span></li>
-                <li><span class="highlight">Случайные события</span> (35%): баффы, дебаффы или полное исцеление</li>
-                <li><span class="highlight">Фракционная пассивка</span> — случайный бонус при входе (8 вариантов для Света, 8 для Тьмы)</li>
-                <li>Трофеи с боссов идут в <span class="highlight">копилку фракции</span></li>
-                <li>Рекорд обновляется если пройдено больше волн (или столько же с большим уроном)</li>
-            </ol>
-        </div>
+		<div class="card">
+			<h2 class="card-title">🏔 Подземелье</h2>
+			<p>PvE-режим. Твой герой в одиночку сражается с <span class="highlight">бесконечными волнами</span> мобов.</p>
+			<ol>
+				<li>Команда: <span class="highlight">!данж</span> — твой герой спускается в подземелье. Оригинал остаётся на арене и может драться параллельно.</li>
+				<li>Каждая <span class="highlight">5-я волна — босс</span> (HP ×1.5, ATK +2, DEF +1). Мобы становятся сильнее с каждой волной.</li>
+				<li>После победы — <span class="highlight">восстановление: 8 + волна × 2</span> HP. Пассивки могут добавить ещё.</li>
+				<li><span class="highlight">Случайные события</span> (35% после волны): +1 ATK, +1 DEF, полное исцеление, +1 MIN/MAX.</li>
+				<li><span class="highlight">Фракционная пассивка</span> — случайный бонус при входе (8 вариантов для Света, 8 для Тьмы).</li>
+				<li>Убил босса — получил <span class="highlight">1-3 трофея</span> в копилку фракции. Трофеи решают, кому достанется Корона Раскола.</li>
+				<li><span class="highlight">Рекорд</span> обновляется, если пройдено больше волн (или столько же с большим уроном).</li>
+			</ol>
+		</div>
 
-        <div class="card">
-            <h2 class="card-title">💎 Осколки и уровни</h2>
-            <div class="table-container">
-                <table class="table-shards">
-                    <thead><tr><th>Действие</th><th>💎</th></tr></thead>
-                    <tbody>
-                        <tr><td>🏆 Победа в дуэли</td><td>+2</td></tr>
-                        <tr><td>💔 Поражение в дуэли</td><td>+1</td></tr>
-                        <tr><td>⚔️ Победа в турнирном бою</td><td>+4</td></tr>
-                        <tr><td>💔 Поражение в турнирном бою</td><td>+2</td></tr>
-                        <tr><td>🏔 Победа в подземелье</td><td>+1 за 3 волны</td></tr>
-                        <tr><td>👑 Чемпион турнира</td><td>+10</td></tr>
-                        <tr><td>🌝🌚 Победа над вражеской фракцией</td><td>×2</td></tr>
-                        <tr><td>🏆 Фракционная битва — победа</td><td>+5</td></tr>
-                        <tr><td>💔 Фракционная битва — поражение</td><td>+2</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <p style="margin-top:14px;" class="text-muted">Каждые <span class="highlight">5💎 = новый уровень</span> (после 10-го — каждые <span class="highlight">10💎</span>). Уровень не ограничен.</p>
-        </div>
+		<div class="card">
+			<h2 class="card-title">💎 Осколки и уровни</h2>
+			<div class="table-container">
+				<table class="table-shards">
+					<thead><tr><th>Действие</th><th style="text-align:center;width:80px;">💎</th></tr></thead>
+					<tbody>
+						<tr><td>🏆 Победа в дуэли</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
+						<tr><td>💔 Поражение в дуэли</td><td style="text-align:center;font-weight:700;color:var(--gold);">+1</td></tr>
+						<tr><td>⚔️ Победа в турнирном бою</td><td style="text-align:center;font-weight:700;color:var(--gold);">+4</td></tr>
+						<tr><td>💔 Поражение в турнирном бою</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
+						<tr><td>🏔 Подземелье — за волну</td><td style="text-align:center;font-weight:700;color:var(--gold);">+1</td></tr>
+						<tr><td>👑 Чемпион турнира</td><td style="text-align:center;font-weight:700;color:var(--gold);">+10</td></tr>
+						<tr><td>🌝🌚 Победа над вражеской фракцией</td><td style="text-align:center;font-weight:700;color:var(--gold);">×2</td></tr>
+						<tr><td>🏆 Фракционная битва — победа</td><td style="text-align:center;font-weight:700;color:var(--gold);">+5</td></tr>
+						<tr><td>💔 Фракционная битва — поражение</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
+					</tbody>
+				</table>
+			</div>
+			<p style="margin-top:14px;">Каждые <span class="highlight">5💎 = новый уровень</span> (после 10-го — каждые <span class="highlight">10💎</span>). Уровень не ограничен.</p>
+		</div>
     </div>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
     <script>
