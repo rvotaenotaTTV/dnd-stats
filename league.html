@@ -11,7 +11,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; line-height: 1.5; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 16px 20px 40px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 16px 20px 40px; }
         .header { text-align: center; padding: 24px 0 16px; }
         .header-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 900; letter-spacing: -0.02em; background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 16px rgba(255,215,0,0.25)); }
         .nav-wrapper { margin-bottom: 22px; }
@@ -46,42 +46,51 @@
         tr.playoff-row.dark td { background: rgba(163,113,247,0.06); }
         tr.cutoff td { border-bottom: 2px solid var(--gold); }
 
-        /* ПЛЕЙ-ОФФ */
-        .bracket-wrap { display: flex; gap: 6px; align-items: stretch; }
-        .bracket-side { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-        .bracket-center { flex: 0 0 200px; display: flex; align-items: center; }
-        .bracket-round { display: flex; flex-direction: column; gap: 0; }
-        .bracket-round h3 { text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; padding: 4px 0; border-radius: 4px; font-weight: 700; margin-bottom: 6px; }
-        .bracket-round h3.light { color: var(--gold); background: rgba(255,215,0,0.15); }
-        .bracket-round h3.dark { color: var(--purple); background: rgba(163,113,247,0.15); }
+        .bracket { display: flex; justify-content: center; gap: 0; overflow-x: auto; padding: 20px 0; }
+        .round { display: flex; flex-direction: column; justify-content: center; gap: 0; flex: 1; min-width: 150px; max-width: 200px; }
+        .round.final { flex: 1.5; min-width: 200px; max-width: 260px; }
+        .round-title { text-align: center; font-size: 0.7rem; font-weight: 700; padding: 5px 8px; border-radius: 6px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .round.light .round-title { background: rgba(255,215,0,0.15); color: var(--gold); }
+        .round.dark .round-title { background: rgba(163,113,247,0.15); color: var(--purple); }
+        .round-title.final-title { background: linear-gradient(90deg, rgba(255,215,0,0.4), rgba(163,113,247,0.4)); color: #fff; }
 
-        .match { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 8px 10px; margin-bottom: 10px; transition: 0.25s; }
-        .match:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); border-color: var(--gold); }
-        .match .p { padding: 5px 6px; border-radius: 4px; font-size: 0.82rem; display: flex; align-items: center; gap: 6px; }
-        .match .p .seed { color: var(--text-muted); font-size: 0.65rem; min-width: 20px; }
+        .match { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 8px; margin: 0 4px 4px 4px; transition: 0.2s; }
+        .match:hover { border-color: var(--gold); transform: translateY(-1px); }
+        .match .p { padding: 3px 4px; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
+        .match .p .seed { color: var(--text-muted); font-size: 0.6rem; min-width: 18px; }
         .match .p .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .match .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border-subtle), transparent); margin: 4px 0; }
+        .match .divider { height: 1px; background: var(--border-subtle); margin: 3px 0; }
 
-        .grand-final { border: 2px solid transparent; border-radius: 14px; padding: 20px; text-align: center; background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box, linear-gradient(135deg, #ffd700, #a371f7) border-box; box-shadow: 0 0 30px rgba(255,215,0,0.2); animation: gfPulse 2.5s infinite; }
-        @keyframes gfPulse { 0%{box-shadow:0 0 20px rgba(255,215,0,0.2)} 50%{box-shadow:0 0 40px rgba(255,215,0,0.4)} 100%{box-shadow:0 0 20px rgba(255,215,0,0.2)} }
-        .grand-final .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 8px; }
-        .grand-final .champ { font-size: 0.9rem; font-weight: 800; padding: 4px; }
+        .grand-final { border: 2px solid transparent; border-radius: 12px; padding: 14px; text-align: center; background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box, linear-gradient(135deg, #ffd700, #a371f7) border-box; box-shadow: 0 0 25px rgba(255,215,0,0.15); }
+        .grand-final .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 4px; }
+        .grand-final .champ { font-size: 0.8rem; font-weight: 800; padding: 2px; }
         .grand-final .champ.light { color: var(--gold); }
         .grand-final .champ.dark { color: var(--purple); }
-        .grand-final .vs { color: var(--text-muted); font-size: 0.7rem; margin: 6px 0; font-weight: 700; }
+        .grand-final .vs { color: var(--text-muted); font-size: 0.65rem; margin: 4px 0; font-weight: 700; }
 
         .playoffs-mobile { display: none; }
-        .mobile-round { margin-bottom: 18px; }
-        .mobile-round h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; padding: 5px 10px; border-radius: 5px; margin-bottom: 8px; display: inline-block; font-weight: 700; }
+        .mobile-round { margin-bottom: 16px; }
+        .mobile-round h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; padding: 5px 10px; border-radius: 5px; margin-bottom: 6px; display: inline-block; font-weight: 700; }
         .mobile-round h3.light { color: var(--gold); background: rgba(255,215,0,0.15); }
         .mobile-round h3.dark { color: var(--purple); background: rgba(163,113,247,0.15); }
+        .mobile-round h3.final-title { color: #fff; background: linear-gradient(90deg, rgba(255,215,0,0.5), rgba(163,113,247,0.5)); }
 
         .status-message { text-align: center; padding: 40px; color: var(--text-secondary); }
         .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 10px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        @media (min-width: 769px) { .playoffs-mobile { display: none !important; } .bracket { display: flex !important; } }
         @media (max-width: 768px) {
-            .bracket-wrap { display: none !important; }
+            .container { padding: 10px 12px 32px; }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 6px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 10px 14px; border-radius: 8px; justify-content: center; font-size: 0.78rem; }
+            .header-title { font-size: 1.5rem; }
+            .standings-table { font-size: 0.7rem; }
+            .standings-table td.name-cell { max-width: 90px; }
+            .standings-table td.class-cell { max-width: 80px; }
+            .bracket { display: none !important; }
             .playoffs-mobile { display: block !important; }
         }
     </style>
@@ -153,35 +162,27 @@ function renderPlayoffs(){
     const container=document.getElementById('playoffs-content');
     const light=allPlayers.filter(p=>p.faction==='Орден Света').slice(0,8);
     const dark=allPlayers.filter(p=>p.faction==='Культ Тьмы').slice(0,8);
-    if(light.length<8||dark.length<8){container.innerHTML='<div class="status-message">Недостаточно игроков. Нужно по 8 в каждой фракции.</div>';return;}
+    if(light.length<8||dark.length<8){container.innerHTML='<div class="status-message">Нужно минимум по 8 игроков в каждой фракции</div>';return;}
     light.forEach((p,i)=>p.seed=i+1);dark.forEach((p,i)=>p.seed=i+1);
 
     const pair=(a,b)=>`<div class="match"><div class="p"><span class="seed">#${a.seed}</span><span class="name">${a.emoji} ${a.display}</span></div><div class="divider"></div><div class="p"><span class="seed">#${b.seed}</span><span class="name">${b.emoji} ${b.display}</span></div></div>`;
-    const empty=`<div class="match"><div class="p"><span class="name" style="color:var(--text-muted);">—</span></div></div>`;
-    const gf=`<div class="grand-final"><div class="label">👑 ЧЕМПИОН ЛИГИ</div><div class="champ light">🌝 Чемпион Света</div><div class="vs">VS</div><div class="champ dark">🌚 Чемпион Тьмы</div></div>`;
+    const empty=`<div class="match"><div class="p" style="color:var(--text-muted);justify-content:center;">—</div></div>`;
 
-    let d='<div class="bracket-wrap">';
-    // Левая сторона — Свет
-    d+='<div class="bracket-side">';
-    d+=`<div class="bracket-round"><h3 class="light">1/8 Света</h3>${pair(light[0],light[7])}${pair(light[1],light[6])}${pair(light[2],light[5])}${pair(light[3],light[4])}</div>`;
-    d+=`<div class="bracket-round"><h3 class="light">1/4 Света</h3>${empty}${empty}</div>`;
-    d+=`<div class="bracket-round"><h3 class="light">1/2 Света</h3>${empty}</div>`;
-    d+='</div>';
-    // Центр — Гранд-финал
-    d+=`<div class="bracket-center">${gf}</div>`;
-    // Правая сторона — Тьма
-    d+='<div class="bracket-side">';
-    d+=`<div class="bracket-round"><h3 class="dark">1/2 Тьмы</h3>${empty}</div>`;
-    d+=`<div class="bracket-round"><h3 class="dark">1/4 Тьмы</h3>${empty}${empty}</div>`;
-    d+=`<div class="bracket-round"><h3 class="dark">1/8 Тьмы</h3>${pair(dark[0],dark[7])}${pair(dark[1],dark[6])}${pair(dark[2],dark[5])}${pair(dark[3],dark[4])}</div>`;
-    d+='</div>';
-    d+='</div>';
+    let html='<div class="bracket">';
+    html+=`<div class="round light"><div class="round-title">1/8 Света</div>${pair(light[0],light[7])}${pair(light[1],light[6])}${pair(light[2],light[5])}${pair(light[3],light[4])}</div>`;
+    html+=`<div class="round light"><div class="round-title">1/4 Света</div>${empty}${empty}</div>`;
+    html+=`<div class="round light"><div class="round-title">1/2 Света</div>${empty}</div>`;
+    html+=`<div class="round final"><div class="round-title final-title">ГРАНД-ФИНАЛ</div><div class="grand-final"><div class="label">👑 ЧЕМПИОН ЛИГИ</div><div class="champ light">🌝 Чемпион Света</div><div class="vs">VS</div><div class="champ dark">🌚 Чемпион Тьмы</div></div></div>`;
+    html+=`<div class="round dark"><div class="round-title">1/2 Тьмы</div>${empty}</div>`;
+    html+=`<div class="round dark"><div class="round-title">1/4 Тьмы</div>${empty}${empty}</div>`;
+    html+=`<div class="round dark"><div class="round-title">1/8 Тьмы</div>${pair(dark[0],dark[7])}${pair(dark[1],dark[6])}${pair(dark[2],dark[5])}${pair(dark[3],dark[4])}</div>`;
+    html+='</div>';
 
     let m='<div class="playoffs-mobile">';
     m+=`<div class="mobile-round"><h3 class="light">1/8 Света</h3>${pair(light[0],light[7])}${pair(light[1],light[6])}${pair(light[2],light[5])}${pair(light[3],light[4])}</div>`;
     m+=`<div class="mobile-round"><h3 class="light">1/4 Света</h3>${empty}${empty}</div>`;
     m+=`<div class="mobile-round"><h3 class="light">1/2 Света</h3>${empty}</div>`;
-    m+=`<div class="mobile-round">${gf}</div>`;
+    m+=`<div class="mobile-round"><h3 class="final-title">ГРАНД-ФИНАЛ</h3><div class="grand-final"><div class="label">👑 ЧЕМПИОН ЛИГИ</div><div class="champ light">🌝 Чемпион Света</div><div class="vs">VS</div><div class="champ dark">🌚 Чемпион Тьмы</div></div></div>`;
     m+=`<div class="mobile-round"><h3 class="dark">1/2 Тьмы</h3>${empty}</div>`;
     m+=`<div class="mobile-round"><h3 class="dark">1/4 Тьмы</h3>${empty}${empty}</div>`;
     m+=`<div class="mobile-round"><h3 class="dark">1/8 Тьмы</h3>${pair(dark[0],dark[7])}${pair(dark[1],dark[6])}${pair(dark[2],dark[5])}${pair(dark[3],dark[4])}</div>`;
