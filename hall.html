@@ -1,49 +1,66 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Зал Славы</title>
-    <link rel="stylesheet" href="theme.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0e17; --bg-secondary: #111827; --bg-elevated: #1a2332; --bg-card: #152028;
+            --text-primary: #e8edf3; --text-secondary: #9ca3af; --text-muted: #6b7280;
+            --border-subtle: rgba(255,255,255,0.08); --gold: #f0b90b; --gold-light: #ffd700;
+            --purple: #a371f7; --red: #ef4444; --green: #10b981; --orange: #f0a500;
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.4); --shadow-gold: 0 4px 12px rgba(240,185,11,0.3);
+            --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
+            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        [data-theme="light"] {
+            --bg-primary: #f8fafc; --bg-secondary: #f1f5f9; --bg-elevated: #e2e8f0; --bg-card: #ffffff;
+            --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8;
+            --border-subtle: rgba(0,0,0,0.08); --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-        .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 40px; }
-        .header { text-align: center; padding: 30px 0 20px; }
-        .header-title { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 50%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .header-subtitle { font-size: 0.9rem; color: var(--text-secondary); font-weight: 400; letter-spacing: 0.04em; }
-        .nav-wrapper { margin-bottom: 28px; }
-        .nav-toggle { display: none; width: 100%; padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 28px; color: var(--gold); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; }
-        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px; background: var(--bg-secondary); border-radius: 28px; border: 1px solid var(--border-subtle); }
-        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: 0.2s; white-space: nowrap; }
-        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
-        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; }
+        body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; line-height: 1.6; transition: background 0.25s,color 0.25s; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 48px; }
+        .header { text-align: center; padding: 32px 0 20px; position: relative; }
+        .header-title { font-size: clamp(2rem,5vw,2.8rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#ffd700 0%,#f0a500 30%,#ffd700 60%,#f0a500 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 24px rgba(255,215,0,0.3)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
+        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+        .header-subtitle { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+        .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-secondary); padding: 8px 12px; border-radius: var(--radius-xl); cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: var(--transition); }
+        .theme-toggle:hover { background: var(--bg-secondary); color: var(--gold); border-color: var(--gold); }
+        .nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
+        .nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; transition: var(--transition); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .nav-toggle:hover { border-color: var(--gold); }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); box-shadow: var(--shadow-lg); backdrop-filter: blur(10px); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); transform: translateY(-1px); }
+        .nav-link.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; font-weight: 700; box-shadow: var(--shadow-gold); }
         .tabs { display: flex; gap: 6px; margin-bottom: 28px; padding: 6px; background: var(--bg-secondary); border-radius: 20px; border: 1px solid var(--border-subtle); overflow-x: auto; }
         .tab-btn { padding: 10px 18px; border: none; background: transparent; color: var(--text-secondary); border-radius: 14px; cursor: pointer; font-size: 0.85rem; font-weight: 600; font-family: inherit; transition: 0.2s; }
         .tab-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
-        .tab-btn.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; }
+        .tab-btn.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; font-weight: 700; }
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .season-frame { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; margin-bottom: 20px; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        .season-frame { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; }
         .season-frame.live { border-color: rgba(255,215,0,0.4); box-shadow: 0 0 20px rgba(255,215,0,0.15); }
         .season-frame.ended { opacity: 0.85; }
         .season-title { font-size: 1.3rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
         .season-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-left: 10px; }
         .season-badge.ended { background: var(--bg-elevated); color: var(--text-muted); }
-        .season-badge.live { background: var(--gold); color: #1a1a1a; }
+        .season-badge.live { background: var(--gold); color: #000; }
         .season-subtitle { color: var(--text-muted); font-size: 0.85rem; font-style: italic; margin-bottom: 20px; }
         .section-title { color: var(--gold); font-size: 0.9rem; font-weight: 700; margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border-subtle); }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-elevated); border-radius: 14px; padding: 16px 12px; text-align: center; border: 1px solid var(--border-subtle); }
         .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
         .stat-label { color: var(--text-muted); font-size: 0.65rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
         .champion-section { background: var(--bg-elevated); border: 1px solid rgba(255,215,0,0.2); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
         .champion-section-title { color: var(--gold); font-size: 0.9rem; font-weight: 700; text-align: center; margin-bottom: 14px; letter-spacing: 2px; text-transform: uppercase; }
-        .champion-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .champion-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
         .champion-card { background: var(--bg-card); border-radius: 14px; padding: 16px 10px; text-align: center; border: 1px solid var(--border-subtle); }
         .champ-medal { font-size: 1.6rem; margin-bottom: 4px; }
         .champ-emoji { font-size: 2rem; margin-bottom: 4px; }
@@ -62,206 +79,171 @@
         td:first-child { text-align: center; width: 35px; }
         .status-message { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
         .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .beer-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: linear-gradient(135deg,#f0b90b,#e0a800); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.4); z-index: 998; transition: all 0.3s ease; animation: float 3s ease-in-out infinite; }
+        .beer-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(240,185,11,0.6); background: linear-gradient(135deg,#ffd700,#f0b90b); }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
+            .header { padding: 20px 0 12px; }
+            .header-title { font-size: 1.8rem; }
+            .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }
             .nav-toggle { display: block; }
             .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
-            .nav-link { padding: 12px 16px; border-radius: 8px; justify-content: center; }
+            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
             .tabs { overflow-x: auto; }
             .tab-btn { white-space: nowrap; font-size: 0.78rem; }
             .season-frame { padding: 18px 14px; }
             .season-title { font-size: 1.1rem; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stats-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
             .stat-value { font-size: 1.3rem; }
-            .champion-grid { grid-template-columns: repeat(2, 1fr); }
+            .champion-grid { grid-template-columns: repeat(2,1fr); }
             .tables-grid { grid-template-columns: 1fr; }
             .table-card.full-width { grid-column: span 1; }
-            .header-title { font-size: 1.8rem; }
             table { font-size: 0.75rem; }
             th, td { padding: 6px 8px; }
+            .beer-btn { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header"><h1 class="header-title">ЗАЛ СЛАВЫ</h1><p class="header-subtitle">История величайших героев Этерниса</p></header>
+        <header class="header">
+            <h1 class="header-title">ЗАЛ СЛАВЫ</h1>
+            <p class="header-subtitle">История величайших героев Этерниса</p>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </header>
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
                 <a href="index.html" class="nav-link">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
                 <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link">⚖️ Баланс</a>
                 <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
-                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-                <a href="hall.html" class="nav-link active">🏆 Зал Славы</a>
-                <a href="lore.html" class="nav-link">📜 Лор</a>
-                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link active">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a>
                 <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
-                <a href="player.html" class="nav-link">👤 Профиль</a>
+                <a href="league.html" class="nav-link">🏟 Лига</a><a href="player.html" class="nav-link">👤 Профиль</a>
             </nav>
         </div>
-
         <div class="tabs" id="season-tabs">
             <button class="tab-btn" data-season="s0">🏁 Бета-тест</button>
             <button class="tab-btn" data-season="s1">🔥 Эра Раскола</button>
             <button class="tab-btn active" data-season="s2">💫 Время Перемен</button>
         </div>
-
         <div id="tab-s0" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
         <div id="tab-s1" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
         <div id="tab-s2" class="tab-content active"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
     </div>
-    <script src="theme.js"></script>
+    <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
     <script>
-        function toggleNav(){const nav=document.getElementById('pageNav');nav.classList.toggle('show');document.querySelector('.nav-toggle').textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+        function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
+        (function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
+        function toggleNav(){const nav=document.getElementById('pageNav');const btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
         document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
         document.querySelectorAll('#season-tabs .tab-btn').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('#season-tabs .tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+this.dataset.season).classList.add('active');});});
 
-        let dungeonPlayers = {};
+        let dungeonPlayers={};
+        function renderSeason(data,seasonName,seasonSubtitle,isCurrent){
+            if(data.dungeon&&data.dungeon.players)dungeonPlayers=data.dungeon.players;
+            const players=data.players||[];
+            const seasonTop=data.seasonTop||[];
+            const factionScore=data.factionScore||{};
+            const totalPlayers=players.length;
+            const totalFights=Math.floor(players.reduce((s,p)=>s+(p.wins||0)+(p.losses||0),0)/2);
+            const maxStreak=players.reduce((m,p)=>(p.best||0)>m?(p.best||0):m,0);
+            const maxShards=players.reduce((m,p)=>(p.shards||0)>m?(p.shards||0):m,0);
+            const maxLevel=players.reduce((m,p)=>(p.level||0)>m?(p.level||0):m,0);
+            const maxFactionWins=players.reduce((m,p)=>(p.factionWins||0)>m?(p.factionWins||0):m,0);
+            const topWR=players.filter(p=>(p.wins||0)+(p.losses||0)>=30).sort((a,b)=>{const wa=(a.wins||0)/((a.wins||0)+(a.losses||0)),wb=(b.wins||0)/((b.wins||0)+(b.losses||0));return wb-wa;});
+            const maxWinrate=topWR[0];
+            const champions=players.filter(p=>(p.tournamentWins||0)>0).sort((a,b)=>(b.tournamentWins||0)-(a.tournamentWins||0));
+            const champCount=champions.length;
+            const maxDungeonBosses=players.reduce((m,p)=>{const d=dungeonPlayers[p.display];return d&&d.bosses>m?d.bosses:m;},0);
+            const maxSkill=seasonTop.length>0?seasonTop[0].skill:'—';
+            const maxDungeonRecord=players.reduce((m,p)=>{const d=dungeonPlayers[p.display];return d&&d.record>m?d.record:m;},0);
+            const maxDungeonTrophies=players.reduce((m,p)=>{const d=dungeonPlayers[p.display];return d&&d.trophies>m?d.trophies:m;},0);
+            const topDungeon=players.map(p=>{const d=dungeonPlayers[p.display];return{...p,record:d?.record||0,trophies:d?.trophies||0};}).filter(p=>p.record>0).sort((a,b)=>b.record-a.record||b.trophies-a.trophies);
+            const duelLight=factionScore.duelLight||0;const duelDark=factionScore.duelDark||0;
+            const battleLight=factionScore.battleLight||0;const battleDark=factionScore.battleDark||0;
 
-        function renderSeason(data, seasonName, seasonSubtitle, isCurrent) {
-            if (data.dungeon && data.dungeon.players) dungeonPlayers = data.dungeon.players;
-            const players = data.players || [];
-            const seasonTop = data.seasonTop || [];
-            const factionScore = data.factionScore || {};
-            const totalPlayers = players.length;
-            const totalFights = Math.floor(players.reduce((s, p) => s + (p.wins||0) + (p.losses||0), 0) / 2);
-            const maxStreak = players.reduce((m, p) => (p.best||0) > m ? (p.best||0) : m, 0);
-            const maxShards = players.reduce((m, p) => (p.shards||0) > m ? (p.shards||0) : m, 0);
-            const maxLevel = players.reduce((m, p) => (p.level||0) > m ? (p.level||0) : m, 0);
-            const maxFactionWins = players.reduce((m, p) => (p.factionWins||0) > m ? (p.factionWins||0) : m, 0);
-            const topWR = players.filter(p => (p.wins||0)+(p.losses||0) >= 30).sort((a,b) => {const wa=(a.wins||0)/((a.wins||0)+(a.losses||0)),wb=(b.wins||0)/((b.wins||0)+(b.losses||0));return wb-wa;});
-            const maxWinrate = topWR[0];
-            const champions = players.filter(p => (p.tournamentWins || 0) > 0).sort((a,b) => (b.tournamentWins||0) - (a.tournamentWins||0));
-            const champCount = champions.length;
-			const maxDungeonBosses = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.bosses > m ? d.bosses : m; }, 0);
-			const maxSkill = seasonTop.length > 0 ? seasonTop[0].skill : '—';
+            let html=`<div class="season-frame ${isCurrent?'live':'ended'}">`;
+            html+=`<div class="season-title">${seasonName} <span class="season-badge ${isCurrent?'live':'ended'}">${isCurrent?'В РАЗГАРЕ':'ЗАВЕРШЁН'}</span></div>`;
+            html+=`<div class="season-subtitle">${seasonSubtitle}</div>`;
 
-            const maxDungeonRecord = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.record > m ? d.record : m; }, 0);
-            const maxDungeonTrophies = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.trophies > m ? d.trophies : m; }, 0);
-            const topDungeon = players.map(p => { const d = dungeonPlayers[p.display]; return { ...p, record: d?.record || 0, trophies: d?.trophies || 0 }; }).filter(p => p.record > 0).sort((a,b) => b.record - a.record || b.trophies - a.trophies);
+            html+='<div class="section-title">Арена</div><div class="stats-grid">';
+            html+=`<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-value">${champCount||'—'}</div><div class="stat-label">👑 Чемпионов</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-value">${maxSkill}</div><div class="stat-label">⭐ Макс. SKILL</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Макс. осколков</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-value">${maxWinrate?(maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1)+'%':'—'}</div><div class="stat-label">📈 Лучший винрейт</div></div>`;
+            html+=`<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Макс. стрик</div></div>`;
+            const worstStreak=players.reduce((m,p)=>p.worst>m?p.worst:m,0);
+            if(worstStreak>0||isCurrent)html+=`<div class="stat-card"><div class="stat-value">${worstStreak||'—'}</div><div class="stat-label">💔 Худший стрик</div></div>`;
+            if(maxFactionWins>0||isCurrent)html+=`<div class="stat-card"><div class="stat-value">${maxFactionWins||'—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
+            if(duelLight+duelDark>0||isCurrent)html+=`<div class="stat-card"><div class="stat-value">${duelLight} : ${duelDark}</div><div class="stat-label">⚔️ Дуэли Свет vs Тьма</div></div>`;
+            if(battleLight+battleDark>0||isCurrent)html+=`<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
+            html+='</div>';
 
-            const duelLight = factionScore.duelLight || 0;
-            const duelDark = factionScore.duelDark || 0;
-            const battleLight = factionScore.battleLight || 0;
-            const battleDark = factionScore.battleDark || 0;
-
-            let html = `<div class="season-frame ${isCurrent ? 'live' : 'ended'}">`;
-            html += `<div class="season-title">${seasonName} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'В РАЗГАРЕ' : 'ЗАВЕРШЁН'}</span></div>`;
-            html += `<div class="season-subtitle">${seasonSubtitle}</div>`;
-
-			// === АРЕНА (PvP) ===
-			html += '<div class="section-title">Арена</div>';
-			html += '<div class="stats-grid">';
-			html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${champCount || '—'}</div><div class="stat-label">👑 Чемпионов</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${maxSkill}</div><div class="stat-label">⭐ Макс. SKILL</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Макс. осколков</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${maxWinrate ? (maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1)+'%' : '—'}</div><div class="stat-label">📈 Лучший винрейт</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Макс. стрик</div></div>`;
-
-			// Эти карточки — только если данные есть (не для бета-теста)
-			const worstStreak = players.reduce((m, p) => p.worst > m ? p.worst : m, 0);
-			if (worstStreak > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${worstStreak || '—'}</div><div class="stat-label">💔 Худший стрик</div></div>`;
-			if (maxFactionWins > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
-			if (duelLight + duelDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${duelLight} : ${duelDark}</div><div class="stat-label">⚔️ Дуэли Свет vs Тьма</div></div>`;
-			if (battleLight + battleDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
-			html += '</div>';
-
-			// === ПОДЗЕМЕЛЬЕ (PvE) ===
-			if (isCurrent || Object.keys(dungeonPlayers).length > 0) {
-				html += '<div class="section-title">Подземелье</div>';
-				html += '<div class="stats-grid">';
-				html += `<div class="stat-card"><div class="stat-value">${Object.keys(dungeonPlayers).length || '—'}</div><div class="stat-label">👥 Игроков</div></div>`;
-				html += `<div class="stat-card"><div class="stat-value">${maxDungeonRecord || '—'}</div><div class="stat-label">🏆 Рекорд волн</div></div>`;
-				html += `<div class="stat-card"><div class="stat-value">${maxDungeonBosses || '—'}</div><div class="stat-label">💀 Боссов убито</div></div>`;
-				html += `<div class="stat-card"><div class="stat-value">${maxDungeonTrophies || '—'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
-				html += '</div>';
-			}
-
-            if (champions.length > 0) {
-                html += `<div class="champion-section"><div class="champion-section-title">👑 Чемпионы сезона</div><div class="champion-grid">`;
-                champions.slice(0, 4).forEach((p, i) => {const medals=['🥇','🥈','🥉'];html += `<div class="champion-card"><div class="champ-medal">${i<3?medals[i]:'⭐'}</div><div class="champ-emoji">${p.emoji||'⚔️'}</div><div class="champ-name">${p.display}</div><div class="champ-wins">${p.tournamentWins} побед</div></div>`;});
-                html += '</div></div>';
-            } else if (!isCurrent) {
-                html += `<div class="champion-section" style="opacity:0.5;text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">Турниры не проводились — эпоха чистых дуэлей</div>`;
+            if(isCurrent||Object.keys(dungeonPlayers).length>0){
+                html+='<div class="section-title">Подземелье</div><div class="stats-grid">';
+                html+=`<div class="stat-card"><div class="stat-value">${Object.keys(dungeonPlayers).length||'—'}</div><div class="stat-label">👥 Игроков</div></div>`;
+                html+=`<div class="stat-card"><div class="stat-value">${maxDungeonRecord||'—'}</div><div class="stat-label">🏆 Рекорд волн</div></div>`;
+                html+=`<div class="stat-card"><div class="stat-value">${maxDungeonBosses||'—'}</div><div class="stat-label">💀 Боссов убито</div></div>`;
+                html+=`<div class="stat-card"><div class="stat-value">${maxDungeonTrophies||'—'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
+                html+='</div>';
             }
 
-            html += '<div class="section-title">📊 Таблицы лидеров</div>';
-            html += '<div class="tables-grid">';
-            if (seasonTop.length > 0) {
-                html += '<div class="table-card full-width"><h3>🏆 Сезонный рейтинг (SKILL)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Skill</th><th>Победы</th></tr></thead><tbody>';
-                seasonTop.slice(0,5).forEach((p,i)=>{html += `<tr><td>${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${p.display}</td><td>${p.emoji||''}</td><td class="number">${p.skill}</td><td class="number">${p.wins}</td></tr>`;});
-                html += '</tbody></table></div></div>';
+            if(champions.length>0){
+                html+=`<div class="champion-section"><div class="champion-section-title">👑 Чемпионы сезона</div><div class="champion-grid">`;
+                champions.slice(0,4).forEach((p,i)=>{const medals=['🥇','🥈','🥉'];html+=`<div class="champion-card"><div class="champ-medal">${i<3?medals[i]:'⭐'}</div><div class="champ-emoji">${p.emoji||'⚔️'}</div><div class="champ-name">${p.display}</div><div class="champ-wins">${p.tournamentWins} побед</div></div>`;});
+                html+='</div></div>';
+            }else if(!isCurrent){html+=`<div class="champion-section" style="opacity:0.5;text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">Турниры не проводились — эпоха чистых дуэлей</div>`;}
+
+            html+='<div class="section-title">📊 Таблицы лидеров</div><div class="tables-grid">';
+            if(seasonTop.length>0){
+                html+='<div class="table-card full-width"><h3>🏆 Сезонный рейтинг (SKILL)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Skill</th><th>Победы</th></tr></thead><tbody>';
+                seasonTop.slice(0,5).forEach((p,i)=>{html+=`<tr><td>${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${p.display}</td><td>${p.emoji||''}</td><td class="number">${p.skill}</td><td class="number">${p.wins}</td></tr>`;});
+                html+='</tbody></table></div></div>';
             }
             const mostActive=[...players].sort((a,b)=>((b.wins||0)+(b.losses||0))-((a.wins||0)+(a.losses||0))).slice(0,5);
-            html += '<div class="table-card"><h3>🔥 Самые активные</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Боёв</th></tr></thead><tbody>';
+            html+='<div class="table-card"><h3>🔥 Самые активные</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Боёв</th></tr></thead><tbody>';
             mostActive.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${(p.wins||0)+(p.losses||0)}</td></tr>`);
-            html += '</tbody></table></div></div>';
+            html+='</tbody></table></div></div>';
             const topShards=[...players].sort((a,b)=>(b.shards||0)-(a.shards||0)).slice(0,5);
-            html += '<div class="table-card"><h3>💎 Коллекционеры осколков</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Осколков</th></tr></thead><tbody>';
+            html+='<div class="table-card"><h3>💎 Коллекционеры осколков</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Осколков</th></tr></thead><tbody>';
             topShards.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.shards||0}</td></tr>`);
-            html += '</tbody></table></div></div>';
+            html+='</tbody></table></div></div>';
             const topStreaks=[...players].sort((a,b)=>(b.best||0)-(a.best||0)).slice(0,5);
-            html += '<div class="table-card"><h3>🔥 Лучшие серии побед</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Побед</th></tr></thead><tbody>';
+            html+='<div class="table-card"><h3>🔥 Лучшие серии побед</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Побед</th></tr></thead><tbody>';
             topStreaks.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.best||0}</td></tr>`);
-            html += '</tbody></table></div></div>';
-            html += '<div class="table-card"><h3>📈 Винрейт (30+ боёв)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>WR</th><th>W/L</th></tr></thead><tbody>';
-            topWR.slice(0,5).forEach((p,i)=>{html += `<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${((p.wins||0)*100/((p.wins||0)+(p.losses||0))).toFixed(1)}%</td><td class="number">${p.wins||0}-${p.losses||0}</td></tr>`;});
-            html += '</tbody></table></div></div>';
-            if (topDungeon.length > 0) {
-                html += '<div class="table-card"><h3>🏔 Рекордсмены данжа</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Волн</th></tr></thead><tbody>';
+            html+='</tbody></table></div></div>';
+            html+='<div class="table-card"><h3>📈 Винрейт (30+ боёв)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>WR</th><th>W/L</th></tr></thead><tbody>';
+            topWR.slice(0,5).forEach((p,i)=>{html+=`<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${((p.wins||0)*100/((p.wins||0)+(p.losses||0))).toFixed(1)}%</td><td class="number">${p.wins||0}-${p.losses||0}</td></tr>`;});
+            html+='</tbody></table></div></div>';
+            if(topDungeon.length>0){
+                html+='<div class="table-card"><h3>🏔 Рекордсмены данжа</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Волн</th></tr></thead><tbody>';
                 topDungeon.slice(0,5).forEach((p,i)=>html+=`<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.record}</td></tr>`);
-                html += '</tbody></table></div></div>';
-                html += '<div class="table-card"><h3>🐉 Охотники на боссов</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Трофеев</th></tr></thead><tbody>';
+                html+='</tbody></table></div></div>';
+                html+='<div class="table-card"><h3>🐉 Охотники на боссов</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Трофеев</th></tr></thead><tbody>';
                 [...topDungeon].sort((a,b)=>(b.trophies||0)-(a.trophies||0)).slice(0,5).forEach((p,i)=>html+=`<tr><td>${i+1}</td><td>${p.display}</td><td class="number">${p.trophies||0}</td></tr>`);
-                html += '</tbody></table></div></div>';
+                html+='</tbody></table></div></div>';
             }
-            html += '</div></div>';
+            html+='</div></div>';
             return html;
         }
 
-        const SEASON_0_URL = 'https://rvotaenotattv.github.io/dnd-stats/season_0.json';
-        const SEASON_1_URL = 'https://rvotaenotattv.github.io/dnd-stats/season_1.json';
-        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        const SEASON_0_URL='https://rvotaenotattv.github.io/dnd-stats/season_0.json';
+        const SEASON_1_URL='https://rvotaenotattv.github.io/dnd-stats/season_1.json';
+        const STATS_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 
-		async function loadSeason0() {
-			const container = document.getElementById('tab-s0');
-			try {
-				const data = await fetch(SEASON_0_URL + '?v=' + Date.now()).then(r => r.json());
-				data.dungeon = { players: {} };
-				container.innerHTML = renderSeason(data, '🏁 Бета-тест', 'Рождение арены. Всё только начиналось.', false);
-			} catch {
-				container.innerHTML = '<div class="season-frame ended"><div class="season-title">🏁 Бета-тест</div><div class="status-message">❌ Архив недоступен</div></div>';
-			}
-		}
+        async function loadSeason0(){const c=document.getElementById('tab-s0');try{const d=await fetch(SEASON_0_URL+'?v='+Date.now()).then(r=>r.json());d.dungeon={players:{}};c.innerHTML=renderSeason(d,'🏁 Бета-тест','Рождение арены. Всё только начиналось.',false);}catch{c.innerHTML='<div class="season-frame ended"><div class="season-title">🏁 Бета-тест</div><div class="status-message">❌ Архив недоступен</div></div>';}}
+        async function loadSeason1(){const c=document.getElementById('tab-s1');try{const d=await fetch(SEASON_1_URL+'?v='+Date.now()).then(r=>r.json());c.innerHTML=renderSeason(d,'🔥 Эра Раскола','50 турниров. Бесконечные волны данжа. Эпоха, где родились легенды.',false);}catch{c.innerHTML='<div class="season-frame ended"><div class="season-title">🔥 Эра Раскола</div><div class="status-message">❌ Архив недоступен</div></div>';}}
+        async function loadSeason2(){const c=document.getElementById('tab-s2');try{const d=await fetch(STATS_URL+'?v='+Date.now()).then(r=>r.json());c.innerHTML=renderSeason(d,'💫 Время Перемен','Табакси вступают в Раскол. История пишется сейчас.',true);}catch{c.innerHTML='<div class="season-frame live"><div class="season-title">💫 Время Перемен</div><div class="status-message">❌ Не удалось загрузить данные</div></div>';}}
 
-		async function loadSeason1() {
-			const container = document.getElementById('tab-s1');
-			try {
-				const data = await fetch(SEASON_1_URL + '?v=' + Date.now()).then(r => r.json());
-				container.innerHTML = renderSeason(data, '🔥 Эра Раскола', '50 турниров. Бесконечные волны данжа. Эпоха, где родились легенды.', false);
-			} catch {
-				container.innerHTML = '<div class="season-frame ended"><div class="season-title">🔥 Эра Раскола</div><div class="status-message">❌ Архив недоступен</div></div>';
-			}
-		}
-
-        async function loadSeason2() {
-            const container = document.getElementById('tab-s2');
-            try {
-                const data = await fetch(STATS_URL + '?v=' + Date.now()).then(r => r.json());
-                container.innerHTML = renderSeason(data, '💫 Время Перемен', 'Табакси вступают в Раскол. История пишется сейчас.', true);
-            } catch {
-                container.innerHTML = '<div class="season-frame live"><div class="season-title">💫 Время Перемен</div><div class="status-message">❌ Не удалось загрузить данные</div></div>';
-            }
-        }
-
-        loadSeason0();
-        loadSeason1();
-        loadSeason2();
+        loadSeason0();loadSeason1();loadSeason2();
     </script>
 </body>
 </html>

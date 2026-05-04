@@ -1,80 +1,91 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Калькулятор</title>
-	<link rel="stylesheet" href="theme.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-primary);
-            background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%);
-            color: var(--text-primary); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased;
+        :root {
+            --bg-primary: #0a0e17; --bg-secondary: #111827; --bg-elevated: #1a2332; --bg-card: #152028;
+            --text-primary: #e8edf3; --text-secondary: #9ca3af; --text-muted: #6b7280;
+            --border-subtle: rgba(255,255,255,0.08); --gold: #f0b90b; --gold-light: #ffd700;
+            --purple: #a371f7; --red: #ef4444; --green: #10b981;
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.4); --shadow-gold: 0 4px 12px rgba(240,185,11,0.3);
+            --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
+            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
         }
-        .container { max-width: 850px; margin: 0 auto; padding: 20px 24px 40px; }
-        .header { text-align: center; padding: 30px 0 20px; }
-        .header-title { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, #ffd700 0%, #f0a500 50%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(255,215,0,0.3)); margin-bottom: 4px; }
-        .header-subtitle { font-size: 0.9rem; color: var(--text-secondary); font-weight: 400; }
-        .nav-wrapper { margin-bottom: 28px; }
-        .nav-toggle { display: none; width: 100%; padding: 14px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--gold); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; transition: var(--transition); }
-        .nav-toggle:hover { background: var(--bg-elevated); }
-        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); }
-        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
-        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); }
-        .nav-link.active { background: var(--gold); color: var(--bg-primary); font-weight: 700; box-shadow: var(--shadow-gold); }
+        [data-theme="light"] {
+            --bg-primary: #f8fafc; --bg-secondary: #f1f5f9; --bg-elevated: #e2e8f0; --bg-card: #ffffff;
+            --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8;
+            --border-subtle: rgba(0,0,0,0.08); --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg-primary); background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%); color: var(--text-primary); min-height: 100vh; line-height: 1.6; transition: background 0.25s,color 0.25s; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 850px; margin: 0 auto; padding: 20px 24px 48px; }
+        .header { text-align: center; padding: 32px 0 20px; position: relative; }
+        .header-title { font-size: clamp(2rem,5vw,2.8rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#ffd700 0%,#f0a500 30%,#ffd700 60%,#f0a500 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 24px rgba(255,215,0,0.3)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
+        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+        .header-subtitle { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+        .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-secondary); padding: 8px 12px; border-radius: var(--radius-xl); cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: var(--transition); }
+        .theme-toggle:hover { background: var(--bg-secondary); color: var(--gold); border-color: var(--gold); }
+        .nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
+        .nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; transition: var(--transition); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .nav-toggle:hover { border-color: var(--gold); }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); box-shadow: var(--shadow-lg); backdrop-filter: blur(10px); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); transform: translateY(-1px); }
+        .nav-link.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; font-weight: 700; box-shadow: var(--shadow-gold); }
 
         .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; position: relative; overflow: hidden; }
         .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
         .card-title { font-size: 1.15rem; font-weight: 700; color: var(--gold); margin-bottom: 16px; }
-
         .mode-switch { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
         .mode-btn { background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-secondary); padding: 10px 22px; border-radius: 25px; cursor: pointer; font-size: 0.85rem; font-weight: 600; font-family: inherit; transition: var(--transition); }
-        .mode-btn.active { background: var(--gold); color: var(--bg-primary); border-color: var(--gold); }
-
+        .mode-btn.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; border-color: var(--gold); }
         .selectors { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: end; margin-bottom: 20px; }
         .fighter-card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px; }
         .fighter-card label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
         select { width: 100%; padding: 10px 12px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem; font-family: inherit; cursor: pointer; margin-top: 8px; }
         .vs-divider { text-align: center; font-size: 1.5rem; color: var(--gold); font-weight: 800; }
-
         .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
         th { background: var(--bg-elevated); color: var(--gold); font-weight: 700; padding: 10px 12px; text-align: center; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--border-subtle); }
         td { padding: 8px 12px; text-align: center; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
         td:first-child { text-align: left; font-weight: 600; color: var(--gold); }
         .number { text-align: right; font-variant-numeric: tabular-nums; }
         tr:hover td { background: rgba(255,255,255,0.02); }
-
         .reasons-box { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px; margin-top: 14px; border-left: 3px solid var(--gold); }
         .reasons-box h4 { color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; }
         .reasons-box ul { padding-left: 20px; color: var(--text-secondary); font-size: 0.82rem; line-height: 1.8; }
-
         .status-message { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .beer-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: linear-gradient(135deg,#f0b90b,#e0a800); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.4); z-index: 998; transition: all 0.3s ease; animation: float 3s ease-in-out infinite; }
+        .beer-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(240,185,11,0.6); background: linear-gradient(135deg,#ffd700,#f0b90b); }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
+            .header { padding: 20px 0 12px; }
+            .header-title { font-size: 1.8rem; }
+            .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }
             .card { padding: 18px 14px; border-radius: var(--radius-md); }
             .nav-toggle { display: block; }
             .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
             .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
-            .header-title { font-size: 1.8rem; }
             .selectors { grid-template-columns: 1fr; }
             .vs-divider { font-size: 1.2rem; }
-            table { font-size: 0.72rem; min-width: auto; }
+            table { font-size: 0.72rem; }
             th, td { padding: 6px 8px; }
+            .beer-btn { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header"><h1 class="header-title">КАЛЬКУЛЯТОР</h1><p class="header-subtitle">Сравнение бойцов</p></header>
-
+        <header class="header"><h1 class="header-title">КАЛЬКУЛЯТОР</h1><p class="header-subtitle">Сравнение бойцов</p><button class="theme-toggle" onclick="toggleTheme()">🌓</button></header>
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
@@ -83,7 +94,8 @@
                 <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
                 <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
                 <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a>
-                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a><a href="player.html" class="nav-link">👤 Профиль</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                <a href="league.html" class="nav-link">🏟 Лига</a><a href="player.html" class="nav-link">👤 Профиль</a>
             </nav>
         </div>
 
@@ -92,183 +104,48 @@
                 <button class="mode-btn active" id="mode-players-btn">👥 Игроки</button>
                 <button class="mode-btn" id="mode-classes-btn">⚙️ Класс/Раса</button>
             </div>
-
             <div class="selectors" id="mode-players">
                 <div class="fighter-card"><label>👤 Игрок 1</label><select id="calc-p1"></select></div>
                 <div class="vs-divider">VS</div>
                 <div class="fighter-card"><label>👤 Игрок 2</label><select id="calc-p2"></select></div>
             </div>
-
             <div class="selectors" id="mode-classes" style="display:none;">
                 <div class="fighter-card"><label>⚔️ Класс</label><select id="calc-class1"></select><label style="margin-top:12px;">🌍 Раса</label><select id="calc-race1"></select></div>
                 <div class="vs-divider">VS</div>
                 <div class="fighter-card"><label>⚔️ Класс</label><select id="calc-class2"></select><label style="margin-top:12px;">🌍 Раса</label><select id="calc-race2"></select></div>
             </div>
         </div>
-
-        <div class="card">
-            <div id="calc-result"><div class="status-message">Выбери бойцов</div></div>
-        </div>
+        <div class="card"><div id="calc-result"><div class="status-message">Выбери бойцов</div></div></div>
     </div>
-
+    <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
     <script>
-        function toggleNav() {
-            const nav = document.getElementById('pageNav'), btn = document.querySelector('.nav-toggle');
-            nav.classList.toggle('show'); btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        }
-        document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
-            document.getElementById('pageNav').classList.remove('show');
-            document.querySelector('.nav-toggle').textContent = '☰ Меню';
-        }));
+        function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
+        (function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
+        function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
 
-        const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-        const CDN_DATA = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
-        const CDN_STATS = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+        const DATA_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+        const STATS_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        const CDN_DATA='https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
+        const CDN_STATS='https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+        let CONFIG={},classesData=[],racesData=[],classEmojis={},raceEmojis={},players=[],currentMode='players';
 
-        let CONFIG = {}, classesData = [], racesData = [], classEmojis = {}, raceEmojis = {}, players = [], currentMode = 'players';
+        function fetchWithTimeout(url,timeout=3000){return Promise.race([fetch(url).then(r=>{if(!r.ok)throw new Error();return r}),new Promise((_,reject)=>setTimeout(()=>reject(new Error()),timeout))]);}
 
-        function fetchWithTimeout(url, timeout = 3000) {
-            return Promise.race([
-                fetch(url).then(r => { if (!r.ok) throw new Error(); return r; }),
-                new Promise((_, reject) => setTimeout(() => reject(new Error()), timeout))
-            ]);
-        }
+        fetchWithTimeout(DATA_URL).catch(()=>fetch(CDN_DATA)).then(r=>r.json()).then(data=>{CONFIG=data.config;classesData=data.classes;racesData=data.races;classEmojis=Object.fromEntries(classesData.map(c=>[c.Name,c.Emoji]));raceEmojis=Object.fromEntries(racesData.map(r=>[r.Name,r.Emoji]));return fetchWithTimeout(STATS_URL).catch(()=>fetch(CDN_STATS));}).then(r=>r.json()).then(stats=>{players=(stats.players||[]).filter(p=>p.name&&p.name!=='Unknown');populateSelects();updateCalc();}).catch(()=>{document.getElementById('calc-result').innerHTML='<div class="status-message" style="color:var(--red);">❌ Ошибка загрузки</div>';});
 
-        fetchWithTimeout(DATA_URL).catch(() => fetch(CDN_DATA)).then(r => r.json()).then(data => {
-            CONFIG = data.config; classesData = data.classes; racesData = data.races;
-            classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
-            raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
-            return fetchWithTimeout(STATS_URL).catch(() => fetch(CDN_STATS));
-        }).then(r => r.json()).then(stats => {
-            players = (stats.players || []).filter(p => p.name && p.name !== 'Unknown');
-            populateSelects(); updateCalc();
-        }).catch(() => {
-            document.getElementById('calc-result').innerHTML = '<div class="status-message" style="color:var(--red);">❌ Ошибка загрузки</div>';
-        });
+        function populateSelects(){const p1=document.getElementById('calc-p1'),p2=document.getElementById('calc-p2');players.sort((a,b)=>a.display.localeCompare(b.display)).forEach(p=>{const o=`<option value="${p.display}">${p.emoji} ${p.display}</option>`;p1.innerHTML+=o;p2.innerHTML+=o;});if(players.length>1)p2.selectedIndex=1;document.getElementById('calc-class1').innerHTML=classesData.map(c=>`<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join('');document.getElementById('calc-class2').innerHTML=classesData.map(c=>`<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join('');if(classesData.length>1)document.getElementById('calc-class2').selectedIndex=1;document.getElementById('calc-race1').innerHTML=racesData.map(r=>`<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join('');document.getElementById('calc-race2').innerHTML=racesData.map(r=>`<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join('');}
 
-        function populateSelects() {
-            const p1 = document.getElementById('calc-p1'), p2 = document.getElementById('calc-p2');
-            players.sort((a,b)=>a.display.localeCompare(b.display)).forEach(p => { const o = `<option value="${p.display}">${p.emoji} ${p.display}</option>`; p1.innerHTML += o; p2.innerHTML += o; });
-            if(players.length>1) p2.selectedIndex = 1;
-            document.getElementById('calc-class1').innerHTML = classesData.map(c => `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join('');
-            document.getElementById('calc-class2').innerHTML = classesData.map(c => `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join('');
-            if(classesData.length>1) document.getElementById('calc-class2').selectedIndex = 1;
-            document.getElementById('calc-race1').innerHTML = racesData.map(r => `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join('');
-            document.getElementById('calc-race2').innerHTML = racesData.map(r => `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join('');
-        }
+        document.getElementById('mode-players-btn').addEventListener('click',()=>{currentMode='players';document.getElementById('mode-players-btn').classList.add('active');document.getElementById('mode-classes-btn').classList.remove('active');document.getElementById('mode-players').style.display='grid';document.getElementById('mode-classes').style.display='none';updateCalc();});
+        document.getElementById('mode-classes-btn').addEventListener('click',()=>{currentMode='classes';document.getElementById('mode-classes-btn').classList.add('active');document.getElementById('mode-players-btn').classList.remove('active');document.getElementById('mode-players').style.display='none';document.getElementById('mode-classes').style.display='grid';updateCalc();});
 
-        document.getElementById('mode-players-btn').addEventListener('click', () => {
-            currentMode = 'players';
-            document.getElementById('mode-players-btn').classList.add('active');
-            document.getElementById('mode-classes-btn').classList.remove('active');
-            document.getElementById('mode-players').style.display = 'grid';
-            document.getElementById('mode-classes').style.display = 'none';
-            updateCalc();
-        });
-        document.getElementById('mode-classes-btn').addEventListener('click', () => {
-            currentMode = 'classes';
-            document.getElementById('mode-classes-btn').classList.add('active');
-            document.getElementById('mode-players-btn').classList.remove('active');
-            document.getElementById('mode-players').style.display = 'none';
-            document.getElementById('mode-classes').style.display = 'grid';
-            updateCalc();
-        });
+        function getSelected(){if(currentMode==='players'){const p1=players.find(p=>p.display===document.getElementById('calc-p1')?.value);const p2=players.find(p=>p.display===document.getElementById('calc-p2')?.value);if(!p1||!p2)return null;const pp=n=>n.split('-');const a=pp(p1.name),b=pp(p2.name);return{p1:{display:p1.display,emoji:p1.emoji,class:a[1]||a[0],race:a[0]},p2:{display:p2.display,emoji:p2.emoji,class:b[1]||b[0],race:b[0]}};}else{const c1=document.getElementById('calc-class1')?.value,r1=document.getElementById('calc-race1')?.value;const c2=document.getElementById('calc-class2')?.value,r2=document.getElementById('calc-race2')?.value;if(!c1||!r1||!c2||!r2)return null;return{p1:{display:`${c1} (${r1})`,emoji:classEmojis[c1]+raceEmojis[r1],class:c1,race:r1},p2:{display:`${c2} (${r2})`,emoji:classEmojis[c2]+raceEmojis[r2],class:c2,race:r2}};}}
 
-        function getSelected() {
-            if(currentMode==='players'){
-                const p1=players.find(p=>p.display===document.getElementById('calc-p1')?.value);
-                const p2=players.find(p=>p.display===document.getElementById('calc-p2')?.value);
-                if(!p1||!p2) return null;
-                const pp=n=>n.split('-'); const a=pp(p1.name), b=pp(p2.name);
-                return {p1:{display:p1.display,emoji:p1.emoji,class:a[1]||a[0],race:a[0]},p2:{display:p2.display,emoji:p2.emoji,class:b[1]||b[0],race:b[0]}};
-            } else {
-                const c1=document.getElementById('calc-class1')?.value, r1=document.getElementById('calc-race1')?.value;
-                const c2=document.getElementById('calc-class2')?.value, r2=document.getElementById('calc-race2')?.value;
-                if(!c1||!r1||!c2||!r2) return null;
-                return {p1:{display:`${c1} (${r1})`,emoji:classEmojis[c1]+raceEmojis[r1],class:c1,race:r1},p2:{display:`${c2} (${r2})`,emoji:classEmojis[c2]+raceEmojis[r2],class:c2,race:r2}};
-            }
-        }
+        function calc(sel){const c1=classesData.find(c=>c.Name===sel.p1.class)||classesData[0];const c2=classesData.find(c=>c.Name===sel.p2.class)||classesData[0];const r1=racesData.find(r=>r.Name===sel.p1.race)||racesData[0];const r2=racesData.find(r=>r.Name===sel.p2.race)||racesData[0];const s1={hp:c1.Hp+r1.BonusHp,atk:c1.Atk+r1.BonusAtk,def:c1.Def+r1.BonusDef,min:c1.Min+r1.BonusMin,max:c1.Max+r1.BonusMax};const s2={hp:c2.Hp+r2.BonusHp,atk:c2.Atk+r2.BonusAtk,def:c2.Def+r2.BonusDef,min:c2.Min+r2.BonusMin,max:c2.Max+r2.BonusMax};const hc=(atk,def)=>{const n=CONFIG.baseAC+def-atk;if(n<=1)return CONFIG.hitChanceMax;if(n>=20)return CONFIG.hitChanceMin;return(21-n)/20;};const h1=hc(s1.atk,s2.def),h2=hc(s2.atk,s1.def);const a1=(s1.min+s1.max)/2,a2=(s2.min+s2.max)/2;const dr1=1-s2.def*CONFIG.defReduction,dr2=1-s1.def*CONFIG.defReduction;const cc=0.05;const d1=h1*a1*dr1*(1-cc)+cc*a1*CONFIG.critMultiplier*dr1;const d2=h2*a2*dr2*(1-cc)+cc*a2*CONFIG.critMultiplier*dr2;const t1=d1>0?s2.hp/d1:999,t2=d2>0?s1.hp/d2:999;const cr1=Math.ceil(s1.max*CONFIG.critMultiplier*dr1),cr2=Math.ceil(s2.max*CONFIG.critMultiplier*dr2);const quick1=Math.ceil(s2.hp/cr1),quick2=Math.ceil(s1.hp/cr2);const critKill1=cr1>=s2.hp,critKill2=cr2>=s1.hp;const total=d1+d2;const w1=total>0?(d1/total)*100:50,w2=total>0?(d2/total)*100:50;const winner=Math.abs(w1-w2)<0.01?null:(w1>w2?sel.p1:sel.p2);const sp1=s1.max-s1.min,sp2=s2.max-s2.min;const reasons=[];if(Math.abs(d1-d2)>0.01)reasons.push(d1>d2?`${sel.p1.display} наносит больше урона (${d1.toFixed(2)} vs ${d2.toFixed(2)})`:`${sel.p2.display} наносит больше урона (${d2.toFixed(2)} vs ${d1.toFixed(2)})`);else reasons.push(`Одинаковый урон (${d1.toFixed(2)})`);if(Math.abs(h1-h2)>0.001)reasons.push(h1>h2?`${sel.p1.display} чаще попадает (${(h1*100).toFixed(0)}% vs ${(h2*100).toFixed(0)}%)`:`${sel.p2.display} чаще попадает (${(h2*100).toFixed(0)}% vs ${(h1*100).toFixed(0)}%)`);else reasons.push(`Одинаковый шанс попадания (${(h1*100).toFixed(0)}%)`);if(Math.abs(t1-t2)>0.1)reasons.push(t1<t2?`${sel.p1.display} убивает быстрее (${t1.toFixed(1)} ходов vs ${t2.toFixed(1)})`:`${sel.p2.display} убивает быстрее (${t2.toFixed(1)} ходов vs ${t1.toFixed(1)})`);else reasons.push(`Одинаковая скорость убийства (${t1.toFixed(1)} ходов)`);if(cr1!==cr2)reasons.push(cr1>cr2?`${sel.p1.display} наносит больше урона критом (${cr1} vs ${cr2})`:`${sel.p2.display} наносит больше урона критом (${cr2} vs ${cr1})`);else reasons.push(`Одинаковый крит-урон (${cr1})`);if(s1.hp!==s2.hp)reasons.push(s1.hp>s2.hp?`${sel.p1.display} живучее (${s1.hp} HP vs ${s2.hp})`:`${sel.p2.display} живучее (${s2.hp} HP vs ${s1.hp})`);else reasons.push(`Одинаковая живучесть (${s1.hp} HP)`);if(s1.def!==s2.def)reasons.push(s1.def>s2.def?`${sel.p1.display} лучше защищён (${s1.def} Def vs ${s2.def})`:`${sel.p2.display} лучше защищён (${s2.def} Def vs ${s1.def})`);else reasons.push(`Одинаковая защита (${s1.def} Def)`);if(sp1!==sp2)reasons.push(sp1<sp2?`${sel.p1.display} стабильнее (разброс ${sp1} vs ${sp2})`:`${sel.p2.display} стабильнее (разброс ${sp2} vs ${sp1})`);else reasons.push(`Одинаковая стабильность (разброс ${sp1})`);return{s1,s2,h1,h2,d1,d2,t1,t2,cr1,cr2,quick1,quick2,critKill1,critKill2,w1,w2,winner,reasons,sp1,sp2};}
 
-        function calc(sel){
-            const c1=classesData.find(c=>c.Name===sel.p1.class)||classesData[0];
-            const c2=classesData.find(c=>c.Name===sel.p2.class)||classesData[0];
-            const r1=racesData.find(r=>r.Name===sel.p1.race)||racesData[0];
-            const r2=racesData.find(r=>r.Name===sel.p2.race)||racesData[0];
-            const s1={hp:c1.Hp+r1.BonusHp,atk:c1.Atk+r1.BonusAtk,def:c1.Def+r1.BonusDef,min:c1.Min+r1.BonusMin,max:c1.Max+r1.BonusMax};
-            const s2={hp:c2.Hp+r2.BonusHp,atk:c2.Atk+r2.BonusAtk,def:c2.Def+r2.BonusDef,min:c2.Min+r2.BonusMin,max:c2.Max+r2.BonusMax};
-            
-            const hc=(atk,def)=>{const n=CONFIG.baseAC+def-atk;if(n<=1)return CONFIG.hitChanceMax;if(n>=20)return CONFIG.hitChanceMin;return (21-n)/20;};
-            const h1=hc(s1.atk,s2.def), h2=hc(s2.atk,s1.def);
-            const a1=(s1.min+s1.max)/2, a2=(s2.min+s2.max)/2;
-            const dr1=1-s2.def*CONFIG.defReduction, dr2=1-s1.def*CONFIG.defReduction;
-            const cc=0.05;
-            const d1=h1*a1*dr1*(1-cc)+cc*a1*CONFIG.critMultiplier*dr1;
-            const d2=h2*a2*dr2*(1-cc)+cc*a2*CONFIG.critMultiplier*dr2;
-            const t1=d1>0?s2.hp/d1:999, t2=d2>0?s1.hp/d2:999;
-            const cr1=Math.ceil(s1.max*CONFIG.critMultiplier*dr1), cr2=Math.ceil(s2.max*CONFIG.critMultiplier*dr2);
-            const quick1=Math.ceil(s2.hp/cr1), quick2=Math.ceil(s1.hp/cr2);
-            const critKill1=cr1>=s2.hp, critKill2=cr2>=s1.hp;
-            const total=d1+d2;
-            const w1=total>0?(d1/total)*100:50, w2=total>0?(d2/total)*100:50;
-            const winner=Math.abs(w1-w2)<0.01?null:(w1>w2?sel.p1:sel.p2);
-            const sp1=s1.max-s1.min, sp2=s2.max-s2.min;
-            
-            const reasons=[];
-            if(Math.abs(d1-d2)>0.01) reasons.push(d1>d2?`${sel.p1.display} наносит больше урона (${d1.toFixed(2)} vs ${d2.toFixed(2)})`:`${sel.p2.display} наносит больше урона (${d2.toFixed(2)} vs ${d1.toFixed(2)})`);
-            else reasons.push(`Одинаковый урон (${d1.toFixed(2)})`);
-            if(Math.abs(h1-h2)>0.001) reasons.push(h1>h2?`${sel.p1.display} чаще попадает (${(h1*100).toFixed(0)}% vs ${(h2*100).toFixed(0)}%)`:`${sel.p2.display} чаще попадает (${(h2*100).toFixed(0)}% vs ${(h1*100).toFixed(0)}%)`);
-            else reasons.push(`Одинаковый шанс попадания (${(h1*100).toFixed(0)}%)`);
-            if(Math.abs(t1-t2)>0.1) reasons.push(t1<t2?`${sel.p1.display} убивает быстрее (${t1.toFixed(1)} ходов vs ${t2.toFixed(1)})`:`${sel.p2.display} убивает быстрее (${t2.toFixed(1)} ходов vs ${t1.toFixed(1)})`);
-            else reasons.push(`Одинаковая скорость убийства (${t1.toFixed(1)} ходов)`);
-            if(cr1!==cr2) reasons.push(cr1>cr2?`${sel.p1.display} наносит больше урона критом (${cr1} vs ${cr2})`:`${sel.p2.display} наносит больше урона критом (${cr2} vs ${cr1})`);
-            else reasons.push(`Одинаковый крит-урон (${cr1})`);
-            if(s1.hp!==s2.hp) reasons.push(s1.hp>s2.hp?`${sel.p1.display} живучее (${s1.hp} HP vs ${s2.hp})`:`${sel.p2.display} живучее (${s2.hp} HP vs ${s1.hp})`);
-            else reasons.push(`Одинаковая живучесть (${s1.hp} HP)`);
-            if(s1.def!==s2.def) reasons.push(s1.def>s2.def?`${sel.p1.display} лучше защищён (${s1.def} Def vs ${s2.def})`:`${sel.p2.display} лучше защищён (${s2.def} Def vs ${s1.def})`);
-            else reasons.push(`Одинаковая защита (${s1.def} Def)`);
-            if(sp1!==sp2) reasons.push(sp1<sp2?`${sel.p1.display} стабильнее (разброс ${sp1} vs ${sp2})`:`${sel.p2.display} стабильнее (разброс ${sp2} vs ${sp1})`);
-            else reasons.push(`Одинаковая стабильность (разброс ${sp1})`);
+        function updateCalc(){const sel=getSelected();if(!sel)return;const r=calc(sel);document.getElementById('calc-result').innerHTML=`<div class="table-container"><table><thead><tr><th></th><th>${sel.p1.emoji} ${sel.p1.display}</th><th>${sel.p2.emoji} ${sel.p2.display}</th></tr></thead><tbody><tr><td>Класс</td><td>${sel.p1.class}</td><td>${sel.p2.class}</td></tr><tr><td>Раса</td><td>${sel.p1.race}</td><td>${sel.p2.race}</td></tr><tr><td>ATK</td><td class="number">${r.s1.atk}</td><td class="number">${r.s2.atk}</td></tr><tr><td>MIN</td><td class="number">${r.s1.min}</td><td class="number">${r.s2.min}</td></tr><tr><td>MAX</td><td class="number">${r.s1.max}</td><td class="number">${r.s2.max}</td></tr><tr><td>DEF</td><td class="number">${r.s1.def}</td><td class="number">${r.s2.def}</td></tr><tr><td>HP</td><td class="number">${r.s1.hp}</td><td class="number">${r.s2.hp}</td></tr><tr><td colspan="3" style="background:var(--border-subtle);"></td></tr><tr><td>Шанс попадания</td><td class="number">${(r.h1*100).toFixed(1)}%</td><td class="number">${(r.h2*100).toFixed(1)}%</td></tr><tr><td>Урон за ход</td><td class="number">${r.d1.toFixed(2)}</td><td class="number">${r.d2.toFixed(2)}</td></tr><tr><td>Ходов до победы</td><td class="number">${r.t1.toFixed(1)}</td><td class="number">${r.t2.toFixed(1)}</td></tr><tr><td>Крит-урон</td><td class="number">${r.cr1}</td><td class="number">${r.cr2}</td></tr><tr><td>Быстрая победа</td><td class="number">${r.quick1}</td><td class="number">${r.quick2}</td></tr><tr><td>Крит убивает?</td><td class="number">${r.critKill1?'✅':'❌'}</td><td class="number">${r.critKill2?'✅':'❌'}</td></tr><tr><td style="color:var(--gold);font-weight:700;">Вероятность победы</td><td class="number" style="color:var(--gold);font-weight:700;">${r.w1.toFixed(2)}%</td><td class="number" style="color:var(--gold);font-weight:700;">${r.w2.toFixed(2)}%</td></tr><tr><td>Опаснее</td><td colspan="2" style="text-align:center;">${r.winner?`💥 ${r.winner.display}`:'⚖️ Равные силы'}</td></tr><tr><td>Стабильность</td><td class="number">${r.sp1}</td><td class="number">${r.sp2}</td></tr></tbody></table></div><div class="reasons-box"><h4>✅ Причина победы: ${r.winner?`${r.winner.display} сильнее`:'⚖️ Полное равновесие'}</h4><ul>${r.reasons.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;}
 
-            return {s1,s2,h1,h2,d1,d2,t1,t2,cr1,cr2,quick1,quick2,critKill1,critKill2,w1,w2,winner,reasons,sp1,sp2};
-        }
-
-        function updateCalc(){
-            const sel=getSelected(); if(!sel) return;
-            const r=calc(sel);
-            document.getElementById('calc-result').innerHTML = `
-                <div class="table-container"><table>
-                    <thead><tr><th></th><th>${sel.p1.emoji} ${sel.p1.display}</th><th>${sel.p2.emoji} ${sel.p2.display}</th></tr></thead>
-                    <tbody>
-                        <tr><td>Класс</td><td>${sel.p1.class}</td><td>${sel.p2.class}</td></tr>
-                        <tr><td>Раса</td><td>${sel.p1.race}</td><td>${sel.p2.race}</td></tr>
-                        <tr><td>ATK</td><td class="number">${r.s1.atk}</td><td class="number">${r.s2.atk}</td></tr>
-                        <tr><td>MIN</td><td class="number">${r.s1.min}</td><td class="number">${r.s2.min}</td></tr>
-                        <tr><td>MAX</td><td class="number">${r.s1.max}</td><td class="number">${r.s2.max}</td></tr>
-                        <tr><td>DEF</td><td class="number">${r.s1.def}</td><td class="number">${r.s2.def}</td></tr>
-                        <tr><td>HP</td><td class="number">${r.s1.hp}</td><td class="number">${r.s2.hp}</td></tr>
-                        <tr><td colspan="3" style="background:var(--border-subtle);"></td></tr>
-                        <tr><td>Шанс попадания</td><td class="number">${(r.h1*100).toFixed(1)}%</td><td class="number">${(r.h2*100).toFixed(1)}%</td></tr>
-                        <tr><td>Урон за ход</td><td class="number">${r.d1.toFixed(2)}</td><td class="number">${r.d2.toFixed(2)}</td></tr>
-                        <tr><td>Ходов до победы</td><td class="number">${r.t1.toFixed(1)}</td><td class="number">${r.t2.toFixed(1)}</td></tr>
-                        <tr><td>Крит-урон</td><td class="number">${r.cr1}</td><td class="number">${r.cr2}</td></tr>
-                        <tr><td>Быстрая победа</td><td class="number">${r.quick1}</td><td class="number">${r.quick2}</td></tr>
-                        <tr><td>Крит убивает?</td><td class="number">${r.critKill1 ? '✅' : '❌'}</td><td class="number">${r.critKill2 ? '✅' : '❌'}</td></tr>
-                        <tr><td style="color:var(--gold);font-weight:700;">Вероятность победы</td><td class="number" style="color:var(--gold);font-weight:700;">${r.w1.toFixed(2)}%</td><td class="number" style="color:var(--gold);font-weight:700;">${r.w2.toFixed(2)}%</td></tr>
-                        <tr><td>Опаснее</td><td colspan="2" style="text-align:center;">${r.winner ? `💥 ${r.winner.display}` : '⚖️ Равные силы'}</td></tr>
-                        <tr><td>Стабильность</td><td class="number">${r.sp1}</td><td class="number">${r.sp2}</td></tr>
-                    </tbody>
-                </table></div>
-                <div class="reasons-box">
-                    <h4>✅ Причина победы: ${r.winner ? `${r.winner.display} сильнее` : '⚖️ Полное равновесие'}</h4>
-                    <ul>${r.reasons.map(x=>`<li>${x}</li>`).join('')}</ul>
-                </div>`;
-        }
-
-        ['calc-p1','calc-p2','calc-class1','calc-race1','calc-class2','calc-race2'].forEach(id => {
-            const el = document.getElementById(id); if(el) el.addEventListener('change', updateCalc);
-        });
+        ['calc-p1','calc-p2','calc-class1','calc-race1','calc-class2','calc-race2'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('change',updateCalc);});
     </script>
-<script src="theme.js"></script>
 </body>
 </html>
