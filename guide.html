@@ -24,6 +24,7 @@
             --gold: #b8860b; --purple: #7b5ea7; --red: #c0392b; --green: #27ae60; --orange: #e67e22;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
         body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg-primary); background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%); color: var(--text-primary); min-height: 100vh; line-height: 1.6; transition: background 0.25s,color 0.25s; -webkit-font-smoothing: antialiased; }
         .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 48px; }
         .header { text-align: center; padding: 32px 0 20px; position: relative; }
@@ -39,6 +40,15 @@
         .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
         .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); transform: translateY(-1px); }
         .nav-link.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; font-weight: 700; box-shadow: var(--shadow-gold); }
+
+        /* ОГЛАВЛЕНИЕ */
+        .toc { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 24px; position: relative; overflow: hidden; animation: fadeSlideIn 0.4s ease; }
+        .toc::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
+        .toc-title { font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .toc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .toc-link { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius-sm); color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: var(--transition); border: 1px solid transparent; background: var(--bg-elevated); }
+        .toc-link:hover { color: var(--gold); border-color: var(--gold); background: var(--bg-secondary); transform: translateX(4px); }
+        .toc-emoji { font-size: 1.1rem; flex-shrink: 0; width: 24px; text-align: center; }
 
         .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; position: relative; overflow: hidden; animation: fadeSlideIn 0.4s ease; }
         .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
@@ -100,8 +110,11 @@
 
         .beer-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: linear-gradient(135deg,#f0b90b,#e0a800); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.4); z-index: 998; transition: all 0.3s ease; animation: float 3s ease-in-out infinite; }
         .beer-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(240,185,11,0.6); background: linear-gradient(135deg,#ffd700,#f0b90b); }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
+        /* ПОДСВЕТКА ПРИ ПЕРЕХОДЕ */
+        .card:target { animation: highlightPulse 1.5s ease; }
+        @keyframes highlightPulse { 0% { box-shadow: 0 0 0 rgba(240,185,11,0); } 30% { box-shadow: 0 0 30px rgba(240,185,11,0.4); } 100% { box-shadow: 0 0 0 rgba(240,185,11,0); } }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
         @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInRow { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
 
@@ -111,6 +124,8 @@
             .header-title { font-size: 1.8rem; }
             .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }
             .card { padding: 18px 14px; border-radius: var(--radius-md); }
+            .toc { padding: 16px 14px; }
+            .toc-grid { grid-template-columns: 1fr; }
             .nav-toggle { display: block; }
             .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
@@ -151,8 +166,29 @@
             </nav>
         </div>
 
+        <!-- ==================== ОГЛАВЛЕНИЕ ==================== -->
+        <div class="toc">
+            <div class="toc-title">📑 Содержание</div>
+            <div class="toc-grid">
+                <a href="#start" class="toc-link"><span class="toc-emoji">🚀</span> Как начать игру</a>
+                <a href="#commands" class="toc-link"><span class="toc-emoji">📋</span> Основные команды</a>
+                <a href="#battle" class="toc-link"><span class="toc-emoji">⚔️</span> Механика боя</a>
+                <a href="#logs" class="toc-link"><span class="toc-emoji">📝</span> Обозначения в логах</a>
+                <a href="#tournament" class="toc-link"><span class="toc-emoji">👑</span> Турнир</a>
+                <a href="#faction-war" class="toc-link"><span class="toc-emoji">⚔️</span> Фракционная битва</a>
+                <a href="#dungeon" class="toc-link"><span class="toc-emoji">🏔</span> Подземелье</a>
+                <a href="#dungeon-events" class="toc-link"><span class="toc-emoji">🎲</span> Случайные события</a>
+                <a href="#dungeon-passives" class="toc-link"><span class="toc-emoji">🌍</span> Фракционные пассивки</a>
+                <a href="#bosses" class="toc-link"><span class="toc-emoji">🐉</span> Боссы подземелья</a>
+                <a href="#mob-stats" class="toc-link"><span class="toc-emoji">👾</span> Статы мобов</a>
+                <a href="#crown" class="toc-link"><span class="toc-emoji">👑</span> Корона Раскола</a>
+                <a href="#shards" class="toc-link"><span class="toc-emoji">💎</span> Осколки и уровни</a>
+                <a href="#tips" class="toc-link"><span class="toc-emoji">💡</span> Полезные советы</a>
+            </div>
+        </div>
+
         <!-- ==================== БЛОК 1: НАЧАЛО ИГРЫ ==================== -->
-        <div class="card">
+        <div class="card" id="start">
             <h2 class="card-title">🚀 Как начать игру?</h2>
             <p>Твоё приключение начинается с создания героя. Бот предложит три случайные комбинации, из которых ты выберешь одну. Не переживай, если не знаешь, что выбрать — система подскажет.</p>
             <div class="step-list">
@@ -176,7 +212,7 @@
         </div>
 
         <!-- ==================== БЛОК 2: ОСНОВНЫЕ КОМАНДЫ ==================== -->
-        <div class="card">
+        <div class="card" id="commands">
             <h2 class="card-title">📋 Основные команды чата</h2>
             <p>Все взаимодействия с игрой происходят через чат. Вот список самых важных команд, которые пригодятся тебе в первые дни.</p>
             <div class="command-grid">
@@ -208,7 +244,7 @@
         </div>
 
         <!-- ==================== БЛОК 3: МЕХАНИКА БОЯ ==================== -->
-        <div class="card">
+        <div class="card" id="battle">
             <h2 class="card-title">⚔️ Как проходит бой? Полная механика</h2>
             <p>Бой — сердце игры. Понимание механик поможет тебе побеждать даже более сильных противников. Вот как всё устроено пошагово:</p>
             <ol>
@@ -229,7 +265,7 @@
         </div>
 
         <!-- ==================== БЛОК 4: ОБОЗНАЧЕНИЯ В ЛОГАХ ==================== -->
-        <div class="card">
+        <div class="card" id="logs">
             <h2 class="card-title">📝 Обозначения в логах боёв</h2>
             <p>Когда ты смотришь логи боёв, каждое действие помечается специальным символом. Вот что они значат:</p>
             <div class="table-container">
@@ -252,7 +288,7 @@
         </div>
 
         <!-- ==================== БЛОК 5: ТУРНИР ==================== -->
-        <div class="card">
+        <div class="card" id="tournament">
             <h2 class="card-title">👑 Турнир — путь к короне</h2>
             <p>Турнир проводится по <span class="highlight">олимпийской системе</span> с участием <span class="highlight">16 бойцов</span>. Проиграл один бой — вылетел. Победитель получает всё.</p>
             <p>Бойцы распределяются по парам случайным образом. Если к моменту старта набралось меньше 16 участников, оставшиеся места автоматически заполняются командой <span class="highlight">!добор</span> (доступна администраторам).</p>
@@ -290,7 +326,7 @@
         </div>
 
         <!-- ==================== БЛОК 6: ФРАКЦИОННАЯ БИТВА ==================== -->
-        <div class="card">
+        <div class="card" id="faction-war">
             <h2 class="card-title">⚔️ Фракционная битва и территории</h2>
             <p>Командное сражение <span class="highlight">5 на 5</span> между двумя великими фракциями: <span class="text-light">🌝 Орденом Света</span> и <span class="text-dark">🌚 Культом Тьмы</span>. Исход битвы определяет, кто будет контролировать ключевые территории мира.</p>
             
@@ -331,7 +367,7 @@
         </div>
 
         <!-- ==================== БЛОК 7: ПОДЗЕМЕЛЬЕ ==================== -->
-        <div class="card">
+        <div class="card" id="dungeon">
             <h2 class="card-title">🏔 Подземелье — полные правила</h2>
             <p>Подземелье — это PvE-режим, в котором твой герой в одиночку сражается с <span class="highlight">бесконечными волнами</span> мобов. Никаких команд, никаких ставок — только ты, твой клинок и тьма впереди. Проверь свою силу, поставь рекорд, впиши своё имя в историю.</p>
             
@@ -357,52 +393,52 @@
             <div class="rule-block">
                 <p><strong>7️⃣ Рекорд:</strong> После завершения забега рекорд героя обновляется, если он прошёл больше волн, чем в предыдущих попытках. Если количество волн одинаковое, сравнивается нанесённый урон — побеждает тот забег, где урона было больше.</p>
             </div>
-			<div class="rule-block">
-				<p><strong>8️⃣ Награда осколками:</strong> За каждые <span class="highlight">3 пройденные волны</span> герой получает <span class="highlight">+1💎 осколок</span>. Прошёл 9 волн — +3💎, прошёл 15 — +5💎.</p>
-			</div>
+            <div class="rule-block">
+                <p><strong>8️⃣ Награда осколками:</strong> За каждые <span class="highlight">3 пройденные волны</span> герой получает <span class="highlight">+1💎 осколок</span>. Прошёл 9 волн — +3💎, прошёл 15 — +5💎.</p>
+            </div>
         </div>
 
-		<!-- СЛУЧАЙНЫЕ СОБЫТИЯ -->
-		<div class="card">
-			<h2 class="card-title">🎲 Случайные события в подземелье</h2>
-			<p>После каждой волны с вероятностью <span class="highlight">35%</span> срабатывает одно из этих событий. Бонусы действуют до конца забега, но стат не может превысить значение «базовый + 5».</p>
-			<div class="table-container">
-				<table>
-					<thead>
-						<tr>
-							<th style="width:25%;">Событие</th>
-							<th style="text-align:center;width:10%;">Шанс</th>
-							<th style="width:65%;">Эффект</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>🧪 <strong>Зелье силы</strong></td>
-							<td style="text-align:center;">8.75%</td>
-							<td>Постоянный бонус <span class="highlight">+1 ATK</span> до конца забега (не выше базового +5)</td>
-						</tr>
-						<tr>
-							<td>🛡️ <strong>Благословение</strong></td>
-							<td style="text-align:center;">8.75%</td>
-							<td>Постоянный бонус <span class="highlight">+1 DEF</span> до конца забега (не выше базового +5)</td>
-						</tr>
-						<tr>
-							<td>✨ <strong>Чудо</strong></td>
-							<td style="text-align:center;">8.75%</td>
-							<td>Мгновенное исцеление: здоровье восстанавливается до значения <span class="highlight">базовый HP + уровень × 2</span></td>
-						</tr>
-						<tr>
-							<td>⚡ <strong>Прилив сил</strong></td>
-							<td style="text-align:center;">8.75%</td>
-							<td>Постоянный бонус <span class="highlight">+1 MIN и +1 MAX</span> до конца забега (не выше базового +5)</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
+        <!-- СЛУЧАЙНЫЕ СОБЫТИЯ -->
+        <div class="card" id="dungeon-events">
+            <h2 class="card-title">🎲 Случайные события в подземелье</h2>
+            <p>После каждой волны с вероятностью <span class="highlight">35%</span> срабатывает одно из этих событий. Бонусы действуют до конца забега, но стат не может превысить значение «базовый + 5».</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:25%;">Событие</th>
+                            <th style="text-align:center;width:10%;">Шанс</th>
+                            <th style="width:65%;">Эффект</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🧪 <strong>Зелье силы</strong></td>
+                            <td style="text-align:center;">8.75%</td>
+                            <td>Постоянный бонус <span class="highlight">+1 ATK</span> до конца забега (не выше базового +5)</td>
+                        </tr>
+                        <tr>
+                            <td>🛡️ <strong>Благословение</strong></td>
+                            <td style="text-align:center;">8.75%</td>
+                            <td>Постоянный бонус <span class="highlight">+1 DEF</span> до конца забега (не выше базового +5)</td>
+                        </tr>
+                        <tr>
+                            <td>✨ <strong>Чудо</strong></td>
+                            <td style="text-align:center;">8.75%</td>
+                            <td>Мгновенное исцеление: здоровье восстанавливается до значения <span class="highlight">базовый HP + уровень × 2</span></td>
+                        </tr>
+                        <tr>
+                            <td>⚡ <strong>Прилив сил</strong></td>
+                            <td style="text-align:center;">8.75%</td>
+                            <td>Постоянный бонус <span class="highlight">+1 MIN и +1 MAX</span> до конца забега (не выше базового +5)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <!-- ФРАКЦИОННЫЕ ПАССИВКИ -->
-        <div class="card">
+        <div class="card" id="dungeon-passives">
             <h2 class="card-title">🌍 Фракционные пассивки</h2>
             <p>При входе в подземелье каждый герой получает <strong>одну случайную пассивную способность</strong>, зависящую от его фракции. Выпавшую пассивку изменить нельзя до конца забега.</p>
             
@@ -442,45 +478,45 @@
                 </div>
             </div>
 
-			<h3>🌚 Пассивки Культа Тьмы</h3>
-			<div class="passive-grid">
-				<div class="passive-item">
-					<strong>💀 Вампиризм</strong>
-					Ты высасываешь жизнь из врагов: +4 HP к восстановлению после каждой волны.
-				</div>
-				<div class="passive-item">
-					<strong>🕳️ Теневой шаг</strong>
-					20% шанс раствориться во тьме и пропустить волну без боя. Волна засчитывается.
-				</div>
-				<div class="passive-item">
-					<strong>🩸 Кровавая жатва</strong>
-					Бонус к каждой атаке: (потерянное HP за текущую волну) ÷ 4. Чем больнее бьют — тем злее ответка.
-				</div>
-				<div class="passive-item">
-					<strong>👻 Призрачный щит</strong>
-					25% шанс стать бесплотным и полностью избежать вражеского удара.
-				</div>
-				<div class="passive-item">
-					<strong>🖤 Проклятие</strong>
-					Аура тьмы ослабляет всех мобов: −1 ATK каждому врагу на всех волнах.
-				</div>
-				<div class="passive-item">
-					<strong>🔮 Отражение</strong>
-					15% шанс: ты получаешь полный урон, но 50% этого урона возвращается врагу.
-				</div>
-				<div class="passive-item">
-					<strong>🗡️ Казнь</strong>
-					Если у моба осталось меньше 25% HP, твой удар добивает его мгновенно, независимо от броска урона.
-				</div>
-				<div class="passive-item">
-					<strong>🌑 Тёмная сила</strong>
-					Тьма закаляет клинок: +1 MIN и +1 MAX на весь забег.
-				</div>
-			</div>
+            <h3>🌚 Пассивки Культа Тьмы</h3>
+            <div class="passive-grid">
+                <div class="passive-item">
+                    <strong>💀 Вампиризм</strong>
+                    Ты высасываешь жизнь из врагов: +4 HP к восстановлению после каждой волны.
+                </div>
+                <div class="passive-item">
+                    <strong>🕳️ Теневой шаг</strong>
+                    20% шанс раствориться во тьме и пропустить волну без боя. Волна засчитывается.
+                </div>
+                <div class="passive-item">
+                    <strong>🩸 Кровавая жатва</strong>
+                    Бонус к каждой атаке: (потерянное HP за текущую волну) ÷ 4. Чем больнее бьют — тем злее ответка.
+                </div>
+                <div class="passive-item">
+                    <strong>👻 Призрачный щит</strong>
+                    25% шанс стать бесплотным и полностью избежать вражеского удара.
+                </div>
+                <div class="passive-item">
+                    <strong>🖤 Проклятие</strong>
+                    Аура тьмы ослабляет всех мобов: −1 ATK каждому врагу на всех волнах.
+                </div>
+                <div class="passive-item">
+                    <strong>🔮 Отражение</strong>
+                    15% шанс: ты получаешь полный урон, но 50% этого урона возвращается врагу.
+                </div>
+                <div class="passive-item">
+                    <strong>🗡️ Казнь</strong>
+                    Если у моба осталось меньше 25% HP, твой удар добивает его мгновенно, независимо от броска урона.
+                </div>
+                <div class="passive-item">
+                    <strong>🌑 Тёмная сила</strong>
+                    Тьма закаляет клинок: +1 MIN и +1 MAX на весь забег.
+                </div>
+            </div>
         </div>
 
         <!-- БОССЫ -->
-        <div class="card">
+        <div class="card" id="bosses">
             <h2 class="card-title">🐉 Боссы подземелья</h2>
             <p>Каждая <span class="highlight">5-я волна</span> (5, 10, 15, 20, 25...) — это битва с боссом. Боссы значительно превосходят обычных мобов по всем параметрам:</p>
             <div class="rule-block">
@@ -492,7 +528,7 @@
         </div>
 
         <!-- СТАТЫ МОБОВ -->
-        <div class="card">
+        <div class="card" id="mob-stats">
             <h2 class="card-title">👾 Характеристики мобов по волнам</h2>
             <p>С каждой волной враги становятся сильнее. Вот их точные параметры для первых 15 волн (включая боссов):</p>
             <div class="table-container">
@@ -537,7 +573,7 @@
         </div>
 
         <!-- КОРОНА РАСКОЛА -->
-        <div class="card">
+        <div class="card" id="crown">
             <h2 class="card-title">👑 Корона Раскола</h2>
             <p>Корона Раскола — это главный символ превосходства фракции в этом сезоне. Она присуждается на основе <strong>общего количества трофеев</strong>, собранных всеми героями фракции в подземелье.</p>
             <div class="rule-block">
@@ -548,7 +584,7 @@
         </div>
 
         <!-- ==================== БЛОК 8: ОСКОЛКИ И УРОВНИ ==================== -->
-        <div class="card">
+        <div class="card" id="shards">
             <h2 class="card-title">💎 Осколки и уровни — система прогресса</h2>
             <p>Осколки (💎) — это основная валюта прогресса твоего героя. Они начисляются за участие в любых активностях и не сгорают даже после удаления персонажа командой <span class="highlight">!харакири</span>.</p>
             
@@ -579,6 +615,20 @@
                 <li>Максимального уровня <strong>не существует</strong> — герой может расти бесконечно.</li>
             </ul>
         </div>
+
+        <!-- ==================== БЛОК 9: СОВЕТЫ ==================== -->
+        <div class="card" id="tips">
+            <h2 class="card-title">💡 Полезные советы новичку</h2>
+            <ol>
+                <li><span class="highlight">Начни с дуэлей.</span> Обычные бои (!бой) — самый безопасный способ накопить первые осколки и понять механику.</li>
+                <li><span class="highlight">Не бойся проигрывать.</span> Даже за поражение дают осколки, так что каждый бой приближает тебя к новому уровню.</li>
+                <li><span class="highlight">Записывайся в турниры.</span> Даже если вылетишь в первом раунде, ты получишь +2💎 за турнирный бой — это в два раза больше, чем за обычное поражение.</li>
+                <li><span class="highlight">Ходи в подземелье.</span> Это отличный способ заработать осколки и помочь своей фракции. Даже 5-10 волн — уже вклад в общую копилку трофеев.</li>
+                <li><span class="highlight">Следи за фракционными битвами.</span> Победа над вражеской фракцией удваивает награду — не упускай возможность.</li>
+                <li><span class="highlight">Используй !харакири с умом.</span> Если тебе не нравится твой текущий класс или раса, ты можешь пересоздать героя, сохранив все заработанные осколки и уровни.</li>
+            </ol>
+        </div>
+    </div>
 
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
