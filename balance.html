@@ -17,12 +17,11 @@
             --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
             --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
         }
-		[data-theme="light"] {
-			--bg-primary: #f7f2eb; --bg-secondary: #efe8dc; --bg-elevated: #fbf8f3; --bg-card: #fefcf8;
-			--text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #6b7280;
-			--border-subtle: rgba(0,0,0,0.08); --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
-			--gold: #b8860b; --purple: #7b5ea7; --red: #c0392b; --green: #27ae60;
-		}
+        [data-theme="light"] {
+            --bg-primary: #f7f2eb; --bg-secondary: #efe8dc; --bg-elevated: #fbf8f3; --bg-card: #fefcf8;
+            --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #6b7280;
+            --border-subtle: rgba(0,0,0,0.08); --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg-primary); background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%); color: var(--text-primary); min-height: 100vh; line-height: 1.6; transition: background 0.25s,color 0.25s; -webkit-font-smoothing: antialiased; }
         .container { max-width: 1100px; margin: 0 auto; padding: 20px 24px 48px; }
@@ -51,12 +50,12 @@
         th.asc::after { content: '↑'; opacity: 1; color: var(--gold); }
         th.desc::after { content: '↓'; opacity: 1; color: var(--gold); }
         td { padding: 7px 10px; text-align: center; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
-        tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
-        tr:nth-child(1) { animation-delay: 0.02s; } tr:nth-child(2) { animation-delay: 0.04s; } tr:nth-child(3) { animation-delay: 0.06s; }
-        tr:nth-child(4) { animation-delay: 0.08s; } tr:nth-child(5) { animation-delay: 0.10s; } tr:nth-child(6) { animation-delay: 0.12s; }
-        tr:nth-child(7) { animation-delay: 0.14s; } tr:nth-child(8) { animation-delay: 0.16s; } tr:nth-child(9) { animation-delay: 0.18s; }
-        tr:nth-child(10) { animation-delay: 0.20s; } tr:nth-child(11) { animation-delay: 0.22s; } tr:nth-child(12) { animation-delay: 0.24s; }
-        tr:nth-child(13) { animation-delay: 0.26s; } tr:nth-child(14) { animation-delay: 0.28s; } tr:nth-child(15) { animation-delay: 0.30s; }
+        tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
+        tbody tr:nth-child(1) { animation-delay: 0.02s; } tbody tr:nth-child(2) { animation-delay: 0.04s; } tbody tr:nth-child(3) { animation-delay: 0.06s; }
+        tbody tr:nth-child(4) { animation-delay: 0.08s; } tbody tr:nth-child(5) { animation-delay: 0.10s; } tbody tr:nth-child(6) { animation-delay: 0.12s; }
+        tbody tr:nth-child(7) { animation-delay: 0.14s; } tbody tr:nth-child(8) { animation-delay: 0.16s; } tbody tr:nth-child(9) { animation-delay: 0.18s; }
+        tbody tr:nth-child(10) { animation-delay: 0.20s; } tbody tr:nth-child(11) { animation-delay: 0.22s; } tbody tr:nth-child(12) { animation-delay: 0.24s; }
+        tbody tr:nth-child(13) { animation-delay: 0.26s; } tbody tr:nth-child(14) { animation-delay: 0.28s; } tbody tr:nth-child(15) { animation-delay: 0.30s; }
         tr:hover td { background: rgba(255,255,255,0.02); }
         td:first-child { font-weight: 600; color: var(--gold); }
         .number { text-align: right; font-variant-numeric: tabular-nums; }
@@ -72,6 +71,12 @@
 
         @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInRow { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ffd700; }
+        * { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
