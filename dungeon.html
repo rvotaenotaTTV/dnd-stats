@@ -6,7 +6,7 @@
     <title>Подземелье</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
     :root {
         --bg-primary: #0a0e17; --bg-secondary: #111827; --bg-elevated: #1a2332; --bg-card: #152028;
@@ -17,12 +17,12 @@
         --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
         --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
     }
-	[data-theme="light"] {
-		--bg-primary: #f7f2eb; --bg-secondary: #efe8dc; --bg-elevated: #fbf8f3; --bg-card: #fefcf8;
-		--text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #6b7280;
-		--border-subtle: rgba(0,0,0,0.08); --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
-		--gold: #b8860b; --purple: #7b5ea7; --red: #c0392b; --green: #27ae60;
-	}
+    [data-theme="light"] {
+        --bg-primary: #f7f2eb; --bg-secondary: #efe8dc; --bg-elevated: #fbf8f3; --bg-card: #fefcf8;
+        --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #6b7280;
+        --border-subtle: rgba(0,0,0,0.08); --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+        --gold: #b8860b; --purple: #7b5ea7; --red: #c0392b; --green: #27ae60;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg-primary); background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%); color: var(--text-primary); min-height: 100vh; line-height: 1.6; transition: background 0.25s,color 0.25s; -webkit-font-smoothing: antialiased; }
     .container { max-width: 1100px; margin: 0 auto; padding: 20px 24px 48px; }
@@ -39,16 +39,9 @@
     .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
     .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); transform: translateY(-1px); }
     .nav-link.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; font-weight: 700; box-shadow: var(--shadow-gold); }
-    .tabs { display: flex; gap: 8px; margin-bottom: 28px; padding: 6px; background: var(--bg-secondary); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); }
-    .tab-btn { flex: 1; padding: 12px 20px; border: none; background: transparent; color: var(--text-secondary); border-radius: var(--radius-md); cursor: pointer; font-size: 0.9rem; font-weight: 600; font-family: inherit; transition: var(--transition); }
-    .tab-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
-    .tab-btn.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeSlideIn 0.3s ease; }
     .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; position: relative; overflow: hidden; animation: fadeSlideIn 0.4s ease; }
     .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
     .card-title { font-size: 1.15rem; font-weight: 700; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .card-subtitle { font-size: 0.95rem; font-weight: 600; color: var(--gold); margin: 16px 0 10px; }
     .crown-section { text-align: center; padding: 10px 0; animation: cardGlow 3s ease-in-out infinite; }
     .crown-icon { font-size: 3.5rem; animation: float 3s ease-in-out infinite; display: block; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
@@ -64,9 +57,9 @@
     .podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
     .podium-card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 20px 14px; text-align: center; border: 1px solid var(--border-subtle); transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 6px; animation: fadeSlideIn 0.4s ease; }
     .podium-card:hover { transform: translateY(-4px); }
-    .podium-card.gold { border-color: rgba(255,215,0,1); box-shadow: 0 0 25px rgba(255,215,0,0.2), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(255,215,0,0.15) 0%, rgba(255,180,0,0.05) 30%, var(--bg-elevated) 100%); animation: pulseGold 2s ease-in-out infinite; }
-    .podium-card.silver { border-color: rgba(192,192,192,1); box-shadow: 0 0 20px rgba(192,192,192,0.15), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(192,192,192,0.12) 0%, rgba(160,160,160,0.04) 30%, var(--bg-elevated) 100%); }
-    .podium-card.bronze { border-color: rgba(205,127,50,1); box-shadow: 0 0 20px rgba(205,127,50,0.15), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(205,127,50,0.12) 0%, rgba(180,100,30,0.04) 30%, var(--bg-elevated) 100%); }
+    .podium-card.gold { border-color: rgba(255,215,0,0.6); box-shadow: 0 0 25px rgba(255,215,0,0.2), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(255,215,0,0.15) 0%, rgba(255,180,0,0.05) 30%, var(--bg-elevated) 100%); animation: pulseGold 2s ease-in-out infinite; }
+    .podium-card.silver { border-color: rgba(192,192,192,0.6); box-shadow: 0 0 20px rgba(192,192,192,0.15), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(192,192,192,0.12) 0%, rgba(160,160,160,0.04) 30%, var(--bg-elevated) 100%); }
+    .podium-card.bronze { border-color: rgba(205,127,50,0.6); box-shadow: 0 0 20px rgba(205,127,50,0.15), 0 4px 12px rgba(0,0,0,0.3); background: linear-gradient(180deg, rgba(205,127,50,0.12) 0%, rgba(180,100,30,0.04) 30%, var(--bg-elevated) 100%); }
     .podium-medal { font-size: 2.4rem; }
     .podium-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
     .podium-emoji { font-size: 1.2rem; margin-right: 4px; vertical-align: middle; }
@@ -94,13 +87,6 @@
     .sortable-header::after { content: '⇅'; position: absolute; right: 5px; opacity: 0.4; font-size: 10px; }
     .sortable-header.asc::after { content: '↑'; opacity: 1; color: var(--gold); }
     .sortable-header.desc::after { content: '↓'; opacity: 1; color: var(--gold); }
-    .rule-block { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; border-left: 3px solid var(--gold); }
-    .rule-block p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.7; }
-    .rule-block code { background: var(--bg-primary); padding: 2px 8px; border-radius: 4px; color: var(--gold); font-size: 0.9rem; font-weight: 600; border: 1px solid var(--border-subtle); }
-    .highlight-text { color: var(--gold); font-weight: 600; }
-    .passive-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
-    .passive-item { background: var(--bg-elevated); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-secondary); border-left: 3px solid var(--border-subtle); }
-    .passive-item strong { color: var(--text-primary); }
     .status-message { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
     .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
     @keyframes spin { to{transform:rotate(360deg)} }
@@ -114,7 +100,7 @@
     @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeInRow { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
     @keyframes cardGlow { 0%, 100% { box-shadow: 0 0 0 rgba(255,215,0,0); } 50% { box-shadow: 0 0 20px rgba(255,215,0,0.15); } }
-    @keyframes pulseGold { 0%, 100% { border-color: rgba(255,215,0,0.2); } 50% { border-color: rgba(255,215,0,0.5); } }
+    @keyframes pulseGold { 0%, 100% { border-color: rgba(255,215,0,0.4); } 50% { border-color: rgba(255,215,0,0.8); } }
 
     @media (max-width: 768px) {
         .container { padding: 12px 14px 32px; }
@@ -124,13 +110,13 @@
         .nav-bar.show { display: flex; }
         .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
         .header-title { font-size: 1.8rem; }
+        .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }
         .podium { display: flex; flex-direction: column; gap: 10px; }
         .podium-card { padding: 14px 12px; gap: 4px; }
         .podium-medal { font-size: 2rem; }
         .podium-name { font-size: 0.9rem; }
         .podium-record { font-size: 1.4rem; }
         .podium-detail { font-size: 0.7rem; padding-top: 6px; border-top: 1px solid var(--border-subtle); width: 100%; }
-        .tab-btn { padding: 10px 14px; font-size: 0.8rem; }
         .records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
         table { font-size: 0.72rem; }
         th, td { padding: 6px 6px; }
@@ -140,139 +126,272 @@
 </head>
 <body>
     <div class="container">
-        <header class="header"><h1 class="header-title">ПОДЗЕМЕЛЬЕ</h1><p class="header-subtitle">Бесконечные волны · Проверь свою силу</p><button class="theme-toggle" onclick="toggleTheme()">🌓</button></header>
+        <header class="header">
+            <h1 class="header-title">ПОДЗЕМЕЛЬЕ</h1>
+            <p class="header-subtitle">Бесконечные волны · Проверь свою силу</p>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </header>
+
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
-                <a href="index.html" class="nav-link">📊 Статистика</a><a href="logs.html" class="nav-link">📜 Логи</a>
-                <a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="balance.html" class="nav-link">⚖️ Баланс</a>
-                <a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a>
-                <a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-                <a href="lore.html" class="nav-link">📜 Лор</a><a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="index.html" class="nav-link">📊 Статистика</a>
+                <a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+                <a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a>
+                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
                 <a href="dungeon.html" class="nav-link active">🏔 Подземелье</a>
-                <a href="league.html" class="nav-link">🏟 Лига</a><a href="player.html" class="nav-link">👤 Профиль</a>
+                <a href="league.html" class="nav-link">🏟 Лига</a>
+                <a href="player.html" class="nav-link">👤 Профиль</a>
             </nav>
         </div>
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('stats', this)">📊 Статистика</button>
-            <button class="tab-btn" onclick="switchTab('rules', this)">📜 Правила</button>
+
+        <div class="status-message" id="stats-loading">
+            <div class="spinner"></div>
+            <p>Загрузка статистики...</p>
         </div>
-        <div id="tab-stats" class="tab-content active"><div class="status-message" id="stats-loading"><div class="spinner"></div><p>Загрузка...</p></div></div>
-		<div id="tab-rules" class="tab-content">
-			<div class="card">
-				<h3 class="card-title">🏔 Что такое Подземелье?</h3>
-				<div class="rule-block">
-					<p>Подземелье — это бесконечные волны мобов, которые становятся сильнее с каждым шагом. Твой герой сражается в одиночку, волна за волной, пока не падёт.</p>
-					<p style="margin-top:10px;">Никаких команд, никаких ставок. Просто ты, твой клинок и тьма впереди. <span class="highlight-text">Проверь свою силу. Поставь рекорд. Впиши имя в историю.</span></p>
-				</div>
-			</div>
-
-			<div class="card">
-				<h3 class="card-title">⚔️ Как играть?</h3>
-				<div class="rule-block"><p><strong>1️⃣ Команда:</strong> Напиши в чат <code>!данж</code> — твой герой спускается в подземелье. Оригинал остаётся на арене и может драться параллельно.</p></div>
-				<div class="rule-block"><p><strong>2️⃣ Волны:</strong> Бесконечные волны мобов. Каждая 5-я — босс. Мобы становятся сильнее с каждой волной.</p></div>
-				<div class="rule-block"><p><strong>3️⃣ Восстановление:</strong> После победы: <span class="highlight-text">8 + волна × 2</span> HP. Пассивки могут добавить ещё.</p></div>
-				<div class="rule-block"><p><strong>4️⃣ События:</strong> 35% шанс после волны — +1 ATK, +1 DEF, полное исцеление, или +1 MIN/MAX.</p></div>
-				<div class="rule-block"><p><strong>5️⃣ Финал:</strong> Проиграл — данж закончен. <span class="highlight-text">Рекорд</span> обновляется если пройдено больше волн или столько же но с большим уроном.</p></div>
-			</div>
-
-			<div class="card">
-				<h3 class="card-title">🎲 Случайные события (35% после волны)</h3>
-				<div class="table-container">
-					<table>
-						<thead><tr><th>Событие</th><th style="text-align:center;width:80px;">Шанс</th><th>Эффект</th></tr></thead>
-						<tbody>
-							<tr><td>🧪 Зелье силы</td><td style="text-align:center;">8.75%</td><td>+1 ATK (не выше базового +5)</td></tr>
-							<tr><td>🛡️ Благословение</td><td style="text-align:center;">8.75%</td><td>+1 DEF (не выше базового +5)</td></tr>
-							<tr><td>✨ Чудо</td><td style="text-align:center;">8.75%</td><td>HP до базового + уровень × 2</td></tr>
-							<tr><td>⚡ Прилив сил</td><td style="text-align:center;">8.75%</td><td>+1 MIN и +1 MAX (не выше базового +5)</td></tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-
-			<div class="card">
-				<h3 class="card-title">🌍 Фракционные пассивки (случайная при входе)</h3>
-				<h4 class="card-subtitle">🌝 Орден Света</h4>
-				<div class="passive-list">
-					<div class="passive-item">🔥 <strong>Очищение</strong> — священный огонь залечивает раны: +4 HP к восстановлению после каждой волны</div>
-					<div class="passive-item">⚡ <strong>Благословение</strong> — 20% шанс что высшие силы пропустят тебя дальше без боя (волна засчитывается)</div>
-					<div class="passive-item">💫 <strong>Сияние</strong> — свет ослепляет боссов: -20% к их здоровью</div>
-					<div class="passive-item">🛡️ <strong>Святая защита</strong> — первый удар в каждой волне уходит в пустоту (0 урона)</div>
-					<div class="passive-item">✨ <strong>Вдохновение</strong> — вера закаляет клинок: +1 MIN и +1 MAX на весь забег</div>
-					<div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс: ты получаешь полный урон, но 50% возвращается врагу</div>
-					<div class="passive-item">⚔️ <strong>Святая ярость</strong> — +2 к урону против боссов (свет режет глубже)</div>
-					<div class="passive-item">💖 <strong>Искупление</strong> — один раз за данж: получив урон меньше 5 HP, восстанавливаешь HP до базового + уровень × 2</div>
-				</div>
-				<h4 class="card-subtitle" style="color: var(--purple);">🌚 Культ Тьмы</h4>
-				<div class="passive-list">
-					<div class="passive-item">💀 <strong>Вампиризм</strong> — ты высасываешь жизнь из врагов: +4 HP к восстановлению после каждой волны</div>
-					<div class="passive-item">🕳️ <strong>Теневой шаг</strong> — 20% шанс раствориться во тьме и пропустить волну</div>
-					<div class="passive-item">🩸 <strong>Кровавая жатва</strong> — каждая атака получает бонус: (потерянное HP за волну) ÷ 4. Чем больнее — тем злее</div>
-					<div class="passive-item">👻 <strong>Призрачный щит</strong> — 25% шанс стать бесплотным и полностью избежать вражеского удара</div>
-					<div class="passive-item">🖤 <strong>Проклятие</strong> — аура тьмы ослабляет мобов: -1 ATK всем врагам</div>
-					<div class="passive-item">🔮 <strong>Отражение</strong> — 15% шанс: ты получаешь полный урон, но 50% возвращается врагу</div>
-					<div class="passive-item">🗡️ <strong>Казнь</strong> — если у моба меньше 25% HP, твой удар добивает его мгновенно</div>
-					<div class="passive-item">🎁 <strong>Тёмный дар</strong> — после убийства босса случайный подарок тьмы: +2 ATK, +1 MAX или +10 HP</div>
-				</div>
-			</div>
-
-			<div class="card">
-				<h3 class="card-title">🐉 Боссы (каждые 5 волн)</h3>
-				<div class="rule-block">
-					<p>На волнах <span class="highlight-text">5, 10, 15, 20...</span> из тьмы выходит босс:</p>
-					<p style="margin-top:10px;">🩸 HP ×1.5 — жирнее обычного моба<br>⚔️ ATK +2 — бьёт больнее<br>🛡️ DEF +1 — держит удар</p>
-					<p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">Убил босса — получил <span class="highlight-text">1-3 трофея</span> в копилку фракции. Трофеи решают кому достанется Корона.</p>
-				</div>
-			</div>
-
-			<div class="card">
-				<h3 class="card-title">🏰 Корона Раскола</h3>
-				<div class="rule-block">
-					<p>Каждый босс роняет <span class="highlight-text">от 1 до 3 трофеев</span>. Трофеи копятся в казне фракции.</p>
-					<p style="margin-top:10px;">У кого больше — тот носит Корону. При равенстве — шаткое равновесие ⚖️.</p>
-					<p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">Не забывай: трофеи приносит только <strong>убийство босса</strong>. Прошёл 4 волны и слился — ничего не получил.</p>
-				</div>
-			</div>
-
-			<div class="card">
-				<h3 class="card-title">👾 Статы мобов</h3>
-				<div class="table-container">
-					<table>
-						<thead><tr><th>Волна</th><th>HP</th><th>ATK</th><th>DEF</th><th>Урон</th></tr></thead>
-						<tbody>
-							<tr><td>1</td><td>23</td><td>1</td><td>0</td><td>1–4</td></tr>
-							<tr><td>2</td><td>31</td><td>1</td><td>0</td><td>2–5</td></tr>
-							<tr><td>3</td><td>39</td><td>2</td><td>0</td><td>2–6</td></tr>
-							<tr><td>4</td><td>47</td><td>2</td><td>1</td><td>3–7</td></tr>
-							<tr><td>5🐉</td><td>82</td><td>3</td><td>1</td><td>3–8</td></tr>
-							<tr><td>6</td><td>68</td><td>3</td><td>1</td><td>4–9</td></tr>
-							<tr><td>7</td><td>81</td><td>4</td><td>1</td><td>4–10</td></tr>
-							<tr><td>8</td><td>94</td><td>4</td><td>2</td><td>5–11</td></tr>
-							<tr><td>9</td><td>107</td><td>5</td><td>2</td><td>5–12</td></tr>
-							<tr><td>10🐉</td><td>175</td><td>7</td><td>3</td><td>6–14</td></tr>
-							<tr><td>12</td><td>146</td><td>6</td><td>3</td><td>7–16</td></tr>
-							<tr><td>15🐉</td><td>307</td><td>9</td><td>4</td><td>8–21</td></tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
     </div>
+
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
+
     <script>
-        function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
-        (function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
-        function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
-        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
-        function switchTab(tabName,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+tabName).classList.add('active');}
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('eternis-theme', next);
+        }
+        (function() {
+            const saved = localStorage.getItem('eternis-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
 
-        const STATS_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        function toggleNav() {
+            const nav = document.getElementById('pageNav');
+            const btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show');
+            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        }
+        document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
+            document.getElementById('pageNav').classList.remove('show');
+            document.querySelector('.nav-toggle').textContent = '☰ Меню';
+        }));
 
-        async function loadStats(){const container=document.getElementById('stats-loading');try{const r=await fetch(STATS_URL+'?v='+Date.now());if(!r.ok)throw new Error('HTTP '+r.status);const data=await r.json();const dungeon=data.dungeon||{};const playersArr=Object.values(dungeon.players||{});const territory=data.territory||{light:0,dark:0};if(!playersArr.length){container.innerHTML=`<div class="card"><h3 class="card-title">🏔 Подземелье пустует</h3><p style="text-align:center;padding:20px;color:var(--text-secondary);">Напиши <code style="background:var(--bg-elevated);padding:3px 10px;border-radius:4px;color:var(--gold);">!данж</code> в чат и стань первым!</p></div>`;return;}renderStats(playersArr,territory);}catch(e){container.innerHTML=`<div class="card"><h3 class="card-title">🏔 Подземелье</h3><p style="text-align:center;color:var(--red);">❌ Ошибка загрузки</p></div>`;}}
+        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 
-        function renderStats(players,territory){const sorted=[...players].sort((a,b)=>b.record-a.record||b.damage-a.damage);const total=territory.light+territory.dark;const lp=total>0?(territory.light*100/total):50;const owner=territory.light>territory.dark?'🌝 Орден Света':territory.dark>territory.light?'🌚 Культ Тьмы':'⚖️ Ничья';let html='';html+=`<div class="card"><div class="crown-section"><span class="crown-icon">👑</span><div class="crown-title">КОРОНА РАСКОЛА</div><div class="crown-owner">Владелец: ${owner}</div><div class="score-row"><span class="score-light">🌝 Свет: ${territory.light}</span><span class="score-dark">${territory.dark} :Тьма 🌚</span></div><div class="progress-bar"><div class="progress-fill progress-light" style="width:${lp}%">${lp>10?Math.round(lp)+'%':''}</div><div class="progress-fill progress-dark" style="width:${100-lp}%">${(100-lp)>10?Math.round(100-lp)+'%':''}</div></div><div class="total-trophies">Всего трофеев: ${total}</div></div></div>`;const top3=sorted.slice(0,3);html+='<div class="podium">';top3.forEach((p,i)=>{html+=`<div class="podium-card ${['gold','silver','bronze'][i]}"><div class="podium-medal">${['🥇','🥈','🥉'][i]}</div><div class="podium-name"><span class="podium-emoji">${p.emoji||'⚔️'}</span>${p.display||'???'}</div><div class="podium-record">${p.record}</div><div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses} · 🛡${p.blocks}</div></div>`;});html+='</div>';const br=sorted[0];const bd=[...players].sort((a,b)=>b.damage-a.damage)[0];const bc=[...players].sort((a,b)=>b.crits-a.crits)[0];const bb=[...players].sort((a,b)=>b.blocks-a.blocks)[0];const bt=[...players].sort((a,b)=>(b.trophies||0)-(a.trophies||0))[0];const bw=[...players].sort((a,b)=>(b.totalWaves||0)-(a.totalWaves||0))[0];html+='<div class="records-grid">';const recs=[['🏆',br.record,'Рекорд волн',br],['💥',bd.damage,'Рекорд урона',bd],['🎯',bc.crits,'Рекорд критов',bc],['🛡',bb.blocks,'Рекорд блоков',bb],['👑',bt?.trophies||0,'Рекорд трофеев',bt],['🌊',bw?.totalWaves||0,'Всего волн',bw]];recs.forEach(([icon,val,label,p])=>{html+=`<div class="record-item"><div class="record-icon">${icon}</div><div class="record-value">${val}</div><div class="record-label">${label}</div><div class="record-player">${p?.emoji||''} ${p?.display||'???'}</div></div>`;});html+='</div>';html+=`<div class="card"><h3 class="card-title">📊 Топ-10 лидеров</h3><div class="table-container"><table id="leaderboard-table"><thead><tr><th class="sortable-header" data-sort="record">Волн</th><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="damage">Урон</th><th class="sortable-header" data-sort="crits">💥</th><th class="sortable-header" data-sort="misses">❌</th><th class="sortable-header" data-sort="blocks">🛡</th></tr></thead><tbody id="leaderboard-tbody">`;sorted.slice(0,10).forEach(p=>{html+=`<tr data-record="${p.record}" data-display="${p.display||''}" data-class="${p.name||''}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}"><td class="highlight">${p.record}</td><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td></tr>`;});html+='</tbody></table></div></div>';const byTrophies=[...players].sort((a,b)=>(b.trophies||0)-(a.trophies||0)||(b.bosses||0)-(a.bosses||0));html+=`<div class="card"><h3 class="card-title">👥 Все участники</h3><div class="table-container"><table id="all-table"><thead><tr><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="waves">🌊 Заходы</th><th class="sortable-header" data-sort="trophies">👑 Трофеи</th><th class="sortable-header" data-sort="bosses">🐉 Боссы</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="all-tbody">`;byTrophies.forEach(p=>{const fi=p.faction==='Орден Света'?'🌝 Свет':(p.faction==='Культ Тьмы'?'🌚 Тьма':'');html+=`<tr data-display="${p.display||''}" data-class="${p.name||''}" data-waves="${p.totalWaves||0}" data-trophies="${p.trophies||0}" data-bosses="${p.bosses||0}" data-faction="${fi}"><td>${p.emoji||''} ${p.display||'???'}</td><td>${p.name||''}</td><td>${p.totalWaves||0}</td><td class="highlight">${p.trophies||0}</td><td>${p.bosses||0}</td><td>${fi}</td></tr>`;});html+='</tbody></table></div></div>';document.getElementById('stats-loading').innerHTML=html;initSortable('leaderboard-table','record','desc');initSortable('all-table','trophies','desc');}
-        function initSortable(tableId,defaultSort,defaultDir){setTimeout(()=>{const table=document.getElementById(tableId);if(!table)return;const tbody=table.querySelector('tbody');const headers=table.querySelectorAll('.sortable-header');let currentSort=defaultSort,currentDir=defaultDir;function sortTable(sortBy){const rows=Array.from(tbody.querySelectorAll('tr'));rows.sort((a,b)=>{let va=a.dataset[sortBy],vb=b.dataset[sortBy];if(sortBy==='display'||sortBy==='faction'||sortBy==='class')return currentDir==='asc'?va.localeCompare(vb):vb.localeCompare(va);va=parseFloat(va)||0;vb=parseFloat(vb)||0;return currentDir==='asc'?va-vb:vb-va;});rows.forEach(row=>tbody.appendChild(row));}headers.forEach(th=>{th.addEventListener('click',()=>{const sortBy=th.dataset.sort;headers.forEach(h=>h.classList.remove('asc','desc'));if(currentSort===sortBy)currentDir=currentDir==='asc'?'desc':'asc';else{currentSort=sortBy;currentDir='desc';}th.classList.add(currentDir);sortTable(currentSort);});});const dh=table.querySelector(`[data-sort="${defaultSort}"]`);if(dh){dh.classList.add(defaultDir);sortTable(defaultSort);}},100);}
+        async function loadStats() {
+            const container = document.getElementById('stats-loading');
+            try {
+                const r = await fetch(STATS_URL + '?v=' + Date.now());
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                const data = await r.json();
+                const dungeon = data.dungeon || {};
+                const playersArr = Object.values(dungeon.players || {});
+                const territory = data.territory || { light: 0, dark: 0 };
+
+                if (!playersArr.length) {
+                    container.innerHTML = `<div class="card" style="text-align:center;padding:40px 20px;">
+                        <h3 class="card-title" style="justify-content:center;">🏔 Подземелье пустует</h3>
+                        <p style="color:var(--text-secondary);margin-top:8px;">Напиши <code style="background:var(--bg-elevated);padding:3px 10px;border-radius:4px;color:var(--gold);">!данж</code> в чат и стань первым!</p>
+                    </div>`;
+                    return;
+                }
+                renderStats(playersArr, territory);
+            } catch (e) {
+                container.innerHTML = `<div class="card" style="text-align:center;padding:40px 20px;">
+                    <h3 class="card-title" style="justify-content:center;">🏔 Подземелье</h3>
+                    <p style="color:var(--red);">❌ Ошибка загрузки данных</p>
+                </div>`;
+            }
+        }
+
+        function renderStats(players, territory) {
+            const sorted = [...players].sort((a, b) => b.record - a.record || b.damage - a.damage);
+            const total = territory.light + territory.dark;
+            const lp = total > 0 ? (territory.light * 100 / total) : 50;
+            const owner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
+
+            let html = '';
+
+            // Корона Раскола
+            html += `<div class="card">
+                <div class="crown-section">
+                    <span class="crown-icon">👑</span>
+                    <div class="crown-title">КОРОНА РАСКОЛА</div>
+                    <div class="crown-owner">Владелец: ${owner}</div>
+                    <div class="score-row">
+                        <span class="score-light">🌝 Свет: ${territory.light}</span>
+                        <span class="score-dark">${territory.dark} :Тьма 🌚</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-light" style="width:${lp}%">${lp > 10 ? Math.round(lp) + '%' : ''}</div>
+                        <div class="progress-fill progress-dark" style="width:${100 - lp}%">${(100 - lp) > 10 ? Math.round(100 - lp) + '%' : ''}</div>
+                    </div>
+                    <div class="total-trophies">Всего трофеев: ${total}</div>
+                </div>
+            </div>`;
+
+            // Пьедестал топ-3
+            const top3 = sorted.slice(0, 3);
+            const medals = ['🥇', '🥈', '🥉'];
+            const styles = ['gold', 'silver', 'bronze'];
+            html += '<div class="podium">';
+            top3.forEach((p, i) => {
+                html += `<div class="podium-card ${styles[i]}">
+                    <div class="podium-medal">${medals[i]}</div>
+                    <div class="podium-name"><span class="podium-emoji">${p.emoji || '⚔️'}</span>${p.display || '???'}</div>
+                    <div class="podium-record">${p.record}</div>
+                    <div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses} · 🛡${p.blocks}</div>
+                </div>`;
+            });
+            html += '</div>';
+
+            // Рекорды
+            const br = sorted[0];
+            const bd = [...players].sort((a, b) => b.damage - a.damage)[0];
+            const bc = [...players].sort((a, b) => b.crits - a.crits)[0];
+            const bb = [...players].sort((a, b) => b.blocks - a.blocks)[0];
+            const bt = [...players].sort((a, b) => (b.trophies || 0) - (a.trophies || 0))[0];
+            const bw = [...players].sort((a, b) => (b.totalWaves || 0) - (a.totalWaves || 0))[0];
+
+            const recs = [
+                ['🏆', br.record, 'Рекорд волн', br],
+                ['💥', bd.damage, 'Рекорд урона', bd],
+                ['🎯', bc.crits, 'Рекорд критов', bc],
+                ['🛡', bb.blocks, 'Рекорд блоков', bb],
+                ['👑', bt?.trophies || 0, 'Рекорд трофеев', bt],
+                ['🌊', bw?.totalWaves || 0, 'Всего волн', bw]
+            ];
+
+            html += '<div class="records-grid">';
+            recs.forEach(([icon, val, label, p]) => {
+                html += `<div class="record-item">
+                    <div class="record-icon">${icon}</div>
+                    <div class="record-value">${val}</div>
+                    <div class="record-label">${label}</div>
+                    <div class="record-player">${p?.emoji || ''} ${p?.display || '???'}</div>
+                </div>`;
+            });
+            html += '</div>';
+
+            // Топ-10 лидеров
+            html += `<div class="card">
+                <h3 class="card-title">📊 Топ-10 лидеров</h3>
+                <div class="table-container">
+                    <table id="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable-header" data-sort="record">Волн</th>
+                                <th class="sortable-header" data-sort="display">Имя</th>
+                                <th class="sortable-header" data-sort="class">Класс</th>
+                                <th class="sortable-header" data-sort="damage">Урон</th>
+                                <th class="sortable-header" data-sort="crits">💥</th>
+                                <th class="sortable-header" data-sort="misses">❌</th>
+                                <th class="sortable-header" data-sort="blocks">🛡</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-tbody">`;
+            sorted.slice(0, 10).forEach(p => {
+                html += `<tr data-record="${p.record}" data-display="${p.display || ''}" data-class="${p.name || ''}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}">
+                    <td class="highlight">${p.record}</td>
+                    <td>${p.emoji || ''} ${p.display || '???'}</td>
+                    <td>${p.name || ''}</td>
+                    <td>${p.damage}</td>
+                    <td>${p.crits}</td>
+                    <td>${p.misses}</td>
+                    <td>${p.blocks}</td>
+                </tr>`;
+            });
+            html += '</tbody></table></div></div>';
+
+            // Все участники
+            const byTrophies = [...players].sort((a, b) => (b.trophies || 0) - (a.trophies || 0) || (b.bosses || 0) - (a.bosses || 0));
+            html += `<div class="card">
+                <h3 class="card-title">👥 Все участники</h3>
+                <div class="table-container">
+                    <table id="all-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable-header" data-sort="display">Имя</th>
+                                <th class="sortable-header" data-sort="class">Класс</th>
+                                <th class="sortable-header" data-sort="waves">🌊 Заходы</th>
+                                <th class="sortable-header" data-sort="trophies">👑 Трофеи</th>
+                                <th class="sortable-header" data-sort="bosses">🐉 Боссы</th>
+                                <th class="sortable-header" data-sort="faction">Фракция</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-tbody">`;
+            byTrophies.forEach(p => {
+                const fi = p.faction === 'Орден Света' ? '🌝 Свет' : (p.faction === 'Культ Тьмы' ? '🌚 Тьма' : '');
+                html += `<tr data-display="${p.display || ''}" data-class="${p.name || ''}" data-waves="${p.totalWaves || 0}" data-trophies="${p.trophies || 0}" data-bosses="${p.bosses || 0}" data-faction="${fi}">
+                    <td>${p.emoji || ''} ${p.display || '???'}</td>
+                    <td>${p.name || ''}</td>
+                    <td>${p.totalWaves || 0}</td>
+                    <td class="highlight">${p.trophies || 0}</td>
+                    <td>${p.bosses || 0}</td>
+                    <td>${fi}</td>
+                </tr>`;
+            });
+            html += '</tbody></table></div></div>';
+
+            document.getElementById('stats-loading').innerHTML = html;
+            initSortable('leaderboard-table', 'record', 'desc');
+            initSortable('all-table', 'trophies', 'desc');
+        }
+
+        function initSortable(tableId, defaultSort, defaultDir) {
+            setTimeout(() => {
+                const table = document.getElementById(tableId);
+                if (!table) return;
+                const tbody = table.querySelector('tbody');
+                const headers = table.querySelectorAll('.sortable-header');
+                let currentSort = defaultSort;
+                let currentDir = defaultDir;
+
+                function sortTable(sortBy) {
+                    const rows = Array.from(tbody.querySelectorAll('tr'));
+                    rows.sort((a, b) => {
+                        let va = a.dataset[sortBy];
+                        let vb = b.dataset[sortBy];
+                        if (sortBy === 'display' || sortBy === 'faction' || sortBy === 'class') {
+                            return currentDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+                        }
+                        va = parseFloat(va) || 0;
+                        vb = parseFloat(vb) || 0;
+                        return currentDir === 'asc' ? va - vb : vb - va;
+                    });
+                    rows.forEach(row => tbody.appendChild(row));
+                }
+
+                headers.forEach(th => {
+                    th.addEventListener('click', () => {
+                        const sortBy = th.dataset.sort;
+                        headers.forEach(h => h.classList.remove('asc', 'desc'));
+                        if (currentSort === sortBy) {
+                            currentDir = currentDir === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            currentSort = sortBy;
+                            currentDir = 'desc';
+                        }
+                        th.classList.add(currentDir);
+                        sortTable(currentSort);
+                    });
+                });
+
+                const dh = table.querySelector(`[data-sort="${defaultSort}"]`);
+                if (dh) {
+                    dh.classList.add(defaultDir);
+                    sortTable(defaultSort);
+                }
+            }, 100);
+        }
+
         loadStats();
     </script>
 </body>
