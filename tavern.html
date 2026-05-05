@@ -251,8 +251,135 @@
         const ochko={deck:[],playerCards:[],dealerCards:[],gameActive:false,bet:10,suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],createDeck(){const d=[];for(const s of this.suits)for(const v of this.values)d.push({suit:s,value:v,rot:Math.random()*6-3});return d.sort(()=>Math.random()-0.5);},cardValue(c){if(c.value==='A')return 11;if(c.value==='J')return 2;if(c.value==='Q')return 3;if(c.value==='K')return 4;return parseInt(c.value);},calcScore(cards){let score=0,aces=0;for(const c of cards){score+=this.cardValue(c);if(c.value==='A')aces++;}if(aces===2&&cards.length===2)return 21;while(score>21&&aces>0){score-=10;aces--;}return score;},renderCard(c,back){if(back)return'<div class="card-el back"></div>';const red=c.suit==='♥'||c.suit==='♦';return`<div class="card-el ${red?'red':''}" style="--rot:${c.rot}deg"><span>${c.value}</span><span class="card-suit">${c.suit}</span></div>`;},render(){const d=document.getElementById('dealerCards'),p=document.getElementById('playerCards');d.innerHTML=this.gameActive?this.renderCard(this.dealerCards[0])+this.renderCard(null,true):this.dealerCards.map(c=>this.renderCard(c)).join('');p.innerHTML=this.playerCards.map(c=>this.renderCard(c)).join('');document.getElementById('dealerScore').textContent=this.gameActive?'?':this.calcScore(this.dealerCards);document.getElementById('playerScore').textContent=this.calcScore(this.playerCards);},startGame(){if(antiSpam()||balance<this.bet){if(balance<this.bet)setQuote('Недостаточно осколков!');return;}balance-=this.bet;updateBalance();this.deck=this.createDeck();this.playerCards=[this.deck.pop(),this.deck.pop()];this.dealerCards=[this.deck.pop(),this.deck.pop()];this.gameActive=true;document.getElementById('startBtn').disabled=true;document.getElementById('hitBtn').disabled=false;document.getElementById('standBtn').disabled=false;if(this.calcScore(this.playerCards)===21)this.stand();this.render();},hit(){if(antiSpam()||!this.gameActive)return;this.playerCards.push(this.deck.pop());this.render();if(this.calcScore(this.playerCards)>21)this.endGame();else if(this.calcScore(this.playerCards)===21)this.stand();},stand(){if(!this.gameActive)return;this.gameActive=false;document.getElementById('hitBtn').disabled=true;document.getElementById('standBtn').disabled=true;setQuote('🐼 ГуангГуанг думает...');setTimeout(()=>{while(this.calcScore(this.dealerCards)<17)this.dealerCards.push(this.deck.pop());this.render();this.resolve();},800);},resolve(){const p=this.calcScore(this.playerCards),d=this.calcScore(this.dealerCards);const hasOchko=this.playerCards.length===2&&this.playerCards[0].value==='A'&&this.playerCards[1].value==='A';let w;if(p>21)w=0;else if(d>21)w=this.bet*2;else if(p>d)w=this.bet*2;else if(p<d)w=0;else w=this.bet;if(hasOchko&&w>0){w=Math.floor(this.bet*2.5);setQuote('🎯 ОЧКО! Два туза! ГуангГуанг в шоке!');}else if(p===21&&this.playerCards.length===2&&w>0){w=Math.floor(this.bet*2.5);setQuote('🔥 Победа! Мой ученик!');}else if(w>this.bet)setQuote('🔥 Победа! Мой ученик!');else if(w===0){setQuote('😏 ЛООООХ!');shakeBalance();}else setQuote('🤝 Ничья.');if(w>0)flashWin();balance+=w;updateBalance();document.getElementById('startBtn').disabled=false;},endGame(){this.gameActive=false;document.getElementById('hitBtn').disabled=true;document.getElementById('standBtn').disabled=true;document.getElementById('startBtn').disabled=false;setQuote('💔 ПЕРЕБОР! ЛООООХ!');shakeBalance();this.render();}};
 
         // ==================== СВИНЬЯ ====================
-        const pigGame={deck:[],drawnCards:[],suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],active:false,bet:5,multiplier:1,history:JSON.parse(localStorage.getItem('pigHistory'))||[],createDeck(){const d=[];for(const s of this.suits)for(const v of this.values)d.push({suit:s,value:v,rot:Math.random()*6-3});return d.sort(()=>Math.random()-0.5);},addHistory(text,amount){const time=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});this.history.unshift({text,amount,time});if(this.history.length>8)this.history.pop();localStorage.setItem('pigHistory',JSON.stringify(this.history));this.renderHistory();},renderHistory(){const box=document.getElementById('historyBox');if(!box)return;if(!this.history.length){box.innerHTML='<div class="history-item" style="color:var(--text-muted)">История...</div>';return;}box.innerHTML=this.history.map(h=>`<div class="history-item">${h.time} — ${h.text} ${h.amount>0?'+':''}${h.amount} 💎</div>`).join('');},start(){if(antiSpam()||balance<this.bet){if(balance<this.bet)setQuote('Недостаточно осколков!');return;}balance-=this.bet;updateBalance();this.deck=this.createDeck();this.drawnCards=[];this.multiplier=1;this.active=true;document.getElementById('pigStartBtn').disabled=true;document.getElementById('pigDrawBtn').disabled=false;document.getElementById('pigStopBtn').disabled=false;document.getElementById('drawnCards').innerHTML='';document.getElementById('lastCardInfo').innerHTML='';document.getElementById('multiplier').textContent='x1';document.getElementById('nextMultiplier').textContent='x2';},draw(){if(antiSpam()||!this.active)return;const card=this.deck.pop();this.drawnCards.push(card);const suits=this.drawnCards.map(c=>c.suit);const dupSuit=suits.length!==new Set(suits).size;const randomFail=Math.random()<0.15;document.getElementById('drawnCards').innerHTML=this.drawnCards.map(c=>`<div class="pig-card ${c.suit==='♥'||c.suit==='♦'?'red':''}" style="--rot:${c.rot}deg">${c.value}<span class="pig-card-suit">${c.suit}</span></div>`).join('');if(dupSuit||randomFail){this.active=false;document.getElementById('pigStartBtn').disabled=false;document.getElementById('pigDrawBtn').disabled=true;document.getElementById('pigStopBtn').disabled=true;const reason=dupSuit?'Повтор масти':'Рандом';setQuote(`💔 ${reason}! -${this.bet} 💎`);shakeBalance();this.addHistory('Проигрыш',-this.bet);}else{this.multiplier++;document.getElementById('multiplier').textContent='x'+this.multiplier;document.getElementById('nextMultiplier').textContent='x'+(this.multiplier+1);setQuote(`Множитель x${this.multiplier}. Ещё?`);if(this.drawnCards.length===4)this.stop(true);}},stop(bonus=false){if(!this.active)return;this.active=false;document.getElementById('pigStartBtn').disabled=false;document.getElementById('pigDrawBtn').disabled=true;document.getElementById('pigStopBtn').disabled=true;let win=this.bet*this.multiplier;if(bonus)win=Math.floor(win*1.5);balance+=win;updateBalance();setQuote('🏆 +'+win+' 💎 Мой ученик!');flashWin();this.addHistory('Победа x'+this.multiplier,win-this.bet);}};
+		const pigGame = {
+			deck: [],
+			drawnCards: [],
+			suits: ['♥', '♦', '♠', '♣'],
+			values: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
+			active: false,
+			bet: 5,
+			multiplier: 1,
+			history: JSON.parse(localStorage.getItem('pigHistory')) || [],
 
+			createDeck() {
+				const d = [];
+				for (const s of this.suits)
+					for (const v of this.values)
+						d.push({ suit: s, value: v, rot: Math.random() * 6 - 3 });
+				return d.sort(() => Math.random() - 0.5);
+			},
+
+			addHistory(text, amount) {
+				const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+				this.history.unshift({ text, amount, time });
+				if (this.history.length > 8) this.history.pop();
+				localStorage.setItem('pigHistory', JSON.stringify(this.history));
+				this.renderHistory();
+			},
+
+			renderHistory() {
+				const box = document.getElementById('historyBox');
+				if (!box) return;
+				if (!this.history.length) {
+					box.innerHTML = '<div class="history-item" style="color:var(--text-muted)">История...</div>';
+					return;
+				}
+				box.innerHTML = this.history.map(h =>
+					`<div class="history-item">${h.time} — ${h.text} ${h.amount > 0 ? '+' : ''}${h.amount} 💎</div>`
+				).join('');
+			},
+
+			start() {
+				if (balance < this.bet) {
+					setQuote('Недостаточно осколков!');
+					return;
+				}
+				balance -= this.bet;
+				updateBalance();
+				this.deck = this.createDeck();
+				if (!this.deck || this.deck.length === 0) {
+					balance += this.bet;
+					updateBalance();
+					setQuote('🐷 Колода рассыпалась! Попробуй ещё раз.');
+					return;
+				}
+				this.drawnCards = [];
+				this.multiplier = 1;
+				this.active = true;
+				document.getElementById('pigStartBtn').disabled = true;
+				document.getElementById('pigDrawBtn').disabled = false;
+				document.getElementById('pigStopBtn').disabled = false;
+				document.getElementById('drawnCards').innerHTML = '';
+				document.getElementById('lastCardInfo').innerHTML = '';
+				document.getElementById('multiplier').textContent = 'x1';
+				document.getElementById('nextMultiplier').textContent = 'x2';
+				setQuote('🐷 Новая игра! Тяни карту!');
+			},
+
+			draw() {
+				if (!this.active) {
+					setQuote('🐷 Игра не начата. Жми "Новая"!');
+					return;
+				}
+				if (!this.deck || this.deck.length === 0) {
+					this.active = false;
+					document.getElementById('pigStartBtn').disabled = false;
+					document.getElementById('pigDrawBtn').disabled = true;
+					document.getElementById('pigStopBtn').disabled = true;
+					setQuote('🐷 Колода кончилась! Начни заново.');
+					return;
+				}
+				const card = this.deck.pop();
+				if (!card) {
+					this.active = false;
+					document.getElementById('pigStartBtn').disabled = false;
+					document.getElementById('pigDrawBtn').disabled = true;
+					document.getElementById('pigStopBtn').disabled = true;
+					setQuote('🐷 Пустая карта! Начни заново.');
+					return;
+				}
+				this.drawnCards.push(card);
+				const suits = this.drawnCards.map(c => c.suit);
+				const dupSuit = suits.length !== new Set(suits).size;
+				
+				document.getElementById('drawnCards').innerHTML = this.drawnCards.map(c =>
+					`<div class="pig-card ${c.suit === '♥' || c.suit === '♦' ? 'red' : ''}" style="--rot:${c.rot}deg">
+						${c.value}<span class="pig-card-suit">${c.suit}</span>
+					</div>`
+				).join('');
+
+				if (dupSuit) {
+					this.active = false;
+					document.getElementById('pigStartBtn').disabled = false;
+					document.getElementById('pigDrawBtn').disabled = true;
+					document.getElementById('pigStopBtn').disabled = true;
+					setQuote(`💔 Повтор масти! -${this.bet} 💎`);
+					shakeBalance();
+					this.addHistory('Проигрыш', -this.bet);
+				} else {
+					this.multiplier++;
+					document.getElementById('multiplier').textContent = 'x' + this.multiplier;
+					document.getElementById('nextMultiplier').textContent = 'x' + (this.multiplier + 1);
+					setQuote(`Множитель x${this.multiplier}. Ещё?`);
+					if (this.drawnCards.length === 4) this.stop(true);
+				}
+			},
+
+			stop(bonus = false) {
+				if (!this.active) return;
+				this.active = false;
+				document.getElementById('pigStartBtn').disabled = false;
+				document.getElementById('pigDrawBtn').disabled = true;
+				document.getElementById('pigStopBtn').disabled = true;
+				let win = this.bet * this.multiplier;
+				if (bonus) win = Math.floor(win * 1.5);
+				balance += win;
+				updateBalance();
+				setQuote('🏆 +' + win + ' 💎 Мой ученик!');
+				flashWin();
+				this.addHistory('Победа x' + this.multiplier, win - this.bet);
+			}
+		};
         // ==================== СУДОКУ ====================
         const SZ=9,BOX=3;let sGrid=[],sSol=[],sFixed=[],sSel=null,sActive=false;let sTimerInterval=null,sSeconds=0;
         function sudokuInit(){sSol=Array.from({length:SZ},()=>Array(SZ).fill(0));fillGrid(sSol);sGrid=sSol.map(r=>[...r]);const cells=[];for(let r=0;r<SZ;r++)for(let c=0;c<SZ;c++)cells.push([r,c]);cells.sort(()=>Math.random()-0.5);const toHide=31+Math.floor(Math.random()*11);for(let i=0;i<toHide;i++){const[r,c]=cells[i];sGrid[r][c]=0;}sFixed=sGrid.map(row=>row.map(cell=>cell!==0));sSeconds=0;clearInterval(sTimerInterval);updateTimerDisplay();sTimerInterval=setInterval(()=>{sSeconds++;updateTimerDisplay();},1000);sActive=true;sSel=null;document.getElementById('sudokuCheckBtn').disabled=true;document.getElementById('sudokuMessage').innerHTML='';sudokuRender();}

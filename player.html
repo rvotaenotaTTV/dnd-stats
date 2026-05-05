@@ -58,7 +58,6 @@
 
         .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 48px; }
 
-        /* Header */
         .header { text-align: center; padding: 32px 0 20px; position: relative; }
         .header-title {
             font-size: clamp(2rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -0.02em;
@@ -83,7 +82,6 @@
         }
         .theme-toggle:hover { background: var(--bg-secondary); color: var(--gold); border-color: var(--gold); }
 
-        /* Навигация */
         .nav-wrapper { margin-bottom: 24px; position: sticky; top: 12px; z-index: 100; }
         .nav-toggle {
             display: none; width: 100%; padding: 13px 18px; background: var(--bg-secondary);
@@ -111,7 +109,6 @@
             color: #000; font-weight: 700; box-shadow: var(--shadow-gold);
         }
 
-        /* Поиск */
         .search-row { display: flex; gap: 10px; margin-bottom: 24px; align-items: center; flex-wrap: wrap; }
         .search-input {
             padding: 10px 16px; background: var(--bg-elevated);
@@ -153,7 +150,6 @@
         .dropdown-item:last-child { border-bottom: none; }
         .dropdown-item:hover { background: var(--bg-elevated); color: var(--gold); }
 
-        /* Профиль */
         .profile-hero {
             background: var(--bg-card); border-radius: var(--radius-lg);
             padding: 28px; border: 1px solid var(--border-subtle);
@@ -174,7 +170,6 @@
         .badge-light { background: rgba(255,215,0,0.15); color: var(--gold); }
         .badge-dark { background: rgba(163,113,247,0.2); color: var(--purple); }
 
-        /* Статистика */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
         .stat-card {
             background: var(--bg-elevated); border-radius: 14px;
@@ -191,7 +186,6 @@
         .rank-pos { font-size: 1.6rem; font-weight: 800; }
         .rank-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-top: 2px; }
 
-        /* Сравнение */
         .compare-bar {
             display: flex; gap: 10px; align-items: center; margin-bottom: 20px;
             padding: 14px; background: var(--bg-elevated); border-radius: 14px;
@@ -216,7 +210,6 @@
 
         .status-message { text-align: center; padding: 48px 20px; color: var(--text-secondary); }
 
-        /* Кнопка пива */
         .beer-btn {
             position: fixed;
             bottom: 24px;
@@ -264,6 +257,50 @@
                 height: 48px;
                 font-size: 1.3rem;
             }
+        }		
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInRow {
+            from { opacity: 0; transform: translateX(-8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes cardGlow {
+            0%, 100% { box-shadow: 0 0 0 rgba(255,215,0,0); }
+            50% { box-shadow: 0 0 20px rgba(255,215,0,0.15); }
+        }
+        @keyframes pulseGold {
+            0%, 100% { border-color: rgba(255,215,0,0.2); }
+            50% { border-color: rgba(255,215,0,0.5); }
+        }
+
+        .tab-content.active {
+            animation: fadeSlideIn 0.3s ease;
+        }
+        .card {
+            animation: fadeSlideIn 0.4s ease;
+        }
+        table tbody tr {
+            animation: fadeInRow 0.3s ease forwards;
+            opacity: 0;
+        }
+        table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+        table tbody tr:nth-child(2) { animation-delay: 0.04s; }
+        table tbody tr:nth-child(3) { animation-delay: 0.06s; }
+        table tbody tr:nth-child(4) { animation-delay: 0.08s; }
+        table tbody tr:nth-child(5) { animation-delay: 0.10s; }
+        table tbody tr:nth-child(6) { animation-delay: 0.12s; }
+        table tbody tr:nth-child(7) { animation-delay: 0.14s; }
+        table tbody tr:nth-child(8) { animation-delay: 0.16s; }
+        table tbody tr:nth-child(9) { animation-delay: 0.18s; }
+        table tbody tr:nth-child(10) { animation-delay: 0.20s; }
+
+        .champion-block, .crown-section {
+            animation: cardGlow 3s ease-in-out infinite;
+        }
+        .podium-card.gold, .season-frame.live {
+            animation: pulseGold 2s ease-in-out infinite;
         }
     </style>
 </head>
@@ -306,242 +343,242 @@
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
 <script>
-function toggleTheme() {
-    const html = document.documentElement;
-    const current = html.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('eternis-theme', next);
-}
-(function() {
-    const saved = localStorage.getItem('eternis-theme');
-    if (saved) document.documentElement.setAttribute('data-theme', saved);
-})();
+		function toggleTheme() {
+			const html = document.documentElement;
+			const current = html.getAttribute('data-theme');
+			const next = current === 'dark' ? 'light' : 'dark';
+			html.setAttribute('data-theme', next);
+			localStorage.setItem('eternis-theme', next);
+		}
+		(function() {
+			const saved = localStorage.getItem('eternis-theme');
+			if (saved) document.documentElement.setAttribute('data-theme', saved);
+		})();
 
-function toggleNav() {
-    const nav = document.getElementById('pageNav');
-    const btn = document.querySelector('.nav-toggle');
-    nav.classList.toggle('show');
-    btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-}
+		function toggleNav() {
+			const nav = document.getElementById('pageNav');
+			const btn = document.querySelector('.nav-toggle');
+			nav.classList.toggle('show');
+			btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+		}
 
-let allPlayers = [], dungeonPlayers = {}, seasonTop = [];
+		let allPlayers = [], dungeonPlayers = {}, seasonTop = [];
 
-async function loadData() {
-    const urls = [
-        'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
-        'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'
-    ];
-    for (const url of urls) {
-        try {
-            const r = await fetch(url);
-            if (r.ok) {
-                const d = await r.json();
-                allPlayers = (d.players || []).filter(p => p.name && p.name !== 'Unknown');
-                if (d.dungeon?.players) dungeonPlayers = d.dungeon.players;
-                seasonTop = (d.players || []).filter(p => p.skill > 0).sort((a, b) => b.skill - a.skill).slice(0, 10);
-                return;
-            }
-        } catch {}
-    }
-}
+		async function loadData() {
+			const urls = [
+				'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
+				'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'
+			];
+			for (const url of urls) {
+				try {
+					const r = await fetch(url);
+					if (r.ok) {
+						const d = await r.json();
+						allPlayers = (d.players || []).filter(p => p.name && p.name !== 'Unknown');
+						if (d.dungeon?.players) dungeonPlayers = d.dungeon.players;
+						seasonTop = (d.players || []).filter(p => p.skill > 0).sort((a, b) => b.skill - a.skill).slice(0, 10);
+						return;
+					}
+				} catch {}
+			}
+		}
 
-function findPlayer(name) {
-    if (!name) return null;
-    const lower = name.toLowerCase().trim();
-    return allPlayers.find(p => p.display.toLowerCase() === lower || p.display.toLowerCase().includes(lower));
-}
+		function findPlayer(name) {
+			if (!name) return null;
+			const lower = name.toLowerCase().trim();
+			return allPlayers.find(p => p.display.toLowerCase() === lower || p.display.toLowerCase().includes(lower));
+		}
 
-function filterPlayerList() {
-    const input = document.getElementById('playerSearch'), dropdown = document.getElementById('playerDropdown');
-    const val = input.value.toLowerCase().trim();
-    if (!val) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; return; }
-    const filtered = allPlayers.filter(x => x.display.toLowerCase().includes(val)).slice(0, 8);
-    if (!filtered.length) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; return; }
-    dropdown.innerHTML = filtered.map(x => `<div class="dropdown-item" onclick="selectPlayer('${x.display}')">${x.emoji||'⚔️'} ${x.display}</div>`).join('');
-    dropdown.style.display = 'block';
-}
+		function filterPlayerList() {
+			const input = document.getElementById('playerSearch'), dropdown = document.getElementById('playerDropdown');
+			const val = input.value.toLowerCase().trim();
+			if (!val) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; return; }
+			const filtered = allPlayers.filter(x => x.display.toLowerCase().includes(val)).slice(0, 8);
+			if (!filtered.length) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; return; }
+			dropdown.innerHTML = filtered.map(x => `<div class="dropdown-item" onclick="selectPlayer('${x.display}')">${x.emoji||'⚔️'} ${x.display}</div>`).join('');
+			dropdown.style.display = 'block';
+		}
 
-function selectPlayer(name) {
-    document.getElementById('playerSearch').value = name;
-    document.getElementById('playerDropdown').style.display = 'none';
-    loadProfile();
-}
+		function selectPlayer(name) {
+			document.getElementById('playerSearch').value = name;
+			document.getElementById('playerDropdown').style.display = 'none';
+			loadProfile();
+		}
 
-function filterCompareList() {
-    const input = document.getElementById('compareInput'), dropdown = document.getElementById('compareDropdown');
-    const val = input.value.toLowerCase().trim();
-    if (!val) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; return; }
-    const filtered = allPlayers.filter(x => x.display.toLowerCase().includes(val)).slice(0, 8);
-    if (!filtered.length) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; return; }
-    dropdown.innerHTML = filtered.map(x => `<div class="dropdown-item" onclick="selectCompare('${x.display}')">${x.emoji||'⚔️'} ${x.display}</div>`).join('');
-    dropdown.style.display = 'block';
-}
+		function filterCompareList() {
+			const input = document.getElementById('compareInput'), dropdown = document.getElementById('compareDropdown');
+			const val = input.value.toLowerCase().trim();
+			if (!val) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; return; }
+			const filtered = allPlayers.filter(x => x.display.toLowerCase().includes(val)).slice(0, 8);
+			if (!filtered.length) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; return; }
+			dropdown.innerHTML = filtered.map(x => `<div class="dropdown-item" onclick="selectCompare('${x.display}')">${x.emoji||'⚔️'} ${x.display}</div>`).join('');
+			dropdown.style.display = 'block';
+		}
 
-function selectCompare(name) {
-    document.getElementById('compareInput').value = name;
-    document.getElementById('compareDropdown').style.display = 'none';
-    compareWith(name);
-}
+		function selectCompare(name) {
+			document.getElementById('compareInput').value = name;
+			document.getElementById('compareDropdown').style.display = 'none';
+			compareWith(name);
+		}
 
-function renderProfile(p) {
-    if (!p) return '<div class="status-message">Игрок не найден</div>';
-    const total = (p.wins || 0) + (p.losses || 0);
-    const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
-    const faction = p.faction || '';
-    const fi = faction === 'Орден Света' ? '🌝' : '🌚';
-    const dungeon = dungeonPlayers[p.display];
-    const seasonRank = seasonTop.findIndex(s => s.display === p.display) + 1;
+		function renderProfile(p) {
+			if (!p) return '<div class="status-message">Игрок не найден</div>';
+			const total = (p.wins || 0) + (p.losses || 0);
+			const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
+			const faction = p.faction || '';
+			const fi = faction === 'Орден Света' ? '🌝' : '🌚';
+			const dungeon = dungeonPlayers[p.display];
+			const seasonRank = seasonTop.findIndex(s => s.display === p.display) + 1;
 
-    const sortedByWins = [...allPlayers].sort((a, b) => (b.wins || 0) - (a.wins || 0));
-    const rankWins = sortedByWins.findIndex(x => x.display === p.display) + 1;
-    const sortedByWR = [...allPlayers].filter(x => ((x.wins || 0) + (x.losses || 0)) >= 20).sort((a, b) => {
-        const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0));
-        const wb = (b.wins || 0) / ((b.wins || 0) + (b.losses || 0));
-        return wb - wa;
-    });
-    const rankWR = sortedByWR.findIndex(x => x.display === p.display) + 1;
-    const sortedByShards = [...allPlayers].sort((a, b) => (b.shards || 0) - (a.shards || 0));
-    const rankShards = sortedByShards.findIndex(x => x.display === p.display) + 1;
-    const dungeonRecords = allPlayers.map(x => ({ display: x.display, record: dungeonPlayers[x.display]?.record || 0 }));
-    dungeonRecords.sort((a, b) => b.record - a.record);
-    const rankDungeon = dungeonRecords.findIndex(x => x.display === p.display && x.record > 0) + 1;
-    const sortedByFaction = [...allPlayers].sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0));
-    const rankFaction = sortedByFaction.findIndex(x => x.display === p.display) + 1;
+			const sortedByWins = [...allPlayers].sort((a, b) => (b.wins || 0) - (a.wins || 0));
+			const rankWins = sortedByWins.findIndex(x => x.display === p.display) + 1;
+			const sortedByWR = [...allPlayers].filter(x => ((x.wins || 0) + (x.losses || 0)) >= 20).sort((a, b) => {
+				const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0));
+				const wb = (b.wins || 0) / ((b.wins || 0) + (b.losses || 0));
+				return wb - wa;
+			});
+			const rankWR = sortedByWR.findIndex(x => x.display === p.display) + 1;
+			const sortedByShards = [...allPlayers].sort((a, b) => (b.shards || 0) - (a.shards || 0));
+			const rankShards = sortedByShards.findIndex(x => x.display === p.display) + 1;
+			const dungeonRecords = allPlayers.map(x => ({ display: x.display, record: dungeonPlayers[x.display]?.record || 0 }));
+			dungeonRecords.sort((a, b) => b.record - a.record);
+			const rankDungeon = dungeonRecords.findIndex(x => x.display === p.display && x.record > 0) + 1;
+			const sortedByFaction = [...allPlayers].sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0));
+			const rankFaction = sortedByFaction.findIndex(x => x.display === p.display) + 1;
 
-    const color = n => n <= 3 ? 'var(--gold)' : n <= 10 ? 'var(--green)' : 'var(--text-muted)';
+			const color = n => n <= 3 ? 'var(--gold)' : n <= 10 ? 'var(--green)' : 'var(--text-muted)';
 
-    let html = `<div class="profile-hero">
-        <div class="profile-emoji">${p.emoji || '⚔️'}</div>
-        <div class="profile-name">${p.display}${p.champion ? ' 👑' : ''}</div>
-        <div class="profile-class">${p.name || ''} · SKILL ${p.skill || 0}</div>
-        <div class="profile-badges">`;
-    if (p.champion) html += '<span class="badge badge-gold">👑 Хранитель</span>';
-    html += `<span class="badge ${faction === 'Орден Света' ? 'badge-light' : 'badge-dark'}">${fi} ${faction}</span>`;
-    if (seasonRank > 0) html += `<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
-    html += `</div>
-        <button class="btn btn-secondary" onclick="copyProfileLink()" style="margin-top:8px;">🔗 Копировать ссылку</button>
-    </div>`;
+			let html = `<div class="profile-hero">
+				<div class="profile-emoji">${p.emoji || '⚔️'}</div>
+				<div class="profile-name">${p.display}${p.champion ? ' 👑' : ''}</div>
+				<div class="profile-class">${p.name || ''} · SKILL ${p.skill || 0}</div>
+				<div class="profile-badges">`;
+			if (p.champion) html += '<span class="badge badge-gold">👑 Хранитель</span>';
+			html += `<span class="badge ${faction === 'Орден Света' ? 'badge-light' : 'badge-dark'}">${fi} ${faction}</span>`;
+			if (seasonRank > 0) html += `<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
+			html += `</div>
+				<button class="btn btn-secondary" onclick="copyProfileLink()" style="margin-top:8px;">🔗 Копировать ссылку</button>
+			</div>`;
 
-    html += '<div class="stats-grid">';
-    html += `<div class="stat-card"><div class="stat-num">${p.wins || 0}</div><div class="stat-label">⚔️ Победы</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${p.losses || 0}</div><div class="stat-label">💀 Поражения</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${wr}%</div><div class="stat-label">📊 Винрейт</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">⚡ Всего боёв</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${p.best || 0}</div><div class="stat-label">🔥 Лучший стрик</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${p.worst || 0}</div><div class="stat-label">💔 Худший стрик</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${p.shards || 0}</div><div class="stat-label">💎 Осколки</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${p.level || 0}</div><div class="stat-label">📈 Уровень</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${p.tournamentWins || 0}</div><div class="stat-label">👑 Турниры</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${p.factionWins || 0}</div><div class="stat-label">🌍 Фракция</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.record : '-'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
-    html += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.trophies : '-'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
-    html += '</div>';
+			html += '<div class="stats-grid">';
+			html += `<div class="stat-card"><div class="stat-num">${p.wins || 0}</div><div class="stat-label">⚔️ Победы</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.losses || 0}</div><div class="stat-label">💀 Поражения</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${wr}%</div><div class="stat-label">📊 Винрейт</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">⚡ Всего боёв</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.best || 0}</div><div class="stat-label">🔥 Лучший стрик</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.worst || 0}</div><div class="stat-label">💔 Худший стрик</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.shards || 0}</div><div class="stat-label">💎 Осколки</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.level || 0}</div><div class="stat-label">📈 Уровень</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.tournamentWins || 0}</div><div class="stat-label">👑 Турниры</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.factionWins || 0}</div><div class="stat-label">🌍 Фракция</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.record : '-'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.trophies : '-'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
+			html += '</div>';
 
-    html += '<div class="ranks-grid">';
-    html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankWins)};">#${rankWins}</div><div class="rank-label">По победам</div></div>`;
-    html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankWR)};">#${rankWR || '-'}</div><div class="rank-label">По винрейту</div></div>`;
-    html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankShards)};">#${rankShards}</div><div class="rank-label">По осколкам</div></div>`;
-    html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankDungeon)};">#${rankDungeon || '-'}</div><div class="rank-label">По данжу</div></div>`;
-    html += `<div class="rank-card"><div class="rank-pos" style="color:${color(seasonRank)};">#${seasonRank || '-'}</div><div class="rank-label">Сезонный топ</div></div>`;
-    html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankFaction)};">#${rankFaction || '-'}</div><div class="rank-label">По фракции</div></div>`;
-    html += '</div>';
+			html += '<div class="ranks-grid">';
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankWins)};">#${rankWins}</div><div class="rank-label">По победам</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankWR)};">#${rankWR || '-'}</div><div class="rank-label">По винрейту</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankShards)};">#${rankShards}</div><div class="rank-label">По осколкам</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankDungeon)};">#${rankDungeon || '-'}</div><div class="rank-label">По данжу</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(seasonRank)};">#${seasonRank || '-'}</div><div class="rank-label">Сезонный топ</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankFaction)};">#${rankFaction || '-'}</div><div class="rank-label">По фракции</div></div>`;
+			html += '</div>';
 
-    html += `<div class="compare-bar">
-        <span>⚔️ Сравнить с:</span>
-        <div class="dropdown-wrap" style="flex:1;min-width:150px;">
-            <input type="text" class="search-input" id="compareInput" placeholder="Введи ник..." oninput="filterCompareList()">
-            <div class="dropdown-list" id="compareDropdown"></div>
-        </div>
-    </div>
-    <div id="compareResult"></div>`;
-    return html;
-}
+			html += `<div class="compare-bar">
+				<span>⚔️ Сравнить с:</span>
+				<div class="dropdown-wrap" style="flex:1;min-width:150px;">
+					<input type="text" class="search-input" id="compareInput" placeholder="Введи ник..." oninput="filterCompareList()">
+					<div class="dropdown-list" id="compareDropdown"></div>
+				</div>
+			</div>
+			<div id="compareResult"></div>`;
+			return html;
+		}
 
-function renderCompare(p1, p2) {
-    if (!p1 || !p2) return '';
-    const d1 = dungeonPlayers[p1.display], d2 = dungeonPlayers[p2.display];
-    const rows = [
-        ['Победы', p1.wins || 0, p2.wins || 0, true],
-        ['Поражения', p1.losses || 0, p2.losses || 0, false],
-        ['Винрейт', ((p1.wins || 0) / ((p1.wins || 0) + (p1.losses || 0) || 1) * 100).toFixed(1) + '%', ((p2.wins || 0) / ((p2.wins || 0) + (p2.losses || 0) || 1) * 100).toFixed(1) + '%', true],
-        ['SKILL', p1.skill || 0, p2.skill || 0, true],
-        ['Всего боёв', (p1.wins || 0) + (p1.losses || 0), (p2.wins || 0) + (p2.losses || 0), true],
-        ['Лучший стрик', p1.best || 0, p2.best || 0, true],
-        ['Худший стрик', p1.worst || 0, p2.worst || 0, false],
-        ['Осколки', p1.shards || 0, p2.shards || 0, true],
-        ['Уровень', p1.level || 0, p2.level || 0, true],
-        ['Турниры', p1.tournamentWins || 0, p2.tournamentWins || 0, true],
-        ['Фракция', p1.factionWins || 0, p2.factionWins || 0, true],
-        ['Рекорд данжа', d1 ? d1.record : '-', d2 ? d2.record : '-', true],
-        ['Трофеев', d1 ? d1.trophies : '-', d2 ? d2.trophies : '-', true]
-    ];
-    let table = '<table class="compare-table"><thead><tr><th>Стат</th><th>' + p1.display + '</th><th>' + p2.display + '</th></tr></thead><tbody>';
-    rows.forEach(([label, v1, v2, higherBetter]) => {
-        let c1 = '', c2 = '';
-        if (typeof v1 === 'number' && typeof v2 === 'number') {
-            if (v1 > v2) {
-                c1 = higherBetter ? 'td-better' : 'td-worse';
-                c2 = higherBetter ? 'td-worse' : 'td-better';
-            } else if (v2 > v1) {
-                c1 = higherBetter ? 'td-worse' : 'td-better';
-                c2 = higherBetter ? 'td-better' : 'td-worse';
-            }
-        }
-        table += `<tr><td>${label}</td><td class="${c1}">${v1}</td><td class="${c2}">${v2}</td></tr>`;
-    });
-    table += '</tbody></table>';
-    return table;
-}
+		function renderCompare(p1, p2) {
+			if (!p1 || !p2) return '';
+			const d1 = dungeonPlayers[p1.display], d2 = dungeonPlayers[p2.display];
+			const rows = [
+				['Победы', p1.wins || 0, p2.wins || 0, true],
+				['Поражения', p1.losses || 0, p2.losses || 0, false],
+				['Винрейт', ((p1.wins || 0) / ((p1.wins || 0) + (p1.losses || 0) || 1) * 100).toFixed(1) + '%', ((p2.wins || 0) / ((p2.wins || 0) + (p2.losses || 0) || 1) * 100).toFixed(1) + '%', true],
+				['SKILL', p1.skill || 0, p2.skill || 0, true],
+				['Всего боёв', (p1.wins || 0) + (p1.losses || 0), (p2.wins || 0) + (p2.losses || 0), true],
+				['Лучший стрик', p1.best || 0, p2.best || 0, true],
+				['Худший стрик', p1.worst || 0, p2.worst || 0, false],
+				['Осколки', p1.shards || 0, p2.shards || 0, true],
+				['Уровень', p1.level || 0, p2.level || 0, true],
+				['Турниры', p1.tournamentWins || 0, p2.tournamentWins || 0, true],
+				['Фракция', p1.factionWins || 0, p2.factionWins || 0, true],
+				['Рекорд данжа', d1 ? d1.record : '-', d2 ? d2.record : '-', true],
+				['Трофеев', d1 ? d1.trophies : '-', d2 ? d2.trophies : '-', true]
+			];
+			let table = '<table class="compare-table"><thead><tr><th>Стат</th><th>' + p1.display + '</th><th>' + p2.display + '</th></tr></thead><tbody>';
+			rows.forEach(([label, v1, v2, higherBetter]) => {
+				let c1 = '', c2 = '';
+				if (typeof v1 === 'number' && typeof v2 === 'number') {
+					if (v1 > v2) {
+						c1 = higherBetter ? 'td-better' : 'td-worse';
+						c2 = higherBetter ? 'td-worse' : 'td-better';
+					} else if (v2 > v1) {
+						c1 = higherBetter ? 'td-worse' : 'td-better';
+						c2 = higherBetter ? 'td-better' : 'td-worse';
+					}
+				}
+				table += `<tr><td>${label}</td><td class="${c1}">${v1}</td><td class="${c2}">${v2}</td></tr>`;
+			});
+			table += '</tbody></table>';
+			return table;
+		}
 
-function compareWith(name) {
-    const p1 = findPlayer(document.getElementById('playerSearch').value.trim());
-    const p2 = findPlayer(name);
-    document.getElementById('compareResult').innerHTML = p2 ? renderCompare(p1, p2) : '';
-}
+		function compareWith(name) {
+			const p1 = findPlayer(document.getElementById('playerSearch').value.trim());
+			const p2 = findPlayer(name);
+			document.getElementById('compareResult').innerHTML = p2 ? renderCompare(p1, p2) : '';
+		}
 
-function copyProfileLink() {
-    const name = document.getElementById('playerSearch').value.trim();
-    if (!name) return;
-    const url = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
-    navigator.clipboard.writeText(url).then(() => {
-        const btn = document.querySelector('#profileContent .btn-secondary');
-        if (!btn) return;
-        const origHTML = btn.innerHTML;
-        btn.innerHTML = '✅ Скопировано!';
-        btn.style.background = 'var(--green)';
-        btn.style.color = '#fff';
-        btn.style.borderColor = 'var(--green)';
-        setTimeout(() => {
-            btn.innerHTML = origHTML;
-            btn.style.background = '';
-            btn.style.color = '';
-            btn.style.borderColor = '';
-        }, 2000);
-    }).catch(() => {
-        const input = document.createElement('input');
-        input.value = url;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-    });
-}
+		function copyProfileLink() {
+			const name = document.getElementById('playerSearch').value.trim();
+			if (!name) return;
+			const url = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
+			navigator.clipboard.writeText(url).then(() => {
+				const btn = document.querySelector('#profileContent .btn-secondary');
+				if (!btn) return;
+				const origHTML = btn.innerHTML;
+				btn.innerHTML = '✅ Скопировано!';
+				btn.style.background = 'var(--green)';
+				btn.style.color = '#fff';
+				btn.style.borderColor = 'var(--green)';
+				setTimeout(() => {
+					btn.innerHTML = origHTML;
+					btn.style.background = '';
+					btn.style.color = '';
+					btn.style.borderColor = '';
+				}, 2000);
+			}).catch(() => {
+				const input = document.createElement('input');
+				input.value = url;
+				document.body.appendChild(input);
+				input.select();
+				document.execCommand('copy');
+				document.body.removeChild(input);
+			});
+		}
 
-async function loadProfile() {
-    if (allPlayers.length === 0) await loadData();
-    const p = findPlayer(document.getElementById('playerSearch').value.trim());
-    document.getElementById('profileContent').innerHTML = p ? renderProfile(p) : '<div class="status-message">Игрок не найден</div>';
-}
+		async function loadProfile() {
+			if (allPlayers.length === 0) await loadData();
+			const p = findPlayer(document.getElementById('playerSearch').value.trim());
+			document.getElementById('profileContent').innerHTML = p ? renderProfile(p) : '<div class="status-message">Игрок не найден</div>';
+		}
 
-loadData().then(() => {
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name');
-    if (name) {
-        document.getElementById('playerSearch').value = name;
-        loadProfile();
-    }
-});
+		loadData().then(() => {
+			const params = new URLSearchParams(window.location.search);
+			const name = params.get('name');
+			if (name) {
+				document.getElementById('playerSearch').value = name;
+				loadProfile();
+			}
+		});
 </script>
 </body>
 </html>
