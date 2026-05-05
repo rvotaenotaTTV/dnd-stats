@@ -72,7 +72,7 @@
     .number { text-align: right; font-variant-numeric: tabular-nums; }
     td:first-child { font-weight: 600; color: var(--gold); }
     .sortable-header { cursor: pointer; user-select: none; position: relative; padding-right: 20px !important; }
-    .sortable-header:hover { background: #252d38 !important; }
+	.sortable-header:hover { background: var(--bg-elevated) !important; }
     .sortable-header::after { content: '⇅'; position: absolute; right: 5px; opacity: 0.4; font-size: 10px; }
     .sortable-header.asc::after { content: '↑'; opacity: 1; color: var(--gold); }
     .sortable-header.desc::after { content: '↓'; opacity: 1; color: var(--gold); }
@@ -121,7 +121,7 @@
     ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
     * { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
-
+	
     @media (max-width: 768px) {
         .container { padding: 12px 14px 32px; }
         .header { padding: 20px 0 12px; }
