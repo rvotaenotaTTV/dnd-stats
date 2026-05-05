@@ -90,6 +90,12 @@
     @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeInRow { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
     @keyframes pulseGold { 0%, 100% { border-color: rgba(255,215,0,0.2); } 50% { border-color: rgba(255,215,0,0.5); } }
+	
+	::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ffd700; }
+    * { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }	
 
     @media (max-width: 768px) {
         .container { padding: 12px 14px 32px; }

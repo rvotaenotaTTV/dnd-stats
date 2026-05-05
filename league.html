@@ -57,7 +57,6 @@
 
         .container { max-width: 1300px; margin: 0 auto; padding: 20px 24px 48px; }
 
-        /* Header */
         .header { text-align: center; padding: 32px 0 20px; position: relative; }
         .header-title {
             font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: -0.03em;
@@ -82,7 +81,6 @@
         }
         .theme-toggle:hover { background: var(--bg-secondary); color: var(--gold); border-color: var(--gold); }
 
-        /* Навигация */
         .nav-wrapper { margin-bottom: 24px; position: sticky; top: 12px; z-index: 100; }
         .nav-toggle {
             display: none; width: 100%; padding: 13px 18px; background: var(--bg-secondary);
@@ -210,7 +208,6 @@
         tr.playoff-row.dark td { background: rgba(163,113,247,0.10); }
         tr.cutoff td { border-bottom: 2px solid var(--gold); }
 
-        /* Админ-панель */
         .admin-tab {
             position: fixed;
             right: 0;
@@ -378,7 +375,6 @@
             border-color: var(--red);
         }
 
-        /* Плавающая кнопка пива */
         .beer-btn {
             position: fixed;
             bottom: 24px;
@@ -463,6 +459,12 @@
         .grand-final .champ.dark { color: var(--purple); }
         .grand-final .champ:hover { transform: scale(1.05); }
         .grand-final .vs { color: var(--text-muted); font-size: 0.7rem; margin: 6px 0; font-weight: 700; letter-spacing: 1px; }
+		
+		::-webkit-scrollbar { width: 6px; height: 6px; }
+		::-webkit-scrollbar-track { background: var(--bg-primary); }
+		::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+		::-webkit-scrollbar-thumb:hover { background: #ffd700; }
+		* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }	
 
         .playoffs-mobile { display: none; }
         .mobile-round { margin-bottom: 18px; }
