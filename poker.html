@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Покер Раскола</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg-primary: #0a0e17; --bg-secondary: #111827; --bg-elevated: #1a2332; --bg-card: #152028;
+        --text-primary: #e8edf3; --text-secondary: #9ca3af; --text-muted: #6b7280;
+        --border-subtle: rgba(255,255,255,0.08); --gold: #f0b90b; --red: #ef4444; --green: #10b981;
+        --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg-primary); background-image: radial-gradient(ellipse at 50% 30%, rgba(139,69,19,0.15) 0%, transparent 60%), radial-gradient(ellipse at 50% 70%, rgba(240,185,11,0.05) 0%, transparent 40%); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; transition: filter 0.3s; }
+    .container { max-width: 700px; width: 100%; }
+    h1 { text-align: center; font-size: 1.8rem; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+    .subtitle { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 16px; }
+    .balance-bar { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .balance-badge { background: var(--bg-elevated); border: 1px solid var(--gold); border-radius: 20px; padding: 5px 14px; color: var(--gold); font-weight: 700; font-size: 0.85rem; }
+    .table-felt { background: linear-gradient(160deg, #1a3020 0%, #0d1f14 30%, #1a3020 60%, #0f2418 100%); border: 3px solid #3d2b1f; border-radius: var(--radius-lg); box-shadow: inset 0 0 60px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.6); padding: 20px; margin-bottom: 14px; position: relative; }
+    .table-felt::before { content: ''; position: absolute; inset: 6px; border: 1px solid rgba(255,215,0,0.08); border-radius: 14px; pointer-events: none; }
+    .area-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+    .cards { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; min-height: 60px; align-items: center; }
+    .empty-seat { color: rgba(255,255,255,0.1); font-size: 0.75rem; font-style: italic; }
+    .poker-card { width: 90px; height: 126px; background: linear-gradient(160deg, #fff, #e8e8e8); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; position: relative; padding: 6px; outline: 2px solid #fff; outline-offset: -1px; border: 3px solid #888; box-shadow: 0 4px 0 #666; cursor: pointer; transition: all 0.1s; user-select: none; }
+    .poker-card.player-card:hover { transform: translateY(-4px); }
+    .poker-card.player-card:active { transform: scale(0.95); }
+    .poker-card.selected { transform: translateY(-12px); box-shadow: 0 8px 0 #666, 0 0 20px rgba(255,215,0,0.6); border-color: var(--gold); }
+    .poker-card.selected::after { content: '✖'; position: absolute; top: -8px; right: -8px; background: var(--red); color: white; font-size: 12px; border-radius: 50%; padding: 2px 6px; font-weight: 700; }
+    .poker-card .corner { position: absolute; font-size: 14px; font-weight: 800; }
+    .poker-card .corner.top { top: 5px; left: 7px; }
+    .poker-card .corner.bottom { bottom: 5px; right: 7px; transform: rotate(180deg); }
+    .red { color: #c0392b; } .black { color: #1a1a2e; }
+    .poker-card .emoji { font-size: 25px; letter-spacing: 2px; display: flex; gap: 1px; }
+    .poker-card .name { font-size: 8px; font-weight: 600; color: #333; text-align: center; line-height: 1.2; max-width: 76px; }
+    .card-back { width: 90px; height: 126px; background: url('card-back.png') center/cover; border-radius: 10px; border: 3px solid #444; box-shadow: 0 4px 0 #333; }
+    .legendary { border-color: #ffaa00; box-shadow: 0 4px 0 #cc8800, 0 0 16px rgba(255,170,0,0.8); animation: glowLegendary 1.5s ease-in-out infinite; }
+    @keyframes glowLegendary { 0%,100% { box-shadow: 0 4px 0 #cc8800, 0 0 12px rgba(255,170,0,0.6); } 50% { box-shadow: 0 4px 0 #cc8800, 0 0 22px rgba(255,170,0,1); } }
+    .epic { border-color: #c471ed; box-shadow: 0 4px 0 #9a40c0, 0 0 14px rgba(196,113,237,0.7); animation: glowEpic 2s ease-in-out infinite; }
+    @keyframes glowEpic { 0%,100% { box-shadow: 0 4px 0 #9a40c0, 0 0 8px rgba(196,113,237,0.5); } 50% { box-shadow: 0 4px 0 #9a40c0, 0 0 18px rgba(196,113,237,0.9); } }
+    .rare { border-color: #4a90d9; box-shadow: 0 4px 0 #3070b0, 0 0 10px rgba(74,144,217,0.6); }
+    .uncommon { border-color: #3fb950; box-shadow: 0 4px 0 #2d8a3e, 0 0 8px rgba(63,185,80,0.5); }
+    .common { border-color: #888; box-shadow: 0 4px 0 #666; }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn { flex: 1; padding: 12px; border-radius: 25px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; font-size: 0.85rem; font-family: inherit; }
+    .btn-primary { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); }
+    .btn-secondary:hover { border-color: var(--gold); }
+    .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .result { text-align: center; font-size: 1.2rem; font-weight: 800; margin-top: 12px; min-height: 30px; }
+    .result.win { color: var(--gold); animation: pulse 0.5s; }
+    .result.lose { color: var(--red); }
+    .result.draw { color: var(--text-muted); }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    .win-glow { animation: handWin 0.6s ease; }
+    @keyframes handWin { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
+    @keyframes winFlash { 0%{filter:brightness(1)} 50%{filter:brightness(1.4)} 100%{filter:brightness(1)} }
+    .win-effect { animation: winFlash 0.6s ease; }
+    .combo-help { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: var(--bg-card); border-left: 1px solid var(--border-subtle); box-shadow: -4px 0 24px rgba(0,0,0,0.5); z-index: 1000; transition: right 0.3s ease; padding: 20px; overflow-y: auto; }
+    .combo-help.visible { right: 0; }
+    .combo-help h3 { color: var(--gold); font-size: 0.9rem; margin-bottom: 12px; text-align: center; }
+    .combo-help .combo-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.75rem; }
+    .combo-help .combo-name { color: var(--text-primary); }
+    .combo-help .combo-mult { color: var(--gold); font-weight: 700; }
+    .combo-help .close-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+    .combo-help .close-btn:hover { color: var(--gold); }
+    .help-trigger { display: inline-block; margin-left: 6px; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; vertical-align: middle; }
+    .help-trigger:hover { color: var(--gold); }
+    .combo-cards { font-family: 'SF Mono','Consolas',monospace; font-size: 0.85rem; color: var(--text-muted); padding: 2px 0 10px 0; letter-spacing: 3px; }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Покер Раскола <span class="help-trigger" onclick="document.getElementById('comboHelp').classList.add('visible')">ⓘ</span></h1>
+    <p class="subtitle">Ставка 10 💎, странник. Меняй до 3 карт. И молись своему осколку.</p>
+    <div class="balance-bar"><span class="balance-badge" id="balance">💎 100</span></div>
+    
+    <div class="table-felt"><div class="area-label">🐼 ГуангГуанг</div><div class="cards" id="botCards"><span class="empty-seat">— пусто —</span></div><div style="text-align:center;font-size:0.9rem;color:var(--gold);margin-top:8px;min-height:22px;" id="botHand"></div></div>
+    <div class="table-felt"><div class="area-label">👤 Ты</div><div class="cards" id="playerCards"><span class="empty-seat">нажми «Раздать»</span></div><div style="text-align:center;font-size:0.9rem;color:var(--gold);margin-top:8px;min-height:22px;" id="playerHand"></div><div id="selectionInfo" style="text-align:center;font-size:0.8rem;color:rgba(255,215,0,0.6);margin-top:4px;min-height:18px;"></div></div>
+    
+    <div class="btn-row"><button class="btn btn-primary" id="dealBtn" onclick="deal()">🃏 Раздать</button><button class="btn btn-secondary" id="drawBtn" onclick="draw()" disabled>🔄 Заменить</button></div>
+    <div id="guangQuote" style="text-align:center;font-size:0.9rem;color:var(--text-secondary);margin-top:8px;font-style:italic;min-height:24px;"></div>
+    <div class="result" id="result"></div>
+</div>
+
+<div class="combo-help" id="comboHelp"><button class="close-btn" onclick="document.getElementById('comboHelp').classList.remove('visible')">✕</button><h3>📋 Комбинации</h3><div class="combo-row"><span class="combo-name">👑 Роял-флеш</span><span class="combo-mult">×100</span></div><div class="combo-cards">A♠ K♠ Q♠ J♠ 10♠</div><div class="combo-row"><span class="combo-name">Стрит-флеш</span><span class="combo-mult">×40</span></div><div class="combo-cards">9♥ 8♥ 7♥ 6♥ 5♥</div><div class="combo-row"><span class="combo-name">Каре</span><span class="combo-mult">×20</span></div><div class="combo-cards">K K K K 3</div><div class="combo-row"><span class="combo-name">Фулл-хаус</span><span class="combo-mult">×12</span></div><div class="combo-cards">Q Q Q 7 7</div><div class="combo-row"><span class="combo-name">Флеш</span><span class="combo-mult">×9</span></div><div class="combo-cards">A♦ J♦ 8♦ 5♦ 2♦</div><div class="combo-row"><span class="combo-name">Стрит</span><span class="combo-mult">×7</span></div><div class="combo-cards">9 8 7 6 5</div><div class="combo-row"><span class="combo-name">Тройка</span><span class="combo-mult">×5</span></div><div class="combo-cards">J J J 8 2</div><div class="combo-row"><span class="combo-name">Две пары</span><span class="combo-mult">×3</span></div><div class="combo-cards">10 10 5 5 A</div><div class="combo-row"><span class="combo-name">Пара</span><span class="combo-mult">×2</span></div><div class="combo-cards">Q Q 9 6 3</div></div>
+
+<script>
+const SUITS=['♠','♥','♦','♣'], VALUES=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const VAL_ORDER={2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,J:11,Q:12,K:13,A:14};
+const MULTS={9:100,8:40,7:20,6:12,5:9,4:7,3:5,2:3,1:2,0:1};
+let deck=[], playerCards=[], botCards=[], selectedCards=new Set(), gamePhase='bet', gachaCache=null, revealedCount=0, balance=100, bet=10;
+
+function loadBalance(){ balance=parseInt(localStorage.getItem('pokerBalance'))||100; }
+function saveBalance(){ localStorage.setItem('pokerBalance',balance); }
+function updateBalance(){ document.getElementById('balance').textContent='💎 '+balance; saveBalance(); }
+function gId(){ return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).substr(2,9); }
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+function createDeck(){ const d=[]; for(const s of SUITS) for(const v of VALUES) d.push({suit:s,value:v,id:gId()}); return shuffle(d); }
+
+function getHand(cards){
+    const vals=cards.map(c=>VAL_ORDER[c.value]).sort((a,b)=>b-a), suits=cards.map(c=>c.suit);
+    const isFlush=new Set(suits).size===1, unique=[...new Set(vals)].sort((a,b)=>a-b);
+    const isLowStraight=JSON.stringify(unique)===JSON.stringify([2,3,4,5,14]);
+    const isStraight=(unique.length===5&&unique[4]-unique[0]===4)||isLowStraight;
+    let straightVals=[...vals]; if(isLowStraight) straightVals=straightVals.map(v=>v===14?1:v).sort((a,b)=>b-a);
+    const counts={}; vals.forEach(v=>counts[v]=(counts[v]||0)+1);
+    const groups=Object.entries(counts).map(([v,c])=>({val:+v,count:c})).sort((a,b)=>b.count-a.count||b.val-a.val);
+    if(isStraight&&isFlush&&Math.max(...vals)===14&&Math.min(...vals)===10) return {rank:9,name:'Роял-флеш',score:straightVals};
+    if(isStraight&&isFlush) return {rank:8,name:'Стрит-флеш',score:straightVals};
+    if(groups[0].count===4) return {rank:7,name:'Каре',score:[groups[0].val,groups[1].val]};
+    if(groups[0].count===3&&groups[1].count===2) return {rank:6,name:'Фулл-хаус',score:[groups[0].val,groups[1].val]};
+    if(isFlush) return {rank:5,name:'Флеш',score:vals};
+    if(isStraight) return {rank:4,name:'Стрит',score:straightVals};
+    if(groups[0].count===3) return {rank:3,name:'Тройка',score:[groups[0].val,...groups.slice(1).map(g=>g.val)]};
+    if(groups[0].count===2&&groups[1].count===2) return {rank:2,name:'Две пары',score:[groups[0].val,groups[1].val,groups[2].val]};
+    if(groups[0].count===2) return {rank:1,name:'Пара',score:[groups[0].val,...groups.slice(1).map(g=>g.val)]};
+    return {rank:0,name:'Старшая карта',score:vals};
+}
+function compareHands(a,b){ if(a.rank!==b.rank) return a.rank-b.rank; for(let i=0;i<Math.max(a.score.length,b.score.length);i++){ const d=(a.score[i]||0)-(b.score[i]||0); if(d!==0) return d; } return 0; }
+function isNearFlush(cards){ const cnt={}; cards.forEach(c=>cnt[c.suit]=(cnt[c.suit]||0)+1); return Object.values(cnt).includes(4); }
+function isNearStraight(cards){ const vals=[...new Set(cards.map(c=>VAL_ORDER[c.value]))].sort((a,b)=>a-b); let s=1,m=1; for(let i=1;i<vals.length;i++){ if(vals[i]===vals[i-1]+1){s++;m=Math.max(m,s);}else s=1; } return m>=4; }
+
+function getGachaItem(cardId){ try{ if(!gachaCache) gachaCache=JSON.parse(localStorage.getItem('gachaCollection')||'[]'); const col=gachaCache; if(col.length>0){ let h=0; for(let i=0;i<cardId.length;i++){ h=((h<<5)-h)+cardId.charCodeAt(i); h|=0; } return col[Math.abs(h)%col.length]; } }catch(e){} return null; }
+
+const GQ={win:['ЧТО ЗА ХЕРНЯ???','БАМБУК ПОТРЯСЁН!','Ты жулик!','ГуангГуанг в ярости!','Так нечестно!'],lose:['ЛООООХ!','Бамбук смеётся!','Приходи ещё, странник...','ГуангГуанг богатеет!','Карты не врут!'],draw:['Ничья? Скучно...','Бамбук зевает...','Давай ещё раз!'],strong:['Ты подписал себе приговор.','БАМБУК УНИЧТОЖИТ ТЕБЯ!','Даже не надейся.'],nearmiss:['Почти… но нет 😈','Ещё чуть-чуть...','Промах!'],thinking:['Хмм...','Ты уверен?','Плохая идея...','Интересный выбор...'],panic:['ПАНИКУЕШЬ?','ТРИ карты?! Серьёзно?','Сливаешь руку!'],bold:['О, смелый...','Воин!','Респект. Или глупость.']};
+
+function botStrategy(cards){
+    const hand=getHand(cards), keep=new Set();
+    const vals=cards.map((c,i)=>({val:VAL_ORDER[c.value],suit:c.suit,index:i}));
+    if(hand.rank<1&&Math.random()<0.1) return keep;
+    if(hand.rank>=7){ for(let i=0;i<5;i++) keep.add(i); return keep; }
+    if(hand.rank===6||hand.rank===3){ const cnt={}; vals.forEach(v=>cnt[v.val]=(cnt[v.val]||0)+1); vals.forEach(v=>{ if(cnt[v.val]>=3) keep.add(v.index); }); return keep; }
+    if(hand.rank===5||hand.rank===4||hand.rank===8||hand.rank===9){ for(let i=0;i<5;i++) keep.add(i); return keep; }
+    if(hand.rank===2){ const cnt={}; vals.forEach(v=>cnt[v.val]=(cnt[v.val]||0)+1); vals.forEach(v=>{ if(cnt[v.val]>=2) keep.add(v.index); }); return keep; }
+    if(hand.rank===1&&Math.random()<0.25) return keep;
+    if(hand.rank===1){ const cnt={}; vals.forEach(v=>cnt[v.val]=(cnt[v.val]||0)+1); vals.forEach(v=>{ if(cnt[v.val]>=2) keep.add(v.index); }); return keep; }
+    const sc={}; vals.forEach(v=>sc[v.suit]=(sc[v.suit]||0)+1);
+    const fs=Object.entries(sc).find(([s,c])=>c>=4);
+    if(fs){ vals.forEach(v=>{ if(v.suit===fs[0]) keep.add(v.index); }); return keep; }
+    const sr=[...vals].sort((a,b)=>a.val-b.val); let bs=[],c=[sr[0]];
+    for(let i=1;i<sr.length;i++){ if(sr[i].val===c[c.length-1].val+1) c.push(sr[i]); else{ if(c.length>=4) bs=c; c=[sr[i]]; } }
+    if(c.length>=4) bs=c; if(bs.length>=4){ bs.forEach(v=>keep.add(v.index)); return keep; }
+    let mi=0; for(let i=1;i<5;i++) if(vals[i].val>vals[mi].val) mi=i; keep.add(mi); return keep;
+}
+
+function renderCard(c,isBot,index){
+    const cls=c.suit==='♥'||c.suit==='♦'?'red':'black', item=getGachaItem(c.id);
+    const em=item?item.emoji:['🐼','👑','⚔️','🔮','💀'][VAL_ORDER[c.value]%5];
+    const nm=item?(item.name||'???').substring(0,15):c.value+c.suit, rarity=item?item.rarity:'common';
+    const sel=selectedCards.has(c.id)?' selected':'';
+    if(isBot){ if(gamePhase==='draw') return '<div class="card-back"></div>'; if(gamePhase==='partial'&&index>=revealedCount) return '<div class="card-back"></div>'; }
+    const ca=isBot?'':`onclick="toggleCard('${c.id}')"`, pc=isBot?'':' player-card';
+    return `<div id="card-${c.id}" class="poker-card ${rarity}${sel}${pc}" ${ca}><span class="corner top ${cls}">${c.value}${c.suit}</span><span class="emoji">${em}</span><span class="name">${nm}</span><span class="corner bottom ${cls}">${c.value}${c.suit}</span></div>`;
+}
+
+function renderAll(){
+    const pc=document.getElementById('playerCards'), bc=document.getElementById('botCards');
+    pc.innerHTML=playerCards.length?playerCards.map((c,i)=>renderCard(c,false,i)).join(''):'<span class="empty-seat">нажми «Раздать»</span>';
+    bc.innerHTML=botCards.length?botCards.map((c,i)=>renderCard(c,true,i)).join(''):'<span class="empty-seat">— пусто —</span>';
+    const si=document.getElementById('selectionInfo');
+    if(si) si.textContent=gamePhase==='draw'?`🎯 Выбрано: ${selectedCards.size}/3`:'';
+}
+
+function toggleCard(id){
+    if(gamePhase!=='draw') return;
+    if(selectedCards.has(id)){ selectedCards.delete(id); renderAll(); if(selectedCards.size===0) document.getElementById('guangQuote').textContent='🐼 «'+GQ.bold[Math.floor(Math.random()*GQ.bold.length)]+'»'; return; }
+    if(selectedCards.size>=3){ const si=document.getElementById('selectionInfo'); si.textContent='❌ Максимум 3!'; setTimeout(()=>{ if(gamePhase==='draw') si.textContent=`🎯 Выбрано: ${selectedCards.size}/3`; },1500); return; }
+    selectedCards.add(id); if(navigator.vibrate) navigator.vibrate(10);
+    const q=document.getElementById('guangQuote');
+    if(selectedCards.size===3) q.textContent='🐼 «'+GQ.panic[Math.floor(Math.random()*GQ.panic.length)]+'»';
+    else if(Math.random()<0.4) q.textContent='🐼 «'+GQ.thinking[Math.floor(Math.random()*GQ.thinking.length)]+'»';
+    renderAll();
+}
+
+function deal(){
+    if(balance<bet){ document.getElementById('guangQuote').textContent='🐼 «Недостаточно осколков!»'; return; }
+    balance-=bet; updateBalance(); gachaCache=null; selectedCards.clear(); deck=createDeck(); revealedCount=0;
+    playerCards=deck.splice(0,5); botCards=deck.splice(0,5); gamePhase='draw';
+    document.getElementById('dealBtn').disabled=true; document.getElementById('drawBtn').disabled=false;
+    document.getElementById('result').textContent=''; document.getElementById('playerHand').textContent=''; document.getElementById('botHand').textContent='';
+    document.getElementById('guangQuote').textContent=''; document.getElementById('playerCards').classList.remove('win-glow');
+    document.body.classList.remove('win-effect'); renderAll();
+    document.getElementById('guangQuote').textContent='🐼 «Выбирай мудро, странник...»';
+}
+
+async function revealBot(){ revealedCount=0; gamePhase='partial'; for(let i=0;i<botCards.length;i++){ if(i===botCards.length-1){ document.getElementById('botHand').textContent='🐼 ...'; await new Promise(r=>setTimeout(r,1200)); }else await new Promise(r=>setTimeout(r,400+Math.random()*300)); revealedCount++; renderAll(); } gamePhase='reveal'; renderAll(); }
+
+async function replaceCards(){
+    const oi=new Set([...selectedCards]);
+    playerCards.forEach(c=>{ if(oi.has(c.id)){ const el=document.getElementById(`card-${c.id}`); if(el) el.style.border='3px solid #ef4444'; } });
+    await new Promise(r=>setTimeout(r,400)); playerCards=playerCards.filter(c=>!oi.has(c.id)); renderAll();
+    document.getElementById('playerHand').textContent='❌ Сброшено: '+oi.size; await new Promise(r=>setTimeout(r,300));
+    let ac=0; while(playerCards.length<5){ playerCards.push(deck.splice(0,1)[0]); ac++; renderAll();
+        document.getElementById('playerHand').textContent='🆕 '+ac+'/'+oi.size;
+        const le=document.getElementById('playerCards').lastElementChild;
+        if(le){ le.style.transform='scale(1.1)'; le.style.borderColor='var(--gold)'; le.style.boxShadow='0 0 16px rgba(255,215,0,0.6)'; setTimeout(()=>{ le.style.transform=''; le.style.borderColor=''; le.style.boxShadow=''; },400); }
+        await new Promise(r=>setTimeout(r,500)); }
+    selectedCards.clear(); document.getElementById('playerHand').textContent='✅ Готово!'; renderAll();
+}
+
+async function draw(){
+    if(gamePhase!=='draw') return;
+    document.getElementById('drawBtn').disabled=true; document.getElementById('playerHand').textContent='🔄 Меняем...';
+    await replaceCards();
+    document.getElementById('botHand').textContent='🐼 ГуангГуанг думает...'; renderAll(); await new Promise(r=>setTimeout(r,1000));
+    const bk=botStrategy(botCards); botCards=botCards.filter((c,i)=>bk.has(i)); while(botCards.length<5) botCards.push(deck.splice(0,1)[0]);
+    document.getElementById('botHand').textContent='🐼 Готов!'; renderAll(); await new Promise(r=>setTimeout(r,800)); await revealBot();
+    document.getElementById('dealBtn').disabled=false;
+    const pH=getHand(playerCards), bH=getHand(botCards);
+    document.getElementById('playerHand').textContent=pH.name; document.getElementById('botHand').textContent=bH.name;
+    if(pH.rank===0) document.getElementById('playerHand').style.color='var(--red)'; else document.getElementById('playerHand').style.color='';
+    const cmp=compareHands(pH,bH), res=document.getElementById('result'), q=document.getElementById('guangQuote');
+    if(cmp>0){
+        const w=bet*MULTS[pH.rank]; balance+=w; updateBalance();
+        res.textContent='🏆 ПОБЕДА! +'+w+' 💎'; res.className='result win';
+        document.getElementById('playerCards').classList.add('win-glow'); document.body.classList.add('win-effect'); setTimeout(()=>document.body.classList.remove('win-effect'),600);
+        q.textContent=bH.rank>=7?'🐼 «'+GQ.strong[Math.floor(Math.random()*GQ.strong.length)]+'»':'🐼 «'+GQ.win[Math.floor(Math.random()*GQ.win.length)]+'»';
+    }else if(cmp<0){
+        res.textContent='💔 Поражение'; res.className='result lose';
+        if(isNearFlush(playerCards)) q.textContent='🐼 «'+GQ.nearmiss[Math.floor(Math.random()*GQ.nearmiss.length)]+'»';
+        else if(isNearStraight(playerCards)) q.textContent='🐼 «Почти стрит… рискнёшь в следующий раз?»';
+        else q.textContent='🐼 «'+GQ.lose[Math.floor(Math.random()*GQ.lose.length)]+'»';
+    }else{
+        balance+=bet; updateBalance(); res.textContent='🤝 Ничья, возврат'; res.className='result draw';
+        q.textContent='🐼 «'+GQ.draw[Math.floor(Math.random()*GQ.draw.length)]+'»';
+    }
+}
+loadBalance(); updateBalance();
+</script>
+</body>
+</html>
