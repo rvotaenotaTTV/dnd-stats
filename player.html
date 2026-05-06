@@ -232,8 +232,11 @@
 		const playerArchive=archive[p.display.toLowerCase()];
 		if(playerArchive&&playerArchive.length>0){
 			html+=`<h3 style="color:var(--gold);margin:16px 0 8px;">👻 Бывшие (${playerArchive.length})</h3>`;
-			html+='<div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border-subtle);"><table style="width:100%;border-collapse:collapse;font-size:0.8rem;"><thead><tr><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Герой</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">W/L</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Винрейт</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Стрик</th></tr></thead><tbody>';
-			playerArchive.forEach(h=>{const t=(h.wins||0)+(h.losses||0),hWr=t>0?(h.wins*100/t).toFixed(1):'0.0';html+=`<tr><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);">${h.emoji||''} ${h.name||''}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.wins}-${h.losses}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${hWr}%</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.best||0}</td></tr>`;});
+			html+='<div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border-subtle);"><table style="width:100%;border-collapse:collapse;font-size:0.8rem;"><thead><tr><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Герой</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">W/L</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Винрейт</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Стрик</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">👑</th></tr></thead><tbody>';
+			playerArchive.forEach(h=>{
+				const t=(h.wins||0)+(h.losses||0),hWr=t>0?(h.wins*100/t).toFixed(1):'0.0';
+				html+=`<tr><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);">${h.emoji||''} ${h.name||''}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.wins}-${h.losses}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${hWr}%</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.best||0}/${h.worst||0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.tournamentWins||0}</td></tr>`;
+			});
 			html+='</tbody></table></div>';
 		}
 
