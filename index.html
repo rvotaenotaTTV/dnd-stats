@@ -280,14 +280,23 @@
 		const topChampions=players.filter(p=>p.tournamentWins>0).sort((a,b)=>b.tournamentWins-a.tournamentWins);
 
 		const heroArchiveChamps=data.heroArchive||{};
-		Object.values(heroArchiveChamps).forEach(heroes=>{
-			heroes.forEach(h=>{
-				if((h.tournamentWins||0)>0){
-					const exists=topChampions.find(c=>c.display===h.name);
-					if(!exists){
-						topChampions.push({display:h.name,emoji:h.emoji||'',name:h.name||'',tournamentWins:h.tournamentWins||0,wins:h.wins||0,losses:h.losses||0,faction:'',champion:false});
-					}else{
-						exists.tournamentWins+=(h.tournamentWins||0);
+		Object.entries(heroArchiveChamps).forEach(([playerKey, heroes]) => {
+			heroes.forEach(h => {
+				if ((h.tournamentWins || 0) > 0) {
+					const exists = topChampions.find(c => c.display === playerKey);
+					if (!exists) {
+						topChampions.push({
+							display: playerKey,
+							emoji: h.emoji || '',
+							name: h.name || '',
+							tournamentWins: h.tournamentWins || 0,
+							wins: h.wins || 0,
+							losses: h.losses || 0,
+							faction: '',
+							champion: false
+						});
+					} else {
+						exists.tournamentWins += (h.tournamentWins || 0);
 					}
 				}
 			});
@@ -304,7 +313,7 @@
 			topChampions.forEach((p,i)=>{
 				const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'👻');
 				const isGhost=!p.faction;
-				html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${p.champion?'style="background:rgba(255,215,0,0.06);"':''}><td>${i+1}</td><td>${p.emoji||''} ${p.display||''} ${p.champion?'<span style="color:var(--gold);">👑</span>':''} ${isGhost?'<span style="color:var(--text-muted);font-size:0.7rem;">(бывший)</span>':''}</td><td>${p.name||''}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.tournamentWins||0}</td><td>${fi}</td></tr>`;
+				html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${p.champion?'style="background:rgba(255,215,0,0.06);"':''}><td>${i+1}</td><td>${p.emoji||''} ${p.display||''} ${p.champion?'<span style="color:var(--gold);">👑</span>':''}</td><td>${p.name||''}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.tournamentWins||0}</td><td>${fi}</td></tr>`;
 			});
 			html+='</tbody></table></div></div>';
 		}
