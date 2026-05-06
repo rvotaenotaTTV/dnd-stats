@@ -191,428 +191,377 @@
             </div>
         </div>
 
-        <!-- ==================== БЛОК 1: НАЧАЛО ИГРЫ ==================== -->
-        <div class="card" id="start">
-            <h2 class="card-title">🚀 Как начать игру?</h2>
-            <p>Твоё приключение начинается с создания героя. Бот предложит три случайные комбинации, из которых ты выберешь одну. Не переживай, если не знаешь, что выбрать — система подскажет.</p>
-            <div class="step-list">
-                <div class="step-item">
-                    <div class="step-num">1</div>
-                    <div>Активируй награду канала <span class="highlight">«Создать героя»</span>. Это откроет доступ к боту.</div>
-                </div>
-                <div class="step-item">
-                    <div class="step-num">2</div>
-                    <div>Бот предложит <span class="highlight">3 случайные комбинации</span>. Каждая состоит из трёх элементов: <span class="highlight">раса + класс + фракция</span>.</div>
-                </div>
-                <div class="step-item">
-                    <div class="step-num">3</div>
-                    <div>Напиши в чат <span class="highlight">!1</span>, <span class="highlight">!2</span> или <span class="highlight">!3</span>, чтобы выбрать понравившегося героя. У тебя есть <span class="highlight">3 минуты</span> на раздумья — если не успеешь, бот выберет за тебя случайным образом.</div>
-                </div>
-                <div class="step-item">
-                    <div class="step-num">4</div>
-                    <div>Готово! Твой герой создан и готов к битвам. Проверь его характеристики командой <span class="highlight">!инфо</span>.</div>
-                </div>
-            </div>
-        </div>
+		<!-- ==================== БЛОК 1: НАЧАЛО ИГРЫ ==================== -->
+		<div class="card" id="start">
+			<h2 class="card-title">🚀 Как начать игру?</h2>
+			<p>Твоё приключение начинается с создания героя. Бот предложит три случайные комбинации — выбери одну.</p>
+			<div class="step-list">
+				<div class="step-item">
+					<div class="step-num">1</div>
+					<div>Активируй награду канала <span class="highlight">«Создать героя»</span>.</div>
+				</div>
+				<div class="step-item">
+					<div class="step-num">2</div>
+					<div>Бот предложит <span class="highlight">3 случайные комбинации</span>: раса + класс + фракция.</div>
+				</div>
+				<div class="step-item">
+					<div class="step-num">3</div>
+					<div>Напиши в чат <span class="highlight">!1</span>, <span class="highlight">!2</span> или <span class="highlight">!3</span>. На выбор — <span class="highlight">3 минуты</span>. Не успеешь — бот выберет случайно.</div>
+				</div>
+				<div class="step-item">
+					<div class="step-num">4</div>
+					<div>Готово! Проверь характеристики командой <span class="highlight">!инфо</span> и иди в бой.</div>
+				</div>
+			</div>
+		</div>
 
-        <!-- ==================== БЛОК 2: ОСНОВНЫЕ КОМАНДЫ ==================== -->
-        <div class="card" id="commands">
-            <h2 class="card-title">📋 Основные команды чата</h2>
-            <p>Все взаимодействия с игрой происходят через чат. Вот список самых важных команд, которые пригодятся тебе в первые дни.</p>
-            <div class="command-grid">
-                <div class="command-item">
-                    <div class="command-name">!инфо</div>
-                    <div class="command-desc">Показывает полную статистику твоего героя. Можешь посмотреть и чужого: <code>!инфо @игрок</code></div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!бой</div>
-                    <div class="command-desc">Начинает случайный бой с другим героем. Чтобы вызвать конкретного: <code>!бой @игрок</code></div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!харакири</div>
-                    <div class="command-desc">Удаляет текущего героя. Осколки и уровень при этом <strong>сохраняются</strong> — ты не теряешь прогресс.</div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!данж</div>
-                    <div class="command-desc">Отправляет героя в подземелье — бесконечные волны мобов. Подробнее читай в разделе «Подземелье» ниже.</div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!рега / !список / !сетка</div>
-                    <div class="command-desc">Запись в турнир, просмотр списка участников и текущая турнирная сетка.</div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!фрега / !фрлист</div>
-                    <div class="command-desc">Запись во фракционную битву 5 на 5 и просмотр списка бойцов твоей фракции.</div>
-                </div>
-            </div>
-        </div>
+		<!-- ==================== БЛОК 2: ОСНОВНЫЕ КОМАНДЫ ==================== -->
+		<div class="card" id="commands">
+			<h2 class="card-title">📋 Основные команды чата</h2>
+			<p>Всё взаимодействие с игрой — через чат. Вот команды, которые нужны в первую очередь:</p>
+			<div class="command-grid">
+				<div class="command-item">
+					<div class="command-name">!инфо</div>
+					<div class="command-desc">Статистика твоего героя. <code>!инфо @игрок</code> — посмотреть чужого</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!бой</div>
+					<div class="command-desc">Случайный бой. <code>!бой @игрок</code> — вызвать конкретного соперника</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!харакири</div>
+					<div class="command-desc">Удалить героя. Осколки и уровень <strong>сохраняются</strong>, старый герой уходит в архив</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!данж</div>
+					<div class="command-desc">Отправиться в подземелье — бесконечные волны мобов</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!рега / !список / !сетка</div>
+					<div class="command-desc">Запись в турнир, список участников, турнирная сетка</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!фрега / !фрлист</div>
+					<div class="command-desc">Запись во фракционную битву и список бойцов фракции</div>
+				</div>
+			</div>
+		</div>
 
-        <!-- ==================== БЛОК 3: МЕХАНИКА БОЯ ==================== -->
-        <div class="card" id="battle">
-            <h2 class="card-title">⚔️ Как проходит бой? Полная механика</h2>
-            <p>Бой — сердце игры. Понимание механик поможет тебе побеждать даже более сильных противников. Вот как всё устроено пошагово:</p>
-            <ol>
-                <li><span class="highlight">Инициатива:</span> Оба героя бросают d20 и прибавляют свою Ловкость (DEX). У кого результат выше — тот ходит первым и получает значок ⚡ в логах. При равенстве результатов порядок определяется случайно.</li>
-                <li><span class="highlight">Бросок атаки:</span> Атакующий бросает d20 и прибавляет свою Атаку (ATK). Если сумма <strong>больше или равна 10 + Защита (DEF) противника</strong> — атака проходит.</li>
-                <li><span class="highlight">Расчёт урона:</span> Если атака прошла, урон вычисляется как случайное число в диапазоне от MIN до MAX (эти параметры указаны в характеристиках героя).</li>
-                <li><span class="highlight">Снижение урона:</span> Защита (DEF) противника снижает полученный урон на <strong>5% за каждую единицу DEF</strong>. Но минимум 1 единица урона всегда проходит.</li>
-                <li><span class="highlight">💥 Критический удар (выпало 20):</span> Если на кубике атаки выпало 20 — это крит! Урон бросается <strong>дважды</strong>, и результаты суммируются. В логах отображается как 💥X.</li>
-                <li><span class="highlight">❌ Критический промах (выпало 1):</span> Если на кубике выпало 1 — атака гарантированно проваливается, урон равен 0. В логах это обозначается как ❌.</li>
-                <li><span class="highlight">Уклонение и блок:</span> Если атака не прошла (d20 + ATK оказалось меньше 10 + DEF противника), смотрим на бросок d20 отдельно:
-                    <ul>
-                        <li>Если d20 <strong>≤ 4</strong> — это 💨 <strong>уклонение</strong>. Противник полностью избежал удара.</li>
-                        <li>Если d20 <strong>> 4</strong> — это 🛡️ <strong>блок</strong>. Броня выдержала удар, урона нет.</li>
-                    </ul>
-                </li>
-                <li><span class="highlight">Завершение боя:</span> Бой идёт до тех пор, пока у одного из героев HP не упадёт до 0. Максимальная длительность — <strong>20 раундов</strong>. Если за 20 раундов никто не победил, сравнивается оставшееся здоровье. При равенстве HP победитель выбирается случайно.</li>
-            </ol>
-        </div>
+		<!-- ==================== БЛОК 3: МЕХАНИКА БОЯ ==================== -->
+		<div class="card" id="battle">
+			<h2 class="card-title">⚔️ Как проходит бой? Полная механика</h2>
+			<p>Бой — сердце игры. Вот как всё устроено пошагово:</p>
+			<ol>
+				<li><span class="highlight">Инициатива:</span> Оба героя бросают d20 + DEX. У кого больше — ходит первым (⚡). При равенстве — случайно.</li>
+				<li><span class="highlight">Бросок атаки:</span> d20 + ATK атакующего. Попадание если <strong>d20 + ATK ≥ 10 + DEF</strong> противника.</li>
+				<li><span class="highlight">Если не попал:</span>
+					<ul>
+						<li>d20 = <strong>1</strong> → ❌ критический промах</li>
+						<li>d20 = <strong>2–4</strong> → 💨 уклонение</li>
+						<li>d20 = <strong>5+</strong> → 🛡️ блок (броня выдержала)</li>
+					</ul>
+				</li>
+				<li><span class="highlight">Если попал:</span>
+					<ul>
+						<li>Урон = случайное число от MIN до MAX</li>
+						<li>d20 = <strong>20</strong> → 💥 критический удар: урон бросается дважды и суммируется</li>
+						<li>Защита снижает урон на <strong>5% за каждое очко DEF</strong> (минимум 1 урон всегда проходит)</li>
+					</ul>
+				</li>
+				<li><span class="highlight">Завершение:</span> Бой идёт пока у кого-то HP не упадёт до 0. Максимум <strong>20 раундов</strong>. Если за 20 раундов никто не победил — побеждает тот у кого больше HP. При равенстве — случайно.</li>
+			</ol>
+		</div>
 
-        <!-- ==================== БЛОК 4: ОБОЗНАЧЕНИЯ В ЛОГАХ ==================== -->
-        <div class="card" id="logs">
-            <h2 class="card-title">📝 Обозначения в логах боёв</h2>
-            <p>Когда ты смотришь логи боёв, каждое действие помечается специальным символом. Вот что они значат:</p>
-            <div class="table-container">
-                <table class="table-symbols">
-                    <thead>
-                        <tr><th style="text-align:center;width:60px;">Символ</th><th>Значение</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td style="text-align:center;">❌</td><td><strong>Критический промах</strong> — на кубике выпала 1, атака полностью провалена, урон равен 0.</td></tr>
-                        <tr><td style="text-align:center;">💨</td><td><strong>Уклонение</strong> — на кубике выпало 2, 3 или 4, и атака не прошла. Противник ловко ушёл из-под удара.</td></tr>
-                        <tr><td style="text-align:center;">🛡️</td><td><strong>Блок</strong> — на кубике выпало 5 или больше, но броня противника выдержала удар. Урона нет.</td></tr>
-                        <tr><td style="text-align:center;">💥X</td><td><strong>Критический удар</strong> — на кубике выпало 20. Урон брошен дважды, X — сумма двух бросков.</td></tr>
-                        <tr><td style="text-align:center;">X</td><td><strong>Обычный урон</strong> — на кубике выпало от 5 до 19, атака прошла, X — итоговый урон после учёта защиты.</td></tr>
-                        <tr><td style="text-align:center;">0</td><td><strong>Не атаковал</strong> — бой уже завершился, этот герой не успел нанести удар в последнем раунде.</td></tr>
-                        <tr><td style="text-align:center;">⚡</td><td><strong>Ходил первым</strong> — герой выиграл бросок инициативы (d20 + DEX) и атакует первым в этом раунде.</td></tr>
-                        <tr><td style="text-align:center;">🏆</td><td><strong>Победитель боя</strong> — этот герой одержал победу.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+		<!-- ==================== БЛОК 4: ОБОЗНАЧЕНИЯ В ЛОГАХ ==================== -->
+		<div class="card" id="logs">
+			<h2 class="card-title">📝 Обозначения в логах боёв</h2>
+			<p>Каждое действие в логах помечается специальным символом:</p>
+			<div class="table-container">
+				<table class="table-symbols">
+					<thead>
+						<tr><th style="text-align:center;width:60px;">Символ</th><th>Значение</th></tr>
+					</thead>
+					<tbody>
+						<tr><td style="text-align:center;">❌</td><td><strong>Критический промах</strong> — на кубике 1. Атака провалена, урон 0</td></tr>
+						<tr><td style="text-align:center;">💨</td><td><strong>Уклонение</strong> — на кубике 2–4, атака не прошла. Противник увернулся</td></tr>
+						<tr><td style="text-align:center;">🛡️</td><td><strong>Блок</strong> — на кубике 5+, но броня выдержала удар. Урона нет</td></tr>
+						<tr><td style="text-align:center;">💥X</td><td><strong>Критический удар</strong> — на кубике 20. Урон брошен дважды, X — сумма</td></tr>
+						<tr><td style="text-align:center;">X</td><td><strong>Обычный урон</strong> — атака прошла, X — урон после учёта защиты</td></tr>
+						<tr><td style="text-align:center;">0</td><td><strong>Не атаковал</strong> — бой завершился до хода этого героя</td></tr>
+						<tr><td style="text-align:center;">⚡</td><td><strong>Ходил первым</strong> — выиграл инициативу (d20 + DEX)</td></tr>
+						<tr><td style="text-align:center;">🏆</td><td><strong>Победитель</strong> — этот герой одержал победу</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-        <!-- ==================== БЛОК 5: ТУРНИР ==================== -->
-        <div class="card" id="tournament">
-            <h2 class="card-title">👑 Турнир — путь к короне</h2>
-            <p>Турнир проводится по <span class="highlight">олимпийской системе</span> с участием <span class="highlight">16 бойцов</span>. Проиграл один бой — вылетел. Победитель получает всё.</p>
-            <p>Бойцы распределяются по парам случайным образом. Если к моменту старта набралось меньше 16 участников, оставшиеся места автоматически заполняются командой <span class="highlight">!добор</span> (доступна администраторам).</p>
-            
-            <div class="command-grid">
-                <div class="command-item">
-                    <div class="command-name">!рега</div>
-                    <div class="command-desc">Записаться в текущий турнир</div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!список</div>
-                    <div class="command-desc">Посмотреть список всех участников</div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!сетка</div>
-                    <div class="command-desc">Текущие пары и результаты. Значок ✅ отмечает победителя в каждой паре</div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name" style="font-size:0.75rem;color:var(--text-muted);">Админ: !старт / !добор</div>
-                    <div class="command-desc">Запуск турнира вручную и автозаполнение до 16 участников</div>
-                </div>
-            </div>
+		<!-- ==================== БЛОК 5: ТУРНИР ==================== -->
+		<div class="card" id="tournament">
+			<h2 class="card-title">👑 Турнир — путь к короне</h2>
+			<p>Турнир на <span class="highlight">16 бойцов</span> по олимпийской системе: проиграл — вылетел. Пары случайные. Если участников меньше 16, админ может добавить случайных героев командой <span class="highlight">!добор</span>.</p>
+			
+			<div class="command-grid">
+				<div class="command-item">
+					<div class="command-name">!рега</div>
+					<div class="command-desc">Записаться в турнир</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!список</div>
+					<div class="command-desc">Список всех участников</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!сетка</div>
+					<div class="command-desc">Текущие пары и результаты (✅ = победитель)</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name" style="font-size:0.75rem;color:var(--text-muted);">Админ: !старт / !добор</div>
+					<div class="command-desc">Запуск турнира и автозаполнение</div>
+				</div>
+			</div>
 
-            <h3>📋 Как проходит турнир:</h3>
-            <ol>
-                <li>После старта объявляются пары первого раунда. На каждый бой даётся <span class="highlight">90 секунд</span> ожидания.</li>
-                <li>Победитель проходит в следующий раунд, проигравший выбывает из турнира.</li>
-                <li>За победу в турнирном бою начисляется <span class="highlight">+4💎 осколка</span>, за поражение — <span class="highlight">+2💎</span>.</li>
-                <li>Если количество участников нечётное, <strong>случайный игрок</strong> получает <span class="highlight">BYE</span> — проходит дальше без боя, а остальные сражаются в парах.</li>
-                <li>Перед финальным боем запускается <span class="highlight">прогноз</span>, где зрители могут угадать победителя.</li>
-            </ol>
+			<h3>📋 Как проходит:</h3>
+			<ol>
+				<li>Объявляются пары первого раунда. На каждый бой — <span class="highlight">90 секунд</span> ожидания.</li>
+				<li>Победитель идёт дальше, проигравший выбывает.</li>
+				<li>Победа в турнирном бою: <span class="highlight">+4💎</span>, поражение: <span class="highlight">+2💎</span>.</li>
+				<li>Если участников нечётное количество — <strong>случайный игрок</strong> получает <span class="highlight">BYE</span> и проходит дальше без боя.</li>
+				<li>Перед финалом запускается <span class="highlight">прогноз</span> для зрителей.</li>
+			</ol>
 
-            <h3>🏆 Награды чемпиона:</h3>
-            <p>Победитель турнира получает <span class="highlight">+10💎 осколков</span>, почётный титул <span class="highlight">👑 Хранитель Вечности</span> и дополнительный бонус: <span class="highlight">SKILL ×25</span> к общему рейтингу.</p>
-        </div>
+			<h3>🏆 Чемпион получает:</h3>
+			<p><span class="highlight">+10💎</span>, титул <span class="highlight">👑 Хранитель Вечности</span>, +1 к счётчику турнирных побед, и бонус к рейтингу SKILL.</p>
+		</div>
 
-        <!-- ==================== БЛОК 6: ФРАКЦИОННАЯ БИТВА ==================== -->
-        <div class="card" id="faction-war">
-            <h2 class="card-title">⚔️ Фракционная битва и территории</h2>
-            <p>Командное сражение <span class="highlight">5 на 5</span> между двумя великими фракциями: <span class="text-light">🌝 Орденом Света</span> и <span class="text-dark">🌚 Культом Тьмы</span>. Исход битвы определяет, кто будет контролировать ключевые территории мира.</p>
-            
-            <div class="command-grid">
-                <div class="command-item">
-                    <div class="command-name">!фрега</div>
-                    <div class="command-desc">Записаться в команду своей фракции для участия в битве</div>
-                </div>
-                <div class="command-item">
-                    <div class="command-name">!фрлист</div>
-                    <div class="command-desc">Посмотреть список всех бойцов, записавшихся от твоей фракции</div>
-                </div>
-            </div>
+		<!-- ==================== БЛОК 6: ФРАКЦИОННАЯ БИТВА ==================== -->
+		<div class="card" id="faction-war">
+			<h2 class="card-title">⚔️ Фракционная битва и территории</h2>
+			<p>Командное сражение <span class="highlight">5 на 5</span> между <span class="text-light">🌝 Орденом Света</span> и <span class="text-dark">🌚 Культом Тьмы</span>. Победившая фракция получает контроль над локацией, где проходил бой.</p>
+			
+			<div class="command-grid">
+				<div class="command-item">
+					<div class="command-name">!фрега</div>
+					<div class="command-desc">Записаться в команду своей фракции</div>
+				</div>
+				<div class="command-item">
+					<div class="command-name">!фрлист</div>
+					<div class="command-desc">Список бойцов твоей фракции</div>
+				</div>
+			</div>
 
-            <h3>⚡ Как проходит битва:</h3>
-            <ol>
-                <li>Администратор запускает регистрацию командой <span class="highlight">!битва</span>. У игроков есть <strong>10 минут</strong> на запись.</li>
-                <li>Для начала сражения необходимо собрать по <span class="highlight">5 бойцов</span> от каждой фракции.</li>
-                <li>Случайным образом выбирается <span class="highlight">локация</span>, которая даёт бонус ко всем характеристикам <strong>обоим фракциям</strong> на время битвы.</li>
-                <li>Проводится <strong>5 отдельных боёв 1 на 1</strong>. Фракция, выигравшая большинство боёв (3 и более), побеждает в битве.</li>
-                <li>Все участники победившей фракции получают <span class="highlight">+5💎</span>, проигравшей — <span class="highlight">+2💎</span>.</li>
-            </ol>
+			<h3>⚡ Как проходит битва:</h3>
+			<ol>
+				<li>Админ запускает регистрацию командой <span class="highlight">!битва</span>. У игроков есть <strong>10 минут</strong> чтобы записаться.</li>
+				<li>Нужно по <span class="highlight">5 бойцов</span> от каждой фракции.</li>
+				<li>Случайно выбирается <span class="highlight">локация</span> с бонусом — он действует на <strong>обе фракции</strong>.</li>
+				<li>Проводится <strong>5 боёв 1 на 1</strong>. Фракция, выигравшая 3 и более боёв, побеждает.</li>
+				<li>Победители получают <span class="highlight">+5💎</span>, проигравшие — <span class="highlight">+2💎</span>.</li>
+				<li>Победившая фракция <strong>захватывает локацию</strong>, на которой шёл бой (кроме вечных территорий).</li>
+			</ol>
 
-            <h3>🗺️ Захват территорий:</h3>
-            <p>Победившая в битве фракция получает контроль над локацией, на которой проходило сражение. Исключение — <strong>Сияющий Шпиль</strong> (вечно за Светом) и <strong>Зал Повествователя</strong> (вечно за Тьмой), они не переходят из рук в руки.</p>
-            <p style="margin-top:8px;">В конце сезона фракция, под чьим контролем находится наибольшее количество территорий, забирает <span class="highlight">Корону Раскола</span> — главный символ превосходства.</p>
-            
-            <h4>Доступные для захвата территории:</h4>
-            <div class="loc-grid">
-                <div class="loc-item">🌑 <strong>Эпицентр Раскола</strong> <br><span class="loc-bonus">+1 MIN ко всем бойцам</span></div>
-                <div class="loc-item">🗡️ <strong>Поле Павшего Клинка</strong> <br><span class="loc-bonus">+1 DEF ко всем бойцам</span></div>
-                <div class="loc-item">🔥 <strong>Кузня Расколотых</strong> <br><span class="loc-bonus">+2 HP ко всем бойцам</span></div>
-                <div class="loc-item">🎭 <strong>Арена Тысячи Эхо</strong> <br><span class="loc-bonus">+2 ко всем статам (HP/ATK/DEF/MIN/MAX/DEX)</span></div>
-                <div class="loc-item">⚓ <strong>Порт Дрейфующих</strong> <br><span class="loc-bonus">+1 DEX ко всем бойцам</span></div>
-                <div class="loc-item locked">✨ <strong>Сияющий Шпиль</strong> <br>+2 ATK · Всегда за Светом</div>
-                <div class="loc-item locked">🌫️ <strong>Зал Повествователя</strong> <br>+1 MAX · Всегда за Тьмой</div>
-            </div>
-        </div>
+			<h3>🗺️ Территории и бонусы:</h3>
+			<div class="loc-grid">
+				<div class="loc-item">🌑 <strong>Эпицентр Раскола</strong> <br><span class="loc-bonus">+1 MIN</span></div>
+				<div class="loc-item">🗡️ <strong>Поле Павшего Клинка</strong> <br><span class="loc-bonus">+1 DEF</span></div>
+				<div class="loc-item">🔥 <strong>Кузня Расколотых</strong> <br><span class="loc-bonus">+2 HP</span></div>
+				<div class="loc-item">🎭 <strong>Арена Тысячи Эхо</strong> <br><span class="loc-bonus">+2 ко всем статам</span></div>
+				<div class="loc-item">⚓ <strong>Порт Дрейфующих</strong> <br><span class="loc-bonus">+1 DEX</span></div>
+				<div class="loc-item locked">✨ <strong>Сияющий Шпиль</strong> <br><span class="loc-bonus">+2 ATK</span> · Всегда за Светом</div>
+				<div class="loc-item locked">🌫️ <strong>Зал Повествователя</strong> <br><span class="loc-bonus">+1 MAX</span> · Всегда за Тьмой</div>
+			</div>
+		</div>
 
-        <!-- ==================== БЛОК 7: ПОДЗЕМЕЛЬЕ ==================== -->
-        <div class="card" id="dungeon">
-            <h2 class="card-title">🏔 Подземелье — полные правила</h2>
-            <p>Подземелье — это PvE-режим, в котором твой герой в одиночку сражается с <span class="highlight">бесконечными волнами</span> мобов. Никаких команд, никаких ставок — только ты, твой клинок и тьма впереди. Проверь свою силу, поставь рекорд, впиши своё имя в историю.</p>
-            
-            <h3>⚔️ Как играть в подземелье</h3>
-            <div class="rule-block">
-                <p><strong>1️⃣ Вход в подземелье:</strong> Напиши в чат команду <code>!данж</code>. Твой герой спускается в подземелье, при этом его оригинал остаётся на арене и может параллельно участвовать в дуэлях и турнирах.</p>
-            </div>
-            <div class="rule-block">
-                <p><strong>2️⃣ Волны мобов:</strong> Подземелье состоит из бесконечных волн. Каждая следующая волна сильнее предыдущей. Каждая <span class="highlight">5-я волна — босс</span>, который значительно превосходит обычных мобов по характеристикам.</p>
-            </div>
-            <div class="rule-block">
-                <p><strong>3️⃣ Восстановление здоровья:</strong> После каждой победы твой герой восстанавливает <span class="highlight">8 + (номер волны × 2)</span> HP. Лечение не поднимет здоровье выше <span class="highlight">базовый HP героя + уровень × 2</span>. Пассивки «Очищение» и «Вампиризм» дают дополнительные +4 HP (с тем же ограничением).</p>
-            </div>
-            <div class="rule-block">
-                <p><strong>4️⃣ Случайные события:</strong> После каждой волны с вероятностью <span class="highlight">35%</span> происходит одно из четырёх событий (подробнее в таблице ниже). Бонусы от событий действуют до конца забега, но не могут поднять стат выше значения <strong>базовый + 5</strong>.</p>
-            </div>
-            <div class="rule-block">
-                <p><strong>5️⃣ Фракционная пассивка:</strong> При входе в подземелье каждый герой получает одну случайную пассивную способность в зависимости от фракции. У Ордена Света — 8 вариантов, у Культа Тьмы — тоже 8.</p>
-            </div>
-            <div class="rule-block">
-                <p><strong>6️⃣ Трофеи за боссов:</strong> За убийство босса герой приносит в копилку своей фракции от <span class="highlight">1 до 3 трофеев</span>. Трофеи копятся и определяют, какая фракция получит Корону Раскола.</p>
-            </div>
-            <div class="rule-block">
-                <p><strong>7️⃣ Рекорд:</strong> После завершения забега рекорд героя обновляется, если он прошёл больше волн, чем в предыдущих попытках. Если количество волн одинаковое, сравнивается нанесённый урон — побеждает тот забег, где урона было больше.</p>
-            </div>
-            <div class="rule-block">
-                <p><strong>8️⃣ Награда осколками:</strong> За каждые <span class="highlight">3 пройденные волны</span> герой получает <span class="highlight">+1💎 осколок</span>. Прошёл 9 волн — +3💎, прошёл 15 — +5💎.</p>
-            </div>
-        </div>
+		<!-- ==================== БЛОК 7: ПОДЗЕМЕЛЬЕ ==================== -->
+		<div class="card" id="dungeon">
+			<h2 class="card-title">🏔 Подземелье — полные правила</h2>
+			<p>Подземелье — это PvE-режим, в котором твой герой в одиночку сражается с <span class="highlight">бесконечными волнами</span> мобов. Твой оригинал остаётся на арене и может параллельно драться в дуэлях и турнирах.</p>
+			
+			<h3>⚔️ Как играть</h3>
+			<div class="rule-block">
+				<p><strong>1️⃣ Вход:</strong> Напиши в чат <code>!данж</code>. Герой получает случайную <span class="highlight">фракционную пассивку</span> (8 вариантов для Света, 8 для Тьмы) и спускается вниз.</p>
+			</div>
+			<div class="rule-block">
+				<p><strong>2️⃣ Волны:</strong> Бесконечные волны мобов. Каждая следующая сильнее предыдущей. Каждая <span class="highlight">5-я волна — босс</span> (HP ×1.5, ATK +2, DEF +1).</p>
+			</div>
+			<div class="rule-block">
+				<p><strong>3️⃣ После волны:</strong> Герой восстанавливает <span class="highlight">8 + (волна × 2)</span> HP (не выше <span class="highlight">HP героя + уровень × 2</span>). С вероятностью <span class="highlight">35%</span> — случайное событие: +1 ATK, +1 DEF, полное исцеление, или +1 MIN/MAX. Бонусы не превышают <strong>базовый стат + 5</strong>.</p>
+			</div>
+			<div class="rule-block">
+				<p><strong>4️⃣ Трофеи:</strong> Убийство босса приносит <span class="highlight">1–3 трофея</span> в копилку фракции. Трофеи определяют, кто владеет Короной Раскола.</p>
+			</div>
+			<div class="rule-block">
+				<p><strong>5️⃣ Рекорд:</strong> Учитывается по максимальному количеству пройденных волн. При равенстве — по нанесённому урону.</p>
+			</div>
+			<div class="rule-block">
+				<p><strong>6️⃣ Награда:</strong> <span class="highlight">+1💎</span> за каждые 3 пройденные волны. Прошёл 9 волн — +3💎, прошёл 15 — +5💎.</p>
+			</div>
+		</div>
 
-        <!-- СЛУЧАЙНЫЕ СОБЫТИЯ -->
-        <div class="card" id="dungeon-events">
-            <h2 class="card-title">🎲 Случайные события в подземелье</h2>
-            <p>После каждой волны с вероятностью <span class="highlight">35%</span> срабатывает одно из этих событий. Бонусы действуют до конца забега, но стат не может превысить значение «базовый + 5».</p>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width:25%;">Событие</th>
-                            <th style="text-align:center;width:10%;">Шанс</th>
-                            <th style="width:65%;">Эффект</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>🧪 <strong>Зелье силы</strong></td>
-                            <td style="text-align:center;">8.75%</td>
-                            <td>Постоянный бонус <span class="highlight">+1 ATK</span> до конца забега (не выше базового +5)</td>
-                        </tr>
-                        <tr>
-                            <td>🛡️ <strong>Благословение</strong></td>
-                            <td style="text-align:center;">8.75%</td>
-                            <td>Постоянный бонус <span class="highlight">+1 DEF</span> до конца забега (не выше базового +5)</td>
-                        </tr>
-                        <tr>
-                            <td>✨ <strong>Чудо</strong></td>
-                            <td style="text-align:center;">8.75%</td>
-                            <td>Мгновенное исцеление: здоровье восстанавливается до значения <span class="highlight">базовый HP + уровень × 2</span></td>
-                        </tr>
-                        <tr>
-                            <td>⚡ <strong>Прилив сил</strong></td>
-                            <td style="text-align:center;">8.75%</td>
-                            <td>Постоянный бонус <span class="highlight">+1 MIN и +1 MAX</span> до конца забега (не выше базового +5)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+		<!-- СЛУЧАЙНЫЕ СОБЫТИЯ -->
+		<div class="card" id="dungeon-events">
+			<h2 class="card-title">🎲 Случайные события в подземелье</h2>
+			<p>После каждой волны с вероятностью <span class="highlight">35%</span> срабатывает одно из четырёх событий (каждое — равный шанс). Бонусы к статам действуют до конца забега, но не могут поднять стат выше значения <span class="highlight">базовый + 5</span>.</p>
+			<div class="table-container">
+				<table>
+					<thead>
+						<tr>
+							<th style="width:25%;">Событие</th>
+							<th style="text-align:center;width:20%;">Шанс</th>
+							<th style="width:55%;">Эффект</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>🧪 <strong>Зелье силы</strong></td>
+							<td style="text-align:center;">~8.75%</td>
+							<td>Повышает Атаку на <span class="highlight">+1 ATK</span> до конца забега</td>
+						</tr>
+						<tr>
+							<td>🛡️ <strong>Благословение</strong></td>
+							<td style="text-align:center;">~8.75%</td>
+							<td>Укрепляет броню на <span class="highlight">+1 DEF</span> до конца забега</td>
+						</tr>
+						<tr>
+							<td>✨ <strong>Чудо</strong></td>
+							<td style="text-align:center;">~8.75%</td>
+							<td>Мгновенное исцеление до максимума: <span class="highlight">HP героя + уровень × 2</span>.<br>Не даёт постоянного бонуса</td>
+						</tr>
+						<tr>
+							<td>⚡ <strong>Прилив сил</strong></td>
+							<td style="text-align:center;">~8.75%</td>
+							<td>Усиливает урон на <span class="highlight">+1 MIN и +1 MAX</span> до конца забега</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-        <!-- ФРАКЦИОННЫЕ ПАССИВКИ -->
-        <div class="card" id="dungeon-passives">
-            <h2 class="card-title">🌍 Фракционные пассивки</h2>
-            <p>При входе в подземелье каждый герой получает <strong>одну случайную пассивную способность</strong>, зависящую от его фракции. Выпавшую пассивку изменить нельзя до конца забега.</p>
-            
-            <h3>🌝 Пассивки Ордена Света</h3>
-            <div class="passive-grid">
-                <div class="passive-item">
-                    <strong>🔥 Очищение</strong>
-                    Священный огонь залечивает раны: дополнительные +4 HP к лечению после каждой волны.
-                </div>
-                <div class="passive-item">
-                    <strong>⚡ Благословение</strong>
-                    20% шанс, что высшие силы пропустят тебя дальше без боя. Волна засчитывается, здоровье не тратится.
-                </div>
-                <div class="passive-item">
-                    <strong>💫 Сияние</strong>
-                    Свет ослепляет боссов: их максимальное здоровье снижается на 20%.
-                </div>
-                <div class="passive-item">
-                    <strong>🛡️ Святая защита</strong>
-                    Первый удар, полученный в каждой волне, гарантированно уходит в пустоту — 0 урона.
-                </div>
-                <div class="passive-item">
-                    <strong>✨ Вдохновение</strong>
-                    Вера закаляет клинок: +1 MIN и +1 MAX на весь забег.
-                </div>
-                <div class="passive-item">
-                    <strong>🔮 Отражение</strong>
-                    15% шанс: ты получаешь полный урон, но 50% этого урона возвращается врагу.
-                </div>
-                <div class="passive-item">
-                    <strong>⚔️ Святая ярость</strong>
-                    +2 к итоговому урону против боссов (свет режет глубже).
-                </div>
-                <div class="passive-item">
-                    <strong>💖 Искупление</strong>
-                    Один раз за весь данж: если полученный урон меньше 5 HP, здоровье восстанавливается до базового HP + уровень × 2.
-                </div>
-            </div>
+		<!-- ФРАКЦИОННЫЕ ПАССИВКИ -->
+		<div class="card" id="dungeon-passives">
+			<h2 class="card-title">🌍 Фракционные пассивки</h2>
+			<p>При входе в подземелье герой получает <strong>одну случайную пассивку</strong> своей фракции. Сменить нельзя до конца забега.</p>
+			
+			<h3>🌝 Орден Света</h3>
+			<div class="passive-grid">
+				<div class="passive-item"><strong>🔥 Очищение</strong> +4 HP к лечению после каждой волны</div>
+				<div class="passive-item"><strong>⚡ Благословение</strong> 20% шанс пропустить волну без боя</div>
+				<div class="passive-item"><strong>💫 Сияние</strong> Боссы появляются с −20% здоровья</div>
+				<div class="passive-item"><strong>🛡️ Святая защита</strong> Первый удар врага в каждой волне не наносит урона</div>
+				<div class="passive-item"><strong>✨ Вдохновение</strong> +1 к минимальному и максимальному урону</div>
+				<div class="passive-item"><strong>🔮 Отражение</strong> 15% шанс отправить половину полученного урона обратно врагу</div>
+				<div class="passive-item"><strong>⚔️ Святая ярость</strong> +2 урона по боссам каждой атакой</div>
+				<div class="passive-item"><strong>💖 Искупление</strong> Один раз за забег: если урон от врага меньше 5 — полное исцеление</div>
+			</div>
 
-            <h3>🌚 Пассивки Культа Тьмы</h3>
-            <div class="passive-grid">
-                <div class="passive-item">
-                    <strong>💀 Вампиризм</strong>
-                    Ты высасываешь жизнь из врагов: дополнительные +4 HP к лечению после каждой волны.
-                </div>
-                <div class="passive-item">
-                    <strong>🕳️ Теневой шаг</strong>
-                    20% шанс раствориться во тьме и пропустить волну без боя. Волна засчитывается.
-                </div>
-                <div class="passive-item">
-                    <strong>🩸 Кровавая жатва</strong>
-                    Бонус к каждой атаке: (потерянное HP за текущую волну) ÷ 4. Чем больнее бьют — тем злее ответка.
-                </div>
-                <div class="passive-item">
-                    <strong>👻 Призрачный щит</strong>
-                    25% шанс стать бесплотным и полностью избежать вражеского удара.
-                </div>
-                <div class="passive-item">
-                    <strong>🖤 Проклятие</strong>
-                    Аура тьмы ослабляет всех мобов: −1 ATK каждому врагу на всех волнах.
-                </div>
-                <div class="passive-item">
-                    <strong>🔮 Отражение</strong>
-                    15% шанс: ты получаешь полный урон, но 50% этого урона возвращается врагу.
-                </div>
-                <div class="passive-item">
-                    <strong>🗡️ Казнь</strong>
-                    Если у моба осталось меньше 25% HP, твой удар добивает его мгновенно, независимо от броска урона.
-                </div>
-                <div class="passive-item">
-                    <strong>🌑 Тёмная сила</strong>
-                    Тьма закаляет клинок: +1 MIN и +1 MAX на весь забег.
-                </div>
-            </div>
-        </div>
+			<h3>🌚 Культ Тьмы</h3>
+			<div class="passive-grid">
+				<div class="passive-item"><strong>💀 Вампиризм</strong> +4 HP к лечению после каждой волны</div>
+				<div class="passive-item"><strong>🕳️ Теневой шаг</strong> 20% шанс пропустить волну без боя</div>
+				<div class="passive-item"><strong>🩸 Кровавая жатва</strong> Чем больше HP потеряно за волну — тем сильнее каждая атака</div>
+				<div class="passive-item"><strong>👻 Призрачный щит</strong> 25% шанс полностью избежать вражеского удара</div>
+				<div class="passive-item"><strong>🖤 Проклятие</strong> Все мобы теряют 1 ATK</div>
+				<div class="passive-item"><strong>🔮 Отражение</strong> 15% шанс отправить половину полученного урона обратно врагу</div>
+				<div class="passive-item"><strong>🗡️ Казнь</strong> Мобы с HP ниже 25% добиваются мгновенно</div>
+				<div class="passive-item"><strong>🌑 Тёмная сила</strong> +1 к минимальному и максимальному урону</div>
+			</div>
+		</div>
 
-        <!-- БОССЫ -->
-        <div class="card" id="bosses">
-            <h2 class="card-title">🐉 Боссы подземелья</h2>
-            <p>Каждая <span class="highlight">5-я волна</span> (5, 10, 15, 20, 25...) — это битва с боссом. Боссы значительно превосходят обычных мобов по всем параметрам:</p>
-            <div class="rule-block">
-                <p>🩸 <strong>HP:</strong> Здоровье босса = здоровье обычного моба этой волны <strong>× 1.5</strong> (жирнее, чем обычный враг)</p>
-                <p style="margin-top:8px;">⚔️ <strong>ATK:</strong> Атака босса = атака обычного моба <strong>+ 2</strong> (бьёт значительно больнее)</p>
-                <p style="margin-top:8px;">🛡️ <strong>DEF:</strong> Защита босса = защита обычного моба <strong>+ 1</strong> (держит удар лучше)</p>
-            </div>
-            <p style="margin-top:12px;">⚠️ <strong>Важно:</strong> Только за убийство босса твоя фракция получает <span class="highlight">1–3 трофея</span> в копилку. Если ты прошёл 4 волны и погиб на пятой, не убив босса — трофеев не будет. Трофеи напрямую влияют на то, какая фракция будет владеть Короной Раскола.</p>
-        </div>
+		<!-- БОССЫ -->
+		<div class="card" id="bosses">
+			<h2 class="card-title">🐉 Боссы подземелья</h2>
+			<p>Каждая <span class="highlight">5-я волна</span> (5, 10, 15, 20, 25...) — это битва с боссом. Боссы значительно превосходят обычных мобов по всем параметрам:</p>
+			<div class="rule-block">
+				<p>🩸 <strong>HP:</strong> Здоровье босса = здоровье обычного моба этой волны <strong>× 1.5</strong></p>
+				<p style="margin-top:8px;">⚔️ <strong>ATK:</strong> Атака босса = атака обычного моба <strong>+ 2</strong></p>
+				<p style="margin-top:8px;">🛡️ <strong>DEF:</strong> Защита босса = защита обычного моба <strong>+ 1</strong></p>
+			</div>
+			<p style="margin-top:12px;">⚠️ <strong>Важно:</strong> Только за убийство босса фракция получает <span class="highlight">1–3 трофея</span> в общую копилку. Герой трофеи себе не забирает — они идут в счётчик фракции и влияют на то, кто владеет Короной Раскола. Если босс не убит — трофеев нет.</p>
+		</div>
 
-        <!-- СТАТЫ МОБОВ -->
-        <div class="card" id="mob-stats">
-            <h2 class="card-title">👾 Характеристики мобов по волнам</h2>
-            <p>С каждой волной враги становятся сильнее. Вот их точные параметры для первых 15 волн (включая боссов):</p>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr><th>Волна</th><th style="text-align:center;">HP</th><th style="text-align:center;">ATK</th><th style="text-align:center;">DEF</th><th style="text-align:center;">Урон</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>1</td><td style="text-align:center;">23</td><td style="text-align:center;">1</td><td style="text-align:center;">0</td><td style="text-align:center;">1–4</td></tr>
-                        <tr><td>2</td><td style="text-align:center;">31</td><td style="text-align:center;">1</td><td style="text-align:center;">0</td><td style="text-align:center;">2–5</td></tr>
-                        <tr><td>3</td><td style="text-align:center;">39</td><td style="text-align:center;">2</td><td style="text-align:center;">0</td><td style="text-align:center;">2–6</td></tr>
-                        <tr><td>4</td><td style="text-align:center;">47</td><td style="text-align:center;">2</td><td style="text-align:center;">1</td><td style="text-align:center;">3–7</td></tr>
-                        <tr style="background:rgba(240,185,11,0.08);">
-                            <td><strong>5 🐉 Босс</strong></td>
-                            <td style="text-align:center;"><strong>82</strong></td>
-                            <td style="text-align:center;"><strong>3</strong></td>
-                            <td style="text-align:center;"><strong>1</strong></td>
-                            <td style="text-align:center;"><strong>3–8</strong></td>
-                        </tr>
-                        <tr><td>6</td><td style="text-align:center;">68</td><td style="text-align:center;">3</td><td style="text-align:center;">1</td><td style="text-align:center;">4–9</td></tr>
-                        <tr><td>7</td><td style="text-align:center;">81</td><td style="text-align:center;">4</td><td style="text-align:center;">1</td><td style="text-align:center;">4–10</td></tr>
-                        <tr><td>8</td><td style="text-align:center;">94</td><td style="text-align:center;">4</td><td style="text-align:center;">2</td><td style="text-align:center;">5–11</td></tr>
-                        <tr><td>9</td><td style="text-align:center;">107</td><td style="text-align:center;">5</td><td style="text-align:center;">2</td><td style="text-align:center;">5–12</td></tr>
-                        <tr style="background:rgba(240,185,11,0.08);">
-                            <td><strong>10 🐉 Босс</strong></td>
-                            <td style="text-align:center;"><strong>175</strong></td>
-                            <td style="text-align:center;"><strong>7</strong></td>
-                            <td style="text-align:center;"><strong>3</strong></td>
-                            <td style="text-align:center;"><strong>6–14</strong></td>
-                        </tr>
-                        <tr><td>12</td><td style="text-align:center;">146</td><td style="text-align:center;">6</td><td style="text-align:center;">3</td><td style="text-align:center;">7–16</td></tr>
-                        <tr style="background:rgba(240,185,11,0.08);">
-                            <td><strong>15 🐉 Босс</strong></td>
-                            <td style="text-align:center;"><strong>307</strong></td>
-                            <td style="text-align:center;"><strong>9</strong></td>
-                            <td style="text-align:center;"><strong>4</strong></td>
-                            <td style="text-align:center;"><strong>8–21</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+		<!-- СТАТЫ МОБОВ -->
+		<div class="card" id="mob-stats">
+			<h2 class="card-title">👾 Характеристики мобов по волнам</h2>
+			<p>С каждой волной враги становятся сильнее. Вот их точные параметры для первых 15 волн (включая боссов):</p>
+			<div class="table-container">
+				<table>
+					<thead>
+						<tr><th>Волна</th><th style="text-align:center;">HP</th><th style="text-align:center;">ATK</th><th style="text-align:center;">DEF</th><th style="text-align:center;">Урон</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>1</td><td style="text-align:center;">23</td><td style="text-align:center;">1</td><td style="text-align:center;">0</td><td style="text-align:center;">1–4</td></tr>
+						<tr><td>2</td><td style="text-align:center;">31</td><td style="text-align:center;">1</td><td style="text-align:center;">0</td><td style="text-align:center;">2–5</td></tr>
+						<tr><td>3</td><td style="text-align:center;">39</td><td style="text-align:center;">2</td><td style="text-align:center;">0</td><td style="text-align:center;">2–6</td></tr>
+						<tr><td>4</td><td style="text-align:center;">47</td><td style="text-align:center;">2</td><td style="text-align:center;">1</td><td style="text-align:center;">3–7</td></tr>
+						<tr style="background:rgba(240,185,11,0.08);">
+							<td><strong>5 🐉 Босс</strong></td>
+							<td style="text-align:center;"><strong>82</strong></td>
+							<td style="text-align:center;"><strong>5</strong></td>
+							<td style="text-align:center;"><strong>2</strong></td>
+							<td style="text-align:center;"><strong>3–8</strong></td>
+						</tr>
+						<tr><td>6</td><td style="text-align:center;">68</td><td style="text-align:center;">3</td><td style="text-align:center;">1</td><td style="text-align:center;">4–9</td></tr>
+						<tr><td>7</td><td style="text-align:center;">81</td><td style="text-align:center;">3</td><td style="text-align:center;">1</td><td style="text-align:center;">4–10</td></tr>
+						<tr><td>8</td><td style="text-align:center;">94</td><td style="text-align:center;">3</td><td style="text-align:center;">2</td><td style="text-align:center;">5–11</td></tr>
+						<tr><td>9</td><td style="text-align:center;">107</td><td style="text-align:center;">4</td><td style="text-align:center;">2</td><td style="text-align:center;">5–12</td></tr>
+						<tr style="background:rgba(240,185,11,0.08);">
+							<td><strong>10 🐉 Босс</strong></td>
+							<td style="text-align:center;"><strong>180</strong></td>
+							<td style="text-align:center;"><strong>7</strong></td>
+							<td style="text-align:center;"><strong>3</strong></td>
+							<td style="text-align:center;"><strong>6–14</strong></td>
+						</tr>
+						<tr><td>11</td><td style="text-align:center;">158</td><td style="text-align:center;">4</td><td style="text-align:center;">3</td><td style="text-align:center;">6–15</td></tr>
+						<tr><td>12</td><td style="text-align:center;">171</td><td style="text-align:center;">5</td><td style="text-align:center;">3</td><td style="text-align:center;">7–16</td></tr>
+						<tr><td>13</td><td style="text-align:center;">184</td><td style="text-align:center;">5</td><td style="text-align:center;">3</td><td style="text-align:center;">7–17</td></tr>
+						<tr><td>14</td><td style="text-align:center;">197</td><td style="text-align:center;">5</td><td style="text-align:center;">3</td><td style="text-align:center;">8–18</td></tr>
+						<tr style="background:rgba(240,185,11,0.08);">
+							<td><strong>15 🐉 Босс</strong></td>
+							<td style="text-align:center;"><strong>325</strong></td>
+							<td style="text-align:center;"><strong>8</strong></td>
+							<td style="text-align:center;"><strong>4</strong></td>
+							<td style="text-align:center;"><strong>8–21</strong></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-        <!-- КОРОНА РАСКОЛА -->
-        <div class="card" id="crown">
-            <h2 class="card-title">👑 Корона Раскола</h2>
-            <p>Корона Раскола — это главный символ превосходства фракции в этом сезоне. Она присуждается на основе <strong>общего количества трофеев</strong>, собранных всеми героями фракции в подземелье.</p>
-            <div class="rule-block">
-                <p>Каждый убитый босс приносит в казну фракции от <span class="highlight">1 до 3 трофеев</span>. Трофеи суммируются за всё время.</p>
-                <p style="margin-top:10px;">Фракция, у которой набралось <strong>больше трофеев</strong>, носит Корону. При точном равенстве счётчиков наступает <strong>⚖️ шаткое равновесие</strong> — Корона не принадлежит никому.</p>
-                <p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">⚠️ Важное напоминание: трофеи приносит только <strong>убийство босса</strong>. Если ты прошёл 4 волны и погиб на пятой, не одолев босса — фракция ничего не получит. Каждый босс на счету!</p>
-            </div>
-        </div>
+		<!-- КОРОНА РАСКОЛА -->
+		<div class="card" id="crown">
+			<h2 class="card-title">👑 Корона Раскола</h2>
+			<p>Корона Раскола — главный символ превосходства фракции в этом сезоне. Присуждается за <strong>общее количество трофеев</strong>, собранных всеми героями фракции в подземелье.</p>
+			<div class="rule-block">
+				<p>Каждый убитый босс приносит в казну фракции от <span class="highlight">1 до 3 трофеев</span>. Трофеи суммируются за весь сезон.</p>
+				<p style="margin-top:10px;">Фракция, набравшая <strong>больше трофеев</strong>, владеет Короной. При равенстве — <strong>⚖️ шаткое равновесие</strong>, Корона не принадлежит никому.</p>
+				<p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">⚠️ Трофеи засчитываются только за <strong>убийство босса</strong>. Прошёл 4 волны и погиб на пятой, не одолев босса — фракция не получит ничего. Каждый босс на счету!</p>
+			</div>
+		</div>
 
-        <!-- ==================== БЛОК 8: ОСКОЛКИ И УРОВНИ ==================== -->
-        <div class="card" id="shards">
-            <h2 class="card-title">💎 Осколки и уровни — система прогресса</h2>
-            <p>Осколки (💎) — это основная валюта прогресса твоего героя. Они начисляются за участие в любых активностях и не сгорают даже после удаления персонажа командой <span class="highlight">!харакири</span>.</p>
-            
-            <div class="table-container">
-                <table class="table-shards">
-                    <thead>
-                        <tr><th>Действие</th><th style="text-align:center;width:80px;">Награда 💎</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>🏆 Победа в дуэли (обычный бой)</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
-                        <tr><td>💔 Поражение в дуэли</td><td style="text-align:center;font-weight:700;color:var(--gold);">+1</td></tr>
-                        <tr><td>⚔️ Победа в турнирном бою</td><td style="text-align:center;font-weight:700;color:var(--gold);">+4</td></tr>
-                        <tr><td>💔 Поражение в турнирном бою</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
-                        <tr><td>🏔 Подземелье — за каждые 3 пройденные волны</td><td style="text-align:center;font-weight:700;color:var(--gold);">+1</td></tr>
-                        <tr><td>👑 Победа в турнире (чемпион)</td><td style="text-align:center;font-weight:700;color:var(--gold);">+10</td></tr>
-                        <tr><td>🌝🌚 Победа над героем вражеской фракции</td><td style="text-align:center;font-weight:700;color:var(--gold);">×2 (удвоение)</td></tr>
-                        <tr><td>🏆 Фракционная битва — победа команды</td><td style="text-align:center;font-weight:700;color:var(--gold);">+5</td></tr>
-                        <tr><td>💔 Фракционная битва — поражение команды</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
-                    </tbody>
-                </table>
-            </div>
+		<!-- ==================== БЛОК 8: ОСКОЛКИ И УРОВНИ ==================== -->
+		<div class="card" id="shards">
+			<h2 class="card-title">💎 Осколки и уровни — система прогресса</h2>
+			<p>Осколки (💎) — основная валюта прогресса твоего героя. Начисляются за любые действия и <strong>не сгорают</strong> даже после <span class="highlight">!харакири</span>.</p>
+			
+			<div class="table-container">
+				<table class="table-shards">
+					<thead>
+						<tr><th>Действие</th><th style="text-align:center;width:80px;">Награда 💎</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>🏆 Победа в дуэли</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
+						<tr><td>💔 Поражение в дуэли</td><td style="text-align:center;font-weight:700;color:var(--gold);">+1</td></tr>
+						<tr><td>🌝🌚 Победа над вражеской фракцией</td><td style="text-align:center;font-weight:700;color:var(--gold);">+4 (вместо +2)</td></tr>
+						<tr><td>⚔️ Победа в турнирном бою</td><td style="text-align:center;font-weight:700;color:var(--gold);">+4</td></tr>
+						<tr><td>💔 Поражение в турнирном бою</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
+						<tr><td>👑 Победа в турнире (чемпион)</td><td style="text-align:center;font-weight:700;color:var(--gold);">+10</td></tr>
+						<tr><td>🏆 Фракционная битва — победа команды</td><td style="text-align:center;font-weight:700;color:var(--gold);">+5</td></tr>
+						<tr><td>💔 Фракционная битва — поражение команды</td><td style="text-align:center;font-weight:700;color:var(--gold);">+2</td></tr>
+						<tr><td>🏔 Подземелье — за каждые 3 волны</td><td style="text-align:center;font-weight:700;color:var(--gold);">+1</td></tr>
+					</tbody>
+				</table>
+			</div>
 
-            <h3>📈 Как растёт уровень:</h3>
-            <p>Твой герой повышает уровень автоматически при накоплении осколков:</p>
+			<h3>📈 Как растёт уровень:</h3>
+			<p>Уровень повышается автоматически при накоплении осколков:</p>
 			<ul>
 				<li>Уровень 1: <span class="highlight">5💎</span></li>
 				<li>Уровень 2: ещё +10💎 (всего <span class="highlight">15💎</span>)</li>
@@ -621,20 +570,20 @@
 				<li>Уровни <strong>с 11 и выше</strong>: ровно <span class="highlight">+10💎</span> за каждый уровень</li>
 				<li>Максимального уровня <strong>не существует</strong></li>
 			</ul>
-        </div>
+		</div>
 
-        <!-- ==================== БЛОК 9: СОВЕТЫ ==================== -->
-        <div class="card" id="tips">
-            <h2 class="card-title">💡 Полезные советы новичку</h2>
-            <ol>
-                <li><span class="highlight">Начни с дуэлей.</span> Обычные бои (!бой) — самый безопасный способ накопить первые осколки и понять механику.</li>
-                <li><span class="highlight">Не бойся проигрывать.</span> Даже за поражение дают осколки, так что каждый бой приближает тебя к новому уровню.</li>
-                <li><span class="highlight">Записывайся в турниры.</span> Даже если вылетишь в первом раунде, ты получишь +2💎 за турнирный бой — это в два раза больше, чем за обычное поражение.</li>
-                <li><span class="highlight">Ходи в подземелье.</span> Это отличный способ заработать осколки и помочь своей фракции. Даже 5-10 волн — уже вклад в общую копилку трофеев.</li>
-                <li><span class="highlight">Следи за фракционными битвами.</span> Победа над вражеской фракцией удваивает награду — не упускай возможность.</li>
-                <li><span class="highlight">Используй !харакири с умом.</span> Если тебе не нравится твой текущий класс или раса, ты можешь пересоздать героя, сохранив все заработанные осколки и уровни.</li>
-            </ol>
-        </div>
+		<!-- ==================== БЛОК 9: СОВЕТЫ ==================== -->
+		<div class="card" id="tips">
+			<h2 class="card-title">💡 Полезные советы новичку</h2>
+			<ol>
+				<li><span class="highlight">Начни с дуэлей.</span> Обычные бои (!бой) — самый безопасный способ накопить первые осколки и понять механику.</li>
+				<li><span class="highlight">Не бойся проигрывать.</span> Даже за поражение дают +1💎, так что каждый бой приближает тебя к новому уровню.</li>
+				<li><span class="highlight">Записывайся в турниры.</span> Даже если вылетишь в первом раунде, получишь +2💎 за турнирный бой — вдвое больше чем за обычное поражение.</li>
+				<li><span class="highlight">Бей вражескую фракцию.</span> Победа над героем из противоположной фракции даёт +4💎 вместо +2💎 — ищи соперников с другой эмблемой.</li>
+				<li><span class="highlight">Ходи в подземелье.</span> Каждые 3 волны приносят +1💎, а боссы дают трофеи в копилку фракции. Даже 5-10 волн — уже вклад.</li>
+				<li><span class="highlight">Используй !харакири с умом.</span> Если не нравится класс или раса — пересоздай героя. Осколки и уровень сохранятся, а старый герой уйдёт в архив.</li>
+			</ol>
+		</div>
     </div>
 
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
