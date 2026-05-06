@@ -274,11 +274,41 @@
         records.forEach(r=>{html+=`<div class="title-card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:6px;">${r.icon}</div><div style="color:var(--text-muted);font-size:0.7rem;">${r.name}</div><div style="font-size:1.5rem;color:var(--gold);font-weight:800;">${r.value}</div><div style="color:var(--text-muted);font-size:0.68rem;">${r.desc}</div><div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border-subtle);font-size:0.8rem;">${r.emoji} ${r.player}</div></div>`;});
         html+='</div></div>';
 
-        // ЧЕМПИОНЫ
-        html+='<div id="tab-champions" class="tab-content">';
-        const currentChampion=players.find(p=>p.champion===true);const topChampions=players.filter(p=>p.tournamentWins>0).sort((a,b)=>b.tournamentWins-a.tournamentWins);
-        if(currentChampion){html+=`<div class="champion-block"><div style="font-size:0.8rem;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;">ХРАНИТЕЛЬ РАСКОЛА</div><div class="champion-emoji">${currentChampion.emoji}</div><div class="champion-name">${currentChampion.display}</div><div class="champion-class">${currentChampion.name}</div><div style="margin-top:16px;display:flex;justify-content:center;gap:32px;"><div><span style="color:var(--text-muted);font-size:0.7rem;">Турнирные победы</span><br><span style="color:var(--gold);font-size:1.5rem;font-weight:800;">${currentChampion.tournamentWins}</span></div><div><span style="color:var(--text-muted);font-size:0.7rem;">Всего побед</span><br><span style="color:var(--text-primary);font-size:1.5rem;font-weight:800;">${currentChampion.wins}</span></div><div><span style="color:var(--text-muted);font-size:0.7rem;">Винрейт</span><br><span style="color:var(--text-primary);font-size:1.5rem;font-weight:800;">${(currentChampion.wins*100/(currentChampion.wins+currentChampion.losses)).toFixed(1)}%</span></div></div></div>`;}else{html+='<div class="champion-block"><div style="font-size:0.8rem;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;">ХРАНИТЕЛЬ РАСКОЛА</div><div style="font-size:4rem;opacity:0.4;">👑</div><div style="color:var(--text-muted);">Титул ждёт своего героя</div></div>';}
-        if(topChampions.length>0){html+='<div class="card"><div class="card-title">🏆 Чемпионы</div><div class="table-container"><table id="champions-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="wins">🏆</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="champions-tbody">';topChampions.forEach((p,i)=>{const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${p.champion?'style="background:rgba(255,215,0,0.06);"':''}><td>${i+1}</td><td>${p.emoji} ${p.display} ${p.champion?'<span style="color:var(--gold);">👑</span>':''}</td><td>${p.name}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.tournamentWins}</td><td>${fi}</td></tr>`;});html+='</tbody></table></div></div>';}html+='</div>';
+		// ЧЕМПИОНЫ
+		html+='<div id="tab-champions" class="tab-content">';
+		const currentChampion=players.find(p=>p.champion===true);
+		const topChampions=players.filter(p=>p.tournamentWins>0).sort((a,b)=>b.tournamentWins-a.tournamentWins);
+
+		const heroArchiveChamps=data.heroArchive||{};
+		Object.values(heroArchiveChamps).forEach(heroes=>{
+			heroes.forEach(h=>{
+				if((h.tournamentWins||0)>0){
+					const exists=topChampions.find(c=>c.display===h.name);
+					if(!exists){
+						topChampions.push({display:h.name,emoji:h.emoji||'',name:h.name||'',tournamentWins:h.tournamentWins||0,wins:h.wins||0,losses:h.losses||0,faction:'',champion:false});
+					}else{
+						exists.tournamentWins+=(h.tournamentWins||0);
+					}
+				}
+			});
+		});
+		topChampions.sort((a,b)=>(b.tournamentWins||0)-(a.tournamentWins||0));
+
+		if(currentChampion){
+			html+=`<div class="champion-block"><div style="font-size:0.8rem;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;">ХРАНИТЕЛЬ РАСКОЛА</div><div class="champion-emoji">${currentChampion.emoji}</div><div class="champion-name">${currentChampion.display}</div><div class="champion-class">${currentChampion.name}</div><div style="margin-top:16px;display:flex;justify-content:center;gap:32px;"><div><span style="color:var(--text-muted);font-size:0.7rem;">Турнирные победы</span><br><span style="color:var(--gold);font-size:1.5rem;font-weight:800;">${currentChampion.tournamentWins}</span></div><div><span style="color:var(--text-muted);font-size:0.7rem;">Всего побед</span><br><span style="color:var(--text-primary);font-size:1.5rem;font-weight:800;">${currentChampion.wins}</span></div><div><span style="color:var(--text-muted);font-size:0.7rem;">Винрейт</span><br><span style="color:var(--text-primary);font-size:1.5rem;font-weight:800;">${(currentChampion.wins*100/(currentChampion.wins+currentChampion.losses)).toFixed(1)}%</span></div></div></div>`;
+		}else{
+			html+='<div class="champion-block"><div style="font-size:0.8rem;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;">ХРАНИТЕЛЬ РАСКОЛА</div><div style="font-size:4rem;opacity:0.4;">👑</div><div style="color:var(--text-muted);">Титул ждёт своего героя</div></div>';
+		}
+		if(topChampions.length>0){
+			html+='<div class="card"><div class="card-title">🏆 Чемпионы</div><div class="table-container"><table id="champions-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="wins">🏆</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="champions-tbody">';
+			topChampions.forEach((p,i)=>{
+				const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'👻');
+				const isGhost=!p.faction;
+				html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${p.champion?'style="background:rgba(255,215,0,0.06);"':''}><td>${i+1}</td><td>${p.emoji||''} ${p.display||''} ${p.champion?'<span style="color:var(--gold);">👑</span>':''} ${isGhost?'<span style="color:var(--text-muted);font-size:0.7rem;">(бывший)</span>':''}</td><td>${p.name||''}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.tournamentWins||0}</td><td>${fi}</td></tr>`;
+			});
+			html+='</tbody></table></div></div>';
+		}
+		html+='</div>';
 
         // ТИТУЛЫ
         html+='<div id="tab-titles" class="tab-content">';
