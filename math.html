@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бамбуковый счёт — тест</title>
+    <style>
+        :root {
+            --bg: #0a0e17; --card: #152028; --elevated: #1a2332;
+            --gold: #f0b90b; --text: #e8edf3; --muted: #6b7280;
+            --green: #10b981; --red: #ef4444;
+            --border-subtle: rgba(255,255,255,0.08);
+            --radius: 20px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 30%, rgba(255,215,0,0.04) 0%, transparent 50%); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 440px; width: 100%; padding: 24px; }
+        .card { background: var(--card); border-radius: var(--radius); padding: 28px 24px; text-align: center; border: 1px solid var(--border-subtle); position: relative; overflow: hidden; }
+        .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #ff8c00, var(--gold), #ff8c00, transparent); opacity: 0.6; }
+        h2 { font-size: 1.1rem; font-weight: 800; color: var(--gold); margin-bottom: 14px; }
+        .score-box { display: inline-block; background: var(--elevated); border-radius: 20px; padding: 6px 18px; margin-bottom: 14px; }
+        .score-label { color: var(--muted); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; }
+        .score-value { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+        .problem-box { background: var(--elevated); border-radius: 16px; padding: 20px 16px; margin: 10px 0; border: 1px solid var(--border-subtle); }
+        .problem { font-size: 2rem; font-weight: 900; color: var(--gold); }
+        .timer-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+        .timer-text { color: var(--muted); font-size: 0.75rem; min-width: 45px; text-align: right; font-variant-numeric: tabular-nums; }
+        .timer-text span { color: var(--gold); font-weight: 700; }
+        .timer-text.urgent span { color: var(--red); }
+        .progress-bar { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; max-width: 200px; }
+        .progress-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.3s linear; width: 100%; }
+        .progress-fill.urgent { background: var(--red); }
+        .answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+        .btn { padding: 18px 12px; border-radius: 14px; border: 2px solid var(--border-subtle); font-size: 1.3rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.15s; background: var(--elevated); color: var(--text); }
+        .btn:hover { border-color: var(--gold); background: var(--card); transform: translateY(-2px); }
+        .btn-start { width: 100%; padding: 12px; border-radius: 14px; font-size: 0.9rem; background: linear-gradient(135deg, var(--gold), #e0a800); color: #000; font-weight: 700; border: none; cursor: pointer; font-family: inherit; transition: 0.15s; box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+        .btn-start:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-start:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+        .btn:disabled, .btn-start:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+        .msg { margin-top: 8px; min-height: 22px; font-size: 0.85rem; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>🎋 Бамбуковый счёт</h2>
+            <div class="score-box">
+                <div class="score-label">Правильных</div>
+                <div class="score-value" id="score">0</div>
+            </div>
+            <div class="problem-box">
+                <div class="problem" id="problem">5 + 2 = ?</div>
+                <div class="timer-row">
+                    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                    <div class="timer-text" id="timerBox">⏱ <span id="timer">5</span>с</div>
+                </div>
+            </div>
+            <div class="answers" id="answers"></div>
+            <div class="msg" id="msg"></div>
+            <button class="btn-start" id="startBtn" onclick="start()">🎋 Начать игру</button>
+        </div>
+    </div>
+
+<script>
+let active=false,correct=0,answer=0,timer=null,timeLeft=0;
+const TOTAL_TIME=5;
+
+function gen(){
+    const ops=['+','-','·',':'];
+    const op=ops[Math.floor(Math.random()*ops.length)];
+    let a,b;
+    switch(op){
+        case '+':a=rand(5,25);b=rand(1,15);answer=a+b;break;
+        case '-':a=rand(10,30);b=rand(1,a);answer=a-b;break;
+        case '·':a=rand(2,9);b=rand(2,9);answer=a*b;break;
+        case ':':b=rand(2,9);answer=rand(2,9);a=b*answer;break;
+    }
+    return `${a} ${op} ${b}`;
+}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function round(){
+    if(!active)return;
+    clearInterval(timer);
+    timeLeft=TOTAL_TIME;
+    updateTimerDisplay();
+    document.getElementById('problem').textContent=gen()+' = ?';
+    const ans=new Set([answer]);
+    while(ans.size<3){const f=answer+rand(-5,5);if(f!==answer&&f>=0&&!ans.has(f))ans.add(f);}
+    document.getElementById('answers').innerHTML=shuffle([...ans]).map(a=>`<button class="btn" onclick="guess(${a})">${a}</button>`).join('');
+    const start=Date.now();
+    timer=setInterval(()=>{
+        const elapsed=(Date.now()-start)/1000;
+        timeLeft=Math.max(0,TOTAL_TIME-elapsed);
+        updateTimerDisplay();
+        if(timeLeft<=0){clearInterval(timer);end('⏰ Время вышло!');}
+    },50);
+}
+
+function updateTimerDisplay(){
+    const pct=(timeLeft/TOTAL_TIME)*100;
+    const fill=document.getElementById('progressFill');
+    const timerBox=document.getElementById('timerBox');
+    const timerEl=document.getElementById('timer');
+    fill.style.width=pct+'%';
+    timerEl.textContent=Math.ceil(timeLeft);
+    if(timeLeft<=2){fill.classList.add('urgent');timerBox.classList.add('urgent');}
+    else{fill.classList.remove('urgent');timerBox.classList.remove('urgent');}
+}
+
+function guess(n){
+    clearInterval(timer);
+    if(n===answer){
+        correct++;
+        document.getElementById('score').textContent=correct;
+        document.getElementById('msg').innerHTML='<span style="color:var(--green)">✅ Верно!</span>';
+        setTimeout(()=>document.getElementById('msg').innerHTML='',500);
+        round();
+    }else{
+        end(`❌ Неверно! Правильно: ${answer}`);
+    }
+}
+
+function end(msg){
+    active=false;
+    clearInterval(timer);
+    document.getElementById('answers').innerHTML='';
+    document.getElementById('msg').innerHTML=`<span style="color:var(--red)">${msg}</span>`;
+    document.getElementById('startBtn').disabled=false;
+    document.getElementById('startBtn').textContent='🎋 Ещё раз';
+    updateTimerDisplay();
+}
+
+function start(){
+    active=true;correct=0;
+    document.getElementById('score').textContent='0';
+    document.getElementById('msg').innerHTML='';
+    document.getElementById('startBtn').disabled=true;
+    document.getElementById('startBtn').textContent='🎋 Думай быстрее...';
+    round();
+}
+</script>
+</body>
+</html>
