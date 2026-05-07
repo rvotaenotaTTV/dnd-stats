@@ -10,12 +10,11 @@
             --gold: #f0b90b; --text: #e8edf3; --muted: #6b7280;
             --green: #10b981; --red: #ef4444;
             --border-subtle: rgba(255,255,255,0.08);
-            --radius: 20px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 30%, rgba(255,215,0,0.04) 0%, transparent 50%); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; }
         .container { max-width: 440px; width: 100%; padding: 24px; }
-        .card { background: var(--card); border-radius: var(--radius); padding: 28px 24px; text-align: center; border: 1px solid var(--border-subtle); position: relative; overflow: hidden; }
+        .card { background: var(--card); border-radius: 20px; padding: 28px 24px; text-align: center; border: 1px solid var(--border-subtle); position: relative; overflow: hidden; }
         .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #ff8c00, var(--gold), #ff8c00, transparent); opacity: 0.6; }
         h2 { font-size: 1.1rem; font-weight: 800; color: var(--gold); margin-bottom: 14px; }
         .score-box { display: inline-block; background: var(--elevated); border-radius: 20px; padding: 6px 18px; margin-bottom: 14px; }
@@ -28,7 +27,7 @@
         .timer-text span { color: var(--gold); font-weight: 700; }
         .timer-text.urgent span { color: var(--red); }
         .progress-bar { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; max-width: 200px; }
-        .progress-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.3s linear; width: 100%; }
+        .progress-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.05s linear; width: 100%; }
         .progress-fill.urgent { background: var(--red); }
         .answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
         .btn { padding: 18px 12px; border-radius: 14px; border: 2px solid var(--border-subtle); font-size: 1.3rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.15s; background: var(--elevated); color: var(--text); }
@@ -62,18 +61,37 @@
     </div>
 
 <script>
-let active=false,correct=0,answer=0,timer=null,timeLeft=0;
-const TOTAL_TIME=5;
+let active=false,correct=0,answer=0,timer=null;
+
+function getTime(){
+    if(correct<5)return 5;
+    if(correct<15)return 4;
+    if(correct<30)return 3;
+    return 2;
+}
 
 function gen(){
+    const lvl=correct;
     const ops=['+','-','·',':'];
     const op=ops[Math.floor(Math.random()*ops.length)];
-    let a,b;
+    let a,b,min,max;
     switch(op){
-        case '+':a=rand(5,25);b=rand(1,15);answer=a+b;break;
-        case '-':a=rand(10,30);b=rand(1,a);answer=a-b;break;
-        case '·':a=rand(2,9);b=rand(2,9);answer=a*b;break;
-        case ':':b=rand(2,9);answer=rand(2,9);a=b*answer;break;
+        case '+':
+            min=Math.min(5+lvl,50);max=Math.min(25+lvl*3,200);
+            a=rand(min,max);b=rand(min,max);answer=a+b;
+            break;
+        case '-':
+            min=Math.min(5+lvl,50);max=Math.min(20+lvl*3,200);
+            b=rand(min,max);answer=rand(min,max);a=b+answer;
+            break;
+        case '·':
+            min=2;max=Math.min(9+Math.floor(lvl/3),20);
+            a=rand(min,max);b=rand(min,max);answer=a*b;
+            break;
+        case ':':
+            min=2;max=Math.min(9+Math.floor(lvl/3),20);
+            b=rand(min,max);answer=rand(min,max);a=b*answer;
+            break;
     }
     return `${a} ${op} ${b}`;
 }
@@ -83,8 +101,9 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function round(){
     if(!active)return;
     clearInterval(timer);
-    timeLeft=TOTAL_TIME;
-    updateTimerDisplay();
+    const total=getTime();
+    let timeLeft=total;
+    updateTimer(total,timeLeft);
     document.getElementById('problem').textContent=gen()+' = ?';
     const ans=new Set([answer]);
     while(ans.size<3){const f=answer+rand(-5,5);if(f!==answer&&f>=0&&!ans.has(f))ans.add(f);}
@@ -92,21 +111,21 @@ function round(){
     const start=Date.now();
     timer=setInterval(()=>{
         const elapsed=(Date.now()-start)/1000;
-        timeLeft=Math.max(0,TOTAL_TIME-elapsed);
-        updateTimerDisplay();
+        timeLeft=Math.max(0,total-elapsed);
+        updateTimer(total,timeLeft);
         if(timeLeft<=0){clearInterval(timer);end('⏰ Время вышло!');}
     },50);
 }
 
-function updateTimerDisplay(){
-    const pct=(timeLeft/TOTAL_TIME)*100;
+function updateTimer(total,left){
+    const pct=(left/total)*100;
     const fill=document.getElementById('progressFill');
-    const timerBox=document.getElementById('timerBox');
-    const timerEl=document.getElementById('timer');
+    const box=document.getElementById('timerBox');
+    const el=document.getElementById('timer');
     fill.style.width=pct+'%';
-    timerEl.textContent=Math.ceil(timeLeft);
-    if(timeLeft<=2){fill.classList.add('urgent');timerBox.classList.add('urgent');}
-    else{fill.classList.remove('urgent');timerBox.classList.remove('urgent');}
+    el.textContent=Math.ceil(left);
+    if(left<=2||pct<=40){fill.classList.add('urgent');box.classList.add('urgent');}
+    else{fill.classList.remove('urgent');box.classList.remove('urgent');}
 }
 
 function guess(n){
@@ -129,7 +148,6 @@ function end(msg){
     document.getElementById('msg').innerHTML=`<span style="color:var(--red)">${msg}</span>`;
     document.getElementById('startBtn').disabled=false;
     document.getElementById('startBtn').textContent='🎋 Ещё раз';
-    updateTimerDisplay();
 }
 
 function start(){
