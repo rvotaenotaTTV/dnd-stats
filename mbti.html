@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кто ты в Этернисе? MBTI</title>
+    <style>
+        :root {
+            --bg: #0a0e17; --card: #152028; --elevated: #1a2332;
+            --gold: #f0b90b; --text: #e8edf3; --muted: #6b7280;
+            --purple: #a371f7; --green: #10b981; --red: #ef4444;
+            --border-subtle: rgba(255,255,255,0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 30%, rgba(255,215,0,0.04) 0%, transparent 50%); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 520px; width: 100%; padding: 24px; }
+        .card { background: var(--card); border-radius: 20px; padding: 28px 24px; text-align: center; border: 1px solid var(--border-subtle); position: relative; overflow: hidden; }
+        .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #ff8c00, var(--gold), #ff8c00, transparent); opacity: 0.6; }
+        h2 { font-size: 1.1rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+        .subtitle { color: var(--muted); font-size: 0.75rem; margin-bottom: 20px; }
+        .progress-bar { height: 4px; background: var(--elevated); border-radius: 2px; margin-bottom: 20px; }
+        .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.3s; }
+        .question { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 16px; line-height: 1.5; }
+        .answers { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .btn { padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border-subtle); font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: all 0.15s; background: var(--elevated); color: var(--text); text-align: left; }
+        .btn:hover { border-color: var(--gold); background: var(--card); transform: translateX(4px); }
+        .result-card { padding: 10px; }
+        .result-emoji { font-size: 4rem; margin-bottom: 8px; }
+        .result-type { font-size: 2rem; font-weight: 900; color: var(--gold); margin-bottom: 4px; letter-spacing: 3px; }
+        .result-class { font-size: 1.6rem; font-weight: 800; margin-bottom: 4px; }
+        .result-faction { font-size: 0.85rem; margin-bottom: 14px; }
+        .result-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.6; margin-bottom: 20px; }
+        .result-prefix { font-size: 0.7rem; color: var(--muted); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 2px; }
+        .btn-start { width: 100%; padding: 14px; border-radius: 14px; font-size: 1rem; background: linear-gradient(135deg, var(--gold), #e0a800); color: #000; font-weight: 700; border: none; cursor: pointer; font-family: inherit; transition: 0.15s; box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+        .btn-start:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-start:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card" id="mainCard">
+            <h2>🔮 Кто ты в Этернисе?</h2>
+            <div class="subtitle">16 типов MBTI • Тест от ГуангГуанга</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+            <div id="content"></div>
+        </div>
+    </div>
+
+<script>
+let scores={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+let qIndex=0;
+
+const questions=[
+    {q:"Ты находишь осколок Солнечного Клинка. Твои действия?",
+     a:[{t:"Расскажу об этом всем в таверне! Пусть знают!",s:{E:2,S:1}},
+        {t:"Уединюсь и изучу его в тишине",s:{I:2,N:1}},
+        {t:"Проверю его свойства логически — эксперименты",s:{T:2,J:1}},
+        {t:"Почувствую его энергию. Что он мне говорит?",s:{F:2,P:1}}]},
+    {q:"Бой окончен. Враг повержен, но жив. Твои мысли?",
+     a:[{t:"Пощажу. Каждая жизнь ценна",s:{F:2,I:1}},
+        {t:"Добью. Так будет справедливо после всего",s:{T:2,J:1}},
+        {t:"Обсужу с союзниками что делать дальше",s:{E:2,P:1}},
+        {t:"Допрошу его — узнаю полезную информацию",s:{N:2,T:1}}]},
+    {q:"Что для тебя важнее в бою?",
+     a:[{t:"Чёткий план и проверенная стратегия",s:{J:2,S:1}},
+        {t:"Интуиция и умение читать противника",s:{P:2,N:1}},
+        {t:"Сыгранность команды и боевой дух",s:{E:2,F:1}},
+        {t:"Моя личная сила и мастерство",s:{I:2,T:1}}]},
+    {q:"Таверна ГуангГуанга. Вечер. Что делаешь?",
+     a:[{t:"Знакомлюсь со всеми! Кто здесь герой?",s:{E:2,S:1}},
+        {t:"Тихо сижу в углу, слушаю разговоры",s:{I:2,N:1}},
+        {t:"Обсуждаю с трактирщиком политику Арены",s:{T:2,J:1}},
+        {t:"Рассказываю историю, которая тронет сердца",s:{F:2,P:1}}]},
+    {q:"Как ты принимаешь важные решения?",
+     a:[{t:"Составляю таблицу за и против",s:{T:2,J:1}},
+        {t:"Доверяюсь чутью. Первое ощущение — верное",s:{F:2,P:1}},
+        {t:"Спрашиваю совета у друзей",s:{E:2,F:1}},
+        {t:"Уединяюсь и обдумываю все варианты",s:{I:2,T:1}}]},
+    {q:"Что тебя больше всего раздражает?",
+     a:[{t:"Хаос и отсутствие плана",s:{J:2,S:1}},
+        {t:"Слишком жёсткие правила и рамки",s:{P:2,N:1}},
+        {t:"Холодность и безразличие к чувствам других",s:{F:2,E:1}},
+        {t:"Громкие и поверхностные люди",s:{I:2,T:1}}]},
+    {q:"Твой союзник ошибся. Ты...",
+     a:[{t:"Скажу ему прямо — пусть знает",s:{T:2,E:1}},
+        {t:"Поддержу эмоционально — он расстроен",s:{F:2,I:1}},
+        {t:"Разберу ошибку по шагам, чтобы не повторить",s:{S:2,J:1}},
+        {t:"Предложу новый, творческий подход",s:{N:2,P:1}}]},
+    {q:"Что ты видишь во сне?",
+     a:[{t:"Конкретные вещи: меч, арену, знакомые лица",s:{S:2,J:1}},
+        {t:"Символы, которые я пытаюсь разгадать",s:{N:2,P:1}},
+        {t:"Толпу, которая приветствует меня",s:{E:2,F:1}},
+        {t:"Себя в одиночестве, но в гармонии",s:{I:2,T:1}}]},
+    {q:"Как ты готовишься к турниру?",
+     a:[{t:"Тренируюсь по расписанию, день за днём",s:{S:2,J:1}},
+        {t:"Представляю бой в голове, визуализирую",s:{N:2,P:1}},
+        {t:"Изучаю соперников — их сильные и слабые стороны",s:{T:2,I:1}},
+        {t:"Заручаюсь поддержкой друзей и болельщиков",s:{F:2,E:1}}]},
+    {q:"Что такое справедливость?",
+     a:[{t:"Равные правила для всех",s:{T:2,J:1}},
+        {t:"Каждому по потребностям",s:{F:2,P:1}},
+        {t:"Порядок, установленный законом",s:{S:2,J:1}},
+        {t:"Идея, которая у каждого своя",s:{N:2,P:1}}]},
+    {q:"Ты узнал, что в городе готовится заговор. Что делаешь?",
+     a:[{t:"Собираю команду и действую немедленно",s:{E:2,J:1}},
+        {t:"Наблюдаю из тени, собирая улики",s:{I:2,P:1}},
+        {t:"Просчитываю все возможные сценарии",s:{T:2,N:1}},
+        {t:"Предупреждаю всех, кто может пострадать",s:{F:2,S:1}}]},
+    {q:"Что важнее для победы?",
+     a:[{t:"Дисциплина и проверенная тактика",s:{S:2,J:1}},
+        {t:"Умение удивить и сломать шаблон",s:{N:2,P:1}},
+        {t:"Холодный расчёт в каждой секунде боя",s:{T:2,I:1}},
+        {t:"Страсть и желание победить любой ценой",s:{F:2,E:1}}]},
+    {q:"ГуангГуанг протягивает тебе карту сокровищ. Что делаешь?",
+     a:[{t:"Сразу зову друзей — вместе искать веселее!",s:{E:2,F:1}},
+        {t:"Изучаю карту вдоль и поперёк перед выходом",s:{I:2,J:1}},
+        {t:"Иду немедленно! Приключения не ждут!",s:{P:2,E:1}},
+        {t:"Сомневаюсь: а настоящая ли карта?",s:{N:2,T:1}}]},
+    {q:"Твоя главная слабость?",
+     a:[{t:"Иногда я слишком прямолинеен с людьми",s:{T:2,E:1}},
+        {t:"Принимаю всё слишком близко к сердцу",s:{F:2,I:1}},
+        {t:"Теряюсь когда планы резко меняются",s:{J:2,S:1}},
+        {t:"Мне трудно завершать начатое — столько всего интересного!",s:{P:2,N:1}}]},
+    {q:"Что для тебя значит осколок?",
+     a:[{t:"Инструмент. Его можно измерить, изучить, применить",s:{S:2,T:1}},
+        {t:"Тайна. Он связан с чем-то большим, чем мы видим",s:{N:2,F:1}},
+        {t:"Ответственность. Его сила требует порядка",s:{J:2,T:1}},
+        {t:"Свобода. Осколок — это шанс стать кем угодно",s:{P:2,F:1}}]},
+    {q:"Последний вопрос. Что ты оставишь после себя в Этернисе?",
+     a:[{t:"Школу для будущих воинов",s:{E:2,S:1,J:1}},
+        {t:"Легенду, которую будут пересказывать веками",s:{I:2,N:1,F:1}},
+        {t:"Трактат о природе осколков и магии",s:{I:2,N:1,T:1}},
+        {t:"Друзей, которые будут помнить меня",s:{E:2,S:1,F:1}}]}
+];
+
+const results={
+    "ESTJ":{emoji:"🛡️",class:"Паладин",faction:"Орден Света",desc:"Прирождённый лидер. Ты ведёшь за собой, опираясь на порядок и дисциплину. Аэлион гордился бы тобой.",color:"var(--gold)"},
+    "ISTJ":{emoji:"⚔️",class:"Воин",faction:"Орден Света",desc:"Молчаливый страж. Ты действуешь методично и надёжно.",color:"var(--gold)"},
+    "ESFJ":{emoji:"✝️",class:"Жрец",faction:"Орден Света",desc:"Душа компании и опора для близких. Свет через заботу.",color:"var(--gold)"},
+    "ISFJ":{emoji:"🥋",class:"Монах",faction:"Орден Света",desc:"Тихая сила. На тебя всегда можно положиться.",color:"var(--gold)"},
+    "ENTJ":{emoji:"⚙️",class:"Изобретатель",faction:"Орден Света",desc:"Стратег и визионер. Ты видишь картину целиком.",color:"var(--gold)"},
+    "INTJ":{emoji:"🏹",class:"Следопыт",faction:"Орден Света",desc:"Одиночка с планом. Бьёшь точно в цель.",color:"var(--gold)"},
+    "ENFJ":{emoji:"✨",class:"Волшебница",faction:"Орден Света",desc:"Вдохновитель. Ты зажигаешь сердца.",color:"var(--gold)"},
+    "INFJ":{emoji:"🎸",class:"Бард",faction:"Орден Света",desc:"Поэт и пророк. Свет через слово.",color:"var(--gold)"},
+    "ESTP":{emoji:"🔮",class:"Чародей",faction:"Культ Тьмы",desc:"Энергия и харизма. Действуешь быстро, рискуешь смело.",color:"var(--purple)"},
+    "ISTP":{emoji:"🗡️",class:"Плут",faction:"Культ Тьмы",desc:"Мастер дела. Немногословен, но смертоносен.",color:"var(--purple)"},
+    "ESFP":{emoji:"🦴",class:"Некромант",faction:"Культ Тьмы",desc:"Душа таверны с тёмной стороной. Играешь со смертью.",color:"var(--purple)"},
+    "ISFP":{emoji:"👁️",class:"Колдун",faction:"Культ Тьмы",desc:"Тихий наблюдатель. Говоришь с силами тьмы.",color:"var(--purple)"},
+    "ENTP":{emoji:"🌿",class:"Друид",faction:"Культ Тьмы",desc:"Экспериментатор. Проверяешь границы природы.",color:"var(--purple)"},
+    "INTP":{emoji:"🪓",class:"Варвар",faction:"Культ Тьмы",desc:"Яростный мыслитель. Ломаешь осмысленно.",color:"var(--purple)"},
+    "ENFP":{emoji:"💎",class:"Осколок",faction:"Вне фракций",desc:"Энтузиазм и любопытство ведут тебя за пределы фракций.",color:"#fff"},
+    "INFP":{emoji:"🌍",class:"Странник",faction:"Вне фракций",desc:"Мечтатель и идеалист. Этернис меняется вместе с тобой.",color:"#fff"}
+};
+
+function addScores(s){for(const[k,v]of Object.entries(s))scores[k]=(scores[k]||0)+v;}
+
+function getType(){
+    return (scores.E>=scores.I?"E":"I")+(scores.S>=scores.N?"S":"N")+
+           (scores.T>=scores.F?"T":"F")+(scores.J>=scores.P?"J":"P");
+}
+
+function renderQuestion(){
+    if(qIndex>=questions.length)return showResult();
+    const q=questions[qIndex];
+    document.getElementById('progressFill').style.width=Math.round(qIndex/questions.length*100)+'%';
+    let html=`<div class="question">${q.q}</div><div class="answers">`;
+    q.a.forEach((a,i)=>html+=`<button class="btn" onclick="answer(${i})">${a.t}</button>`);
+    html+='</div><div style="color:var(--muted);font-size:0.7rem;">Вопрос '+(qIndex+1)+' из '+questions.length+'</div>';
+    document.getElementById('content').innerHTML=html;
+}
+
+function answer(i){addScores(questions[qIndex].a[i].s);qIndex++;renderQuestion();}
+
+function showResult(){
+    const type=getType();
+    const r=results[type];
+    document.getElementById('progressFill').style.width='100%';
+    const pairs=[{l:"E",r:"I",vl:scores.E,vr:scores.I,c:"var(--gold)"},{l:"S",r:"N",vl:scores.S,vr:scores.N,c:"#4a90d9"},{l:"T",r:"F",vl:scores.T,vr:scores.F,c:"var(--green)"},{l:"J",r:"P",vl:scores.J,vr:scores.P,c:"#ff8c00"}];
+let barsHtml='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">';
+pairs.forEach(b=>{
+    const maxVal=Math.max(...Object.values(scores))||1;
+    barsHtml+=`<div style="display:flex;align-items:center;gap:6px;font-size:0.7rem;">
+        <span style="width:14px;text-align:right;color:var(--muted);font-weight:700;">${b.l}</span>
+        <span style="width:20px;text-align:center;font-weight:700;color:${b.c};">${b.vl}</span>
+        <div style="flex:1;height:6px;background:var(--elevated);border-radius:3px;overflow:hidden;"><div style="width:${b.vl/maxVal*100}%;height:100%;background:${b.c};border-radius:3px;"></div></div>
+    </div>`;
+    barsHtml+=`<div style="display:flex;align-items:center;gap:6px;font-size:0.7rem;">
+        <span style="width:14px;text-align:right;color:var(--muted);font-weight:700;">${b.r}</span>
+        <span style="width:20px;text-align:center;font-weight:700;color:var(--muted);">${b.vr}</span>
+        <div style="flex:1;height:6px;background:var(--elevated);border-radius:3px;overflow:hidden;"><div style="width:${b.vr/maxVal*100}%;height:100%;background:var(--muted);border-radius:3px;"></div></div>
+    </div>`;
+});
+barsHtml+='</div>';
+    document.getElementById('content').innerHTML=`
+        <div class="result-card">
+            <div class="result-emoji">${r.emoji}</div>
+            <div class="result-prefix">Твой тип MBTI</div>
+            <div class="result-type">${type}</div>
+            <div class="result-class" style="color:${r.color}">${r.class}</div>
+            <div class="result-faction">${r.faction}</div>
+            <div class="result-desc">${r.desc}</div>
+            ${barsHtml}
+            <button class="btn-start" onclick="restart()">🔄 Пройти заново</button>
+        </div>`;
+}
+
+function restart(){scores={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};qIndex=0;renderQuestion();}
+renderQuestion();
+</script>
+</body>
+</html>
