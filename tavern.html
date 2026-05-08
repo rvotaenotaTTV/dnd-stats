@@ -259,6 +259,7 @@
                 <div class="game-option" onclick="selectGame('sudoku')"><div class="game-option-emoji">🧩</div><div class="game-option-name">Мозголомка</div><div class="game-option-desc">Девять кругов бамбука</div></div>
                 <div class="game-option" onclick="selectGame('runes')"><div class="game-option-emoji">🔮</div><div class="game-option-name">Руны Раскола</div><div class="game-option-desc">Собери 3 в ряд</div></div>
                 <div class="game-option" onclick="selectGame('gacha')"><div class="game-option-emoji">🎰</div><div class="game-option-name">Крутки</div><div class="game-option-desc">ГуангГуанг продаёт</div></div>
+				<div class="game-option" onclick="selectGame('math')"><div class="game-option-emoji">🎋</div><div class="game-option-name">Бамбуковый счёт</div><div class="game-option-desc">5 секунд на пример</div></div>
             </div>
         </div>
 		<div id="panel-ochko" class="game-panel"></div>
@@ -266,6 +267,7 @@
         <div id="panel-sudoku" class="game-panel"></div>
         <div id="panel-runes" class="game-panel"></div>
         <div id="panel-gacha" class="game-panel"></div>
+		<div id="panel-math" class="game-panel"></div>
     </div>
 </div>
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
@@ -396,6 +398,146 @@ function gachaTradeUp(index){const item=gachaCollection[index];if(!item)return;i
 function gachaRenderRecent(){const list=document.getElementById('gachaRecentList');if(!list)return;if(!gachaRecent.length){list.innerHTML='<span style="color:var(--text-muted);">Пока ничего...</span>';return;}const colors={legendary:'#ffaa00',epic:'#c471ed',rare:'#4a90d9',uncommon:'#3fb950',common:'var(--text-muted)'};list.innerHTML=gachaRecent.map(d=>`<div class="recent-item"><span style="color:${colors[d.rarity]||'var(--text-muted)'};">${d.emoji} ${d.name}</span> <span style="color:var(--text-muted);">${d.time||''}</span></div>`).join('');}
 function gachaShowItem(index){const item=gachaCollection[index];if(!item)return;const prices={legendary:50,epic:20,rare:8,uncommon:3,common:1};const price=prices[item.rarity]||1;const rarityLabel=item.rarity==='legendary'?'ЛЕГЕНДАРНЫЙ':item.rarity==='epic'?'Эпический':item.rarity==='rare'?'Редкий':item.rarity==='uncommon'?'Необычный':'Обычный';const sameNameCount=gachaCollection.filter(it=>it.name===item.name&&it.rarity===item.rarity).length;const canTrade=item.rarity!=='legendary'&&sameNameCount>=5;const overlay=document.createElement('div');overlay.className='modal-overlay';overlay.onclick=e=>{if(e.target===overlay)overlay.remove();};overlay.innerHTML=`<div class="modal-card ${item.rarity}"><div class="drop-emoji">${item.emoji}</div><div class="drop-name">${item.name}</div>${item.desc?`<div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">${item.desc}</div>`:''}<div class="drop-rarity rarity-${item.rarity}">${rarityLabel}</div>${canTrade?`<div style="color:var(--text-muted);font-size:0.7rem;margin-top:4px;">${sameNameCount}/5 для обмена</div>`:''}<div style="display:flex;gap:8px;margin-top:16px;"><button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать<br>(${price}💎)</button>${canTrade?`<button class="btn btn-secondary" onclick="gachaTradeUp(${index})">🔄 Обменять 5→1</button>`:''}<button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Закрыть</button></div></div>`;document.body.appendChild(overlay);}
 
+// ==================== БАМБУКОВЫЙ СЧЁТ ====================
+let mathActive=false,mathCorrect=0,mathAnswer=0,mathTimer=null,mathTimeLeft=0;
+const MATH_BET=5;
+
+function mathGetTime(){
+    if(mathCorrect<5)return 5;
+    if(mathCorrect<15)return 4;
+    if(mathCorrect<30)return 3;
+    return 2;
+}
+
+function mathGetReward(){
+    if(mathCorrect<5)return 2;
+    if(mathCorrect<15)return 3;
+    if(mathCorrect<30)return 5;
+    return 10;
+}
+
+function mathPanel(){
+    return `<div class="game-area"><h3>🎋 Бамбуковый счёт</h3>
+    <div style="text-align:center;margin:10px 0;"><span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">Правильных</span><br><span style="font-size:1.4rem;font-weight:800;color:var(--gold)" id="mathScore">0</span></div>
+    <div style="text-align:center;margin:16px 0;padding:20px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-subtle);">
+        <div style="font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:8px;" id="mathProblem">5 + 2 = ?</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+            <div style="flex:1;max-width:200px;height:6px;background:var(--bg-primary);border-radius:3px;overflow:hidden;"><div id="mathProgress" style="height:100%;background:var(--gold);border-radius:3px;width:100%;transition:width 0.05s linear;"></div></div>
+            <span style="color:var(--text-muted);font-size:0.75rem;min-width:40px;text-align:right;" id="mathTimerBox">⏱ <span id="mathTimer" style="color:var(--gold);font-weight:700;">5</span>с</span>
+        </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;" id="mathAnswers"></div>
+    <div class="bet-info">🎲 Ставка: <span>${MATH_BET} 💎</span></div>
+    <div class="game-buttons"><button class="btn btn-primary" id="mathStartBtn" onclick="mathStart()">🎋 Начать</button></div>
+    <div id="mathMessage" style="text-align:center;margin-top:8px;min-height:24px;"></div>
+    <div class="back-btn" onclick="mathStop();backToSelect()">← Назад</div></div>`;
+}
+
+function mathGenerate(){
+    const lvl=mathCorrect;
+    const ops=['+','-','·',':'];
+    const op=ops[Math.floor(Math.random()*ops.length)];
+    let a,b,min,max;
+    switch(op){
+        case '+':
+            min=Math.min(5+lvl,50);max=Math.min(25+lvl*3,200);
+            a=mathRand(min,max);b=mathRand(min,max);mathAnswer=a+b;
+            break;
+        case '-':
+            min=Math.min(5+lvl,50);max=Math.min(20+lvl*3,200);
+            b=mathRand(min,max);mathAnswer=mathRand(min,max);a=b+mathAnswer;
+            break;
+        case '·':
+            min=2;max=Math.min(9+Math.floor(lvl/3),20);
+            a=mathRand(min,max);b=mathRand(min,max);mathAnswer=a*b;
+            break;
+        case ':':
+            min=2;max=Math.min(9+Math.floor(lvl/3),20);
+            b=mathRand(min,max);mathAnswer=mathRand(min,max);a=b*mathAnswer;
+            break;
+    }
+    return `${a} ${op} ${b}`;
+}
+
+function mathRand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function mathShuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function mathNewRound(){
+    if(!mathActive)return;
+    clearInterval(mathTimer);
+    mathTimeLeft=mathGetTime();
+    mathUpdateTimer();
+    document.getElementById('mathProblem').textContent=mathGenerate()+' = ?';
+    const ans=new Set([mathAnswer]);
+    while(ans.size<3){const f=mathAnswer+mathRand(-5,5);if(f!==mathAnswer&&f>=0&&!ans.has(f))ans.add(f);}
+    document.getElementById('mathAnswers').innerHTML=mathShuffle([...ans]).map(a=>`<button class="btn btn-primary" style="font-size:1.2rem;" onclick="mathGuess(${a})">${a}</button>`).join('');
+    const start=Date.now();
+    mathTimer=setInterval(()=>{
+        const elapsed=(Date.now()-start)/1000;
+        mathTimeLeft=Math.max(0,mathGetTime()-elapsed);
+        mathUpdateTimer();
+        if(mathTimeLeft<=0){clearInterval(mathTimer);mathTimeout();}
+    },50);
+}
+
+function mathUpdateTimer(){
+    const total=mathGetTime();
+    const pct=(mathTimeLeft/total)*100;
+    const fill=document.getElementById('mathProgress');
+    const box=document.getElementById('mathTimerBox');
+    const el=document.getElementById('mathTimer');
+    if(fill)fill.style.width=pct+'%';
+    if(el)el.textContent=Math.ceil(mathTimeLeft);
+    if(mathTimeLeft<=2||pct<=40){if(fill)fill.style.background='var(--red)';if(box)box.style.color='var(--red)';}
+    else{if(fill)fill.style.background='var(--gold)';if(box)box.style.color='';}
+}
+
+function mathGuess(num){
+    if(!mathActive)return;
+    clearInterval(mathTimer);
+    if(num===mathAnswer){
+        mathCorrect++;
+        const reward=mathGetReward();
+        document.getElementById('mathScore').textContent=mathCorrect;
+        balance+=reward;updateBalance();
+        document.getElementById('mathMessage').innerHTML=`<span style="color:var(--green);">✅ +${reward}💎</span>`;
+        setTimeout(()=>document.getElementById('mathMessage').innerHTML='',600);
+        const quotes=['🎋 Верно! Бамбук доволен!','🌿 ГуангГуанг кивает!','⚡ Мозг работает!','🔥 Продолжай!'];
+        setQuote(quotes[Math.floor(Math.random()*quotes.length)]);
+        mathNewRound();
+    }else{
+        mathActive=false;
+        document.getElementById('mathAnswers').innerHTML='';
+        document.getElementById('mathMessage').innerHTML=`<span style="color:var(--red);">❌ Неверно! Правильно: ${mathAnswer}</span>`;
+        document.getElementById('mathStartBtn').disabled=false;
+        setQuote(`💔 Ошибка! ${mathCorrect} правильных подряд.`);
+        shakeBalance();
+    }
+}
+
+function mathTimeout(){
+    if(!mathActive)return;
+    mathActive=false;
+    document.getElementById('mathAnswers').innerHTML='';
+    document.getElementById('mathMessage').innerHTML=`<span style="color:var(--red);">⏰ Время вышло! Правильно: ${mathAnswer}</span>`;
+    document.getElementById('mathStartBtn').disabled=false;
+    setQuote('⏰ Слишком долго!');
+    shakeBalance();
+}
+
+function mathStart(){
+    if(balance<MATH_BET){setQuote('Недостаточно осколков!');return;}
+    balance-=MATH_BET;updateBalance();
+    mathActive=true;mathCorrect=0;
+    document.getElementById('mathScore').textContent='0';
+    document.getElementById('mathStartBtn').disabled=true;
+    document.getElementById('mathMessage').innerHTML='';
+    setQuote('🎋 Бамбук спрашивает...');
+    mathNewRound();
+}
+
+function mathStop(){clearInterval(mathTimer);mathActive=false;}
+
 // ==================== ПАНЕЛИ ====================
 function ochkoPanel(){return `<div class="game-area"><h3>🃏 Не лопни!</h3><div class="table-felt"><div class="table-label">🐼 ГуангГуанг</div><div class="cards-row" id="dealerCards"></div><div class="score">Сумма: <span class="score-value" id="dealerScore">0</span></div></div><div class="table-felt"><div class="table-label">👤 Твоя рука</div><div class="cards-row" id="playerCards"></div><div class="score">Сумма: <span class="score-value" id="playerScore">0</span></div></div><div class="bet-info">🎲 Ставка: <span>10 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="startBtn" onclick="ochko.startGame()">🃏 Играем</button><button class="btn btn-secondary" id="hitBtn" onclick="ochko.hit()" disabled>➕ Ещё</button><button class="btn btn-secondary" id="standBtn" onclick="ochko.stand()" disabled>✋ Я всё</button></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
 function pigPanel(){return `<div class="game-area"><h3>🐷 Сало или золото?</h3><div class="last-card-info" id="lastCardInfo"></div><div class="table-felt"><div class="table-label">🐷 Выложенные карты</div><div class="cards-row" id="drawnCards"></div></div><div style="text-align:center"><div class="multiplier-box"><span style="color:var(--text-muted)">Множитель </span><span class="multiplier-value" id="multiplier">x1</span><span style="color:var(--text-muted);font-size:0.8rem"> → <span id="nextMultiplier">x2</span></span></div></div><div class="bet-info">🎲 Ставка: <span>5 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="pigStartBtn" onclick="pigGame.start()">🐷 Новая</button><button class="btn btn-secondary" id="pigDrawBtn" onclick="pigGame.draw()" disabled>🃏 Тянуть</button><button class="btn btn-secondary" id="pigStopBtn" onclick="pigGame.stop()" disabled>✋ Хватит</button></div><div class="history-box" id="historyBox"></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
@@ -413,11 +555,11 @@ function selectGame(g){
     else if(g==='sudoku'){panel.innerHTML=sudokuPanel();setQuote('🧩 '+randomQuote());sudokuInit();}
     else if(g==='runes'){panel.innerHTML=runesPanel();setQuote('🔮 '+randomQuote());runesNewGame();}
     else if(g==='gacha'){panel.innerHTML=gachaPanel();setQuote('🎰 '+randomQuote());gachaInit();}
+    else if(g==='math'){panel.innerHTML=mathPanel();setQuote('🎋 '+randomQuote());mathStart();}
 }
 window.selectGame=selectGame;
 
 updateBalance();setQuote(randomQuote());
-if(window.location.hash==='#pig')selectGame('pig');else if(window.location.hash==='#ochko')selectGame('ochko');else if(window.location.hash==='#sudoku')selectGame('sudoku');else if(window.location.hash==='#runes')selectGame('runes');else if(window.location.hash==='#gacha')selectGame('gacha');
-</script>
+if(window.location.hash==='#pig')selectGame('pig');else if(window.location.hash==='#ochko')selectGame('ochko');else if(window.location.hash==='#sudoku')selectGame('sudoku');else if(window.location.hash==='#runes')selectGame('runes');else if(window.location.hash==='#gacha')selectGame('gacha');else if(window.location.hash==='#math')selectGame('math');</script>
 </body>
 </html>
