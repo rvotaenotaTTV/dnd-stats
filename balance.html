@@ -167,34 +167,35 @@
         function initRaceBar(){const bar=document.getElementById('raceBar');RACES.forEach(r=>{const c=document.createElement('div');c.className='race-chip';c.innerHTML=`${r.Emoji} ${r.Name}`;c.onclick=()=>selectRace(r.Name);bar.appendChild(c);});}
         function selectRace(name){selRace=name;document.querySelectorAll('.race-chip').forEach(c=>c.classList.remove('active'));const chips=document.querySelectorAll('.race-chip');const idx=name?RACES.findIndex(r=>r.Name===name)+1:0;if(chips[idx])chips[idx].classList.add('active');renderClasses();document.querySelectorAll('#classes-balance-table th').forEach(h=>h.classList.remove('asc','desc'));const th=document.querySelector('#classes-balance-table th[data-sort="power"]');if(th)th.classList.add('desc');sortTable('power','desc');}
 
-        function calc(cls, race){
-            let h = cls.Hp, a = cls.Atk, d = cls.Def, dx = cls.Dex || 0, mn = cls.Min, mx = cls.Max;
-            if (race) {
-                h += race.BonusHp; a += race.BonusAtk; d += race.BonusDef;
-                dx += race.BonusDex; mn += race.BonusMin; mx += race.BonusMax;
-            }
-            const avg = (mn + mx) / 2;
-            const accCPI = (CONFIG.accBaseCPI + a) / 20;
-            const atkBonus = 1 + a * CONFIG.cpiAtkBonus;
-            const surv = Math.round(h * (1 + d * CONFIG.defReduction));
-            const effHP = h * (1 + d * CONFIG.effHpDefMult);
-            let cpi = Math.pow(effHP, CONFIG.cpiHpPower) * Math.pow(avg * accCPI * atkBonus * CONFIG.cpiFixedReduction, CONFIG.cpiDmgPower);
-            if (a > 8) { cpi -= (a - 8) * 0.8; if (a > 9) cpi -= (a - 9) * 0.5; }
-            if (mn > 5) cpi += (mn - 5) * 0.4;
-            if (h > 28) cpi += (h - 28) * 0.2;
-            const power = Math.round(cpi * CONFIG.powerMultiplier * 10) / 10;
-            const acc = Math.round(Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - d) / 20)) * 100);
-            const dmg5 = Math.round(avg * Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - d) / 20)) * 5);
-            return {
-                hp: h, atk: a, def: d, dex: dx, min: mn, max: mx,
-                avg: Math.round(avg * 10) / 10,
-                acc: acc,
-                surv: surv,
-                dmg5: dmg5,
-                cpi: Math.round(cpi * 100) / 100,
-                power: power
-            };
-        }
+		function calc(cls, race){
+			let h = cls.Hp, a = cls.Atk, d = cls.Def, dx = cls.Dex || 0, mn = cls.Min, mx = cls.Max;
+			if (race) {
+				h += race.BonusHp; a += race.BonusAtk; d += race.BonusDef;
+				dx += race.BonusDex; mn += race.BonusMin; mx += race.BonusMax;
+			}
+			const avg = (mn + mx) / 2;
+			const accCPI = (CONFIG.accBaseCPI + a) / 20;
+			const atkBonus = 1 + a * CONFIG.cpiAtkBonus;
+			const surv = Math.round(h * (1 + d * CONFIG.defReduction));
+			const effHP = h * (1 + d * CONFIG.effHpDefMult);
+			let cpi = Math.pow(effHP, CONFIG.cpiHpPower) * Math.pow(avg * accCPI * atkBonus * CONFIG.cpiFixedReduction, CONFIG.cpiDmgPower);
+			if (a > 8) { cpi -= (a - 8) * 0.8; if (a > 9) cpi -= (a - 9) * 0.5; }
+			if (mn > 5) cpi += (mn - 5) * 0.4;
+			if (h > 28) cpi += (h - 28) * 0.2;
+			const power = Math.round(cpi * CONFIG.powerMultiplier * 10) / 10;
+			const enemyDef = 2;
+			const acc = Math.round(Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - enemyDef) / 20)) * 100);
+			const dmg5 = Math.round(avg * Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - enemyDef) / 20)) * 5);
+			return {
+				hp: h, atk: a, def: d, dex: dx, min: mn, max: mx,
+				avg: Math.round(avg * 10) / 10,
+				acc: acc,
+				surv: surv,
+				dmg5: dmg5,
+				cpi: Math.round(cpi * 100) / 100,
+				power: power
+			};
+		}
         
         function renderClasses(){
             const race=selRace?RACES.find(r=>r.Name===selRace):null;
