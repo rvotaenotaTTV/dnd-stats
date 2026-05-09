@@ -257,8 +257,8 @@
 				<li><span class="highlight">Если не попал:</span>
 					<ul>
 						<li>d20 = <strong>1</strong> → ❌ критический промах</li>
-						<li>d20 = <strong>2–4</strong> → 💨 уклонение</li>
-						<li>d20 = <strong>5+</strong> → 🛡️ блок (броня выдержала)</li>
+						<li>d20 ≤ <strong>2 + DEX защитника</strong> → 💨 уклонение</li>
+						<li>d20 > <strong>2 + DEX защитника</strong> → 🛡️ блок (броня выдержала)</li>
 					</ul>
 				</li>
 				<li><span class="highlight">Если попал:</span>
@@ -283,8 +283,8 @@
 					</thead>
 					<tbody>
 						<tr><td style="text-align:center;">❌</td><td><strong>Критический промах</strong> — на кубике 1. Атака провалена, урон 0</td></tr>
-						<tr><td style="text-align:center;">💨</td><td><strong>Уклонение</strong> — на кубике 2–4, атака не прошла. Противник увернулся</td></tr>
-						<tr><td style="text-align:center;">🛡️</td><td><strong>Блок</strong> — на кубике 5+, но броня выдержала удар. Урона нет</td></tr>
+						<tr><td style="text-align:center;">💨</td><td><strong>Уклонение</strong> — атака не прошла, противник увернулся (d20 ≤ 2 + DEX защитника)</td></tr>
+						<tr><td style="text-align:center;">🛡️</td><td><strong>Блок</strong> — атака не прошла, броня выдержала удар (d20 > 2 + DEX защитника)</td></tr>
 						<tr><td style="text-align:center;">💥X</td><td><strong>Критический удар</strong> — на кубике 20. Урон брошен дважды, X — сумма</td></tr>
 						<tr><td style="text-align:center;">X</td><td><strong>Обычный урон</strong> — атака прошла, X — урон после учёта защиты</td></tr>
 						<tr><td style="text-align:center;">0</td><td><strong>Не атаковал</strong> — бой завершился до хода этого героя</td></tr>
