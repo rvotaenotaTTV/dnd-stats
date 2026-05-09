@@ -43,12 +43,27 @@
         .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
         .card-title { font-size: 1.15rem; font-weight: 700; color: var(--gold); margin-bottom: 16px; }
 
-        .race-bar { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-        .race-chip { padding: 6px 14px; border-radius: 16px; border: 1px solid var(--border-subtle); font-size: 0.72rem; cursor: pointer; transition: var(--transition); color: var(--text-muted); background: var(--bg-elevated); }
-        .race-chip:hover { border-color: var(--text-secondary); color: var(--text-primary); }
-        .race-chip.active { border-color: var(--gold); color: var(--gold); background: rgba(240,185,11,0.06); }
-        .race-info { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
-        .race-info strong { color: var(--text-primary); font-size: 0.85rem; }
+        .race-bar {
+            display: flex; gap: 0; margin-bottom: 14px;
+            border-radius: var(--radius-lg); overflow: hidden;
+            border: 1px solid var(--border-subtle);
+        }
+        .race-chip {
+            flex: 1; padding: 12px 8px; text-align: center; cursor: pointer;
+            transition: var(--transition); color: var(--text-muted);
+            background: var(--bg-elevated); border-right: 1px solid var(--border-subtle);
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+        }
+        .race-chip:last-child { border-right: none; }
+        .race-chip .chip-emoji { font-size: 1.3rem; }
+        .race-chip .chip-name { font-size: 0.75rem; font-weight: 600; }
+        .race-chip .chip-bonus { font-size: 0.6rem; color: var(--text-muted); }
+        .race-chip:hover { background: var(--bg-secondary); color: var(--text-primary); }
+        .race-chip.active {
+            background: rgba(240,185,11,0.1); color: var(--gold);
+            box-shadow: inset 0 -3px 0 var(--gold);
+        }
+        .race-chip.active .chip-bonus { color: var(--gold); }
 
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); }
         table { width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 950px; }
@@ -99,6 +114,8 @@
             .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
             .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
+            .race-bar { flex-wrap: wrap; }
+            .race-chip { flex: 1 1 30%; min-width: 80px; }
             table { font-size: 0.68rem; min-width: 780px; }
             th, td { padding: 5px 7px; }
             .formula-grid { grid-template-columns: 1fr; }
@@ -123,11 +140,13 @@
         </div>
 
         <div class="card">
-            <h2 class="card-title">📊 Классы</h2>
             <div class="race-bar" id="raceBar">
-                <div class="race-chip active" onclick="selectRace('')">🚫 Без расы</div>
+                <div class="race-chip active" onclick="selectRace('')">
+                    <span class="chip-emoji">⚔️</span>
+                    <span class="chip-name">Без расы</span>
+                    <span class="chip-bonus">базовые статы</span>
+                </div>
             </div>
-            <div class="race-info" id="raceInfo"></div>
             <div class="table-wrapper">
                 <table id="classes-balance-table">
                     <thead><tr><th data-sort="name">Класс</th><th data-sort="hp">HP</th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th><th data-sort="dex">DEX</th><th data-sort="min">MIN</th><th data-sort="max">MAX</th><th data-sort="avg">AVG</th><th data-sort="acc">ACC</th><th data-sort="surv">SURV</th><th data-sort="dmg5">DMG/5</th><th data-sort="power">POWER</th><th data-sort="cpi">CPI</th></tr></thead>
@@ -136,7 +155,6 @@
             </div>
         </div>
         <div class="card">
-            <h2 class="card-title">🌍 Расы</h2>
             <div class="table-wrapper">
                 <table id="races-balance-table">
                     <thead><tr><th data-sort="name">Раса</th><th data-sort="hp">HP</th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th><th data-sort="dex">DEX</th><th data-sort="min">MIN</th><th data-sort="max">MAX</th></tr></thead>
@@ -145,7 +163,6 @@
             </div>
         </div>
         <div class="card">
-            <h2 class="card-title">📐 Формулы баланса</h2>
             <div class="formula-grid" id="formulaGrid"></div>
         </div>
     </div>
@@ -164,114 +181,73 @@
             initRaceBar(); renderClasses(); renderRaces(); renderFormulas(); initSort();
         }).catch(()=>{document.getElementById('classes-balance-tbody').innerHTML='<tr><td colspan="13" style="text-align:center;color:var(--red);">Ошибка загрузки</td></tr>';});
 
-        function initRaceBar(){const bar=document.getElementById('raceBar');RACES.forEach(r=>{const c=document.createElement('div');c.className='race-chip';c.innerHTML=`${r.Emoji} ${r.Name}`;c.onclick=()=>selectRace(r.Name);bar.appendChild(c);});}
-        function selectRace(name){selRace=name;document.querySelectorAll('.race-chip').forEach(c=>c.classList.remove('active'));const chips=document.querySelectorAll('.race-chip');const idx=name?RACES.findIndex(r=>r.Name===name)+1:0;if(chips[idx])chips[idx].classList.add('active');renderClasses();document.querySelectorAll('#classes-balance-table th').forEach(h=>h.classList.remove('asc','desc'));const th=document.querySelector('#classes-balance-table th[data-sort="power"]');if(th)th.classList.add('desc');sortTable('power','desc');}
+        function initRaceBar(){
+            const bar=document.getElementById('raceBar');
+            const icons={'Человек':'🧑','Орк':'👹','Дворф':'🧔','Нежить':'💀','Эльф':'🧝','Табакси':'🐱'};
+            RACES.forEach(r=>{
+                const c=document.createElement('div');c.className='race-chip';
+                const bonus=[];if(r.BonusHp)bonus.push(`HP+${r.BonusHp}`);if(r.BonusAtk)bonus.push(`ATK+${r.BonusAtk}`);if(r.BonusDef)bonus.push(`DEF+${r.BonusDef}`);if(r.BonusDex)bonus.push(`DEX+${r.BonusDex}`);if(r.BonusMin)bonus.push(`MIN+${r.BonusMin}`);if(r.BonusMax)bonus.push(`MAX+${r.BonusMax}`);
+                c.innerHTML=`<span class="chip-emoji">${icons[r.Name]||r.Emoji}</span><span class="chip-name">${r.Name}</span><span class="chip-bonus">${bonus.join('·')||'—'}</span>`;
+                c.onclick=()=>selectRace(r.Name);bar.appendChild(c);
+            });
+        }
+        function selectRace(name){
+            selRace=name;
+            document.querySelectorAll('.race-chip').forEach(c=>c.classList.remove('active'));
+            const chips=document.querySelectorAll('.race-chip');
+            const idx=name?RACES.findIndex(r=>r.Name===name)+1:0;
+            if(chips[idx])chips[idx].classList.add('active');
+            renderClasses();
+            document.querySelectorAll('#classes-balance-table th').forEach(h=>h.classList.remove('asc','desc'));
+            const th=document.querySelector('#classes-balance-table th[data-sort="power"]');
+            if(th)th.classList.add('desc');
+            sortTable('power','desc');
+        }
 
-		function calc(cls, race){
-			let h = cls.Hp, a = cls.Atk, d = cls.Def, dx = cls.Dex || 0, mn = cls.Min, mx = cls.Max;
-			if (race) {
-				h += race.BonusHp; a += race.BonusAtk; d += race.BonusDef;
-				dx += race.BonusDex; mn += race.BonusMin; mx += race.BonusMax;
-			}
-			const avg = (mn + mx) / 2;
-			const accCPI = (CONFIG.accBaseCPI + a) / 20;
-			const atkBonus = 1 + a * CONFIG.cpiAtkBonus;
-			const surv = Math.round(h * (1 + d * CONFIG.defReduction));
-			const effHP = h * (1 + d * CONFIG.effHpDefMult);
-			let cpi = Math.pow(effHP, CONFIG.cpiHpPower) * Math.pow(avg * accCPI * atkBonus * CONFIG.cpiFixedReduction, CONFIG.cpiDmgPower);
-			if (a > 8) { cpi -= (a - 8) * 0.8; if (a > 9) cpi -= (a - 9) * 0.5; }
-			if (mn > 5) cpi += (mn - 5) * 0.4;
-			if (h > 28) cpi += (h - 28) * 0.2;
-			const power = Math.round(cpi * CONFIG.powerMultiplier * 10) / 10;
-			const enemyDef = 2;
-			const acc = Math.round(Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - enemyDef) / 20)) * 100);
-			const dmg5 = Math.round(avg * Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - enemyDef) / 20)) * 5);
-			return {
-				hp: h, atk: a, def: d, dex: dx, min: mn, max: mx,
-				avg: Math.round(avg * 10) / 10,
-				acc: acc,
-				surv: surv,
-				dmg5: dmg5,
-				cpi: Math.round(cpi * 100) / 100,
-				power: power
-			};
-		}
-        
+        function calc(cls, race){
+            let h=cls.Hp,a=cls.Atk,d=cls.Def,dx=cls.Dex||0,mn=cls.Min,mx=cls.Max;
+            if(race){h+=race.BonusHp;a+=race.BonusAtk;d+=race.BonusDef;dx+=race.BonusDex;mn+=race.BonusMin;mx+=race.BonusMax;}
+            const avg=(mn+mx)/2;
+            const accCPI=(CONFIG.accBaseCPI+a)/20;
+            const atkBonus=1+a*CONFIG.cpiAtkBonus;
+            const surv=Math.round(h*(1+d*CONFIG.defReduction));
+            const effHP=h*(1+d*CONFIG.effHpDefMult);
+            let cpi=Math.pow(effHP,CONFIG.cpiHpPower)*Math.pow(avg*accCPI*atkBonus*CONFIG.cpiFixedReduction,CONFIG.cpiDmgPower);
+            if(a>8){cpi-=(a-8)*0.8;if(a>9)cpi-=(a-9)*0.5;}
+            if(mn>5)cpi+=(mn-5)*0.4;
+            if(h>28)cpi+=(h-28)*0.2;
+            const power=Math.round(cpi*CONFIG.powerMultiplier*10)/10;
+            const enemyDef=2;
+            const acc=Math.round(Math.min(CONFIG.hitChanceMax,Math.max(CONFIG.hitChanceMin,(CONFIG.hitChanceBase+a-enemyDef)/20))*100);
+            const dmg5=Math.round(avg*Math.min(CONFIG.hitChanceMax,Math.max(CONFIG.hitChanceMin,(CONFIG.hitChanceBase+a-enemyDef)/20))*5);
+            return{hp:h,atk:a,def:d,dex:dx,min:mn,max:mx,avg:Math.round(avg*10)/10,acc:acc,surv:surv,dmg5:dmg5,cpi:Math.round(cpi*100)/100,power:power};
+        }
+
         function renderClasses(){
             const race=selRace?RACES.find(r=>r.Name===selRace):null;
             const data=CLASSES.map(c=>({...c,s:calc(c,race)})).sort((a,b)=>b.s.power-a.s.power);
-            const info=document.getElementById('raceInfo');
-            if(race){
-                const b=[];
-                if(race.BonusHp) b.push(`HP ${race.BonusHp>0?'+':''}${race.BonusHp}`);
-                if(race.BonusAtk) b.push(`ATK ${race.BonusAtk>0?'+':''}${race.BonusAtk}`);
-                if(race.BonusDef) b.push(`DEF ${race.BonusDef>0?'+':''}${race.BonusDef}`);
-                if(race.BonusDex) b.push(`DEX ${race.BonusDex>0?'+':''}${race.BonusDex}`);
-                if(race.BonusMin) b.push(`MIN ${race.BonusMin>0?'+':''}${race.BonusMin}`);
-                if(race.BonusMax) b.push(`MAX ${race.BonusMax>0?'+':''}${race.BonusMax}`);
-                info.innerHTML=`<strong>${race.Emoji} ${race.Name}</strong> — ${b.join(' · ')||'нет бонусов'}`;
-            }else{info.innerHTML='';}
             const tbody=document.getElementById('classes-balance-tbody');
-            tbody.innerHTML=data.map(c=>{
-                const s=c.s;
-                return`<tr data-name="${c.Name}" data-hp="${s.hp}" data-atk="${s.atk}" data-def="${s.def}" data-dex="${s.dex}" data-min="${s.min}" data-max="${s.max}" data-avg="${s.avg}" data-acc="${s.acc}" data-surv="${s.surv}" data-dmg5="${s.dmg5}" data-cpi="${s.cpi}" data-power="${s.power}"><td>${c.Emoji} ${c.Name}</td><td class="number">${s.hp}</td><td class="number">${s.atk}</td><td class="number">${s.def}</td><td class="number">${s.dex}</td><td class="number">${s.min}</td><td class="number">${s.max}</td><td class="number">${s.avg}</td><td class="number">${s.acc}%</td><td class="number">${s.surv}</td><td class="number">${s.dmg5}</td><td class="number" style="font-weight:700;color:var(--gold)">${s.power.toFixed(1)}</td><td class="number">${s.cpi.toFixed(2)}</td></tr>`;
-            }).join('');
+            tbody.innerHTML=data.map(c=>{const s=c.s;return`<tr data-name="${c.Name}" data-hp="${s.hp}" data-atk="${s.atk}" data-def="${s.def}" data-dex="${s.dex}" data-min="${s.min}" data-max="${s.max}" data-avg="${s.avg}" data-acc="${s.acc}" data-surv="${s.surv}" data-dmg5="${s.dmg5}" data-cpi="${s.cpi}" data-power="${s.power}"><td>${c.Emoji} ${c.Name}</td><td class="number">${s.hp}</td><td class="number">${s.atk}</td><td class="number">${s.def}</td><td class="number">${s.dex}</td><td class="number">${s.min}</td><td class="number">${s.max}</td><td class="number">${s.avg}</td><td class="number">${s.acc}%</td><td class="number">${s.surv}</td><td class="number">${s.dmg5}</td><td class="number" style="font-weight:700;color:var(--gold)">${s.power.toFixed(1)}</td><td class="number">${s.cpi.toFixed(2)}</td></tr>`;}).join('');
         }
 
         function renderRaces(){const tbody=document.getElementById('races-balance-tbody');tbody.innerHTML=RACES.map(r=>`<tr data-name="${r.Name}" data-hp="${r.BonusHp}" data-atk="${r.BonusAtk}" data-def="${r.BonusDef}" data-dex="${r.BonusDex}" data-min="${r.BonusMin}" data-max="${r.BonusMax}"><td>${r.Emoji} ${r.Name}</td><td class="number">${r.BonusHp>0?'+':''}${r.BonusHp}</td><td class="number">${r.BonusAtk>0?'+':''}${r.BonusAtk}</td><td class="number">${r.BonusDef>0?'+':''}${r.BonusDef}</td><td class="number">${r.BonusDex>0?'+':''}${r.BonusDex}</td><td class="number">${r.BonusMin>0?'+':''}${r.BonusMin}</td><td class="number">${r.BonusMax>0?'+':''}${r.BonusMax}</td></tr>`).join('');}
 
         function sortTable(key,dir){const tbody=document.querySelector('#classes-balance-table tbody');const rows=Array.from(tbody.querySelectorAll('tr'));rows.sort((a,b)=>{const va=isNaN(a.dataset[key])?a.dataset[key]:parseFloat(a.dataset[key]);const vb=isNaN(b.dataset[key])?b.dataset[key]:parseFloat(b.dataset[key]);return dir==='asc'?(va>vb?1:-1):(va<vb?1:-1);});rows.forEach(r=>tbody.appendChild(r));}
         function initSort(){document.querySelectorAll('th[data-sort]').forEach(th=>{th.addEventListener('click',()=>{const table=th.closest('table');const key=th.dataset.sort;const isAsc=th.classList.contains('asc');table.querySelectorAll('th').forEach(h=>h.classList.remove('asc','desc'));th.classList.add(isAsc?'desc':'asc');if(table.id==='classes-balance-table')sortTable(key,isAsc?'desc':'asc');else{const tbody=table.querySelector('tbody');const rows=Array.from(tbody.querySelectorAll('tr'));rows.sort((a,b)=>{const va=isNaN(a.dataset[key])?a.dataset[key]:parseFloat(a.dataset[key]);const vb=isNaN(b.dataset[key])?b.dataset[key]:parseFloat(b.dataset[key]);return(isAsc?'desc':'asc')==='asc'?(va>vb?1:-1):(va<vb?1:-1);});rows.forEach(r=>tbody.appendChild(r));}});});}
-		function renderFormulas(){
-			const c = CONFIG;
-			document.getElementById('formulaGrid').innerHTML = `
-				<div class="formula-card">
-					<div class="f-title">📊 POWER</div>
-					<div class="f-body">POWER = CPI × ${c.powerMultiplier}</div>
-					<div class="f-note">Итоговая боевая мощь класса</div>
-				</div>
-				<div class="formula-card">
-					<div class="f-title">🧠 CPI</div>
-					<div class="f-body">CPI = Базовый CPI − Штраф ATK + Бонус MIN + Бонус HP</div>
-					<div class="f-note">Базовая сила минус штрафы плюс бонусы</div>
-				</div>
-				<div class="formula-card">
-					<div class="f-title">📐 Базовый CPI</div>
-					<div class="f-body">(Эфф. HP)<sup>${c.cpiHpPower}</sup> × (AVG × ACC × Бонус × ${c.cpiFixedReduction})<sup>${c.cpiDmgPower}</sup></div>
-					<div class="f-note">Геометрическое среднее защиты и нападения</div>
-				</div>
-				<div class="formula-card">
-					<div class="f-title">🛡️ Эффективное HP</div>
-					<div class="f-body">HP × (1 + DEF × ${c.effHpDefMult})</div>
-					<div class="f-note">+${(c.effHpDefMult*100).toFixed(0)}% выживаемости за каждое очко DEF</div>
-				</div>
-				<div class="formula-card">
-					<div class="f-title">⚔️ Атака</div>
-					<div class="f-body">AVG × ACC × (1 + ATK × ${c.cpiAtkBonus}) × ${c.cpiFixedReduction}</div>
-					<div class="f-note">AVG = (MIN+MAX)/2<br>ACC = (${c.accBaseCPI} + ATK) / 20<br>Бонус = 1 + ATK × ${c.cpiAtkBonus}</div>
-				</div>
-				<div class="formula-card">
-					<div class="f-title">🎯 Точность в бою</div>
-					<div class="f-body">(${c.hitChanceBase} + ATK − DEF) / 20</div>
-					<div class="f-note">Шанс попасть. Ограничена ${(c.hitChanceMin*100).toFixed(0)}%–${(c.hitChanceMax*100).toFixed(0)}%</div>
-				</div>
-				<div class="formula-card">
-					<div class="f-title">💥 DMG/5</div>
-					<div class="f-body">AVG × ACC × 5</div>
-					<div class="f-note">Ожидаемый урон за 5 раундов (ACC из боя, с DEF врага)</div>
-				</div>
-				<div class="formula-card">
-					<div class="f-title">⚙️ Поправки</div>
-					<div class="f-body">ATK > 8: −(ATK−8) × 0.8<br>ATK > 9: ещё −(ATK−9) × 0.5<br>MIN > 5: +(MIN−5) × 0.4<br>HP > 28: +(HP−28) × 0.2</div>
-					<div class="f-note">Штрафы и бонусы к CPI</div>
-				</div>
-				<div class="formula-card">
-					<div class="f-title">🏃 DEX</div>
-					<div class="f-body">Инициатива = d20 + DEX</div>
-					<div class="f-note">Не влияет на POWER</div>
-				</div>
-			`;
-		}
+        function renderFormulas(){
+            const c=CONFIG;
+            document.getElementById('formulaGrid').innerHTML=`
+                <div class="formula-card"><div class="f-title">📊 POWER</div><div class="f-body">POWER = CPI × ${c.powerMultiplier}</div><div class="f-note">Итоговая боевая мощь класса</div></div>
+                <div class="formula-card"><div class="f-title">🧠 CPI</div><div class="f-body">CPI = Базовый CPI − Штраф ATK + Бонус MIN + Бонус HP</div><div class="f-note">Базовая сила минус штрафы плюс бонусы</div></div>
+                <div class="formula-card"><div class="f-title">📐 Базовый CPI</div><div class="f-body">(Эфф. HP)<sup>${c.cpiHpPower}</sup> × (AVG × ACC × Бонус × ${c.cpiFixedReduction})<sup>${c.cpiDmgPower}</sup></div><div class="f-note">Геометрическое среднее защиты и нападения</div></div>
+                <div class="formula-card"><div class="f-title">🛡️ Эффективное HP</div><div class="f-body">HP × (1 + DEF × ${c.effHpDefMult})</div><div class="f-note">+${(c.effHpDefMult*100).toFixed(0)}% выживаемости за каждое очко DEF</div></div>
+                <div class="formula-card"><div class="f-title">⚔️ Атака</div><div class="f-body">AVG × ACC × (1 + ATK × ${c.cpiAtkBonus}) × ${c.cpiFixedReduction}</div><div class="f-note">AVG = (MIN+MAX)/2<br>ACC = (${c.accBaseCPI} + ATK) / 20<br>Бонус = 1 + ATK × ${c.cpiAtkBonus}</div></div>
+                <div class="formula-card"><div class="f-title">🎯 Точность в бою</div><div class="f-body">(${c.hitChanceBase} + ATK − DEF) / 20</div><div class="f-note">Шанс попасть. Ограничена ${(c.hitChanceMin*100).toFixed(0)}%–${(c.hitChanceMax*100).toFixed(0)}%</div></div>
+                <div class="formula-card"><div class="f-title">💥 DMG/5</div><div class="f-body">AVG × ACC × 5</div><div class="f-note">Ожидаемый урон за 5 раундов (ACC из боя, с DEF врага)</div></div>
+                <div class="formula-card"><div class="f-title">⚙️ Поправки</div><div class="f-body">ATK > 8: −(ATK−8) × 0.8<br>ATK > 9: ещё −(ATK−9) × 0.5<br>MIN > 5: +(MIN−5) × 0.4<br>HP > 28: +(HP−28) × 0.2</div><div class="f-note">Штрафы и бонусы к CPI</div></div>
+                <div class="formula-card"><div class="f-title">🏃 DEX</div><div class="f-body">Инициатива = d20 + DEX</div><div class="f-note">Не влияет на POWER</div></div>
+            `;
+        }
     </script>
 </body>
 </html>
