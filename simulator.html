@@ -140,8 +140,8 @@
                 </div>
             </div>
             <div class="btn-row">
-                <button class="btn btn-primary" onclick="simulateFight()">⚔️ 1 бой</button>
-                <button class="btn btn-secondary" onclick="simulateMultiple(100)">📊 ×100 боёв</button>
+                <button class="btn btn-primary" onclick="simulateMultiple(10)">⚡ ×10 боёв</button>
+				<button class="btn btn-secondary" onclick="simulateMultiple(200)">📊 ×200 боёв</button>
             </div>
         </div>
         <div class="result-card" id="resultCard" style="display:none;">
@@ -178,8 +178,84 @@
 
         function simulateFight(){const p1=getFighter(true),p2=getFighter(false);if(!p1||!p2)return;const r=fight(p1,p2);document.getElementById('resultCard').style.display='block';document.getElementById('resultTitle').textContent='📋 Результат боя';document.getElementById('resultContent').innerHTML=`<div class="result-stats"><div class="stat-item">🏆 <span class="stat-value">${r.winner.name}</span></div><div class="stat-item">❤️ <span class="stat-value">${r.winnerHp}</span></div><div class="stat-item">⚔️ <span class="stat-value">${r.winnerDmg}:${r.loserDmg}</span></div><div class="stat-item">⏱ <span class="stat-value">${r.rounds}</span></div><div class="stat-item">⚡ <span class="stat-value">${r.first.name}</span></div></div><div class="result-log">${colorize(r.fullLog)}</div>`;}
         window.simulateFight=simulateFight;
-
-        function simulateMultiple(n){const p1=getFighter(true),p2=getFighter(false);if(!p1||!p2)return;let w1=0,w2=0,fw=0,tr=0,tc=0,tm=0,fc={p1:0,p2:0};const results=[];for(let i=0;i<n;i++){const r=fight(p1,p2);if(!r)continue;results.push(r);if(r.winner===p1)w1++;else w2++;if(r.winner===r.first)fw++;if(r.first===p1)fc.p1++;else fc.p2++;tr+=r.rounds;tc+=r.crits;tm+=r.misses;}const r1=(w1/n*100).toFixed(1),r2=(w2/n*100).toFixed(1);document.getElementById('resultCard').style.display='block';document.getElementById('resultTitle').textContent=`📊 Результаты ×${n}`;document.getElementById('resultContent').innerHTML=`<div class="analytics-grid"><div class="analytics-card"><h4>🏆 Победитель</h4><div>${p1.name}</div><div class="progress-bar"><div class="progress-fill" style="width:${r1}%">${w1} (${r1}%)</div></div><div style="margin-top:12px;">${p2.name}</div><div class="progress-bar"><div class="progress-fill" style="width:${r2}%">${w2} (${r2}%)</div></div><div style="margin-top:12px;text-align:center;">${w1>w2?p1.name+' сильнее!':w2>w1?p2.name+' сильнее!':'Равные силы!'}</div></div><div class="analytics-card"><h4>⚡ Первый ход</h4><div>${p1.name}: ${fc.p1} (${(fc.p1/n*100).toFixed(0)}%)</div><div>${p2.name}: ${fc.p2} (${(fc.p2/n*100).toFixed(0)}%)</div><div style="margin-top:12px;">Побед первого хода: ${fw}/${n} (${(fw/n*100).toFixed(0)}%)</div></div><div class="analytics-card"><h4>📈 Статистика</h4><div>Средняя длительность: ${(tr/n).toFixed(1)} раунда</div><div>Всего критов: ${tc}</div><div>Всего промахов/блоков: ${tm}</div></div><div class="analytics-card"><h4>📋 Пример боя</h4><div class="result-log" style="max-height:100px;margin-top:4px;">${colorize(results[0]?.fullLog||'')}</div></div></div>`;}
+		
+		function simulateMultiple(n){
+			const p1=getFighter(true),p2=getFighter(false);
+			if(!p1||!p2)return;
+			let w1=0,w2=0,fw=0,tr=0,tc=0,tm=0,fc={p1:0,p2:0};
+			const results=[];
+			for(let i=0;i<n;i++){
+				const r=fight(p1,p2);
+				if(!r)continue;
+				results.push(r);
+				if(r.winner===p1)w1++;else w2++;
+				if(r.winner===r.first)fw++;
+				if(r.first===p1)fc.p1++;else fc.p2++;
+				tr+=r.rounds;tc+=r.crits;tm+=r.misses;
+			}
+			const r1=(w1/n*100).toFixed(1),r2=(w2/n*100).toFixed(1);
+			const winner=r1>r2?p1:p2,loser=r1>r2?p2:p1;
+			const wPct=r1>r2?r1:r2,lPct=r1>r2?r2:r1;
+			const domLevel=wPct>=60?'💀 Доминация':wPct>=55?'⚔️ Преимущество':wPct>=52?'📈 Лёгкий перевес':'⚖️ Равные силы';
+			
+			document.getElementById('resultCard').style.display='block';
+			document.getElementById('resultTitle').textContent=`📊 Результаты ×${n}`;
+			document.getElementById('resultContent').innerHTML=`
+				<div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
+					<div style="flex:1;min-width:140px;background:${r1>r2?'rgba(255,215,0,0.08)':'var(--bg-elevated)'};border-radius:var(--radius-md);padding:20px 16px;text-align:center;border:1px solid ${r1>r2?'rgba(255,215,0,0.3)':'var(--border-subtle)'};">
+						<div style="font-size:2.5rem;margin-bottom:8px;">${p1.emoji}</div>
+						<div style="font-weight:700;color:var(--text-primary);margin-bottom:4px;">${p1.name}</div>
+						<div style="font-size:2rem;font-weight:800;color:${r1>r2?'var(--gold)':'var(--text-secondary)'};">${r1}%</div>
+						<div style="color:var(--text-muted);font-size:0.8rem;">${w1} из ${n} боёв</div>
+						${r1>r2?`<div style="margin-top:8px;color:var(--gold);font-weight:700;">🏆 ПОБЕДИТЕЛЬ</div>`:''}
+					</div>
+					<div style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--text-muted);font-weight:800;">VS</div>
+					<div style="flex:1;min-width:140px;background:${r2>r1?'rgba(255,215,0,0.08)':'var(--bg-elevated)'};border-radius:var(--radius-md);padding:20px 16px;text-align:center;border:1px solid ${r2>r1?'rgba(255,215,0,0.3)':'var(--border-subtle)'};">
+						<div style="font-size:2.5rem;margin-bottom:8px;">${p2.emoji}</div>
+						<div style="font-weight:700;color:var(--text-primary);margin-bottom:4px;">${p2.name}</div>
+						<div style="font-size:2rem;font-weight:800;color:${r2>r1?'var(--gold)':'var(--text-secondary)'};">${r2}%</div>
+						<div style="color:var(--text-muted);font-size:0.8rem;">${w2} из ${n} боёв</div>
+						${r2>r1?`<div style="margin-top:8px;color:var(--gold);font-weight:700;">🏆 ПОБЕДИТЕЛЬ</div>`:''}
+					</div>
+				</div>
+				<div style="text-align:center;margin-bottom:20px;padding:8px 16px;background:var(--bg-elevated);border-radius:20px;display:inline-block;width:100%;">
+					<span style="color:var(--text-muted);font-size:0.85rem;">Вердикт:</span>
+					<span style="color:var(--gold);font-weight:700;font-size:0.95rem;margin-left:6px;">${domLevel}</span>
+					<span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">— ${winner.name} побеждает в ${wPct}% случаев</span>
+				</div>
+				<div class="analytics-grid">
+					<div class="analytics-card">
+						<h4>⚡ Инициатива</h4>
+						<div style="margin-bottom:8px;">${p1.name}: ${fc.p1} (${(fc.p1/n*100).toFixed(0)}%)</div>
+						<div class="progress-bar"><div class="progress-fill" style="width:${(fc.p1/n*100).toFixed(0)}%"></div></div>
+						<div style="margin:8px 0;">${p2.name}: ${fc.p2} (${(fc.p2/n*100).toFixed(0)}%)</div>
+						<div class="progress-bar"><div class="progress-fill" style="width:${(fc.p2/n*100).toFixed(0)}%"></div></div>
+						<div style="margin-top:12px;font-size:0.8rem;color:var(--text-muted);">
+							⚡ Первый ход = победа в ${(fw/n*100).toFixed(0)}% случаев
+						</div>
+					</div>
+					<div class="analytics-card">
+						<h4>📈 Цифры</h4>
+						<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+							<span>⏱ Средняя длительность</span><span style="color:var(--gold);font-weight:600;">${(tr/n).toFixed(1)} раунда</span>
+						</div>
+						<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+							<span>💥 Всего критов</span><span style="color:var(--red);font-weight:600;">${tc}</span>
+						</div>
+						<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+							<span>🛡️ Промахов/блоков</span><span style="color:var(--text-muted);font-weight:600;">${tm}</span>
+						</div>
+						<div style="display:flex;justify-content:space-between;padding:6px 0;">
+							<span>🎯 Критов на бой</span><span style="color:var(--red);font-weight:600;">${(tc/n).toFixed(1)}</span>
+						</div>
+					</div>
+				</div>
+				<div class="card" style="margin-top:16px;padding:16px;">
+					<h4 style="color:var(--gold);font-size:0.85rem;margin-bottom:10px;">📋 Пример боя</h4>
+					<div class="result-log" style="max-height:60px;">${colorize(results[0]?.fullLog||'')}</div>
+				</div>`;
+		}
+		
         window.simulateMultiple=simulateMultiple;
     </script>
 </body>

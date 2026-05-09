@@ -146,25 +146,202 @@
         </div>
     </div>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
-    <script>
-        function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
-        (function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
-        function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
-        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
+<script>
+    function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
+    (function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
+    function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+    document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
 
-        const DATA_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-        const STATS_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-        let CONFIG={},classesData=[],racesData=[],originalStats={},currentClass='Некромант',currentRace='';
-        let isRunning=false,REAL_WINRATES={};
+    const DATA_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+    const STATS_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+    let CONFIG={},classesData=[],racesData=[],originalStats={},currentClass='Некромант',currentRace='';
+    let isRunning=false,REAL_WINRATES={};
 
-        async function loadData(){const[dr,sr]=await Promise.all([fetch(DATA_URL),fetch(STATS_URL)]);const data=await dr.json(),stats=await sr.json();CONFIG=data.config||{defReduction:0.05,baseAC:10,maxRounds:20};classesData=data.classes;racesData=data.races;const players=stats.players||[];const classStats={};players.filter(p=>p.name&&p.name!=='Unknown').forEach(p=>{const parts=p.name.split('-');let cn=parts.length>1?parts[1]:p.name;cn=cn.charAt(0).toUpperCase()+cn.slice(1).toLowerCase();if(!classStats[cn])classStats[cn]={wins:0,losses:0};classStats[cn].wins+=(p.wins||0);classStats[cn].losses+=(p.losses||0);});let totalBattles=0;classesData.forEach(cls=>{const s=classStats[cls.Name];REAL_WINRATES[cls.Name]=s?(s.wins+s.losses>0?(s.wins/(s.wins+s.losses))*100:50):50;if(s)totalBattles+=s.wins+s.losses;});document.getElementById('liveStatsInfo').textContent=`на основе ${totalBattles} реальных боёв`;const cs=document.getElementById('classSelect');cs.innerHTML='';classesData.sort((a,b)=>a.Name.localeCompare(b.Name)).forEach(cls=>{const o=document.createElement('option');o.value=cls.Name;o.textContent=`${cls.Emoji} ${cls.Name}`;cs.appendChild(o);});const rs=document.getElementById('raceSelect');rs.innerHTML='<option value="">🚫 Без расы</option>';racesData.forEach(r=>{const o=document.createElement('option');o.value=r.Name;o.textContent=`${r.Emoji} ${r.Name}`;rs.appendChild(o);});cs.value=currentClass;cs.addEventListener('change',()=>{currentClass=cs.value;setOptimalRace();loadClassStats();});rs.addEventListener('change',()=>{currentRace=rs.value;loadClassStats();});setOptimalRace();loadClassStats();}
-        function setOptimalRace(){const opt={'Варвар':'Орк','Следопыт':'Эльф','Бард':'Человек','Паладин':'Дворф','Колдун':'Нежить','Чародей':'Нежить','Изобретатель':'Эльф','Воин':'Дворф','Жрец':'Человек','Друид':'Эльф','Плут':'Орк','Некромант':'Дворф','Монах':'Человек','Волшебница':'Эльф'};currentRace=opt[currentClass]||'';document.getElementById('raceSelect').value=currentRace;}
-        function loadClassStats(){const cls=classesData.find(c=>c.Name===currentClass);if(!cls)return;const race=currentRace?racesData.find(r=>r.Name===currentRace):null;originalStats={hp:cls.Hp+(race?.BonusHp||0),atk:cls.Atk+(race?.BonusAtk||0),dex:(cls.Dex||0)+(race?.BonusDex||0),def:cls.Def+(race?.BonusDef||0),min:cls.Min+(race?.BonusMin||0),max:cls.Max+(race?.BonusMax||0)};['hp','atk','def','dex','min','max'].forEach(s=>{document.getElementById(`${s}Display`).textContent=originalStats[s];document.getElementById(`${s}Input`).value=originalStats[s];});}
-        window.resetToOriginal=loadClassStats;
-        function simulateFight(s1,s2){const rnd=()=>Math.floor(Math.random()*20)+1;const i1=rnd()+(s1.dex||0),i2=rnd()+(s2.dex||0);const first=i1!==i2?i1>i2:Math.random()<0.5;let hp1=s1.hp,hp2=s2.hp,rounds=0;while(hp1>0&&hp2>0&&rounds<CONFIG.maxRounds){rounds++;if(first){const r1=rnd();if(r1!==1&&r1+s1.atk>=10+s2.def){let d=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min;if(r1===20)d+=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min;d=Math.max(1,Math.round(d*(1-s2.def*CONFIG.defReduction)));hp2=Math.max(0,hp2-d);}if(hp2<=0)break;const r2=rnd();if(r2!==1&&r2+s2.atk>=10+s1.def){let d=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min;if(r2===20)d+=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min;d=Math.max(1,Math.round(d*(1-s1.def*CONFIG.defReduction)));hp1=Math.max(0,hp1-d);}}else{const r2=rnd();if(r2!==1&&r2+s2.atk>=10+s1.def){let d=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min;if(r2===20)d+=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min;d=Math.max(1,Math.round(d*(1-s1.def*CONFIG.defReduction)));hp1=Math.max(0,hp1-d);}if(hp1<=0)break;const r1=rnd();if(r1!==1&&r1+s1.atk>=10+s2.def){let d=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min;if(r1===20)d+=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min;d=Math.max(1,Math.round(d*(1-s2.def*CONFIG.defReduction)));hp2=Math.max(0,hp2-d);}}}return hp1>hp2?1:0;}
-        async function runGradient(){if(isRunning)return;isRunning=true;const btn=document.getElementById('simulateBtn'),progress=document.getElementById('progress');btn.disabled=true;if(classesData.length===0){progress.textContent='Загрузка...';await loadData();}const fps=500,classes=classesData.map(c=>c.Name),n=classes.length;const cur={...originalStats};const nxt={hp:+document.getElementById('hpInput').value||originalStats.hp,atk:+document.getElementById('atkInput').value||originalStats.atk,def:+document.getElementById('defInput').value||originalStats.def,dex:+document.getElementById('dexInput').value||originalStats.dex,min:+document.getElementById('minInput').value||originalStats.min,max:+document.getElementById('maxInput').value||originalStats.max};let cw=0,nw=0;progress.textContent='Симуляция текущих...';for(const o of classes){if(o===currentClass)continue;const oc=classesData.find(c=>c.Name===o);if(!oc)continue;const s={hp:oc.Hp,atk:oc.Atk,def:oc.Def,dex:(oc.Dex||0),min:oc.Min,max:oc.Max};for(let i=0;i<fps;i++)cw+=simulateFight(cur,s);await new Promise(r=>setTimeout(r,5));}progress.textContent='Симуляция новых...';for(const o of classes){if(o===currentClass)continue;const oc=classesData.find(c=>c.Name===o);if(!oc)continue;const s={hp:oc.Hp,atk:oc.Atk,def:oc.Def,dex:(oc.Dex||0),min:oc.Min,max:oc.Max};for(let i=0;i<fps;i++)nw+=simulateFight(nxt,s);await new Promise(r=>setTimeout(r,5));}const total=(n-1)*fps;const simCur=(cw/total)*100,simNew=(nw/total)*100;const real=REAL_WINRATES[currentClass]||50;const coef=simCur>0?real/simCur:1;const pred=simNew*coef,diff=pred-real;const rc=document.getElementById('resultCard');rc.style.display='block';document.getElementById('currentWinrate').textContent=real.toFixed(1)+'%';document.getElementById('predictedWinrate').textContent=pred.toFixed(1)+'%';const de=document.getElementById('winrateDiff');de.textContent=`${diff>=0?'+':''}${diff.toFixed(1)}%`;de.className='diff-badge '+(diff>0.5?'diff-positive':diff<-0.5?'diff-negative':'diff-neutral');document.getElementById('simulationDetails').textContent=`Симулировано: ${simCur.toFixed(1)}% → ${simNew.toFixed(1)}% | Коэф: ${coef.toFixed(3)} | Боёв: ${total}`;btn.disabled=false;isRunning=false;progress.textContent='✅ Готово!';}
-        window.runGradient=runGradient;
-        loadData();
-    </script>
+	async function loadData(){
+		const[dr,sr]=await Promise.all([fetch(DATA_URL),fetch(STATS_URL)]);
+		const data=await dr.json(),stats=await sr.json();
+		CONFIG=data.config||{defReduction:0.05,baseAC:10,maxRounds:20};
+		classesData=data.classes;
+		racesData=data.races;
+		
+		const players=stats.players||[];
+		const heroArchive=stats.heroArchive||{};
+		const classStats={};
+		
+		players.filter(p=>p.name&&p.name!=='Unknown').forEach(p=>{
+			const parts=p.name.split('-');
+			let cn=parts.length>1?parts[1]:p.name;
+			cn=cn.charAt(0).toUpperCase()+cn.slice(1).toLowerCase();
+			if(!classStats[cn])classStats[cn]={wins:0,losses:0};
+			classStats[cn].wins+=(p.wins||0);
+			classStats[cn].losses+=(p.losses||0);
+		});
+		
+		Object.values(heroArchive).forEach(heroes=>{
+			heroes.forEach(h=>{
+				if(!h.name)return;
+				const parts=h.name.split('-');
+				let cn=parts.length>1?parts[1]:h.name;
+				cn=cn.charAt(0).toUpperCase()+cn.slice(1).toLowerCase();
+				if(!classStats[cn])classStats[cn]={wins:0,losses:0};
+				classStats[cn].wins+=(h.wins||0);
+				classStats[cn].losses+=(h.losses||0);
+			});
+		});
+		
+		let totalBattles=0;
+		classesData.forEach(cls=>{
+			const s=classStats[cls.Name];
+			REAL_WINRATES[cls.Name]=s?(s.wins+s.losses>0?(s.wins/(s.wins+s.losses))*100:50):50;
+			if(s)totalBattles+=s.wins+s.losses;
+		});
+		
+		document.getElementById('liveStatsInfo').textContent=`на основе ${totalBattles} реальных боёв (активные + архив)`;
+		
+		const cs=document.getElementById('classSelect');
+		cs.innerHTML='';
+		classesData.sort((a,b)=>a.Name.localeCompare(b.Name)).forEach(cls=>{
+			const o=document.createElement('option');
+			o.value=cls.Name;o.textContent=`${cls.Emoji} ${cls.Name}`;
+			cs.appendChild(o);
+		});
+		const rs=document.getElementById('raceSelect');
+		rs.innerHTML='<option value="">🚫 Без расы</option>';
+		racesData.forEach(r=>{
+			const o=document.createElement('option');
+			o.value=r.Name;o.textContent=`${r.Emoji} ${r.Name}`;
+			rs.appendChild(o);
+		});
+		cs.value=currentClass;
+		cs.addEventListener('change',()=>{currentClass=cs.value;setOptimalRace();loadClassStats();});
+		rs.addEventListener('change',()=>{currentRace=rs.value;loadClassStats();});
+		setOptimalRace();loadClassStats();
+	}
+    
+    function setOptimalRace(){
+        const opt={'Варвар':'Орк','Следопыт':'Эльф','Бард':'Человек','Паладин':'Дворф','Колдун':'Нежить','Чародей':'Нежить','Изобретатель':'Эльф','Воин':'Дворф','Жрец':'Человек','Друид':'Эльф','Плут':'Орк','Некромант':'Дворф','Монах':'Человек','Волшебница':'Эльф'};
+        currentRace=opt[currentClass]||'';
+        document.getElementById('raceSelect').value=currentRace;
+    }
+    
+    function loadClassStats(){
+        const cls=classesData.find(c=>c.Name===currentClass);
+        if(!cls)return;
+        const race=currentRace?racesData.find(r=>r.Name===currentRace):null;
+        originalStats={
+            hp:cls.Hp+(race?.BonusHp||0),
+            atk:cls.Atk+(race?.BonusAtk||0),
+            dex:(cls.Dex||0)+(race?.BonusDex||0),
+            def:cls.Def+(race?.BonusDef||0),
+            min:cls.Min+(race?.BonusMin||0),
+            max:cls.Max+(race?.BonusMax||0)
+        };
+        ['hp','atk','def','dex','min','max'].forEach(s=>{
+            document.getElementById(`${s}Display`).textContent=originalStats[s];
+            document.getElementById(`${s}Input`).value=originalStats[s];
+        });
+    }
+    
+    window.resetToOriginal=loadClassStats;
+    
+    function simulateFight(s1,s2){
+        const rnd=()=>Math.floor(Math.random()*20)+1;
+        const i1=rnd()+(s1.dex||0),i2=rnd()+(s2.dex||0);
+        const first=i1!==i2?i1>i2:Math.random()<0.5;
+        let hp1=s1.hp,hp2=s2.hp,rounds=0;
+        while(hp1>0&&hp2>0&&rounds<CONFIG.maxRounds){
+            rounds++;
+            if(first){
+                const r1=rnd();
+                if(r1!==1&&r1+s1.atk>=10+s2.def){
+                    let d=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min;
+                    if(r1===20)d+=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min;
+                    d=Math.max(1,Math.round(d*(1-s2.def*CONFIG.defReduction)));
+                    hp2=Math.max(0,hp2-d);
+                }
+                if(hp2<=0)break;
+                const r2=rnd();
+                if(r2!==1&&r2+s2.atk>=10+s1.def){
+                    let d=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min;
+                    if(r2===20)d+=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min;
+                    d=Math.max(1,Math.round(d*(1-s1.def*CONFIG.defReduction)));
+                    hp1=Math.max(0,hp1-d);
+                }
+            }else{
+                const r2=rnd();
+                if(r2!==1&&r2+s2.atk>=10+s1.def){
+                    let d=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min;
+                    if(r2===20)d+=Math.floor(Math.random()*(s2.max-s2.min+1))+s2.min;
+                    d=Math.max(1,Math.round(d*(1-s1.def*CONFIG.defReduction)));
+                    hp1=Math.max(0,hp1-d);
+                }
+                if(hp1<=0)break;
+                const r1=rnd();
+                if(r1!==1&&r1+s1.atk>=10+s2.def){
+                    let d=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min;
+                    if(r1===20)d+=Math.floor(Math.random()*(s1.max-s1.min+1))+s1.min;
+                    d=Math.max(1,Math.round(d*(1-s2.def*CONFIG.defReduction)));
+                    hp2=Math.max(0,hp2-d);
+                }
+            }
+        }
+        return hp1>hp2?1:0;
+    }
+    
+    async function runGradient(){
+        if(isRunning)return;
+        isRunning=true;
+        const btn=document.getElementById('simulateBtn'),progress=document.getElementById('progress');
+        btn.disabled=true;
+        if(classesData.length===0){progress.textContent='Загрузка...';await loadData();}
+        const fps=500,classes=classesData.map(c=>c.Name),n=classes.length;
+        const cur={...originalStats};
+        const nxt={
+            hp:+document.getElementById('hpInput').value||originalStats.hp,
+            atk:+document.getElementById('atkInput').value||originalStats.atk,
+            def:+document.getElementById('defInput').value||originalStats.def,
+            dex:+document.getElementById('dexInput').value||originalStats.dex,
+            min:+document.getElementById('minInput').value||originalStats.min,
+            max:+document.getElementById('maxInput').value||originalStats.max
+        };
+        let cw=0,nw=0;
+        progress.textContent='Симуляция текущих...';
+        for(const o of classes){
+            if(o===currentClass)continue;
+            const oc=classesData.find(c=>c.Name===o);
+            if(!oc)continue;
+            const s={hp:oc.Hp,atk:oc.Atk,def:oc.Def,dex:(oc.Dex||0),min:oc.Min,max:oc.Max};
+            for(let i=0;i<fps;i++)cw+=simulateFight(cur,s);
+            await new Promise(r=>setTimeout(r,5));
+        }
+        progress.textContent='Симуляция новых...';
+        for(const o of classes){
+            if(o===currentClass)continue;
+            const oc=classesData.find(c=>c.Name===o);
+            if(!oc)continue;
+            const s={hp:oc.Hp,atk:oc.Atk,def:oc.Def,dex:(oc.Dex||0),min:oc.Min,max:oc.Max};
+            for(let i=0;i<fps;i++)nw+=simulateFight(nxt,s);
+            await new Promise(r=>setTimeout(r,5));
+        }
+        const total=(n-1)*fps;
+        const simCur=(cw/total)*100,simNew=(nw/total)*100;
+        const real=REAL_WINRATES[currentClass]||50;
+        const coef=simCur>0?real/simCur:1;
+        const pred=simNew*coef,diff=pred-real;
+        const rc=document.getElementById('resultCard');
+        rc.style.display='block';
+        document.getElementById('currentWinrate').textContent=real.toFixed(1)+'%';
+        document.getElementById('predictedWinrate').textContent=pred.toFixed(1)+'%';
+        const de=document.getElementById('winrateDiff');
+        de.textContent=`${diff>=0?'+':''}${diff.toFixed(1)}%`;
+        de.className='diff-badge '+(diff>0.5?'diff-positive':diff<-0.5?'diff-negative':'diff-neutral');
+        document.getElementById('simulationDetails').textContent=`Симулировано: ${simCur.toFixed(1)}% → ${simNew.toFixed(1)}% | Коэф: ${coef.toFixed(3)} | Боёв: ${total}`;
+        btn.disabled=false;isRunning=false;
+        progress.textContent='✅ Готово!';
+    }
+    
+    window.runGradient=runGradient;
+    loadData();
+</script>
 </body>
 </html>
