@@ -108,14 +108,28 @@
             .container { padding: 12px 14px 32px; }
             .header { padding: 20px 0 12px; }
             .header-title { font-size: 1.8rem; }
-            .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }
+            .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }		
             .card { padding: 18px 14px; border-radius: var(--radius-md); }
             .nav-toggle { display: block; }
             .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
             .nav-bar.show { display: flex; }
             .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
-            .race-bar { flex-wrap: wrap; }
-            .race-chip { flex: 1 1 30%; min-width: 80px; }
+			.race-bar {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 0;
+			}
+			.race-chip {
+				flex: none;
+				min-width: 0;
+				border-right: 1px solid var(--border-subtle);
+				border-bottom: 1px solid var(--border-subtle);
+				padding: 10px 6px;
+			}
+			.race-chip:nth-child(4n) { border-right: none; }
+			.race-chip .chip-emoji { font-size: 1.1rem; }
+			.race-chip .chip-name { font-size: 0.65rem; }
+			.race-chip .chip-bonus { font-size: 0.55rem; }
             table { font-size: 0.68rem; min-width: 780px; }
             th, td { padding: 5px 7px; }
             .formula-grid { grid-template-columns: 1fr; }
