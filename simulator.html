@@ -101,6 +101,17 @@
         .vs-header { gap: 10px; }
         .fighter-emoji { font-size: 2rem; }
         .beer-btn { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 1.3rem; }
+		.result-card .winrate-display > div:first-child,
+		.result-card .winrate-display > div:last-child {
+			min-width: 120px;
+			padding: 14px 10px;
+		}
+		.result-card .winrate-display > div:first-child .stat-value,
+		.result-card .winrate-display > div:last-child .stat-value {
+			font-size: 1.4rem;
+		}
+		.vs-divider { font-size: 1rem; }
+		.result-log { max-height: 120px; }
     }
 </style>
 </head>
@@ -203,58 +214,56 @@
 			document.getElementById('resultCard').style.display='block';
 			document.getElementById('resultTitle').textContent=`📊 Результаты ×${n}`;
 			document.getElementById('resultContent').innerHTML=`
-				<div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
-					<div style="flex:1;min-width:140px;background:${r1>r2?'rgba(255,215,0,0.08)':'var(--bg-elevated)'};border-radius:var(--radius-md);padding:20px 16px;text-align:center;border:1px solid ${r1>r2?'rgba(255,215,0,0.3)':'var(--border-subtle)'};">
-						<div style="font-size:2.5rem;margin-bottom:8px;">${p1.emoji}</div>
-						<div style="font-weight:700;color:var(--text-primary);margin-bottom:4px;">${p1.name}</div>
-						<div style="font-size:2rem;font-weight:800;color:${r1>r2?'var(--gold)':'var(--text-secondary)'};">${r1}%</div>
-						<div style="color:var(--text-muted);font-size:0.8rem;">${w1} из ${n} боёв</div>
-						${r1>r2?`<div style="margin-top:8px;color:var(--gold);font-weight:700;">🏆 ПОБЕДИТЕЛЬ</div>`:''}
+				<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:nowrap;align-items:stretch;">
+					<div style="flex:1;min-width:0;background:${r1>r2?'rgba(255,215,0,0.08)':'var(--bg-elevated)'};border-radius:var(--radius-md);padding:12px 8px;text-align:center;border:1px solid ${r1>r2?'rgba(255,215,0,0.3)':'var(--border-subtle)'};">
+						<div style="font-size:1.8rem;margin-bottom:4px;">${p1.emoji}</div>
+						<div style="font-weight:700;color:var(--text-primary);margin-bottom:2px;font-size:0.75rem;">${p1.name}</div>
+						<div style="font-size:1.4rem;font-weight:800;color:${r1>r2?'var(--gold)':'var(--text-secondary)'};">${r1}%</div>
+						<div style="color:var(--text-muted);font-size:0.7rem;">${w1} из ${n}</div>
+						${r1>r2?`<div style="margin-top:4px;color:var(--gold);font-weight:700;font-size:0.7rem;">🏆 ПОБЕДИТЕЛЬ</div>`:''}
 					</div>
-					<div style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--text-muted);font-weight:800;">VS</div>
-					<div style="flex:1;min-width:140px;background:${r2>r1?'rgba(255,215,0,0.08)':'var(--bg-elevated)'};border-radius:var(--radius-md);padding:20px 16px;text-align:center;border:1px solid ${r2>r1?'rgba(255,215,0,0.3)':'var(--border-subtle)'};">
-						<div style="font-size:2.5rem;margin-bottom:8px;">${p2.emoji}</div>
-						<div style="font-weight:700;color:var(--text-primary);margin-bottom:4px;">${p2.name}</div>
-						<div style="font-size:2rem;font-weight:800;color:${r2>r1?'var(--gold)':'var(--text-secondary)'};">${r2}%</div>
-						<div style="color:var(--text-muted);font-size:0.8rem;">${w2} из ${n} боёв</div>
-						${r2>r1?`<div style="margin-top:8px;color:var(--gold);font-weight:700;">🏆 ПОБЕДИТЕЛЬ</div>`:''}
+					<div style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text-muted);font-weight:800;flex-shrink:0;">VS</div>
+					<div style="flex:1;min-width:0;background:${r2>r1?'rgba(255,215,0,0.08)':'var(--bg-elevated)'};border-radius:var(--radius-md);padding:12px 8px;text-align:center;border:1px solid ${r2>r1?'rgba(255,215,0,0.3)':'var(--border-subtle)'};">
+						<div style="font-size:1.8rem;margin-bottom:4px;">${p2.emoji}</div>
+						<div style="font-weight:700;color:var(--text-primary);margin-bottom:2px;font-size:0.75rem;">${p2.name}</div>
+						<div style="font-size:1.4rem;font-weight:800;color:${r2>r1?'var(--gold)':'var(--text-secondary)'};">${r2}%</div>
+						<div style="color:var(--text-muted);font-size:0.7rem;">${w2} из ${n}</div>
+						${r2>r1?`<div style="margin-top:4px;color:var(--gold);font-weight:700;font-size:0.7rem;">🏆 ПОБЕДИТЕЛЬ</div>`:''}
 					</div>
 				</div>
-				<div style="text-align:center;margin-bottom:20px;padding:8px 16px;background:var(--bg-elevated);border-radius:20px;display:inline-block;width:100%;">
-					<span style="color:var(--text-muted);font-size:0.85rem;">Вердикт:</span>
-					<span style="color:var(--gold);font-weight:700;font-size:0.95rem;margin-left:6px;">${domLevel}</span>
-					<span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">— ${winner.name} побеждает в ${wPct}% случаев</span>
+				<div style="text-align:center;margin-bottom:16px;padding:8px 12px;background:var(--bg-elevated);border-radius:20px;">
+					<span style="color:var(--text-muted);font-size:0.8rem;">Вердикт:</span>
+					<span style="color:var(--gold);font-weight:700;font-size:0.85rem;margin-left:4px;">${domLevel}</span>
+					<span style="color:var(--text-muted);font-size:0.75rem;margin-left:4px;">— ${winner.name} ${wPct}%</span>
 				</div>
 				<div class="analytics-grid">
 					<div class="analytics-card">
 						<h4>⚡ Инициатива</h4>
-						<div style="margin-bottom:8px;">${p1.name}: ${fc.p1} (${(fc.p1/n*100).toFixed(0)}%)</div>
+						<div style="margin-bottom:6px;font-size:0.75rem;">${p1.name}: ${fc.p1} (${(fc.p1/n*100).toFixed(0)}%)</div>
 						<div class="progress-bar"><div class="progress-fill" style="width:${(fc.p1/n*100).toFixed(0)}%"></div></div>
-						<div style="margin:8px 0;">${p2.name}: ${fc.p2} (${(fc.p2/n*100).toFixed(0)}%)</div>
+						<div style="margin:6px 0;font-size:0.75rem;">${p2.name}: ${fc.p2} (${(fc.p2/n*100).toFixed(0)}%)</div>
 						<div class="progress-bar"><div class="progress-fill" style="width:${(fc.p2/n*100).toFixed(0)}%"></div></div>
-						<div style="margin-top:12px;font-size:0.8rem;color:var(--text-muted);">
-							⚡ Первый ход = победа в ${(fw/n*100).toFixed(0)}% случаев
-						</div>
+						<div style="margin-top:10px;font-size:0.72rem;color:var(--text-muted);">⚡ Первый ход = победа в ${(fw/n*100).toFixed(0)}% случаев</div>
 					</div>
 					<div class="analytics-card">
 						<h4>📈 Цифры</h4>
-						<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+						<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-subtle);font-size:0.72rem;">
 							<span>⏱ Средняя длительность</span><span style="color:var(--gold);font-weight:600;">${(tr/n).toFixed(1)} раунда</span>
 						</div>
-						<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+						<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-subtle);font-size:0.72rem;">
 							<span>💥 Всего критов</span><span style="color:var(--red);font-weight:600;">${tc}</span>
 						</div>
-						<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+						<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-subtle);font-size:0.72rem;">
 							<span>🛡️ Промахов/блоков</span><span style="color:var(--text-muted);font-weight:600;">${tm}</span>
 						</div>
-						<div style="display:flex;justify-content:space-between;padding:6px 0;">
+						<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.72rem;">
 							<span>🎯 Критов на бой</span><span style="color:var(--red);font-weight:600;">${(tc/n).toFixed(1)}</span>
 						</div>
 					</div>
 				</div>
-				<div class="card" style="margin-top:16px;padding:16px;">
-					<h4 style="color:var(--gold);font-size:0.85rem;margin-bottom:10px;">📋 Пример боя</h4>
-					<div class="result-log" style="max-height:60px;">${colorize(results[0]?.fullLog||'')}</div>
+				<div class="card" style="margin-top:14px;padding:14px;">
+					<h4 style="color:var(--gold);font-size:0.8rem;margin-bottom:8px;">📋 Пример боя</h4>
+					<div class="result-log" style="max-height:50px;font-size:0.7rem;">${colorize(results[0]?.fullLog||'')}</div>
 				</div>`;
 		}
 		
