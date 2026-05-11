@@ -237,9 +237,9 @@
 		// КЛАССЫ
 		html+='<div id="tab-classes" class="tab-content">';
 		const classStats={};const classChamps={};
-		players.forEach(p=>{const cn=p.name.split('-')[1]||p.name;if(!classStats[cn]){classStats[cn]={wins:0,losses:0,players:0,shards:0,best:0};classChamps[cn]=0;}classStats[cn].wins+=p.wins;classStats[cn].losses+=p.losses;classStats[cn].players++;classStats[cn].shards+=p.shards;classStats[cn].best=Math.max(classStats[cn].best,p.best);classChamps[cn] += (p.tournamentWins || 0);});
+		players.forEach(p=>{const cn=p.name.split('-')[1]||p.name;if(!classStats[cn]){classStats[cn]={wins:0,losses:0,players:0,shards:0,best:0};classChamps[cn]=0;}classStats[cn].wins+=p.wins;classStats[cn].losses+=p.losses;classStats[cn].players++;classStats[cn].shards+=p.shards;classStats[cn].best=Math.max(classStats[cn].best,p.best);classChamps[cn]+=(p.tournamentWins||0);});
 		const heroArchive=data.heroArchive||{};
-		Object.values(heroArchive).forEach(heroes=>{heroes.forEach(h=>{const cn=h.name.split('-')[1]||h.name;if(!classStats[cn]){classStats[cn]={wins:0,losses:0,players:0,shards:0,best:0};classChamps[cn]=0;}classStats[cn].wins+=h.wins;classStats[cn].losses+=h.losses;classStats[cn].best=Math.max(classStats[cn].best,h.best||0);if(h.tournamentWins>0)classChamps[cn]++;});});
+		Object.values(heroArchive).forEach(heroes=>{heroes.forEach(h=>{const cn=h.name.split('-')[1]||h.name;if(!classStats[cn]){classStats[cn]={wins:0,losses:0,players:0,shards:0,best:0};classChamps[cn]=0;}classStats[cn].wins+=h.wins;classStats[cn].losses+=h.losses;classStats[cn].best=Math.max(classStats[cn].best,h.best||0);classChamps[cn]+=(h.tournamentWins||0);});});
 		const classArray=Object.entries(classStats).map(([n,s])=>({name:n,...s,total:s.wins+s.losses,champs:classChamps[n]||0}));
 		html+='<div class="card"><div class="card-title">⚔️ Статистика по классам</div><div class="table-container"><table id="classes-table"><thead><tr>';
 		html+='<th class="sortable-header" data-sort="name">Класс</th><th class="sortable-header" data-sort="players">Игроков</th><th class="sortable-header" data-sort="wins">Победы</th><th class="sortable-header" data-sort="losses">Поражения</th><th class="sortable-header" data-sort="total">Всего</th><th class="sortable-header" data-sort="winrate">Винрейт</th><th class="sortable-header" data-sort="shards">Ср.осколки</th><th class="sortable-header" data-sort="streak">Стрик</th><th class="sortable-header" data-sort="champs">👑</th></tr></thead><tbody id="classes-tbody">';
@@ -249,8 +249,8 @@
 		// РАСЫ
 		html+='<div id="tab-races" class="tab-content">';
 		const raceStats={};const raceChamps={};
-		players.forEach(p=>{const rn=p.name.split('-')[0];if(!rn)return;if(!raceStats[rn]){raceStats[rn]={wins:0,losses:0,players:0};raceChamps[rn]=0;}raceStats[rn].wins+=p.wins;raceStats[rn].losses+=p.losses;raceStats[rn].players++;raceChamps[rn] += (p.tournamentWins || 0);});
-		Object.values(heroArchive).forEach(heroes=>{heroes.forEach(h=>{const rn=h.name.split('-')[0];if(!rn)return;if(!raceStats[rn]){raceStats[rn]={wins:0,losses:0,players:0};raceChamps[rn]=0;}raceStats[rn].wins+=h.wins;raceStats[rn].losses+=h.losses;if(h.tournamentWins>0)raceChamps[rn]++;});});
+		players.forEach(p=>{const rn=p.name.split('-')[0];if(!rn)return;if(!raceStats[rn]){raceStats[rn]={wins:0,losses:0,players:0};raceChamps[rn]=0;}raceStats[rn].wins+=p.wins;raceStats[rn].losses+=p.losses;raceStats[rn].players++;raceChamps[rn]+=(p.tournamentWins||0);});
+		Object.values(heroArchive).forEach(heroes=>{heroes.forEach(h=>{const rn=h.name.split('-')[0];if(!rn)return;if(!raceStats[rn]){raceStats[rn]={wins:0,losses:0,players:0};raceChamps[rn]=0;}raceStats[rn].wins+=h.wins;raceStats[rn].losses+=h.losses;raceChamps[rn]+=(h.tournamentWins||0);});});
 		const raceArray=Object.entries(raceStats).map(([n,s])=>({name:n,...s,total:s.wins+s.losses,champs:raceChamps[n]||0}));
 		html+='<div class="card"><div class="card-title">🌍 Статистика по расам</div><div class="table-container"><table id="races-table"><thead><tr>';
 		html+='<th class="sortable-header" data-sort="name">Раса</th><th class="sortable-header" data-sort="players">Игроков</th><th class="sortable-header" data-sort="wins">Победы</th><th class="sortable-header" data-sort="losses">Поражения</th><th class="sortable-header" data-sort="total">Боёв</th><th class="sortable-header" data-sort="winrate">Винрейт</th><th class="sortable-header" data-sort="champs">👑</th></tr></thead><tbody id="races-tbody">';
