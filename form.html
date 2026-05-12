@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Форма — Арена Этерниса</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e17; --bg-secondary: #111827; --bg-elevated: #1a2332; --bg-card: #152028;
+            --text-primary: #e8edf3; --text-secondary: #9ca3af; --text-muted: #6b7280;
+            --border-subtle: rgba(255,255,255,0.08); --gold: #f0b90b; --gold-light: #ffd700;
+            --purple: #a371f7; --red: #ef4444; --green: #10b981;
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.4); --shadow-gold: 0 4px 12px rgba(240,185,11,0.3);
+            --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
+            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        [data-theme="light"] {
+            --bg-primary: #f7f2eb; --bg-secondary: #efe8dc; --bg-elevated: #fbf8f3; --bg-card: #fefcf8;
+            --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #6b7280;
+            --border-subtle: rgba(0,0,0,0.08); --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg-primary); background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%); color: var(--text-primary); min-height: 100vh; line-height: 1.5; transition: background 0.25s,color 0.25s; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 20px 24px 48px; }
+        .header { text-align: center; padding: 32px 0 20px; position: relative; }
+        .header-title { font-size: clamp(2rem,5vw,2.8rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#ffd700 0%,#f0a500 30%,#ffd700 60%,#f0a500 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 24px rgba(255,215,0,0.3)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
+        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+        .header-subtitle { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+        .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-secondary); padding: 8px 12px; border-radius: var(--radius-xl); cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: var(--transition); }
+        .theme-toggle:hover { background: var(--bg-secondary); color: var(--gold); border-color: var(--gold); }
+        .nav-wrapper { margin-bottom: 24px; position: sticky; top: 12px; z-index: 100; }
+        .nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; transition: var(--transition); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .nav-toggle:hover { border-color: var(--gold); }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); box-shadow: var(--shadow-lg); backdrop-filter: blur(10px); }
+        .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); transform: translateY(-1px); }
+        .nav-link.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; font-weight: 700; box-shadow: var(--shadow-gold); }
+        .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .status-message { text-align: center; padding: 48px 20px; color: var(--text-secondary); }
+        .status-message.error { color: var(--red); }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+        .tab-btn { padding: 10px 24px; border: 2px solid var(--border-subtle); background: var(--bg-elevated); color: var(--text-secondary); border-radius: var(--radius-xl); cursor: pointer; font-family: inherit; font-weight: 600; font-size: 0.85rem; transition: all var(--transition); }
+        .tab-btn:hover { border-color: var(--gold); color: var(--text-primary); }
+        .tab-btn.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; border-color: transparent; box-shadow: 0 4px 16px rgba(240,185,11,0.25); font-weight: 700; }
+        .tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeSlideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+        .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
+        .card-title { font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+        .info-bar { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+        .info-pill { padding: 6px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+        .info-pill strong { color: var(--gold); }
+
+        .search-wrapper { margin-bottom: 16px; position: relative; }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
+        .search-input { padding: 10px 16px 10px 40px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--text-primary); font-size: 0.85rem; font-family: inherit; transition: var(--transition); width: 100%; }
+        .search-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(240,185,11,0.1); }
+        .search-input::placeholder { color: var(--text-muted); }
+
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 750px; }
+        th { background: var(--bg-elevated); color: var(--gold); font-weight: 700; padding: 10px 12px; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid var(--border-subtle); cursor: pointer; user-select: none; white-space: nowrap; transition: all var(--transition); }
+        th:hover { background: rgba(240,185,11,0.1); color: var(--gold-light); }
+        th .sort-icon { margin-left: 4px; font-size: 0.6rem; opacity: 0.5; }
+        th.sort-active .sort-icon { opacity: 1; color: var(--gold); }
+        td { padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); transition: background var(--transition); }
+        tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
+        @keyframes fadeInRow { to{opacity:1} }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+        td:first-child { font-weight: 600; color: var(--gold); }
+        .number { text-align: right; font-variant-numeric: tabular-nums; }
+        .up { color: var(--green); font-weight: 700; }
+        .down { color: var(--red); font-weight: 700; }
+        .pos { width: 40px; text-align: center; font-weight: 700; font-size: 0.9rem; }
+        .pos.top-1 { color: #ffd700; font-size: 1.1rem; }
+        .pos.top-2 { color: #c0c0c0; }
+        .pos.top-3 { color: #cd7f32; }
+
+        .beer-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: linear-gradient(135deg,#f0b90b,#e0a800); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.4); z-index: 998; transition: all 0.3s ease; animation: float 3s ease-in-out infinite; }
+        .beer-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(240,185,11,0.6); background: linear-gradient(135deg,#ffd700,#f0b90b); }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ffd700; }
+        * { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 36px; }
+            .header { padding: 20px 0 12px; }
+            .header-title { font-size: 1.6rem; }
+            .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }
+            .nav-wrapper { position: static; }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 11px 16px; border-radius: var(--radius-sm); justify-content: center; font-size: 0.8rem; }
+            .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+            .tab-btn { text-align: center; padding: 8px 10px; font-size: 0.75rem; }
+            table { font-size: 0.68rem; min-width: 600px; }
+            th, td { padding: 6px 8px; }
+            .beer-btn { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title">ФОРМА</h1>
+            <p class="header-subtitle">Изменение винрейтов за последние часы</p>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </header>
+
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link">📊 Статистика</a>
+                <a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+                <a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a>
+                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                <a href="league.html" class="nav-link">🏟 Лига</a>
+                <a href="player.html" class="nav-link">👤 Профиль</a>
+                <a href="form.html" class="nav-link active">🔥 Форма</a>
+            </nav>
+        </div>
+
+        <div id="content">
+            <div class="status-message"><div class="spinner"></div><p>Загрузка формы...</p></div>
+        </div>
+    </div>
+
+    <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
+
+    <script>
+        function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
+        (function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
+        function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+        document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.nav-link').forEach(link=>{link.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';});});});
+
+        const REPO = 'rvotaenotaTTV/dnd-stats';
+        const FILE = 'stats_data.json';
+        const CACHE_KEY = 'eternis-form-commits';
+        let allChanges = [], currentTab = 'players', currentSort = { key: 'diff', dir: 'desc' }, searchQuery = '';
+
+        async function loadForm() {
+            const container = document.getElementById('content');
+            try {
+                // Кешируем коммиты на час
+                let commits;
+                const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+                if (cached.ts && (Date.now() - cached.ts < 60 * 60 * 1000)) {
+                    commits = cached.data;
+                } else {
+                    const [p1, p2] = await Promise.all([
+                        fetch(`https://api.github.com/repos/${REPO}/commits?path=${FILE}&per_page=30&page=1`).then(r => r.json()),
+                        fetch(`https://api.github.com/repos/${REPO}/commits?path=${FILE}&per_page=30&page=2`).then(r => r.json())
+                    ]);
+                    commits = [...(Array.isArray(p1) ? p1 : []), ...(Array.isArray(p2) ? p2 : [])];
+                    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: commits }));
+                }
+                
+                if (!commits.length) { container.innerHTML = '<div class="status-message">❌ Коммиты не найдены</div>'; return; }
+                
+                const target = commits[commits.length - 1];
+                const commitDate = new Date(target.commit.committer.date);
+                const hoursAgo = ((new Date() - commitDate) / (60 * 60 * 1000)).toFixed(1);
+                const sha = target.sha.substring(0, 7);
+                
+                const oldUrl = `https://raw.githubusercontent.com/${REPO}/${target.sha}/${FILE}`;
+                const [oldResp, newResp] = await Promise.all([fetch(oldUrl), fetch(`https://raw.githubusercontent.com/${REPO}/main/${FILE}`)]);
+                const oldData = await oldResp.json();
+                const newData = await newResp.json();
+                const oldPlayers = (oldData.players || []).filter(p => p.name && p.name !== 'Unknown');
+                const newPlayers = (newData.players || []).filter(p => p.name && p.name !== 'Unknown');
+                
+                allChanges = [];
+                newPlayers.forEach(p => {
+                    const old = oldPlayers.find(x => x.display === p.display);
+                    if (!old) return;
+                    if (old.wins === p.wins && old.losses === p.losses) return;
+                    const oldTotal = old.wins + old.losses;
+                    const newTotal = p.wins + p.losses;
+                    const oldWr = oldTotal > 0 ? old.wins / oldTotal * 100 : 0;
+                    const newWr = newTotal > 0 ? p.wins / newTotal * 100 : 0;
+                    allChanges.push({ ...p, oldWr, newWr, diff: newWr - oldWr, oldW: old.wins, oldL: old.losses });
+                });
+                
+                window._commitInfo = { commitDate, hoursAgo, sha };
+                renderAll();
+            } catch(e) {
+                container.innerHTML = `<div class="status-message error">❌ Ошибка загрузки: ${e.message}</div>`;
+            }
+        }
+
+        function renderAll() {
+            const info = window._commitInfo;
+            const changesCount = allChanges.length;
+            
+            let html = '';
+            
+            // Инфо-панель
+            html += '<div class="info-bar">';
+            html += `<div class="info-pill">📅 <strong>${info.commitDate.toLocaleString()}</strong></div>`;
+            html += `<div class="info-pill">⏱ <strong>${info.hoursAgo}ч</strong> назад</div>`;
+            html += `<div class="info-pill">🔗 <strong>${info.sha}</strong></div>`;
+            html += `<div class="info-pill">👥 <strong>${changesCount}</strong> изменений</div>`;
+            html += '</div>';
+            
+            // Вкладки
+            html += '<div class="tabs">';
+            html += `<button class="tab-btn${currentTab==='players'?' active':''}" onclick="switchTab('players')">👥 Игроки</button>`;
+            html += `<button class="tab-btn${currentTab==='classes'?' active':''}" onclick="switchTab('classes')">⚔️ Классы</button>`;
+            html += `<button class="tab-btn${currentTab==='races'?' active':''}" onclick="switchTab('races')">🌍 Расы</button>`;
+            html += '</div>';
+            
+            // Поиск
+            html += '<div class="search-wrapper">';
+            html += '<span class="search-icon">🔍</span>';
+            html += `<input type="text" class="search-input" id="formSearch" placeholder="Поиск по имени..." oninput="filterTable()" value="${searchQuery}">`;
+            html += '</div>';
+            
+            // Таблица
+            html += '<div class="card"><div class="table-wrapper"><table id="formTable"><thead><tr>';
+            html += `<th data-sort="display" onclick="sortBy('display')">${currentTab==='players'?'Игрок':currentTab==='classes'?'Класс':'Раса'} <span class="sort-icon">⇅</span></th>`;
+            html += '<th class="number" data-sort="oldW" onclick="sortBy(\'oldW\')">Было <span class="sort-icon">⇅</span></th>';
+            html += '<th class="number" data-sort="wins" onclick="sortBy(\'wins\')">Стало <span class="sort-icon">⇅</span></th>';
+            html += '<th class="number" data-sort="oldWr" onclick="sortBy(\'oldWr\')">WR было <span class="sort-icon">⇅</span></th>';
+            html += '<th class="number" data-sort="newWr" onclick="sortBy(\'newWr\')">WR стало <span class="sort-icon">⇅</span></th>';
+            html += '<th class="number" data-sort="diff" onclick="sortBy(\'diff\')">Δ <span class="sort-icon">⇅</span></th>';
+            html += '</tr></thead><tbody id="formTbody"></tbody></table></div></div>';
+            
+            document.getElementById('content').innerHTML = html;
+            renderTable();
+        }
+
+        function renderTable() {
+            let data = [];
+            
+            if (currentTab === 'players') {
+                data = [...allChanges];
+            } else if (currentTab === 'classes') {
+                const map = {};
+                allChanges.forEach(c => {
+                    const cn = c.name.split('-')[1] || c.name;
+                    if (!map[cn]) map[cn] = { display: cn, emoji: c.emoji, oldW: 0, oldL: 0, wins: 0, losses: 0 };
+                    map[cn].oldW += c.oldW; map[cn].oldL += c.oldL;
+                    map[cn].wins += c.wins; map[cn].losses += c.losses;
+                });
+                data = Object.values(map).map(c => ({
+                    ...c,
+                    oldWr: c.oldW + c.oldL > 0 ? c.oldW / (c.oldW + c.oldL) * 100 : 0,
+                    newWr: c.wins + c.losses > 0 ? c.wins / (c.wins + c.losses) * 100 : 0,
+                    diff: 0
+                })).map(c => ({ ...c, diff: c.newWr - c.oldWr }));
+            } else if (currentTab === 'races') {
+                const map = {};
+                allChanges.forEach(c => {
+                    const rn = c.name.split('-')[0];
+                    if (!rn) return;
+                    if (!map[rn]) map[rn] = { display: rn, emoji: c.emoji, oldW: 0, oldL: 0, wins: 0, losses: 0 };
+                    map[rn].oldW += c.oldW; map[rn].oldL += c.oldL;
+                    map[rn].wins += c.wins; map[rn].losses += c.losses;
+                });
+                data = Object.values(map).map(c => ({
+                    ...c,
+                    oldWr: c.oldW + c.oldL > 0 ? c.oldW / (c.oldW + c.oldL) * 100 : 0,
+                    newWr: c.wins + c.losses > 0 ? c.wins / (c.wins + c.losses) * 100 : 0,
+                    diff: 0
+                })).map(c => ({ ...c, diff: c.newWr - c.oldWr }));
+            }
+            
+            if (searchQuery) data = data.filter(d => (d.display || '').toLowerCase().includes(searchQuery));
+            
+            data.sort((a, b) => {
+                let va = a[currentSort.key], vb = b[currentSort.key];
+                if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); return currentSort.dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va); }
+                va = va || 0; vb = vb || 0;
+                return currentSort.dir === 'asc' ? va - vb : vb - va;
+            });
+            
+            const topDiff = data.slice(0, 3).map(d => d.display);
+            
+            const tbody = document.getElementById('formTbody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = data.length === 0
+                ? '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted);">Нет изменений за этот период</td></tr>'
+                : data.map((c, i) => {
+                    const cls = c.diff > 0.5 ? 'up' : c.diff < -0.5 ? 'down' : '';
+                    const arrow = c.diff > 0.5 ? '📈' : c.diff < -0.5 ? '📉' : '';
+                    const rank = i + 1;
+                    const posClass = rank === 1 ? 'top-1' : rank === 2 ? 'top-2' : rank === 3 ? 'top-3' : '';
+                    return `<tr style="animation-delay:${i*0.02}s">
+                        <td>${c.emoji || '⚔️'} ${c.display || c.name}</td>
+                        <td class="number">${c.oldW}-${c.oldL}</td>
+                        <td class="number">${c.wins}-${c.losses}</td>
+                        <td class="number">${c.oldWr.toFixed(1)}%</td>
+                        <td class="number">${c.newWr.toFixed(1)}%</td>
+                        <td class="number ${cls}">${arrow} ${c.diff > 0 ? '+' : ''}${c.diff.toFixed(1)}%</td>
+                    </tr>`;
+                }).join('');
+            
+            // Стрелки
+            document.querySelectorAll('#formTable th').forEach(th => {
+                th.classList.remove('sort-active');
+                if (th.dataset.sort === currentSort.key) th.classList.add('sort-active');
+            });
+        }
+
+        function sortBy(key) {
+            if (currentSort.key === key) currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            else { currentSort.key = key; currentSort.dir = 'desc'; }
+            renderTable();
+        }
+        function filterTable() { searchQuery = document.getElementById('formSearch')?.value.toLowerCase() || ''; renderTable(); }
+        function switchTab(tab) { currentTab = tab; document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderTable(); }
+        window.sortBy = sortBy;
+        window.filterTable = filterTable;
+        window.switchTab = switchTab;
+
+        loadForm();
+    </script>
+</body>
+</html>
