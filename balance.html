@@ -197,7 +197,10 @@
 
         function initRaceBar(){
             const bar=document.getElementById('raceBar');
-            const icons={'Человек':'🧑','Орк':'👹','Дворф':'🧔','Нежить':'💀','Эльф':'🧝','Табакси':'🐱'};
+            const icons = {
+				'Человек':'🧑', 'Орк':'👹', 'Дворф':'🧔', 'Нежить':'💀', 
+				'Эльф':'🧝', 'Табакси':'🐱', 'Тифлинг':'😈'
+			};
             RACES.forEach(r=>{
                 const c=document.createElement('div');c.className='race-chip';
                 const bonus=[];if(r.BonusHp)bonus.push(`HP+${r.BonusHp}`);if(r.BonusAtk)bonus.push(`ATK+${r.BonusAtk}`);if(r.BonusDef)bonus.push(`DEF+${r.BonusDef}`);if(r.BonusDex)bonus.push(`DEX+${r.BonusDex}`);if(r.BonusMin)bonus.push(`MIN+${r.BonusMin}`);if(r.BonusMax)bonus.push(`MAX+${r.BonusMax}`);

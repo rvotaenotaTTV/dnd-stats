@@ -292,15 +292,41 @@
 			return html;
 		}
 
-        const SEASON_0_URL='https://rvotaenotattv.github.io/dnd-stats/season_0.json';
-        const SEASON_1_URL='https://rvotaenotattv.github.io/dnd-stats/season_1.json';
-        const STATS_URL='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+		const ARCHIVE_BASE = 'https://rvotaenotattv.github.io/dnd-stats/season_';
+		const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+		const CURRENT_SEASON = 2;
 
-        async function loadSeason0(){const c=document.getElementById('tab-s0');try{const d=await fetch(SEASON_0_URL+'?v='+Date.now()).then(r=>r.json());d.dungeon={players:{}};c.innerHTML=renderSeason(d,'🏁 Бета-тест','Рождение арены. Всё только начиналось.',false);}catch{c.innerHTML='<div class="season-frame ended"><div class="season-title">🏁 Бета-тест</div><div class="status-message">❌ Архив недоступен</div></div>';}}
-        async function loadSeason1(){const c=document.getElementById('tab-s1');try{const d=await fetch(SEASON_1_URL+'?v='+Date.now()).then(r=>r.json());c.innerHTML=renderSeason(d,'🔥 Эра Раскола','50 турниров. Бесконечные волны данжа. Эпоха, где родились легенды.',false);}catch{c.innerHTML='<div class="season-frame ended"><div class="season-title">🔥 Эра Раскола</div><div class="status-message">❌ Архив недоступен</div></div>';}}
-        async function loadSeason2(){const c=document.getElementById('tab-s2');try{const d=await fetch(STATS_URL+'?v='+Date.now()).then(r=>r.json());c.innerHTML=renderSeason(d,'💫 Время Перемен','Табакси вступают в Раскол. История пишется сейчас.',true);}catch{c.innerHTML='<div class="season-frame live"><div class="season-title">💫 Время Перемен</div><div class="status-message">❌ Не удалось загрузить данные</div></div>';}}
+		const seasons = [
+			{ num: 0, name: '🏁 Бета-тест', sub: 'Первые дуэли. Рождение Арены.' },
+			{ num: 1, name: '🔥 Эра Раскола', sub: '50 турниров. Эпоха легенд.' },
+			{ num: 2, name: '💫 Время Перемен', sub: 'Корабли без капитанов. Табакси здесь.' },
+			//{ num: 3, name: '🩸 Кровь Бездны', sub: 'Тифлинги выходят из тени. Разлом открыт.' },
+		];
 
-        loadSeason0();loadSeason1();loadSeason2();
+		async function loadSeason(num, tabId, name, subtitle) {
+			const c = document.getElementById(tabId);
+			
+			if (num < CURRENT_SEASON) {
+				// Архивный сезон
+				try {
+					const d = await fetch(`${ARCHIVE_BASE}${num}.json?v=${Date.now()}`).then(r => r.json());
+					if (num === 0) d.dungeon = { players: {} };
+					c.innerHTML = renderSeason(d, name, subtitle, false);
+				} catch {
+					c.innerHTML = `<div class="season-frame ended"><div class="season-title">${name}</div><div class="status-message">❌ Архив недоступен</div></div>`;
+				}
+			} else {
+				// Текущий сезон
+				try {
+					const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json());
+					c.innerHTML = renderSeason(d, name, subtitle, true);
+				} catch {
+					c.innerHTML = `<div class="season-frame live"><div class="season-title">${name}</div><div class="status-message">❌ Не удалось загрузить данные</div></div>`;
+				}
+			}
+		}
+
+		seasons.forEach(s => loadSeason(s.num, `tab-s${s.num}`, s.name, s.sub));
     </script>
 </body>
 </html>
