@@ -140,14 +140,21 @@
                 <a href="league.html" class="nav-link">🏟 Лига</a><a href="player.html" class="nav-link">👤 Профиль</a>
             </nav>
         </div>
-        <div class="tabs" id="season-tabs">
-            <button class="tab-btn" data-season="s0">🏁 Бета-тест</button>
-            <button class="tab-btn" data-season="s1">🔥 Эра Раскола</button>
-            <button class="tab-btn active" data-season="s2">💫 Время Перемен</button>
-        </div>
-        <div id="tab-s0" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
-        <div id="tab-s1" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
-        <div id="tab-s2" class="tab-content active"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+		
+		<div class="tabs" id="season-tabs">
+			<button class="tab-btn" data-season="s0">🏁 Бета-тест</button>
+			<button class="tab-btn" data-season="s1">🔥 Эра Раскола</button>
+			<button class="tab-btn active" data-season="s2">💫 Время Перемен</button>
+			<button class="tab-btn" data-season="s3">🩸 Кровь Бездны</button>
+		</div>
+		<div id="tab-s0" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+		<div id="tab-s1" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+		<div id="tab-s2" class="tab-content active"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+		<div id="tab-s3" class="tab-content" style="text-align:center;padding:40px 20px;">
+			<div style="font-size:3rem;">🩸</div>
+			<h3 style="color:var(--abyss-light);margin:16px 0;">Сезон 3 — Кровь Бездны</h3>
+			<p style="color:var(--text-secondary);max-width:500px;margin:0 auto;">Ещё не начался. Тифлинги ждут. Разлом Бездны откроется после завершения сезона «Время Перемен».</p>
+		</div>
     </div>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
     <script>
@@ -162,7 +169,9 @@
 			if(data.dungeon&&data.dungeon.players)dungeonPlayers=data.dungeon.players;
 			const players=data.players||[];
 			const heroArchive=data.heroArchive||{};
-			const seasonTop=data.seasonTop||[];
+			const seasonTop = data.seasonTop && data.seasonTop.length > 0 
+			? data.seasonTop 
+			: [...players].filter(p => (p.skill || 0) > 0).sort((a, b) => (b.skill || 0) - (a.skill || 0));
 			const factionScore=data.factionScore||{};
 			const totalPlayers=players.length;
 			
@@ -207,7 +216,9 @@
 			
 			const champCount=champions.length;
 			const maxDungeonBosses=players.reduce((m,p)=>{const d=dungeonPlayers[p.display];return d&&d.bosses>m?d.bosses:m;},0);
-			const maxSkill=seasonTop.length>0?seasonTop[0].skill:'—';
+			const maxSkill = seasonTop.length > 0 
+				? seasonTop[0].skill || seasonTop[0].shards || '—' 
+				: '—';
 			const maxDungeonRecord=players.reduce((m,p)=>{const d=dungeonPlayers[p.display];return d&&d.record>m?d.record:m;},0);
 			const maxDungeonTrophies=players.reduce((m,p)=>{const d=dungeonPlayers[p.display];return d&&d.trophies>m?d.trophies:m;},0);
 			const topDungeon=players.map(p=>{const d=dungeonPlayers[p.display];return{...p,record:d?.record||0,trophies:d?.trophies||0};}).filter(p=>p.record>0).sort((a,b)=>b.record-a.record||b.trophies-a.trophies);
