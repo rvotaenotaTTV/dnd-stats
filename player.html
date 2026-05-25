@@ -268,28 +268,30 @@ async function loadAllSeasons(playerName){
 
     const archive=heroArchive||{};
     const allHeroes=[];
+	const CURRENT=2;
+	const seasonNames=['🏁 0','🔥 1','💫 2','🩸 3'];
+	const seasonKeys=['season_0.json','season_1.json','season_2.json','season_3.json'];
 
-    const seasons=[
-        {url:'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/season_0.json',name:'🏁 0'},
-        {url:'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/season_1.json',name:'🔥 1'}
-    ];
-
-    for(const s of seasons){
-        try{
-            const r=await fetch(s.url);
-            const d=await r.json();
-            const arch=d.heroArchive?.[playerName.toLowerCase()];
-            if(arch){arch.forEach(h=>allHeroes.push({...h,season:s.name}));}
-            else{
-                const player=d.players?.find(p=>p.display?.toLowerCase()===playerName.toLowerCase());
-                if(player) allHeroes.push({name:player.name,emoji:player.emoji,wins:player.wins,losses:player.losses,best:player.best,worst:player.worst||0,tournamentWins:player.tournamentWins||0,season:s.name});
-            }
-        }catch(e){}
+    for(let i=0;i<=CURRENT;i++){
+        if(i<CURRENT){
+            const url=`https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/${seasonKeys[i]}`;
+            try{
+                const r=await fetch(url);
+                const d=await r.json();
+                const key=playerName.toLowerCase();
+                const arch=d.heroArchive?.[key];
+                if(arch){
+                    arch.forEach(h=>allHeroes.push({...h,season:seasonNames[i]}));
+                }else{
+                    const player=d.players?.find(p=>p.display?.toLowerCase()===key);
+                    if(player) allHeroes.push({name:player.name,emoji:player.emoji,wins:player.wins,losses:player.losses,best:player.best,worst:player.worst||0,tournamentWins:player.tournamentWins||0,season:seasonNames[i]});
+                }
+            }catch(e){}
+        }else{
+            const currentArchive=archive[playerName.toLowerCase()]||[];
+            currentArchive.forEach(h=>allHeroes.push({...h,season:seasonNames[i]}));
+        }
     }
-
-    // Текущий архив (2 сезон) — в конец
-    const currentArchive=archive[playerName.toLowerCase()]||[];
-    currentArchive.forEach(h=>allHeroes.push({...h,season:'💫 2'}));
 
     if(allHeroes.length===0){container.innerHTML='';return;}
 
