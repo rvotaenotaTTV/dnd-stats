@@ -179,7 +179,7 @@
                 <a href="#battle" class="toc-link"><span class="toc-emoji">⚔️</span> Механика боя</a>
                 <a href="#logs" class="toc-link"><span class="toc-emoji">📝</span> Обозначения в логах</a>
                 <a href="#tournament" class="toc-link"><span class="toc-emoji">👑</span> Турнир</a>
-                <a href="#faction-war" class="toc-link"><span class="toc-emoji">⚔️</span> Фракционная битва</a>
+                <a href="#faction-war" class="toc-link"><span class="toc-emoji">⚔️</span> Фракционное противостояние</a>
                 <a href="#dungeon" class="toc-link"><span class="toc-emoji">🏔</span> Подземелье</a>
                 <a href="#dungeon-events" class="toc-link"><span class="toc-emoji">🎲</span> Артефакты Этерниса</a>
                 <a href="#dungeon-passives" class="toc-link"><span class="toc-emoji">🌍</span> Пассивки подземелья</a>
@@ -239,10 +239,6 @@
 				<div class="command-item">
 					<div class="command-name">!рега / !список / !сетка</div>
 					<div class="command-desc">Запись в турнир, список участников, турнирная сетка</div>
-				</div>
-				<div class="command-item">
-					<div class="command-name">!фрега / !фрлист</div>
-					<div class="command-desc">Запись во фракционную битву и список бойцов фракции</div>
 				</div>
 			</div>
 		</div>
@@ -332,41 +328,27 @@
 			<p><span class="highlight">+10💎</span>, титул <span class="highlight">👑 Хранитель Вечности</span>, +1 к счётчику турнирных побед, и бонус к рейтингу SKILL.</p>
 		</div>
 
-		<!-- ==================== БЛОК 6: ФРАКЦИОННАЯ БИТВА ==================== -->
+		<!-- ==================== БЛОК 6: ФРАКЦИОННОЕ ПРОТИВОСТОЯНИЕ ==================== -->
 		<div class="card" id="faction-war">
-			<h2 class="card-title">⚔️ Фракционная битва и территории</h2>
-			<p>Командное сражение <span class="highlight">5 на 5</span> между <span class="text-light">🌝 Орденом Света</span> и <span class="text-dark">🌚 Культом Тьмы</span>. Победившая фракция получает контроль над локацией, где проходил бой.</p>
+			<h2 class="card-title">⚔️ Фракционное противостояние</h2>
+			<p>Каждая дуэль между <span class="text-light">🌝 Орденом Света</span> и <span class="text-dark">🌚 Культом Тьмы</span> приближает твою фракцию к захвату территорий.</p>
 			
-			<div class="command-grid">
-				<div class="command-item">
-					<div class="command-name">!фрега</div>
-					<div class="command-desc">Записаться в команду своей фракции</div>
-				</div>
-				<div class="command-item">
-					<div class="command-name">!фрлист</div>
-					<div class="command-desc">Список бойцов твоей фракции</div>
-				</div>
-			</div>
-
-			<h3>⚡ Как проходит битва:</h3>
+			<h3>⚡ Как работают территории:</h3>
 			<ol>
-				<li>Админ запускает регистрацию командой <span class="highlight">!битва</span>. У игроков есть <strong>10 минут</strong> чтобы записаться.</li>
-				<li>Нужно по <span class="highlight">5 бойцов</span> от каждой фракции.</li>
-				<li>Случайно выбирается <span class="highlight">локация</span> с бонусом — он действует на <strong>обе фракции</strong>.</li>
-				<li>Проводится <strong>5 боёв 1 на 1</strong>. Фракция, выигравшая 3 и более боёв, побеждает.</li>
-				<li>Победители получают <span class="highlight">+5💎</span>, проигравшие — <span class="highlight">+2💎</span>.</li>
-				<li>Победившая фракция <strong>захватывает локацию</strong>, на которой шёл бой (кроме вечных территорий).</li>
+				<li>Каждые <span class="highlight">100 побед</span> в дуэлях против вражеской фракции — фракция захватывает случайную территорию противника.</li>
+				<li>Счётчик побед общий для всей фракции. Каждый бой на счету.</li>
+				<li>Захват происходит автоматически — просто продолжай дуэлиться.</li>
 			</ol>
 
-			<h3>🗺️ Территории и бонусы:</h3>
+			<h3>🗺️ Территории:</h3>
 			<div class="loc-grid" style="grid-template-columns:1fr;">
-				<div class="loc-item locked">✨ <strong>Сияющий Шпиль</strong> · +2 ATK · Вечно за Светом</div>
-				<div class="loc-item locked">🌫️ <strong>Зал Повествователя</strong> · +1 MAX · Вечно за Тьмой</div>
-				<div class="loc-item">🌑 <strong>Эпицентр Раскола</strong> · +1 MIN</div>
-				<div class="loc-item">🗡️ <strong>Поле Павшего Клинка</strong> · +1 DEF</div>
-				<div class="loc-item">🔥 <strong>Кузня Расколотых</strong> · +2 HP</div>
-				<div class="loc-item">🎭 <strong>Арена Тысячи Эхо</strong> · +2 ко всем статам</div>
-				<div class="loc-item">⚓ <strong>Порт Дрейфующих</strong> · +1 DEX</div>
+				<div class="loc-item locked">✨ <strong>Сияющий Шпиль</strong> · Вечно за Светом</div>
+				<div class="loc-item locked">🌫️ <strong>Зал Повествователя</strong> · Вечно за Тьмой</div>
+				<div class="loc-item">🌑 <strong>Эпицентр Раскола</strong></div>
+				<div class="loc-item">🗡️ <strong>Поле Павшего Клинка</strong></div>
+				<div class="loc-item">🔥 <strong>Кузня Расколотых</strong></div>
+				<div class="loc-item">🎭 <strong>Арена Тысячи Эхо</strong></div>
+				<div class="loc-item">⚓ <strong>Порт Дрейфующих</strong></div>
 			</div>
 		</div>
 
@@ -563,12 +545,12 @@
 		<div class="card" id="tips">
 			<h2 class="card-title">💡 Полезные советы новичку</h2>
 			<ol>
-				<li><span class="highlight">Начни с дуэлей.</span> Обычные бои (!бой) — самый безопасный способ накопить первые осколки и понять механику.</li>
-				<li><span class="highlight">Не бойся проигрывать.</span> Даже за поражение дают +1💎, так что каждый бой приближает тебя к новому уровню.</li>
-				<li><span class="highlight">Записывайся в турниры.</span> Даже если вылетишь в первом раунде, получишь +2💎 за турнирный бой — вдвое больше чем за обычное поражение.</li>
-				<li><span class="highlight">Бей вражескую фракцию.</span> Победа над героем из противоположной фракции даёт +4💎 вместо +2💎 — ищи соперников с другой эмблемой.</li>
-				<li><span class="highlight">Ходи в подземелье.</span> Каждые 3 волны приносят +1💎, а боссы дают трофеи в копилку фракции. Даже 5-10 волн — уже вклад.</li>
-				<li><span class="highlight">Используй !харакири с умом.</span> Если не нравится класс или раса — пересоздай героя. Осколки и уровень сохранятся, а старый герой уйдёт в архив.</li>
+				<li><span class="highlight">Начни с дуэлей.</span> Обычные бои (<code>!бой</code>) — самый безопасный способ накопить первые осколки и понять механику.</li>
+				<li><span class="highlight">Не бойся проигрывать.</span> Даже за поражение дают +1💎. Каждый бой приближает тебя к новому уровню.</li>
+				<li><span class="highlight">Записывайся в турниры.</span> Даже если вылетишь в первом раунде, получишь +2💎 за турнирный бой.</li>
+				<li><span class="highlight">Бей вражескую фракцию.</span> Победа над героем из противоположной фракции даёт +4💎 и приближает твою фракцию к захвату территории.</li>
+				<li><span class="highlight">Ходи в Разлом.</span> Каждые 3 волны — +1💎, а боссы дают трофеи в копилку фракции для Короны Раскола.</li>
+				<li><span class="highlight">Используй !харакири с умом.</span> Не нравится класс или раса — пересоздай героя. Осколки и уровень сохранятся.</li>
 			</ol>
 		</div>
     </div>
