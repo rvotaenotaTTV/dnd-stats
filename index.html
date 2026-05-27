@@ -329,21 +329,16 @@
 		Object.entries(heroArchiveChamps).forEach(([playerKey, heroes]) => {
 			heroes.forEach(h => {
 				if ((h.tournamentWins || 0) > 0) {
-					const exists = topChampions.find(c => c.display === playerKey);
-					if (!exists) {
-						topChampions.push({
-							display: playerKey,
-							emoji: h.emoji || '',
-							name: h.name || '',
-							tournamentWins: h.tournamentWins || 0,
-							wins: h.wins || 0,
-							losses: h.losses || 0,
-							faction: '',
-							champion: false
-						});
-					} else {
-						exists.tournamentWins += (h.tournamentWins || 0);
-					}
+					topChampions.push({
+						display: playerKey,
+						emoji: h.emoji || '',
+						name: h.name || '',
+						tournamentWins: h.tournamentWins || 0,
+						wins: h.wins || 0,
+						losses: h.losses || 0,
+						faction: '',
+						champion: false
+					});
 				}
 			});
 		});
@@ -358,7 +353,6 @@
 			html+='<div class="card"><div class="card-title">🏆 Чемпионы</div><div class="table-container"><table id="champions-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="wins">🏆</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="champions-tbody">';
 			topChampions.forEach((p,i)=>{
 				const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'👻');
-				const isGhost=!p.faction;
 				html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${p.champion?'style="background:rgba(255,215,0,0.06);"':''}><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display||'')}" class="player-link">${p.emoji||''} ${p.display||''}</a> ${p.champion?'<span style="color:var(--gold);">👑</span>':''}</td><td>${p.name||''}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.tournamentWins||0}</td><td>${fi}</td></tr>`;
 			});
 			html+='</tbody></table></div></div>';

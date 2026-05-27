@@ -167,146 +167,251 @@
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
 <script>
-function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
-(function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
-function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+		function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
+		(function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
+		function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
 
-let allPlayers=[],dungeonPlayers={},seasonTop=[],heroArchive={};
+		// === ЗАГРУЗКА ДАННЫХ ===
+		let allPlayers = [], dungeonPlayers = {}, seasonTop = [], heroArchive = {};
 
-async function loadData(){
-    const urls=['https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json','https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'];
-    for(const url of urls){try{const r=await fetch(url);if(r.ok){const d=await r.json();allPlayers=(d.players||[]).filter(p=>p.name&&p.name!=='Unknown');if(d.dungeon?.players)dungeonPlayers=d.dungeon.players;seasonTop=(d.players||[]).filter(p=>p.skill>0).sort((a,b)=>b.skill-a.skill).slice(0,10);heroArchive=d.heroArchive||{};return;}}catch(e){}}
-}
+		async function loadData() {
+			const urls = [
+				'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
+				'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'
+			];
+			for (const url of urls) {
+				try {
+					const r = await fetch(url);
+					if (r.ok) {
+						const d = await r.json();
+						allPlayers = (d.players || []).filter(p => p.name && p.name !== 'Unknown');
+						if (d.dungeon?.players) dungeonPlayers = d.dungeon.players;
+						seasonTop = (d.players || []).filter(p => p.skill > 0).sort((a, b) => b.skill - a.skill).slice(0, 10);
+						heroArchive = d.heroArchive || {};
+						return;
+					}
+				} catch (e) {}
+			}
+		}
 
-function findPlayer(name){if(!name||!allPlayers.length)return null;const lower=name.toLowerCase().trim();return allPlayers.find(p=>p.display&&p.display.toLowerCase()===lower)||allPlayers.find(p=>p.display&&p.display.toLowerCase().includes(lower))||null;}
+		// === ПОИСК ИГРОКА ===
+		function findPlayer(name) {
+			if (!name || !allPlayers.length) return null;
+			const lower = name.toLowerCase().trim();
+			return allPlayers.find(p => p.display && p.display.toLowerCase() === lower) || 
+				   allPlayers.find(p => p.display && p.display.toLowerCase().includes(lower)) || null;
+		}
 
-function filterPlayerList(){const input=document.getElementById('playerSearch'),dropdown=document.getElementById('playerDropdown');const val=input.value.toLowerCase().trim();if(!val||!allPlayers.length){dropdown.style.display='none';return;}const filtered=allPlayers.filter(x=>x.display&&x.display.toLowerCase().includes(val)).slice(0,8);if(!filtered.length){dropdown.style.display='none';return;}dropdown.innerHTML=filtered.map(x=>`<div class="dropdown-item" onclick="selectPlayer('${x.display.replace(/'/g,"\\'")}')">${x.emoji||'⚔️'} ${x.display}</div>`).join('');dropdown.style.display='block';}
-function selectPlayer(name){document.getElementById('playerSearch').value=name;document.getElementById('playerDropdown').style.display='none';loadProfile();}
+		// === ВЫПАДАЮЩИЙ СПИСОК ===
+		function filterPlayerList() {
+			const input = document.getElementById('playerSearch'), dropdown = document.getElementById('playerDropdown');
+			const val = input.value.toLowerCase().trim();
+			if (!val || !allPlayers.length) { dropdown.style.display = 'none'; return; }
+			const filtered = allPlayers.filter(x => x.display && x.display.toLowerCase().includes(val)).slice(0, 8);
+			if (!filtered.length) { dropdown.style.display = 'none'; return; }
+			dropdown.innerHTML = filtered.map(x => `<div class="dropdown-item" onclick="selectPlayer('${x.display.replace(/'/g, "\\'")}')">${x.emoji || '⚔️'} ${x.display}</div>`).join('');
+			dropdown.style.display = 'block';
+		}
 
-function filterCompareList(){const input=document.getElementById('compareInput'),dropdown=document.getElementById('compareDropdown');if(!input)return;const val=input.value.toLowerCase().trim();if(!val||!allPlayers.length){dropdown.style.display='none';return;}const filtered=allPlayers.filter(x=>x.display&&x.display.toLowerCase().includes(val)).slice(0,8);if(!filtered.length){dropdown.style.display='none';return;}dropdown.innerHTML=filtered.map(x=>`<div class="dropdown-item" onclick="selectCompare('${x.display.replace(/'/g,"\\'")}')">${x.emoji||'⚔️'} ${x.display}</div>`).join('');dropdown.style.display='block';}
-function selectCompare(name){document.getElementById('compareInput').value=name;document.getElementById('compareDropdown').style.display='none';compareWith(name);}
+		function selectPlayer(name) {
+			document.getElementById('playerSearch').value = name;
+			document.getElementById('playerDropdown').style.display = 'none';
+			loadProfile();
+		}
 
-function renderProfile(p){
-    if(!p)return'<div class="status-message">Игрок не найден</div>';
-    const total=(p.wins||0)+(p.losses||0),wr=total>0?(p.wins*100/total).toFixed(1):'0.0';
-    const faction=p.faction||'',fi=faction==='Орден Света'?'🌝':'🌚';
-    const dungeon=dungeonPlayers[p.display];
-    const seasonRank=seasonTop.findIndex(s=>s.display===p.display)+1;
-    const sortedByWins=[...allPlayers].sort((a,b)=>(b.wins||0)-(a.wins||0));
-    const rankWins=sortedByWins.findIndex(x=>x.display===p.display)+1;
-    const sortedByWR=[...allPlayers].filter(x=>((x.wins||0)+(x.losses||0))>=20).sort((a,b)=>{const wa=(a.wins||0)/((a.wins||0)+(a.losses||0)),wb=(b.wins||0)/((b.wins||0)+(b.losses||0));return wb-wa;});
-    const rankWR=sortedByWR.findIndex(x=>x.display===p.display)+1;
-    const sortedByShards=[...allPlayers].sort((a,b)=>(b.shards||0)-(a.shards||0));
-    const rankShards=sortedByShards.findIndex(x=>x.display===p.display)+1;
-    const dungeonRecords=allPlayers.map(x=>({display:x.display,record:dungeonPlayers[x.display]?.record||0})).sort((a,b)=>b.record-a.record);
-    const rankDungeon=dungeonRecords.findIndex(x=>x.display===p.display&&x.record>0)+1;
-    const sortedByFaction=[...allPlayers].sort((a,b)=>(b.factionWins||0)-(a.factionWins||0));
-    const rankFaction=sortedByFaction.findIndex(x=>x.display===p.display)+1;
-    const color=n=>n<=3?'var(--gold)':n<=10?'var(--green)':'var(--text-muted)';
+		// === КАРТОЧКА ПРОФИЛЯ ===
+		function renderProfile(p) {
+			if (!p) return '<div class="status-message">Игрок не найден</div>';
+			const total = (p.wins || 0) + (p.losses || 0), wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
+			const faction = p.faction || '', fi = faction === 'Орден Света' ? '🌝' : '🌚';
+			const dungeon = dungeonPlayers[p.display];
+			const seasonRank = seasonTop.findIndex(s => s.display === p.display) + 1;
+			const sortedByWins = [...allPlayers].sort((a, b) => (b.wins || 0) - (a.wins || 0));
+			const rankWins = sortedByWins.findIndex(x => x.display === p.display) + 1;
+			const sortedByWR = [...allPlayers].filter(x => ((x.wins || 0) + (x.losses || 0)) >= 20).sort((a, b) => {
+				const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0)), wb = (b.wins || 0) / ((b.wins || 0) + (b.losses || 0));
+				return wb - wa;
+			});
+			const rankWR = sortedByWR.findIndex(x => x.display === p.display) + 1;
+			const sortedByShards = [...allPlayers].sort((a, b) => (b.shards || 0) - (a.shards || 0));
+			const rankShards = sortedByShards.findIndex(x => x.display === p.display) + 1;
+			const dungeonRecords = allPlayers.map(x => ({ display: x.display, record: dungeonPlayers[x.display]?.record || 0 })).sort((a, b) => b.record - a.record);
+			const rankDungeon = dungeonRecords.findIndex(x => x.display === p.display && x.record > 0) + 1;
+			const sortedByFaction = [...allPlayers].sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0));
+			const rankFaction = sortedByFaction.findIndex(x => x.display === p.display) + 1;
+			const color = n => n <= 3 ? 'var(--gold)' : n <= 10 ? 'var(--green)' : 'var(--text-muted)';
 
-    let html=`<div class="profile-hero"><div class="profile-emoji">${p.emoji||'⚔️'}</div><div class="profile-name">${p.display}${p.champion?' 👑':''}</div><div class="profile-class">${p.name||''} · SKILL ${p.skill||0}</div><div class="profile-badges">`;
-    if(p.champion)html+='<span class="badge badge-gold">👑 Хранитель</span>';
-    html+=`<span class="badge ${faction==='Орден Света'?'badge-light':'badge-dark'}">${fi} ${faction}</span>`;
-    if(seasonRank>0)html+=`<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
-    html+=`</div><button class="btn btn-secondary" onclick="copyProfileLink()" style="margin-top:8px;">🔗 Копировать ссылку</button></div>`;
+			// === ШАПКА ===
+			let html = `<div class="profile-hero"><div class="profile-emoji">${p.emoji || '⚔️'}</div><div class="profile-name">${p.display}${p.champion ? ' 👑' : ''}</div><div class="profile-class">${p.name || ''} · SKILL ${p.skill || 0}</div><div class="profile-badges">`;
+			if (p.champion) html += '<span class="badge badge-gold">👑 Хранитель</span>';
+			html += `<span class="badge ${faction === 'Орден Света' ? 'badge-light' : 'badge-dark'}">${fi} ${faction}</span>`;
+			if (seasonRank > 0) html += `<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>`;
+			html += `</div><button class="btn btn-secondary" onclick="copyProfileLink()" style="margin-top:8px;">🔗 Копировать ссылку</button></div>`;
 
-    html+='<div class="stats-grid">';
-    html+=`<div class="stat-card"><div class="stat-num">${p.wins||0}</div><div class="stat-label">⚔️ Победы</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${p.losses||0}</div><div class="stat-label">💀 Поражения</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${wr}%</div><div class="stat-label">📊 Винрейт</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">⚡ Всего боёв</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${p.best||0}</div><div class="stat-label">🔥 Лучший стрик</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${p.worst||0}</div><div class="stat-label">💔 Худший стрик</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${p.shards||0}</div><div class="stat-label">💎 Осколки</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${p.level||0}</div><div class="stat-label">📈 Уровень</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${p.tournamentWins||0}</div><div class="stat-label">👑 Турниры</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${p.factionWins||0}</div><div class="stat-label">🌍 Фракция</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${dungeon?dungeon.record:'-'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
-    html+=`<div class="stat-card"><div class="stat-num">${dungeon?dungeon.trophies:'-'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
-    html+='</div>';
+			// === СТАТЫ ===
+			html += '<div class="stats-grid">';
+			html += `<div class="stat-card"><div class="stat-num">${p.wins || 0}</div><div class="stat-label">⚔️ Победы</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.losses || 0}</div><div class="stat-label">💀 Поражения</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${wr}%</div><div class="stat-label">📊 Винрейт</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">⚡ Всего боёв</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.best || 0}</div><div class="stat-label">🔥 Лучший стрик</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.worst || 0}</div><div class="stat-label">💔 Худший стрик</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.shards || 0}</div><div class="stat-label">💎 Осколки</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.level || 0}</div><div class="stat-label">📈 Уровень</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.tournamentWins || 0}</div><div class="stat-label">👑 Турниры</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${p.factionWins || 0}</div><div class="stat-label">🌍 Фракция</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.record : '-'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
+			html += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.trophies : '-'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
+			html += '</div>';
 
-    html+='<div class="ranks-grid">';
-    html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankWins)};">#${rankWins}</div><div class="rank-label">По победам</div></div>`;
-    html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankWR)};">#${rankWR||'-'}</div><div class="rank-label">По винрейту</div></div>`;
-    html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankShards)};">#${rankShards}</div><div class="rank-label">По осколкам</div></div>`;
-    html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankDungeon)};">#${rankDungeon||'-'}</div><div class="rank-label">По данжу</div></div>`;
-    html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(seasonRank)};">#${seasonRank||'-'}</div><div class="rank-label">Сезонный топ</div></div>`;
-    html+=`<div class="rank-card"><div class="rank-pos" style="color:${color(rankFaction)};">#${rankFaction||'-'}</div><div class="rank-label">По фракции</div></div>`;
-    html+='</div>';
+			// === ПОЗИЦИИ В РЕЙТИНГАХ ===
+			html += '<div class="ranks-grid">';
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankWins)};">#${rankWins}</div><div class="rank-label">По победам</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankWR)};">#${rankWR || '-'}</div><div class="rank-label">По винрейту</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankShards)};">#${rankShards}</div><div class="rank-label">По осколкам</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankDungeon)};">#${rankDungeon || '-'}</div><div class="rank-label">По данжу</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(seasonRank)};">#${seasonRank || '-'}</div><div class="rank-label">Сезонный топ</div></div>`;
+			html += `<div class="rank-card"><div class="rank-pos" style="color:${color(rankFaction)};">#${rankFaction || '-'}</div><div class="rank-label">По фракции</div></div>`;
+			html += '</div>';
 
-    html+=`<div id="allFormerHeroes"></div>`;
+			// === БЫВШИЕ ГЕРОИ ===
+			html += `<div id="allFormerHeroes"></div>`;
 
-    html+=`<div class="compare-bar" style="margin-top:24px;"><span>⚔️ Сравнить с:</span><div class="dropdown-wrap" style="flex:1;min-width:150px;"><input type="text" class="search-input" id="compareInput" placeholder="Введи ник..." oninput="filterCompareList()"><div class="dropdown-list" id="compareDropdown"></div></div></div><div id="compareResult"></div>`;
-    return html;
-}
+			// === СРАВНЕНИЕ ===
+			html += `<div class="compare-bar" style="margin-top:24px;"><span>⚔️ Сравнить с:</span><div class="dropdown-wrap" style="flex:1;min-width:150px;"><input type="text" class="search-input" id="compareInput" placeholder="Введи ник..." oninput="filterCompareList()"><div class="dropdown-list" id="compareDropdown"></div></div></div><div id="compareResult"></div>`;
+			return html;
+		}
 
-function renderCompare(p1,p2){
-    if(!p1||!p2)return'';
-    const d1=dungeonPlayers[p1.display],d2=dungeonPlayers[p2.display];
-    const rows=[['Победы',p1.wins||0,p2.wins||0,true],['Поражения',p1.losses||0,p2.losses||0,false],['Винрейт',((p1.wins||0)/((p1.wins||0)+(p1.losses||0)||1)*100).toFixed(1)+'%',((p2.wins||0)/((p2.wins||0)+(p2.losses||0)||1)*100).toFixed(1)+'%',true],['SKILL',p1.skill||0,p2.skill||0,true],['Всего боёв',(p1.wins||0)+(p1.losses||0),(p2.wins||0)+(p2.losses||0),true],['Лучший стрик',p1.best||0,p2.best||0,true],['Худший стрик',p1.worst||0,p2.worst||0,false],['Осколки',p1.shards||0,p2.shards||0,true],['Уровень',p1.level||0,p2.level||0,true],['Турниры',p1.tournamentWins||0,p2.tournamentWins||0,true],['Фракция',p1.factionWins||0,p2.factionWins||0,true],['Рекорд данжа',d1?d1.record:'-',d2?d2.record:'-',true],['Трофеев',d1?d1.trophies:'-',d2?d2.trophies:'-',true]];
-    let table='<table class="compare-table"><thead><tr><th>Стат</th><th>'+p1.display+'</th><th>'+p2.display+'</th></tr></thead><tbody>';
-    rows.forEach(([label,v1,v2,higherBetter])=>{let c1='',c2='';if(typeof v1==='number'&&typeof v2==='number'){if(v1>v2){c1=higherBetter?'td-better':'td-worse';c2=higherBetter?'td-worse':'td-better';}else if(v2>v1){c1=higherBetter?'td-worse':'td-better';c2=higherBetter?'td-better':'td-worse';}}table+=`<tr><td>${label}</td><td class="${c1}">${v1}</td><td class="${c2}">${v2}</td></tr>`;});
-    table+='</tbody></table>';return table;
-}
+		// === ТАБЛИЦА СРАВНЕНИЯ ===
+		function renderCompare(p1, p2) {
+			if (!p1 || !p2) return '';
+			const d1 = dungeonPlayers[p1.display], d2 = dungeonPlayers[p2.display];
+			const rows = [
+				['Победы', p1.wins || 0, p2.wins || 0, true],
+				['Поражения', p1.losses || 0, p2.losses || 0, false],
+				['Винрейт', ((p1.wins || 0) / ((p1.wins || 0) + (p1.losses || 0) || 1) * 100).toFixed(1) + '%', ((p2.wins || 0) / ((p2.wins || 0) + (p2.losses || 0) || 1) * 100).toFixed(1) + '%', true],
+				['SKILL', p1.skill || 0, p2.skill || 0, true],
+				['Всего боёв', (p1.wins || 0) + (p1.losses || 0), (p2.wins || 0) + (p2.losses || 0), true],
+				['Лучший стрик', p1.best || 0, p2.best || 0, true],
+				['Худший стрик', p1.worst || 0, p2.worst || 0, false],
+				['Осколки', p1.shards || 0, p2.shards || 0, true],
+				['Уровень', p1.level || 0, p2.level || 0, true],
+				['Турниры', p1.tournamentWins || 0, p2.tournamentWins || 0, true],
+				['Фракция', p1.factionWins || 0, p2.factionWins || 0, true],
+				['Рекорд данжа', d1 ? d1.record : '-', d2 ? d2.record : '-', true],
+				['Трофеев', d1 ? d1.trophies : '-', d2 ? d2.trophies : '-', true]
+			];
+			let table = '<table class="compare-table"><thead><tr><th>Стат</th><th>' + p1.display + '</th><th>' + p2.display + '</th></tr></thead><tbody>';
+			rows.forEach(([label, v1, v2, higherBetter]) => {
+				let c1 = '', c2 = '';
+				if (typeof v1 === 'number' && typeof v2 === 'number') {
+					if (v1 > v2) { c1 = higherBetter ? 'td-better' : 'td-worse'; c2 = higherBetter ? 'td-worse' : 'td-better'; }
+					else if (v2 > v1) { c1 = higherBetter ? 'td-worse' : 'td-better'; c2 = higherBetter ? 'td-better' : 'td-worse'; }
+				}
+				table += `<tr><td>${label}</td><td class="${c1}">${v1}</td><td class="${c2}">${v2}</td></tr>`;
+			});
+			table += '</tbody></table>';
+			return table;
+		}
 
-function compareWith(name){const p1=findPlayer(document.getElementById('playerSearch').value.trim()),p2=findPlayer(name);document.getElementById('compareResult').innerHTML=p2?renderCompare(p1,p2):'';}
+		function compareWith(name) {
+			const p1 = findPlayer(document.getElementById('playerSearch').value.trim()), p2 = findPlayer(name);
+			document.getElementById('compareResult').innerHTML = p2 ? renderCompare(p1, p2) : '';
+		}
 
-function copyProfileLink(){const name=document.getElementById('playerSearch').value.trim();if(!name)return;const url=`${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;navigator.clipboard.writeText(url).then(()=>{const btn=document.querySelector('#profileContent .btn-secondary');if(!btn)return;btn.innerHTML='✅ Скопировано!';btn.style.background='var(--green)';btn.style.color='#fff';btn.style.borderColor='var(--green)';setTimeout(()=>{btn.innerHTML='🔗 Копировать ссылку';btn.style.background='';btn.style.color='';btn.style.borderColor='';},2000);}).catch(()=>{const input=document.createElement('input');input.value=url;document.body.appendChild(input);input.select();document.execCommand('copy');document.body.removeChild(input);});}
+		function filterCompareList() {
+			const input = document.getElementById('compareInput'), dropdown = document.getElementById('compareDropdown');
+			if (!input) return;
+			const val = input.value.toLowerCase().trim();
+			if (!val || !allPlayers.length) { dropdown.style.display = 'none'; return; }
+			const filtered = allPlayers.filter(x => x.display && x.display.toLowerCase().includes(val)).slice(0, 8);
+			if (!filtered.length) { dropdown.style.display = 'none'; return; }
+			dropdown.innerHTML = filtered.map(x => `<div class="dropdown-item" onclick="selectCompare('${x.display.replace(/'/g, "\\'")}')">${x.emoji || '⚔️'} ${x.display}</div>`).join('');
+			dropdown.style.display = 'block';
+		}
 
-async function loadProfile(){
-    if(!allPlayers.length)await loadData();
-    const p=findPlayer(document.getElementById('playerSearch').value.trim());
-    document.getElementById('profileContent').innerHTML=p?renderProfile(p):'<div class="status-message">Игрок не найден</div>';
-    if(p) setTimeout(()=>loadAllSeasons(p.display), 200);
-}
+		function selectCompare(name) {
+			document.getElementById('compareInput').value = name;
+			document.getElementById('compareDropdown').style.display = 'none';
+			compareWith(name);
+		}
 
-loadData().then(()=>{const params=new URLSearchParams(window.location.search);const name=params.get('name');if(name){document.getElementById('playerSearch').value=name;loadProfile();}});
+		// === КОПИРОВАНИЕ ССЫЛКИ ===
+		function copyProfileLink() {
+			const name = document.getElementById('playerSearch').value.trim();
+			if (!name) return;
+			const url = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
+			navigator.clipboard.writeText(url).then(() => {
+				const btn = document.querySelector('#profileContent .btn-secondary');
+				if (!btn) return;
+				btn.innerHTML = '✅ Скопировано!';
+				btn.style.background = 'var(--green)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--green)';
+				setTimeout(() => { btn.innerHTML = '🔗 Копировать ссылку'; btn.style.background = ''; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+			}).catch(() => {
+				const input = document.createElement('input'); input.value = url; document.body.appendChild(input);
+				input.select(); document.execCommand('copy'); document.body.removeChild(input);
+			});
+		}
 
-async function loadAllSeasons(playerName){
-    const container=document.getElementById('allFormerHeroes');
-    if(!container)return;
+		// === ЗАГРУЗКА ПРОФИЛЯ ===
+		async function loadProfile() {
+			if (!allPlayers.length) await loadData();
+			const p = findPlayer(document.getElementById('playerSearch').value.trim());
+			document.getElementById('profileContent').innerHTML = p ? renderProfile(p) : '<div class="status-message">Игрок не найден</div>';
+			if (p) setTimeout(() => loadAllSeasons(p.display), 200);
+		}
 
-    const archive=heroArchive||{};
-    const allHeroes=[];
-	const CURRENT=2;
-	const seasonNames=['🏁 0','🔥 1','💫 2','🩸 3'];
-	const seasonKeys=['season_0.json','season_1.json','season_2.json','season_3.json'];
+		loadData().then(() => {
+			const params = new URLSearchParams(window.location.search);
+			const name = params.get('name');
+			if (name) { document.getElementById('playerSearch').value = name; loadProfile(); }
+		});
 
-    for(let i=0;i<=CURRENT;i++){
-        if(i<CURRENT){
-            const url=`https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/${seasonKeys[i]}`;
-            try{
-                const r=await fetch(url);
-                const d=await r.json();
-                const key=playerName.toLowerCase();
-                const arch=d.heroArchive?.[key];
-                if(arch){
-                    arch.forEach(h=>allHeroes.push({...h,season:seasonNames[i]}));
-                }else{
-                    const player=d.players?.find(p=>p.display?.toLowerCase()===key);
-                    if(player) allHeroes.push({name:player.name,emoji:player.emoji,wins:player.wins,losses:player.losses,best:player.best,worst:player.worst||0,tournamentWins:player.tournamentWins||0,season:seasonNames[i]});
-                }
-            }catch(e){}
-        }else{
-            const currentArchive=archive[playerName.toLowerCase()]||[];
-            currentArchive.forEach(h=>allHeroes.push({...h,season:seasonNames[i]}));
-        }
-    }
+		// === БЫВШИЕ ГЕРОИ ПО СЕЗОНАМ ===
+		async function loadAllSeasons(playerName) {
+			const container = document.getElementById('allFormerHeroes');
+			if (!container) return;
+			const archive = heroArchive || {};
+			const allHeroes = [];
+			const CURRENT = 2;
+			const seasonNames = ['🏁 0', '🔥 1', '💫 2', '🩸 3'];
+			const seasonKeys = ['season_0.json', 'season_1.json', 'season_2.json', 'season_3.json'];
 
-    if(allHeroes.length===0){container.innerHTML='';return;}
+			for (let i = 0; i <= CURRENT; i++) {
+				if (i < CURRENT) {
+					const url = `https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/${seasonKeys[i]}`;
+					try {
+						const r = await fetch(url);
+						const d = await r.json();
+						const key = playerName.toLowerCase();
+						const arch = d.heroArchive?.[key];
+						if (arch) {
+							arch.forEach(h => allHeroes.push({ ...h, season: seasonNames[i] }));
+						} else {
+							const player = d.players?.find(p => p.display?.toLowerCase() === key);
+							if (player) allHeroes.push({ name: player.name, emoji: player.emoji, wins: player.wins, losses: player.losses, best: player.best, worst: player.worst || 0, tournamentWins: player.tournamentWins || 0, season: seasonNames[i] });
+						}
+					} catch (e) {}
+				} else {
+					const currentArchive = archive[playerName.toLowerCase()] || [];
+					currentArchive.forEach(h => allHeroes.push({ ...h, season: seasonNames[i] }));
+				}
+			}
 
-    let html=`<h3 style="color:var(--gold);margin:16px 0 8px;">👻 Бывшие (${allHeroes.length})</h3>`;
-    html+='<div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border-subtle);"><table style="width:100%;border-collapse:collapse;font-size:0.8rem;"><thead><tr>';
-    html+='<th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Сезон</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Герой</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">W</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">L</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">WR</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">🔥</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">💀</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">👑</th></tr></thead><tbody>';
+			if (allHeroes.length === 0) { container.innerHTML = ''; return; }
 
-    allHeroes.forEach(h=>{
-        const t=(h.wins||0)+(h.losses||0),wr=t>0?(h.wins*100/t).toFixed(1):'0.0',crown=(h.tournamentWins||0)>0;
-        html+=`<tr><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);font-size:0.75rem;color:var(--text-muted);">${h.season}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);">${h.emoji||''} ${h.name||''}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.wins||0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.losses||0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${wr}%</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.best||0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.worst||0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.tournamentWins||0}${crown?' 👑':''}</td></tr>`;
-    });
+			let html = `<h3 style="color:var(--gold);margin:16px 0 8px;">👻 Бывшие (${allHeroes.length})</h3>`;
+			html += '<div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border-subtle);"><table style="width:100%;border-collapse:collapse;font-size:0.8rem;"><thead><tr>';
+			html += '<th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Сезон</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">Герой</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">W</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">L</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">WR</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">🔥</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">💀</th><th style="background:var(--bg-elevated);color:var(--gold);padding:8px;">👑</th></tr></thead><tbody>';
 
-    html+='</tbody></table></div>';
-    container.innerHTML=html;
-}
+			allHeroes.forEach(h => {
+				const t = (h.wins || 0) + (h.losses || 0), wr = t > 0 ? (h.wins * 100 / t).toFixed(1) : '0.0', crown = (h.tournamentWins || 0) > 0;
+				html += `<tr><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);font-size:0.75rem;color:var(--text-muted);">${h.season}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);">${h.emoji || ''} ${h.name || ''}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.wins || 0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.losses || 0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${wr}%</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.best || 0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.worst || 0}</td><td style="padding:6px 8px;border-bottom:1px solid var(--border-subtle);text-align:center;">${h.tournamentWins || 0}${crown ? ' 👑' : ''}</td></tr>`;
+			});
+
+			html += '</tbody></table></div>';
+			container.innerHTML = html;
+		}
 </script>
 </body>
 </html>
