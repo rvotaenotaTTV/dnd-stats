@@ -170,26 +170,22 @@
             </nav>
         </div>
 
-        <!-- ==================== ОГЛАВЛЕНИЕ ==================== -->
-        <div class="toc">
-            <div class="toc-title">📑 Содержание</div>
-            <div class="toc-grid">
-                <a href="#start" class="toc-link"><span class="toc-emoji">🚀</span> Как начать игру</a>
-                <a href="#commands" class="toc-link"><span class="toc-emoji">📋</span> Основные команды</a>
-                <a href="#battle" class="toc-link"><span class="toc-emoji">⚔️</span> Механика боя</a>
-                <a href="#logs" class="toc-link"><span class="toc-emoji">📝</span> Обозначения в логах</a>
-                <a href="#tournament" class="toc-link"><span class="toc-emoji">👑</span> Турнир</a>
-                <a href="#faction-war" class="toc-link"><span class="toc-emoji">⚔️</span> Фракционное противостояние</a>
-                <a href="#dungeon" class="toc-link"><span class="toc-emoji">🏔</span> Подземелье</a>
-                <a href="#dungeon-events" class="toc-link"><span class="toc-emoji">🎲</span> Артефакты Этерниса</a>
-                <a href="#dungeon-passives" class="toc-link"><span class="toc-emoji">🌍</span> Пассивки подземелья</a>
-                <a href="#bosses" class="toc-link"><span class="toc-emoji">🐉</span> Боссы подземелья</a>
-                <a href="#mob-stats" class="toc-link"><span class="toc-emoji">👾</span> Статы мобов</a>
-                <a href="#crown" class="toc-link"><span class="toc-emoji">👑</span> Корона Раскола</a>
-                <a href="#shards" class="toc-link"><span class="toc-emoji">💎</span> Осколки и уровни</a>
-                <a href="#tips" class="toc-link"><span class="toc-emoji">💡</span> Полезные советы</a>
-            </div>
-        </div>
+		<!-- ==================== ОГЛАВЛЕНИЕ ==================== -->
+		<div class="toc">
+			<div class="toc-title">📑 Содержание</div>
+			<div class="toc-grid">
+				<a href="#start" class="toc-link"><span class="toc-emoji">🚀</span> Как начать игру</a>
+				<a href="#commands" class="toc-link"><span class="toc-emoji">📋</span> Основные команды</a>
+				<a href="#battle" class="toc-link"><span class="toc-emoji">⚔️</span> Механика боя</a>
+				<a href="#logs" class="toc-link"><span class="toc-emoji">📝</span> Обозначения в логах</a>
+				<a href="#tournament" class="toc-link"><span class="toc-emoji">👑</span> Турнир</a>
+				<a href="#faction-war" class="toc-link"><span class="toc-emoji">⚔️</span> Фракционное противостояние</a>
+				<a href="#dungeon" class="toc-link"><span class="toc-emoji">🩸</span> Разлом Бездны</a>
+				<a href="#crown" class="toc-link"><span class="toc-emoji">👑</span> Корона Раскола</a>
+				<a href="#shards" class="toc-link"><span class="toc-emoji">💎</span> Осколки и уровни</a>
+				<a href="#tips" class="toc-link"><span class="toc-emoji">💡</span> Полезные советы</a>
+			</div>
+		</div>
 
 		<!-- ==================== БЛОК 1: НАЧАЛО ИГРЫ ==================== -->
 		<div class="card" id="start">
@@ -354,98 +350,65 @@
 
 		<!-- ==================== БЛОК 7: ПОДЗЕМЕЛЬЕ ==================== -->
 		<div class="card" id="dungeon">
-			<h2 class="card-title">🏔 Подземелье</h2>
-			<p>Подземелье — это PvE-режим, в котором твой герой в одиночку сражается с <span class="highlight">бесконечными волнами</span> мобов. Твой оригинал остаётся на арене и может параллельно драться в дуэлях и турнирах.</p>		
+			<h2 class="card-title">🩸 Разлом Бездны</h2>
+			<p>PvE-режим: твой герой в одиночку спускается в Разлом, сражаясь с бесконечными волнами мобов. Оригинал остаётся на арене и может параллельно драться в дуэлях и турнирах.</p>		
 			
+			<!-- КАК ИГРАТЬ -->
 			<h3>⚔️ Как играть</h3>
-			<div class="rule-block">
-				<p><strong>1️⃣ Вход:</strong> Напиши в чат <code>!данж</code>. Герой получает случайную <span class="highlight">пассивку</span> и спускается вниз.</p>
-			</div>
-			<div class="rule-block">
-				<p><strong>2️⃣ Волны:</strong> Бесконечные волны мобов. Каждая следующая сильнее предыдущей. Каждая <span class="highlight">5-я волна — босс</span> (HP ×1.5, ATK +2, DEF +1).</p>
-			</div>
-			<div class="rule-block">
-				<p><strong>3️⃣ После волны:</strong> Герой восстанавливает <span class="highlight">8 + (волна × 2)</span> HP (не выше <span class="highlight">HP героя + уровень × 2</span>). С вероятностью <span class="highlight">35%</span> (или <span class="highlight">70%</span> после босса) выпадает один из шести <span class="highlight">артефактов Этерниса</span>. Бонусы стакаются до <strong>базовый стат + 6</strong>.</p>
-			<!--<p><strong>3️⃣ После волны:</strong> Герой восстанавливает <span class="highlight">8 + (волна × 2)</span> HP (не выше <span class="highlight">HP героя + уровень × 2</span>). <span class="highlight">После убийства босса — полное восстановление HP.</span> С вероятностью <span class="highlight">35%</span> (или <span class="highlight">70%</span> после босса) выпадает один из шести <span class="highlight">артефактов Этерниса</span>. Бонусы стакаются до <strong>базовый стат + 6</strong>.</p>
-			-->
-			</div>
-			<div class="rule-block">
-				<p><strong>4️⃣ Трофеи:</strong> Убийство босса приносит <span class="highlight">1–3 трофея</span> в копилку фракции. Трофеи определяют, кто владеет Короной Раскола.</p>
-			</div>
-			<div class="rule-block">
-				<p><strong>5️⃣ Рекорд:</strong> Учитывается по максимальному количеству пройденных волн. При равенстве — по нанесённому урону.</p>
-			</div>
-			<div class="rule-block">
-				<p><strong>6️⃣ Награда:</strong> <span class="highlight">+1💎</span> за каждые 3 пройденные волны. Прошёл 9 волн — +3💎, прошёл 15 — +5💎.</p>
-			</div>
-		</div>
-		
-		<!-- ПАССИВКИ ПОДЗЕМЕЛЬЯ -->
-		<div class="card" id="dungeon-passives">
-			<h2 class="card-title">🌍 Пассивки подземелья</h2>
-			<p>При входе в подземелье герой получает <strong>одну случайную пассивку</strong> из десяти.</p>		
-			
-			<div class="passive-grid">
-				<div class="passive-item"><strong>🩸 Вампиризм</strong> Ты высасываешь жизнь из врагов: +4 HP к лечению после каждой волны.</div>
-				<div class="passive-item"><strong>💫 Сияние</strong> Твой свет ослепляет боссов — они выходят на бой с −20% здоровья.</div>
-				<div class="passive-item"><strong>🔮 Отражение</strong> 20% шанс что враг получит половину своего же урона обратно.</div>
-				<div class="passive-item"><strong>⚔️ Святая ярость</strong> Твои атаки по боссам наносят дополнительные 2 урона. Священный гнев!</div>
-				<div class="passive-item"><strong>💢 Накопленная ярость</strong> Чем больнее тебя бьют — тем злее твоя ответка. Потерял HP → бьёшь сильнее.</div>
-				<div class="passive-item"><strong>👻 Призрачный щит</strong> 25% шанс стать бесплотным и полностью избежать вражеского удара.</div>
-				<div class="passive-item"><strong>🗡️ Казнь</strong> Раненый враг (HP < 25%) будет добит мгновенно. Без пощады.</div>
-				<div class="passive-item"><strong>✨ Благословение</strong> Высшие силы помогают: +10% к шансу найти артефакт после волны.</div>
-				<div class="passive-item"><strong>💖 Искупление</strong> Один раз за забег смертельный удар оставит тебя на 1 HP. Второй шанс.</div>
-				<div class="passive-item"><strong>💥 Жажда крови</strong> Твои криты наносят дополнительный бросок урона. Три броска вместо двух.</div>
-			<!--<div class="passive-item"><strong>🧿 Амулет Раскола</strong> Каждый 3-й удар по мобу наносит +50% урона.</div>
-				<div class="passive-item"><strong>🕯️ Свеча Надежды</strong> Если HP меньше 20%, +3 ATK.</div>
-				-->
-			</div>
-		</div>
+			<div class="rule-block"><p><strong>1️⃣ Вход:</strong> напиши <code>!данж</code>. Герой получает случайную <span class="highlight">пассивку</span> (одну из 12) и спускается в Разлом.</p></div>
+			<div class="rule-block"><p><strong>2️⃣ Волны:</strong> бесконечные. Каждая следующая сильнее. Каждая <span class="highlight">5-я волна — босс</span> (HP×1.5, ATK+2, DEF+1).</p></div>
+			<div class="rule-block"><p><strong>3️⃣ После волны:</strong> восстановление <span class="highlight">8 + волна×2</span> HP. <span class="highlight">После босса — полный отхил.</span> Шанс <span class="highlight">35%</span> (70% после босса) найти артефакт. Бонусы стакаются до <strong>базовый стат +6</strong>.</p></div>
+			<div class="rule-block"><p><strong>4️⃣ Награда:</strong> <span class="highlight">+1💎</span> за каждые 3 волны. Боссы дают <span class="highlight">1–3 трофея</span> в копилку фракции для Короны Раскола.</p></div>
+			<div class="rule-block"><p><strong>5️⃣ Рекорд:</strong> по волнам, при равенстве — по урону.</p></div>
 
-		<!-- СЛУЧАЙНЫЕ СОБЫТИЯ -->
-		<div class="card" id="dungeon-events">
-			<h2 class="card-title">🎲 Артефакты Этерниса</h2>
-			<p>После каждой волны с вероятностью <span class="highlight">35%</span> (или <span class="highlight">70%</span> после босса) выпадает один из шести артефактов.<br>Бонусы к статам действуют до конца забега и стакаются до <span class="highlight">базовый + 6</span>.</p>
-			
+			<!-- ПАССИВКИ -->
+			<h3>🌍 Пассивки (12 шт, одна случайная при входе)</h3>
+			<div class="passive-grid">
+				<div class="passive-item"><strong>🩸 Вампиризм</strong> +4 HP к лечению после каждой волны.</div>
+				<div class="passive-item"><strong>💫 Сияние</strong> Боссы выходят с −20% здоровья.</div>
+				<div class="passive-item"><strong>🔮 Отражение</strong> 20% шанс вернуть половину урона врагу.</div>
+				<div class="passive-item"><strong>⚔️ Святая ярость</strong> +2 урона по боссам.</div>
+				<div class="passive-item"><strong>💢 Накопленная ярость</strong> Потерянное HP / 4 добавляется к урону.</div>
+				<div class="passive-item"><strong>👻 Призрачный щит</strong> 25% шанс полностью избежать урона.</div>
+				<div class="passive-item"><strong>🗡️ Казнь</strong> Мгновенное добивание при HP врага < 25%.</div>
+				<div class="passive-item"><strong>✨ Благословение</strong> +10% к шансу найти артефакт.</div>
+				<div class="passive-item"><strong>💖 Искупление</strong> Один раз за забег: смертельный удар → HP=1.</div>
+				<div class="passive-item"><strong>💥 Жажда крови</strong> Крит = три броска урона вместо двух.</div>
+				<div class="passive-item"><strong>🧿 Амулет Раскола</strong> Каждый 3-й удар +50% урона.</div>
+				<div class="passive-item"><strong>🕯️ Свеча Надежды</strong> Если HP < 20%, +3 ATK.</div>
+			</div>
+
+			<!-- АРТЕФАКТЫ -->
+			<h3>🎲 Артефакты</h3>
 			<div class="table-container">
 				<table>
-					<thead><tr><th>Артефакт</th><th style="text-align:center;">Шанс</th><th>Эффект</th></tr></thead>
+					<thead><tr><th>Артефакт</th><th>Эффект</th></tr></thead>
 					<tbody>
-						<tr><td>☀️ <strong>Осколок Солнечного Клинка</strong></td><td style="text-align:center;">~5.8%</td><td>+2 ATK и +2 DEX</td></tr>
-						<tr><td>🌫️ <strong>Плащ Повествовательницы</strong></td><td style="text-align:center;">~5.8%</td><td>+2 DEF и +2 MAX</td></tr>
-						<tr><td>💍 <strong>Кольцо Аэлиона</strong></td><td style="text-align:center;">~5.8%</td><td>+2 ATK и +2 DEF</td></tr>
-						<tr><td>🔮 <strong>Руна Раскола</strong></td><td style="text-align:center;">~5.8%</td><td>+2 MIN и +2 MAX</td></tr>
-						<tr><td>🍺 <strong>Пиво ГуангГуанга</strong></td><td style="text-align:center;">~5.8%</td><td>Полное исцеление до максимума</td></tr>
-						<tr><td>💀 <strong>Проклятие Бездны</strong></td><td style="text-align:center;">~5.8%</td><td>Случайный дебафф: -1 ATK, -1 DEF, -2 MIN/MAX, или -5 HP</td></tr>
+						<tr><td>☀️ Осколок Солнечного Клинка</td><td>+2 ATK, +2 DEX</td></tr>
+						<tr><td>🌫️ Плащ Повествовательницы</td><td>+2 DEF, +2 MAX</td></tr>
+						<tr><td>💍 Кольцо Аэлиона</td><td>+2 ATK, +2 DEF</td></tr>
+						<tr><td>🔮 Руна Раскола</td><td>+2 MIN, +2 MAX</td></tr>
+						<tr><td>🍺 Пиво ГуангГуанга</td><td>Полное исцеление</td></tr>
+						<tr><td>💀 Проклятие Бездны</td><td>Случайный дебафф</td></tr>
 					</tbody>
 				</table>
 			</div>
-		</div>
 
-		<!-- БОССЫ -->
-		<div class="card" id="bosses">
-			<h2 class="card-title">🐉 Боссы подземелья</h2>
-			<p>Каждая <span class="highlight">5-я волна</span> — битва с боссом. Босс — усиленная версия обычного моба: <strong>HP×1.5, ATK+2, DEF+1</strong>.</p>
-			<p style="margin-top:8px;">⚠️ Только за убийство босса фракция получает <span class="highlight">1–3 трофея</span> в копилку Короны Раскола. Не убил — трофеев нет.</p>
+			<!-- БОССЫ -->
+			<h3>🐉 Боссы</h3>
+			<p>Каждые 5 волн — босс: <strong>HP×1.5, ATK+2, DEF+1</strong>. Только за убийство босса фракция получает 1–3 трофея.</p>
 			
-			<div style="margin-top:16px;">
-				<h3>🩸 Боссы Бездны</h3>
-				<p>Стример может активировать особых боссов командой <code>!босс</code>. Они заменяют обычных боссов на 5 и 10 волнах:</p>
-				<div class="rule-block">
-					<p>😈 <strong>Суккуб 4OREVER</strong> — 5 волна. Ещё HP×1.3, ATK+2, DEF+1 поверх босса.</p>
-					<p style="margin-top:8px;">🩸 <strong>Глашатай Бездны</strong> — 10 волна. Ещё HP×1.3, ATK+2, DEF+1 поверх босса.</p>
-					<p style="margin-top:8px;">Оба дают <strong>×3 трофеев</strong> и <strong>100% артефакт</strong>.</p>
-				</div>
+			<h4>🩸 Боссы Бездны (<code>!босс</code>)</h4>
+			<p>Стример включает особых боссов. Они заменяют обычных на 5 и 10 волнах, дают <strong>×3 трофеев</strong> и <strong>100% артефакт</strong>.</p>
+			<div class="rule-block">
+				<p>😈 <strong>Суккуб 4OREVER</strong> — волна 5. HP×1.3, ATK+2, DEF+1 поверх босса.</p>
+				<p style="margin-top:6px;">🩸 <strong>Глашатай Бездны</strong> — волна 10. HP×1.3, ATK+2, DEF+1 поверх босса.</p>
 			</div>
-		</div>
 
-		<!-- СТАТЫ МОБОВ -->
-		<div class="card" id="mob-stats">
-			<h2 class="card-title">👾 Характеристики мобов</h2>
-			<p>Обычный моб: <strong>HP = 15 + волна×8</strong> (с 6 волны +5 за каждую), <strong>ATK = 1 + волна/3</strong>, <strong>DEF = волна/5</strong> (деление нацело).</p>
-			<p style="margin-top:4px;">🐉 Босс: HP×1.5, ATK+2, DEF+1. 🩸 Босс Бездны: ещё HP×1.3, ATK+2, DEF+1.</p>
-			
-			<div class="table-container" style="margin-top:14px;">
+			<!-- СТАТЫ МОБОВ -->
+			<h3>👾 Статы мобов</h3>
+			<p>Обычный моб: <strong>HP = 15 + волна×8</strong> (+5 с 6 волны), <strong>ATK = 1 + волна/3</strong>, <strong>DEF = волна/5</strong> (нацело).</p>
+			<div class="table-container">
 				<table>
 					<thead><tr><th>Волны</th><th>HP</th><th>ATK</th><th>DEF</th></tr></thead>
 					<tbody>
@@ -461,17 +424,6 @@
 						<tr style="background:rgba(240,185,11,0.08);"><td><strong>25 🐉</strong></td><td><strong>472</strong></td><td><strong>11</strong></td><td><strong>6</strong></td></tr>
 					</tbody>
 				</table>
-			</div>
-		</div>
-
-		<!-- КОРОНА РАСКОЛА -->
-		<div class="card" id="crown">
-			<h2 class="card-title">👑 Корона Раскола</h2>
-			<p>Корона Раскола — главный символ превосходства фракции в этом сезоне. Присуждается за <strong>общее количество трофеев</strong>, собранных всеми героями фракции в подземелье.</p>
-			<div class="rule-block">
-				<p>Каждый убитый босс приносит в казну фракции от <span class="highlight">1 до 3 трофеев</span>. Трофеи суммируются за весь сезон.</p>
-				<p style="margin-top:10px;">Фракция, набравшая <strong>больше трофеев</strong>, владеет Короной. При равенстве — <strong>⚖️ шаткое равновесие</strong>, Корона не принадлежит никому.</p>
-				<p style="margin-top:10px;font-size:0.85rem;color:var(--text-muted);">⚠️ Трофеи засчитываются только за <strong>убийство босса</strong>. Прошёл 4 волны и погиб на пятой, не одолев босса — фракция не получит ничего. Каждый босс на счету!</p>
 			</div>
 		</div>
 
