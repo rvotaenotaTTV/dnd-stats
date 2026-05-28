@@ -27,20 +27,20 @@
         .container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
 
         .header { text-align: center; padding: 32px 0 8px; position: relative; }
-        .header-title { font-size: clamp(2.2rem,6vw,3.2rem); font-weight: 900; background: linear-gradient(135deg,#ffd700,#e85d3a,#ffd700); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(232,93,58,0.3)); animation: shimmer 3s linear infinite; }
-        @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
-        .header-subtitle { font-size: 0.9rem; color: var(--sub); margin-top: 6px; }
-        .theme-toggle { position: absolute; right: 0; top: 32px; background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
-        .theme-toggle:hover { color: var(--gold); }
+        .header-title { font-size: clamp(2.2rem,6vw,3.2rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#8b0000 0%,#e85d3a 40%,#ffd700 70%,#e85d3a 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(232,93,58,0.5)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
+        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+        .header-subtitle { font-size: 0.9rem; color: var(--red); font-weight: 500; letter-spacing: 0.04em; }
+        .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
+        .theme-toggle:hover { background: var(--card); color: var(--red); border-color: var(--red); }
 
         .nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
         .nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; }
         .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
         .nav-link { padding: 8px 14px; border-radius: 20px; color: var(--sub); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: 0.2s; }
         .nav-link:hover { color: var(--text); background: var(--elevated); }
-        .nav-link.active { background: var(--gold); color: #000; font-weight: 700; }
+        .nav-link.active { background: linear-gradient(135deg,var(--red),var(--gold)); color: #000; font-weight: 700; }
 
-        .toc { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 28px; }
+        .toc { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 28px; position: relative; overflow: hidden; }
         .toc::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
         .toc-title { font-weight: 700; color: var(--gold); margin-bottom: 12px; }
         .toc-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 6px; }
@@ -103,8 +103,9 @@
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 32px; }
+            .header { padding: 20px 0 8px; }
             .header-title { font-size: 1.8rem; }
-            .theme-toggle { position: static; margin: 12px auto; display: block; width: fit-content; }
+            .theme-toggle { position: static; transform: none; margin: 12px auto; display: block; width: fit-content; }
             .nav-toggle { display: block; }
             .nav-bar { display: none; flex-direction: column; margin-top: 8px; }
             .nav-bar.show { display: flex; }
@@ -119,7 +120,7 @@
     <div class="container">
         <header class="header">
             <h1 class="header-title">ГАЙД</h1>
-            <p class="header-subtitle">Создай персонажа. Дерись. Умри в Разломе. Повтори.</p>
+            <p class="header-subtitle">Создай персонажа · Дерись · Умри в Разломе · Повтори</p>
             <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         </header>
 
@@ -142,6 +143,7 @@
             </nav>
         </div>
 
+        <!-- Содержание и все секции без изменений -->
         <div class="toc">
             <div class="toc-title">📑 Содержание</div>
             <div class="toc-grid">
@@ -179,43 +181,19 @@
         </div>
 
         <!-- 3. БОЕВАЯ СИСТЕМА -->
-		<div class="section gold" id="battle">
-			<div class="section-title">⚔️ Как проходит бой? Полная механика</div>
-			<div class="mech-grid">
-				<div class="mech-card">
-					<div class="mech-title">⚡ Инициатива</div>
-					<div class="mech-body">Оба героя бросают d20 + DEX. У кого больше — ходит первым (⚡). При равенстве — случайно.</div>
-				</div>
-				<div class="mech-card">
-					<div class="mech-title">🎯 Бросок атаки</div>
-					<div class="mech-body">d20 + ATK атакующего. Попадание если <strong>d20 + ATK ≥ 10 + DEF</strong> противника.</div>
-				</div>
-				<div class="mech-card">
-					<div class="mech-title">❌ Критический промах</div>
-					<div class="mech-body">d20 = <strong>1</strong>. Атака провалена, урон 0.</div>
-				</div>
-				<div class="mech-card">
-					<div class="mech-title">💨 Уклонение</div>
-					<div class="mech-body">d20 = <strong>2–6</strong>. Противник увернулся, атака не прошла.</div>
-				</div>
-				<div class="mech-card">
-					<div class="mech-title">🛡️ Блок</div>
-					<div class="mech-body">d20 = <strong>7+</strong>. Броня выдержала удар. Урона нет.</div>
-				</div>
-				<div class="mech-card">
-					<div class="mech-title">💥 Критический удар</div>
-					<div class="mech-body">d20 = <strong>20</strong>. Урон бросается дважды и суммируется.</div>
-				</div>
-				<div class="mech-card">
-					<div class="mech-title">🛡️ Защита</div>
-					<div class="mech-body">Снижает урон на <strong>5% за каждое очко DEF</strong>. Минимум 1 урон всегда проходит.</div>
-				</div>
-				<div class="mech-card">
-					<div class="mech-title">⏱ Завершение</div>
-					<div class="mech-body">Бой идёт пока у кого-то HP не упадёт до 0. Максимум <strong>20 раундов</strong>. При ничьей — побеждает тот у кого больше HP. При равенстве — случайно.</div>
-				</div>
-			</div>
-		</div>
+        <div class="section gold" id="battle">
+            <div class="section-title">⚔️ Как проходит бой? Полная механика</div>
+            <div class="mech-grid">
+                <div class="mech-card"><div class="mech-title">⚡ Инициатива</div><div class="mech-body">Оба героя бросают d20 + DEX. У кого больше — ходит первым (⚡). При равенстве — случайно.</div></div>
+                <div class="mech-card"><div class="mech-title">🎯 Бросок атаки</div><div class="mech-body">d20 + ATK атакующего. Попадание если <strong>d20 + ATK ≥ 10 + DEF</strong> противника.</div></div>
+                <div class="mech-card"><div class="mech-title">❌ Критический промах</div><div class="mech-body">d20 = <strong>1</strong>. Атака провалена, урон 0.</div></div>
+                <div class="mech-card"><div class="mech-title">💨 Уклонение</div><div class="mech-body">d20 = <strong>2–6</strong>. Противник увернулся, атака не прошла.</div></div>
+                <div class="mech-card"><div class="mech-title">🛡️ Блок</div><div class="mech-body">d20 = <strong>7+</strong>. Броня выдержала удар. Урона нет.</div></div>
+                <div class="mech-card"><div class="mech-title">💥 Критический удар</div><div class="mech-body">d20 = <strong>20</strong>. Урон бросается дважды и суммируется.</div></div>
+                <div class="mech-card"><div class="mech-title">🛡️ Защита</div><div class="mech-body">Снижает урон на <strong>5% за каждое очко DEF</strong>. Минимум 1 урон всегда проходит.</div></div>
+                <div class="mech-card"><div class="mech-title">⏱ Завершение</div><div class="mech-body">Бой идёт пока у кого-то HP не упадёт до 0. Максимум <strong>20 раундов</strong>. При ничьей — побеждает тот у кого больше HP. При равенстве — случайно.</div></div>
+            </div>
+        </div>
 
         <!-- 4. ЛОГИ -->
         <div class="section gold" id="logs">
@@ -277,18 +255,18 @@
 
             <h3>🌍 Пассивки (12 шт, одна случайная)</h3>
             <div class="passive-grid">
-				<div class="passive-item"><strong>🩸 Вампиризм</strong> Ты высасываешь жизнь из врагов: +4 HP к лечению после каждой волны.</div>
-				<div class="passive-item"><strong>💫 Сияние</strong> Твой свет ослепляет боссов — они выходят на бой с −20% здоровья.</div>
-				<div class="passive-item"><strong>🔮 Отражение</strong> 20% шанс что враг получит половину своего же урона обратно.</div>
-				<div class="passive-item"><strong>⚔️ Святая ярость</strong> Твои атаки по боссам наносят дополнительные 2 урона. Священный гнев!</div>
-				<div class="passive-item"><strong>💢 Накопленная ярость</strong> Чем больнее тебя бьют — тем злее твоя ответка. Потерял HP → бьёшь сильнее.</div>
-				<div class="passive-item"><strong>👻 Призрачный щит</strong> 25% шанс стать бесплотным и полностью избежать вражеского удара.</div>
-				<div class="passive-item"><strong>🗡️ Казнь</strong> Раненый враг (HP < 25%) будет добит мгновенно. Без пощады.</div>
-				<div class="passive-item"><strong>✨ Благословение</strong> Высшие силы помогают: +10% к шансу найти артефакт после волны.</div>
-				<div class="passive-item"><strong>💖 Искупление</strong> Один раз за забег смертельный удар оставит тебя на 1 HP. Второй шанс.</div>
-				<div class="passive-item"><strong>💥 Жажда крови</strong> Твои криты наносят дополнительный бросок урона. Три броска вместо двух.</div>
-				<div class="passive-item"><strong>🧿 Амулет Раскола</strong> Каждый 3-й удар по мобу наносит +50% урона. Ритм Бездны в твоей крови.</div>
-				<div class="passive-item"><strong>🕯️ Свеча Надежды</strong> Если HP меньше 20%, ты получаешь +3 ATK. Свет в кромешной тьме.</div>
+                <div class="passive-item"><strong>🩸 Вампиризм</strong> Ты высасываешь жизнь из врагов: +4 HP к лечению после каждой волны.</div>
+                <div class="passive-item"><strong>💫 Сияние</strong> Твой свет ослепляет боссов — они выходят на бой с −20% здоровья.</div>
+                <div class="passive-item"><strong>🔮 Отражение</strong> 20% шанс что враг получит половину своего же урона обратно.</div>
+                <div class="passive-item"><strong>⚔️ Святая ярость</strong> Твои атаки по боссам наносят дополнительные 2 урона. Священный гнев!</div>
+                <div class="passive-item"><strong>💢 Накопленная ярость</strong> Чем больнее тебя бьют — тем злее твоя ответка. Потерял HP → бьёшь сильнее.</div>
+                <div class="passive-item"><strong>👻 Призрачный щит</strong> 25% шанс стать бесплотным и полностью избежать вражеского удара.</div>
+                <div class="passive-item"><strong>🗡️ Казнь</strong> Раненый враг (HP < 25%) будет добит мгновенно. Без пощады.</div>
+                <div class="passive-item"><strong>✨ Благословение</strong> Высшие силы помогают: +10% к шансу найти артефакт после волны.</div>
+                <div class="passive-item"><strong>💖 Искупление</strong> Один раз за забег смертельный удар оставит тебя на 1 HP. Второй шанс.</div>
+                <div class="passive-item"><strong>💥 Жажда крови</strong> Твои криты наносят дополнительный бросок урона. Три броска вместо двух.</div>
+                <div class="passive-item"><strong>🧿 Амулет Раскола</strong> Каждый 3-й удар по мобу наносит +50% урона. Ритм Бездны в твоей крови.</div>
+                <div class="passive-item"><strong>🕯️ Свеча Надежды</strong> Если HP меньше 20%, ты получаешь +3 ATK. Свет в кромешной тьме.</div>
             </div>
 
             <h3>🎲 Артефакты</h3>
