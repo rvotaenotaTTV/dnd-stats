@@ -370,9 +370,47 @@
         [...achievements].sort((a,b)=>(titleCounts[a.emoji+" "+a.name]||0)-(titleCounts[b.emoji+" "+b.name]||0)).forEach(ach=>{const fullName=ach.emoji+" "+ach.name;const holders=titleCounts[fullName]||0;const percent=(holders/players.length)*100;const condText=ach.type==='level'?ach.value+' уровень':ach.type==='wins'?ach.value+' побед':ach.type==='losses'?ach.value+' поражений':ach.type==='best'?'Стрик '+ach.value:ach.type==='fights'?ach.value+' боёв':ach.type==='tournament'?ach.value+' турнирных побед':ach.type==='faction'?ach.value+' побед за '+ach.faction:ach.type==='winrate'?'Винрейт '+ach.value+'%':ach.type==='balance'?'Побед = Поражений':ach.type==='dungeon_record'?ach.value+' волн в данже':ach.type==='dungeon_trophies'?ach.value+' трофеев':ach.type==='dungeon_bosses'?ach.value+' боссов':ach.type==='dungeon_waves'?ach.value+' волн всего':'Текущий чемпион';html+=`<div class="title-card"><div class="title-emoji">${ach.emoji}</div><div class="title-name">${ach.name}</div><div class="title-cond">${condText}</div><div class="title-progress"><div class="title-progress-fill" style="width:${percent}%;"></div></div><div class="title-holders">👤 ${holders} игроков</div></div>`;});html+='</div>';
         html+='<div class="card"><div class="card-title">🔍 Прогресс игрока</div><input type="text" id="title-player-search" class="search-input" placeholder="Введите ник..." style="width:100%;margin-bottom:12px;" oninput="showPlayerProgress(this.value)"><div id="player-progress-result" style="display:grid;gap:10px;"><span style="color:var(--text-muted);">Введите ник, чтобы увидеть прогресс</span></div></div></div>';
 
-        // === РЕЙТИНГ ===
-        html+='<div id="tab-rating" class="tab-content">';const seasonTop=(data.players||[]).filter(p=>p.skill>0).sort((a,b)=>b.skill-a.skill).slice(0,10);html+='<div class="card"><div class="card-title">🏆 Сезонный рейтинг (SKILL)</div>';if(seasonTop.length>0){html+='<div class="table-container"><table id="rating-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="skill">Skill</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Винрейт</th></tr></thead><tbody id="rating-tbody">';seasonTop.forEach((p,i)=>{const player=players.find(pl=>pl.display===p.display)||{};const total=p.wins+p.losses;const wr=total>0?(p.wins*100/total).toFixed(1):'0.0';const rank=i+1;const medal=rank===1?'🥇':(rank===2?'🥈':(rank===3?'🥉':rank));html+=`<tr data-rank="${rank}" data-name="${p.display}" data-class="${player.name||''}" data-skill="${p.skill}" data-wl="${total}" data-winrate="${wr}"><td style="color:${rank<=3?'var(--gold)':'var(--text-muted)'};font-weight:${rank<=3?'700':'400'};">${medal}</td><td>${p.emoji||'🏆'} ${p.display}</td><td>${player.name||'—'}</td><td class="number" style="color:var(--gold);font-weight:700;">${p.skill}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td></tr>`;});html+='</tbody></table></div>';html+='<div style="margin-top:12px;padding:12px;background:var(--bg-elevated);border-radius:var(--radius-sm);border:1px solid var(--border-subtle);font-size:0.75rem;color:var(--text-muted);line-height:1.6;"><span style="color:var(--gold);">📐 Как считается рейтинг:</span><br><code style="color:var(--text-secondary);">Skill ≈ (Победы × Винрейт × 10 + Стрик × 5 + Уровень × 3 + 🏆 × 25) ÷ √(Боёв / 100 + 1)</code></div>';}else{html+='<div style="text-align:center;padding:40px;color:var(--text-muted);">Нет данных рейтинга</div>';}html+='</div></div>';
+		// === РЕЙТИНГ ===
+		html+='<div id="tab-rating" class="tab-content">';
+		const seasonTop=(data.players||[]).filter(p=>p.skill>0).sort((a,b)=>b.skill-a.skill).slice(0,10);
+		html+='<div class="card"><div class="card-title">🏆 Сезонный рейтинг (SKILL)</div>';
+		if(seasonTop.length>0){
+			html+='<div class="table-container"><table id="rating-table"><thead><tr>';
+			html+='<th class="sortable-header" data-sort="rank">#</th>';
+			html+='<th class="sortable-header" data-sort="name">Игрок</th>';
+			html+='<th class="sortable-header" data-sort="class">Класс</th>';
+			html+='<th class="sortable-header" data-sort="skill">Skill</th>';
+			html+='<th class="sortable-header" data-sort="level">Ур.</th>';
+			html+='<th class="sortable-header" data-sort="tournaments">🏆</th>';
+			html+='<th class="sortable-header" data-sort="wl">W/L</th>';
+			html+='<th class="sortable-header" data-sort="winrate">Винрейт</th>';
+			html+='</tr></thead><tbody id="rating-tbody">';
 
+			seasonTop.forEach((p,i)=>{
+				const player=players.find(pl=>pl.display===p.display)||{};
+				const total=p.wins+p.losses;
+				const wr=total>0?(p.wins*100/total).toFixed(1):'0.0';
+				const rank=i+1;
+				const medal=rank===1?'🥇':(rank===2?'🥈':(rank===3?'🥉':rank));
+
+				html+=`<tr data-rank="${rank}" data-name="${p.display}" data-class="${player.name||''}" data-skill="${p.skill}" data-level="${p.level||0}" data-tournaments="${p.tournamentWins||0}" data-wl="${total}" data-winrate="${wr}">`;
+				html+=`<td style="color:${rank<=3?'var(--gold)':'var(--text-muted)'};font-weight:${rank<=3?'700':'400'};">${medal}</td>`;
+				html+=`<td>${p.emoji||'🏆'} ${p.display}</td>`;
+				html+=`<td>${player.name||'—'}</td>`;
+				html+=`<td class="number" style="color:var(--gold);font-weight:700;">${p.skill}</td>`;
+				html+=`<td class="number">${p.level||0}</td>`;
+				html+=`<td class="number" style="color:var(--gold);">${p.tournamentWins||0}</td>`;
+				html+=`<td class="number">${p.wins}-${p.losses}</td>`;
+				html+=`<td class="number">${wr}%</td>`;
+				html+=`</tr>`;
+			});
+			html+='</tbody></table></div>';
+			html+='<div style="margin-top:12px;padding:12px;background:var(--bg-elevated);border-radius:var(--radius-sm);border:1px solid var(--border-subtle);font-size:0.75rem;color:var(--text-muted);line-height:1.6;"><span style="color:var(--gold);">📐 Как считается рейтинг:</span><br><code style="color:var(--text-secondary);">Skill ≈ (Победы × Винрейт × 10 + Стрик × 5 + Уровень × 2 + 🏆 × 25) ÷ √(Боёв / 100 + 1)</code></div>';
+		}else{
+			html+='<div style="text-align:center;padding:40px;color:var(--text-muted);">Нет данных рейтинга</div>';
+		}
+		html+='</div></div>';
+		
         // === ОСКОЛКИ ===
         html+='<div id="tab-shards" class="tab-content"><div class="card"><div class="card-title">💎 Топ коллекционеров осколков</div><div class="table-container"><table id="shards-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="shards">Осколки</th><th class="sortable-header" data-sort="level">Уровень</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="shards-tbody">';[...players].sort((a,b)=>b.shards-a.shards).forEach((p,i)=>{const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}"><td>${i+1}</td><td>${p.emoji} ${p.display}</td><td>${p.name}</td><td class="number">${p.shards}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;});html+='</tbody></table></div></div></div>';
 
