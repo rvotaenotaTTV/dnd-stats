@@ -171,7 +171,7 @@
             const heroArchive = data.heroArchive || {};
             const seasonTop = data.seasonTop && data.seasonTop.length > 0 ? data.seasonTop : [...players].filter(p => (p.skill || 0) > 0).sort((a, b) => (b.skill || 0) - (a.skill || 0));
             const factionScore = data.factionScore || {};
-            const territory = data.territory || { light: 0, dark: 0 };
+            const territory = data.territory || (data.dungeon && data.dungeon.territory) || { light: 0, dark: 0 };
             const totalPlayers = players.length;
             let totalFights = Math.floor(players.reduce((s, p) => s + (p.wins || 0) + (p.losses || 0), 0) / 2);
             let maxStreak = players.reduce((m, p) => (p.best || 0) > m ? (p.best || 0) : m, 0);
