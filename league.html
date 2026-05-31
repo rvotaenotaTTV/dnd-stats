@@ -9,911 +9,192 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #111827;
-            --bg-elevated: #1a2332;
-            --bg-card: #152028;
-            --text-primary: #e8edf3;
-            --text-secondary: #9ca3af;
-            --text-muted: #6b7280;
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --gold: #f0b90b;
-            --gold-light: #ffd700;
-            --purple: #a371f7;
-            --red: #ef4444;
-            --green: #10b981;
-            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
-            --shadow-gold: 0 4px 12px rgba(240, 185, 11, 0.3);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
-            --radius-xl: 24px;
-            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg: #0a0e17; --bg2: #111827; --bg3: #1a2332; --bg4: #152028;
+            --text: #e8edf3; --text2: #9ca3af; --text3: #6b7280;
+            --border: rgba(255,255,255,0.08); --gold: #f0b90b; --purple: #a371f7;
+            --red: #ef4444; --green: #10b981;
         }
-
-		[data-theme="light"] {
-			--bg-primary: #f7f2eb;
-			--bg-secondary: #efe8dc;
-			--bg-elevated: #fbf8f3;
-			--bg-card: #fefcf8;
-			--text-primary: #1e293b;
-			--text-secondary: #64748b;
-			--text-muted: #6b7280;
-			--border-subtle: rgba(0, 0, 0, 0.08);
-			--shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
-		}
-
+        [data-theme="light"] {
+            --bg: #f7f2eb; --bg2: #efe8dc; --bg3: #fbf8f3; --bg4: #fefcf8;
+            --text: #1e293b; --text2: #64748b; --text3: #6b7280; --border: rgba(0,0,0,0.08);
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.5;
-            transition: background 0.25s, color 0.25s;
-            -webkit-font-smoothing: antialiased;
-        }
-
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
         .container { max-width: 1300px; margin: 0 auto; padding: 20px 24px 48px; }
-
         .header { text-align: center; padding: 32px 0 20px; position: relative; }
         .header-title {
             font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: -0.03em;
             background: linear-gradient(135deg, #ffd700 0%, #f0a500 30%, #ffd700 60%, #f0a500 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            filter: drop-shadow(0 0 24px rgba(255,215,0,0.3));
-            animation: shimmer 3s linear infinite;
-            margin-bottom: 4px;
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; filter: drop-shadow(0 0 24px rgba(255,215,0,0.3));
+            animation: shimmer 3s linear infinite; margin-bottom: 4px;
         }
-        @keyframes shimmer {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-        .header-subtitle { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
-
-        .theme-toggle {
-            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-            background: var(--bg-elevated); border: 1px solid var(--border-subtle);
-            color: var(--text-secondary); padding: 8px 12px; border-radius: var(--radius-xl);
-            cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: var(--transition);
-        }
-        .theme-toggle:hover { background: var(--bg-secondary); color: var(--gold); border-color: var(--gold); }
-
-        .nav-wrapper { margin-bottom: 24px; position: sticky; top: 12px; z-index: 100; }
-        .nav-toggle {
-            display: none; width: 100%; padding: 13px 18px; background: var(--bg-secondary);
-            border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
-            color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer;
-            text-align: left; font-family: inherit; transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .nav-toggle:hover { border-color: var(--gold); }
-        .nav-bar {
-            display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;
-            padding: 6px; background: var(--bg-secondary); border-radius: var(--radius-xl);
-            border: 1px solid var(--border-subtle); box-shadow: var(--shadow-lg);
-            backdrop-filter: blur(10px);
-        }
-        .nav-link {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 9px 16px; border-radius: 20px;
-            color: var(--text-secondary); text-decoration: none;
-            font-size: 0.8rem; font-weight: 500; transition: var(--transition); white-space: nowrap;
-        }
-        .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); transform: translateY(-1px); }
-        .nav-link.active {
-            background: linear-gradient(135deg, var(--gold), #e0a800);
-            color: #000; font-weight: 700; box-shadow: var(--shadow-gold);
-        }
-
-        .spinner {
-            display: inline-block; width: 32px; height: 32px;
-            border: 3px solid var(--border-subtle); border-top: 3px solid var(--gold);
-            border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .status-message { text-align: center; padding: 48px 20px; color: var(--text-secondary); }
-        .status-message.error { color: var(--red); }
-
+        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+        .header-subtitle { font-size: 0.85rem; color: var(--text3); font-weight: 400; }
+        .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--bg3);
+            border: 1px solid var(--border); color: var(--text2); padding: 8px 12px; border-radius: 20px;
+            cursor: pointer; font-size: 0.85rem; font-family: inherit; }
+        .theme-toggle:hover { color: var(--gold); border-color: var(--gold); }
+        .nav { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px;
+            background: var(--bg2); border-radius: 20px; border: 1px solid var(--border); margin-bottom: 24px; }
+        .nav a { padding: 9px 16px; border-radius: 20px; color: var(--text2); text-decoration: none; font-size: 0.8rem; font-weight: 500; }
+        .nav a:hover { color: var(--text); background: var(--bg3); }
+        .nav a.active { background: linear-gradient(135deg, var(--gold), #e0a800); color: #000; font-weight: 700; }
         .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-        .tab-btn {
-            padding: 10px 24px;
-            border: 2px solid var(--border-subtle);
-            background: var(--bg-elevated);
-            color: var(--text-secondary);
-            border-radius: var(--radius-xl);
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all var(--transition);
-        }
-        .tab-btn:hover { border-color: var(--gold); color: var(--text-primary); }
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--gold), #e0a800);
-            color: #000; border-color: transparent;
-            box-shadow: 0 4px 16px rgba(240, 185, 11, 0.25); font-weight: 700;
-        }
-        .tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
-        .tab-content.active { display: block; }
-
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        .tabs button { padding: 10px 24px; border: 2px solid var(--border); background: var(--bg3);
+            color: var(--text2); border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+        .tabs button.active { background: linear-gradient(135deg, var(--gold), #e0a800); color: #000; border-color: transparent; }
+        .tab { display: none; }
+        .tab.active { display: block; }
         .faction-switch { display: flex; gap: 8px; margin-bottom: 8px; }
-        .faction-btn {
-            flex: 1; padding: 12px;
-            border: 2px solid var(--border-subtle);
-            background: var(--bg-elevated); color: var(--text-secondary);
-            border-radius: var(--radius-md); cursor: pointer;
-            font-family: inherit; font-weight: 700; font-size: 0.9rem;
-            transition: all var(--transition); text-align: center;
-        }
-        .faction-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
-        .faction-btn.light.active {
-            border-color: var(--gold);
-            background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(240,185,11,0.05));
-            color: var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.2);
-        }
-        .faction-btn.dark.active {
-            border-color: var(--purple);
-            background: linear-gradient(135deg, rgba(163,113,247,0.12), rgba(163,113,247,0.05));
-            color: var(--purple); box-shadow: 0 0 20px rgba(163,113,247,0.2);
-        }
-        .faction-icon { font-size: 1.3rem; display: block; margin-bottom: 2px; }
-        .faction-note { text-align: center; color: var(--text-muted); font-size: 0.7rem; margin-bottom: 16px; font-style: italic; }
-
-        .search-wrapper { margin-bottom: 16px; position: relative; }
-        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
-        .search-input {
-            padding: 10px 16px 10px 40px; background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
-            color: var(--text-primary); font-size: 0.85rem; font-family: inherit;
-            transition: var(--transition); width: 100%;
-        }
-        .search-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(240,185,11,0.1); }
-        .search-input::placeholder { color: var(--text-muted); }
-
-        .standings-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: var(--bg-card); }
-        .standings-table thead { position: sticky; top: 0; z-index: 10; }
-        .standings-table th {
-            background: var(--bg-elevated); color: var(--gold);
-            padding: 10px 12px; text-align: left; font-size: 0.7rem;
-            text-transform: uppercase; letter-spacing: 0.06em;
-            border-bottom: 2px solid var(--border-subtle);
-            cursor: pointer; user-select: none; transition: all var(--transition); white-space: nowrap;
-        }
-        .standings-table th:hover { background: rgba(240,185,11,0.1); color: var(--gold-light); }
-        .standings-table th .sort-icon { margin-left: 4px; font-size: 0.6rem; opacity: 0.5; }
-        .standings-table th.sort-active .sort-icon { opacity: 1; color: var(--gold); }
-        .standings-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); transition: background var(--transition); }
-        .standings-table tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
-        @keyframes fadeInRow { to { opacity: 1; } }
-        .standings-table tbody tr:hover { background: rgba(255,255,255,0.03); }
-        .standings-table td.name-cell { font-weight: 600; white-space: nowrap; }
-        .standings-table td.class-cell { color: var(--text-secondary); white-space: nowrap; }
-        .standings-table .pos { width: 40px; text-align: center; font-weight: 700; font-size: 0.9rem; }
-        .standings-table .pos.top-1 { color: #ffd700; font-size: 1.1rem; }
-        .standings-table .pos.top-2 { color: #c0c0c0; }
-        .standings-table .pos.top-3 { color: #cd7f32; }
-        .standings-table .num { text-align: center; font-weight: 500; white-space: nowrap; }
-        .standings-table .skill { color: var(--gold); font-weight: 700; font-size: 0.9rem; }
-        .standings-table .win-rate { font-weight: 600; }
-        tr.playoff-row.light td { background: rgba(255,215,0,0.10); }
-        tr.playoff-row.dark td { background: rgba(163,113,247,0.10); }
+        .faction-switch button { flex: 1; padding: 12px; border: 2px solid var(--border); background: var(--bg3);
+            color: var(--text2); border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
+        .faction-switch button.light.active { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.08); }
+        .faction-switch button.dark.active { border-color: var(--purple); color: var(--purple); background: rgba(163,113,247,0.08); }
+        .faction-note { text-align: center; color: var(--text3); font-size: 0.7rem; margin-bottom: 16px; font-style: italic; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: var(--bg4); }
+        th { background: var(--bg3); color: var(--gold); padding: 10px 12px; text-align: left; font-size: 0.7rem;
+            text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid var(--border); cursor: pointer; }
+        td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+        tr.playoff-row.light td { background: rgba(255,215,0,0.08); }
+        tr.playoff-row.dark td { background: rgba(163,113,247,0.08); }
         tr.cutoff td { border-bottom: 2px solid var(--gold); }
-
-        .admin-tab {
-            position: fixed;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 60px;
-            background: rgba(239, 68, 68, 0.6);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-right: none;
-            border-radius: 12px 0 0 12px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 0.6rem;
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            letter-spacing: 1px;
-            font-weight: 700;
-            backdrop-filter: blur(4px);
-        }
-        .admin-tab:hover {
-            width: 30px;
-            background: rgba(239, 68, 68, 0.9);
-            box-shadow: -2px 0 12px rgba(239, 68, 68, 0.3);
-        }
-        .admin-panel {
-            position: fixed;
-            top: 50%;
-            right: -360px;
-            transform: translateY(-50%);
-            width: 340px;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-right: none;
-            border-radius: var(--radius-md) 0 0 var(--radius-md);
-            z-index: 1000;
-            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: -4px 0 24px rgba(0,0,0,0.4);
-        }
-        .admin-panel.visible { right: 0; }
-        .admin-panel::-webkit-scrollbar { width: 3px; }
-        .admin-panel::-webkit-scrollbar-track { background: transparent; }
-        .admin-panel::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 2px; }
-        .admin-title {
-            color: var(--text-secondary);
-            font-weight: 700;
-            margin-bottom: 12px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            background: var(--bg-card);
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border-subtle);
-            z-index: 1;
-        }
-        .admin-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-        .admin-section {
-            color: var(--text-muted);
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 6px;
-            padding: 4px 0;
-        }
-        .admin-section.grand {
-            color: #fff;
-            background: linear-gradient(90deg, rgba(255,215,0,0.2), rgba(163,113,247,0.2));
-            padding: 6px;
-            border-radius: 4px;
-            text-align: center;
-        }
-        .admin-match {
-            background: var(--bg-elevated);
-            padding: 6px 8px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-subtle);
-        }
-        .admin-match h4 {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-        .admin-players {
-            display: flex;
-            gap: 4px;
-        }
-        .admin-player-btn {
-            flex: 1;
-            padding: 6px 8px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.68rem;
-            text-align: center;
-            transition: all var(--transition);
-            white-space: nowrap;
-        }
-        .admin-player-btn:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
-        .admin-player-btn.winner {
-            border-color: var(--green);
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--green);
-            font-weight: 700;
-        }
-        .admin-actions {
-            display: flex;
-            gap: 6px;
-            position: sticky;
-            bottom: 0;
-            background: var(--bg-card);
-            padding-top: 8px;
-        }
-        .admin-save, .admin-clear {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-weight: 700;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all var(--transition);
-        }
-        .admin-save {
-            background: var(--green);
-            color: #fff;
-        }
-        .admin-save:hover {
-            background: #059669;
-            transform: translateY(-1px);
-        }
-        .admin-clear {
-            background: var(--bg-elevated);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-subtle);
-        }
-        .admin-clear:hover {
-            background: var(--red);
-            color: #fff;
-            border-color: var(--red);
-        }
-
-        .beer-btn {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #f0b90b, #e0a800);
-            color: #000;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            text-decoration: none;
-            box-shadow: 0 4px 16px rgba(240, 185, 11, 0.4);
-            z-index: 998;
-            transition: all 0.3s ease;
-            animation: float 3s ease-in-out infinite;
-        }
-        .beer-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 24px rgba(240, 185, 11, 0.6);
-            background: linear-gradient(135deg, #ffd700, #f0b90b);
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
+        .pos { width: 40px; text-align: center; font-weight: 700; }
+        .pos.top-1 { color: #ffd700; } .pos.top-2 { color: #c0c0c0; } .pos.top-3 { color: #cd7f32; }
+        .skill { color: var(--gold); font-weight: 700; }
+        .admin-trigger { position: fixed; bottom: 24px; left: 24px; width: 40px; height: 40px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; font-size: 1rem;
+            z-index: 999; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+        .admin-trigger:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.2); }
+        .admin-trigger.active { color: var(--gold); border-color: var(--gold); background: rgba(255,215,0,0.1); }
         .bracket-wrapper { overflow-x: auto; padding: 10px 0; }
-        .bracket-wrapper::-webkit-scrollbar { height: 6px; }
-        .bracket-wrapper::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 3px; }
-        .bracket-wrapper::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
         .bracket { display: flex; justify-content: center; gap: 0; padding: 20px 0; min-width: fit-content; }
-        .round { display: flex; flex-direction: column; justify-content: center; gap: 0; flex: 1; min-width: 160px; max-width: 200px; }
-        .round.final { flex: 1.8; min-width: 220px; max-width: 280px; }
-        .round-title {
-            text-align: center; font-size: 0.7rem; font-weight: 700;
-            padding: 6px 10px; border-radius: var(--radius-sm);
-            margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .round.light .round-title { background: rgba(255,215,0,0.15); color: var(--gold); }
-        .round.dark .round-title { background: rgba(163,113,247,0.15); color: var(--purple); }
-        .round-title.final-title {
-            background: linear-gradient(90deg, rgba(255,215,0,0.4), rgba(163,113,247,0.4));
-            color: #fff; font-size: 0.75rem;
-        }
-
-        .match {
-            background: var(--bg-card); border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm); padding: 8px 10px;
-            margin: 0 6px 6px 6px; transition: all var(--transition); cursor: default;
-        }
-        .match:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 2; position: relative; }
-        .match .p {
-            padding: 4px 6px; font-size: 0.75rem; display: flex;
-            align-items: center; gap: 6px;
-            transition: color var(--transition); border-radius: 4px;
-        }
-        .match .p:hover { background: rgba(255,255,255,0.03); }
-        .match .p .seed { color: var(--text-muted); font-size: 0.6rem; min-width: 22px; font-weight: 600; }
-        .match .p .name { font-weight: 600; white-space: nowrap; }
-        .match .divider { height: 1px; background: var(--border-subtle); margin: 4px 0; }
-
-        .player-link { color: inherit; text-decoration: none; transition: color var(--transition); }
-        .player-link:hover { color: var(--gold) !important; }
-
-        .grand-final {
-            border: 2px solid transparent; border-radius: var(--radius-lg);
-            padding: 16px; text-align: center;
-            background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
-                linear-gradient(135deg, #ffd700, #a371f7, #ffd700) border-box;
-            background-size: 200% 200%;
-            box-shadow: 0 0 30px rgba(255,215,0,0.15);
-            position: relative; overflow: hidden;
-            animation: grandFinalGlow 4s ease infinite;
-        }
-        @keyframes grandFinalGlow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+        .round { display: flex; flex-direction: column; justify-content: center; gap: 8px; flex: 1; min-width: 140px; max-width: 180px; }
+        .round.final { flex: 1.8; min-width: 200px; max-width: 260px; }
+        .round-title { text-align: center; font-size: 0.65rem; font-weight: 700; padding: 5px 8px;
+            border-radius: 6px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+        .round.light .round-title { background: rgba(255,215,0,0.12); color: var(--gold); }
+        .round.dark .round-title { background: rgba(163,113,247,0.12); color: var(--purple); }
+        .round-title.final-title { background: linear-gradient(90deg, rgba(255,215,0,0.3), rgba(163,113,247,0.3)); color: #fff; }
+        .match { background: var(--bg4); border: 1px solid var(--border); border-radius: 8px; padding: 5px 6px; margin: 0 3px 3px 3px; }
+        .match .p { padding: 5px 6px; font-size: 0.7rem; display: flex; align-items: center; gap: 5px;
+            border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+        .match .p.clickable { cursor: pointer; }
+        .match .p.clickable:hover { background: rgba(255,255,255,0.05); }
+        .match .p.winner { background: rgba(16,185,129,0.15); color: var(--green); font-weight: 700; }
+        .match .p.loser { opacity: 0.3; }
+        .match .seed { color: var(--text3); font-size: 0.55rem; min-width: 18px; font-weight: 600; }
+        .match .divider { height: 1px; background: var(--border); margin: 3px 0; }
+        .grand-final { border: 2px solid transparent; border-radius: 12px; padding: 14px; text-align: center;
+            background: linear-gradient(var(--bg4), var(--bg4)) padding-box,
+                linear-gradient(135deg, #ffd700, #a371f7, #ffd700) border-box; background-size: 200% 200%;
+            animation: glow 4s ease infinite; }
+        @keyframes glow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
         .grand-final .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 6px; }
-        .grand-final .champ { font-size: 0.85rem; font-weight: 800; padding: 2px; transition: all var(--transition); }
-        .grand-final .champ.light { color: var(--gold); }
-        .grand-final .champ.dark { color: var(--purple); }
-        .grand-final .champ:hover { transform: scale(1.05); }
-        .grand-final .vs { color: var(--text-muted); font-size: 0.7rem; margin: 6px 0; font-weight: 700; letter-spacing: 1px; }
-		
-		::-webkit-scrollbar { width: 6px; height: 6px; }
-		::-webkit-scrollbar-track { background: var(--bg-primary); }
-		::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-		::-webkit-scrollbar-thumb:hover { background: #ffd700; }
-		* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }	
-
-        .playoffs-mobile { display: none; }
-        .mobile-round { margin-bottom: 18px; }
-        .mobile-round h3 {
-            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
-            padding: 6px 12px; border-radius: 6px; margin-bottom: 8px;
-            display: inline-block; font-weight: 700;
-        }
-        .mobile-round h3.light { color: var(--gold); background: rgba(255,215,0,0.15); }
-        .mobile-round h3.dark { color: var(--purple); background: rgba(163,113,247,0.15); }
-        .mobile-round h3.final-title { color: #fff; background: linear-gradient(90deg, rgba(255,215,0,0.5), rgba(163,113,247,0.5)); }
-
-        @media (min-width: 769px) {
-            .playoffs-mobile { display: none !important; }
-            .bracket { display: flex !important; }
-        }
+        .grand-final .champ { font-size: 0.8rem; font-weight: 800; }
+        .grand-final .champ.light { color: var(--gold); } .grand-final .champ.dark { color: var(--purple); }
+        .grand-final .champ.clickable { cursor: pointer; }
+        .grand-final .champ.clickable:hover { opacity: 0.8; }
+        .grand-final .champ.winner { color: #fff; text-shadow: 0 0 8px rgba(255,215,0,0.6); }
+        .grand-final .vs { color: var(--text3); font-size: 0.65rem; margin: 6px 0; font-weight: 700; }
+        .admin-panel { position: fixed; bottom: 80px; left: 24px; background: var(--bg4);
+            border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+            display: none; z-index: 999; min-width: 180px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .admin-panel.visible { display: block; }
+        .admin-panel button { display: block; width: 100%; padding: 8px 16px; margin-bottom: 6px;
+            border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; font-family: inherit;
+            text-align: left; transition: all 0.2s; }
+        .admin-panel button:last-child { margin-bottom: 0; }
+        .btn-save { background: var(--green); color: #fff; border: none; }
+        .btn-save:hover { background: #059669; }
+        .btn-export { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+        .btn-export:hover { color: var(--gold); border-color: var(--gold); }
+        .btn-clear { background: transparent; color: var(--text3); border: 1px solid transparent; }
+        .btn-clear:hover { color: var(--red); border-color: var(--red); }
+        .admin-hint { font-size: 0.6rem; color: var(--text3); margin-top: 6px; text-align: center; }
+        .status { text-align: center; padding: 40px; color: var(--text2); }
+        .player-link { color: inherit; text-decoration: none; }
+        .player-link:hover { color: var(--gold); }
+        .beer-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px;
+            background: linear-gradient(135deg,#f0b90b,#e0a800); color: #000; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+            text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.4); z-index: 998; }
+        .beer-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(240,185,11,0.6); }
 
         @media (max-width: 768px) {
-            .container { padding: 12px 14px 36px; }
+            .container { padding: 12px 14px 32px; }
             .header { padding: 20px 0 12px; }
             .header-title { font-size: 1.6rem; }
-            .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }
-            .nav-wrapper { position: static; }
-            .nav-toggle { display: block; }
-            .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
-            .nav-bar.show { display: flex; }
-            .nav-link { padding: 11px 16px; border-radius: var(--radius-sm); justify-content: center; font-size: 0.8rem; }
-            .standings-table { min-width: 550px; font-size: 0.7rem; }
-            .standings-table th, .standings-table td { padding: 6px 8px; white-space: nowrap; }
-            .standings-table .pos { width: 28px; }
-            .bracket { display: none !important; }
-            .playoffs-mobile { display: block !important; }
-            .admin-panel {
-                width: 100%;
-                right: -100%;
-                border-radius: var(--radius-md) var(--radius-md) 0 0;
-                top: auto;
-                bottom: 0;
-                transform: none;
-                max-height: 60vh;
-            }
-            .admin-panel.visible { right: 0; }
-            .admin-tab {
-                top: auto;
-                bottom: 50%;
-                width: 60px;
-                height: 24px;
-                border-radius: 12px 12px 0 0;
-                writing-mode: horizontal-tb;
-            }
-            .beer-btn {
-                bottom: 16px;
-                right: 16px;
-                width: 48px;
-                height: 48px;
-                font-size: 1.3rem;
-            }
+            .theme-toggle { position: static; transform: none; margin: 12px auto; display: block; width: fit-content; }
+            .bracket { flex-direction: column; align-items: center; }
+            .round { min-width: 100%; max-width: 100%; }
+            .round.final { min-width: 100%; max-width: 100%; }
+            .admin-trigger { bottom: 16px; left: 16px; }
+            .admin-panel { bottom: 70px; left: 16px; }
+            .beer-btn { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
+        <div class="header">
             <h1 class="header-title">ЛИГА ЭТЕРНИСА</h1>
             <p class="header-subtitle">Турнирная таблица и плей-офф</p>
             <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-        </header>
-
-        <div class="nav-wrapper">
-            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
-            <nav class="nav-bar" id="pageNav">
-                <a href="index.html" class="nav-link">📊 Статистика</a>
-                <a href="logs.html" class="nav-link">📜 Логи</a>
-                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
-                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-                <a href="gradient.html" class="nav-link">📈 Градиент</a>
-                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-                <a href="lore.html" class="nav-link">📜 Лор</a>
-                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
-                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
-                <a href="league.html" class="nav-link active">🏟 Лига</a>
-				<a href="player.html" class="nav-link">👤 Профиль</a>
-            </nav>
         </div>
-
+        <div class="nav" id="nav">
+            <a href="index.html">📊 Статистика</a><a href="logs.html">📜 Логи</a>
+            <a href="calc.html">🎲 Калькулятор</a><a href="balance.html">⚖️ Баланс</a>
+            <a href="simulator.html">🧪 Симулятор</a><a href="gradient.html">📈 Градиент</a>
+            <a href="guide.html">⚔️ Гайд</a><a href="hall.html">🏆 Зал Славы</a>
+            <a href="lore.html">📜 Лор</a><a href="tavern.html">🍺 Таверна</a>
+            <a href="dungeon.html">🏔 Подземелье</a>
+            <a href="league.html" class="active">🏟 Лига</a><a href="player.html">👤 Профиль</a>
+        </div>
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('standings', this)">📊 Таблица</button>
-            <button class="tab-btn" onclick="switchTab('playoffs', this)">🏆 Плей-офф</button>
+            <button class="active" onclick="switchTab('standings')">📊 Таблица</button>
+            <button onclick="switchTab('playoffs')">🏆 Плей-офф</button>
         </div>
-
-        <div id="tab-standings" class="tab-content active">
+        <div id="tab-standings" class="tab active">
             <div class="faction-switch">
-                <button class="faction-btn light active" onclick="showFaction('light', this)"><span class="faction-icon">🌝</span>Орден Света</button>
-                <button class="faction-btn dark" onclick="showFaction('dark', this)"><span class="faction-icon">🌚</span>Культ Тьмы</button>
+                <button class="light active" onclick="showFaction('light')">🌝 Орден Света</button>
+                <button class="dark" onclick="showFaction('dark')">🌚 Культ Тьмы</button>
             </div>
             <p class="faction-note">Топ-8 выходят в плей-офф</p>
-            <div class="search-wrapper">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="playerSearch" placeholder="Поиск по имени или классу..." oninput="filterTable()">
-            </div>
-            <div id="standings-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+            <div id="standings-content"><div class="status">Загрузка...</div></div>
         </div>
-
-        <div id="tab-playoffs" class="tab-content">
-            <div id="playoffs-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+        <div id="tab-playoffs" class="tab">
+            <div id="playoffs-content"><div class="status">Загрузка...</div></div>
         </div>
     </div>
-
-    <!-- Плавающая кнопка пива -->
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
-
-    <!-- Админ-панель -->
-    <!-- <button class="admin-tab" onclick="toggleAdmin()" title="Админ">АДМ</button> -->
+    <button class="admin-trigger" id="adminTrigger" onclick="toggleAdmin()" title="Управление">🛠</button>
     <div class="admin-panel" id="adminPanel">
-        <div class="admin-title">Управление плей-офф</div>
-        <div class="admin-grid" id="adminGrid"></div>
-        <div class="admin-actions">
-            <button class="admin-save" onclick="savePlayoffWinners()">💾 Сохранить</button>
-            <button class="admin-clear" onclick="clearPlayoffs()">🗑 Очистить</button>
-        </div>
+        <button class="btn-save" onclick="savePlayoffs()">💾 Сохранить</button>
+        <button class="btn-export" onclick="exportPlayoffs()">📋 Копировать JSON</button>
+        <button class="btn-clear" onclick="clearPlayoffs()">🗑 Сбросить всё</button>
+        <div class="admin-hint">Клик по игроку в сетке = автовыбор победителя</div>
     </div>
-
     <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('eternis-theme', next);
-        }
-        (function() {
-            const saved = localStorage.getItem('eternis-theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-
-        function toggleNav() {
-            const nav = document.getElementById('pageNav');
-            const btn = document.querySelector('.nav-toggle');
-            nav.classList.toggle('show');
-            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', () => {
-                    document.getElementById('pageNav').classList.remove('show');
-                    document.querySelector('.nav-toggle').textContent = '☰ Меню';
-                });
-            });
-        });
-
-        const JSON_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-        
-        async function loadStats() {
-            const cached = localStorage.getItem('eternis-stats');
-            if (cached) {
-                try {
-                    const { data, ts } = JSON.parse(cached);
-                    if (Date.now() - ts < 5 * 60 * 1000) return data;
-                } catch(e) {}
-            }
-            const resp = await fetch(JSON_URL);
-            const json = await resp.json();
-            localStorage.setItem('eternis-stats', JSON.stringify({ data: json, ts: Date.now() }));
-            return json;
-        }
-
-        let allPlayers = [], lightPlayers = [], darkPlayers = [];
-        let currentFaction = 'light';
-        let currentSort = { field: 'skill', asc: false };
-        let searchQuery = '';
-
-        let PLAYOFF_WINNERS = JSON.parse(localStorage.getItem('eternis-playoffs')) || {
-            light_round1: ['', '', '', ''],
-            light_round2: ['', ''],
-            light_champion: '',
-            dark_round1: ['', '', '', ''],
-            dark_round2: ['', ''],
-            dark_champion: '',
-            grand_champion: ''
-        };
-
-        function savePlayoffWinners() {
-            localStorage.setItem('eternis-playoffs', JSON.stringify(PLAYOFF_WINNERS));
-            renderPlayoffs();
-            const btn = document.querySelector('.admin-save');
-            btn.textContent = '✅ Сохранено!';
-            setTimeout(() => { btn.textContent = '💾 Сохранить'; }, 2000);
-        }
-
-        function clearPlayoffs() {
-            if (!confirm('Очистить ВСЕ результаты плей-офф?')) return;
-            PLAYOFF_WINNERS = {
-                light_round1: ['', '', '', ''],
-                light_round2: ['', ''],
-                light_champion: '',
-                dark_round1: ['', '', '', ''],
-                dark_round2: ['', ''],
-                dark_champion: '',
-                grand_champion: ''
-            };
-            localStorage.removeItem('eternis-playoffs');
-            renderAdminPanel();
-            renderPlayoffs();
-        }
-
-        function toggleAdmin() {
-            const panel = document.getElementById('adminPanel');
-            if (panel.classList.contains('visible')) {
-                panel.classList.remove('visible');
-            } else {
-                panel.classList.add('visible');
-                renderAdminPanel();
-            }
-        }
-
-        function renderAdminPanel() {
-            const grid = document.getElementById('adminGrid');
-            if (!grid) return;
-
-            const light = lightPlayers.slice(0, 8);
-            const dark = darkPlayers.slice(0, 8);
-
-            if (light.length < 8 || dark.length < 8) {
-                grid.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;">Нужно по 8 игроков</p>';
-                return;
-            }
-
-            light.forEach((p,i) => p.seed = i+1);
-            dark.forEach((p,i) => p.seed = i+1);
-
-            let html = '';
-            
-            // 1/8 Света
-            html += '<div class="admin-section">🌝 1/8 Света</div>';
-            [[light[0],light[7]],[light[1],light[6]],[light[2],light[5]],[light[3],light[4]]].forEach(([a,b],i) => {
-                html += adminMatch(`#${a.seed} vs #${b.seed}`, a, b, 'light_round1', i);
-            });
-
-            // 1/4 Света
-            html += '<div class="admin-section">🌝 1/4 Света</div>';
-            [0,1].forEach(i => {
-                const a = allPlayers.find(p => p.display === PLAYOFF_WINNERS.light_round1[i*2]) || null;
-                const b = allPlayers.find(p => p.display === PLAYOFF_WINNERS.light_round1[i*2+1]) || null;
-                html += adminMatch(`Матч ${i+1}`, a, b, 'light_round2', i);
-            });
-
-            // Финал Света
-            html += '<div class="admin-section">🌝 Финал Света</div>';
-            html += adminMatch('Чемпион', 
-                allPlayers.find(p => p.display === PLAYOFF_WINNERS.light_round2[0]) || null,
-                allPlayers.find(p => p.display === PLAYOFF_WINNERS.light_round2[1]) || null,
-                'light_champion', 0, true);
-
-            // Гранд-финал
-            html += '<div class="admin-section grand">👑 ГРАНД-ФИНАЛ</div>';
-            html += adminMatch('Абсолютный чемпион',
-                allPlayers.find(p => p.display === PLAYOFF_WINNERS.light_champion) || null,
-                allPlayers.find(p => p.display === PLAYOFF_WINNERS.dark_champion) || null,
-                'grand_champion', 0, true);
-
-            // Финал Тьмы
-            html += '<div class="admin-section">🌚 Финал Тьмы</div>';
-            html += adminMatch('Чемпион',
-                allPlayers.find(p => p.display === PLAYOFF_WINNERS.dark_round2[0]) || null,
-                allPlayers.find(p => p.display === PLAYOFF_WINNERS.dark_round2[1]) || null,
-                'dark_champion', 0, true);
-
-            // 1/4 Тьмы
-            html += '<div class="admin-section">🌚 1/4 Тьмы</div>';
-            [0,1].forEach(i => {
-                const a = allPlayers.find(p => p.display === PLAYOFF_WINNERS.dark_round1[i*2]) || null;
-                const b = allPlayers.find(p => p.display === PLAYOFF_WINNERS.dark_round1[i*2+1]) || null;
-                html += adminMatch(`Матч ${i+1}`, a, b, 'dark_round2', i);
-            });
-
-            // 1/8 Тьмы
-            html += '<div class="admin-section">🌚 1/8 Тьмы</div>';
-            [[dark[0],dark[7]],[dark[1],dark[6]],[dark[2],dark[5]],[dark[3],dark[4]]].forEach(([a,b],i) => {
-                html += adminMatch(`#${a.seed} vs #${b.seed}`, a, b, 'dark_round1', i);
-            });
-
-            grid.innerHTML = html;
-        }
-
-        function adminMatch(title, p1, p2, key, index, isSingle = false) {
-            const winner = isSingle ? PLAYOFF_WINNERS[key] : PLAYOFF_WINNERS[key][index];
-            const btn = (p) => {
-                if (!p) return '<button class="admin-player-btn" disabled style="opacity:0.3">—</button>';
-                const w = p.display === winner;
-                return `<button class="admin-player-btn${w?' winner':''}" onclick="setWinner('${key}',${index},'${p.display.replace(/'/g,"\\'")}',${isSingle})">${p.emoji||'⚔️'} ${p.display}</button>`;
-            };
-            const players = (p1||p2) ? btn(p1)+btn(p2) : '<span style="color:var(--text-muted);font-size:0.6rem;padding:6px;">Заполните прошлый раунд</span>';
-            return `<div class="admin-match"><h4>${title}</h4><div class="admin-players">${players}</div></div>`;
-        }
-
-        function setWinner(key, index, name, isSingle) {
-            if (isSingle) PLAYOFF_WINNERS[key] = name;
-            else PLAYOFF_WINNERS[key][index] = name;
-            renderAdminPanel();
-            renderPlayoffs();
-        }
-
-        function switchTab(tab, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            if (tab === 'playoffs') renderPlayoffs();
-        }
-
-        function showFaction(faction, btn) {
-            currentFaction = faction;
-            document.querySelectorAll('.faction-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderStandings();
-        }
-
-        function sortPlayers(field) {
-            if (currentSort.field === field) currentSort.asc = !currentSort.asc;
-            else { currentSort.field = field; currentSort.asc = (field === 'name' || field === 'class'); }
-            renderStandings();
-        }
-
-        function filterTable() {
-            searchQuery = document.getElementById('playerSearch').value.toLowerCase();
-            renderStandings();
-        }
-
-        function renderStandings() {
-            const c = document.getElementById('standings-content');
-            let players = currentFaction === 'light' ? [...lightPlayers] : [...darkPlayers];
-            if (!players.length) { c.innerHTML = '<div class="status-message">Нет данных.</div>'; return; }
-            if (searchQuery) players = players.filter(p => (p.display||'').toLowerCase().includes(searchQuery) || (p.name||'').toLowerCase().includes(searchQuery));
-            players.sort((a, b) => {
-                let va, vb;
-                switch (currentSort.field) {
-                    case 'name': va = (a.display||'').toLowerCase(); vb = (b.display||'').toLowerCase(); break;
-                    case 'class': va = (a.name||'').toLowerCase(); vb = (b.name||'').toLowerCase(); break;
-                    case 'wins': va = a.wins||0; vb = b.wins||0; break;
-                    case 'losses': va = a.losses||0; vb = b.losses||0; break;
-                    case 'winrate': const ta=(a.wins||0)+(a.losses||0), tb=(b.wins||0)+(b.losses||0); va=ta>0?(a.wins||0)/ta:0; vb=tb>0?(b.wins||0)/tb:0; break;
-                    default: va = a.skill||0; vb = b.skill||0;
-                }
-                return typeof va === 'string' ? (currentSort.asc ? va.localeCompare(vb) : vb.localeCompare(va)) : (currentSort.asc ? va - vb : vb - va);
-            });
-            if (!players.length && searchQuery) { c.innerHTML = '<div class="status-message">🔍 Ничего не найдено</div>'; return; }
-
-            const rc = 'playoff-row ' + currentFaction;
-            const si = (f) => currentSort.field === f ? (currentSort.asc ? ' ▲' : ' ▼') : '';
-            let h = `<table class="standings-table"><thead><tr><th class="pos">#</th>
-                <th onclick="sortPlayers('name')" class="sort-${currentSort.field==='name'?'active':''}">Игрок<span class="sort-icon">${si('name')}</span></th>
-                <th onclick="sortPlayers('class')" class="sort-${currentSort.field==='class'?'active':''}">Класс<span class="sort-icon">${si('class')}</span></th>
-                <th onclick="sortPlayers('wins')" class="num sort-${currentSort.field==='wins'?'active':''}">W<span class="sort-icon">${si('wins')}</span></th>
-                <th onclick="sortPlayers('losses')" class="num sort-${currentSort.field==='losses'?'active':''}">L<span class="sort-icon">${si('losses')}</span></th>
-                <th onclick="sortPlayers('winrate')" class="num sort-${currentSort.field==='winrate'?'active':''}">%<span class="sort-icon">${si('winrate')}</span></th>
-                <th onclick="sortPlayers('skill')" class="num sort-${currentSort.field==='skill'?'active':''}">🌟<span class="sort-icon">${si('skill')}</span></th>
-            </tr></thead><tbody>`;
-
-            players.forEach((p, i) => {
-                const t = (p.wins||0)+(p.losses||0), wr = t>0?((p.wins||0)*100/t).toFixed(1):'0.0';
-                const pc = i===0?' top-1':i===1?' top-2':i===2?' top-3':'';
-                h += `<tr class="${i<8?rc:''} ${i===7?'cutoff':''}" style="animation-delay:${i*0.03}s">
-                    <td class="pos${pc}">${i+1}</td>
-                    <td class="name-cell"><a href="player.html?name=${encodeURIComponent(p.display||'')}" class="player-link">${p.emoji||'⚔️'} ${p.display||''}</a></td>
-                    <td class="class-cell">${p.name||''}</td>
-                    <td class="num">${p.wins||0}</td><td class="num">${p.losses||0}</td>
-                    <td class="num win-rate">${wr}%</td><td class="num skill">${p.skill||0}</td></tr>`;
-            });
-            h += '</tbody></table>';
-            c.innerHTML = h;
-        }
-
-        function renderPlayoffs() {
-            const c = document.getElementById('playoffs-content');
-            const light = lightPlayers.slice(0, 8), dark = darkPlayers.slice(0, 8);
-            if (light.length < 8 || dark.length < 8) { 
-                c.innerHTML = '<div class="status-message">Нужно по 8 игроков в каждой фракции.</div>'; 
-                return; 
-            }
-            light.forEach((p,i) => p.seed = i+1);
-            dark.forEach((p,i) => p.seed = i+1);
-
-            const fn = (n) => n ? allPlayers.find(p => p.display === n) || null : null;
-            const lr1 = PLAYOFF_WINNERS.light_round1.map(fn);
-            const lr2 = PLAYOFF_WINNERS.light_round2.map(fn);
-            const lChamp = fn(PLAYOFF_WINNERS.light_champion);
-            const dr1 = PLAYOFF_WINNERS.dark_round1.map(fn);
-            const dr2 = PLAYOFF_WINNERS.dark_round2.map(fn);
-            const dChamp = fn(PLAYOFF_WINNERS.dark_champion);
-            const grandChamp = fn(PLAYOFF_WINNERS.grand_champion);
-
-            const short = (s) => s && s.length > 3 ? s.substring(0, 3).toUpperCase() : (s ? s.toUpperCase() : '???');
-            const plink = (p) => p ? `<a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.emoji||'⚔️'} ${short(p.display)}</a>` : '—';
-            
-            const pr = (a, b) => `<div class="match"><div class="p"><span class="seed">#${a.seed}</span><span class="name">${plink(a)}</span></div><div class="divider"></div><div class="p"><span class="seed">#${b.seed}</span><span class="name">${plink(b)}</span></div></div>`;
-            const pr2 = (a, b) => (!a && !b) ? '<div class="match"><div class="p" style="color:var(--text-muted);justify-content:center;font-style:italic;">— vs —</div></div>' : `<div class="match"><div class="p"><span class="name">${plink(a)}</span></div><div class="divider"></div><div class="p"><span class="name">${plink(b)}</span></div></div>`;
-
-            let chL = '<div class="champ light">🌝 ' + (lChamp ? plink(lChamp) : 'Чемпион Света') + '</div>';
-            let chD = '<div class="champ dark">🌚 ' + (dChamp ? plink(dChamp) : 'Чемпион Тьмы') + '</div>';
-            if (grandChamp) {
-                const gc = plink(grandChamp);
-                if (grandChamp.faction === 'Орден Света') {
-                    chL = '<div class="champ light">👑 ' + gc + ' 👑</div>';
-                    chD = '<div class="champ dark">🌚 ' + (dChamp ? plink(dChamp) : 'Чемпион Тьмы') + '</div>';
-                } else {
-                    chD = '<div class="champ dark">👑 ' + gc + ' 👑</div>';
-                    chL = '<div class="champ light">🌝 ' + (lChamp ? plink(lChamp) : 'Чемпион Света') + '</div>';
-                }
-            }
-
-            let h = '<div class="bracket-wrapper"><div class="bracket">';
-            h += `<div class="round light"><div class="round-title">1/8 Света</div>${pr(light[0],light[7])}${pr(light[1],light[6])}${pr(light[2],light[5])}${pr(light[3],light[4])}</div>`;
-            h += `<div class="round light"><div class="round-title">1/4 Света</div>${pr2(lr1[0],lr1[1])}${pr2(lr1[2],lr1[3])}</div>`;
-            h += `<div class="round light"><div class="round-title">Финал Света</div>${pr2(lr2[0],lr2[1])}</div>`;
-            h += `<div class="round final"><div class="round-title final-title">🏆 ГРАНД-ФИНАЛ</div><div class="grand-final"><div class="label">👑 ЧЕМПИОН ЛИГИ ЭТЕРНИСА</div>${chL}<div class="vs">⚔️ VS ⚔️</div>${chD}</div></div>`;
-            h += `<div class="round dark"><div class="round-title">Финал Тьмы</div>${pr2(dr2[0],dr2[1])}</div>`;
-            h += `<div class="round dark"><div class="round-title">1/4 Тьмы</div>${pr2(dr1[0],dr1[1])}${pr2(dr1[2],dr1[3])}</div>`;
-            h += `<div class="round dark"><div class="round-title">1/8 Тьмы</div>${pr(dark[0],dark[7])}${pr(dark[1],dark[6])}${pr(dark[2],dark[5])}${pr(dark[3],dark[4])}</div>`;
-            h += '</div></div>';
-
-            let m = '<div class="playoffs-mobile">';
-            m += `<div class="mobile-round"><h3 class="light">1/8 Света</h3>${pr(light[0],light[7])}${pr(light[1],light[6])}${pr(light[2],light[5])}${pr(light[3],light[4])}</div>`;
-            m += `<div class="mobile-round"><h3 class="light">1/4 Света</h3>${pr2(lr1[0],lr1[1])}${pr2(lr1[2],lr1[3])}</div>`;
-            m += `<div class="mobile-round"><h3 class="light">Финал Света</h3>${pr2(lr2[0],lr2[1])}</div>`;
-            m += `<div class="mobile-round"><h3 class="final-title">🏆 ГРАНД-ФИНАЛ</h3><div class="grand-final"><div class="label">👑 ЧЕМПИОН ЛИГИ ЭТЕРНИСА</div>${chL}<div class="vs">⚔️ VS ⚔️</div>${chD}</div></div>`;
-            m += `<div class="mobile-round"><h3 class="dark">Финал Тьмы</h3>${pr2(dr2[0],dr2[1])}</div>`;
-            m += `<div class="mobile-round"><h3 class="dark">1/4 Тьмы</h3>${pr2(dr1[0],dr1[1])}${pr2(dr1[2],dr1[3])}</div>`;
-            m += `<div class="mobile-round"><h3 class="dark">1/8 Тьмы</h3>${pr(dark[0],dark[7])}${pr(dark[1],dark[6])}${pr(dark[2],dark[5])}${pr(dark[3],dark[4])}</div>`;
-            m += '</div>';
-
-            c.innerHTML = h + m;
-        }
-
-        async function loadData() {
-            try {
-                const data = await loadStats();
-                allPlayers = (data.players || []).filter(p => p.name && p.name !== 'Unknown' && p.skill > 0);
-                allPlayers.sort((a, b) => b.skill - a.skill);
-                lightPlayers = allPlayers.filter(p => p.faction === 'Орден Света');
-                darkPlayers = allPlayers.filter(p => p.faction === 'Культ Тьмы');
-                renderStandings();
-            } catch {
-                document.getElementById('standings-content').innerHTML = '<div class="status-message error">❌ Ошибка загрузки</div>';
-            }
-        }
-
-        loadData();
+        function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
+        (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
+        const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        let allPlayers=[],lightPlayers=[],darkPlayers=[],currentFaction='light',isAdmin=false;
+        let PLAYOFFS=JSON.parse(localStorage.getItem('eternis-playoffs'))||{light_round1:['','','',''],light_round2:['',''],light_champion:'',dark_round1:['','','',''],dark_round2:['',''],dark_champion:'',grand_champion:''};
+        function toggleAdmin(){isAdmin=!isAdmin;document.getElementById('adminTrigger').classList.toggle('active',isAdmin);document.getElementById('adminPanel').classList.toggle('visible',isAdmin);if(isAdmin)renderPlayoffs();}
+        function savePlayoffs(){localStorage.setItem('eternis-playoffs',JSON.stringify(PLAYOFFS));const b=document.querySelector('.btn-save');b.textContent='✅ Сохранено!';setTimeout(()=>b.textContent='💾 Сохранить',2000);}
+        function exportPlayoffs(){navigator.clipboard.writeText(JSON.stringify(PLAYOFFS,null,2));const b=document.querySelector('.btn-export');b.textContent='✅ Скопировано!';setTimeout(()=>b.textContent='📋 Копировать JSON',2000);}
+        function clearPlayoffs(){if(!confirm('Очистить ВСЕ результаты?'))return;PLAYOFFS={light_round1:['','','',''],light_round2:['',''],light_champion:'',dark_round1:['','','',''],dark_round2:['',''],dark_champion:'',grand_champion:''};localStorage.removeItem('eternis-playoffs');renderPlayoffs();}
+        function shortName(n){return n&&n.length>3?n.substring(0,3).toUpperCase():(n?n.toUpperCase():'???');}
+        function switchTab(t){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.tabs button').forEach(e=>e.classList.remove('active'));document.getElementById('tab-'+t).classList.add('active');event.target.classList.add('active');if(t==='playoffs')renderPlayoffs();}
+        function showFaction(f){currentFaction=f;document.querySelectorAll('.faction-switch button').forEach(e=>e.classList.remove('active'));event.target.classList.add('active');renderStandings();}
+        function renderStandings(){const p=currentFaction==='light'?[...lightPlayers]:[...darkPlayers];const c=document.getElementById('standings-content');if(!p.length){c.innerHTML='<div class="status">Нет данных.</div>';return;}const rc='playoff-row '+currentFaction;let h='<table><thead><tr><th class="pos">#</th><th>Игрок</th><th>Класс</th><th>W</th><th>L</th><th>%</th><th>🌟</th></tr></thead><tbody>';p.forEach((p,i)=>{const t=(p.wins||0)+(p.losses||0),wr=t>0?((p.wins||0)*100/t).toFixed(1):'0.0',pc=i===0?' top-1':i===1?' top-2':i===2?' top-3':'';h+=`<tr class="${i<8?rc:''} ${i===7?'cutoff':''}"><td class="pos${pc}">${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display||'')}" class="player-link">${p.emoji||'⚔️'} ${p.display||''}</a></td><td>${p.name||''}</td><td>${p.wins||0}</td><td>${p.losses||0}</td><td>${wr}%</td><td class="skill">${p.skill||0}</td></tr>`;});h+='</tbody></table>';c.innerHTML=h;}
+        function findPlayer(n){return n?allPlayers.find(p=>p.display===n)||null:null;}
+        function clickPlayer(mt,idx,name,isFinal){if(!isAdmin)return;if(isFinal){PLAYOFFS[mt]=PLAYOFFS[mt]===name?'':name;}else{const a=PLAYOFFS[mt];a[idx]=a[idx]===name?'':name;}localStorage.setItem('eternis-playoffs',JSON.stringify(PLAYOFFS));renderPlayoffs();}
+        function renderPlayoffs(){const light=lightPlayers.slice(0,8),dark=darkPlayers.slice(0,8);const c=document.getElementById('playoffs-content');if(light.length<8||dark.length<8){c.innerHTML='<div class="status">Нужно по 8 игроков в каждой фракции.</div>';return;}light.forEach((p,i)=>p.seed=i+1);dark.forEach((p,i)=>p.seed=i+1);const pr=(p,mt,idx,isFinal,ow)=>{if(!p)return '<div class="p" style="opacity:0.2">—</div>';const won=isFinal?PLAYOFFS[mt]===p.display:(PLAYOFFS[mt]||[])[idx]===p.display;const lost=ow&&!won;const cls=won?' winner':(lost?' loser':'');const mark=won?' ✅':'';const cl=isAdmin?' clickable':'';const oc=isAdmin?`onclick="clickPlayer('${mt}',${idx},'${p.display.replace(/'/g,"\\'")}',${isFinal})"`:'';return `<div class="p${cls}${cl}" ${oc}><span class="seed">#${p.seed}</span>${p.emoji||''} ${shortName(p.display)}${mark}</div>`;};const m=(a,b,mt,idx)=>{const wa=(PLAYOFFS[mt]||[])[idx]===(a?.display||'');const wb=(PLAYOFFS[mt]||[])[idx]===(b?.display||'');return `<div class="match">${pr(a,mt,idx,false,wb)}<div class="divider"></div>${pr(b,mt,idx,false,wa)}</div>`;};const fm=(a,b,mt)=>{const wa=PLAYOFFS[mt]===(a?.display||'');const wb=PLAYOFFS[mt]===(b?.display||'');return `<div class="match">${pr(a,mt,0,true,wb)}<div class="divider"></div>${pr(b,mt,0,true,wa)}</div>`;};const lr1=PLAYOFFS.light_round1.map(findPlayer);const lr2=PLAYOFFS.light_round2.map(findPlayer);const lc=findPlayer(PLAYOFFS.light_champion);const dr1=PLAYOFFS.dark_round1.map(findPlayer);const dr2=PLAYOFFS.dark_round2.map(findPlayer);const dc=findPlayer(PLAYOFFS.dark_champion);const gc=findPlayer(PLAYOFFS.grand_champion);let gf='';if(gc){const il=gc.faction==='Орден Света';gf=`<div class="champ ${il?'light':'dark'} winner">👑 ${gc.emoji||''} ${shortName(gc.display)} 👑</div>`;}else if(lc&&dc){const lw=PLAYOFFS.grand_champion===lc.display;const dw=PLAYOFFS.grand_champion===dc.display;const cl=isAdmin?' clickable':'';const clL=isAdmin?`onclick="clickPlayer('grand_champion',0,'${lc.display.replace(/'/g,"\\'")}',true)"`:'';const clD=isAdmin?`onclick="clickPlayer('grand_champion',0,'${dc.display.replace(/'/g,"\\'")}',true)"`:'';gf=`<div class="champ light${lw?' winner':''}${cl}" ${clL}>🌝 ${lc.emoji||''} ${shortName(lc.display)}${lw?' ✅':''}</div><div class="vs">⚔️ VS ⚔️</div><div class="champ dark${dw?' winner':''}${cl}" ${clD}>🌚 ${dc.emoji||''} ${shortName(dc.display)}${dw?' ✅':''}</div>`;}else{gf=`<div class="champ light">🌝 ${lc?lc.emoji+' '+shortName(lc.display):'Чемпион Света'}</div><div class="vs">⚔️ VS ⚔️</div><div class="champ dark">🌚 ${dc?dc.emoji+' '+shortName(dc.display):'Чемпион Тьмы'}</div>`;}c.innerHTML=`<div class="bracket-wrapper"><div class="bracket"><div class="round light"><div class="round-title">1/8 Света</div>${m(light[0],light[7],'light_round1',0)}${m(light[1],light[6],'light_round1',1)}${m(light[2],light[5],'light_round1',2)}${m(light[3],light[4],'light_round1',3)}</div><div class="round light"><div class="round-title">1/4 Света</div>${m(lr1[0],lr1[1],'light_round2',0)}${m(lr1[2],lr1[3],'light_round2',1)}</div><div class="round light"><div class="round-title">Финал</div>${fm(lr2[0],lr2[1],'light_champion')}</div><div class="round final"><div class="round-title final-title">🏆 ГРАНД-ФИНАЛ</div><div class="grand-final"><div class="label">ЧЕМПИОН ЛИГИ ЭТЕРНИСА</div>${gf}</div></div><div class="round dark"><div class="round-title">Финал</div>${fm(dr2[0],dr2[1],'dark_champion')}</div><div class="round dark"><div class="round-title">1/4 Тьмы</div>${m(dr1[0],dr1[1],'dark_round2',0)}${m(dr1[2],dr1[3],'dark_round2',1)}</div><div class="round dark"><div class="round-title">1/8 Тьмы</div>${m(dark[0],dark[7],'dark_round1',0)}${m(dark[1],dark[6],'dark_round1',1)}${m(dark[2],dark[5],'dark_round1',2)}${m(dark[3],dark[4],'dark_round1',3)}</div></div></div>`;}
+        async function init(){try{const r=await fetch(DATA_URL);const d=await r.json();allPlayers=(d.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);allPlayers.sort((a,b)=>b.skill-a.skill);lightPlayers=allPlayers.filter(p=>p.faction==='Орден Света');darkPlayers=allPlayers.filter(p=>p.faction==='Культ Тьмы');renderStandings();}catch(e){document.getElementById('standings-content').innerHTML='<div class="status">❌ Ошибка загрузки</div>';}}
+        init();
     </script>
 </body>
 </html>
