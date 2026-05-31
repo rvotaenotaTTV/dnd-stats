@@ -227,7 +227,7 @@
 			const maxDungeonRecord = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.record > m ? d.record : m; }, 0);
 			const maxDungeonTrophies = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.trophies > m ? d.trophies : m; }, 0);
 			const topDungeon = players.map(p => { const d = dungeonPlayers[p.display]; return { ...p, record: d?.record || 0, trophies: d?.trophies || 0 }; }).filter(p => p.record > 0).sort((a, b) => b.record - a.record || b.trophies - a.trophies);
-
+			
 			// === ФРАКЦИОННЫЕ ОЧКИ ===
 			const duelLight = factionScore.duelLight || 0;
 			const duelDark = factionScore.duelDark || 0;
