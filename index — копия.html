@@ -39,7 +39,7 @@
     .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); transform: translateY(-1px); }
     .nav-link.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; font-weight: 700; box-shadow: var(--shadow-gold); }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
     .stat-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px 14px; text-align: center; transition: var(--transition); position: relative; overflow: hidden; animation: fadeSlideIn 0.4s ease; }
     .stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.4; }
     .stat-card:hover { transform: translateY(-2px); border-color: rgba(255,215,0,0.3); }
@@ -225,16 +225,8 @@
 			html+=`<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
 			html+=`<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
 			html+=`<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
-			html+=`<div class="stat-card">
-				<div class="stat-label">Свет vs Тьма</div>
-				<div class="stat-value" style="font-size:1.2rem;">${factionLight} : ${factionDark}</div>
-				<div style="display:flex;justify-content:center;gap:8px;margin-top:8px;font-weight:700;font-size:0.85rem;">
-					<span style="color:var(--gold);">🌝${lightRemaining}</span>
-					<span style="color:var(--text-muted);">·</span>
-					<span style="color:var(--purple);">${darkRemaining}🌚</span>
-				</div>
-				<div class="stat-label" style="margin-top:4px;">побед до захвата</div>
-			</div>`;
+			html+=`<div class="stat-card"><div class="stat-value">${factionLight} : ${factionDark}</div><div class="stat-label">🌝 Свет vs Тьма 🌚</div></div>`;
+			html+=`<div class="stat-card"><div class="stat-value"><span style="color:var(--gold);">${lightRemaining}</span> <span style="color:var(--text-muted);">·</span> <span style="color:var(--purple);">${darkRemaining}</span></div><div class="stat-label">побед до захвата</div></div>`;
 			html+='</div>';
 			
         html+='<div class="nav-tabs">';
