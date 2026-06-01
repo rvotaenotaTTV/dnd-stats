@@ -57,7 +57,7 @@
       "best": 2,
       "worst": 1,
       "champion": false,
-      "shards": 60,
+      "shards": 65,
       "level": 4,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -196,17 +196,17 @@
       "display": "verdoga",
       "emoji": "🐱📿",
       "name": "Табакси-Монах",
-      "wins": 1,
-      "losses": 2,
+      "wins": 2,
+      "losses": 3,
       "best": 1,
       "worst": 1,
       "champion": false,
-      "shards": 128,
+      "shards": 133,
       "level": 6,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 1,
-      "skill": 0
+      "factionWins": 2,
+      "skill": 24
     },
     {
       "display": "strannik_25",
@@ -276,17 +276,17 @@
       "display": "fialo4ka",
       "emoji": "👹⚔️",
       "name": "Орк-Воин",
-      "wins": 12,
+      "wins": 13,
       "losses": 10,
       "best": 3,
       "worst": 3,
       "champion": false,
-      "shards": 55,
+      "shards": 57,
       "level": 4,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
       "factionWins": 7,
-      "skill": 80
+      "skill": 86
     },
     {
       "display": "milyvolk",
@@ -405,11 +405,11 @@
       "emoji": "😈🎸",
       "name": "Тифлинг-Бард",
       "wins": 0,
-      "losses": 0,
+      "losses": 1,
       "best": 0,
-      "worst": 0,
+      "worst": 1,
       "champion": false,
-      "shards": 33,
+      "shards": 36,
       "level": 3,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -418,16 +418,16 @@
     },
     {
       "display": "jed1master",
-      "emoji": "🐱🪓",
-      "name": "Табакси-Варвар",
+      "emoji": "",
+      "name": "Unknown",
       "wins": 0,
       "losses": 0,
       "best": 0,
       "worst": 0,
       "champion": false,
-      "shards": 10,
+      "shards": 14,
       "level": 1,
-      "faction": "Орден Света",
+      "faction": "",
       "tournamentWins": 0,
       "factionWins": 0,
       "skill": 0
@@ -533,11 +533,11 @@
       "emoji": "🐱✨",
       "name": "Табакси-Волшебница",
       "wins": 1,
-      "losses": 0,
+      "losses": 1,
       "best": 1,
-      "worst": 0,
+      "worst": 1,
       "champion": false,
-      "shards": 19,
+      "shards": 20,
       "level": 2,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -610,15 +610,15 @@
     }
   ],
   "factionScore": {
-    "duelLight": 59,
-    "duelDark": 66,
+    "duelLight": 60,
+    "duelDark": 67,
     "battleLight": 0,
     "battleDark": 0
   },
   "tournaments": 2,
   "territory": {
-    "light": 166,
-    "dark": 70
+    "light": 168,
+    "dark": 71
   },
   "dungeon": {
     "players": {
@@ -722,9 +722,9 @@
         "crits": 7,
         "misses": 4,
         "blocks": 7,
-        "trophies": 26,
-        "bosses": 14,
-        "totalWaves": 118,
+        "trophies": 28,
+        "bosses": 16,
+        "totalWaves": 134,
         "passive": "✨ Благословение"
       },
       "phili4pok": {
@@ -917,9 +917,9 @@
         "crits": 1,
         "misses": 3,
         "blocks": 6,
-        "trophies": 25,
-        "bosses": 10,
-        "totalWaves": 88,
+        "trophies": 26,
+        "bosses": 11,
+        "totalWaves": 94,
         "passive": "🗡️ Казнь"
       },
       "skufenberg": {
@@ -1091,15 +1091,6 @@
   },
   "fights": [
     {
-      "FullLog": "😈🪓 artem_jz 13:31 ⚡🏆😈🌿 shs_strapl | 8:💨 | 8:7 | 8:6 | 7:0"
-    },
-    {
-      "FullLog": "⚡🧑📿 verdoga 29:29 🏆💀🪓 kot02 | 7:💨 | ❌:7 | 💥8:9 | 4:💨 | 6:💨 | 💨:9 | 4:4"
-    },
-    {
-      "FullLog": "🧝🛡️ velitar_game 13:42 ⚡🏆🧔👁️ larikcat | 11:6 | 5:💨 | 7:💨 | 8:7 | 11:0"
-    },
-    {
       "FullLog": "👹⚙️ milyvolk 6:29 ⚡🏆😈✨ ded_evgenius2 | 10:6 | 💥19:0"
     },
     {
@@ -1119,6 +1110,15 @@
     },
     {
       "FullLog": "😈⚔️ ded_evgenius 10:39 ⚡🏆🐱✨ ami_kron | 11:3 | 💥18:7 | 10:0"
+    },
+    {
+      "FullLog": "⚡🏆🐱📿 verdoga 26:18 🐱✨ ami_kron | 6:4 | 4:9 | 6:💨 | 4:5 | 6:0"
+    },
+    {
+      "FullLog": "⚡🏆🐱🪓 jed1master 33:10 😈🎸 kot02 | 6:💨 | 7:❌ | 4:3 | 8:7 | 8:0"
+    },
+    {
+      "FullLog": "⚡🐱📿 verdoga 16:27 🏆👹⚔️ fialo4ka | 8:7 | 4:6 | 💨:7 | 4:7"
     }
   ],
   "heroArchive": {
