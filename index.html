@@ -217,8 +217,8 @@
 			const factionDark=fs.battleDark||0;
 			const duelLight=fs.duelLight||0;
 			const duelDark=fs.duelDark||0;
-			const lightRemaining = duelLight % 100 === 0 ? 0 : 100 - (duelLight % 100);
-			const darkRemaining = duelDark % 100 === 0 ? 0 : 100 - (duelDark % 100);
+			const lightRemaining=100-(duelLight%100);
+			const darkRemaining=100-(duelDark%100);
 			let html='';
 			html+='<div class="stats-grid">';
 			html+=`<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
