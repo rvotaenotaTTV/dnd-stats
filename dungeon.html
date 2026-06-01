@@ -139,13 +139,12 @@
 		.podium-record { font-size: 1.4rem; }
 		.podium-detail { font-size: 0.7rem; padding-top: 6px; border-top: 1px solid var(--border-subtle); width: 100%; }
 		.records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-		#leaderboard-table { min-width: 550px; }
-		#leaderboard-table td:first-child, #leaderboard-table th:first-child { min-width: 40px; }
-		#leaderboard-table td:nth-child(2), #leaderboard-table th:nth-child(2) { min-width: 80px; }
-		#all-table { min-width: 500px; }
-		#all-table td:first-child, #all-table th:first-child { min-width: 80px; }
-		table { font-size: 0.72rem; }
-		th, td { padding: 6px 8px; }
+		#leaderboard-table, #all-table { min-width: 550px; font-size: 0.7rem; }
+		#leaderboard-table td:nth-child(2), #leaderboard-table th:nth-child(2),
+		#leaderboard-table td:nth-child(3), #leaderboard-table th:nth-child(3),
+		#all-table td:first-child, #all-table th:first-child,
+		#all-table td:nth-child(2), #all-table th:nth-child(2) { min-width: 130px; }
+		th, td { padding: 6px 8px; white-space: nowrap; }
 		.beer-btn { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 1.3rem; }
 	}
 </style>
