@@ -341,7 +341,7 @@
 					const r = Array.from(b.querySelectorAll('tr'));
 					r.sort((a, b) => {
 						let va = a.dataset[sb], vb = b.dataset[sb];
-						if (sb === 'display' || sb === 'faction' || sb === 'class') return cd === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+						if (sb === 'display' || sb === 'faction' || sb === 'class' || sb === 'passive')  return cd === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
 						va = parseFloat(va) || 0; vb = parseFloat(vb) || 0;
 						return cd === 'asc' ? va - vb : vb - va;
 					});
