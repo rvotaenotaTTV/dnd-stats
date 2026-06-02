@@ -376,7 +376,7 @@
 			const CURRENT = 3;
 			const seasonNames = ['🏁 0', '🔥 1', '💫 2', '🩸 3'];
 			const seasonKeys = ['season_0.json', 'season_1.json', 'season_2.json', 'season_3.json'];
-			const seen = new Set(); // чтобы не дублировать
+			const seen = new Set();
 
 			for (let i = 0; i <= CURRENT; i++) {
 				if (i < CURRENT) {
@@ -399,22 +399,15 @@
 						// Архивные герои за этот сезон
 						const arch = d.heroArchive?.[key];
 						if (arch) {
-							arch.forEach(h => {
-								const id = `${h.name}-${i}-arch`;
-								if (!seen.has(id)) {
-									seen.add(id);
-									allHeroes.push({ ...h, season: seasonNames[i] });
-								}
-							});
+							arch.forEach(h => allHeroes.push({ ...h, season: seasonNames[i] }));
 						}
 					} catch (e) {}
 				} else {
-					// Текущий сезон: игрок из players[] уже показан в профиле, только архив
+					// Текущий сезон
 					const currentArchive = archive[playerName.toLowerCase()] || [];
 					currentArchive.forEach(h => {
-						const id = `${h.name}-${CURRENT}-arch`;
-						if (!seen.has(id)) {
-							seen.add(id);
+						const id = `${h.name}-${h.wins}-${h.losses}`;
+						if (!allHeroes.find(x => x.name === h.name && x.wins === h.wins && x.losses === h.losses && x.season === seasonNames[i])) {
 							allHeroes.push({ ...h, season: seasonNames[i] });
 						}
 					});
