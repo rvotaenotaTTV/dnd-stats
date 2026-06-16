@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Гайд</title>
+    <title>Гайд — Арена Этерниса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
@@ -96,16 +96,16 @@
         .loc-list div { padding: 8px 12px; background: var(--elevated); border-radius: var(--radius-sm); border-left: 3px solid var(--border); }
         .loc-list div.locked { opacity: 0.4; }
 
-        .beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.3); z-index: 99; }
+        .beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.3); z-index: 99; transition: transform 0.2s; }
+        .beer-btn:hover { transform: scale(1.1); }
 
-        .text-light { color: var(--gold); font-weight: 600; }
-        .text-dark { color: var(--purple); font-weight: 600; }
+        .boss-row { background: rgba(240,185,11,0.08); }
 
         @media (max-width: 768px) {
-            .container { padding: 12px 14px 32px; }
+            .container { padding: 12px 14px 80px; }
             .header { padding: 20px 0 8px; }
             .header-title { font-size: 1.8rem; }
-            .theme-toggle { position: static; transform: none; margin: 12px auto; display: block; width: fit-content; }
+            .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
             .nav-toggle { display: block; }
             .nav-bar { display: none; flex-direction: column; margin-top: 8px; }
             .nav-bar.show { display: flex; }
@@ -113,6 +113,7 @@
             .toc-grid { grid-template-columns: 1fr; }
             .mech-grid, .command-grid, .passive-grid { grid-template-columns: 1fr; }
             table { font-size: 0.72rem; }
+            .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -143,14 +144,12 @@
             </nav>
         </div>
 
-        <!-- Содержание и все секции без изменений -->
         <div class="toc">
             <div class="toc-title">📑 Содержание</div>
             <div class="toc-grid">
                 <a href="#start" class="toc-link">🚀 Как начать</a>
                 <a href="#commands" class="toc-link">📋 Команды</a>
                 <a href="#battle" class="toc-link">⚔️ Боевая система</a>
-                <a href="#logs" class="toc-link">📝 Обозначения в логах</a>
                 <a href="#tournament" class="toc-link">👑 Турнир</a>
                 <a href="#faction" class="toc-link">⚔️ Фракции</a>
                 <a href="#dungeon" class="toc-link">🩸 Подземелье</a>
@@ -161,92 +160,152 @@
         <!-- 1. СТАРТ -->
         <div class="section gold" id="start">
             <div class="section-title">🚀 Как начать</div>
+            <p class="flavor">Три шага до первого боя. Четвёртый — победа.</p>
+
             <div class="step-list">
-                <div class="step-item"><div class="step-num">1</div><div>Активируй награду <span class="highlight">«Создать героя»</span>.</div></div>
+                <div class="step-item"><div class="step-num">1</div><div>Активируй награду канала <span class="highlight">«Создать героя»</span>.</div></div>
                 <div class="step-item"><div class="step-num">2</div><div>Бот предложит 3 комбинации: раса + класс + фракция. Классы не повторяются.</div></div>
-                <div class="step-item"><div class="step-num">3</div><div>Напиши <code>!1</code>, <code>!2</code> или <code>!3</code>. На выбор 3 минуты.</div></div>
+                <div class="step-item"><div class="step-num">3</div><div>Напиши <code>!1</code>, <code>!2</code> или <code>!3</code> в течение 3 минут.</div></div>
                 <div class="step-item"><div class="step-num">4</div><div>Готово. <code>!инфо</code> — статы, <code>!бой</code> — в драку.</div></div>
             </div>
         </div>
 
-		<!-- 2. КОМАНДЫ -->
-		<div class="section gold" id="commands">
-			<div class="section-title">📋 Команды</div>
-			<div class="command-grid">
-				<div class="command-item">
-					<div class="command-name">!бой</div>
-					<div class="command-desc">Рейтинговая дуэль со случайным соперником. Награды, стата, стрики, фракционные очки.</div>
-				</div>
-				<div class="command-item">
-					<div class="command-name">!бой @ник</div>
-					<div class="command-desc">🤝 Товарищеский бой. Без наград и без влияния на статистику.</div>
-				</div>
-				<div class="command-item">
-					<div class="command-name">!инфо</div>
-					<div class="command-desc">Статистика героя. <code>!инфо @ник</code> — посмотреть чужого.</div>
-				</div>
-				<div class="command-item">
-					<div class="command-name">!данж</div>
-					<div class="command-desc">Подземелье — волны мобов, пассивки, артефакты.</div>
-				</div>
-				<div class="command-item">
-					<div class="command-name">!харакири</div>
-					<div class="command-desc">Удалить героя. Осколки и уровень сохраняются.</div>
-				</div>
-			</div>
-		</div>
+        <!-- 2. КОМАНДЫ -->
+        <div class="section gold" id="commands">
+            <div class="section-title">📋 Команды</div>
+            <p class="flavor">Все команды чата. ⚡ — только для стримера.</p>
 
-        <!-- 3. БОЕВАЯ СИСТЕМА -->
-        <div class="section gold" id="battle">
-            <div class="section-title">⚔️ Как проходит бой? Полная механика</div>
-            <div class="mech-grid">
-                <div class="mech-card"><div class="mech-title">⚡ Инициатива</div><div class="mech-body">Оба героя бросают d20 + DEX. У кого больше — ходит первым (⚡). При равенстве — случайно.</div></div>
-                <div class="mech-card"><div class="mech-title">🎯 Бросок атаки</div><div class="mech-body">d20 + ATK атакующего. Попадание если <strong>d20 + ATK ≥ 10 + DEF</strong> противника.</div></div>
-                <div class="mech-card"><div class="mech-title">❌ Критический промах</div><div class="mech-body">d20 = <strong>1</strong>. Атака провалена, урон 0.</div></div>
-                <div class="mech-card"><div class="mech-title">💨 Уклонение</div><div class="mech-body">d20 = <strong>2–6</strong>. Противник увернулся, атака не прошла.</div></div>
-                <div class="mech-card"><div class="mech-title">🛡️ Блок</div><div class="mech-body">d20 = <strong>7+</strong>. Броня выдержала удар. Урона нет.</div></div>
-                <div class="mech-card"><div class="mech-title">💥 Критический удар</div><div class="mech-body">d20 = <strong>20</strong>. Урон бросается дважды и суммируется.</div></div>
-                <div class="mech-card"><div class="mech-title">🛡️ Защита</div><div class="mech-body">Снижает урон на <strong>5% за каждое очко DEF</strong>. Минимум 1 урон всегда проходит.</div></div>
-                <div class="mech-card"><div class="mech-title">⏱ Завершение</div><div class="mech-body">Бой идёт пока у кого-то HP не упадёт до 0. Максимум <strong>20 раундов</strong>. При ничьей — побеждает тот у кого больше HP. При равенстве — случайно.</div></div>
+            <h3>🎮 Игровые</h3>
+            <div class="command-grid">
+                <div class="command-item">
+                    <div class="command-name">!бой</div>
+                    <div class="command-desc">Рейтинговая дуэль со случайным соперником. Награды, стата, стрики.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!бой @ник</div>
+                    <div class="command-desc">🤝 Товарищеский бой. Без наград и статистики.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!инфо</div>
+                    <div class="command-desc">Статы героя. <code>!инфо @ник</code> — посмотреть чужого.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!данж</div>
+                    <div class="command-desc">Вход в подземелье: волны, боссы, артефакты.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!харакири</div>
+                    <div class="command-desc">Сброс героя в архив. Осколки и уровень сохраняются.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!рега</div>
+                    <div class="command-desc">Запись в турнир. <code>!список</code> — участники, <code>!сетка</code> — пары.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!1 / !2 / !3</div>
+                    <div class="command-desc">Выбор героя при создании (3 минуты на ответ).</div>
+                </div>
+            </div>
+
+            <h3>⚡ Админские</h3>
+            <div class="command-grid">
+                <div class="command-item">
+                    <div class="command-name">!режим</div>
+                    <div class="command-desc">Переключение между обычным режимом и турнирным.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!лига</div>
+                    <div class="command-desc">Запуск Лиги Этерниса: 8 лучших Света против 8 Тьмы.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!резерв @ник</div>
+                    <div class="command-desc">Добавить/убрать из резерва турниров (до 15 мест).</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!воскресить @ник Имя</div>
+                    <div class="command-desc">Вернуть героя из архива. Слот должен быть пуст.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!перенос @старый @новый</div>
+                    <div class="command-desc">Перенос героя при смене ника на Twitch.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!сезон</div>
+                    <div class="command-desc">Сброс всей статистики. Герои и фракции сохраняются.</div>
+                </div>
+                <div class="command-item">
+                    <div class="command-name">!save / !логи</div>
+                    <div class="command-desc">Принудительное сохранение / логи последних боёв.</div>
+                </div>
             </div>
         </div>
 
-        <!-- 4. ЛОГИ -->
-        <div class="section gold" id="logs">
-            <div class="section-title">📝 Обозначения в логах</div>
+        <!-- 3. БОЕВАЯ СИСТЕМА -->
+        <div class="section gold" id="battle">
+            <div class="section-title">⚔️ Боевая система</div>
+            <p class="flavor">Два героя. Двадцать граней. Один победитель.</p>
+
+            <div class="mech-grid">
+                <div class="mech-card"><div class="mech-title">⚡ Инициатива</div><div class="mech-body">Оба бросают <strong>d20 + DEX</strong>. Победитель ходит первым и получает метку ⚡. При равенстве — случайно.</div></div>
+                <div class="mech-card"><div class="mech-title">🎯 Бросок атаки</div><div class="mech-body"><strong>d20 + ATK</strong>. Попадание если результат ≥ <strong>10 + DEF</strong> защитника.</div></div>
+                <div class="mech-card"><div class="mech-title">❌ Крит-промах</div><div class="mech-body">d20 = <strong>1</strong>. Полный провал, урон 0.</div></div>
+                <div class="mech-card"><div class="mech-title">💨 Уклонение</div><div class="mech-body">d20 ≤ <strong>2 + DEX</strong> защитника. Противник ушёл из-под удара, урон 0.</div></div>
+                <div class="mech-card"><div class="mech-title">🛡️ Блок</div><div class="mech-body">d20 > <strong>2 + DEX</strong> защитника, но атака не пробила броню. Урон 0.</div></div>
+                <div class="mech-card"><div class="mech-title">💥 Критический удар</div><div class="mech-body">d20 = <strong>20</strong>. Урон бросается <strong>дважды</strong> и суммируется (💥X).</div></div>
+                <div class="mech-card"><div class="mech-title">🛡️ Редукция урона</div><div class="mech-body">Каждое очко DEF снижает входящий урон на <strong>5%</strong>. Минимум — 1 урон.</div></div>
+                <div class="mech-card"><div class="mech-title">⏱ Ход боя</div><div class="mech-body">Атакующий → защитник → атакующий… До падения HP ≤ 0. Лимит — <strong>20 раундов</strong>. При ничьей побеждает тот, у кого больше HP. При равенстве — случайно.</div></div>
+            </div>
+
+            <h3>📝 Обозначения в логах</h3>
             <div class="table-container">
                 <table>
                     <thead><tr><th style="text-align:center;width:50px;">Символ</th><th>Значение</th></tr></thead>
                     <tbody>
-                        <tr><td style="text-align:center;">❌</td><td><strong>Крит-промах</strong> — на кубике 1. Атака провалена, урон 0</td></tr>
-                        <tr><td style="text-align:center;">💨</td><td><strong>Уклонение</strong> — на кубике 2–6, атака не прошла. Противник увернулся</td></tr>
-                        <tr><td style="text-align:center;">🛡️</td><td><strong>Блок</strong> на кубике 7+, но броня выдержала удар. Урона нет</td></tr>
-                        <tr><td style="text-align:center;">💥X</td><td><strong>Крит</strong> — на кубике 20. Урон брошен дважды, X — сумма</td></tr>
-                        <tr><td style="text-align:center;">X</td><td><strong>Обычный урон</strong></td></tr>
-                        <tr><td style="text-align:center;">0</td><td><strong>Не атаковал</strong> — бой завершился до хода</td></tr>
-                        <tr><td style="text-align:center;">⚡</td><td><strong>Ходил первым</strong></td></tr>
-                        <tr><td style="text-align:center;">🏆</td><td><strong>Победитель</strong></td></tr>
+                        <tr><td style="text-align:center;">⚡</td><td>Ходил первым (выиграл инициативу)</td></tr>
+                        <tr><td style="text-align:center;">❌</td><td>Крит-промах (d20 = 1)</td></tr>
+                        <tr><td style="text-align:center;">💨</td><td>Уклонение (d20 ≤ 2 + DEX защитника)</td></tr>
+                        <tr><td style="text-align:center;">🛡️</td><td>Блок (d20 > 2 + DEX защитника, но атака не попала)</td></tr>
+                        <tr><td style="text-align:center;">💥X</td><td>Критический удар (d20 = 20), X — сумма двух бросков</td></tr>
+                        <tr><td style="text-align:center;">X</td><td>Обычное попадание, X — итоговый урон после редукции DEF</td></tr>
+                        <tr><td style="text-align:center;">0</td><td>Не атаковал (бой завершился до хода)</td></tr>
+                        <tr><td style="text-align:center;">🏆</td><td>Победитель боя</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 5. ТУРНИР -->
+        <!-- 4. ТУРНИР -->
         <div class="section gold" id="tournament">
             <div class="section-title">👑 Турнир</div>
             <p class="flavor">16 бойцов. Один Хранитель. Проиграл — вылетел.</p>
-            <p><code>!рега</code> — записаться. <code>!список</code> — участники. <code>!сетка</code> — пары.</p>
-            <div class="reward-row"><span class="reward-act">Победа в турнирном бою</span><span class="reward-val">+4💎</span></div>
-            <div class="reward-row"><span class="reward-act">Поражение в турнирном бою</span><span class="reward-val">+2💎</span></div>
-            <div class="reward-row"><span class="reward-act">🏆 Чемпион</span><span class="reward-val">+10💎 + 👑 Хранитель Вечности + бонус к SKILL</span></div>
+
+            <div class="command-grid">
+                <div class="command-item"><div class="command-name">!рега</div><div class="command-desc">Записаться в турнир</div></div>
+                <div class="command-item"><div class="command-name">!список</div><div class="command-desc">Список участников</div></div>
+                <div class="command-item"><div class="command-name">!сетка</div><div class="command-desc">Пары текущего раунда</div></div>
+                <div class="command-item"><div class="command-name">!резерв @ник</div><div class="command-desc">⭐ Гарантированное место (админ, до 15)</div></div>
+            </div>
+
+            <h3>🏆 Награды</h3>
+            <div class="reward-row"><span class="reward-act">Победа в бою</span><span class="reward-val">+4💎</span></div>
+            <div class="reward-row"><span class="reward-act">Поражение в бою</span><span class="reward-val">+2💎</span></div>
+            <div class="reward-row"><span class="reward-act">👑 Чемпион</span><span class="reward-val">+10💎 + титул + бонус SKILL</span></div>
+
+            <p style="margin-top:12px; color: var(--sub); font-size: 0.82rem;">⚡ Автозапуск при 16 регистрациях. <code>!старт</code> — принудительно, <code>!добор</code> — заполнить случайными.</p>
         </div>
 
-        <!-- 6. ФРАКЦИИ -->
+        <!-- 5. ФРАКЦИИ -->
         <div class="section purple" id="faction">
             <div class="section-title">⚔️ Фракции</div>
-            <p class="flavor">Свет против Тьмы. Каждая дуэль — шаг к захвату земель.</p>
-            <p>Победа над вражеской фракцией: <span class="highlight">+4💎</span> (вместо +2). Каждые <span class="highlight">50 побед</span> = захват случайной территории.</p>
-            <div class="loc-list" style="margin-top:12px;">
+            <p class="flavor">Свет против Тьмы. Каждая битва меняет карту Этерниса.</p>
+
+            <div class="mech-grid">
+                <div class="mech-card"><div class="mech-title">🌝🌚 Бонус</div><div class="mech-body">Победа над вражеской фракцией: <span class="highlight">+4💎</span> (вместо +2).</div></div>
+                <div class="mech-card"><div class="mech-title">🏰 Захват</div><div class="mech-body">Каждые <span class="highlight">50 побед</span> — случайная территория из 5. Своя = удержание, чужая = захват.</div></div>
+            </div>
+
+            <h3>🗺️ Территории</h3>
+            <div class="loc-list">
                 <div class="locked">✨ Сияющий Шпиль · Вечно за Светом</div>
                 <div class="locked">🌫️ Зал Повествователя · Вечно за Тьмой</div>
                 <div>🌑 Эпицентр Раскола</div>
@@ -257,98 +316,108 @@
             </div>
         </div>
 
-        <!-- 7. ПОДЗЕМЕЛЬЕ -->
+        <!-- 6. ПОДЗЕМЕЛЬЕ -->
         <div class="section red" id="dungeon">
-			<div class="section-title">🩸 Разлом Бездны</div>
-			<p class="flavor">Большинство не возвращается. Но добыча того стоит.</p>
+            <div class="section-title">🩸 Разлом Бездны</div>
+            <p class="flavor">Большинство не возвращается. Но добыча того стоит.</p>
 
-			<h3>⚔️ Механика</h3>
-			<p><strong>Вход:</strong> <code>!данж</code>. Герой получает случайную <span class="highlight">пассивку</span> (одну из 12).</p>
-			<p><strong>Волны:</strong> бесконечные. Каждая 5-я — <span class="highlight">босс</span> (HP×1.5, ATK+2, DEF+1). После босса — <span class="highlight">полный отхил</span>.</p>
-			<p><strong>Отхил:</strong> 10 + волна×2 HP после обычной волны.</p>
-			<p><strong>Артефакты:</strong> шанс 35% после волны, 70% после босса. +2 к случайным статам, до +6 к базовым.</p>
-			<p><strong>Награда:</strong> +1💎 за каждые 3 волны. Босс даёт 1–3 трофея в копилку фракции.</p>
+            <h3>⚔️ Механика</h3>
+            <div class="mech-grid">
+                <div class="mech-card"><div class="mech-title">🚪 Вход</div><div class="mech-body"><code>!данж</code>. Случайная пассивка (из 12) + случайный фамильяр (из 9).</div></div>
+                <div class="mech-card"><div class="mech-title">🌊 Волны</div><div class="mech-body">Бесконечные. Каждая 5-я — <span class="highlight">босс</span> (HP×1.5, ATK+2, DEF+1).</div></div>
+                <div class="mech-card"><div class="mech-title">💚 Отхил</div><div class="mech-body">10 + волна×2 HP после волны. После босса — полный отхил.</div></div>
+                <div class="mech-card"><div class="mech-title">🎲 Артефакты</div><div class="mech-body">35% после волны, 70% после босса. +2 к статам, до +6 к базе.</div></div>
+                <div class="mech-card"><div class="mech-title">💰 Награда</div><div class="mech-body">+1💎 за 3 волны. Босс: 1–3 трофея в копилку фракции.</div></div>
+                <div class="mech-card"><div class="mech-title">💀 Смерть</div><div class="mech-body">HP = 0 → конец забега. Рекорд сохраняется.</div></div>
+            </div>
 
-			<h3>🌍 Пассивки (12 шт, одна случайная)</h3>
-			<div class="passive-grid">
-				<div class="passive-item"><strong>🩸 Вампиризм</strong> Ты высасываешь жизнь из врагов: +8 HP к лечению после каждой волны.</div>
-				<div class="passive-item"><strong>💫 Сияние</strong> Твой свет ослепляет боссов — они выходят на бой с −30% здоровья.</div>
-				<div class="passive-item"><strong>🔮 Отражение</strong> 20% шанс что враг получит половину своего же урона обратно.</div>
-				<div class="passive-item"><strong>⚔️ Святая ярость</strong> Твои атаки по боссам наносят дополнительные +4 урона. Священный гнев!</div>
-				<div class="passive-item"><strong>💢 Накопленная ярость</strong> Чем больнее тебя бьют — тем злее твоя ответка. Потерял HP → бьёшь сильнее.</div>
-				<div class="passive-item"><strong>👻 Призрачный щит</strong> 25% шанс стать бесплотным и полностью избежать вражеского удара.</div>
-				<div class="passive-item"><strong>🗡️ Казнь</strong> Раненый враг (HP < 25%) будет добит мгновенно. Без пощады.</div>
-				<div class="passive-item"><strong>✨ Благословение</strong> Высшие силы помогают: +10% к шансу найти артефакт после волны.</div>
-				<div class="passive-item"><strong>💚 Стойкость</strong> Твоя броня крепчает: +3 защиты на всё подземелье. Непробиваемый щит.</div>
-				<div class="passive-item"><strong>💥 Жажда крови</strong> Твои криты наносят дополнительный бросок урона. Три броска вместо двух.</div>
-				<div class="passive-item"><strong>🧿 Амулет Раскола</strong> Каждый 3-й удар по мобу наносит +50% урона. Ритм Бездны в твоей крови.</div>
-				<div class="passive-item"><strong>🎯 Метка Охотника</strong> Первый удар в каждой волне наносит двойной урон. Ты пришёл — ты попал.</div>
-			</div>
+            <h3>🐾 Фамильяры</h3>
+            <p>Один случайный питомец на забег. Бонус применяется к копии героя.</p>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Бонус</th><th>Фамильяры</th></tr></thead>
+                    <tbody>
+                        <tr><td>+1 ATK</td><td>🐺 Волк</td></tr>
+                        <tr><td>+1 DEX</td><td>🦅 Орёл, 🦊 Лиса</td></tr>
+                        <tr><td>+1 MIN</td><td>🐍 Змея, 🦝 Енот</td></tr>
+                        <tr><td>+1 MAX</td><td>🐲 Дракончик, 🦉 Сова</td></tr>
+                        <tr><td>+1 DEF</td><td>🐢 Черепаха</td></tr>
+                        <tr><td>+2 HP</td><td>🐻 Медведь</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🌿 Пассивки (12 шт)</h3>
+            <div class="passive-grid">
+                <div class="passive-item"><strong>🩸 Вампиризм</strong> +8 HP к лечению после каждой волны.</div>
+                <div class="passive-item"><strong>💫 Сияние</strong> Боссы выходят с −30% HP.</div>
+                <div class="passive-item"><strong>🔮 Отражение</strong> 20% шанс вернуть половину урона врагу.</div>
+                <div class="passive-item"><strong>⚔️ Святая ярость</strong> +4 урона по боссам.</div>
+                <div class="passive-item"><strong>💢 Накопленная ярость</strong> Потерял HP → бьёшь сильнее.</div>
+                <div class="passive-item"><strong>👻 Призрачный щит</strong> 25% шанс избежать урона полностью.</div>
+                <div class="passive-item"><strong>🗡️ Казнь</strong> Добивание при HP врага < 25%.</div>
+                <div class="passive-item"><strong>✨ Благословение</strong> +10% к шансу найти артефакт.</div>
+                <div class="passive-item"><strong>💚 Стойкость</strong> +3 DEF на весь забег.</div>
+                <div class="passive-item"><strong>💥 Жажда крови</strong> Крит = три броска урона вместо двух.</div>
+                <div class="passive-item"><strong>🧿 Амулет Раскола</strong> Каждый 3-й удар +50% урона.</div>
+                <div class="passive-item"><strong>🎯 Метка Охотника</strong> Первый удар в волне — двойной урон.</div>
+            </div>
 
             <h3>🎲 Артефакты</h3>
             <div class="table-container">
                 <table>
                     <thead><tr><th>Артефакт</th><th>Эффект</th></tr></thead>
                     <tbody>
-                        <tr><td>☀️ <strong>Осколок Солнечного Клинка</strong></td><td>+2 ATK и +2 DEX</td></tr>
-                        <tr><td>🌫️ <strong>Плащ Повествовательницы</strong></td><td>+2 DEF и +2 MAX</td></tr>
-                        <tr><td>💍 <strong>Кольцо Аэлиона</strong></td><td>+2 ATK и +2 DEF</td></tr>
-                        <tr><td>🔮 <strong>Руна Раскола</strong></td><td>+2 MIN и +2 MAX</td></tr>
-                        <tr><td>🍺 <strong>Пиво ГуангГуанга</strong></td><td>Полное исцеление до максимума</td></tr>
-                        <tr><td>💀 <strong>Проклятие Бездны</strong></td><td>Случайный дебафф: -1 ATK, -1 DEF, -2 MIN/MAX, или -10 HP</td></tr>
+                        <tr><td>☀️ Осколок Солнечного Клинка</td><td>+2 ATK, +2 DEX</td></tr>
+                        <tr><td>🌫️ Плащ Повествовательницы</td><td>+2 DEF, +2 MAX</td></tr>
+                        <tr><td>💍 Кольцо Аэлиона</td><td>+2 ATK, +2 DEF</td></tr>
+                        <tr><td>🔮 Руна Раскола</td><td>+2 MIN, +2 MAX</td></tr>
+                        <tr><td>🍺 Пиво ГуангГуанга</td><td>Полное исцеление</td></tr>
+                        <tr><td>💀 Проклятие Бездны</td><td>Случайный дебафф</td></tr>
                     </tbody>
                 </table>
             </div>
-			
-			<h3>🐾 Фамильяры</h3>
-			<p>Каждый заход в подземелье — с вами случайный питомец. Даёт бонус только на этот забег.</p>
-			<div class="table-container">
-				<table>
-					<thead><tr><th>Бонус</th><th>Фамильяры</th></tr></thead>
-					<tbody>
-						<tr><td>+1 ATK</td><td>🐺 Волк</td></tr>
-						<tr><td>+1 DEX</td><td>🦅 Орёл / 🦊 Лиса</td></tr>
-						<tr><td>+1 MIN</td><td>🐍 Змея / 🦝 Енот</td></tr>
-						<tr><td>+1 MAX</td><td>🐲 Дракончик / 🦉 Сова</td></tr>
-						<tr><td>+1 DEF</td><td>🐢 Черепаха</td></tr>
-						<tr><td>+2 HP</td><td>🐻 Медведь</td></tr>
-					</tbody>
-				</table>
-			</div>
 
-			<h3>🐉 Статы мобов</h3>
-			<p>Обычный моб: <strong>HP = 15 + волна×8</strong> (+5 с 6 волны), <strong>ATK = 1 + волна/3</strong>, <strong>DEF = волна/5</strong>. Босс: HP×1.5, ATK+2, DEF+1.</p>
-			<div class="table-container">
-				<table>
-					<thead><tr><th>Волны</th><th>HP</th><th>ATK</th><th>DEF</th></tr></thead>
-					<tbody>
-						<tr><td>1–4</td><td>23–47</td><td>1–2</td><td>0</td></tr>
-						<tr style="background:rgba(240,185,11,0.08);"><td><strong>5 🐉</strong></td><td><strong>82</strong></td><td><strong>4</strong></td><td><strong>2</strong></td></tr>
-						<tr><td>6–9</td><td>68–107</td><td>3–4</td><td>1</td></tr>
-						<tr style="background:rgba(240,185,11,0.08);"><td><strong>10 🐉</strong></td><td><strong>180</strong></td><td><strong>6</strong></td><td><strong>3</strong></td></tr>
-						<tr><td>11–14</td><td>133–172</td><td>4–5</td><td>2</td></tr>
-						<tr style="background:rgba(240,185,11,0.08);"><td><strong>15 🐉</strong></td><td><strong>277</strong></td><td><strong>8</strong></td><td><strong>4</strong></td></tr>
-						<tr><td>16–19</td><td>198–235</td><td>6–7</td><td>3</td></tr>
-						<tr style="background:rgba(240,185,11,0.08);"><td><strong>20 🐉</strong></td><td><strong>375</strong></td><td><strong>9</strong></td><td><strong>5</strong></td></tr>
-						<tr><td>21–24</td><td>263–300</td><td>8–9</td><td>4</td></tr>
-						<tr style="background:rgba(240,185,11,0.08);"><td><strong>25 🐉</strong></td><td><strong>472</strong></td><td><strong>11</strong></td><td><strong>6</strong></td></tr>
-					</tbody>
-				</table>
-			</div>
+            <h3>🐉 Статы мобов</h3>
+            <p>Обычный: <strong>HP = 15 + волна×8</strong>, <strong>ATK = 1 + волна/3</strong>, <strong>DEF = волна/5</strong>. Босс: HP×1.5, ATK+2, DEF+1.</p>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Волны</th><th>HP</th><th>ATK</th><th>DEF</th></tr></thead>
+                    <tbody>
+                        <tr><td>1–4</td><td>23–47</td><td>1–2</td><td>0</td></tr>
+                        <tr class="boss-row"><td><strong>5 🐉</strong></td><td><strong>82</strong></td><td><strong>4</strong></td><td><strong>2</strong></td></tr>
+                        <tr><td>6–9</td><td>68–107</td><td>3–4</td><td>1</td></tr>
+                        <tr class="boss-row"><td><strong>10 🐉</strong></td><td><strong>180</strong></td><td><strong>6</strong></td><td><strong>3</strong></td></tr>
+                        <tr><td>11–14</td><td>133–172</td><td>4–5</td><td>2</td></tr>
+                        <tr class="boss-row"><td><strong>15 🐉</strong></td><td><strong>277</strong></td><td><strong>8</strong></td><td><strong>4</strong></td></tr>
+                        <tr><td>16–19</td><td>198–235</td><td>6–7</td><td>3</td></tr>
+                        <tr class="boss-row"><td><strong>20 🐉</strong></td><td><strong>375</strong></td><td><strong>9</strong></td><td><strong>5</strong></td></tr>
+                        <tr><td>21–24</td><td>263–300</td><td>8–9</td><td>4</td></tr>
+                        <tr class="boss-row"><td><strong>25 🐉</strong></td><td><strong>472</strong></td><td><strong>11</strong></td><td><strong>6</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- 8. ОСКОЛКИ -->
+        <!-- 7. ОСКОЛКИ -->
         <div class="section gold" id="shards">
             <div class="section-title">💎 Осколки и уровни</div>
-            <p class="flavor">Валюта прогресса. Не сгорают при <code>!харакири</code>. Копятся вечно.</p>
-            <div class="reward-row"><span class="reward-act">🏆 Победа в дуэли</span><span class="reward-val">+2</span></div>
-            <div class="reward-row"><span class="reward-act">💔 Поражение в дуэли</span><span class="reward-val">+1</span></div>
+            <p class="flavor">Валюта прогресса. Сохраняются при <code>!харакири</code>. Сбрасываются при <code>!сезон</code>.</p>
+
+            <h3>📊 Награды</h3>
+            <div class="reward-row"><span class="reward-act">🏆 Победа в рейтинговой дуэли</span><span class="reward-val">+2</span></div>
+            <div class="reward-row"><span class="reward-act">💔 Поражение в рейтинговой дуэли</span><span class="reward-val">+1</span></div>
             <div class="reward-row"><span class="reward-act">🌝🌚 Победа над вражеской фракцией</span><span class="reward-val">+4</span></div>
-            <div class="reward-row"><span class="reward-act">⚔️ Турнирный бой (победа / поражение)</span><span class="reward-val">+4 / +2</span></div>
+            <div class="reward-row"><span class="reward-act">⚔️ Турнир: победа / поражение</span><span class="reward-val">+4 / +2</span></div>
             <div class="reward-row"><span class="reward-act">👑 Чемпион турнира</span><span class="reward-val">+10</span></div>
             <div class="reward-row"><span class="reward-act">🩸 Подземелье (за 3 волны)</span><span class="reward-val">+1</span></div>
+            <div class="reward-row" style="opacity:0.5;"><span class="reward-act">🤝 Товарищеский бой</span><span class="reward-val">0</span></div>
+
             <h3>📈 Рост уровня</h3>
-            <p>До 10 уровня каждый шаг дороже на 5💎: <span class="highlight">5, 15, 30, 50, 75, 105, 140, 180, 225, 275</span>. С 11 уровня — ровно <span class="highlight">+10💎</span> за каждый уровень. Максимума нет.</p>
+            <div class="mech-grid">
+                <div class="mech-card"><div class="mech-title">Уровни 1–10</div><div class="mech-body">Каждый шаг дороже на 5💎:<br>5, 15, 30, 50, 75, 105, 140, 180, 225, 275</div></div>
+                <div class="mech-card"><div class="mech-title">Уровни 11+</div><div class="mech-body">Ровно +10💎 за уровень.<br>Максимума нет.</div></div>
+            </div>
         </div>
     </div>
 
