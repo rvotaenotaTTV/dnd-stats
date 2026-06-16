@@ -6,111 +6,95 @@
     <title>Лор</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-    :root {
-        --bg-primary: #0a0e17; --bg-secondary: #111827; --bg-elevated: #1a2332; --bg-card: #152028;
-        --text-primary: #e8edf3; --text-secondary: #9ca3af; --text-muted: #6b7280;
-        --border-subtle: rgba(255,255,255,0.08); --gold: #f0b90b; --gold-light: #ffd700;
-        --purple: #a371f7; --red: #ef4444; --green: #10b981; --dwarf: #c0c0c0; --tabaxi: #5cd6c4;
-        --shadow-lg: 0 20px 40px rgba(0,0,0,0.4); --shadow-gold: 0 4px 12px rgba(240,185,11,0.3);
-        --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
-        --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
-    }
-	[data-theme="light"] {
-		--bg-primary: #f7f2eb; --bg-secondary: #efe8dc; --bg-elevated: #fbf8f3; --bg-card: #fefcf8;
-		--text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #6b7280;
-		--border-subtle: rgba(0,0,0,0.08); --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
-		--gold: #b8860b; --purple: #7b5ea7; --red: #c0392b; --green: #27ae60;
-		--dwarf: #4a3728; --tabaxi: #3a9d8f;
-	}
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg-primary); background-image: radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 20%, rgba(163,113,247,0.05) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(255,215,0,0.02) 0%, transparent 40%); color: var(--text-primary); min-height: 100vh; line-height: 1.6; transition: background 0.25s,color 0.25s; -webkit-font-smoothing: antialiased; }
-    .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 48px; }
-    .header { text-align: center; padding: 32px 0 20px; position: relative; }
-    .header-title { font-size: clamp(2rem,5vw,2.8rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#ffd700 0%,#f0a500 30%,#ffd700 60%,#f0a500 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 24px rgba(255,215,0,0.3)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
-    @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
-    .header-subtitle { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
-    .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-secondary); padding: 8px 12px; border-radius: var(--radius-xl); cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: var(--transition); }
-    .theme-toggle:hover { background: var(--bg-secondary); color: var(--gold); border-color: var(--gold); }
-    .nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
-    .nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; font-family: inherit; transition: var(--transition); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    .nav-toggle:hover { border-color: var(--gold); }
-    .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); box-shadow: var(--shadow-lg); backdrop-filter: blur(10px); }
-    .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: var(--transition); white-space: nowrap; }
-    .nav-link:hover { color: var(--text-primary); background: var(--bg-elevated); transform: translateY(-1px); }
-    .nav-link.active { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; font-weight: 700; box-shadow: var(--shadow-gold); }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06040a; --card: #0e0a14; --elevated: #140c1a;
+            --text: #e8ddf0; --sub: #8a7d94; --muted: #5e5268;
+            --border: rgba(180,100,140,0.15);
+            --gold: #f0b90b; --red: #e85d3a; --purple: #a371f7;
+            --dwarf: #c0c0c0; --tabaxi: #5cd6c4;
+            --radius: 16px; --radius-sm: 10px;
+        }
+        [data-theme="light"] {
+            --bg: #f7f2eb; --card: #fefcf8; --elevated: #fbf8f3;
+            --text: #2d1a1a; --sub: #6b4e4e; --muted: #8b6b6b;
+            --border: rgba(180,80,60,0.12);
+            --gold: #b8860b; --red: #a03020; --purple: #7b5ea7;
+            --dwarf: #4a3728; --tabaxi: #3a9d8f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+        body { font-family: 'Inter',system-ui,sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 0%, rgba(200,40,40,0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(163,113,247,0.04) 0%, transparent 50%); color: var(--text); min-height: 100vh; line-height: 1.5; }
+        .container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
 
-    .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; position: relative; overflow: hidden; animation: fadeSlideIn 0.4s ease; }
-    .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
-    .card-title { font-size: 1.2rem; font-weight: 700; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle); }
-    .card p { line-height: 1.7; margin-bottom: 10px; color: var(--text-secondary); font-size: 0.9rem; }
-    .highlight { color: var(--gold); font-weight: 600; }
-    .text-light { color: var(--gold); font-weight: 600; }
-    .text-dark { color: var(--purple); font-weight: 600; }
-    .text-muted { color: var(--text-muted); }
+        .header { text-align: center; padding: 32px 0 8px; position: relative; }
+        .header-title { font-size: clamp(2.2rem,6vw,3.2rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#8b0000 0%,#e85d3a 40%,#ffd700 70%,#e85d3a 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(232,93,58,0.5)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
+        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+        .header-subtitle { font-size: 0.9rem; color: var(--red); font-weight: 500; letter-spacing: 0.04em; }
+        .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
+        .theme-toggle:hover { background: var(--card); color: var(--red); border-color: var(--red); }
 
-    .lore-block { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 18px; margin-bottom: 12px; border-left: 3px solid var(--gold); font-style: italic; line-height: 1.7; color: var(--text-secondary); font-size: 0.9rem; animation: fadeSlideIn 0.3s ease; }
+        .nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
+        .nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; }
+        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
+        .nav-link { padding: 8px 14px; border-radius: 20px; color: var(--sub); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: 0.2s; }
+        .nav-link:hover { color: var(--text); background: var(--elevated); }
+        .nav-link.active { background: linear-gradient(135deg,var(--red),var(--gold)); color: #000; font-weight: 700; }
 
-    .faction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .faction-card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 20px; border: 2px solid var(--border-subtle); animation: fadeSlideIn 0.3s ease; }
-    .faction-card.light { border-color: rgba(255,215,0,0.3); }
-    .faction-card.dark { border-color: rgba(163,113,247,0.3); }
-    .faction-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
-    .faction-card.light h4 { color: var(--gold); }
-    .faction-card.dark h4 { color: var(--purple); }
-    .faction-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
-    .faction-quote { background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); padding: 12px 14px; margin: 10px 0; font-style: italic; font-size: 0.85rem; border-left: 3px solid; }
-    .faction-card.light .faction-quote { border-color: var(--gold); color: var(--gold); }
-    .faction-card.dark .faction-quote { border-color: var(--purple); color: var(--purple); }
+        .section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .section::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.6; }
+        .section.gold::after { background: linear-gradient(90deg,transparent,var(--gold),transparent); }
+        .section.purple::after { background: linear-gradient(90deg,transparent,var(--purple),transparent); }
+        .section.red::after { background: linear-gradient(90deg,transparent,var(--red),transparent); }
+        .section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .section.gold .section-title { color: var(--gold); }
+        .section.purple .section-title { color: var(--purple); }
+        .section.red .section-title { color: var(--red); }
+        .section h3 { color: var(--gold); font-size: 0.9rem; font-weight: 700; margin: 18px 0 8px; }
+        .section p { color: var(--sub); font-size: 0.85rem; line-height: 1.65; margin-bottom: 8px; }
+        .flavor { font-style: italic; color: var(--muted); }
 
-    .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); margin-top: 12px; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-    th { background: var(--bg-elevated); color: var(--gold); font-weight: 700; padding: 10px 14px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--border-subtle); }
-    td { padding: 9px 14px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); }
-    tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
-    tbody tr:nth-child(1) { animation-delay: 0.02s; } tbody tr:nth-child(2) { animation-delay: 0.04s; } tbody tr:nth-child(3) { animation-delay: 0.06s; }
-    tbody tr:nth-child(4) { animation-delay: 0.08s; } tbody tr:nth-child(5) { animation-delay: 0.10s; } tbody tr:nth-child(6) { animation-delay: 0.12s; }
-    tbody tr:nth-child(7) { animation-delay: 0.14s; } tbody tr:nth-child(8) { animation-delay: 0.16s; } tbody tr:nth-child(9) { animation-delay: 0.18s; }
-    tbody tr:nth-child(10) { animation-delay: 0.20s; } tbody tr:nth-child(11) { animation-delay: 0.22s; } tbody tr:nth-child(12) { animation-delay: 0.24s; }
-    tbody tr:nth-child(13) { animation-delay: 0.26s; } tbody tr:nth-child(14) { animation-delay: 0.28s; }
-    tr:hover td { background: rgba(255,255,255,0.02); }
-    .hero-table td:first-child { font-weight: 600; }
-    .hero-table td:last-child { text-align: center; width: 44px; }
+        .table-container { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { background: var(--elevated); color: var(--gold); font-weight: 700; padding: 8px 10px; text-align: left; font-size: 0.7rem; text-transform: uppercase; }
+        td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+        tr:hover td { background: rgba(255,255,255,0.02); }
 
-    .cta-block { text-align: center; padding: 10px 0; }
-    .cta-block p { font-size: 1rem; color: var(--text-primary); }
-    .cta-block .big-text { font-size: 1.3rem; color: var(--gold); font-weight: 700; margin-top: 12px; }
+        .faction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+        .faction-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 18px; border: 1px solid var(--border); }
+        .faction-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+        .faction-card p { font-size: 0.82rem; color: var(--sub); line-height: 1.6; margin-bottom: 6px; }
+        .faction-quote { font-style: italic; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 0.85rem; background: rgba(0,0,0,0.15); }
+        .faction-card.light .faction-quote { border-left: 3px solid var(--gold); color: var(--gold); }
+        .faction-card.dark .faction-quote { border-left: 3px solid var(--purple); color: var(--purple); }
 
-    .beer-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: linear-gradient(135deg,#f0b90b,#e0a800); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.4); z-index: 998; transition: all 0.3s ease; animation: float 3s ease-in-out infinite; }
-    .beer-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(240,185,11,0.6); background: linear-gradient(135deg,#ffd700,#f0b90b); }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        .lore-block { background: var(--elevated); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 8px; font-style: italic; line-height: 1.7; color: var(--sub); font-size: 0.85rem; border-left: 3px solid var(--border); transition: box-shadow 0.3s; }
 
-    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeInRow { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
-	
-	::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-primary); }
-    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #ffd700; }
-    * { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }	
+        .shard-box { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px; min-height: 180px; text-align: center; cursor: pointer; transition: 0.2s; user-select: none; }
+        .shard-box:hover { border-color: var(--gold); }
 
-    @media (max-width: 768px) {
-        .container { padding: 12px 14px 32px; }
-        .header { padding: 20px 0 12px; }
-        .header-title { font-size: 1.8rem; }
-        .theme-toggle { position: static; transform: none; margin-top: 12px; width: 100%; }
-        .card { padding: 18px 14px; border-radius: var(--radius-md); }
-        .nav-toggle { display: block; }
-        .nav-bar { display: none; flex-direction: column; gap: 2px; margin-top: 8px; padding: 4px; }
-        .nav-bar.show { display: flex; }
-        .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
-        .faction-grid { grid-template-columns: 1fr; }
-        table { font-size: 0.7rem; }
-        th, td { padding: 8px 10px; }
-        .beer-btn { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 1.3rem; }
-    }
-</style>
+        .beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.3); z-index: 99; transition: transform 0.2s; }
+        .beer-btn:hover { transform: scale(1.1); }
+
+        .cta-block { text-align: center; padding: 10px 0; }
+        .cta-block p { font-size: 0.9rem; color: var(--sub); }
+        .cta-block .big-text { font-size: 1.2rem; color: var(--gold); font-weight: 700; margin-top: 12px; }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px 14px 80px; }
+            .header { padding: 20px 0 8px; }
+            .header-title { font-size: 1.8rem; }
+            .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
+            .nav-toggle { display: block; }
+            .nav-bar { display: none; flex-direction: column; margin-top: 8px; }
+            .nav-bar.show { display: flex; }
+            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
+            .faction-grid { grid-template-columns: 1fr; }
+            .section { padding: 18px 14px; }
+            .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -135,12 +119,13 @@
                 <a href="tavern.html" class="nav-link">🍺 Таверна</a>
                 <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
                 <a href="league.html" class="nav-link">🏟 Лига</a>
+				<a href="form.html" class="nav-link">🔥 Форма</a>
                 <a href="player.html" class="nav-link">👤 Профиль</a>
             </nav>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">🌍 Мир Этернис</h2>
+        <div class="section gold">
+            <div class="section-title">🌍 Мир Этернис</div>
             <div class="table-container">
                 <table>
                     <thead><tr><th>Название</th><th>Описание</th></tr></thead>
@@ -153,19 +138,19 @@
             </div>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">📖 Предыстория</h2>
+        <div class="section gold">
+            <div class="section-title">📖 Предыстория</div>
             <div class="lore-block">
                 <p>Мир Этернис раскололся после падения Солнечного Клинка — древнего артефакта, который тысячелетия удерживал равновесие между Светом и Тьмой. Осколки Клинка разлетелись по всему миру, наделяя смертных невиданной силой. Те, кто нашли эти осколки, стали первыми героями — и первыми врагами.</p>
                 <p style="margin-top: 12px;">Так началась эпоха Вечной Дуэли.</p>
             </div>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">⚔️ Фракции</h2>
+        <div class="section purple">
+            <div class="section-title">⚔️ Фракции</div>
             <div class="faction-grid">
                 <div class="faction-card light">
-                    <h4>🌝 Орден Света</h4>
+                    <h4 style="color:var(--gold);">🌝 Орден Света</h4>
                     <div class="faction-quote">«Свет во тьме — не угаснет никогда»</div>
                     <p>Орден был основан паладином Аэлионом, первым, кто поднял осколок Солнечного Клинка над головой и поклялся защищать слабых. Сегодня Орден — это рыцари, жрецы и маги, которые верят, что сила должна служить добру. Их цитадель — Сияющий Шпиль — стоит на месте падения Клинка.</p>
                     <p>Аэлион не проиграл ни одной дуэли. Но и не убил ни одного врага. Все, кто сражался с ним, оставались живы. Некоторые даже присоединялись к Ордену.</p>
@@ -173,7 +158,7 @@
                     <p style="font-style: italic;">«Сила — это ответственность. Мы не прячемся во тьме, мы освещаем её.»</p>
                 </div>
                 <div class="faction-card dark">
-                    <h4>🌚 Культ Тьмы</h4>
+                    <h4 style="color:var(--purple);">🌚 Культ Тьмы</h4>
                     <div class="faction-quote">«Истинная сила рождается в тени»</div>
                     <p>Никто не знает имени основателя Культа. Говорят, это был маг, который первым понял, что осколки Клинка можно не только подчинить, но и сломать, вырвав из них ещё больше силы. Его называют Повествователем — он наблюдал за Битвой Раскола и ушёл в тень, когда Аэлион шагнул в центр раскола.</p>
                     <p>Он никогда не сражался сам. Вместо этого он находил тех, кто сразится за него. Никто не знает, сколько у него было учеников. Говорят, десятки. Говорят, сотни.</p>
@@ -183,126 +168,126 @@
             </div>
         </div>
 
-		<div class="card">
-			<h2 class="card-title">🌍 Расы Этерниса</h2>
+		<div class="section gold">
+			<div class="section-title">🌍 Расы Этерниса</div>
 			<div class="faction-grid">
 				<div class="faction-card light">
-					<h4>🧑 Люди</h4>
+					<h4 style="color:var(--gold);">🧑 Люди</h4>
 					<div class="faction-quote">«Мы не помним мир целым. Мы построим новый.»</div>
 					<p>Самая молодая раса. Они не видели Этернис до Раскола — но именно поэтому они бесстрашны. У них нет клыков орков, памяти камня дворфов, вечности эльфов. Только воля. Аэлион был человеком. Этого достаточно.</p>
 				</div>
 				<div class="faction-card light">
-					<h4>👹 Орки</h4>
+					<h4 style="color:var(--gold);">👹 Орки</h4>
 					<div class="faction-quote">«Шрамы — летопись воина. Покажи свои.»</div>
 					<p>Горные кланы, чтившие только силу. Когда осколки упали на их пики — в их крови проснулась не слепая ярость, а холодная, как сталь на морозе. Орк не убьёт слабого. Он дождётся пока слабый станет сильным — и вызовет его на бой.</p>
 				</div>
 				<div class="faction-card dark">
-					<h4>💀 Нежить</h4>
+					<h4 style="color:var(--purple);">💀 Нежить</h4>
 					<div class="faction-quote">«Смерть — не конец. Смерть — начало слушания.»</div>
 					<p>Осколки упали так глубоко, что разбудили тех, кто покоился веками. Нежить помнит свою прошлую жизнь, но видит мир иначе — слышит голоса таких же воскресших. Они не боятся смерти. Они её пережили.</p>
 				</div>
 				<div class="faction-card dark">
-					<h4>🧝 Эльфы</h4>
+					<h4 style="color:var(--purple);">🧝 Эльфы</h4>
 					<div class="faction-quote">«Лес помнит. Лес ждёт. Лес решает.»</div>
 					<p>Древнейшая раса. Их глаза видели Клинок в небе. Когда осколки пробили кроны — деревья впитали магию, а эльфы услышали дыхание леса. Они не выбирают сторону. Они защищают корни.</p>
 				</div>
 				<div class="faction-card dark">
-					<h4>😈 Тифлинги</h4>
+					<h4 style="color:var(--purple);">😈 Тифлинги</h4>
 					<div class="faction-quote">«Наша кровь — не проклятие. Это наследие.»</div>
 					<p>Когда Клинок раскололся, самые глубокие осколки пробили не только землю — они пробили границу между мирами. Оттуда, из Бездны, пришли они — потомки древнего союза смертных и демонов. Их кровь горяча, как магма, а рога помнят форму первого осколка.</p>
 					<p>Их не ждали. Их боялись. Но когда первый Тифлинг поднял осколок — Бездна заговорила с ним. Не как с хозяином. Как с равным.</p>
 				</div>
 				<div class="faction-card" style="border-color: var(--dwarf);">
 					<h4 style="color: var(--dwarf);">🧔 Дворфы</h4>
-					<div class="faction-quote" style="border-color: var(--dwarf); color: var(--dwarf);">«Пламя не спрашивает разрешения. Оно просто горит.»</div>
+					<div class="faction-quote" style="border-left-color: var(--dwarf); color: var(--dwarf);">«Пламя не спрашивает разрешения. Оно просто горит.»</div>
 					<p>Пока мир рушился, дворфы ушли под землю и начали собирать осколки. Кузня Расколотых — их сердце. Молоты бьют сами по себе. Горны не гаснут никогда. Дворф не спросит зачем ты пришёл — он спросит что ты умеешь делать руками.</p>
 				</div>
 				<div class="faction-card" style="border-color: var(--tabaxi);">
 					<h4 style="color: var(--tabaxi);">🐱 Табакси</h4>
-					<div class="faction-quote" style="border-color: var(--tabaxi); color: var(--tabaxi);">«Любопытство не порок. Это инстинкт.»</div>
+					<div class="faction-quote" style="border-left-color: var(--tabaxi); color: var(--tabaxi);">«Любопытство не порок. Это инстинкт.»</div>
 					<p>Когда осколки упали, табакси не стали воевать за них — они начали их коллекционировать. Кошачий народ появился из ниоткуда: никто не помнит их до Раскола. Они быстрее ветра, проворнее тени, и всегда приземляются на четыре лапы. Табакси не выбирают сторону. Они выбирают интерес.</p>
 				</div>
 			</div>
-			<p class="text-muted" style="margin-top: 8px;">Люди и Орки тяготеют к Свету. Нежить, Эльфы и Тифлинги — к Тьме. Дворфы и Табакси — посередине.</p>
+			<p style="margin-top: 8px; font-size: 0.8rem; color: var(--muted);">Люди и Орки тяготеют к Свету. Нежить, Эльфы и Тифлинги — к Тьме. Дворфы и Табакси — посередине.</p>
 		</div>
 
-		<div class="card">
-			<h2 class="card-title">🗺️ Места силы</h2>
-			    <p style="margin-bottom: 12px;">Семь земель Этерниса, за которые сражаются фракции. Сияющий Шпиль и Зал Повествователя непоколебимы. Остальные земли переходят из рук в руки — дуэли решают всё.</p>
+		<div class="section gold">
+			<div class="section-title">🗺️ Места силы</div>
+			<p style="margin-bottom: 12px; color: var(--sub); font-size: 0.85rem;">Семь земель Этерниса, за которые сражаются фракции. Сияющий Шпиль и Зал Повествователя непоколебимы. Остальные земли переходят из рук в руки — дуэли решают всё.</p>
 			<div class="lore-block" id="loc-spires" style="border-left: 3px solid var(--gold);">
 				<p><strong>✨ Сияющий Шпиль</strong> — цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё теплый.</p>
 			</div>
 			<div class="lore-block" id="loc-hall" style="border-left: 3px solid var(--purple);">
 				<p><strong>🌫️ Зал Повествователя</strong> — тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</p>
 			</div>
-			<div class="lore-block" id="loc-arena" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-arena">
 				<p><strong>🎭 Арена Тысячи Эхо</strong> — легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.</p>
 			</div>
-			<div class="lore-block" id="loc-epicenter" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-epicenter">
 				<p><strong>🌑 Эпицентр Раскола</strong> — место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул вниз — и открыл путь в Бездну.</p>
 			</div>
-			<div class="lore-block" id="loc-field" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-field">
 				<p><strong>🗡️ Поле Павшего Клинка</strong> — земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.</p>
 			</div>
-			<div class="lore-block" id="loc-forge" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-forge">
 				<p><strong>🔥 Кузня Расколотых</strong> — здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.</p>
 			</div>
-			<div class="lore-block" id="loc-port" style="border-left: 3px solid var(--border-subtle);">
+			<div class="lore-block" id="loc-port">
 				<p><strong>⚓ Порт Дрейфующих</strong> — единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Порт не принадлежит ни Свету, ни Тьме. Здесь правят Любопытство и Случай.</p>
 			</div>
 		</div>
 
-        <div class="card">
-            <h2 class="card-title">✨ Герои и осколки</h2>
-            <p style="margin-bottom: 12px;">Каждый класс — это путь, которым осколок проявился в герое:</p>
+        <div class="section gold">
+            <div class="section-title">✨ Герои и осколки</div>
+            <p style="margin-bottom: 12px; color: var(--sub); font-size: 0.85rem;">Каждый класс — это путь, которым осколок проявился в герое:</p>
             <div class="table-container">
-                <table class="hero-table">
-                    <thead><tr><th>Класс</th><th>Как осколок изменил героя</th><th>⚔</th></tr></thead>
+                <table>
+                    <thead><tr><th>Класс</th><th>Как осколок изменил героя</th><th style="text-align:center;width:44px;">⚔</th></tr></thead>
                     <tbody>
-                        <tr><td>🔮 Чародей</td><td>Осколок прожёг плоть, открыв канал к чистой магии</td><td>🌚</td></tr>
-                        <tr><td>✨ Волшебница</td><td>Осколок слился с душой, дав контроль над стихиями</td><td>🌝</td></tr>
-                        <tr><td>🗡️ Плут</td><td>Осколок спрятался в тени, научив двигаться незаметно</td><td>🌚</td></tr>
-                        <tr><td>🦴 Некромант</td><td>Осколок коснулся мёртвых — герой слышит их голоса</td><td>🌚</td></tr>
-                        <tr><td>🏹 Следопыт</td><td>Осколок стал частью леса — герой чувствует каждый лист</td><td>🌝</td></tr>
-                        <tr><td>🥋 Монах</td><td>Осколок поселился в теле, закалив его до предела</td><td>🌝</td></tr>
-                        <tr><td>👁️ Колдун</td><td>Осколок шепчет древние знания</td><td>🌚</td></tr>
-                        <tr><td>⚔️ Воин</td><td>Осколок укрепил мышцы и кости — живой щит</td><td>🌝</td></tr>
-                        <tr><td>🛡️ Паладин</td><td>Осколок загорелся светом — герой поклялся защищать</td><td>🌝</td></tr>
-                        <tr><td>🪓 Варвар</td><td>Осколок пробудил ярость — герой едва сдерживает гнев</td><td>🌚</td></tr>
-                        <tr><td>🌿 Друид</td><td>Осколок пустил корни — герой чувствует боль земли</td><td>🌝</td></tr>
-                        <tr><td>✝️ Жрец</td><td>Осколок зазвучал как молитва — герой слышит богов</td><td>🌝</td></tr>
-                        <tr><td>🎸 Бард</td><td>Осколок запел — герой меняет реальность песней</td><td>🌚</td></tr>
-                        <tr><td>⚙️ Изобретатель</td><td>Осколок вплавился в механизмы — создаёт невозможное</td><td>🌚</td></tr>
+                        <tr><td>🔮 Чародей</td><td>Осколок прожёг плоть, открыв канал к чистой магии</td><td style="text-align:center;">🌚</td></tr>
+                        <tr><td>✨ Волшебница</td><td>Осколок слился с душой, дав контроль над стихиями</td><td style="text-align:center;">🌝</td></tr>
+                        <tr><td>🗡️ Плут</td><td>Осколок спрятался в тени, научив двигаться незаметно</td><td style="text-align:center;">🌚</td></tr>
+                        <tr><td>🦴 Некромант</td><td>Осколок коснулся мёртвых — герой слышит их голоса</td><td style="text-align:center;">🌚</td></tr>
+                        <tr><td>🏹 Следопыт</td><td>Осколок стал частью леса — герой чувствует каждый лист</td><td style="text-align:center;">🌝</td></tr>
+                        <tr><td>🥋 Монах</td><td>Осколок поселился в теле, закалив его до предела</td><td style="text-align:center;">🌝</td></tr>
+                        <tr><td>👁️ Колдун</td><td>Осколок шепчет древние знания</td><td style="text-align:center;">🌚</td></tr>
+                        <tr><td>⚔️ Воин</td><td>Осколок укрепил мышцы и кости — живой щит</td><td style="text-align:center;">🌝</td></tr>
+                        <tr><td>🛡️ Паладин</td><td>Осколок загорелся светом — герой поклялся защищать</td><td style="text-align:center;">🌝</td></tr>
+                        <tr><td>🪓 Варвар</td><td>Осколок пробудил ярость — герой едва сдерживает гнев</td><td style="text-align:center;">🌚</td></tr>
+                        <tr><td>🌿 Друид</td><td>Осколок пустил корни — герой чувствует боль земли</td><td style="text-align:center;">🌝</td></tr>
+                        <tr><td>✝️ Жрец</td><td>Осколок зазвучал как молитва — герой слышит богов</td><td style="text-align:center;">🌝</td></tr>
+                        <tr><td>🎸 Бард</td><td>Осколок запел — герой меняет реальность песней</td><td style="text-align:center;">🌚</td></tr>
+                        <tr><td>⚙️ Изобретатель</td><td>Осколок вплавился в механизмы — создаёт невозможное</td><td style="text-align:center;">🌚</td></tr>
                     </tbody>
                 </table>
             </div>
-            <p class="text-muted" style="margin-top: 8px; font-size: 0.8rem;">🌝 = склонность к Свету &nbsp;|&nbsp; 🌚 = склонность к Тьме</p>
+            <p style="margin-top: 8px; font-size: 0.8rem; color: var(--muted);">🌝 = склонность к Свету &nbsp;|&nbsp; 🌚 = склонность к Тьме</p>
         </div>
 
-        <div class="card" id="shards-card">
-            <h2 class="card-title">🔮 Тринадцать осколков. Тринадцать голосов. Тринадцать причин почему.</h2>
-            <div id="shard-display" style="background:var(--bg-elevated);border-radius:var(--radius-md);padding:24px;min-height:200px;text-align:center;font-style:italic;line-height:1.8;color:var(--text-secondary);font-size:0.95rem;"></div>
-            <p style="text-align:center;margin-top:12px;font-size:0.8rem;color:var(--text-muted);">Каждый раз — случайный осколок. Некоторые лгут. Некоторые молчат. Некоторые говорят голосами тех, кто ещё жив.</p>
+        <div class="section red" id="shards-card">
+            <div class="section-title">🔮 Тринадцать осколков. Тринадцать голосов. Тринадцать причин почему.</div>
+            <div class="shard-box" id="shard-display" onclick="randomShard()" title="Кликни, чтобы услышать другой осколок"></div>
+            <p style="text-align:center;margin-top:12px;font-size:0.8rem;color:var(--muted);">Каждый раз — случайный осколок. Некоторые лгут. Некоторые молчат. Некоторые говорят голосами тех, кто ещё жив.</p>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">📅 Сезоны</h2>
+        <div class="section gold">
+            <div class="section-title">📅 Сезоны</div>
             <div class="lore-block">
                 <p>Каждый сезон — это новая глава в истории Этерниса. С началом нового сезона осколки обнуляются, герои начинают с чистого листа, а чемпион прошлого сезона навсегда остаётся в Зале Славы.</p>
                 <p style="margin-top: 12px;">Никто не удерживает титул вечно. Раскол не терпит застоя — каждый сезон рождает новых легенд.</p>
             </div>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">🔮 Легенда о восстановлении</h2>
+        <div class="section gold">
+            <div class="section-title">🔮 Легенда о восстановлении</div>
             <div class="lore-block">
                 <p>Говорят, что тот, кто соберёт все осколки, сможет восстановить Солнечный Клинок и... никто не знает, что произойдёт дальше. Может, мир обретёт покой. А может, расколется окончательно.</p>
             </div>
         </div>
 
-        <div class="card">
+        <div class="section gold">
             <div class="cta-block">
-                <p>Вы — искатель осколков. Выбирайте путь: встать под знамя <span class="text-light">🌝 Ордена Света</span> или принять <span class="text-dark">🌚 тьму Культа</span></p>
+                <p>Вы — искатель осколков. Выбирайте путь: встать под знамя <span style="color:var(--gold);font-weight:600;">🌝 Ордена Света</span> или принять <span style="color:var(--purple);font-weight:600;">🌚 тьму Культа</span></p>
                 <p>Сражайтесь на Арене, побеждайте в турнирах, собирайте осколки</p>
                 <p class="big-text">Добро пожаловать на Раскол</p>
             </div>
@@ -312,32 +297,10 @@
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
     <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('eternis-theme', next);
-        }
-        (function() {
-            const saved = localStorage.getItem('eternis-theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-
-        function toggleNav() {
-            const nav = document.getElementById('pageNav');
-            const btn = document.querySelector('.nav-toggle');
-            nav.classList.toggle('show');
-            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-        }
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                const nav = document.getElementById('pageNav');
-                const btn = document.querySelector('.nav-toggle');
-                nav.classList.remove('show');
-                if (btn) btn.textContent = '☰ Меню';
-            });
-        });
+        function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
+        (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
+        function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
 
         async function loadTerritory() {
             const urls = [
@@ -387,11 +350,10 @@
         function randomShard() {
             const i = Math.floor(Math.random() * shards.length);
             const s = shards[i];
-            document.getElementById('shard-display').innerHTML = `
-                <div style="font-size:0.8rem;color:var(--gold);margin-bottom:12px;letter-spacing:2px;text-transform:uppercase;">Осколок ${i+1} из 13</div>
-                <div style="margin-bottom:8px;">${s.text}</div>
-                <div style="font-size:0.85rem;color:var(--gold);margin-top:12px;font-style:normal;">— ${s.voice}</div>
-            `;
+            document.getElementById('shard-display').innerHTML =
+                `<div style="font-size:0.8rem;color:var(--gold);margin-bottom:12px;letter-spacing:2px;text-transform:uppercase;">Осколок ${i+1} из 13</div>` +
+                `<div style="margin-bottom:8px;">${s.text}</div>` +
+                `<div style="font-size:0.85rem;color:var(--gold);margin-top:12px;font-style:normal;">— ${s.voice}</div>`;
         }
 
         randomShard();
