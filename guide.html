@@ -100,6 +100,12 @@
         .beer-btn:hover { transform: scale(1.1); }
 
         .boss-row { background: rgba(240,185,11,0.08); }
+		
+		::-webkit-scrollbar { width: 6px; height: 6px; }
+		::-webkit-scrollbar-track { background: var(--bg); }
+		::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+		::-webkit-scrollbar-thumb:hover { background: #ffd700; }
+		* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 80px; }

@@ -80,6 +80,12 @@
         .cta-block { text-align: center; padding: 10px 0; }
         .cta-block p { font-size: 0.9rem; color: var(--sub); }
         .cta-block .big-text { font-size: 1.2rem; color: var(--gold); font-weight: 700; margin-top: 12px; }
+		
+		::-webkit-scrollbar { width: 6px; height: 6px; }
+		::-webkit-scrollbar-track { background: var(--bg); }
+		::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+		::-webkit-scrollbar-thumb:hover { background: #ffd700; }
+		* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 80px; }
