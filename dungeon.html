@@ -286,47 +286,52 @@
             }
         }
 
-        function renderStats(players, territory) {
-            const sorted = [...players].sort((a, b) => b.record - a.record || b.damage - a.damage);
-            const total = territory.light + territory.dark;
-            const lp = total > 0 ? (territory.light * 100 / total) : 50;
-            const owner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
-            let html = '';
-            html += `<div class="section gold"><div class="crown-section"><span class="crown-icon">👑</span><div class="crown-title">КОРОНА РАСКОЛА</div><div class="crown-owner">${owner}</div><div class="score-row"><span class="score-light">🌝 Свет: ${territory.light}</span><span class="score-dark">${territory.dark} :Тьма 🌚</span></div><div class="progress-bar"><div class="progress-fill progress-light" style="width:${lp}%">${lp > 10 ? Math.round(lp) + '%' : ''}</div><div class="progress-fill progress-dark" style="width:${100 - lp}%">${(100 - lp) > 10 ? Math.round(100 - lp) + '%' : ''}</div></div><div class="total-trophies">Всего трофеев: ${total}</div></div></div>`;
+		function renderStats(players, territory) {
+			const sorted = [...players].sort((a, b) => b.record - a.record || b.damage - a.damage);
+			const total = territory.light + territory.dark;
+			const lp = total > 0 ? (territory.light * 100 / total) : 50;
+			const owner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
+			let html = '';
+			html += `<div class="section gold"><div class="crown-section"><span class="crown-icon">👑</span><div class="crown-title">КОРОНА РАСКОЛА</div><div class="crown-owner">${owner}</div><div class="score-row"><span class="score-light">🌝 Свет: ${territory.light}</span><span class="score-dark">${territory.dark} :Тьма 🌚</span></div><div class="progress-bar"><div class="progress-fill progress-light" style="width:${lp}%">${lp > 10 ? Math.round(lp) + '%' : ''}</div><div class="progress-fill progress-dark" style="width:${100 - lp}%">${(100 - lp) > 10 ? Math.round(100 - lp) + '%' : ''}</div></div><div class="total-trophies">Всего трофеев: ${total}</div></div></div>`;
 
-            const top3 = sorted.slice(0, 3), medals = ['🥇', '🥈', '🥉'], styles = ['gold', 'silver', 'bronze'];
-            html += '<div class="podium">';
-            top3.forEach((p, i) => {
-                html += `<div class="podium-card ${styles[i]}"><div class="podium-medal">${medals[i]}</div><div class="podium-name"><span class="podium-emoji">${p.emoji || '⚔️'}</span>${p.display || '???'}</div><div class="podium-record">${p.record}</div><div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses} · 🛡${p.blocks}</div></div>`;
-            });
-            html += '</div>';
+			const top3 = sorted.slice(0, 3), medals = ['🥇', '🥈', '🥉'], styles = ['gold', 'silver', 'bronze'];
+			html += '<div class="podium">';
+			top3.forEach((p, i) => {
+				html += `<div class="podium-card ${styles[i]}"><div class="podium-medal">${medals[i]}</div><div class="podium-name"><span class="podium-emoji">${p.emoji || '⚔️'}</span>${p.display || '???'}</div><div class="podium-record">${p.record}</div><div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses} · 🛡${p.blocks}</div></div>`;
+			});
+			html += '</div>';
 
-            const br = sorted[0], bd = [...players].sort((a, b) => b.damage - a.damage)[0], bc = [...players].sort((a, b) => b.crits - a.crits)[0], bb = [...players].sort((a, b) => b.blocks - a.blocks)[0], bt = [...players].sort((a, b) => (b.trophies || 0) - (a.trophies || 0))[0], bw = [...players].sort((a, b) => (b.totalWaves || 0) - (a.totalWaves || 0))[0];
-            const recs = [['🏆', br.record, 'Рекорд волн', br], ['💥', bd.damage, 'Рекорд урона', bd], ['🎯', bc.crits, 'Рекорд критов', bc], ['🛡', bb.blocks, 'Рекорд блоков', bb], ['👑', bt?.trophies || 0, 'Рекорд трофеев', bt], ['🌊', bw?.totalWaves || 0, 'Всего волн', bw]];
-            html += '<div class="records-grid">';
-            recs.forEach(([icon, val, label, p]) => {
-                html += `<div class="record-item"><div class="record-icon">${icon}</div><div class="record-value">${val}</div><div class="record-label">${label}</div><div class="record-player">${p?.emoji || ''} ${p?.display || '???'}</div></div>`;
-            });
-            html += '</div>';
+			const br = sorted[0], bd = [...players].sort((a, b) => b.damage - a.damage)[0], bc = [...players].sort((a, b) => b.crits - a.crits)[0], bb = [...players].sort((a, b) => b.blocks - a.blocks)[0], bt = [...players].sort((a, b) => (b.trophies || 0) - (a.trophies || 0))[0], bw = [...players].sort((a, b) => (b.totalWaves || 0) - (a.totalWaves || 0))[0];
+			const recs = [['🏆', br.record, 'Рекорд волн', br], ['💥', bd.damage, 'Рекорд урона', bd], ['🎯', bc.crits, 'Рекорд критов', bc], ['🛡', bb.blocks, 'Рекорд блоков', bb], ['👑', bt?.trophies || 0, 'Рекорд трофеев', bt], ['🌊', bw?.totalWaves || 0, 'Всего волн', bw]];
+			html += '<div class="records-grid">';
+			recs.forEach(([icon, val, label, p]) => {
+				html += `<div class="record-item"><div class="record-icon">${icon}</div><div class="record-value">${val}</div><div class="record-label">${label}</div><div class="record-player">${p?.emoji || ''} ${p?.display || '???'}</div></div>`;
+			});
+			html += '</div>';
 
-            html += `<div class="section red"><div class="section-title">📊 Топ-10 лидеров</div><div class="table-container"><table id="leaderboard-table"><thead><tr><th class="sortable-header" data-sort="record">Волн</th><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="passive">Пассивка</th><th class="sortable-header" data-sort="damage">Урон</th><th class="sortable-header" data-sort="crits">💥</th><th class="sortable-header" data-sort="misses">❌</th><th class="sortable-header" data-sort="blocks">🛡</th></tr></thead><tbody id="leaderboard-tbody">`;
-            sorted.slice(0, 10).forEach(p => {
-                const pa = p.passive ? p.passive.split(' ')[0] : '';
-                const fullPassive = p.passive || '';
-                html += `<tr data-record="${p.record}" data-display="${p.display || ''}" data-class="${p.name || ''}" data-passive="${pa}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}"><td class="highlight">${p.record}</td><td>${p.emoji || ''} ${p.display || '???'}</td><td>${p.name || ''}</td><td title="${fullPassive}">${pa}</td><td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td></tr>`;
-            });
-            html += '</tbody></table></div></div>';
+			html += `<div class="section red"><div class="section-title">📊 Топ-10 лидеров</div><div class="table-container"><table id="leaderboard-table"><thead><tr><th class="sortable-header" data-sort="record">Волн</th><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="passive">Пассивка</th><th class="sortable-header" data-sort="damage">Урон</th><th class="sortable-header" data-sort="crits">💥</th><th class="sortable-header" data-sort="misses">❌</th><th class="sortable-header" data-sort="blocks">🛡</th></tr></thead><tbody id="leaderboard-tbody">`;
+			sorted.slice(0, 10).forEach(p => {
+				const pa = p.passive ? p.passive.split(' ')[0] : '';
+				const fullPassive = p.passive || '';
+				html += `<tr data-record="${p.record}" data-display="${p.display || ''}" data-class="${p.name || ''}" data-passive="${pa}" data-damage="${p.damage}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}"><td class="highlight">${p.record}</td><td>${p.emoji || ''} ${p.display || '???'}</td><td>${p.name || ''}</td><td title="${fullPassive}">${pa}</td><td>${p.damage}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td></tr>`;
+			});
+			html += '</tbody></table></div></div>';
 
-            const byTrophies = [...players].sort((a, b) => (b.trophies || 0) - (a.trophies || 0) || (b.bosses || 0) - (a.bosses || 0));
-            html += `<div class="section red"><div class="section-title">👥 Все участники</div><div class="table-container"><table id="all-table"><thead><tr><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="waves">🌊 Заходы</th><th class="sortable-header" data-sort="trophies">👑 Трофеи</th><th class="sortable-header" data-sort="bosses">🐉 Боссы</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="all-tbody">`;
-            byTrophies.forEach(p => {
-                const fi = p.faction === 'Орден Света' ? '🌝 Свет' : (p.faction === 'Культ Тьмы' ? '🌚 Тьма' : '');
-                html += `<tr data-display="${p.display || ''}" data-class="${p.name || ''}" data-waves="${p.totalWaves || 0}" data-trophies="${p.trophies || 0}" data-bosses="${p.bosses || 0}" data-faction="${fi}"><td>${p.emoji || ''} ${p.display || '???'}</td><td>${p.name || ''}</td><td>${p.totalWaves || 0}</td><td class="highlight">${p.trophies || 0}</td><td>${p.bosses || 0}</td><td>${fi}</td></tr>`;
-            });
-            html += '</tbody></table></div></div>';
+			const byTrophies = [...players].sort((a, b) => (b.trophies || 0) - (a.trophies || 0) || (b.bosses || 0) - (a.bosses || 0));
+			html += `<div class="section red"><div class="section-title">👥 Все участники</div><div class="table-container"><table id="all-table"><thead><tr><th class="sortable-header" data-sort="display">Имя</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="waves">🌊 Заходы</th><th class="sortable-header" data-sort="trophies">👑 Трофеи</th><th class="sortable-header" data-sort="bosses">🐉 Боссы</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="all-tbody">`;
+			byTrophies.forEach(p => {
+				const fi = p.faction === 'Орден Света' ? '🌝 Свет' : (p.faction === 'Культ Тьмы' ? '🌚 Тьма' : '');
+				html += `<tr data-display="${p.display || ''}" data-class="${p.name || ''}" data-waves="${p.totalWaves || 0}" data-trophies="${p.trophies || 0}" data-bosses="${p.bosses || 0}" data-faction="${fi}"><td>${p.emoji || ''} ${p.display || '???'}</td><td>${p.name || ''}</td><td>${p.totalWaves || 0}</td><td class="highlight">${p.trophies || 0}</td><td>${p.bosses || 0}</td><td>${fi}</td></tr>`;
+			});
+			html += '</tbody></table></div></div>';
 
-            return html;
-        }
+			setTimeout(() => {
+				initSortable('leaderboard-table', 'record', 'desc');
+				initSortable('all-table', 'trophies', 'desc');
+			}, 100);
+
+			return html;
+		}
 
         function initSortable(id, defSort, defDir) {
             setTimeout(() => {
