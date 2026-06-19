@@ -300,7 +300,7 @@
 				const wr=c.total>0?(c.wins*100/c.total).toFixed(1):'0.0';
 				const avgShards=Math.round(c.shards/c.players);
 				const barW=Math.min(100,parseFloat(wr));
-				const barColor=wr>=55?'var(--gold)':wr>=48?'var(--green)':'var(--red)';
+				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
 				html+=`<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-shards="${avgShards}" data-streak="${c.best}" data-skill="${c.avgSkill}" data-champs="${c.champs}">
 					<td>${emoji} ${c.name}</td>
 					<td class="number">${c.players}</td>
@@ -353,7 +353,7 @@
 				const wr=r.total>0?(r.wins*100/r.total).toFixed(1):'0.0';
 				const avgShards=Math.round((r.shards||0)/r.players);
 				const barW=Math.min(100,parseFloat(wr));
-				const barColor=wr>=55?'var(--gold)':wr>=48?'var(--green)':'var(--red)';
+				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
 				html+=`<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}" data-shards="${avgShards}" data-champs="${r.champs}">
 					<td>${emoji} ${r.name}</td>
 					<td class="number">${r.players}</td>
@@ -423,7 +423,7 @@
 				const raceEm=raceEmojis[parts[0]]||'',classEm=classEmojis[parts[1]]||'';
 				const wr=(c.wins*100/c.total).toFixed(1);
 				const barW=Math.min(100,wr);
-				const barColor=wr>=55?'var(--gold)':wr>=48?'var(--green)':'var(--red)';
+				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
 				html+=`<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-streak="${c.streak||0}" data-faction="${c.factionWins||0}">
 					<td>${raceEm}${classEm} ${c.name}</td>
 					<td class="number">${c.players}</td>
