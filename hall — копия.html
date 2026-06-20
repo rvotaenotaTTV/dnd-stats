@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Зал Славы</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--bg: #06040a; --card: #0e0a14; --elevated: #140c1a;
+			--text: #e8ddf0; --sub: #8a7d94; --muted: #5e5268;
+			--border: rgba(180,100,140,0.15);
+			--gold: #f0b90b; --red: #e85d3a; --purple: #a371f7;
+			--radius: 16px; --radius-sm: 10px;
+		}
+		[data-theme="light"] {
+			--bg: #f7f2eb; --card: #fefcf8; --elevated: #fbf8f3;
+			--text: #2d1a1a; --sub: #6b4e4e; --muted: #8b6b6b;
+			--border: rgba(180,80,60,0.12);
+			--gold: #b8860b; --red: #a03020; --purple: #7b5ea7;
+		}
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+		html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+		body { font-family: 'Inter',system-ui,sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 0%, rgba(200,40,40,0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(163,113,247,0.04) 0%, transparent 50%); color: var(--text); min-height: 100vh; line-height: 1.5; }
+		.container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+
+		.header { text-align: center; padding: 32px 0 8px; position: relative; }
+		.header-title { font-size: clamp(2.2rem,6vw,3.2rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#8b0000 0%,#e85d3a 40%,#ffd700 70%,#e85d3a 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(232,93,58,0.5)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
+		@keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+		.header-subtitle { font-size: 0.9rem; color: var(--red); font-weight: 500; letter-spacing: 0.04em; }
+		.theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
+		.theme-toggle:hover { background: var(--card); color: var(--red); border-color: var(--red); }
+
+		.nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
+		.nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; }
+		.nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
+		.nav-link { padding: 8px 14px; border-radius: 20px; color: var(--sub); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: 0.2s; }
+		.nav-link:hover { color: var(--text); background: var(--elevated); }
+		.nav-link.active { background: linear-gradient(135deg,var(--red),var(--gold)); color: #000; font-weight: 700; }
+
+		.section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; margin-bottom: 20px; position: relative; overflow: hidden; }
+		.section::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.6; }
+		.section.gold::after { background: linear-gradient(90deg,transparent,var(--gold),transparent); }
+		.section.red::after { background: linear-gradient(90deg,transparent,var(--red),transparent); }
+		.section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+		.section.gold .section-title { color: var(--gold); }
+		.section.red .section-title { color: var(--red); }
+
+		.tabs { display: flex; gap: 6px; margin-bottom: 28px; padding: 6px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow-x: auto; }
+		.tab-btn { padding: 10px 18px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-size: 0.85rem; font-weight: 600; font-family: inherit; transition: 0.2s; white-space: nowrap; }
+		.tab-btn:hover { background: var(--elevated); color: var(--text); }
+		.tab-btn.active { background: linear-gradient(135deg,var(--red),var(--gold)); color: #000; font-weight: 700; }
+		.tab-content { display: none; }
+		.tab-content.active { display: block; }
+
+		.season-frame { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; margin-bottom: 20px; position: relative; overflow: hidden; animation: fadeSlideIn 0.4s ease; }
+		.season-frame::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.6; background: linear-gradient(90deg,transparent,var(--gold),transparent); }
+		.season-frame.live { border-color: rgba(240,185,11,0.4); animation: fadeSlideIn 0.4s ease, pulseGold 2s ease-in-out infinite; }
+		.season-frame.ended { opacity: 0.85; }
+		.season-title { font-size: 1.15rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+		.season-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-left: 10px; }
+		.season-badge.ended { background: var(--elevated); color: var(--muted); }
+		.season-badge.live { background: var(--gold); color: #000; }
+		.season-subtitle { color: var(--muted); font-size: 0.85rem; font-style: italic; margin-bottom: 20px; }
+
+		.section-subtitle { color: var(--gold); font-size: 0.9rem; font-weight: 700; margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+		.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
+		.stat-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 16px 12px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
+		.stat-value { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
+		.stat-label { color: var(--muted); font-size: 0.65rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+		.champion-section { background: var(--elevated); border: 1px solid rgba(240,185,11,0.2); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 20px; animation: fadeSlideIn 0.4s ease; }
+		.champion-section-title { color: var(--gold); font-size: 0.9rem; font-weight: 700; text-align: center; margin-bottom: 14px; letter-spacing: 2px; text-transform: uppercase; }
+		.champion-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+		.champion-card { background: var(--card); border-radius: var(--radius-sm); padding: 16px 10px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
+		.champ-medal { font-size: 1.6rem; margin-bottom: 4px; }
+		.champ-emoji { font-size: 2rem; margin-bottom: 4px; }
+		.champ-name { color: var(--gold); font-weight: 700; font-size: 0.85rem; word-break: break-word; }
+		.champ-wins { color: var(--muted); font-size: 0.7rem; margin-top: 2px; }
+
+		.tables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+		.table-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 16px; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
+		.table-card.full-width { grid-column: span 2; }
+		.table-card h3 { color: var(--gold); font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
+
+		.table-container { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+		table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+		th { background: var(--elevated); color: var(--gold); font-weight: 700; padding: 8px 10px; text-align: left; font-size: 0.7rem; text-transform: uppercase; }
+		td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+		tr:hover td { background: rgba(255,255,255,0.02); }
+		.number { text-align: right; }
+		td:first-child { text-align: center; width: 35px; }
+		tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
+		tbody tr:nth-child(1) { animation-delay: 0.02s; } tbody tr:nth-child(2) { animation-delay: 0.04s; } tbody tr:nth-child(3) { animation-delay: 0.06s; }
+		tbody tr:nth-child(4) { animation-delay: 0.08s; } tbody tr:nth-child(5) { animation-delay: 0.10s; } tbody tr:nth-child(6) { animation-delay: 0.12s; }
+		tbody tr:nth-child(7) { animation-delay: 0.14s; } tbody tr:nth-child(8) { animation-delay: 0.16s; } tbody tr:nth-child(9) { animation-delay: 0.18s; }
+		tbody tr:nth-child(10) { animation-delay: 0.20s; }
+
+		.crown-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+		.crown-card { flex: 1; background: var(--elevated); border-radius: var(--radius-sm); padding: 16px 12px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
+		.crown-card.light { border-color: rgba(240,185,11,0.3); }
+		.crown-card.dark { border-color: rgba(163,113,247,0.3); }
+		.crown-value { font-size: 1.5rem; font-weight: 800; }
+		.crown-card.light .crown-value { color: var(--gold); }
+		.crown-card.dark .crown-value { color: var(--purple); }
+		.crown-label { color: var(--muted); font-size: 0.65rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+		.status-message { text-align: center; padding: 40px 20px; color: var(--sub); }
+		.spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+
+		.beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.3); z-index: 99; transition: transform 0.2s; animation: float 3s ease-in-out infinite; }
+		.beer-btn:hover { transform: scale(1.1); }
+
+		@keyframes spin { to{transform:rotate(360deg)} }
+		@keyframes pulseGold { 0%, 100% { border-color: rgba(240,185,11,0.2); } 50% { border-color: rgba(240,185,11,0.5); } }
+		@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+		@keyframes fadeInRow { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+		@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+		
+		::-webkit-scrollbar { width: 6px; height: 6px; }
+		::-webkit-scrollbar-track { background: var(--bg); }
+		::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+		::-webkit-scrollbar-thumb:hover { background: #ffd700; }
+		* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+
+		@media (max-width: 768px) {
+			.container { padding: 12px 14px 80px; }
+			.header { padding: 20px 0 8px; }
+			.header-title { font-size: 1.8rem; }
+			.theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
+			.nav-toggle { display: block; }
+			.nav-bar { display: none; flex-direction: column; margin-top: 8px; }
+			.nav-bar.show { display: flex; }
+			.nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
+			.tabs { overflow-x: auto; }
+			.tab-btn { font-size: 0.78rem; }
+			.season-frame, .section { padding: 18px 14px; }
+			.stats-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
+			.stat-value { font-size: 1.3rem; }
+			.champion-grid { grid-template-columns: repeat(2,1fr); }
+			.tables-grid { grid-template-columns: 1fr; }
+			.table-card.full-width { grid-column: span 1; }
+			.crown-bar { flex-direction: column; }
+			table { font-size: 0.75rem; }
+			th, td { padding: 6px 8px; }
+			.beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
+		}
+	</style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title">ЗАЛ СЛАВЫ</h1>
+            <p class="header-subtitle">История величайших героев Этерниса</p>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </header>
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <a href="index.html" class="nav-link">📊 Статистика</a>
+				<a href="logs.html" class="nav-link">📜 Логи</a>
+                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+				<a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+				<a href="gradient.html" class="nav-link">📈 Градиент</a>
+                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+				<a href="hall.html" class="nav-link active">🏆 Зал Славы</a>
+                <a href="lore.html" class="nav-link">📜 Лор</a>
+				<a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                <a href="league.html" class="nav-link">🏟 Лига</a>
+				<a href="form.html" class="nav-link">🔥 Форма</a>
+				<a href="player.html" class="nav-link">👤 Профиль</a>
+            </nav>
+        </div>
+        <div class="tabs" id="season-tabs">
+            <button class="tab-btn" data-season="s0">🏁 Бета-тест</button>
+            <button class="tab-btn" data-season="s1">🔥 Эра Раскола</button>
+            <button class="tab-btn" data-season="s2">💫 Время Перемен</button>
+            <button class="tab-btn active" data-season="s3">🩸 Кровь Бездны</button>
+        </div>
+        <div id="tab-s0" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+        <div id="tab-s1" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+        <div id="tab-s2" class="tab-content"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+        <div id="tab-s3" class="tab-content active"><div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div></div>
+    </div>
+    <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
+    <script>
+        function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
+        (function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
+        function toggleNav(){const nav=document.getElementById('pageNav');const btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
+        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
+        document.querySelectorAll('#season-tabs .tab-btn').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('#season-tabs .tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+this.dataset.season).classList.add('active');});});
+        let dungeonPlayers = {};
+        function renderSeason(data, seasonName, seasonSubtitle, isCurrent) {
+            if (data.dungeon && data.dungeon.players) dungeonPlayers = data.dungeon.players;
+            const players = data.players || [];
+            const heroArchive = data.heroArchive || {};
+            const seasonTop = data.seasonTop && data.seasonTop.length > 0 ? data.seasonTop : [...players].filter(p => (p.skill || 0) > 0).sort((a, b) => (b.skill || 0) - (a.skill || 0));
+            const factionScore = data.factionScore || {};
+            const territory = data.territory || (data.dungeon && data.dungeon.territory) || { light: 0, dark: 0 };
+            const totalPlayers = players.length;
+            let totalFights = Math.floor(players.reduce((s, p) => s + (p.wins || 0) + (p.losses || 0), 0) / 2);
+            let maxStreak = players.reduce((m, p) => (p.best || 0) > m ? (p.best || 0) : m, 0);
+            let maxShards = players.reduce((m, p) => (p.shards || 0) > m ? (p.shards || 0) : m, 0);
+            let maxLevel = players.reduce((m, p) => (p.level || 0) > m ? (p.level || 0) : m, 0);
+            let maxFactionWins = players.reduce((m, p) => (p.factionWins || 0) > m ? (p.factionWins || 0) : m, 0);
+            let worstStreak = players.reduce((m, p) => (p.worst || 0) > m ? (p.worst || 0) : m, 0);
+            let allForWR = [...players];
+            Object.values(heroArchive).forEach(heroes => { heroes.forEach(h => { totalFights += Math.floor(((h.wins || 0) + (h.losses || 0)) / 2); if ((h.best || 0) > maxStreak) maxStreak = h.best || 0; if ((h.worst || 0) > worstStreak) worstStreak = h.worst || 0; allForWR.push({ wins: h.wins || 0, losses: h.losses || 0, display: h.name || '' }); }); });
+            const topWR = allForWR.filter(p => (p.wins || 0) + (p.losses || 0) >= 30).sort((a, b) => { const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0) || 1); const wb = (b.wins || 0) / ((b.wins || 0) + (b.losses || 0) || 1); return wb - wa; });
+            const maxWinrate = topWR[0];
+            const champions = players.filter(p => (p.tournamentWins || 0) > 0).sort((a, b) => (b.tournamentWins || 0) - (a.tournamentWins || 0));
+            Object.entries(heroArchive).forEach(([playerKey, heroes]) => { heroes.forEach(h => { if ((h.tournamentWins || 0) > 0) { champions.push({ display: playerKey, emoji: h.emoji || '', name: h.name || '', tournamentWins: h.tournamentWins || 0, wins: h.wins || 0, losses: h.losses || 0, faction: '', champion: false }); } }); });
+            champions.sort((a, b) => (b.tournamentWins || 0) - (a.tournamentWins || 0));
+            const champCount = champions.length;
+            const maxDungeonBosses = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.bosses > m ? d.bosses : m; }, 0);
+            const maxSkill = seasonTop.length > 0 ? seasonTop[0].skill || seasonTop[0].shards || '—' : '—';
+            const maxDungeonRecord = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.record > m ? d.record : m; }, 0);
+            const maxDungeonTrophies = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.trophies > m ? d.trophies : m; }, 0);
+            const topDungeon = players.map(p => { const d = dungeonPlayers[p.display]; return { ...p, record: d?.record || 0, trophies: d?.trophies || 0 }; }).filter(p => p.record > 0).sort((a, b) => b.record - a.record || b.trophies - a.trophies);
+            const duelLight = factionScore.duelLight || 0;
+            const duelDark = factionScore.duelDark || 0;
+            const battleLight = factionScore.battleLight || 0;
+            const battleDark = factionScore.battleDark || 0;
+            const crownOwner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
+
+            let html = `<div class="season-frame ${isCurrent ? 'live' : 'ended'}">`;
+            html += `<div class="season-title">${seasonName} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'В РАЗГАРЕ' : 'ЗАВЕРШЁН'}</span></div>`;
+            html += `<div class="season-subtitle">${seasonSubtitle}</div>`;
+            html += '<div class="section-subtitle">Арена</div><div class="stats-grid">';
+            html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${champCount || '—'}</div><div class="stat-label">👑 Чемпионов</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxSkill}</div><div class="stat-label">⭐ Макс. SKILL</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Макс. осколков</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxWinrate ? ((maxWinrate.wins || 0) * 100 / ((maxWinrate.wins || 0) + (maxWinrate.losses || 0) || 1)).toFixed(1) + '%' : '—'}</div><div class="stat-label">📈 Лучший винрейт</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Макс. стрик</div></div>`;
+            if (worstStreak > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${worstStreak || '—'}</div><div class="stat-label">💔 Худший стрик</div></div>`;
+            if (maxFactionWins > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
+            if (duelLight + duelDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${duelLight} : ${duelDark}</div><div class="stat-label">⚔️ Дуэли Свет vs Тьма</div></div>`;
+            if (battleLight + battleDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
+            html += '</div>';
+
+            if (territory.light > 0 || territory.dark > 0) {
+                html += '<div class="section-subtitle">👑 Корона Раскола</div><div class="crown-bar">';
+                html += `<div class="crown-card light"><div class="crown-value">${territory.light}</div><div class="crown-label">🌝 Трофеи Света</div></div>`;
+                html += `<div class="crown-card dark"><div class="crown-value">${territory.dark}</div><div class="crown-label">🌚 Трофеи Тьмы</div></div>`;
+                html += `<div class="crown-card"><div class="crown-value">${crownOwner}</div><div class="crown-label">👑 Владелец</div></div>`;
+                html += '</div>';
+            }
+
+            if (isCurrent || Object.keys(dungeonPlayers).length > 0) {
+                html += '<div class="section-subtitle">Подземелье</div><div class="stats-grid">';
+                html += `<div class="stat-card"><div class="stat-value">${Object.keys(dungeonPlayers).length || '—'}</div><div class="stat-label">👥 Игроков</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${maxDungeonRecord || '—'}</div><div class="stat-label">🏆 Рекорд волн</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${maxDungeonBosses || '—'}</div><div class="stat-label">💀 Боссов убито</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${maxDungeonTrophies || '—'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
+                html += '</div>';
+            }
+            if (champions.length > 0) {
+                html += `<div class="champion-section"><div class="champion-section-title">👑 Чемпионы сезона</div><div class="champion-grid">`;
+                champions.slice(0, 4).forEach((p, i) => { const medals = ['🥇', '🥈', '🥉']; html += `<div class="champion-card"><div class="champ-medal">${i < 3 ? medals[i] : '⭐'}</div><div class="champ-emoji">${p.emoji || '⚔️'}</div><div class="champ-name">${p.display}</div><div class="champ-wins">${p.tournamentWins} побед</div></div>`; });
+                html += '</div></div>';
+            } else if (!isCurrent) { html += '<div class="champion-section" style="opacity:0.5;text-align:center;padding:20px;color:var(--muted);font-style:italic;">Турниры не проводились — эпоха чистых дуэлей</div>'; }
+            html += '<div class="section-subtitle">📊 Таблицы лидеров</div><div class="tables-grid">';
+            if (seasonTop.length > 0) { html += '<div class="table-card full-width"><h3>🏆 Сезонный рейтинг (SKILL)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Skill</th><th>Победы</th></tr></thead><tbody>'; seasonTop.slice(0, 5).forEach((p, i) => { html += `<tr><td>${i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1}</td><td>${p.display}</td><td>${p.emoji || ''}</td><td class="number">${p.skill}</td><td class="number">${p.wins}</td></tr>`; }); html += '</tbody></table></div></div>'; }
+            const mostActive = [...players].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0))).slice(0, 5);
+            html += '<div class="table-card"><h3>🔥 Самые активные</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Боёв</th></tr></thead><tbody>'; mostActive.forEach((p, i) => html += `<tr><td>${i + 1}</td><td>${p.display}</td><td class="number">${(p.wins || 0) + (p.losses || 0)}</td></tr>`); html += '</tbody></table></div></div>';
+            const topShards = [...players].sort((a, b) => (b.shards || 0) - (a.shards || 0)).slice(0, 5);
+            html += '<div class="table-card"><h3>💎 Коллекционеры осколков</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Осколков</th></tr></thead><tbody>'; topShards.forEach((p, i) => html += `<tr><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.shards || 0}</td></tr>`); html += '</tbody></table></div></div>';
+            const topStreaks = [...players].sort((a, b) => (b.best || 0) - (a.best || 0)).slice(0, 5);
+            html += '<div class="table-card"><h3>🔥 Лучшие серии побед</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Побед</th></tr></thead><tbody>'; topStreaks.forEach((p, i) => html += `<tr><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.best || 0}</td></tr>`); html += '</tbody></table></div></div>';
+            html += '<div class="table-card"><h3>📈 Винрейт (30+ боёв)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>WR</th><th>W/L</th></tr></thead><tbody>'; topWR.slice(0, 5).forEach((p, i) => { html += `<tr><td>${i + 1}</td><td>${p.display || p.name || ''}</td><td class="number">${((p.wins || 0) * 100 / ((p.wins || 0) + (p.losses || 0) || 1)).toFixed(1)}%</td><td class="number">${p.wins || 0}-${p.losses || 0}</td></tr>`; }); html += '</tbody></table></div></div>';
+            if (topDungeon.length > 0) { html += '<div class="table-card"><h3>🏔 Рекордсмены данжа</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Волн</th></tr></thead><tbody>'; topDungeon.slice(0, 5).forEach((p, i) => html += `<tr><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.record}</td></tr>`); html += '</tbody></table></div></div>'; html += '<div class="table-card"><h3>🐉 Охотники на боссов</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Трофеев</th></tr></thead><tbody>'; [...topDungeon].sort((a, b) => (b.trophies || 0) - (a.trophies || 0)).slice(0, 5).forEach((p, i) => html += `<tr><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.trophies || 0}</td></tr>`); html += '</tbody></table></div></div>'; }
+            html += '</div></div>';
+            return html;
+        }
+        const ARCHIVE_BASE = 'https://rvotaenotattv.github.io/dnd-stats/season_';
+        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        const CURRENT_SEASON = 3;
+        const seasons = [{ num: 0, name: '🏁 Бета-тест', sub: 'Первые дуэли. Рождение Арены.' },{ num: 1, name: '🔥 Эра Раскола', sub: '50 турниров. Эпоха легенд.' },{ num: 2, name: '💫 Время Перемен', sub: 'Корабли без капитанов. Табакси здесь.' },{ num: 3, name: '🩸 Кровь Бездны', sub: 'Тифлинги выходят из тени. Разлом открыт.' }];
+        async function loadSeason(num, tabId, name, subtitle) {
+            const c = document.getElementById(tabId);
+            if (num < CURRENT_SEASON) {
+                try { const d = await fetch(`${ARCHIVE_BASE}${num}.json?v=${Date.now()}`).then(r => r.json()); if (num === 0) d.dungeon = { players: {} }; c.innerHTML = renderSeason(d, name, subtitle, false); }
+                catch { c.innerHTML = `<div class="season-frame ended"><div class="season-title">${name}</div><div class="status-message">❌ Архив недоступен</div></div>`; }
+            } else {
+                try { const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json()); c.innerHTML = renderSeason(d, name, subtitle, true); }
+                catch { c.innerHTML = `<div class="season-frame live"><div class="season-title">${name}</div><div class="status-message">❌ Не удалось загрузить данные</div></div>`; }
+            }
+        }
+        seasons.forEach(s => loadSeason(s.num, `tab-s${s.num}`, s.name, s.sub));
+    </script>
+</body>
+</html>
