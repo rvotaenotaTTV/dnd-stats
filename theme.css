@@ -1,0 +1,132 @@
+/* === ТЕМА 4 СЕЗОНА: ЭКСПЕДИЦИЯ В БЕЗДНУ === */
+:root {
+    --bg: #060a14; --card: #0a0f1e; --elevated: #0f1428;
+    --text: #dde4f0; --sub: #8a94a8; --muted: #5e6478;
+    --border: rgba(100,140,180,0.12);
+    --gold: #f0b90b; --red: #5bc0eb; --purple: #a371f7; --green: #10b981;
+    --orange: #ff8c00; --blue: #4a90d9; --ice: #5bc0eb;
+    --radius: 16px; --radius-sm: 10px;
+    --bg-primary: #060a14; --bg-secondary: #0a0f1e; --bg-elevated: #0f1428; --bg-card: #0a0f1e;
+    --text-primary: #dde4f0; --text-secondary: #8a94a8; --text-muted: #5e6478;
+    --border-subtle: rgba(100,140,180,0.12); --border-strong: #2a3550;
+    --sudoku-fixed: #f0b90b;
+    --cell-selected-bg: rgba(240,185,11,0.3);
+    --cell-same-bg: rgba(240,185,11,0.1);
+    --cell-same-num-bg: rgba(240,185,11,0.2);
+    --shadow-lg: 0 20px 40px rgba(0,0,0,0.4);
+    --shadow-gold: 0 4px 12px rgba(240,185,11,0.3);
+    --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
+    --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    --collection-height: 400px;
+    --abyss: #0a1a2e; --abyss-accent: #5bc0eb; --candle: #8fbc5e;
+}
+[data-theme="light"] {
+    --bg: #f0f4fa; --card: #fafcfe; --elevated: #f5f8fd;
+    --text: #1a2a3a; --sub: #4a5a6e; --muted: #6a7a8e;
+    --border: rgba(80,120,180,0.12);
+    --gold: #b8860b; --red: #3a90c0; --purple: #7b5ea7; --green: #27ae60;
+    --orange: #e67e22; --blue: #3a7db8; --ice: #3a90c0;
+    --bg-primary: #f0f4fa; --bg-secondary: #e8ecf4; --bg-elevated: #f5f8fd; --bg-card: #fafcfe;
+    --text-primary: #1a2a3a; --text-secondary: #4a5a6e; --text-muted: #6a7a8e;
+    --border-subtle: rgba(80,120,180,0.12); --border-strong: #8b9db5;
+    --sudoku-fixed: #3a90c0;
+    --cell-selected-bg: #c8ddf0;
+    --cell-same-bg: #dce6f2;
+    --cell-same-num-bg: #c0d8ec;
+    --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+    --collection-height: 400px;
+    --abyss: #0d2b4e; --abyss-accent: #3a90c0; --candle: #6b8e3a;
+}
+
+/* === БАЗОВЫЕ === */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+body { font-family: 'Inter',system-ui,sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 0%, rgba(91,192,235,0.05) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(100,140,180,0.03) 0%, transparent 50%); color: var(--text); min-height: 100vh; line-height: 1.5; }
+.container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+
+/* === ШАПКА === */
+.header { text-align: center; padding: 32px 0 8px; position: relative; }
+.header-title { font-size: clamp(2.2rem,6vw,3.2rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, #5bc0eb 0%, #a371f7 50%, #f0b90b 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(91,192,235,0.4)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
+@keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+.header-subtitle { font-size: 0.9rem; color: var(--sub); font-weight: 500; letter-spacing: 0.04em; }
+.theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
+.theme-toggle:hover { background: var(--card); color: var(--ice); border-color: var(--ice); }
+
+/* === НАВБАР === */
+.nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
+.nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--ice); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; }
+.nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
+.nav-link { padding: 8px 14px; border-radius: 20px; color: var(--sub); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: 0.2s; }
+.nav-link:hover { color: var(--text); background: var(--elevated); }
+.nav-link.active { background: linear-gradient(135deg, var(--ice), var(--gold)); color: #000; font-weight: 700; }
+
+/* === СЕКЦИИ === */
+.section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; margin-bottom: 20px; position: relative; overflow: hidden; }
+.section::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.6; }
+.section.gold::after { background: linear-gradient(90deg,transparent,var(--gold),transparent); }
+.section.red::after, .section.ice::after { background: linear-gradient(90deg,transparent,var(--ice),transparent); }
+.section.purple::after { background: linear-gradient(90deg,transparent,var(--purple),transparent); }
+.section.candle::after { background: linear-gradient(90deg,transparent,var(--candle),transparent); }
+.section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section.gold .section-title { color: var(--gold); }
+.section.red .section-title, .section.ice .section-title { color: var(--ice); }
+.section.purple .section-title { color: var(--purple); }
+.section.candle .section-title { color: var(--candle); }
+.section p { color: var(--sub); font-size: 0.85rem; line-height: 1.65; margin-bottom: 8px; }
+code { background: var(--elevated); padding: 2px 8px; border-radius: 4px; color: var(--ice); font-weight: 600; font-size: 0.85rem; }
+
+/* === ТАБЛИЦЫ === */
+.table-container { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+th { background: var(--elevated); color: var(--gold); font-weight: 700; padding: 8px 10px; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+tr:hover td { background: rgba(255,255,255,0.02); }
+.sortable-header { cursor: pointer; user-select: none; position: relative; padding-right: 20px !important; }
+.sortable-header:hover { background: var(--elevated) !important; }
+.sortable-header::after { content: '⇅'; position: absolute; right: 5px; opacity: 0.4; font-size: 10px; }
+.sortable-header.asc::after { content: '↑'; opacity: 1; color: var(--gold); }
+.sortable-header.desc::after { content: '↓'; opacity: 1; color: var(--gold); }
+
+/* === КНОПКИ === */
+.btn { padding: 10px 20px; border-radius: 20px; font-weight: 700; cursor: pointer; border: none; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
+.btn-primary { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; }
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-secondary { background: var(--elevated); border: 1px solid var(--border); color: var(--text); }
+.btn-secondary:hover { border-color: var(--gold); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.back-btn { display: block; text-align: center; margin-top: 14px; color: var(--muted); cursor: pointer; font-size: 0.85rem; }
+.back-btn:hover { color: var(--gold); }
+
+/* === ПИВНАЯ КНОПКА === */
+.beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--ice); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(91,192,235,0.3); z-index: 99; transition: transform 0.2s; animation: float 3s ease-in-out infinite; }
+.beer-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(91,192,235,0.5); }
+
+/* === СПИННЕР === */
+.spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top: 3px solid var(--ice); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+
+/* === АНИМАЦИИ === */
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInRow { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+
+/* === СКРОЛЛБАРЫ === */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #ffd700; }
+* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+
+/* === МОБИЛКА === */
+@media (max-width: 768px) {
+    .container { padding: 12px 14px 80px; }
+    .header { padding: 20px 0 8px; }
+    .header-title { font-size: 1.8rem; }
+    .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
+    .nav-toggle { display: block; }
+    .nav-bar { display: none; flex-direction: column; margin-top: 8px; }
+    .nav-bar.show { display: flex; }
+    .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
+    .section { padding: 18px 14px; }
+    .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
+}
