@@ -13,7 +13,7 @@
             --text: #e8ddf0; --sub: #8a7d94; --muted: #5e5268;
             --border: rgba(180,100,140,0.15);
             --gold: #f0b90b; --red: #e85d3a; --purple: #a371f7; --green: #10b981;
-            --orange: #ff8c00;
+            --orange: #ff8c00; --blue: #4a90d9;
             --radius: 16px; --radius-sm: 10px;
             --bg-primary: #06040a; --bg-secondary: #0e0a14; --bg-elevated: #140c1a; --bg-card: #0e0a14;
             --text-primary: #e8ddf0; --text-secondary: #8a7d94; --text-muted: #5e5268;
@@ -33,7 +33,7 @@
             --text: #2d1a1a; --sub: #6b4e4e; --muted: #8b6b6b;
             --border: rgba(180,80,60,0.12);
             --gold: #b8860b; --red: #a03020; --purple: #7b5ea7; --green: #27ae60;
-            --orange: #e67e22;
+            --orange: #e67e22; --blue: #3a7db8;
             --bg-primary: #f7f2eb; --bg-secondary: #efe8dc; --bg-elevated: #fbf8f3; --bg-card: #fefcf8;
             --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #6b7280;
             --border-subtle: rgba(0,0,0,0.08); --border-strong: #8b7d6b;
@@ -129,7 +129,6 @@
         .history-box { margin-top: 14px; padding: 10px; background: var(--card); border-radius: var(--radius-sm); border: 1px solid var(--border); max-height: 120px; overflow-y: auto; }
         .history-item { color: var(--sub); font-size: 0.72rem; padding: 3px 0; border-bottom: 1px solid var(--border); }
 
-        /* === СУДОКУ === */
         .sudoku-grid { display: grid; grid-template-columns: repeat(9, 1fr); margin: 16px 0; gap: 1px; background: var(--border-strong); border: 3px solid var(--border-strong); border-radius: 12px; width: 100%; }
         .sudoku-cell { aspect-ratio: 1; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.1s; color: var(--text); user-select: none; border: 1px solid rgba(255,255,255,0.05); }
         .sudoku-cell:nth-child(3n) { border-right: 4px solid var(--border-strong); }
@@ -150,7 +149,6 @@
         .sudoku-timer span { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
         .win-message { text-align: center; padding: 16px; color: var(--gold); font-size: 1.2rem; font-weight: 800; }
 
-        /* === РУНЫ === */
         .combo-overlay { text-align: center; font-size: 1.1rem; font-weight: 900; color: var(--gold); min-height: 28px; margin-bottom: 4px; }
         .runes-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 12px; }
         .rune-cell { aspect-ratio: 1; background: var(--elevated); border: 2px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; user-select: none; }
@@ -163,40 +161,62 @@
         @keyframes cellShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
         @keyframes hintPulse { 0%,100%{box-shadow:0 0 6px rgba(255,215,0,0.2)} 50%{box-shadow:0 0 16px rgba(255,215,0,0.5)} }
 
-        /* === ГАЧА / КОЛЛЕКЦИЯ === */
         .result-area { min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px 0; }
         .drop-card { background: var(--elevated); border-radius: 20px; padding: 30px; text-align: center; animation: dropIn 0.5s ease; max-width: 350px; width: 100%; border: 3px solid var(--border); }
         .drop-card.legendary { border-color: #ffaa00; box-shadow: 0 0 40px rgba(255,170,0,0.6); }
         .drop-card.epic { border-color: #c471ed; box-shadow: 0 0 30px rgba(196,113,237,0.5); }
-        .drop-card.rare { border-color: #4a90d9; box-shadow: 0 0 20px rgba(74,144,217,0.4); }
+        .drop-card.rare { border-color: var(--blue); box-shadow: 0 0 20px rgba(74,144,217,0.4); }
         .drop-card.uncommon { border-color: #3fb950; }
         .drop-card.common { border-color: var(--border); opacity: 0.7; }
         @keyframes dropIn { from{transform:translateY(-30px);opacity:0} to{transform:translateY(0);opacity:1} }
         .drop-emoji { font-size: 4rem; margin-bottom: 10px; }
         .drop-name { font-size: 1.3rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
         .drop-rarity { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        .rarity-legendary { color: #ffaa00; } .rarity-epic { color: #c471ed; } .rarity-rare { color: #4a90d9; } .rarity-uncommon { color: #3fb950; } .rarity-common { color: var(--muted); }
+        .rarity-legendary { color: #ffaa00; } .rarity-epic { color: #c471ed; } .rarity-rare { color: var(--blue); } .rarity-uncommon { color: #3fb950; } .rarity-common { color: var(--muted); }
 
-        .collection-section { margin-top: 20px; }
-        .collection-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-        .collection-header h3 { margin: 0; }
-        .collection-toolbar { display: flex; gap: 6px; flex-wrap: wrap; }
-        .collection-toolbar .btn { flex: 0; padding: 6px 12px; font-size: 0.7rem; border-radius: 15px; }
+        .chest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+        .chest-card { background: var(--elevated); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 16px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .chest-card:hover { transform: translateY(-4px); }
+        .chest-card.common { border-color: #888; }
+        .chest-card.common:hover { border-color: #aaa; box-shadow: 0 0 20px rgba(136,136,136,0.3); }
+        .chest-card.rare { border-color: var(--blue); }
+        .chest-card.rare:hover { border-color: #6ab0f3; box-shadow: 0 0 20px rgba(74,144,217,0.3); }
+        .chest-card.epic { border-color: #c471ed; }
+        .chest-card.epic:hover { border-color: #da90f5; box-shadow: 0 0 20px rgba(196,113,237,0.3); }
+        .chest-icon { font-size: 2.5rem; margin-bottom: 6px; }
+        .chest-name { font-weight: 700; color: var(--text); margin-bottom: 2px; font-size: 0.85rem; }
+        .chest-cost { color: var(--gold); font-weight: 700; font-size: 0.8rem; }
+        .chest-desc { color: var(--muted); font-size: 0.65rem; margin-top: 2px; }
+
+        .collection-progress { margin-bottom: 10px; }
+        .progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--sub); }
+        .progress-bar-sm { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
+        .progress-fill-sm { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.3s; }
+
+        .filter-bar { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+        .filter-btn { padding: 5px 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--elevated); color: var(--sub); cursor: pointer; font-size: 0.7rem; font-family: inherit; transition: 0.2s; }
+        .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .filter-btn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
+
         .collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; max-height: var(--collection-height); overflow-y: auto; padding: 2px; }
-        .collection-item { background: var(--elevated); border-radius: 12px; padding: 10px 6px; text-align: center; font-size: 1.6rem; border: 2px solid var(--border); cursor: pointer; transition: 0.2s; position: relative; display: flex; align-items: center; justify-content: center; min-height: 70px; }
+        .collection-item { background: var(--elevated); border-radius: 12px; padding: 10px 6px; text-align: center; border: 2px solid var(--border); cursor: pointer; transition: 0.2s; position: relative; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
         .collection-item:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .collection-item .check-mark { position: absolute; top: 4px; right: 4px; font-size: 0.65rem; background: var(--gold); color: #000; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .collection-item .item-emoji { font-size: 1.6rem; }
+        .collection-item .item-name { font-size: 0.55rem; color: var(--sub); line-height: 1.2; text-align: center; }
+        .collection-item .item-count { position: absolute; top: 2px; right: 4px; font-size: 0.5rem; color: var(--muted); background: var(--bg); padding: 1px 4px; border-radius: 6px; }
+        .collection-item.selected { border-color: var(--gold) !important; box-shadow: 0 0 16px rgba(240,185,11,0.5) !important; transform: scale(1.05); }
         .collection-item.legendary { border-color: #ffaa00; box-shadow: 0 0 12px rgba(255,170,0,0.3); }
         .collection-item.epic { border-color: #c471ed; box-shadow: 0 0 8px rgba(196,113,237,0.3); }
-        .collection-item.rare { border-color: #4a90d9; }
+        .collection-item.rare { border-color: var(--blue); }
         .collection-item.uncommon { border-color: #3fb950; }
         .collection-item.common { border-color: var(--border); opacity: 0.6; }
 
         .recent-log { margin-top: 16px; padding: 10px; background: var(--card); border-radius: 12px; border: 1px solid var(--border); max-height: 120px; overflow-y: auto; }
         .recent-log h4 { color: var(--muted); font-size: 0.75rem; margin-bottom: 6px; }
         .recent-item { color: var(--sub); font-size: 0.72rem; padding: 2px 0; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .modal-card { background: var(--card); border-radius: 20px; padding: 30px; text-align: center; max-width: 350px; width: 90%; border: 3px solid var(--border); }
+
+        .search-input { padding: 6px 12px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-size: 0.8rem; font-family: inherit; flex: 1; min-width: 120px; }
+        .search-input:focus { outline: none; border-color: var(--gold); }
 
         .beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.3); z-index: 99; transition: transform 0.2s; }
         .beer-btn:hover { transform: scale(1.1); }
@@ -206,6 +226,9 @@
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #ffd700; }
         * { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+		
+		.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+		.modal-card { background: var(--card); border-radius: 20px; padding: 30px; text-align: center; max-width: 400px; width: 90%; border: 3px solid var(--border); max-height: 85vh; overflow-y: auto; }
 
         @media (max-width: 768px) {
             .container { padding: 12px 14px 80px; }
@@ -230,6 +253,7 @@
             .num-btn { font-size: 0.8rem; padding: 10px 2px; }
             .rune-cell { font-size: 1.3rem; }
             .game-area { padding: 12px 8px; }
+            .chest-grid { grid-template-columns: 1fr; }
             .collection-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); max-height: 300px; }
             .collection-item { font-size: 1.3rem; min-height: 60px; }
             .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
@@ -243,19 +267,19 @@
         <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
         <nav class="nav-bar" id="pageNav">
             <a href="index.html" class="nav-link">📊 Статистика</a>
-			<a href="logs.html" class="nav-link">📜 Логи</a>
+            <a href="logs.html" class="nav-link">📜 Логи</a>
             <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-			<a href="balance.html" class="nav-link">⚖️ Баланс</a>
+            <a href="balance.html" class="nav-link">⚖️ Баланс</a>
             <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-			<a href="gradient.html" class="nav-link">📈 Градиент</a>
+            <a href="gradient.html" class="nav-link">📈 Градиент</a>
             <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-			<a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+            <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
             <a href="lore.html" class="nav-link">📜 Лор</a>
-			<a href="tavern.html" class="nav-link active">🍺 Таверна</a>
+            <a href="tavern.html" class="nav-link active">🍺 Таверна</a>
             <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
             <a href="league.html" class="nav-link">🏟 Лига</a>
-			<a href="form.html" class="nav-link">🔥 Форма</a>
-			<a href="player.html" class="nav-link">👤 Профиль</a>
+            <a href="form.html" class="nav-link">🔥 Форма</a>
+            <a href="player.html" class="nav-link">👤 Профиль</a>
         </nav>
     </div>
     <div class="section" id="tavernCard">
@@ -270,7 +294,7 @@
                 <div class="game-option" onclick="selectGame('pig')"><div class="game-option-emoji">🐷</div><div class="game-option-name">Сало или золото?</div><div class="game-option-desc">Хрюкающий банк</div></div>
                 <div class="game-option" onclick="selectGame('sudoku')"><div class="game-option-emoji">🧩</div><div class="game-option-name">Мозголомка</div><div class="game-option-desc">Девять кругов бамбука</div></div>
                 <div class="game-option" onclick="selectGame('runes')"><div class="game-option-emoji">🔮</div><div class="game-option-name">Руны Раскола</div><div class="game-option-desc">Собери 3 в ряд</div></div>
-                <div class="game-option" onclick="selectGame('gacha')"><div class="game-option-emoji">🎰</div><div class="game-option-name">Крутки</div><div class="game-option-desc">ГуангГуанг продаёт</div></div>
+                <div class="game-option" onclick="selectGame('gacha')"><div class="game-option-emoji">🎰</div><div class="game-option-name">Сундуки</div><div class="game-option-desc">Собери коллекцию</div></div>
                 <div class="game-option" onclick="selectGame('math')"><div class="game-option-emoji">🎋</div><div class="game-option-name">Бамбуковый счёт</div><div class="game-option-desc">5 секунд на пример</div></div>
             </div>
         </div>
@@ -301,18 +325,12 @@ function antiSpam(){if(spamLock)return true;spamLock=true;setTimeout(()=>spamLoc
 function backToSelect(){document.querySelectorAll('.game-panel').forEach(p=>{if(p.id!=='panel-select'){p.classList.remove('active');p.innerHTML='';}});document.getElementById('panel-select').classList.add('active');setQuote('Во что сыграем? '+randomQuote());}
 window.backToSelect=backToSelect;
 
-function getGachaEmoji(index){try{const col=JSON.parse(localStorage.getItem('gachaCollection')||'[]');if(col.length>0)return col[index%col.length].emoji||'⚔️';}catch(e){}return null;}
-function getGachaRarity(index){try{const col=JSON.parse(localStorage.getItem('gachaCollection')||'[]');if(col.length>0)return col[index%col.length].rarity||'common';}catch(e){}return 'common';}
-function getGachaName(index){try{const col=JSON.parse(localStorage.getItem('gachaCollection')||'[]');if(col.length>0)return (col[index%col.length].name||'???').substring(0,15);}catch(e){}return null;}
-
 function renderCardHTML(c,back,index){
     if(back) return '<div class="card-back"></div>';
     const cls=c.suit==='♥'||c.suit==='♦'?'red':'black';
-    const gem=getGachaEmoji(index!=null?index:Math.floor(Math.random()*100));
-    const em=gem||['🐼','👑','⚔️','🔮','💀','✨','🛡️','🗡️','🌿','🧔'][index!=null?index%10:0];
-    const nm=getGachaName(index!=null?index:Math.floor(Math.random()*100));
-    const name=nm||c.value+c.suit;
-    const rarity=getGachaRarity(index!=null?index:Math.floor(Math.random()*100));
+    const em=null||['🐼','👑','⚔️','🔮','💀','✨','🛡️','🗡️','🌿','🧔'][index!=null?index%10:0];
+    const name=c.value+c.suit;
+    const rarity='common';
     return `<div class="poker-card ${rarity}"><span class="corner top ${cls}">${c.value}${c.suit}</span><span class="emoji">${em}</span><span class="name">${name}</span><span class="corner bottom ${cls}">${c.value}${c.suit}</span></div>`;
 }
 
@@ -350,19 +368,327 @@ function collapseRunesGrid(){for(let c=0;c<COLS;c++){let writeRow=ROWS-1;for(let
 function endRunesGame(){runesActive=false;runesProcessing=false;clearHints();runesEarned=calcRunesEarned();balance+=runesEarned;updateBalance();updateRunesUI();document.getElementById('runesNewBtn').disabled=false;document.getElementById('runesCashBtn').disabled=true;document.getElementById('comboOverlay').textContent='';if(runesEarned>RUNES_BET){setQuote(`🏆 Игра окончена! +${runesEarned}💎`);flashWin();}else if(runesEarned===0)setQuote('💔 Ходы кончились. Пусто...');else setQuote(`⏰ Ходы кончились. +${runesEarned}💎`);}
 function sleepRunes(ms){return new Promise(r=>setTimeout(r,ms));}
 
-let gachaPool=[],gachaReady=false;let gachaCollection=JSON.parse(localStorage.getItem('gachaCollection'))||[];let gachaRecent=JSON.parse(localStorage.getItem('gachaRecent'))||[];let gachaSort='newest',gachaSortDir='desc';let gachaSelected=new Set();
+// ==================== СУНДУКИ РАСКОЛА ====================
+let gachaPool=[],gachaReady=false;
+let gachaCollection=JSON.parse(localStorage.getItem('gachaCollection'))||[];
+let gachaRecent=JSON.parse(localStorage.getItem('gachaRecent'))||[];
+let gachaFilter='all';
+let gachaSelected=new Set();
+const RARITY_ORDER=['legendary','epic','rare','uncommon','common'];
+const RARITY_LABELS={legendary:'ЛЕГЕНДАРНЫЙ',epic:'Эпический',rare:'Редкий',uncommon:'Необычный',common:'Обычный'};
+const RARITY_COLORS={legendary:'#ffaa00',epic:'#c471ed',rare:'#4a90d9',uncommon:'#3fb950',common:'var(--muted)'};
+const SELL_PRICES={legendary:50,epic:20,rare:8,uncommon:3,common:1};
+const CHEST_COSTS={common:10,rare:50,epic:200};
+const CHEST_LOOT={
+    common:[{r:'common',w:3},{r:'uncommon',w:1}],
+    rare:[{r:'rare',w:3},{r:'epic',w:1}],
+    epic:[{r:'epic',w:3},{r:'legendary',w:1}]
+};
+
 function gachaSaveCollection(){localStorage.setItem('gachaCollection',JSON.stringify(gachaCollection));}
-async function gachaInit(){document.getElementById('gachaResultArea').innerHTML='<div style="color:var(--muted);text-align:center;">Данные загружаются...</div>';try{const urls=['https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json','https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'];let data;for(const url of urls){try{const r=await fetch(url);if(r.ok){data=await r.json();break;}}catch{}}if(!data)throw new Error('No data');const players=data.players.filter(p=>p.name&&p.name!=='Unknown');const pool=[];const seen=new Set();const addUnique=item=>{if(seen.has(item.name+item.rarity))return;seen.add(item.name+item.rarity);pool.push(item);};const junk=[{emoji:'🦴',name:'Кость',rarity:'common'},{emoji:'🍂',name:'Лист',rarity:'common'},{emoji:'🍺',name:'Кружка ГуангГуанга',rarity:'common'},{emoji:'🕯️',name:'Огарок свечи',rarity:'common'},{emoji:'🧦',name:'Носок',rarity:'common'},{emoji:'🗑️',name:'Мусор',rarity:'common'},{emoji:'🍭',name:'Леденец',rarity:'common'},{emoji:'🍄',name:'Гриб',rarity:'common'}];junk.forEach(item=>{for(let i=0;i<15;i++)addUnique(item);});const uncommon=[{emoji:'🧪',name:'Зелье силы',rarity:'uncommon'},{emoji:'🛡️',name:'Благословение',rarity:'uncommon'},{emoji:'✨',name:'Чудо',rarity:'uncommon'},{emoji:'📜',name:'Свиток',rarity:'uncommon'},{emoji:'💎',name:'Осколок',rarity:'uncommon'},{emoji:'🔮',name:'Кристалл',rarity:'uncommon'},{emoji:'🗡️',name:'Кинжал',rarity:'uncommon'},{emoji:'🧿',name:'Амулет',rarity:'uncommon'}];uncommon.forEach(item=>{for(let i=0;i<6;i++)addUnique(item);});players.forEach(p=>addUnique({emoji:p.emoji||'⚔️',name:p.display,rarity:'uncommon',desc:p.name}));const rare=[{emoji:'⚔️',name:'Меч Аэлиона',rarity:'rare'},{emoji:'🏹',name:'Лук Следопыта',rarity:'rare'},{emoji:'🪓',name:'Топор Варвара',rarity:'rare'},{emoji:'🗡️',name:'Клинок Тени',rarity:'rare'},{emoji:'🛡️',name:'Щит Паладина',rarity:'rare'},{emoji:'💎',name:'Двойной осколок',rarity:'rare'}];rare.forEach(item=>{for(let i=0;i<3;i++)addUnique(item);});players.filter(p=>(p.wins||0)+(p.losses||0)>=50).forEach(p=>addUnique({emoji:p.emoji||'⚔️',name:p.display,rarity:'rare',desc:p.name}));const epicItems=[{emoji:'🏰',name:'Сияющий Шпиль',rarity:'epic'},{emoji:'🌑',name:'Эпицентр Раскола',rarity:'epic'},{emoji:'🎭',name:'Арена Тысячи Эхо',rarity:'epic'},{emoji:'🔥',name:'Кузня Расколотых',rarity:'epic'},{emoji:'🌫️',name:'Зал Повествователя',rarity:'epic'},{emoji:'👑',name:'Корона Раскола',rarity:'epic'}];epicItems.forEach(item=>pool.push(item));const top15=players.sort((a,b)=>(b.wins||0)-(a.wins||0)).slice(0,15);top15.forEach(p=>pool.push({emoji:p.emoji||'⚔️',name:p.display,rarity:'epic',desc:p.name}));if(data.dungeon&&data.dungeon.players){const dp=Object.values(data.dungeon.players).sort((a,b)=>(b.record||0)-(a.record||0)).slice(0,10);dp.forEach(d=>{const player=players.find(p=>p.display===d.display);if(player)pool.push({emoji:player.emoji||'🏔',name:player.display,rarity:'epic',desc:`Рекорд данжа: ${d.record} волн`});});}const legendary=[{emoji:'🐼',name:'ГуангГуанг',rarity:'legendary',desc:'Трактирщик'},{emoji:'🔮',name:'Осколок Клинка',rarity:'legendary'},{emoji:'☀️',name:'Солнечный Клинок',rarity:'legendary',desc:'Артефакт'}];legendary.forEach(item=>pool.push(item));const champions=players.filter(p=>p.tournamentWins>0||p.champion);champions.forEach(p=>pool.push({emoji:p.emoji||'👑',name:p.display,rarity:'legendary',desc:p.name+' | Чемпион'}));gachaPool=pool;gachaReady=true;document.getElementById('gachaResultArea').innerHTML='<div style="color:var(--muted);text-align:center;">Нажми на крутку, странник...</div>';}catch{document.getElementById('gachaResultArea').innerHTML='<div style="color:var(--red);text-align:center;">❌ Не удалось загрузить данные</div>';}gachaRenderCollection();gachaRenderRecent();}
-function gachaPull(count){if(!gachaReady){setQuote('Данные ещё грузятся, не спеши...');return;}const cost=count===10?90:10;if(balance<cost){setQuote('Недостаточно осколков!');return;}balance-=cost;updateBalance();const area=document.getElementById('gachaResultArea');area.innerHTML='<div style="text-align:center;font-size:3rem;">🎰</div>';setTimeout(()=>{const drops=[];for(let i=0;i<count;i++)drops.push(gachaPool[Math.floor(Math.random()*gachaPool.length)]);const rank=r=>['legendary','epic','rare','uncommon','common'].indexOf(r.rarity);const best=drops.reduce((a,b)=>rank(a)<rank(b)?a:b);drops.forEach(d=>gachaCollection.push(d));if(gachaCollection.length>200){gachaCollection=gachaCollection.slice(-200);setQuote('📦 Коллекция переполнена! Старые предметы удалены.');}gachaSaveCollection();best.time=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});gachaRecent.unshift(best);if(gachaRecent.length>5)gachaRecent.pop();localStorage.setItem('gachaRecent',JSON.stringify(gachaRecent));if(count===1){const rarityLabel=best.rarity==='legendary'?'ЛЕГЕНДАРНЫЙ':best.rarity==='epic'?'Эпический':best.rarity==='rare'?'Редкий':best.rarity==='uncommon'?'Необычный':'Обычный';area.innerHTML=`<div class="drop-card ${best.rarity}"><div class="drop-emoji">${best.emoji}</div><div class="drop-name">${best.name}</div>${best.desc?`<div style="color:var(--sub);font-size:0.85rem;margin-top:4px;">${best.desc}</div>`:''}<div class="drop-rarity rarity-${best.rarity}">${rarityLabel}</div></div>`;}else{const colors={legendary:'#ffaa00',epic:'#c471ed',rare:'#4a90d9',uncommon:'#3fb950',common:'var(--muted)'};area.innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px;">`+drops.map(d=>`<div style="background:var(--elevated);border-radius:10px;padding:6px 8px;text-align:center;border:1px solid ${colors[d.rarity]};font-size:1.2rem;" title="${d.name} (${d.rarity})">${d.emoji}</div>`).join('')+`</div><div class="drop-card ${best.rarity}" style="margin-top:8px;"><div class="drop-emoji" style="font-size:2rem;">${best.emoji}</div><div class="drop-name" style="font-size:1rem;">Лучшее: ${best.name}</div><div class="drop-rarity rarity-${best.rarity}">${best.rarity==='legendary'?'ЛЕГЕНДАРНЫЙ':best.rarity==='epic'?'Эпический':best.rarity==='rare'?'Редкий':best.rarity==='uncommon'?'Необычный':'Обычный'}</div></div>`;}if(best.rarity==='legendary')setQuote('🐼 БАМБУК ПОТРЯСЁН! ЛЕГЕНДАРКА!!!');else if(best.rarity==='epic')setQuote('✨ Эпик! ГуангГуанг одобряет!');else if(best.rarity==='rare')setQuote('👀 Ого, редкая штука!');else if(best.rarity==='uncommon')setQuote('🙂 Неплохо, странник.');else setQuote('🗑️ Мусор... но ты заходи ещё!');gachaRenderCollection();gachaRenderRecent();},800);}
-function gachaSortCollection(sort){if(gachaSort===sort){gachaSortDir=gachaSortDir==='desc'?'asc':'desc';}else{gachaSort=sort;gachaSortDir='desc';}gachaRenderCollection();}
-function gachaGetSortedCollection(){const sorted=[...gachaCollection];if(gachaSort==='rarity'){const rank=r=>['legendary','epic','rare','uncommon','common'].indexOf(r.rarity);sorted.sort((a,b)=>gachaSortDir==='desc'?rank(b)-rank(a):rank(a)-rank(b));}else if(gachaSort==='name'){sorted.sort((a,b)=>gachaSortDir==='desc'?b.name.localeCompare(a.name):a.name.localeCompare(b.name));}else if(gachaSort==='newest'&&gachaSortDir==='asc'){sorted.reverse();}return sorted;}
-function gachaRenderCollection(){const grid=document.getElementById('gachaCollectionGrid');const count=document.getElementById('gachaCollectionCount');if(!grid||!count)return;count.textContent=gachaCollection.length;const sorted=gachaGetSortedCollection();grid.innerHTML=sorted.map((item)=>{const actualIdx=gachaCollection.findIndex((x,i)=>x===item);const isSelected=gachaSelected.has(actualIdx);return`<div class="collection-item ${item.rarity}" style="${isSelected?'box-shadow:0 0 10px rgba(255,215,0,0.6);transform:scale(1.05);':''}" title="${item.name}" onclick="gachaToggleSelect(${actualIdx}, event)">${item.emoji}${isSelected?'<div class="check-mark">✓</div>':''}</div>`;}).join('');const sellBtn=document.getElementById('gachaSellSelected');if(sellBtn)sellBtn.textContent=`💰 Продать (${gachaSelected.size})`;}
-function gachaToggleSelect(index,event){if(event.ctrlKey||event.metaKey){if(gachaSelected.has(index))gachaSelected.delete(index);else gachaSelected.add(index);gachaRenderCollection();}else{gachaShowItem(index);}}
-function gachaSellSelected(){if(gachaSelected.size===0)return;const prices={legendary:50,epic:20,rare:8,uncommon:3,common:1};let total=0;const sorted=[...gachaSelected].sort((a,b)=>b-a);sorted.forEach(idx=>{const item=gachaCollection[idx];if(item)total+=prices[item.rarity]||1;});sorted.forEach(idx=>{gachaCollection.splice(idx,1);});gachaSelected.clear();gachaSaveCollection();balance+=total;updateBalance();setQuote(`💰 Продано ${sorted.length} предметов за ${total}💎`);flashWin();gachaRenderCollection();}
-function gachaSellItem(index){const item=gachaCollection[index];if(!item)return;const prices={legendary:50,epic:20,rare:8,uncommon:3,common:1};const price=prices[item.rarity]||1;gachaCollection.splice(index,1);gachaSelected.delete(index);gachaSaveCollection();balance+=price;updateBalance();setQuote(`💰 Продано за ${price}💎`);flashWin();gachaRenderCollection();const overlay=document.querySelector('.modal-overlay');if(overlay)overlay.remove();}
-function gachaTradeUp(index){const item=gachaCollection[index];if(!item)return;if(item.rarity==='legendary'){setQuote('⚠️ Легендарки не обмениваются!');return;}const sameItems=gachaCollection.filter((it,i)=>it.name===item.name&&it.rarity===item.rarity);if(sameItems.length<5){setQuote(`⚠️ Нужно 5× ${item.name}, у тебя ${sameItems.length}`);return;}let removed=0;for(let i=gachaCollection.length-1;i>=0;i--){if(removed>=5)break;if(gachaCollection[i].name===item.name&&gachaCollection[i].rarity===item.rarity){gachaCollection.splice(i,1);removed++;}}const nextRarity={common:'uncommon',uncommon:'rare',rare:'epic',epic:'legendary'};const newRarity=nextRarity[item.rarity];const upgradePool=gachaPool.filter(it=>it.rarity===newRarity);const reward=upgradePool.length>0?upgradePool[Math.floor(Math.random()*upgradePool.length)]:{emoji:'✨',name:'Случайный апгрейд',rarity:newRarity};gachaCollection.push(reward);gachaSaveCollection();const rarityLabel=newRarity==='legendary'?'ЛЕГЕНДАРНЫЙ':newRarity==='epic'?'Эпический':newRarity==='rare'?'Редкий':'Необычный';setQuote(`🔄 Обмен! 5× ${item.name} → ${reward.emoji} ${reward.name} (${rarityLabel})`);flashWin();gachaRenderCollection();const overlay=document.querySelector('.modal-overlay');if(overlay)overlay.remove();setTimeout(()=>{gachaShowItem(gachaCollection.length-1);},300);}
-function gachaRenderRecent(){const list=document.getElementById('gachaRecentList');if(!list)return;if(!gachaRecent.length){list.innerHTML='<span style="color:var(--muted);">Пока ничего...</span>';return;}const colors={legendary:'#ffaa00',epic:'#c471ed',rare:'#4a90d9',uncommon:'#3fb950',common:'var(--muted)'};list.innerHTML=gachaRecent.map(d=>`<div class="recent-item"><span style="color:${colors[d.rarity]||'var(--muted)'};">${d.emoji} ${d.name}</span> <span style="color:var(--muted);">${d.time||''}</span></div>`).join('');}
-function gachaShowItem(index){const item=gachaCollection[index];if(!item)return;const prices={legendary:50,epic:20,rare:8,uncommon:3,common:1};const price=prices[item.rarity]||1;const rarityLabel=item.rarity==='legendary'?'ЛЕГЕНДАРНЫЙ':item.rarity==='epic'?'Эпический':item.rarity==='rare'?'Редкий':item.rarity==='uncommon'?'Необычный':'Обычный';const sameNameCount=gachaCollection.filter(it=>it.name===item.name&&it.rarity===item.rarity).length;const canTrade=item.rarity!=='legendary'&&sameNameCount>=5;const overlay=document.createElement('div');overlay.className='modal-overlay';overlay.onclick=e=>{if(e.target===overlay)overlay.remove();};overlay.innerHTML=`<div class="modal-card ${item.rarity}"><div class="drop-emoji">${item.emoji}</div><div class="drop-name">${item.name}</div>${item.desc?`<div style="color:var(--sub);font-size:0.85rem;margin-top:4px;">${item.desc}</div>`:''}<div class="drop-rarity rarity-${item.rarity}">${rarityLabel}</div>${canTrade?`<div style="color:var(--muted);font-size:0.7rem;margin-top:4px;">${sameNameCount}/5 для обмена</div>`:''}<div style="display:flex;gap:8px;margin-top:16px;"><button class="btn btn-primary" onclick="gachaSellItem(${index})">💰 Продать<br>(${price}💎)</button>${canTrade?`<button class="btn btn-secondary" onclick="gachaTradeUp(${index})">🔄 Обменять 5→1</button>`:''}<button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Закрыть</button></div></div>`;document.body.appendChild(overlay);}
+function gachaSaveRecent(){localStorage.setItem('gachaRecent',JSON.stringify(gachaRecent));}
+
+async function loadGachaPool(){
+    const area=document.getElementById('gachaResultArea');
+    if(area)area.innerHTML='<div style="color:var(--muted);text-align:center;">Загрузка сундуков...</div>';
+    try{
+        const r=await fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json');
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        const data=await r.json();
+        const players=(data.players||[]).filter(p=>p.name&&p.name!=='Unknown');
+        const pool=[];
+        const seen=new Set();
+        const add=(emoji,name,rarity,desc='')=>{const k=name+'|'+rarity;if(seen.has(k))return;seen.add(k);pool.push({emoji,name,rarity,desc});};
+
+        // Обычные
+        ['🦴','🍂','🍺','🕯️','🧦','🗑️','🍭','🍄','👟','📎'].forEach((e,i)=>add(e,['Кость','Лист','Кружка','Огарок','Носок','Мусор','Леденец','Гриб','Тапок','Скрепка'][i],'common'));
+        // Необычные
+        ['🧪','🛡️','✨','📜','💎','🔮','🗡️','🧿'].forEach((e,i)=>add(e,['Зелье','Благословение','Чудо','Свиток','Осколок','Кристалл','Кинжал','Амулет'][i],'uncommon'));
+        // Редкие
+        add('⚔️','Меч Аэлиона','rare','Первый клинок');
+        add('🏹','Лук Следопыта','rare','Бьёт без промаха');
+        add('🪓','Топор Варвара','rare','Ярость внутри');
+        add('🗡️','Клинок Тени','rare','Невидим во тьме');
+        add('🛡️','Щит Паладина','rare','Свет отражает');
+        add('💎','Двойной осколок','rare','Двойная мощь');
+        // Эпические
+        ['🏰','🌑','🎭','🔥','🌫️','👑'].forEach((e,i)=>add(e,['Сияющий Шпиль','Эпицентр Раскола','Арена Тысячи Эхо','Кузня Расколотых','Зал Повествователя','Корона Раскола'][i],'epic'));
+        // Игроки
+        players.forEach(p=>add(p.emoji||'⚔️',p.display,'uncommon',p.name));
+        players.filter(p=>(p.wins||0)+(p.losses||0)>=50).forEach(p=>add(p.emoji||'⚔️',p.display,'rare',p.name));
+        [...players].sort((a,b)=>(b.wins||0)-(a.wins||0)).slice(0,15).forEach(p=>add(p.emoji||'⚔️',p.display,'epic',p.name));
+        players.filter(p=>p.tournamentWins>0||p.champion).forEach(p=>add(p.emoji||'👑',p.display,'legendary',p.name+' | Чемпион'));
+        // Легендарные
+        add('🐼','ГуангГуанг','legendary','Трактирщик');
+        add('🔮','Осколок Клинка','legendary','Артефакт');
+        add('☀️','Солнечный Клинок','legendary','Восстановленный');
+
+        gachaPool=pool;
+        gachaReady=true;
+        if(area)area.innerHTML='<div style="color:var(--muted);text-align:center;">Выбери сундук, странник...</div>';
+        gachaRenderCollection();
+        gachaRenderRecent();
+    }catch(e){
+        if(area)area.innerHTML='<div style="color:var(--red);text-align:center;">❌ Ошибка загрузки</div>';
+    }
+}
+
+function openChest(type){
+    if(!gachaReady){setQuote('Сундуки загружаются...');return;}
+    if(balance<CHEST_COSTS[type]){setQuote('Недостаточно осколков!');shakeBalance();return;}
+    balance-=CHEST_COSTS[type];updateBalance();
+
+    const lootTable=CHEST_LOOT[type];
+    const drops=[];
+    lootTable.forEach(({r,w})=>{
+        const pool=gachaPool.filter(p=>p.rarity===r);
+        for(let i=0;i<w;i++)drops.push(pool[Math.floor(Math.random()*pool.length)]);
+    });
+
+    drops.forEach(d=>gachaCollection.push({...d,time:Date.now()}));
+    if(gachaCollection.length>300)gachaCollection=gachaCollection.slice(-300);
+    gachaSaveCollection();
+
+    const best=[...drops].sort((a,b)=>RARITY_ORDER.indexOf(a.rarity)-RARITY_ORDER.indexOf(b.rarity))[0];
+    const area=document.getElementById('gachaResultArea');
+    if(area)area.innerHTML=`<div class="drop-card ${best.rarity}">
+        <div class="drop-emoji">${best.emoji}</div>
+        <div class="drop-name">${best.name}</div>
+        ${best.desc?`<div style="color:var(--sub);font-size:0.8rem;margin-top:4px;">${best.desc}</div>`:''}
+        <div class="drop-rarity rarity-${best.rarity}">${RARITY_LABELS[best.rarity]}</div>
+        <div style="display:flex;gap:6px;justify-content:center;margin-top:12px;">${drops.map(d=>`<span style="font-size:1.5rem;" title="${d.name}">${d.emoji}</span>`).join('')}</div>
+    </div>`;
+
+    best.time=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+    gachaRecent.unshift(best);
+    if(gachaRecent.length>8)gachaRecent.pop();
+    gachaSaveRecent();
+
+    if(best.rarity==='legendary'){setQuote('🐼 БАМБУК ПОТРЯСЁН! ЛЕГЕНДАРКА!!!');flashWin();}
+    else if(best.rarity==='epic'){setQuote('✨ Эпик! ГуангГуанг одобряет!');flashWin();}
+    else if(best.rarity==='rare')setQuote('👀 Ого, редкая штука!');
+    else if(best.rarity==='uncommon')setQuote('🙂 Неплохо, странник.');
+    else setQuote('🗑️ Мусор... но ты заходи ещё!');
+
+    gachaRenderCollection();
+    gachaRenderRecent();
+}
+
+function gachaSetFilter(filter,btn){
+    gachaFilter=filter;
+    document.querySelectorAll('#gachaFilters .filter-btn').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    gachaSelected.clear();
+    gachaRenderCollection();
+}
+
+function getSelectedRealCount(){
+    let count=0;
+    for(const key of gachaSelected){
+        const [name,rarity]=key.split('|');
+        for(const item of gachaCollection)if(item.name===name&&item.rarity===rarity)count++;
+    }
+    return count;
+}
+
+function gachaRenderCollection(){
+    const grid=document.getElementById('gachaCollectionGrid');
+    if(!grid)return;
+    const count=document.getElementById('gachaCollectionCount');
+    const progressText=document.getElementById('gachaProgressText');
+    const progressFill=document.getElementById('gachaProgressFill');
+    const searchText=(document.getElementById('gachaSearch')?.value||'').toLowerCase();
+
+    let items=[...gachaCollection];
+    if(gachaFilter!=='all')items=items.filter(i=>i.rarity===gachaFilter);
+    if(searchText)items=items.filter(i=>i.name.toLowerCase().includes(searchText));
+
+    const grouped={};
+    items.forEach(i=>{const k=i.name+'|'+i.rarity;if(!grouped[k])grouped[k]={...i,count:0};grouped[k].count++;});
+    const uniqueItems=Object.values(grouped);
+
+    const totalUnique=new Set(gachaPool.map(p=>p.name+'|'+p.rarity)).size;
+    const collectedUnique=new Set(gachaCollection.map(i=>i.name+'|'+i.rarity)).size;
+    const pct=totalUnique>0?(collectedUnique/totalUnique*100):0;
+
+    if(count)count.textContent=collectedUnique+' / '+totalUnique;
+    if(progressText)progressText.textContent=collectedUnique+' / '+totalUnique;
+    if(progressFill)progressFill.style.width=pct+'%';
+
+    grid.innerHTML=uniqueItems.map(i=>{
+        const isSelected=gachaSelected.has(i.name+'|'+i.rarity);
+        return`<div class="collection-item ${i.rarity} ${isSelected?'selected':''}" onclick="showItemModal('${i.name.replace(/'/g,"\\'")}','${i.rarity}')" title="${i.name} (${RARITY_LABELS[i.rarity]})"><div class="item-emoji">${i.emoji}</div><div class="item-name">${i.name.substring(0,12)}</div>${i.count>1?`<div class="item-count">×${i.count}</div>`:''}</div>`;
+    }).join('');
+
+    const realCount=getSelectedRealCount();
+    const tradeBtn=document.getElementById('gachaTradeBtn');
+    if(tradeBtn){tradeBtn.textContent=`🔄 (${realCount}/5)`;tradeBtn.disabled=realCount<5;}
+    const sellBtn=document.getElementById('gachaSellBtn');
+    if(sellBtn){sellBtn.textContent=`💰 (${realCount})`;sellBtn.disabled=realCount===0;}
+}
+
+function showItemModal(name,rarity){
+    const items=gachaCollection.filter(i=>i.name===name&&i.rarity===rarity);
+    if(!items.length)return;
+    const item=items[0];
+    const count=items.length;
+    const price=SELL_PRICES[rarity]||1;
+    const canTrade=rarity!=='legendary'&&count>=5;
+
+    const overlay=document.createElement('div');
+    overlay.className='modal-overlay';
+    overlay.onclick=e=>{if(e.target===overlay)overlay.remove();};
+    overlay.innerHTML=`<div class="modal-card ${rarity}">
+        <div class="drop-emoji">${item.emoji}</div>
+        <div class="drop-name">${item.name}</div>
+        ${item.desc?`<div style="color:var(--sub);font-size:0.8rem;margin:4px 0;">${item.desc}</div>`:''}
+        <div class="drop-rarity rarity-${rarity}">${RARITY_LABELS[rarity]}</div>
+        <div style="color:var(--muted);font-size:0.8rem;margin:8px 0;">В наличии: ${count} шт.</div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center;">
+            <button class="btn btn-primary" style="flex:1;min-width:70px;" onclick="sellItem('${name.replace(/'/g,"\\'")}','${rarity}',1);this.closest('.modal-overlay').remove();">💰 1<br>(${price}💎)</button>
+            ${count>1?`<button class="btn btn-primary" style="flex:1;min-width:70px;" onclick="sellItem('${name.replace(/'/g,"\\'")}','${rarity}',${count});this.closest('.modal-overlay').remove();">💰 Все<br>(${price*count}💎)</button>`:''}
+            ${canTrade?`<button class="btn btn-secondary" style="flex:1;min-width:70px;" onclick="tradeSingle('${name.replace(/'/g,"\\'")}','${rarity}');this.closest('.modal-overlay').remove();">🔄 5→1</button>`:''}
+            ${count>=5&&rarity!=='legendary'?`<div style="width:100%;font-size:0.65rem;color:var(--muted);">Можно обменять 5×${name} → предмет редкостью выше</div>`:''}
+            <button class="btn btn-secondary" style="flex:1;min-width:70px;" onclick="this.closest('.modal-overlay').remove();">Закрыть</button>
+        </div>
+    </div>`;
+    document.body.appendChild(overlay);
+}
+
+function sellItem(name,rarity,qty){
+    let sold=0;
+    for(let i=gachaCollection.length-1;i>=0;i--){
+        if(sold>=qty)break;
+        if(gachaCollection[i].name===name&&gachaCollection[i].rarity===rarity){
+            balance+=SELL_PRICES[rarity]||1;
+            gachaCollection.splice(i,1);
+            sold++;
+        }
+    }
+    gachaSaveCollection();
+    updateBalance();
+    gachaRenderCollection();
+    setQuote(`💰 Продано ×${sold} за ${(SELL_PRICES[rarity]||1)*sold}💎`);
+    flashWin();
+}
+
+function tradeSingle(name,rarity){
+    const count=gachaCollection.filter(i=>i.name===name&&i.rarity===rarity).length;
+    if(count<5){setQuote(`⚠️ Нужно 5× ${name}, у тебя ${count}`);return;}
+    if(rarity==='legendary'){setQuote('⚠️ Легендарки не обмениваются!');return;}
+
+    let removed=0;
+    for(let i=gachaCollection.length-1;i>=0;i--){
+        if(removed>=5)break;
+        if(gachaCollection[i].name===name&&gachaCollection[i].rarity===rarity){gachaCollection.splice(i,1);removed++;}
+    }
+
+    const nextRarity={common:'uncommon',uncommon:'rare',rare:'epic',epic:'legendary'}[rarity];
+    const pool=gachaPool.filter(p=>p.rarity===nextRarity);
+    const reward=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:{emoji:'✨',name:'Случайный апгрейд',rarity:nextRarity};
+    gachaCollection.push({...reward,time:Date.now()});
+    gachaSaveCollection();
+
+    const area=document.getElementById('gachaResultArea');
+    if(area)area.innerHTML=`<div class="drop-card ${reward.rarity}"><div style="color:var(--muted);font-size:0.7rem;margin-bottom:8px;">🔄 5×${name} →</div><div class="drop-emoji">${reward.emoji}</div><div class="drop-name">${reward.name}</div><div class="drop-rarity rarity-${reward.rarity}">${RARITY_LABELS[reward.rarity]}</div></div>`;
+
+    gachaRenderCollection();
+    setQuote(`🔄 Обмен! +${reward.emoji} ${reward.name}`);
+    flashWin();
+}
+
+function gachaSellSelected(){
+    if(gachaSelected.size===0)return;
+    let total=0;
+    const toRemove=[];
+    for(const key of gachaSelected){
+        const [name,rarity]=key.split('|');
+        for(let i=gachaCollection.length-1;i>=0;i--){
+            if(gachaCollection[i].name===name&&gachaCollection[i].rarity===rarity){
+                total+=SELL_PRICES[rarity]||1;
+                toRemove.push(i);
+            }
+        }
+    }
+    toRemove.sort((a,b)=>b-a).forEach(i=>gachaCollection.splice(i,1));
+    gachaSelected.clear();
+    gachaSaveCollection();
+    balance+=total;
+    updateBalance();
+    gachaRenderCollection();
+    setQuote(`💰 Продано за ${total}💎`);
+    flashWin();
+}
+
+function gachaTradeUp(){
+    if(gachaSelected.size===0)return;
+    const realCount=getSelectedRealCount();
+    if(realCount<5){setQuote(`⚠️ Нужно 5 предметов, выбрано ${realCount}`);return;}
+
+    const firstKey=[...gachaSelected][0];
+    const rarity=firstKey.split('|')[1];
+    if(rarity==='legendary'){setQuote('⚠️ Легендарки не обмениваются!');return;}
+
+    let removed=0;
+    for(const key of gachaSelected){
+        const [name,rarity]=key.split('|');
+        for(let i=gachaCollection.length-1;i>=0;i--){
+            if(removed>=5)break;
+            if(gachaCollection[i].name===name&&gachaCollection[i].rarity===rarity){gachaCollection.splice(i,1);removed++;}
+        }
+    }
+    gachaSelected.clear();
+
+    const nextRarity={common:'uncommon',uncommon:'rare',rare:'epic',epic:'legendary'}[rarity];
+    const pool=gachaPool.filter(p=>p.rarity===nextRarity);
+    const reward=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:{emoji:'✨',name:'Случайный апгрейд',rarity:nextRarity};
+    gachaCollection.push({...reward,time:Date.now()});
+    gachaSaveCollection();
+
+    const area=document.getElementById('gachaResultArea');
+    if(area)area.innerHTML=`<div class="drop-card ${reward.rarity}"><div style="color:var(--muted);font-size:0.7rem;margin-bottom:8px;">🔄 ОБМЕН 5→1</div><div class="drop-emoji">${reward.emoji}</div><div class="drop-name">${reward.name}</div><div class="drop-rarity rarity-${reward.rarity}">${RARITY_LABELS[reward.rarity]}</div></div>`;
+
+    gachaRenderCollection();
+    setQuote(`🔄 Обмен! +${reward.emoji} ${reward.name}`);
+    flashWin();
+}
+
+function gachaRenderRecent(){
+    const list=document.getElementById('gachaRecentList');
+    if(!list)return;
+    if(!gachaRecent.length){list.innerHTML='<span style="color:var(--muted);">Пока ничего...</span>';return;}
+    list.innerHTML=gachaRecent.map(d=>`<div class="recent-item"><span style="color:${RARITY_COLORS[d.rarity]||'var(--muted)'};">${d.emoji} ${d.name}</span> <span style="color:var(--muted);">${d.time||''}</span></div>`).join('');
+}
+
+function gachaPanel(){
+    return`<div class="game-area"><h3>🎰 Сундуки Раскола</h3>
+    <div class="chest-grid">
+        <div class="chest-card common" onclick="openChest('common')"><div class="chest-icon">🟢</div><div class="chest-name">Обычный</div><div class="chest-cost">10 💎</div><div class="chest-desc">Обычные и необычные</div></div>
+        <div class="chest-card rare" onclick="openChest('rare')"><div class="chest-icon">🔵</div><div class="chest-name">Редкий</div><div class="chest-cost">50 💎</div><div class="chest-desc">Редкие+ · 25% эпик</div></div>
+        <div class="chest-card epic" onclick="openChest('epic')"><div class="chest-icon">🟣</div><div class="chest-name">Эпический</div><div class="chest-cost">200 💎</div><div class="chest-desc">Эпик+ · 15% легендарка</div></div>
+    </div>
+    <div class="result-area" id="gachaResultArea"><div style="color:var(--muted);text-align:center;">Загрузка сундуков...</div></div>
+    <div class="recent-log"><h4>📋 Последние дропы</h4><div id="gachaRecentList" style="color:var(--muted);">Пока ничего...</div></div>
+    <div style="margin-top:20px;">
+        <div class="collection-progress"><div class="progress-header"><span>📦 Коллекция</span><span id="gachaProgressText">0 / 0</span></div><div class="progress-bar-sm"><div id="gachaProgressFill" class="progress-fill-sm" style="width:0%"></div></div></div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+            <input type="text" class="search-input" id="gachaSearch" placeholder="🔍 Поиск..." oninput="gachaRenderCollection()">
+            <button class="btn btn-secondary" id="gachaTradeBtn" onclick="gachaTradeUp()" disabled style="flex:0;font-size:0.75rem;">🔄 (0/5)</button>
+            <button class="btn btn-secondary" id="gachaSellBtn" onclick="gachaSellSelected()" disabled style="flex:0;font-size:0.75rem;">💰 (0)</button>
+        </div>
+        <div class="filter-bar" id="gachaFilters">
+            <button class="filter-btn active" onclick="gachaSetFilter('all',this)">Все</button>
+            <button class="filter-btn" onclick="gachaSetFilter('legendary',this)">👑</button>
+            <button class="filter-btn" onclick="gachaSetFilter('epic',this)">🟣</button>
+            <button class="filter-btn" onclick="gachaSetFilter('rare',this)">🔵</button>
+            <button class="filter-btn" onclick="gachaSetFilter('uncommon',this)">🟢</button>
+            <button class="filter-btn" onclick="gachaSetFilter('common',this)">⚪</button>
+        </div>
+        <div class="collection-grid" id="gachaCollectionGrid"></div>
+        <div style="font-size:0.65rem;color:var(--muted);margin-top:4px;">Клик — продать/обменять · Ctrl+клик — выбрать несколько</div>
+    </div>
+    <div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;
+}
 
 let mathActive=false,mathCorrect=0,mathAnswer=0,mathTimer=null,mathTimeLeft=0;
 const MATH_BET=5;
@@ -383,7 +709,6 @@ function ochkoPanel(){return `<div class="game-area"><h3>🃏 Не лопни!</
 function pigPanel(){return `<div class="game-area"><h3>🐷 Сало или золото?</h3><div class="last-card-info" id="lastCardInfo"></div><div class="table-felt"><div class="table-label">🐷 Выложенные карты</div><div class="cards-row" id="drawnCards"></div></div><div style="text-align:center"><div class="multiplier-box"><span style="color:var(--muted)">Множитель </span><span class="multiplier-value" id="multiplier">x1</span><span style="color:var(--muted);font-size:0.8rem"> → <span id="nextMultiplier">x2</span></span></div></div><div class="bet-info">🎲 Ставка: <span>5 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="pigStartBtn" onclick="pigGame.start()">🐷 Новая</button><button class="btn btn-secondary" id="pigDrawBtn" onclick="pigGame.draw()" disabled>🃏 Тянуть</button><button class="btn btn-secondary" id="pigStopBtn" onclick="pigGame.stop()" disabled>✋ Хватит</button></div><div class="history-box" id="historyBox"></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
 function sudokuPanel(){const nums=[1,2,3,4,5,6,7,8,9].map(n=>`<button class="num-btn" onclick="sudokuPlace(${n})">${n}</button>`).join('');return `<div class="game-area"><h3>🧩 Мозголомка</h3><div class="sudoku-timer">⏱ <span id="sudokuTimer">00:00</span></div><div class="sudoku-grid" id="sudokuGrid"></div><div class="num-pad">${nums}<button class="num-btn clear-btn" onclick="sudokuPlace(0)" style="grid-column:span 9">✕ Очистить</button></div><div class="bet-info">🎲 Ставка: <span>5 💎</span> | 🏆 Выигрыш: <span id="sudokuMulti">×3</span></div><div class="game-buttons"><button class="btn btn-primary" onclick="sudokuNewGame()">🆕 Новая</button><button class="btn btn-secondary" id="sudokuCheckBtn" onclick="sudokuCheck()" disabled>✅ Проверить</button></div><div id="sudokuMessage"></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
 function runesPanel(){return `<div class="game-area"><h3>🔮 Руны Раскола</h3><div class="combo-overlay" id="comboOverlay"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Ходов</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="movesLeft">30</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Комбо</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="comboCount">×1</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Очки</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="runesScore">0</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Выигрыш</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="earned">0 💎</div></div></div><div class="runes-grid" id="runesGrid"></div><div class="bet-info">🎲 Ставка: <span>10 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="runesNewBtn" onclick="runesNewGame()">🆕 Новая игра</button><button class="btn btn-secondary" id="runesCashBtn" onclick="runesCashOut()" disabled>💰 Забрать</button></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
-function gachaPanel(){return `<div class="game-area"><h3>🎰 Крутки Раскола</h3><div style="display:flex;justify-content:center;gap:10px;margin-bottom:16px;"><button class="btn btn-primary" onclick="gachaPull(1)">🎰 Крутка (10💎)</button><button class="btn btn-secondary" onclick="gachaPull(10)">🔥 ×10 (90💎, -10%)</button></div><div class="result-area" id="gachaResultArea"><div style="color:var(--muted);text-align:center;">Нажми на крутку, странник...</div></div><div class="recent-log"><h4>📋 Последние дропы</h4><div id="gachaRecentList" style="color:var(--muted);">Пока ничего...</div></div><div class="collection-section"><div class="collection-header"><h3>📦 Коллекция (<span id="gachaCollectionCount">0</span>)</h3><div class="collection-toolbar"><button class="btn btn-secondary" onclick="gachaSortCollection('newest')">🕐 Новые</button><button class="btn btn-secondary" onclick="gachaSortCollection('rarity')">💎 Редкость</button><button class="btn btn-secondary" onclick="gachaSortCollection('name')">🔤 Имя</button><button class="btn btn-primary" id="gachaSellSelected" onclick="gachaSellSelected()">💰 Продать (0)</button></div></div><div class="collection-grid" id="gachaCollectionGrid"></div><div style="font-size:0.65rem;color:var(--muted);margin-top:4px;">Ctrl+клик для выбора нескольких</div></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
 
 function selectGame(g){
     document.querySelectorAll('.game-panel').forEach(p=>{if(p.id!=='panel-select'){p.classList.remove('active');p.innerHTML='';}});
@@ -394,7 +719,7 @@ function selectGame(g){
     else if(g==='pig'){panel.innerHTML=pigPanel();setQuote('🐷 '+randomQuote());pigGame.renderHistory();}
     else if(g==='sudoku'){panel.innerHTML=sudokuPanel();setQuote('🧩 '+randomQuote());sudokuInit();}
     else if(g==='runes'){panel.innerHTML=runesPanel();setQuote('🔮 '+randomQuote());runesNewGame();}
-    else if(g==='gacha'){panel.innerHTML=gachaPanel();setQuote('🎰 '+randomQuote());gachaInit();}
+    else if(g==='gacha'){panel.innerHTML=gachaPanel();setQuote('🎰 '+randomQuote());loadGachaPool();}
     else if(g==='math'){panel.innerHTML=mathPanel();setQuote('🎋 '+randomQuote());}
 }
 window.selectGame=selectGame;
