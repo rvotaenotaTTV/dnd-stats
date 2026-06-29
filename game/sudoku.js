@@ -1,4 +1,3 @@
-// game/sudoku.js
 window.sudoku = {
     grid: [], sol: [], fixed: [], sel: null, active: false, timerInterval: null, seconds: 0,
 
@@ -91,7 +90,7 @@ window.sudoku = {
             const win = 10 * mult; window.tavernBalance += win; updateBalanceDisplay();
             const m = Math.floor(this.seconds / 60), s = this.seconds % 60;
             msg.innerHTML = `<div style="text-align:center;padding:16px;color:var(--gold);font-size:1.2rem;font-weight:800">🎉 +${win} 💎 (×${mult}, ${m>0?m+'м ':''}${s}с)</div>`;
-            window.flashWin(); setQuote('🧩 ' + (window.GG_IN_EXPEDITION ? 'Мурка' : 'ГуангГуанг') + ' уважает!');
+            window.flashWin(); setQuote('🧩 ' + (window.GG_IN_EXPEDITION ? 'Кэтэрина' : 'ГуангГуанг') + ' уважает!');
         } else if (hasEmpty) {
             msg.innerHTML = '<div style="text-align:center;color:var(--orange);padding:8px">⚠️ Заполни всё поле!</div>';
             setTimeout(() => msg.innerHTML = '', 2000);

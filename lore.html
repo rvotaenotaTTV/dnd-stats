@@ -3,290 +3,563 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Лор</title>
+    <title>Лор Этерниса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #06040a; --card: #0e0a14; --elevated: #140c1a;
-            --text: #e8ddf0; --sub: #8a7d94; --muted: #5e5268;
-            --border: rgba(180,100,140,0.15);
-            --gold: #f0b90b; --red: #e85d3a; --purple: #a371f7;
-            --dwarf: #c0c0c0; --tabaxi: #5cd6c4;
-            --radius: 16px; --radius-sm: 10px;
-        }
-        [data-theme="light"] {
-            --bg: #f7f2eb; --card: #fefcf8; --elevated: #fbf8f3;
-            --text: #2d1a1a; --sub: #6b4e4e; --muted: #8b6b6b;
-            --border: rgba(180,80,60,0.12);
-            --gold: #b8860b; --red: #a03020; --purple: #7b5ea7;
-            --dwarf: #4a3728; --tabaxi: #3a9d8f;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
-        body { font-family: 'Inter',system-ui,sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 0%, rgba(200,40,40,0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(163,113,247,0.04) 0%, transparent 50%); color: var(--text); min-height: 100vh; line-height: 1.5; }
-        .container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+        .section h3{color:var(--gold);font-size:.9rem;font-weight:700;margin:18px 0 8px}
+        .flavor{font-style:italic;color:var(--muted)}
+        .lore-block{background:var(--elevated);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;font-style:italic;line-height:1.7;color:var(--sub);font-size:.85rem;border-left:3px solid var(--border);transition:.2s}
+        .cta-block{text-align:center;padding:10px 0}
+        .cta-block p{font-size:.9rem;color:var(--sub)}
+        .cta-block .big-text{font-size:1.2rem;color:var(--gold);font-weight:700;margin-top:12px}
 
-        .header { text-align: center; padding: 32px 0 8px; position: relative; }
-        .header-title { font-size: clamp(2.2rem,6vw,3.2rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#8b0000 0%,#e85d3a 40%,#ffd700 70%,#e85d3a 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(232,93,58,0.5)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
-        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
-        .header-subtitle { font-size: 0.9rem; color: var(--red); font-weight: 500; letter-spacing: 0.04em; }
-        .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
-        .theme-toggle:hover { background: var(--card); color: var(--red); border-color: var(--red); }
+        .hero-lore{text-align:center;padding:60px 20px 40px;position:relative;overflow:hidden;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);margin-bottom:20px}
+        .hero-lore::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(240,185,11,0.04) 0%,transparent 40%),radial-gradient(circle at 70% 60%,rgba(163,113,247,0.04) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(91,192,235,0.03) 0%,transparent 50%);animation:heroFloat 20s ease-in-out infinite;z-index:0}
+        @keyframes heroFloat{0%,100%{transform:translate(0,0) rotate(0deg)}33%{transform:translate(1%,-1%) rotate(1deg)}66%{transform:translate(-1%,1%) rotate(-1deg)}}
+        .hero-lore>*{position:relative;z-index:1}
+        .path-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+        .path-card{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px 16px;text-align:center;cursor:pointer;transition:all .25s ease;text-decoration:none;color:inherit;display:block}
+        .path-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 8px 24px rgba(240,185,11,0.1)}
+        .path-icon{font-size:2rem;margin-bottom:10px;display:block}
+        .path-title{font-weight:700;font-size:.9rem;color:var(--text);margin-bottom:4px}
+        .path-desc{font-size:.7rem;color:var(--muted);line-height:1.5}
 
-        .nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
-        .nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; }
-        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
-        .nav-link { padding: 8px 14px; border-radius: 20px; color: var(--sub); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: 0.2s; }
-        .nav-link:hover { color: var(--text); background: var(--elevated); }
-        .nav-link.active { background: linear-gradient(135deg,var(--red),var(--gold)); color: #000; font-weight: 700; }
+        .faction-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+        .faction-tab{flex:1;min-width:120px;padding:14px 18px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);cursor:pointer;text-align:center;transition:all .25s ease;font-family:inherit;font-size:.85rem;color:var(--sub);font-weight:600}
+        .faction-tab:hover{border-color:var(--gold);color:var(--text)}
+        .faction-tab.active{border-color:transparent;color:#000;font-weight:700}
+        .faction-tab.light.active{background:var(--gold);box-shadow:0 4px 16px rgba(240,185,11,0.3)}
+        .faction-tab.dark.active{background:var(--purple);box-shadow:0 4px 16px rgba(163,113,247,0.3)}
+        .faction-content{display:none;animation:fadeSlideIn .3s ease}
+        .faction-content.active{display:block}
+        @keyframes fadeSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .faction-motto{font-style:italic;font-size:1rem;padding:16px 20px;border-radius:var(--radius-sm);margin-bottom:16px;text-align:center;font-weight:600}
+        .faction-motto.light{background:rgba(240,185,11,0.08);color:var(--gold);border-left:4px solid var(--gold)}
+        .faction-motto.dark{background:rgba(163,113,247,0.08);color:var(--purple);border-left:4px solid var(--purple)}
+        .faction-detail{margin-bottom:10px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+        .faction-detail summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.85rem;color:var(--text);background:var(--elevated);list-style:none;display:flex;align-items:center;gap:8px;transition:background .2s}
+        .faction-detail summary:hover{background:var(--card)}
+        .faction-detail summary::before{content:'▸';font-size:.7rem;transition:transform .2s;color:var(--gold)}
+        .faction-detail[open] summary::before{transform:rotate(90deg)}
+        .faction-detail .detail-content{padding:14px 16px;font-size:.8rem;color:var(--sub);line-height:1.7;border-top:1px solid var(--border)}
 
-        .section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; margin-bottom: 20px; position: relative; overflow: hidden; }
-        .section::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.6; }
-        .section.gold::after { background: linear-gradient(90deg,transparent,var(--gold),transparent); }
-        .section.purple::after { background: linear-gradient(90deg,transparent,var(--purple),transparent); }
-        .section.red::after { background: linear-gradient(90deg,transparent,var(--red),transparent); }
-        .section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-        .section.gold .section-title { color: var(--gold); }
-        .section.purple .section-title { color: var(--purple); }
-        .section.red .section-title { color: var(--red); }
-        .section h3 { color: var(--gold); font-size: 0.9rem; font-weight: 700; margin: 18px 0 8px; }
-        .section p { color: var(--sub); font-size: 0.85rem; line-height: 1.65; margin-bottom: 8px; }
-        .flavor { font-style: italic; color: var(--muted); }
+        .race-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+        .race-card{background:var(--elevated);border-radius:var(--radius-sm);padding:20px;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .3s ease;cursor:default}
+        .race-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.2)}
+        .race-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;transition:all .3s ease}
+        .race-card.light::before{background:var(--gold)}
+        .race-card.dark::before{background:var(--purple)}
+        .race-card.neutral-dwarf::before{background:var(--orange)}
+        .race-card.neutral-tabaxi::before{background:var(--ice)}
+        .race-card.light:hover{box-shadow:0 8px 28px rgba(240,185,11,0.1);border-color:rgba(240,185,11,0.3)}
+        .race-card.dark:hover{box-shadow:0 8px 28px rgba(163,113,247,0.1);border-color:rgba(163,113,247,0.3)}
+        .race-card.neutral-dwarf:hover{box-shadow:0 8px 28px rgba(255,153,0,0.08);border-color:rgba(255,153,0,0.25)}
+        .race-card.neutral-tabaxi:hover{box-shadow:0 8px 28px rgba(91,192,235,0.08);border-color:rgba(91,192,235,0.25)}
+        .race-card .race-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+        .race-card .race-icon{font-size:1.8rem;flex-shrink:0}
+        .race-card .race-info{flex:1}
+        .race-card h4{font-size:.9rem;font-weight:700;margin:0 0 2px}
+        .race-card .race-affiliation{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+        .race-card .race-quote{font-style:italic;padding:10px 14px;border-radius:8px;margin-bottom:10px;font-size:.84rem;line-height:1.5;background:rgba(0,0,0,0.12)}
+        .race-card.light .race-quote{border-left:3px solid var(--gold);color:var(--gold)}
+        .race-card.dark .race-quote{border-left:3px solid var(--purple);color:var(--purple)}
+        .race-card.neutral-dwarf .race-quote{border-left:3px solid var(--orange);color:var(--orange)}
+        .race-card.neutral-tabaxi .race-quote{border-left:3px solid var(--ice);color:var(--ice)}
+        .race-card p{font-size:.8rem;color:var(--sub);line-height:1.65;margin:0}
 
-        .table-container { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-top: 10px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        th { background: var(--elevated); color: var(--gold); font-weight: 700; padding: 8px 10px; text-align: left; font-size: 0.7rem; text-transform: uppercase; }
-        td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
-        tr:hover td { background: rgba(255,255,255,0.02); }
+        .territory-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+        .territory-card{background:var(--elevated);border:2px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:all .3s ease;position:relative;overflow:hidden}
+        .territory-card.light{border-color:rgba(240,185,11,0.35);box-shadow:0 0 20px rgba(240,185,11,0.06)}
+        .territory-card.dark{border-color:rgba(163,113,247,0.35);box-shadow:0 0 20px rgba(163,113,247,0.06)}
+        .territory-card.neutral{border-color:rgba(91,192,235,0.2);box-shadow:0 0 16px rgba(91,192,235,0.04)}
+        .territory-card:hover{transform:translateY(-2px)}
+        .territory-card.light:hover{box-shadow:0 6px 24px rgba(240,185,11,0.1)}
+        .territory-card.dark:hover{box-shadow:0 6px 24px rgba(163,113,247,0.1)}
+        .territory-card.neutral:hover{box-shadow:0 6px 20px rgba(91,192,235,0.06)}
+        .territory-card .territory-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+        .territory-card .territory-name{font-size:.85rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
+        .territory-card .territory-icon{font-size:1.3rem}
+        .territory-card .territory-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:.65rem;font-weight:700}
+        .territory-badge.light{background:rgba(240,185,11,0.15);color:var(--gold)}
+        .territory-badge.dark{background:rgba(163,113,247,0.15);color:var(--purple)}
+        .territory-badge.neutral{background:rgba(91,192,235,0.12);color:var(--ice)}
+        .territory-card .territory-lore{font-size:.75rem;color:var(--muted);line-height:1.6;font-style:italic}
+        .territory-card::after{content:'';position:absolute;top:0;right:0;width:50px;height:50px;border-radius:0 0 0 50px;opacity:0.04;transition:opacity .3s}
+        .territory-card.light::after{background:var(--gold)}
+        .territory-card.dark::after{background:var(--purple)}
+        .territory-card.neutral::after{background:var(--ice)}
 
-        .faction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-        .faction-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 18px; border: 1px solid var(--border); }
-        .faction-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
-        .faction-card p { font-size: 0.82rem; color: var(--sub); line-height: 1.6; margin-bottom: 6px; }
-        .faction-quote { font-style: italic; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 0.85rem; background: rgba(0,0,0,0.15); }
-        .faction-card.light .faction-quote { border-left: 3px solid var(--gold); color: var(--gold); }
-        .faction-card.dark .faction-quote { border-left: 3px solid var(--purple); color: var(--purple); }
+        .shard-box{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:28px 24px;min-height:180px;text-align:center;cursor:pointer;transition:.2s;user-select:none;max-width:520px;margin:0 auto}
+        .shard-box:hover{border-color:var(--gold)}
 
-        .lore-block { background: var(--elevated); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 8px; font-style: italic; line-height: 1.7; color: var(--sub); font-size: 0.85rem; border-left: 3px solid var(--border); transition: box-shadow 0.3s; }
+        .season-progress{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px;padding:0 10px;flex-wrap:wrap}
+        .season-dot{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;transition:all .3s ease}
+        .season-dot .dot-icon{font-size:1.1rem;position:absolute;top:-18px;transition:all .3s ease}
+        .season-dot .dot-label{font-size:.7rem;font-weight:800;color:#000;z-index:1}
+        .season-dot.done{background:var(--gold);box-shadow:0 0 16px rgba(240,185,11,0.3)}
+        .season-dot.done .dot-icon{opacity:0.9}
+        .season-dot.current{background:var(--ice);box-shadow:0 0 20px rgba(91,192,235,0.5);animation:dotGlow 2s ease-in-out infinite}
+        .season-dot.current .dot-icon{opacity:1;animation:iconFloat 3s ease-in-out infinite}
+        .season-dot.future{background:var(--elevated);border:2px dashed var(--border)}
+        .season-dot.future .dot-label{color:var(--muted)}
+        .season-dot.future .dot-icon{opacity:0.4}
+        .pulse{position:absolute;width:100%;height:100%;border-radius:50%;border:2px solid var(--ice);animation:pulseRing 2s ease-out infinite;pointer-events:none}
+        .season-line{width:36px;height:2px;flex-shrink:0;border-radius:1px}
+        .season-line.done{background:var(--gold)}
+        .season-line.active{background:linear-gradient(90deg,var(--gold),var(--ice));animation:lineShimmer 2s ease-in-out infinite}
+        .season-line.future{background:var(--border);border-style:dashed;border-width:1px;height:0}
 
-        .shard-box { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px; min-height: 180px; text-align: center; cursor: pointer; transition: 0.2s; user-select: none; }
-        .shard-box:hover { border-color: var(--gold); }
+        @keyframes dotGlow{0%,100%{box-shadow:0 0 20px rgba(91,192,235,0.5)}50%{box-shadow:0 0 32px rgba(91,192,235,0.8)}}
+        @keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+        @keyframes pulseRing{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.8);opacity:0}}
+        @keyframes lineShimmer{0%,100%{background-position:0% center}50%{background-position:100% center}}
 
-        .beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.3); z-index: 99; transition: transform 0.2s; }
-        .beer-btn:hover { transform: scale(1.1); }
+        .timeline-enhanced{position:relative;padding:20px 0}
+        .timeline-season{display:flex;gap:16px;margin-bottom:20px;animation:slideIn .5s ease forwards;align-items:flex-start}
+        .timeline-season:nth-child(2){animation-delay:.1s}
+        .timeline-season:nth-child(3){animation-delay:.2s}
+        .timeline-season:nth-child(4){animation-delay:.3s}
+        .timeline-season:nth-child(5){animation-delay:.4s}
+        @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+        .season-marker{flex-shrink:0;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;border:2px solid var(--border);background:var(--card)}
+        .season-marker.s1{color:var(--gold);border-color:var(--gold)}
+        .season-marker.s2{color:var(--red);border-color:var(--red)}
+        .season-marker.s3{color:var(--purple);border-color:var(--purple)}
+        .season-marker.s4{color:var(--ice);border-color:var(--ice);animation:markerPulse 3s ease-in-out infinite}
+        .season-marker.s5{color:var(--gold);border-style:dashed;opacity:0.6}
+        @keyframes markerPulse{0%,100%{box-shadow:0 0 8px rgba(91,192,235,0.3)}50%{box-shadow:0 0 20px rgba(91,192,235,0.6)}}
+        .season-card{flex:1;background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;position:relative}
+        .season-card h4{font-size:.9rem;margin-bottom:10px}
+        .season-card p{font-size:.78rem;color:var(--sub);line-height:1.7;margin-bottom:6px}
+        .season-card p strong{color:var(--text)}
+        .season-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.65rem;font-weight:700;margin-bottom:10px}
+        .season-badge.done{background:rgba(240,185,11,0.12);color:var(--gold)}
+        .season-badge.current{background:rgba(91,192,235,0.15);color:var(--ice);animation:badgePulse 2s ease-in-out infinite}
+        .season-badge.future{background:rgba(255,255,255,0.04);color:var(--muted)}
+        @keyframes badgePulse{0%,100%{opacity:1}50%{opacity:0.7}}
 
-        .cta-block { text-align: center; padding: 10px 0; }
-        .cta-block p { font-size: 0.9rem; color: var(--sub); }
-        .cta-block .big-text { font-size: 1.2rem; color: var(--gold); font-weight: 700; margin-top: 12px; }
-		
-		::-webkit-scrollbar { width: 6px; height: 6px; }
-		::-webkit-scrollbar-track { background: var(--bg); }
-		::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-		::-webkit-scrollbar-thumb:hover { background: #ffd700; }
-		* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+        .current-season .season-card{border-color:rgba(91,192,235,0.2);box-shadow:0 0 24px rgba(91,192,235,0.06)}
+        .future-season .season-card{opacity:0.6;border-style:dashed}
 
-        @media (max-width: 768px) {
-            .container { padding: 12px 14px 80px; }
-            .header { padding: 20px 0 8px; }
-            .header-title { font-size: 1.8rem; }
-            .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
-            .nav-toggle { display: block; }
-            .nav-bar { display: none; flex-direction: column; margin-top: 8px; }
-            .nav-bar.show { display: flex; }
-            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
-            .faction-grid { grid-template-columns: 1fr; }
-            .section { padding: 18px 14px; }
-            .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
+        @media(max-width:768px){
+            .path-grid{grid-template-columns:1fr}
+            .faction-tabs{flex-direction:column}
+            .race-grid{grid-template-columns:1fr}
+            .territory-grid{grid-template-columns:1fr}
+            .timeline-season{flex-direction:column;gap:8px}
+            .season-marker{width:36px;height:36px;font-size:.8rem}
+            .shard-box{padding:20px 16px;min-height:150px}
+            .season-progress{gap:4px}
+            .season-dot{width:36px;height:36px}
+            .season-dot .dot-icon{font-size:.9rem;top:-14px}
+            .season-dot .dot-label{font-size:.65rem}
+            .season-line{width:20px}
         }
     </style>
 </head>
 <body>
     <div class="container">
+
+        <!-- Шапка -->
         <header class="header">
             <h1 class="header-title">ЛОР ЭТЕРНИСА</h1>
             <p class="header-subtitle">История расколотого мира</p>
-            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">🌓</button>
         </header>
 
+        <!-- Навигация -->
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
-                <a href="index.html" class="nav-link">📊 Статистика</a>
-                <a href="logs.html" class="nav-link">📜 Логи</a>
-                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-                <a href="balance.html" class="nav-link">⚖️ Баланс</a>
-                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-                <a href="gradient.html" class="nav-link">📈 Градиент</a>
-                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-                <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-                <a href="lore.html" class="nav-link active">📜 Лор</a>
-                <a href="tavern.html" class="nav-link">🍺 Таверна</a>
-                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
-                <a href="league.html" class="nav-link">🏟 Лига</a>
-				<a href="form.html" class="nav-link">🔥 Форма</a>
-                <a href="player.html" class="nav-link">👤 Профиль</a>
+                <div class="nav-group">
+                    <span class="nav-label">⚔️ Арена ▾</span>
+                    <div class="nav-dropdown">
+                        <a href="index.html" class="nav-link">📊 Статистика</a>
+                        <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                        <a href="league.html" class="nav-link">🏟 Лига</a>
+                        <a href="logs.html" class="nav-link">📜 Логи</a>
+                        <a href="player.html" class="nav-link">👤 Профиль</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <span class="nav-label">📐 Аналитика ▾</span>
+                    <div class="nav-dropdown">
+                        <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                        <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                        <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+                        <a href="gradient.html" class="nav-link">📈 Градиент</a>
+                        <a href="form.html" class="nav-link">🔥 Форма</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <span class="nav-label">🌍 Мир ▾</span>
+                    <div class="nav-dropdown">
+                        <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+                        <a href="lore.html" class="nav-link active">📜 Лор</a>
+                        <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                        <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                    </div>
+                </div>
             </nav>
         </div>
 
-        <div class="section gold">
-            <div class="section-title">🌍 Мир Этернис</div>
-            <div class="table-container">
-                <table>
-                    <thead><tr><th>Название</th><th>Описание</th></tr></thead>
-                    <tbody>
-                        <tr><td>Этернис</td><td>Мир, расколотый падением древнего артефакта — Солнечного Клинка</td></tr>
-                        <tr><td>Солнечный Клинок</td><td>Легендарное оружие, тысячелетия державшее равновесие между Светом и Тьмой. Раскололся, осколки разлетелись по миру</td></tr>
-                        <tr><td>Арена Тысячи Эхо</td><td>Арена, где осколки чувствуются сильнее всего. Бои здесь — ритуал, а не просто состязание</td></tr>
-                    </tbody>
-                </table>
+        <!-- Hero: три пути -->
+        <div class="hero-lore">
+            <p style="font-style:italic;color:var(--sub);font-size:.85rem;max-width:500px;margin:0 auto 20px">
+                «Мир расколот. Истина — не одна. Выбери, с чего начнёшь свой путь.»
+            </p>
+            <div class="path-grid">
+                <a href="#factions" class="path-card">
+                    <span class="path-icon">⚔️</span>
+                    <div class="path-title">Познать фракции</div>
+                    <div class="path-desc">Узнай, за кого ты сражаешься</div>
+                </a>
+                <a href="#shards-section" class="path-card">
+                    <span class="path-icon">💎</span>
+                    <div class="path-title">Коснуться осколков</div>
+                    <div class="path-desc">Услышь 13 голосов расколотого мира</div>
+                </a>
+                <a href="#territory-section" class="path-card">
+                    <span class="path-icon">🗺️</span>
+                    <div class="path-title">Увидеть земли</div>
+                    <div class="path-desc">Узнай, кто контролирует земли Этерниса</div>
+                </a>
             </div>
         </div>
 
+        <!-- Мир Этерниса — таблица -->
+        <div class="section gold">
+            <div class="section-title">🌍 Мир Этерниса</div>
+            <div class="table-container"><table>
+                <thead><tr><th>Название</th><th>Описание</th></tr></thead>
+                <tbody>
+                    <tr><td>Этернис</td><td>Мир, расколотый падением древнего артефакта — Солнечного Клинка</td></tr>
+                    <tr><td>Солнечный Клинок</td><td>Легендарное оружие, тысячелетия державшее равновесие между Светом и Тьмой. Раскололся, осколки разлетелись по миру</td></tr>
+                    <tr><td>Арена Тысячи Эхо</td><td>Арена, где осколки чувствуются сильнее всего. Бои здесь — ритуал, а не просто состязание</td></tr>
+                </tbody>
+            </table></div>
+        </div>
+
+        <!-- Предыстория -->
         <div class="section gold">
             <div class="section-title">📖 Предыстория</div>
             <div class="lore-block">
                 <p>Мир Этернис раскололся после падения Солнечного Клинка — древнего артефакта, который тысячелетия удерживал равновесие между Светом и Тьмой. Осколки Клинка разлетелись по всему миру, наделяя смертных невиданной силой. Те, кто нашли эти осколки, стали первыми героями — и первыми врагами.</p>
-                <p style="margin-top: 12px;">Так началась эпоха Вечной Дуэли.</p>
+                <p style="margin-top:12px">Так началась эпоха Вечной Дуэли.</p>
             </div>
         </div>
 
-        <div class="section purple">
-            <div class="section-title">⚔️ Фракции</div>
-            <div class="faction-grid">
-                <div class="faction-card light">
-                    <h4 style="color:var(--gold);">🌝 Орден Света</h4>
-                    <div class="faction-quote">«Свет во тьме — не угаснет никогда»</div>
-                    <p>Орден был основан паладином Аэлионом, первым, кто поднял осколок Солнечного Клинка над головой и поклялся защищать слабых. Сегодня Орден — это рыцари, жрецы и маги, которые верят, что сила должна служить добру. Их цитадель — Сияющий Шпиль — стоит на месте падения Клинка.</p>
-                    <p>Аэлион не проиграл ни одной дуэли. Но и не убил ни одного врага. Все, кто сражался с ним, оставались живы. Некоторые даже присоединялись к Ордену.</p>
-                    <p>Во время Битвы Раскола Аэлион шагнул в центр раскола, чтобы удержать мир от полного уничтожения. С тех пор его никто не видел. Но его осколок остался — он хранится в Сияющем Шпиле.</p>
-                    <p style="font-style: italic;">«Сила — это ответственность. Мы не прячемся во тьме, мы освещаем её.»</p>
+        <!-- Фракции с переключателем -->
+        <div class="section purple" id="factions">
+            <div class="section-title">⚔️ Фракции Этерниса</div>
+            <p style="color:var(--sub);font-size:.85rem;margin-bottom:16px">
+                Две силы, два взгляда на Раскол. У каждой — своя правда.
+            </p>
+            <div class="faction-tabs">
+                <button class="faction-tab light active" onclick="switchFaction('light')" data-faction="light">🌝 Орден Света</button>
+                <button class="faction-tab dark" onclick="switchFaction('dark')" data-faction="dark">🌚 Культ Тьмы</button>
+            </div>
+
+            <!-- Орден Света -->
+            <div class="faction-content active" id="faction-light">
+                <div class="faction-motto light">«Свет во тьме — не угаснет никогда»</div>
+                <details class="faction-detail" open>
+                    <summary>📖 История</summary>
+                    <div class="detail-content">
+                        Орден был основан паладином Аэлионом, первым, кто поднял осколок Солнечного Клинка над головой и поклялся защищать слабых. Сегодня Орден — это рыцари, жрецы и маги, которые верят, что сила должна служить добру. Их цитадель — Сияющий Шпиль — стоит на месте падения Клинка.<br><br>
+                        Аэлион не проиграл ни одной дуэли. Но и не убил ни одного врага. Все, кто сражался с ним, оставались живы. Некоторые даже присоединялись к Ордену.<br><br>
+                        Во время Битвы Раскола Аэлион шагнул в центр раскола, чтобы удержать мир от полного уничтожения. С тех пор его никто не видел. Но его осколок остался — он хранится в Сияющем Шпиле.
+                    </div>
+                </details>
+                <details class="faction-detail">
+                    <summary>🛡️ Философия</summary>
+                    <div class="detail-content">
+                        <em>«Сила — это ответственность. Мы не прячемся во тьме, мы освещаем её.»</em>
+                    </div>
+                </details>
+                <details class="faction-detail">
+                    <summary>👤 Ключевые фигуры</summary>
+                    <div class="detail-content">
+                        <strong>Аэлион</strong> — основатель Ордена, шагнувший в Раскол, чтобы удержать мир. Его осколок до сих пор хранится в Сияющем Шпиле, и говорят, он всё ещё тёплый.<br>
+                        <strong>Серафим</strong> — действующий глава Ордена, ученик Аэлиона. Готовит экспедицию в Бездну на поиски учителя.
+                    </div>
+                </details>
+            </div>
+
+            <!-- Культ Тьмы -->
+            <div class="faction-content" id="faction-dark">
+                <div class="faction-motto dark">«Истинная сила рождается в тени»</div>
+                <details class="faction-detail" open>
+                    <summary>📖 История</summary>
+                    <div class="detail-content">
+                        Никто не знает имени основателя Культа. Говорят, это был маг, который первым понял, что осколки Клинка можно не только подчинить, но и сломать, вырвав из них ещё больше силы. Его называют Повествователем — он наблюдал за Битвой Раскола и ушёл в тень, когда Аэлион шагнул в центр раскола.<br><br>
+                        Он никогда не сражался сам. Вместо этого он находил тех, кто сразится за него. Никто не знает, сколько у него было учеников. Говорят, десятки. Говорят, сотни.<br><br>
+                        Культ не скрывается — его храмы открыты для всех, кто ищет могущество. Их символ — новолуние — напоминает, что даже в полной темноте можно разглядеть путь.
+                    </div>
+                </details>
+                <details class="faction-detail">
+                    <summary>🕯️ Философия</summary>
+                    <div class="detail-content">
+                        <em>«Свет обжигает. Тьма принимает. Выбирай, кем ты хочешь стать.»</em>
+                    </div>
+                </details>
+                <details class="faction-detail">
+                    <summary>👤 Ключевые фигуры</summary>
+                    <div class="detail-content">
+                        <strong>Повествователь</strong> — основатель Культа, наблюдавший за Битвой Раскола и ушедший в тень. Говорят, он никогда не сражался сам — только находил тех, кто сразится за него.<br>
+                        <strong>Зара</strong> — тёмная владычица, тифлинг. Вызвалась вести экспедицию в Бездну. Говорят, она слышит Разлом иначе — не как угрозу, а как зов. Редко появляется в Зале Повествователя, предпочитает действовать, а не говорить.
+                    </div>
+                </details>
+            </div>
+		</div>
+		
+        <!-- Расы -->
+        <div class="section gold" id="races-section">
+            <div class="section-title">🌍 Расы Этерниса</div>
+            <div class="race-grid">
+                <!-- Люди -->
+                <div class="race-card light">
+                    <div class="race-header">
+                        <span class="race-icon">🧑</span>
+                        <div class="race-info">
+                            <h4 style="color:var(--gold)">Люди</h4>
+                            <span class="race-affiliation" style="color:var(--gold)">🌝 Свет</span>
+                        </div>
+                    </div>
+                    <div class="race-quote">«Мы не помним мир целым. Мы построим новый.»</div>
+                    <p>Самая молодая раса. Они не видели Этернис до Раскола — но именно поэтому они бесстрашны. У них нет клыков орков, памяти камня дворфов, вечности эльфов. Только воля. Аэлион был человеком. Этого достаточно.</p>
                 </div>
-                <div class="faction-card dark">
-                    <h4 style="color:var(--purple);">🌚 Культ Тьмы</h4>
-                    <div class="faction-quote">«Истинная сила рождается в тени»</div>
-                    <p>Никто не знает имени основателя Культа. Говорят, это был маг, который первым понял, что осколки Клинка можно не только подчинить, но и сломать, вырвав из них ещё больше силы. Его называют Повествователем — он наблюдал за Битвой Раскола и ушёл в тень, когда Аэлион шагнул в центр раскола.</p>
-                    <p>Он никогда не сражался сам. Вместо этого он находил тех, кто сразится за него. Никто не знает, сколько у него было учеников. Говорят, десятки. Говорят, сотни.</p>
-                    <p>Культ не скрывается — его храмы открыты для всех, кто ищет могущество. Их символ — новолуние — напоминает, что даже в полной темноте можно разглядеть путь.</p>
-                    <p style="font-style: italic;">«Свет обжигает. Тьма принимает. Выбирай, кем ты хочешь стать.»</p>
+
+                <!-- Орки -->
+                <div class="race-card light">
+                    <div class="race-header">
+                        <span class="race-icon">👹</span>
+                        <div class="race-info">
+                            <h4 style="color:var(--gold)">Орки</h4>
+                            <span class="race-affiliation" style="color:var(--gold)">🌝 Свет</span>
+                        </div>
+                    </div>
+                    <div class="race-quote">«Шрамы — летопись воина. Покажи свои.»</div>
+                    <p>Горные кланы, чтившие только силу. Когда осколки упали на их пики — в их крови проснулась не слепая ярость, а холодная, как сталь на морозе. Орк не убьёт слабого. Он дождётся пока слабый станет сильным — и вызовет его на бой.</p>
+                </div>
+
+                <!-- Нежить -->
+                <div class="race-card dark">
+                    <div class="race-header">
+                        <span class="race-icon">💀</span>
+                        <div class="race-info">
+                            <h4 style="color:var(--purple)">Нежить</h4>
+                            <span class="race-affiliation" style="color:var(--purple)">🌚 Тьма</span>
+                        </div>
+                    </div>
+                    <div class="race-quote">«Смерть — не конец. Смерть — начало слушания.»</div>
+                    <p>Осколки упали так глубоко, что разбудили тех, кто покоился веками. Нежить помнит свою прошлую жизнь, но видит мир иначе — слышит голоса таких же воскресших. Они не боятся смерти. Они её пережили.</p>
+                </div>
+
+                <!-- Эльфы -->
+                <div class="race-card dark">
+                    <div class="race-header">
+                        <span class="race-icon">🧝</span>
+                        <div class="race-info">
+                            <h4 style="color:var(--purple)">Эльфы</h4>
+                            <span class="race-affiliation" style="color:var(--purple)">🌚 Тьма</span>
+                        </div>
+                    </div>
+                    <div class="race-quote">«Лес помнит. Лес ждёт. Лес решает.»</div>
+                    <p>Древнейшая раса. Их глаза видели Клинок в небе. Когда осколки пробили кроны — деревья впитали магию, а эльфы услышали дыхание леса. Они не выбирают сторону. Они защищают корни.</p>
+                </div>
+
+                <!-- Тифлинги -->
+                <div class="race-card dark">
+                    <div class="race-header">
+                        <span class="race-icon">😈</span>
+                        <div class="race-info">
+                            <h4 style="color:var(--purple)">Тифлинги</h4>
+                            <span class="race-affiliation" style="color:var(--purple)">🌚 Тьма</span>
+                        </div>
+                    </div>
+                    <div class="race-quote">«Наша кровь — не проклятие. Это наследие.»</div>
+                    <p>Когда Клинок раскололся, самые глубокие осколки пробили не только землю — они пробили границу между мирами. Оттуда, из Бездны, пришли они — потомки древнего союза смертных и демонов. Их не ждали. Их боялись. Но когда первый Тифлинг поднял осколок — Бездна заговорила с ним. Не как с хозяином. Как с равным.</p>
+                </div>
+
+                <!-- Дворфы -->
+                <div class="race-card neutral-dwarf">
+                    <div class="race-header">
+                        <span class="race-icon">🧔</span>
+                        <div class="race-info">
+                            <h4 style="color:var(--orange)">Дворфы</h4>
+                            <span class="race-affiliation" style="color:var(--orange)">⚖️ Посередине</span>
+                        </div>
+                    </div>
+                    <div class="race-quote">«Пламя не спрашивает разрешения. Оно просто горит.»</div>
+                    <p>Пока мир рушился, дворфы ушли под землю и начали собирать осколки. Кузня Расколотых — их сердце. Молоты бьют сами по себе. Горны не гаснут никогда. Дворф не спросит зачем ты пришёл — он спросит что ты умеешь делать руками.</p>
+                </div>
+
+                <!-- Табакси -->
+                <div class="race-card neutral-tabaxi">
+                    <div class="race-header">
+                        <span class="race-icon">🐱</span>
+                        <div class="race-info">
+                            <h4 style="color:var(--ice)">Табакси</h4>
+                            <span class="race-affiliation" style="color:var(--ice)">⚖️ Посередине</span>
+                        </div>
+                    </div>
+                    <div class="race-quote">«Любопытство не порок. Это инстинкт.»</div>
+                    <p>Когда осколки упали, табакси не стали воевать за них — они начали их коллекционировать. Кошачий народ появился из ниоткуда: никто не помнит их до Раскола. Они быстрее ветра, проворнее тени, и всегда приземляются на четыре лапы. Табакси не выбирают сторону. Они выбирают интерес.</p>
                 </div>
             </div>
         </div>
 
-		<div class="section gold">
-			<div class="section-title">🌍 Расы Этерниса</div>
-			<div class="faction-grid">
-				<div class="faction-card light">
-					<h4 style="color:var(--gold);">🧑 Люди</h4>
-					<div class="faction-quote">«Мы не помним мир целым. Мы построим новый.»</div>
-					<p>Самая молодая раса. Они не видели Этернис до Раскола — но именно поэтому они бесстрашны. У них нет клыков орков, памяти камня дворфов, вечности эльфов. Только воля. Аэлион был человеком. Этого достаточно.</p>
-				</div>
-				<div class="faction-card light">
-					<h4 style="color:var(--gold);">👹 Орки</h4>
-					<div class="faction-quote">«Шрамы — летопись воина. Покажи свои.»</div>
-					<p>Горные кланы, чтившие только силу. Когда осколки упали на их пики — в их крови проснулась не слепая ярость, а холодная, как сталь на морозе. Орк не убьёт слабого. Он дождётся пока слабый станет сильным — и вызовет его на бой.</p>
-				</div>
-				<div class="faction-card dark">
-					<h4 style="color:var(--purple);">💀 Нежить</h4>
-					<div class="faction-quote">«Смерть — не конец. Смерть — начало слушания.»</div>
-					<p>Осколки упали так глубоко, что разбудили тех, кто покоился веками. Нежить помнит свою прошлую жизнь, но видит мир иначе — слышит голоса таких же воскресших. Они не боятся смерти. Они её пережили.</p>
-				</div>
-				<div class="faction-card dark">
-					<h4 style="color:var(--purple);">🧝 Эльфы</h4>
-					<div class="faction-quote">«Лес помнит. Лес ждёт. Лес решает.»</div>
-					<p>Древнейшая раса. Их глаза видели Клинок в небе. Когда осколки пробили кроны — деревья впитали магию, а эльфы услышали дыхание леса. Они не выбирают сторону. Они защищают корни.</p>
-				</div>
-				<div class="faction-card dark">
-					<h4 style="color:var(--purple);">😈 Тифлинги</h4>
-					<div class="faction-quote">«Наша кровь — не проклятие. Это наследие.»</div>
-					<p>Когда Клинок раскололся, самые глубокие осколки пробили не только землю — они пробили границу между мирами. Оттуда, из Бездны, пришли они — потомки древнего союза смертных и демонов. Их кровь горяча, как магма, а рога помнят форму первого осколка.</p>
-					<p>Их не ждали. Их боялись. Но когда первый Тифлинг поднял осколок — Бездна заговорила с ним. Не как с хозяином. Как с равным.</p>
-				</div>
-				<div class="faction-card" style="border-color: var(--dwarf);">
-					<h4 style="color: var(--dwarf);">🧔 Дворфы</h4>
-					<div class="faction-quote" style="border-left-color: var(--dwarf); color: var(--dwarf);">«Пламя не спрашивает разрешения. Оно просто горит.»</div>
-					<p>Пока мир рушился, дворфы ушли под землю и начали собирать осколки. Кузня Расколотых — их сердце. Молоты бьют сами по себе. Горны не гаснут никогда. Дворф не спросит зачем ты пришёл — он спросит что ты умеешь делать руками.</p>
-				</div>
-				<div class="faction-card" style="border-color: var(--tabaxi);">
-					<h4 style="color: var(--tabaxi);">🐱 Табакси</h4>
-					<div class="faction-quote" style="border-left-color: var(--tabaxi); color: var(--tabaxi);">«Любопытство не порок. Это инстинкт.»</div>
-					<p>Когда осколки упали, табакси не стали воевать за них — они начали их коллекционировать. Кошачий народ появился из ниоткуда: никто не помнит их до Раскола. Они быстрее ветра, проворнее тени, и всегда приземляются на четыре лапы. Табакси не выбирают сторону. Они выбирают интерес.</p>
-				</div>
-			</div>
-			<p style="margin-top: 8px; font-size: 0.8rem; color: var(--muted);">Люди и Орки тяготеют к Свету. Нежить, Эльфы и Тифлинги — к Тьме. Дворфы и Табакси — посередине.</p>
-		</div>
+        <!-- Земли под контролем -->
+        <div class="section gold" id="territory-section">
+            <div class="section-title">🗺️ Земли под контролем</div>
+            <p style="color:var(--sub);font-size:.85rem;margin-bottom:12px">
+                Семь земель Этерниса. Сияющий Шпиль и Зал Повествователя непоколебимы. Остальные земли переходят из рук в руки — дуэли решают всё. Данные обновляются автоматически.
+            </p>
+            <div class="territory-grid" id="territoryGrid">
+                <div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px">Загрузка данных...</div>
+            </div>
+            <p style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:center">
+                🟡 = Свет &nbsp;|&nbsp; 🟣 = Тьма &nbsp;|&nbsp; 🔵 = Нейтральная / Вольная
+            </p>
+        </div>
 
-		<div class="section gold">
-			<div class="section-title">🗺️ Места силы</div>
-			<p style="margin-bottom: 12px; color: var(--sub); font-size: 0.85rem;">Семь земель Этерниса, за которые сражаются фракции. Сияющий Шпиль и Зал Повествователя непоколебимы. Остальные земли переходят из рук в руки — дуэли решают всё.</p>
-			<div class="lore-block" id="loc-spires" style="border-left: 3px solid var(--gold);">
-				<p><strong>✨ Сияющий Шпиль</strong> — цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё теплый.</p>
-			</div>
-			<div class="lore-block" id="loc-hall" style="border-left: 3px solid var(--purple);">
-				<p><strong>🌫️ Зал Повествователя</strong> — тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</p>
-			</div>
-			<div class="lore-block" id="loc-arena">
-				<p><strong>🎭 Арена Тысячи Эхо</strong> — легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.</p>
-			</div>
-			<div class="lore-block" id="loc-epicenter">
-				<p><strong>🌑 Эпицентр Раскола</strong> — место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул вниз — и открыл путь в Бездну.</p>
-			</div>
-			<div class="lore-block" id="loc-field">
-				<p><strong>🗡️ Поле Павшего Клинка</strong> — земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.</p>
-			</div>
-			<div class="lore-block" id="loc-forge">
-				<p><strong>🔥 Кузня Расколотых</strong> — здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.</p>
-			</div>
-			<div class="lore-block" id="loc-port">
-				<p><strong>⚓ Порт Дрейфующих</strong> — единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Порт не принадлежит ни Свету, ни Тьме. Здесь правят Любопытство и Случай.</p>
-			</div>
-		</div>
-
+        <!-- Герои и осколки -->
         <div class="section gold">
             <div class="section-title">✨ Герои и осколки</div>
-            <p style="margin-bottom: 12px; color: var(--sub); font-size: 0.85rem;">Каждый класс — это путь, которым осколок проявился в герое:</p>
-            <div class="table-container">
-                <table>
-                    <thead><tr><th>Класс</th><th>Как осколок изменил героя</th><th style="text-align:center;width:44px;">⚔</th></tr></thead>
-                    <tbody>
-                        <tr><td>🔮 Чародей</td><td>Осколок прожёг плоть, открыв канал к чистой магии</td><td style="text-align:center;">🌚</td></tr>
-                        <tr><td>✨ Волшебница</td><td>Осколок слился с душой, дав контроль над стихиями</td><td style="text-align:center;">🌝</td></tr>
-                        <tr><td>🗡️ Плут</td><td>Осколок спрятался в тени, научив двигаться незаметно</td><td style="text-align:center;">🌚</td></tr>
-                        <tr><td>🦴 Некромант</td><td>Осколок коснулся мёртвых — герой слышит их голоса</td><td style="text-align:center;">🌚</td></tr>
-                        <tr><td>🏹 Следопыт</td><td>Осколок стал частью леса — герой чувствует каждый лист</td><td style="text-align:center;">🌝</td></tr>
-                        <tr><td>🥋 Монах</td><td>Осколок поселился в теле, закалив его до предела</td><td style="text-align:center;">🌝</td></tr>
-                        <tr><td>👁️ Колдун</td><td>Осколок шепчет древние знания</td><td style="text-align:center;">🌚</td></tr>
-                        <tr><td>⚔️ Воин</td><td>Осколок укрепил мышцы и кости — живой щит</td><td style="text-align:center;">🌝</td></tr>
-                        <tr><td>🛡️ Паладин</td><td>Осколок загорелся светом — герой поклялся защищать</td><td style="text-align:center;">🌝</td></tr>
-                        <tr><td>🪓 Варвар</td><td>Осколок пробудил ярость — герой едва сдерживает гнев</td><td style="text-align:center;">🌚</td></tr>
-                        <tr><td>🌿 Друид</td><td>Осколок пустил корни — герой чувствует боль земли</td><td style="text-align:center;">🌝</td></tr>
-                        <tr><td>✝️ Жрец</td><td>Осколок зазвучал как молитва — герой слышит богов</td><td style="text-align:center;">🌝</td></tr>
-                        <tr><td>🎸 Бард</td><td>Осколок запел — герой меняет реальность песней</td><td style="text-align:center;">🌚</td></tr>
-                        <tr><td>⚙️ Изобретатель</td><td>Осколок вплавился в механизмы — создаёт невозможное</td><td style="text-align:center;">🌚</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <p style="margin-top: 8px; font-size: 0.8rem; color: var(--muted);">🌝 = склонность к Свету &nbsp;|&nbsp; 🌚 = склонность к Тьме</p>
+            <p style="margin-bottom:12px;color:var(--sub);font-size:.85rem">Каждый класс — это путь, которым осколок проявился в герое:</p>
+            <div class="table-container"><table>
+                <thead><tr><th>Класс</th><th>Как осколок изменил героя</th><th style="text-align:center;width:44px">⚔</th></tr></thead>
+                <tbody>
+                    <tr><td>🔮 Чародей</td><td>Осколок прожёг плоть, открыв канал к чистой магии</td><td style="text-align:center">🌚</td></tr>
+                    <tr><td>✨ Волшебница</td><td>Осколок слился с душой, дав контроль над стихиями</td><td style="text-align:center">🌝</td></tr>
+                    <tr><td>🗡️ Плут</td><td>Осколок спрятался в тени, научив двигаться незаметно</td><td style="text-align:center">🌚</td></tr>
+                    <tr><td>🦴 Некромант</td><td>Осколок коснулся мёртвых — герой слышит их голоса</td><td style="text-align:center">🌚</td></tr>
+                    <tr><td>🏹 Следопыт</td><td>Осколок стал частью леса — герой чувствует каждый лист</td><td style="text-align:center">🌝</td></tr>
+                    <tr><td>🥋 Монах</td><td>Осколок поселился в теле, закалив его до предела</td><td style="text-align:center">🌝</td></tr>
+                    <tr><td>👁️ Колдун</td><td>Осколок шепчет древние знания</td><td style="text-align:center">🌚</td></tr>
+                    <tr><td>⚔️ Воин</td><td>Осколок укрепил мышцы и кости — живой щит</td><td style="text-align:center">🌝</td></tr>
+                    <tr><td>🛡️ Паладин</td><td>Осколок загорелся светом — герой поклялся защищать</td><td style="text-align:center">🌝</td></tr>
+                    <tr><td>🪓 Варвар</td><td>Осколок пробудил ярость — герой едва сдерживает гнев</td><td style="text-align:center">🌚</td></tr>
+                    <tr><td>🌿 Друид</td><td>Осколок пустил корни — герой чувствует боль земли</td><td style="text-align:center">🌝</td></tr>
+                    <tr><td>✝️ Жрец</td><td>Осколок зазвучал как молитва — герой слышит богов</td><td style="text-align:center">🌝</td></tr>
+                    <tr><td>🎸 Бард</td><td>Осколок запел — герой меняет реальность песней</td><td style="text-align:center">🌚</td></tr>
+                    <tr><td>⚙️ Изобретатель</td><td>Осколок вплавился в механизмы — создаёт невозможное</td><td style="text-align:center">🌚</td></tr>
+                </tbody>
+            </table></div>
+            <p style="margin-top:8px;font-size:.8rem;color:var(--muted)">🌝 = склонность к Свету &nbsp;|&nbsp; 🌚 = склонность к Тьме</p>
         </div>
 
-        <div class="section red" id="shards-card">
-            <div class="section-title">🔮 Тринадцать осколков. Тринадцать голосов. Тринадцать причин почему.</div>
+        <!-- 13 осколков -->
+        <div class="section gold" id="shards-section">
+            <div class="section-title">💎 Тринадцать осколков. Тринадцать голосов. Тринадцать причин почему.</div>
             <div class="shard-box" id="shard-display" onclick="randomShard()" title="Кликни, чтобы услышать другой осколок"></div>
-            <p style="text-align:center;margin-top:12px;font-size:0.8rem;color:var(--muted);">Каждый раз — случайный осколок. Некоторые лгут. Некоторые молчат. Некоторые говорят голосами тех, кто ещё жив.</p>
+            <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--muted)">
+                Каждый раз — случайный осколок. Некоторые лгут. Некоторые молчат. Некоторые говорят голосами тех, кто ещё жив.
+            </p>
         </div>
 
-		<div class="section gold">
-			<div class="section-title">📅 Сезоны</div>
-			<div class="lore-block" style="font-style:normal;">
-				<p><b style="color:var(--gold);">Сезон 1:</b> Падение Солнечного Клинка. Аэлион основал Орден Света. Повествовательница начала записывать историю. Первые дуэли на Арене Тысячи Эхо. Война Света и Тьмы за осколки.</p>
-				<p style="margin-top:10px;"><b style="color:var(--gold);">Сезон 2:</b> Корабли без капитанов пришли в Порт Дрейфующих. Табакси ступили на землю Этерниса — кошачий народ без памяти о прошлом. Дворфы ударили в молоты в Кузне Расколотых.</p>
-				<p style="margin-top:10px;"><b style="color:var(--gold);">Сезон 3 (текущий):</b> Разлом Бездны открылся. Тифлинги вышли из глубин. Стало известно — Аэлион жив. Он в Бездне. Тысячу лет. Один. Фракции готовят экспедицию.</p>
-				<p style="margin-top:10px;"><b style="color:var(--ice);">Сезон 4 (следующий):</b> Экспедиция в Бездну. Серафим, Зара, ГуангГуанг и Чемпион спустятся в Разлом. Их цель — найти Аэлиона и его осколок. Повествовательница будет вести дневник.</p>
-				<p style="margin-top:12px;color:var(--muted);">Каждый сезон — новая глава. Статистика обнуляется, чемпионы уходят в Зал Славы, герои начинают с чистого листа.</p>
-			</div>
-		</div>
+        <!-- Таймлайн -->
+        <div class="section gold" id="timeline-section">
+            <div class="section-title">📅 Хроника Этерниса</div>
 
+            <!-- Прогресс-бар сезонов -->
+            <div class="season-progress">
+                <div class="season-dot done" title="Сезон 1 — Рождение Арены">
+                    <span class="dot-icon">🏁</span>
+                    <span class="dot-label">1</span>
+                </div>
+                <div class="season-line done"></div>
+                <div class="season-dot done" title="Сезон 2 — Эпоха легенд">
+                    <span class="dot-icon">🔥</span>
+                    <span class="dot-label">2</span>
+                </div>
+                <div class="season-line done"></div>
+                <div class="season-dot done" title="Сезон 3 — Кровь Бездны">
+                    <span class="dot-icon">🩸</span>
+                    <span class="dot-label">3</span>
+                </div>
+                <div class="season-line active"></div>
+                <div class="season-dot current" title="Сезон 4 — Экспедиция (идёт сейчас)">
+                    <span class="dot-icon">🕯️</span>
+                    <span class="dot-label">4</span>
+                    <span class="pulse"></span>
+                </div>
+                <div class="season-line future"></div>
+                <div class="season-dot future" title="Сезон 5 — скоро">
+                    <span class="dot-icon">⚡</span>
+                    <span class="dot-label">5</span>
+                </div>
+            </div>
+
+            <div class="timeline-enhanced">
+                <!-- Сезон 1 -->
+                <div class="timeline-season">
+                    <div class="season-marker s1">1</div>
+                    <div class="season-card">
+                        <div class="season-badge done">Завершён</div>
+                        <h4>🏁 Сезон 1 — Рождение Арены</h4>
+                        <p>Солнечный Клинок — артефакт, тысячелетиями хранивший равновесие — пал с небес. Его осколки разлетелись по миру, наделяя смертных невиданной силой. Паладин Аэлион первым поднял осколок над головой и основал Орден Света.</p>
+                        <p>Первые дуэли прошли без правил. Насмерть. Арена Тысячи Эхо ещё не знала пощады. Аэлион не проиграл ни одного боя — но и не убил ни одного врага. Некоторые из побеждённых присоединились к Ордену.</p>
+                        <p>Великая Битва Раскола. Аэлион шагнул в эпицентр — и исчез. Мир решил, что он погиб. Повествовательница начала вести хроники.</p>
+                    </div>
+                </div>
+
+                <!-- Сезон 2 -->
+                <div class="timeline-season">
+                    <div class="season-marker s2">2</div>
+                    <div class="season-card">
+                        <div class="season-badge done">Завершён</div>
+                        <h4>🔥 Сезон 2 — Эра Раскола</h4>
+                        <p>Корабли без капитанов вошли в Порт Дрейфующих. С них сошли Табакси — кошачий народ без памяти о прошлом. Никто не помнит их до Раскола. Они принесли с собой любопытство, игральные кости и вопросы без ответов.</p>
+                        <p>Дворфы ударили в молоты. Кузня Расколотых загорелась — и не гаснет до сих пор. Орки спустились с гор: не за войной — за испытанием. Эльфы ушли глубже в леса. Нежить проснулась.</p>
+                        <p>Мир перестал быть чёрно-белым. К Свету и Тьме добавились те, кто не выбирал сторону.</p>
+                    </div>
+                </div>
+
+                <!-- Сезон 3 -->
+                <div class="timeline-season">
+                    <div class="season-marker s3">3</div>
+                    <div class="season-card">
+                        <div class="season-badge done">Завершён</div>
+                        <h4>🩸 Сезон 3 — Кровь Бездны</h4>
+                        <p>Разлом открылся. Из глубин вышли Тифлинги — потомки союза смертных и демонов. Их не ждали. Их боялись. Но первый же Тифлинг, поднявший осколок, услышал голос Бездны — не как хозяина, а как равного.</p>
+                        <p>Стало известно: <strong>Аэлион жив</strong>. Тысячу лет он провёл в Бездне. Один. Его осколок всё ещё тёплый — он хранится в Сияющем Шпиле и зовёт.</p>
+                        <p>Орден Света и Культ Тьмы начали готовить экспедицию. Серафим — ученик Аэлиона — поклялся найти учителя. Зара — тифлинг, слышащая зов Бездны — вызвалась вести. Чемпион Великой Лиги и ГуангГуанг присоединились.</p>
+                    </div>
+                </div>
+
+                <!-- Сезон 4 — текущий -->
+                <div class="timeline-season current-season">
+                    <div class="season-marker s4">4</div>
+                    <div class="season-card">
+                        <div class="season-badge current">Идёт сейчас</div>
+                        <h4 style="color:var(--ice)">🕯️ Сезон 4 — Экспедиция</h4>
+                        <p>Серафим, Зара, ГуангГуанг, Чемпион и Повествовательница спустились в Разлом. Глубина: неизвестно. Время: течёт иначе. Цель: найти Аэлиона и его осколок.</p>
+                        <p>То, что они найдут — изменит Этернис навсегда. Дневник Повествовательницы — единственное свидетельство. Он открывается тем, кто проходит Подземелье.</p>
+                        <p style="color:var(--ice);font-style:italic;margin-top:8px">📓 Записи экспедиции — в Подземелье. Каждая волна открывает новую страницу.</p>
+                    </div>
+                </div>
+
+                <!-- Сезон 5 — тизер -->
+                <div class="timeline-season future-season">
+                    <div class="season-marker s5">5</div>
+                    <div class="season-card">
+                        <div class="season-badge future">Скоро</div>
+                        <h4 style="color:var(--gold)">⚡ Сезон 5 — ???</h4>
+                        <p>Что принесёт пятый сезон — не знает никто. Даже Повествовательница ещё не дописала эту главу.</p>
+                        <p style="color:var(--muted);font-style:italic">Продолжение следует...</p>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top:12px;color:var(--muted);text-align:center">Каждый сезон — новая глава. Статистика обнуляется, чемпионы уходят в Зал Славы, герои начинают с чистого листа.</p>
+        </div>
+
+        <!-- Легенда о восстановлении -->
         <div class="section gold">
             <div class="section-title">🔮 Легенда о восстановлении</div>
             <div class="lore-block">
@@ -294,52 +567,116 @@
             </div>
         </div>
 
+        <!-- CTA -->
         <div class="section gold">
             <div class="cta-block">
-                <p>Вы — искатель осколков. Выбирайте путь: встать под знамя <span style="color:var(--gold);font-weight:600;">🌝 Ордена Света</span> или принять <span style="color:var(--purple);font-weight:600;">🌚 тьму Культа</span></p>
+                <p>Вы — искатель осколков. Выбирайте путь: встать под знамя <span style="color:var(--gold);font-weight:600">🌝 Ордена Света</span> или принять <span style="color:var(--purple);font-weight:600">🌚 тьму Культа</span></p>
                 <p>Сражайтесь на Арене, побеждайте в турнирах, собирайте осколки</p>
                 <p class="big-text">Добро пожаловать на Раскол</p>
             </div>
         </div>
+
     </div>
 
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
     <script>
-        function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
-        (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
-        function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
-        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
+        // === ТЕМА ===
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('eternis-theme', next);
+        }
+        (function() {
+            const saved = localStorage.getItem('eternis-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
 
-        async function loadTerritory() {
+        // === НАВИГАЦИЯ ===
+        function toggleNav() {
+            const nav = document.getElementById('pageNav');
+            const btn = document.querySelector('.nav-toggle');
+            nav.classList.toggle('show');
+            btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        }
+        document.querySelectorAll('.nav-label').forEach(label => {
+            label.addEventListener('click', function(e) {
+                if (window.innerWidth > 768) return;
+                e.preventDefault();
+                const dd = this.nextElementSibling;
+                if (dd && dd.classList.contains('nav-dropdown')) {
+                    const isOpen = dd.style.display === 'block';
+                    document.querySelectorAll('.nav-dropdown').forEach(d => d.style.display = 'none');
+                    dd.style.display = isOpen ? 'none' : 'block';
+                }
+            });
+        });
+
+        // === ПЕРЕКЛЮЧЕНИЕ ФРАКЦИЙ ===
+        function switchFaction(faction) {
+            document.querySelectorAll('.faction-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.faction-content').forEach(content => content.classList.remove('active'));
+            document.querySelector(`.faction-tab[data-faction="${faction}"]`).classList.add('active');
+            document.getElementById(`faction-${faction}`).classList.add('active');
+        }
+
+		// === ЗЕМЛИ ПОД КОНТРОЛЕМ ===
+		const territoryData = [
+			{ jsonKey: '✨ Сияющий Шпиль',   icon: '✨', name: 'Сияющий Шпиль',       lore: 'Цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё тёплый.', defaultControl: 'light' },
+			{ jsonKey: '🌫️ Зал Повествователя', icon: '🌫️', name: 'Зал Повествователя',  lore: 'Тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.', defaultControl: 'dark' },
+			{ jsonKey: '🎭 Арена Тысячи Эхо',  icon: '🎭', name: 'Арена Тысячи Эхо',    lore: 'Легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.', defaultControl: 'neutral' },
+			{ jsonKey: '🌑 Эпицентр Раскола',  icon: '🌑', name: 'Эпицентр Раскола',    lore: 'Место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул вниз — и открыл путь в Бездну.', defaultControl: 'neutral' },
+			{ jsonKey: '🗡️ Поле Павшего Клинка', icon: '🗡️', name: 'Поле Павшего Клинка', lore: 'Земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.', defaultControl: 'neutral' },
+			{ jsonKey: '🔥 Кузня Расколотых',   icon: '🔥', name: 'Кузня Расколотых',     lore: 'Здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.', defaultControl: 'neutral' },
+			{ jsonKey: '⚓ Порт Дрейфующих',    icon: '⚓', name: 'Порт Дрейфующих',      lore: 'Единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Порт не принадлежит ни Свету, ни Тьме. Здесь правят Любопытство и Случай.', defaultControl: 'neutral' }
+		];
+
+        async function loadTerritoryControl() {
             const urls = [
                 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
                 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'
             ];
             let data;
             for (const url of urls) {
-                try { const r = await fetch(url); if (r.ok) { data = await r.json(); break; } } catch {}
+                try {
+                    const r = await fetch(url);
+                    if (r.ok) { data = await r.json(); break; }
+                } catch {}
             }
-            if (!data) return;
 
-            const control = data.territoryControl || {};
-            const map = {
-                '🌑 Эпицентр Раскола': 'loc-epicenter',
-                '🗡️ Поле Павшего Клинка': 'loc-field',
-                '🔥 Кузня Расколотых': 'loc-forge',
-                '🎭 Арена Тысячи Эхо': 'loc-arena',
-                '⚓ Порт Дрейфующих': 'loc-port'
-            };
+            const control = data?.territoryControl || {};
+            const grid = document.getElementById('territoryGrid');
+            grid.innerHTML = '';
 
-            Object.entries(control).forEach(([name, owner]) => {
-                const el = document.getElementById(map[name]);
-                if (!el) return;
-                const isLight = owner === 'light';
-                el.style.borderLeft = isLight ? '3px solid var(--gold)' : '3px solid var(--purple)';
-                el.style.boxShadow = isLight ? '0 0 12px rgba(255,215,0,0.2)' : '0 0 12px rgba(163,113,247,0.2)';
+            territoryData.forEach(t => {
+                const rawOwner = control[t.jsonKey];
+                let owner;
+                if (rawOwner === 'light') owner = 'light';
+                else if (rawOwner === 'dark') owner = 'dark';
+                else owner = t.defaultControl;
+
+                let badgeText, badgeIcon;
+                if (owner === 'light') { badgeText = 'Свет'; badgeIcon = '🌝'; }
+                else if (owner === 'dark') { badgeText = 'Тьма'; badgeIcon = '🌚'; }
+                else { badgeText = 'Вольная'; badgeIcon = '🔵'; }
+
+                const card = document.createElement('div');
+                card.className = `territory-card ${owner}`;
+                card.innerHTML = `
+                    <div class="territory-top">
+                        <span class="territory-name"><span class="territory-icon">${t.icon}</span>${t.name}</span>
+                        <span class="territory-badge ${owner}">${badgeIcon} ${badgeText}</span>
+                    </div>
+                    <div class="territory-lore">${t.lore}</div>
+                `;
+                grid.appendChild(card);
             });
         }
+        loadTerritoryControl();
 
+        // === ОСКОЛКИ ===
         const shards = [
             { voice: "Аэлион", text: "«Я думал, что спасаю мир. Я ошибался. Я спасал только себя. Когда я шагнул в Раскол — я не жертвовал собой. Я бежал. От неё. От себя. От правды, которую знал с самого начала: Клинок не падал. Его отпустили.»" },
             { voice: "Повествователь", text: "«Я не начинала эту историю. Я просто записывала. Но однажды заметила, что мои слова... меняют написанное. Я написала: 'Аэлион победил'. Он победил. Я написала: 'Клинок пал'. Он пал. Я никогда не писала: 'Повествователь умерла'. И вот я здесь. Тысячу лет спустя. Всё ещё пишу. Помоги мне закончить.»" },
@@ -359,14 +696,13 @@
         function randomShard() {
             const i = Math.floor(Math.random() * shards.length);
             const s = shards[i];
-            document.getElementById('shard-display').innerHTML =
-                `<div style="font-size:0.8rem;color:var(--gold);margin-bottom:12px;letter-spacing:2px;text-transform:uppercase;">Осколок ${i+1} из 13</div>` +
-                `<div style="margin-bottom:8px;">${s.text}</div>` +
-                `<div style="font-size:0.85rem;color:var(--gold);margin-top:12px;font-style:normal;">— ${s.voice}</div>`;
+            document.getElementById('shard-display').innerHTML = `
+                <div style="font-size:0.8rem;color:var(--gold);margin-bottom:12px;letter-spacing:2px;text-transform:uppercase">Осколок ${i + 1} из 13</div>
+                <div style="margin-bottom:8px">${s.text}</div>
+                <div style="font-size:0.85rem;color:var(--gold);margin-top:12px;font-style:normal">— ${s.voice}</div>
+            `;
         }
-
         randomShard();
-        loadTerritory();
     </script>
 </body>
 </html>

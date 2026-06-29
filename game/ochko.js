@@ -20,7 +20,7 @@ window.ochko = {
         return s;
     },
 	renderCard(c, back) {
-		if (back) return '<div class="card-back" style="width:78px;height:110px;background:#444;border-radius:10px;border:3px solid #444;box-shadow:0 4px 0 #333;display:inline-block;margin:2px"></div>';
+		if (back) return `<div class="card-back" style="width:78px;height:110px;border-radius:10px;border:3px solid #666;box-shadow:0 4px 0 #444;display:inline-block;margin:2px;overflow:hidden"><img src="game/card-back.png" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#444';this.style.display='none'"></div>`;
 		const suits = { '♥': 'red', '♦': 'red', '♠': 'black', '♣': 'black' };
 		const cls = suits[c.suit] || 'black';
 		const collection = window.getGachaCollection ? window.getGachaCollection() : [];
@@ -73,7 +73,7 @@ window.ochko = {
         this.active = false;
         document.getElementById('hitBtn').disabled = true;
         document.getElementById('standBtn').disabled = true;
-        const who = window.GG_IN_EXPEDITION ? '🐱 Мурка думает...' : '🐼 ГуангГуанг думает...';
+        const who = window.GG_IN_EXPEDITION ? '🐱👑 Кэтэрина думает...' : '🐼 ГуангГуанг думает...';
         setQuote(who);
         setTimeout(() => {
             while (this.calcScore(this.dealerCards) < 17) this.dealerCards.push(this.deck.pop());
@@ -95,7 +95,7 @@ window.ochko = {
         document.getElementById('startBtn').disabled = false;
         if (w > this.bet) window.flashWin();
         else if (w === 0) window.shakeBalance();
-        const gg = window.GG_IN_EXPEDITION ? '🐱 Мурка' : '🐼 ГуангГуанг';
+        const gg = window.GG_IN_EXPEDITION ? '🐱👑 Кэтэрина' : '🐼 ГуангГуанг';
         if (hasOchko) setQuote('🎯 ОЧКО! Два туза! ' + gg + ' в шоке!');
         else if (w > this.bet) setQuote('🔥 Победа! Мой ученик!');
         else if (w === 0) setQuote('😏 ЛООООХ!');
@@ -114,7 +114,7 @@ window.ochko = {
         container.innerHTML = `
         <div style="max-width:500px;margin:0 auto">
             <div style="text-align:center;margin-bottom:12px;font-size:0.85rem;color:var(--sub)">Баланс: <span style="color:var(--gold);font-weight:700" id="balanceTop">💎 ${window.tavernBalance}</span></div>
-            <div class="table-felt" style="background:linear-gradient(160deg,#1a3020 0%,#0d1f14 30%,#1a3020 60%,#0f2418 100%);border:3px solid #3d2b1f;border-radius:16px;box-shadow:inset 0 0 60px rgba(0,0,0,0.5);padding:20px;margin-bottom:14px"><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px;text-align:center;text-transform:uppercase">${window.GG_IN_EXPEDITION?'🐱 Мурка':'🐼 ГуангГуанг'}</div><div id="dealerCards" style="text-align:center;min-height:115px"></div><div style="text-align:center;margin-top:8px;color:var(--sub)">Сумма: <span style="color:var(--gold);font-size:1.3rem;font-weight:800" id="dealerScore">0</span></div></div>
+            <div class="table-felt" style="background:linear-gradient(160deg,#1a3020 0%,#0d1f14 30%,#1a3020 60%,#0f2418 100%);border:3px solid #3d2b1f;border-radius:16px;box-shadow:inset 0 0 60px rgba(0,0,0,0.5);padding:20px;margin-bottom:14px"><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px;text-align:center;text-transform:uppercase">${window.GG_IN_EXPEDITION?'🐱👑 Кэтэрина':'🐼 ГуангГуанг'}</div><div id="dealerCards" style="text-align:center;min-height:115px"></div><div style="text-align:center;margin-top:8px;color:var(--sub)">Сумма: <span style="color:var(--gold);font-size:1.3rem;font-weight:800" id="dealerScore">0</span></div></div>
             <div class="table-felt" style="background:linear-gradient(160deg,#1a3020 0%,#0d1f14 30%,#1a3020 60%,#0f2418 100%);border:3px solid #3d2b1f;border-radius:16px;box-shadow:inset 0 0 60px rgba(0,0,0,0.5);padding:20px;margin-bottom:14px"><div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px;text-align:center;text-transform:uppercase">👤 Твоя рука</div><div id="playerCards" style="text-align:center;min-height:115px"></div><div style="text-align:center;margin-top:8px;color:var(--sub)">Сумма: <span style="color:var(--gold);font-size:1.3rem;font-weight:800" id="playerScore">0</span></div></div>
             <div style="text-align:center;margin:10px 0;color:var(--sub)">🎲 Ставка: <span style="color:var(--gold);font-weight:700">10 💎</span></div>
             <div style="display:flex;gap:8px;justify-content:center">

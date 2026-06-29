@@ -9,7 +9,7 @@ window.pig = {
         return d.sort(() => Math.random() - 0.5);
     },
 	renderCard(c, back) {
-		if (back) return '<div class="card-back" style="width:78px;height:110px;background:#444;border-radius:10px;border:3px solid #444;box-shadow:0 4px 0 #333;display:inline-block;margin:2px"></div>';
+		if (back) return `<div class="card-back" style="width:78px;height:110px;border-radius:10px;border:3px solid #666;box-shadow:0 4px 0 #444;display:inline-block;margin:2px;overflow:hidden"><img src="game/card-back.png" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#444';this.style.display='none'"></div>`;
 		const suits = { '♥': 'red', '♦': 'red', '♠': 'black', '♣': 'black' };
 		const cls = suits[c.suit] || 'black';
 		const collection = window.getGachaCollection ? window.getGachaCollection() : [];

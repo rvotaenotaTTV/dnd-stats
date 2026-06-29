@@ -6,726 +6,227 @@
     <title>Таверна</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #06040a; --card: #0e0a14; --elevated: #140c1a;
-            --text: #e8ddf0; --sub: #8a7d94; --muted: #5e5268;
-            --border: rgba(180,100,140,0.15);
-            --gold: #f0b90b; --red: #e85d3a; --purple: #a371f7; --green: #10b981;
-            --orange: #ff8c00; --blue: #4a90d9;
-            --radius: 16px; --radius-sm: 10px;
-            --bg-primary: #06040a; --bg-secondary: #0e0a14; --bg-elevated: #140c1a; --bg-card: #0e0a14;
-            --text-primary: #e8ddf0; --text-secondary: #8a7d94; --text-muted: #5e5268;
-            --border-subtle: rgba(180,100,140,0.15); --border-strong: #3a4555;
-            --sudoku-fixed: #f0b90b;
-            --cell-selected-bg: rgba(240,185,11,0.3);
-            --cell-same-bg: rgba(240,185,11,0.1);
-            --cell-same-num-bg: rgba(240,185,11,0.2);
-            --shadow-lg: 0 20px 40px rgba(0,0,0,0.4);
-            --shadow-gold: 0 4px 12px rgba(240,185,11,0.3);
-            --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
-            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
-            --collection-height: 400px;
-        }
-        [data-theme="light"] {
-            --bg: #f7f2eb; --card: #fefcf8; --elevated: #fbf8f3;
-            --text: #2d1a1a; --sub: #6b4e4e; --muted: #8b6b6b;
-            --border: rgba(180,80,60,0.12);
-            --gold: #b8860b; --red: #a03020; --purple: #7b5ea7; --green: #27ae60;
-            --orange: #e67e22; --blue: #3a7db8;
-            --bg-primary: #f7f2eb; --bg-secondary: #efe8dc; --bg-elevated: #fbf8f3; --bg-card: #fefcf8;
-            --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #6b7280;
-            --border-subtle: rgba(0,0,0,0.08); --border-strong: #8b7d6b;
-            --sudoku-fixed: #a03020;
-            --cell-selected-bg: #e8d5a0;
-            --cell-same-bg: #efe0c0;
-            --cell-same-num-bg: #e0c878;
-            --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
-            --collection-height: 400px;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
-        body { font-family: 'Inter',system-ui,sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 0%, rgba(200,40,40,0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(163,113,247,0.04) 0%, transparent 50%); color: var(--text); min-height: 100vh; line-height: 1.5; }
-        .container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
-
-        .header { text-align: center; padding: 32px 0 8px; position: relative; }
-        .header-title { font-size: clamp(2.2rem,6vw,3.2rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#8b0000 0%,#e85d3a 40%,#ffd700 70%,#e85d3a 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(232,93,58,0.5)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
-        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
-        .header-subtitle { font-size: 0.9rem; color: var(--red); font-weight: 500; letter-spacing: 0.04em; }
-        .theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
-        .theme-toggle:hover { background: var(--card); color: var(--red); border-color: var(--red); }
-
-        .nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
-        .nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; }
-        .nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
-        .nav-link { padding: 8px 14px; border-radius: 20px; color: var(--sub); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: 0.2s; }
-        .nav-link:hover { color: var(--text); background: var(--elevated); }
-        .nav-link.active { background: linear-gradient(135deg,var(--red),var(--gold)); color: #000; font-weight: 700; }
-
-        .section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; margin-bottom: 20px; position: relative; overflow: hidden; }
-        .section::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.6; background: linear-gradient(90deg, transparent, var(--orange), var(--gold), var(--orange), transparent); }
-        .section.flash-win { animation: winFlash 0.5s; }
-        @keyframes winFlash { 0%{box-shadow:0 0 0 rgba(255,215,0,0)} 50%{box-shadow:0 0 30px rgba(255,215,0,0.6)} 100%{box-shadow:0 0 0 rgba(255,215,0,0)} }
-
-        .innkeeper { display: flex; align-items: center; gap: 14px; background: var(--elevated); border-radius: var(--radius-sm); padding: 16px 18px; margin-bottom: 20px; border-left: 3px solid var(--gold); }
-        .innkeeper-avatar { font-size: 2.5rem; } .innkeeper-text { flex: 1; }
-        .innkeeper-name { color: var(--gold); font-weight: 700; font-size: 1rem; }
-        .innkeeper-quote { color: var(--sub); font-style: italic; font-size: 0.85rem; }
-        .balance-badge { background: var(--elevated); border: 1px solid var(--gold); border-radius: 25px; padding: 6px 16px; color: var(--gold); font-weight: 700; font-size: 0.9rem; }
-        .balance-badge.shake { animation: shake 0.3s; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
-
-        .game-select { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .game-option { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .game-option:hover { border-color: var(--gold); transform: translateY(-2px); }
-        .game-option-emoji { font-size: 2rem; margin-bottom: 6px; }
-        .game-option-name { color: var(--gold); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
-        .game-option-desc { color: var(--muted); font-size: 0.7rem; }
-        .game-panel { display: none; }
-        .game-panel.active { display: block; }
-
-        .game-area { background: var(--elevated); border-radius: var(--radius-sm); padding: 20px; border: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .game-area h3 { color: var(--gold); font-size: 1rem; text-align: center; margin-bottom: 16px; }
-
-        .table-felt { background: linear-gradient(160deg, #1a3020 0%, #0d1f14 30%, #1a3020 60%, #0f2418 100%); border: 3px solid #3d2b1f; border-radius: var(--radius); box-shadow: inset 0 0 60px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.6); padding: 20px; margin-bottom: 14px; position: relative; }
-        .table-felt::before { content: ''; position: absolute; inset: 6px; border: 1px solid rgba(255,215,0,0.08); border-radius: 14px; pointer-events: none; }
-        .table-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
-        .cards-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; min-height: 60px; align-items: center; }
-
-        .poker-card { width: 78px; height: 110px; background: linear-gradient(160deg, #fff, #e8e8e8); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; position: relative; padding: 4px; outline: 2px solid #fff; outline-offset: -1px; border: 3px solid #888; box-shadow: 0 4px 0 #666; transition: all 0.1s; user-select: none; animation: dealCard 0.3s ease; }
-        @keyframes dealCard { from{transform:translateY(-20px) scale(0.8);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
-        .poker-card .corner { position: absolute; font-size: 12px; font-weight: 800; }
-        .poker-card .corner.top { top: 3px; left: 5px; }
-        .poker-card .corner.bottom { bottom: 3px; right: 5px; transform: rotate(180deg); }
-        .red { color: #c0392b; } .black { color: #1a1a2e; }
-        .poker-card .emoji { font-size: 22px; letter-spacing: 1px; }
-        .poker-card .name { font-size: 7px; font-weight: 600; color: #333; text-align: center; line-height: 1.1; max-width: 66px; }
-        .card-back { width: 78px; height: 110px; background: #444; border-radius: 10px; border: 3px solid #444; box-shadow: 0 4px 0 #333; }
-        .legendary { border-color: #ffaa00; box-shadow: 0 4px 0 #cc8800, 0 0 12px rgba(255,170,0,0.5); }
-        .epic { border-color: #c471ed; box-shadow: 0 4px 0 #9a40c0, 0 0 10px rgba(196,113,237,0.4); }
-        .rare { border-color: #4a90d9; box-shadow: 0 4px 0 #3070b0; }
-        .uncommon { border-color: #3fb950; box-shadow: 0 4px 0 #2d8a3e; }
-        .common { border-color: #888; box-shadow: 0 4px 0 #666; }
-        .poker-card.burned { border-color: var(--red) !important; box-shadow: 0 4px 0 #991111, 0 0 10px rgba(239,68,68,0.5) !important; }
-
-        .score { text-align: center; font-size: 0.85rem; margin: 8px 0; color: var(--sub); }
-        .score-value { color: var(--gold); font-size: 1.3rem; font-weight: 800; }
-        .bet-info { text-align: center; margin: 10px 0; font-size: 0.85rem; color: var(--sub); }
-        .bet-info span { color: var(--gold); font-weight: 700; }
-        .game-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn { flex: 1; padding: 11px 14px; border-radius: 25px; font-weight: 700; cursor: pointer; transition: 0.2s; border: none; font-size: 0.85rem; font-family: inherit; }
-        .btn-primary { background: linear-gradient(135deg,var(--gold),#e0a800); color: #000; box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
-        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
-        .btn-secondary { background: var(--elevated); border: 1px solid var(--border); color: var(--text); }
-        .btn-secondary:hover { border-color: var(--gold); }
-        .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-        .back-btn { display: block; text-align: center; margin-top: 14px; color: var(--muted); cursor: pointer; font-size: 0.85rem; }
-        .back-btn:hover { color: var(--gold); }
-
-        .multiplier-box { display: inline-block; background: var(--elevated); border: 1px solid var(--gold); border-radius: 20px; padding: 6px 16px; margin: 6px 0; text-align: center; }
-        .multiplier-value { font-size: 1.3rem; color: var(--gold); font-weight: 800; }
-        .history-box { margin-top: 14px; padding: 10px; background: var(--card); border-radius: var(--radius-sm); border: 1px solid var(--border); max-height: 120px; overflow-y: auto; }
-        .history-item { color: var(--sub); font-size: 0.72rem; padding: 3px 0; border-bottom: 1px solid var(--border); }
-
-        .sudoku-grid { display: grid; grid-template-columns: repeat(9, 1fr); margin: 16px 0; gap: 1px; background: var(--border-strong); border: 3px solid var(--border-strong); border-radius: 12px; width: 100%; }
-        .sudoku-cell { aspect-ratio: 1; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.1s; color: var(--text); user-select: none; border: 1px solid rgba(255,255,255,0.05); }
-        .sudoku-cell:nth-child(3n) { border-right: 4px solid var(--border-strong); }
-        .sudoku-cell:nth-child(9n+1) { border-left: 4px solid var(--border-strong); }
-        .sudoku-cell:nth-child(n+19):nth-child(-n+27), .sudoku-cell:nth-child(n+46):nth-child(-n+54), .sudoku-cell:nth-child(n+73):nth-child(-n+81) { border-bottom: 4px solid var(--border-strong); }
-        .sudoku-cell:nth-child(-n+9), .sudoku-cell:nth-child(n+28):nth-child(-n+36), .sudoku-cell:nth-child(n+55):nth-child(-n+63) { border-top: 4px solid var(--border-strong); }
-        .sudoku-cell:hover { background: var(--elevated); }
-        .sudoku-cell.fixed { color: var(--sudoku-fixed); font-weight: 800; }
-        .sudoku-cell.selected { outline: 3px solid var(--gold); outline-offset: -2px; background: var(--cell-selected-bg); z-index: 2; position: relative; }
-        .sudoku-cell.same-row-col { background: var(--cell-same-bg); }
-        .sudoku-cell.same-number { background: var(--cell-same-num-bg); }
-        .sudoku-cell.error { color: var(--red); background: rgba(239,68,68,0.25); outline: 2px solid var(--red); animation: shake 0.3s; }
-        .num-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin: 12px 0; }
-        .num-btn { padding: 14px 8px; border-radius: 10px; border: 2px solid var(--border); background: var(--elevated); color: var(--text); font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: inherit; }
-        .num-btn:hover { border-color: var(--gold); background: var(--cell-selected-bg); }
-        .num-btn.clear-btn { color: var(--red); border-color: rgba(239,68,68,0.3); font-size: 0.85rem; grid-column: span 9; }
-        .sudoku-timer { text-align: center; font-size: 0.85rem; color: var(--sub); margin-bottom: 4px; }
-        .sudoku-timer span { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
-        .win-message { text-align: center; padding: 16px; color: var(--gold); font-size: 1.2rem; font-weight: 800; }
-
-        .combo-overlay { text-align: center; font-size: 1.1rem; font-weight: 900; color: var(--gold); min-height: 28px; margin-bottom: 4px; }
-        .runes-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 12px; }
-        .rune-cell { aspect-ratio: 1; background: var(--elevated); border: 2px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; user-select: none; }
-        .rune-cell:hover { transform: scale(1.06); }
-        .rune-cell.selected { border-color: var(--gold); box-shadow: 0 0 16px rgba(255,215,0,0.6); transform: scale(1.1); }
-        .rune-cell.glowing { border-color: #fff; box-shadow: 0 0 24px rgba(255,255,255,0.8), 0 0 40px rgba(255,215,0,0.4); animation: glowPop 0.4s ease-out; }
-        .rune-cell.shake { animation: cellShake 0.3s; }
-        .rune-cell.hint { border-color: rgba(255,215,0,0.6); box-shadow: 0 0 10px rgba(255,215,0,0.3); animation: hintPulse 0.8s ease-in-out infinite; }
-        @keyframes glowPop { 0%{transform:scale(1)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
-        @keyframes cellShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
-        @keyframes hintPulse { 0%,100%{box-shadow:0 0 6px rgba(255,215,0,0.2)} 50%{box-shadow:0 0 16px rgba(255,215,0,0.5)} }
-
-        .result-area { min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px 0; }
-        .drop-card { background: var(--elevated); border-radius: 20px; padding: 30px; text-align: center; animation: dropIn 0.5s ease; max-width: 350px; width: 100%; border: 3px solid var(--border); }
-        .drop-card.legendary { border-color: #ffaa00; box-shadow: 0 0 40px rgba(255,170,0,0.6); }
-        .drop-card.epic { border-color: #c471ed; box-shadow: 0 0 30px rgba(196,113,237,0.5); }
-        .drop-card.rare { border-color: var(--blue); box-shadow: 0 0 20px rgba(74,144,217,0.4); }
-        .drop-card.uncommon { border-color: #3fb950; }
-        .drop-card.common { border-color: var(--border); opacity: 0.7; }
-        @keyframes dropIn { from{transform:translateY(-30px);opacity:0} to{transform:translateY(0);opacity:1} }
-        .drop-emoji { font-size: 4rem; margin-bottom: 10px; }
-        .drop-name { font-size: 1.3rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
-        .drop-rarity { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        .rarity-legendary { color: #ffaa00; } .rarity-epic { color: #c471ed; } .rarity-rare { color: var(--blue); } .rarity-uncommon { color: #3fb950; } .rarity-common { color: var(--muted); }
-
-        .chest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-        .chest-card { background: var(--elevated); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 16px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .chest-card:hover { transform: translateY(-4px); }
-        .chest-card.common { border-color: #888; }
-        .chest-card.common:hover { border-color: #aaa; box-shadow: 0 0 20px rgba(136,136,136,0.3); }
-        .chest-card.rare { border-color: var(--blue); }
-        .chest-card.rare:hover { border-color: #6ab0f3; box-shadow: 0 0 20px rgba(74,144,217,0.3); }
-        .chest-card.epic { border-color: #c471ed; }
-        .chest-card.epic:hover { border-color: #da90f5; box-shadow: 0 0 20px rgba(196,113,237,0.3); }
-        .chest-icon { font-size: 2.5rem; margin-bottom: 6px; }
-        .chest-name { font-weight: 700; color: var(--text); margin-bottom: 2px; font-size: 0.85rem; }
-        .chest-cost { color: var(--gold); font-weight: 700; font-size: 0.8rem; }
-        .chest-desc { color: var(--muted); font-size: 0.65rem; margin-top: 2px; }
-
-        .collection-progress { margin-bottom: 10px; }
-        .progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--sub); }
-        .progress-bar-sm { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
-        .progress-fill-sm { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.3s; }
-
-        .filter-bar { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
-        .filter-btn { padding: 5px 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--elevated); color: var(--sub); cursor: pointer; font-size: 0.7rem; font-family: inherit; transition: 0.2s; }
-        .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
-        .filter-btn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
-
-        .collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; max-height: var(--collection-height); overflow-y: auto; padding: 2px; }
-        .collection-item { background: var(--elevated); border-radius: 12px; padding: 10px 6px; text-align: center; border: 2px solid var(--border); cursor: pointer; transition: 0.2s; position: relative; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
-        .collection-item:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .collection-item .item-emoji { font-size: 1.6rem; }
-        .collection-item .item-name { font-size: 0.55rem; color: var(--sub); line-height: 1.2; text-align: center; }
-        .collection-item .item-count { position: absolute; top: 2px; right: 4px; font-size: 0.5rem; color: var(--muted); background: var(--bg); padding: 1px 4px; border-radius: 6px; }
-        .collection-item.selected { border-color: var(--gold) !important; box-shadow: 0 0 16px rgba(240,185,11,0.5) !important; transform: scale(1.05); }
-        .collection-item.legendary { border-color: #ffaa00; box-shadow: 0 0 12px rgba(255,170,0,0.3); }
-        .collection-item.epic { border-color: #c471ed; box-shadow: 0 0 8px rgba(196,113,237,0.3); }
-        .collection-item.rare { border-color: var(--blue); }
-        .collection-item.uncommon { border-color: #3fb950; }
-        .collection-item.common { border-color: var(--border); opacity: 0.6; }
-
-        .recent-log { margin-top: 16px; padding: 10px; background: var(--card); border-radius: 12px; border: 1px solid var(--border); max-height: 120px; overflow-y: auto; }
-        .recent-log h4 { color: var(--muted); font-size: 0.75rem; margin-bottom: 6px; }
-        .recent-item { color: var(--sub); font-size: 0.72rem; padding: 2px 0; }
-
-        .search-input { padding: 6px 12px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-size: 0.8rem; font-family: inherit; flex: 1; min-width: 120px; }
-        .search-input:focus { outline: none; border-color: var(--gold); }
-
-        .beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.3); z-index: 99; transition: transform 0.2s; }
-        .beer-btn:hover { transform: scale(1.1); }
-
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #ffd700; }
-        * { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
-		
-		.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-		.modal-card { background: var(--card); border-radius: 20px; padding: 30px; text-align: center; max-width: 400px; width: 90%; border: 3px solid var(--border); max-height: 85vh; overflow-y: auto; }
-
-        @media (max-width: 768px) {
-            .container { padding: 12px 14px 80px; }
-            .header { padding: 20px 0 8px; }
-            .header-title { font-size: 1.5rem; }
-            .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
-            .nav-toggle { display: block; }
-            .nav-bar { display: none; flex-direction: column; margin-top: 8px; }
-            .nav-bar.show { display: flex; }
-            .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
-            .section { padding: 16px 12px; }
-            .game-select { grid-template-columns: repeat(2, 1fr); }
-            .poker-card { width: 62px; height: 88px; }
-            .poker-card .corner { font-size: 8px; }
-            .poker-card .corner.top { top: 1px; left: 2px; }
-            .poker-card .corner.bottom { bottom: 1px; right: 2px; }
-            .poker-card .emoji { font-size: 16px; }
-            .poker-card .name { font-size: 6px; max-width: 54px; }
-            .card-back { width: 62px; height: 88px; }
-            .innkeeper { padding: 12px 14px; } .innkeeper-avatar { font-size: 2rem; }
-            .sudoku-cell { font-size: 0.8rem; }
-            .num-btn { font-size: 0.8rem; padding: 10px 2px; }
-            .rune-cell { font-size: 1.3rem; }
-            .game-area { padding: 12px 8px; }
-            .chest-grid { grid-template-columns: 1fr; }
-            .collection-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); max-height: 300px; }
-            .collection-item { font-size: 1.3rem; min-height: 60px; }
-            .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
-        }
-    </style>
+<style>
+    .innkeeper{display:flex;align-items:center;gap:14px;background:var(--elevated);border-radius:var(--radius-sm);padding:16px 18px;margin-bottom:8px;border-left:3px solid var(--gold)}
+    .innkeeper-avatar{font-size:2.5rem}
+    .innkeeper-text{flex:1}
+    .innkeeper-name{color:var(--gold);font-weight:700;font-size:1rem;margin-bottom:2px}
+    .innkeeper-quote{color:var(--sub);font-style:italic;font-size:0.85rem;line-height:1.5;min-height:2.5em}
+    .balance-badge{background:var(--elevated);border:1px solid var(--gold);border-radius:25px;padding:6px 16px;color:var(--gold);font-weight:700;font-size:0.9rem;white-space:nowrap}
+    .helper-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;color:var(--muted);font-size:0.7rem}
+    .helper-avatar{font-size:1.2rem}
+    .game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .game-card{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px 12px;text-align:center;cursor:pointer;transition:0.2s}
+    .game-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(240,185,11,0.1)}
+    .game-emoji{font-size:2rem;margin-bottom:6px}
+    .game-name{color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:4px}
+    .game-cost{color:var(--muted);font-size:0.7rem}
+    .modal-overlay{position:fixed!important;top:0!important;left:0!important;width:100%!important;height:100%!important;background:rgba(0,0,0,0.85)!important;z-index:99999!important;display:flex!important;align-items:center!important;justify-content:center!important;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);animation:fadeIn .2s ease}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .modal-card{background:var(--card);border-radius:20px;padding:30px;text-align:center;max-width:400px;width:90%;border:3px solid var(--border);max-height:85vh;overflow-y:auto;position:relative;z-index:100000}
+    #gameContainer{min-height:300px}
+    .table-felt{background:linear-gradient(160deg,#1a3020 0%,#0d1f14 30%,#1a3020 60%,#0f2418 100%);border:3px solid #3d2b1f;border-radius:var(--radius);box-shadow:inset 0 0 60px rgba(0,0,0,0.5),0 8px 32px rgba(0,0,0,0.6);padding:28px 24px;margin-bottom:14px;position:relative;min-height:160px}
+    .poker-card{width:88px;height:124px;background:linear-gradient(160deg,#fff,#e8e8e8);border-radius:10px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:4px;border:3px solid #888;box-shadow:0 4px 0 #666;vertical-align:top;margin:3px;animation:dealCard .3s ease}
+    @keyframes dealCard{from{transform:translateY(-20px) scale(0.8);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+    .poker-card .corner{font-size:13px;font-weight:800}
+    .poker-card .corner.top{top:3px;left:5px}
+    .poker-card .corner.bottom{bottom:3px;right:5px;transform:rotate(180deg)}
+    .poker-card .emoji{font-size:26px}
+    .poker-card .name{font-size:8px}
+    .card-back{width:88px;height:124px;background:#444;border-radius:10px;border:3px solid #444;box-shadow:0 4px 0 #333;display:inline-block;margin:3px}
+    .sudoku-grid{display:grid;grid-template-columns:repeat(9,1fr);margin:16px 0;gap:1px;background:var(--border-strong);border:3px solid var(--border-strong);border-radius:12px;width:100%}
+    .sudoku-cell{aspect-ratio:1;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;cursor:pointer;transition:all .1s;color:var(--text);user-select:none;border:1px solid rgba(255,255,255,0.05)}
+    .sudoku-cell:nth-child(3n){border-right:4px solid var(--border-strong)}
+    .sudoku-cell:nth-child(9n+1){border-left:4px solid var(--border-strong)}
+    .sudoku-cell:nth-child(n+19):nth-child(-n+27),.sudoku-cell:nth-child(n+46):nth-child(-n+54),.sudoku-cell:nth-child(n+73):nth-child(-n+81){border-bottom:4px solid var(--border-strong)}
+    .sudoku-cell:nth-child(-n+9),.sudoku-cell:nth-child(n+28):nth-child(-n+36),.sudoku-cell:nth-child(n+55):nth-child(-n+63){border-top:4px solid var(--border-strong)}
+    .sudoku-cell:hover{background:var(--elevated)}
+    .sudoku-cell.fixed{color:var(--sudoku-fixed);font-weight:800}
+    .sudoku-cell.selected{outline:3px solid var(--gold);outline-offset:-2px;background:var(--cell-selected-bg);z-index:2;position:relative}
+    .sudoku-cell.same-row-col{background:var(--cell-same-bg)}
+    .sudoku-cell.same-number{background:var(--cell-same-num-bg)}
+    .sudoku-cell.error{color:var(--red);background:rgba(239,68,68,0.25);outline:2px solid var(--red);animation:shake .3s}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+    .num-pad{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin:12px 0}
+    .num-btn{padding:14px 8px;border-radius:10px;border:2px solid var(--border);background:var(--elevated);color:var(--text);font-size:1rem;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
+    .num-btn:hover{border-color:var(--gold);background:var(--cell-selected-bg)}
+    .num-btn.clear-btn{color:var(--red);border-color:rgba(239,68,68,0.3);font-size:.85rem;grid-column:span 9}
+    .sudoku-timer{text-align:center;font-size:.85rem;color:var(--sub);margin-bottom:4px}
+    .sudoku-timer span{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums}
+    @media(max-width:768px){.game-grid{grid-template-columns:repeat(2,1fr)}.innkeeper{padding:12px 14px}.innkeeper-avatar{font-size:2rem}.poker-card{width:70px;height:98px}.card-back{width:70px;height:98px}.table-felt{padding:18px 12px;min-height:130px}}
+</style>
 </head>
 <body>
 <div class="container">
-    <header class="header"><h1 class="header-title">ТАВЕРНА «ОЧКО ЭТЕРНИСА»</h1><p class="header-subtitle">ГуангГуанг ждёт тебя, странник</p><button class="theme-toggle" onclick="toggleTheme()">🌓</button></header>
+    <header class="header"><h1 class="header-title">ТАВЕРНА «ОЧКО ЭТЕРНИСА»</h1><p class="header-subtitle">Перекуси, сыграй, проиграй</p><button class="theme-toggle" onclick="toggleTheme()">🌓</button></header>
+
     <div class="nav-wrapper">
         <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
         <nav class="nav-bar" id="pageNav">
-            <a href="index.html" class="nav-link">📊 Статистика</a>
-            <a href="logs.html" class="nav-link">📜 Логи</a>
-            <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-            <a href="balance.html" class="nav-link">⚖️ Баланс</a>
-            <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-            <a href="gradient.html" class="nav-link">📈 Градиент</a>
-            <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-            <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-            <a href="lore.html" class="nav-link">📜 Лор</a>
-            <a href="tavern.html" class="nav-link active">🍺 Таверна</a>
-            <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
-            <a href="league.html" class="nav-link">🏟 Лига</a>
-            <a href="form.html" class="nav-link">🔥 Форма</a>
-            <a href="player.html" class="nav-link">👤 Профиль</a>
+            <div class="nav-group"><span class="nav-label">⚔️ Арена ▾</span><div class="nav-dropdown"><a href="index.html" class="nav-link">📊 Статистика</a><a href="dungeon.html" class="nav-link">🏔 Подземелье</a><a href="league.html" class="nav-link">🏟 Лига</a><a href="logs.html" class="nav-link">📜 Логи</a><a href="player.html" class="nav-link">👤 Профиль</a></div></div>
+            <div class="nav-group"><span class="nav-label">📐 Аналитика ▾</span><div class="nav-dropdown"><a href="balance.html" class="nav-link">⚖️ Баланс</a><a href="calc.html" class="nav-link">🎲 Калькулятор</a><a href="simulator.html" class="nav-link">🧪 Симулятор</a><a href="gradient.html" class="nav-link">📈 Градиент</a><a href="form.html" class="nav-link">🔥 Форма</a></div></div>
+            <div class="nav-group"><span class="nav-label">🌍 Мир ▾</span><div class="nav-dropdown"><a href="guide.html" class="nav-link">⚔️ Гайд</a><a href="lore.html" class="nav-link">📜 Лор</a><a href="hall.html" class="nav-link">🏆 Зал Славы</a><a href="tavern.html" class="nav-link active">🍺 Таверна</a></div></div>
         </nav>
     </div>
-    <div class="section" id="tavernCard">
+
+    <div class="section" id="tavernSection">
         <div class="innkeeper">
-            <div class="innkeeper-avatar">🐼🍺</div>
-            <div class="innkeeper-text"><div class="innkeeper-name">Трактирщик ГуангГуанг</div><div class="innkeeper-quote" id="innkeeperQuote">Сыграем в очко, странник?</div></div>
-            <div class="balance-badge" id="balance">💎 100</div>
+            <div class="innkeeper-avatar" id="innkeeperAvatar">🐼🍺</div>
+            <div class="innkeeper-text">
+                <div class="innkeeper-name" id="innkeeperName">Трактирщик ГуангГуанг</div>
+                <div class="innkeeper-quote" id="innkeeperQuote">Сыграем в очко, странник?</div>
+            </div>
+            <div class="balance-badge" id="balanceDisplay">💎 100</div>
         </div>
-        <div id="panel-select" class="game-panel active">
-            <div class="game-select">
-                <div class="game-option" onclick="selectGame('ochko')"><div class="game-option-emoji">🃏</div><div class="game-option-name">Не лопни!</div><div class="game-option-desc">Очко с картами Раскола</div></div>
-                <div class="game-option" onclick="selectGame('pig')"><div class="game-option-emoji">🐷</div><div class="game-option-name">Сало или золото?</div><div class="game-option-desc">Хрюкающий банк</div></div>
-                <div class="game-option" onclick="selectGame('sudoku')"><div class="game-option-emoji">🧩</div><div class="game-option-name">Мозголомка</div><div class="game-option-desc">Девять кругов бамбука</div></div>
-                <div class="game-option" onclick="selectGame('runes')"><div class="game-option-emoji">🔮</div><div class="game-option-name">Руны Раскола</div><div class="game-option-desc">Собери 3 в ряд</div></div>
-                <div class="game-option" onclick="selectGame('gacha')"><div class="game-option-emoji">🎰</div><div class="game-option-name">Сундуки</div><div class="game-option-desc">Собери коллекцию</div></div>
-                <div class="game-option" onclick="selectGame('math')"><div class="game-option-emoji">🎋</div><div class="game-option-name">Бамбуковый счёт</div><div class="game-option-desc">5 секунд на пример</div></div>
+
+        <div class="helper-row" id="helperRow" style="display:none">
+            <span class="helper-avatar">🐼</span> Джийонг молча протирает кружки. Кружку хозяина не трогать.
+        </div>
+
+        <div id="gameContainer">
+            <div class="game-grid" id="gameGrid">
+                <div class="game-card" onclick="loadGame('ochko')"><div class="game-emoji">🃏</div><div class="game-name">Не лопни!</div><div class="game-cost">Ставка: 10 💎</div></div>
+                <div class="game-card" onclick="loadGame('pig')"><div class="game-emoji">🐷</div><div class="game-name">Сало или золото?</div><div class="game-cost">Ставка: 5 💎</div></div>
+                <div class="game-card" onclick="loadGame('sudoku')"><div class="game-emoji">🧩</div><div class="game-name">Мозголомка</div><div class="game-cost">Ставка: 5 💎</div></div>
+                <div class="game-card" onclick="loadGame('runes')"><div class="game-emoji">🔮</div><div class="game-name">Руны Раскола</div><div class="game-cost">Ставка: 10 💎</div></div>
+                <div class="game-card" onclick="loadGame('gacha')"><div class="game-emoji">🎰</div><div class="game-name">Сундуки</div><div class="game-cost">от 10 💎</div></div>
+                <div class="game-card" onclick="loadGame('math')"><div class="game-emoji">🎋</div><div class="game-name">Бамбуковый счёт</div><div class="game-cost">Ставка: 5 💎</div></div>
             </div>
         </div>
-        <div id="panel-ochko" class="game-panel"></div>
-        <div id="panel-pig" class="game-panel"></div>
-        <div id="panel-sudoku" class="game-panel"></div>
-        <div id="panel-runes" class="game-panel"></div>
-        <div id="panel-gacha" class="game-panel"></div>
-        <div id="panel-math" class="game-panel"></div>
     </div>
 </div>
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
+
 <script>
-function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
-(function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
-function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
-document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
+// === ТЕМА И НАВИГАЦИЯ ===
+function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-theme'),n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n)}
+(function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s)})()
+function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню'}
+document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню'}))
+document.querySelectorAll('.nav-label').forEach(l=>{l.addEventListener('click',function(e){if(window.innerWidth>768)return;e.preventDefault();const d=this.nextElementSibling;if(d&&d.classList.contains('nav-dropdown')){const o=d.style.display==='block';document.querySelectorAll('.nav-dropdown').forEach(x=>x.style.display='none');d.style.display=o?'none':'block'}})})
 
-let balance=parseInt(localStorage.getItem('tavernBalance'))||100;
-function updateBalance(){document.getElementById('balance').textContent=`💎 ${balance}`;localStorage.setItem('tavernBalance',balance);}
-function setQuote(t){document.getElementById('innkeeperQuote').textContent=t;}
-function flashWin(){const card=document.getElementById('tavernCard');card.classList.add('flash-win');setTimeout(()=>card.classList.remove('flash-win'),500);}
-function shakeBalance(){const badge=document.getElementById('balance');badge.classList.add('shake');setTimeout(()=>badge.classList.remove('shake'),300);}
-const quotes=["Сыграем в очко?","ГуангГуанг верит в твою удачу!","Бамбук шепчет: бери ещё!","Очко — игра смелых!","Перебор? Бывает!","Блэкджек! Ты великий воин!","Осколки приходят и уходят...","Ставки сделаны!","Руны не врут!","Три в ряд — и ты богач!","Сало или золото — вот в чём вопрос!","Девять кругов бамбука ждут тебя!","Не лопни, странник!","ГуангГуанг шепчет: бери ещё карту!","Бамбук не прощает жадности!","Свинья любит смелых!","Мозголомка для избранных!","Руны шепчут твоё имя...","Панда сдаёт — панда забирает!","Кто не рискует — не пьёт бамбуковое пиво!","Сами леса Лордерона прошептали это имя — Настя ВТФ!"];
-function randomQuote(){return quotes[Math.floor(Math.random()*quotes.length)];}
-let spamLock=false;
-function antiSpam(){if(spamLock)return true;spamLock=true;setTimeout(()=>spamLock=false,300);return false;}
-function backToSelect(){document.querySelectorAll('.game-panel').forEach(p=>{if(p.id!=='panel-select'){p.classList.remove('active');p.innerHTML='';}});document.getElementById('panel-select').classList.add('active');setQuote('Во что сыграем? '+randomQuote());}
-window.backToSelect=backToSelect;
+// === РЕЖИМ ТРАКТИРЩИКА ===
+const GG_IN_EXPEDITION = true  // false когда ГуангГуанг вернётся
 
-function renderCardHTML(c,back,index){
-    if(back) return '<div class="card-back"></div>';
-    const cls=c.suit==='♥'||c.suit==='♦'?'red':'black';
-    const em=null||['🐼','👑','⚔️','🔮','💀','✨','🛡️','🗡️','🌿','🧔'][index!=null?index%10:0];
-    const name=c.value+c.suit;
-    const rarity='common';
-    return `<div class="poker-card ${rarity}"><span class="corner top ${cls}">${c.value}${c.suit}</span><span class="emoji">${em}</span><span class="name">${name}</span><span class="corner bottom ${cls}">${c.value}${c.suit}</span></div>`;
+const quotesGG = [
+    "Сыграем в очко?","ГуангГуанг верит в твою удачу!","Бамбук шепчет: бери ещё!",
+    "Очко — игра смелых!","Перебор? Бывает!","Блэкджек! Ты великий воин!",
+    "Осколки приходят и уходят...","Ставки сделаны!","Руны не врут!",
+    "Три в ряд — и ты богач!","Сало или золото — вот в чём вопрос!",
+    "Не лопни, странник!","Бамбук не прощает жадности!","Свинья любит смелых!",
+    "Мозголомка для избранных!","Руны шепчут твоё имя...","Панда сдаёт — панда забирает!",
+    "Кто не рискует — не пьёт бамбуковое пиво!","Сами леса Лордерона прошептали это имя — Настя ВТФ!"
+]
+
+const quotesKaterina = [
+    "Хозяин в Разломе. Кэтэрина за стойкой.",
+    "Кружку не трогай. Это его.",
+    "Пиво то же. Панда другой. Кошка та же.",
+    "Джийонг, проверь подвал. И принеси сливки.",
+    "Он сказал — не проиграй таверну. Я сказала — мур.",
+    "Ставки те же. Панды нет. Но ставки те же.",
+    "Кэтэрина не Мурка. Кэтэрина — королева.",
+    "ГуангГуанг вернётся — удивится порядку."
+]
+
+function getQuotes(){ return GG_IN_EXPEDITION ? quotesKaterina : quotesGG }
+function randomQuote(){ const q=getQuotes(); return q[Math.floor(Math.random()*q.length)] }
+function setQuote(t){ document.getElementById('innkeeperQuote').textContent = t }
+function updateInnkeeperUI(){
+    document.getElementById('innkeeperAvatar').textContent = GG_IN_EXPEDITION ? '🐱👑' : '🐼🍺'
+	document.getElementById('innkeeperName').textContent = GG_IN_EXPEDITION ? 'Кэтэрина' : 'Трактирщик ГуангГуанг'
+    document.getElementById('helperRow').style.display = GG_IN_EXPEDITION ? 'flex' : 'none'
+    setQuote(randomQuote())
+}
+updateInnkeeperUI()
+
+// === БАЛАНС ===
+window.tavernBalance = parseInt(localStorage.getItem('tavernBalance')) || 100
+function updateBalanceDisplay(){
+    document.getElementById('balanceDisplay').textContent = `💎 ${window.tavernBalance}`
+    localStorage.setItem('tavernBalance', window.tavernBalance)
+    const bt = document.getElementById('balanceTop'); if(bt) bt.textContent = `💎 ${window.tavernBalance}`
+}
+updateBalanceDisplay()
+
+// === ОБЩИЕ ФУНКЦИИ ДЛЯ ИГР ===
+window.flashWin = function(){
+    const s = document.getElementById('tavernSection')
+    s.style.boxShadow = '0 0 30px rgba(255,215,0,0.6)'
+    setTimeout(() => s.style.boxShadow = '', 500)
+}
+window.shakeBalance = function(){
+    const b = document.getElementById('balanceDisplay')
+    b.style.transform = 'translateX(-3px)'
+    setTimeout(() => b.style.transform = '', 150)
+}
+window.spamLock = false
+window.antiSpam = function(){
+    if (window.spamLock) return true
+    window.spamLock = true
+    setTimeout(() => window.spamLock = false, 300)
+    return false
+}
+window.GG_IN_EXPEDITION = GG_IN_EXPEDITION
+
+window.getGachaCollection = function() {
+    try { return JSON.parse(localStorage.getItem('gachaCollection')) || []; }
+    catch(e) { return []; }
 }
 
-const ochko={deck:[],playerCards:[],dealerCards:[],gameActive:false,bet:10,suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],cardIndex:0,createDeck(){const d=[];for(const s of this.suits)for(const v of this.values)d.push({suit:s,value:v,index:this.cardIndex++});return d.sort(()=>Math.random()-0.5);},cardValue(c){if(c.value==='A')return 11;if(c.value==='J')return 2;if(c.value==='Q')return 3;if(c.value==='K')return 4;return parseInt(c.value);},calcScore(cards){let score=0,aces=0;for(const c of cards){score+=this.cardValue(c);if(c.value==='A')aces++;}if(aces===2&&cards.length===2)return 21;while(score>21&&aces>0){score-=10;aces--;}return score;},render(){const d=document.getElementById('dealerCards'),p=document.getElementById('playerCards');d.innerHTML=this.gameActive?renderCardHTML(this.dealerCards[0],false,this.dealerCards[0].index)+renderCardHTML(null,true,0):this.dealerCards.map(c=>renderCardHTML(c,false,c.index)).join('');p.innerHTML=this.playerCards.map(c=>renderCardHTML(c,false,c.index)).join('');document.getElementById('dealerScore').textContent=this.gameActive?'?':this.calcScore(this.dealerCards);document.getElementById('playerScore').textContent=this.calcScore(this.playerCards);},startGame(){if(antiSpam()||balance<this.bet){if(balance<this.bet)setQuote('Недостаточно осколков!');return;}balance-=this.bet;updateBalance();this.deck=this.createDeck();this.playerCards=[this.deck.pop(),this.deck.pop()];this.dealerCards=[this.deck.pop(),this.deck.pop()];this.gameActive=true;document.getElementById('startBtn').disabled=true;document.getElementById('hitBtn').disabled=false;document.getElementById('standBtn').disabled=false;if(this.calcScore(this.playerCards)===21)this.stand();this.render();},hit(){if(antiSpam()||!this.gameActive)return;this.playerCards.push(this.deck.pop());this.render();if(this.calcScore(this.playerCards)>21)this.endGame();else if(this.calcScore(this.playerCards)===21)this.stand();},stand(){if(!this.gameActive)return;this.gameActive=false;document.getElementById('hitBtn').disabled=true;document.getElementById('standBtn').disabled=true;setQuote('🐼 ГуангГуанг думает...');setTimeout(()=>{while(this.calcScore(this.dealerCards)<17)this.dealerCards.push(this.deck.pop());this.render();this.resolve();},800);},resolve(){const p=this.calcScore(this.playerCards),d=this.calcScore(this.dealerCards);const hasOchko=this.playerCards.length===2&&this.playerCards[0].value==='A'&&this.playerCards[1].value==='A';let w;if(p>21)w=0;else if(d>21)w=this.bet*2;else if(p>d)w=this.bet*2;else if(p<d)w=0;else w=this.bet;if(hasOchko&&w>0){w=Math.floor(this.bet*2.5);setQuote('🎯 ОЧКО! Два туза! ГуангГуанг в шоке!');}else if(p===21&&this.playerCards.length===2&&w>0){w=Math.floor(this.bet*2.5);setQuote('🔥 Блэкджек! Мой ученик!');}else if(w>this.bet)setQuote('🔥 Победа! Мой ученик!');else if(w===0){setQuote('😏 ЛООООХ!');shakeBalance();}else setQuote('🤝 Ничья.');if(w>0)flashWin();balance+=w;updateBalance();document.getElementById('startBtn').disabled=false;},endGame(){this.gameActive=false;document.getElementById('hitBtn').disabled=true;document.getElementById('standBtn').disabled=true;document.getElementById('startBtn').disabled=false;setQuote('💔 ПЕРЕБОР! ЛООООХ!');shakeBalance();this.render();}};
+// === ЗАГРУЗКА ИГР ===
+let currentGame = null
+const gameScripts = {}
 
-const pigGame={deck:[],drawnCards:[],suits:['♥','♦','♠','♣'],values:['2','3','4','5','6','7','8','9','10','J','Q','K','A'],active:false,bet:5,multiplier:1,cardIndex:0,history:JSON.parse(localStorage.getItem('pigHistory'))||[],createDeck(){const d=[];for(const s of this.suits)for(const v of this.values)d.push({suit:s,value:v,index:this.cardIndex++});return d.sort(()=>Math.random()-0.5);},addHistory(text,amount){const time=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});this.history.unshift({text,amount,time});if(this.history.length>8)this.history.pop();localStorage.setItem('pigHistory',JSON.stringify(this.history));this.renderHistory();},renderHistory(){const box=document.getElementById('historyBox');if(!box)return;if(!this.history.length){box.innerHTML='<div class="history-item" style="color:var(--muted)">История...</div>';return;}box.innerHTML=this.history.map(h=>`<div class="history-item">${h.time} — ${h.text} ${h.amount>0?'+':''}${h.amount} 💎</div>`).join('');},start(){if(balance<this.bet){setQuote('Недостаточно осколков!');return;}balance-=this.bet;updateBalance();this.deck=this.createDeck();this.drawnCards=[];this.multiplier=1;this.active=true;document.getElementById('pigStartBtn').disabled=true;document.getElementById('pigDrawBtn').disabled=false;document.getElementById('pigStopBtn').disabled=false;document.getElementById('drawnCards').innerHTML='';document.getElementById('lastCardInfo').innerHTML='';document.getElementById('multiplier').textContent='x1';document.getElementById('nextMultiplier').textContent='x2';setQuote('🐷 Новая игра! Тяни карту!');},draw(){if(!this.active)return;const card=this.deck.pop();if(!card)return;this.drawnCards.push(card);const suits=this.drawnCards.map(c=>c.suit);const dupSuit=suits.length!==new Set(suits).size;document.getElementById('drawnCards').innerHTML=this.drawnCards.map(c=>renderCardHTML(c,false,c.index)).join('');if(dupSuit){this.active=false;document.getElementById('pigStartBtn').disabled=false;document.getElementById('pigDrawBtn').disabled=true;document.getElementById('pigStopBtn').disabled=true;const cards=document.querySelectorAll('#drawnCards .poker-card');if(cards.length)cards[cards.length-1].classList.add('burned');setQuote(`💔 Повтор масти! -${this.bet} 💎`);shakeBalance();this.addHistory('Проигрыш',-this.bet);}else{this.multiplier++;document.getElementById('multiplier').textContent='x'+this.multiplier;document.getElementById('nextMultiplier').textContent='x'+(this.multiplier+1);setQuote(`Множитель x${this.multiplier}. Ещё?`);if(this.drawnCards.length===4)this.stop(true);}},stop(bonus=false){if(!this.active)return;this.active=false;document.getElementById('pigStartBtn').disabled=false;document.getElementById('pigDrawBtn').disabled=true;document.getElementById('pigStopBtn').disabled=true;let win=this.bet*this.multiplier;if(bonus)win=Math.floor(win*1.5);balance+=win;updateBalance();setQuote('🏆 +'+win+' 💎 Мой ученик!');flashWin();this.addHistory('Победа x'+this.multiplier,win-this.bet);}};
+async function loadGame(name){
+    if (currentGame && currentGame.destroy) currentGame.destroy()
+    document.getElementById('gameContainer').innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)"><div class="spinner"></div><p>Загрузка...</p></div>'
 
-const SZ=9,BOX=3;let sGrid=[],sSol=[],sFixed=[],sSel=null,sActive=false;let sTimerInterval=null,sSeconds=0;
-function sudokuInit(){sSol=Array.from({length:SZ},()=>Array(SZ).fill(0));fillGrid(sSol);sGrid=sSol.map(r=>[...r]);const cells=[];for(let r=0;r<SZ;r++)for(let c=0;c<SZ;c++)cells.push([r,c]);cells.sort(()=>Math.random()-0.5);const toHide=31+Math.floor(Math.random()*11);for(let i=0;i<toHide;i++){const[r,c]=cells[i];sGrid[r][c]=0;}sFixed=sGrid.map(row=>row.map(cell=>cell!==0));sSeconds=0;clearInterval(sTimerInterval);updateTimerDisplay();sTimerInterval=setInterval(()=>{sSeconds++;updateTimerDisplay();},1000);sActive=true;sSel=null;document.getElementById('sudokuCheckBtn').disabled=true;document.getElementById('sudokuMessage').innerHTML='';sudokuRender();}
-function fillGrid(grid){const nums=[1,2,3,4,5,6,7,8,9];function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}function isValid(g,r,c,n){for(let i=0;i<SZ;i++)if(g[r][i]===n||g[i][c]===n)return false;const br=Math.floor(r/BOX)*BOX,bc=Math.floor(c/BOX)*BOX;for(let i=0;i<BOX;i++)for(let j=0;j<BOX;j++)if(g[br+i][bc+j]===n)return false;return true;}function solve(g){for(let r=0;r<SZ;r++){for(let c=0;c<SZ;c++){if(g[r][c]===0){const tries=[...nums];shuffle(tries);for(const n of tries){if(isValid(g,r,c,n)){g[r][c]=n;if(solve(g))return true;g[r][c]=0;}}return false;}}}return true;}for(let b=0;b<SZ;b+=BOX){const tries=[...nums];shuffle(tries);for(let i=0;i<BOX;i++){for(let j=0;j<BOX;j++){let placed=false;for(let k=0;k<tries.length;k++){if(isValid(grid,b+i,b+j,tries[k])){grid[b+i][b+j]=tries[k];tries.splice(k,1);placed=true;break;}}if(!placed)grid[b+i][b+j]=tries.pop();}}}if(!solve(grid)){for(let r=0;r<SZ;r++)for(let c=0;c<SZ;c++)grid[r][c]=0;for(let b=0;b<SZ;b+=BOX){const tries=[...nums];shuffle(tries);let idx=0;for(let i=0;i<BOX;i++)for(let j=0;j<BOX;j++)grid[b+i][b+j]=tries[idx++];}solve(grid);}}
-function updateTimerDisplay(){const el=document.getElementById('sudokuTimer');if(!el)return;const m=Math.floor(sSeconds/60).toString().padStart(2,'0'),s=(sSeconds%60).toString().padStart(2,'0');el.textContent=`${m}:${s}`;const multEl=document.getElementById('sudokuMulti');if(sSeconds<180)multEl.textContent='×5 ⚡';else if(sSeconds<600)multEl.textContent='×3';else multEl.textContent='×2';}
-function sudokuRender(){const container=document.getElementById('sudokuGrid');if(!container)return;container.innerHTML='';const selectedNum=sSel&&sGrid[sSel.r][sSel.c]!==0?sGrid[sSel.r][sSel.c]:null;let boxRStart=-1,boxREnd=-1,boxCStart=-1,boxCEnd=-1;if(sSel){boxRStart=Math.floor(sSel.r/BOX)*BOX;boxREnd=boxRStart+BOX;boxCStart=Math.floor(sSel.c/BOX)*BOX;boxCEnd=boxCStart+BOX;}for(let r=0;r<SZ;r++){for(let c=0;c<SZ;c++){const el=document.createElement('div');el.className='sudoku-cell';if(sGrid[r][c]!==0)el.textContent=sGrid[r][c];if(sFixed[r][c])el.classList.add('fixed');if(sSel&&sSel.r===r&&sSel.c===c)el.classList.add('selected');if(sSel&&(sSel.r===r||sSel.c===c))el.classList.add('same-row-col');if(sSel&&r>=boxRStart&&r<boxREnd&&c>=boxCStart&&c<boxCEnd)el.classList.add('same-row-col');if(selectedNum&&sGrid[r][c]===selectedNum&&!(sSel&&sSel.r===r&&sSel.c===c))el.classList.add('same-number');el.onclick=()=>{if(!sActive)return;if(sFixed[r][c])return;sSel={r,c};sudokuRender();};container.appendChild(el);}}}
-function sudokuPlace(num){if(!sActive||!sSel)return;if(sFixed[sSel.r][sSel.c])return;sGrid[sSel.r][sSel.c]=num;sudokuRender();const hasEmpty=sGrid.some(row=>row.some(cell=>cell===0));document.getElementById('sudokuCheckBtn').disabled=hasEmpty;}
-function sudokuCheck(){if(!sActive)return;let ok=true,hasEmpty=false;const errors=[];for(let r=0;r<SZ;r++){for(let c=0;c<SZ;c++){if(sGrid[r][c]===0)hasEmpty=true;else if(sGrid[r][c]!==sSol[r][c]){ok=false;errors.push({r,c});}}}if(ok&&!hasEmpty){sActive=false;clearInterval(sTimerInterval);document.getElementById('sudokuCheckBtn').disabled=true;let mult=3;if(sSeconds<180)mult=5;else if(sSeconds<600)mult=3;else mult=2;const win=10*mult;balance+=win;updateBalance();const m=Math.floor(sSeconds/60),s=sSeconds%60;const timeStr=m>0?`${m}м ${s}с`:`${s}с`;document.getElementById('sudokuMessage').innerHTML=`<div class="win-message">🎉 +${win} 💎 (×${mult}, ${timeStr})</div>`;flashWin();setQuote('🧩 ГуангГуанг уважает!');}else if(hasEmpty){document.getElementById('sudokuMessage').innerHTML=`<div style="text-align:center;color:var(--orange);padding:8px">⚠️ Заполни всё поле!</div>`;setTimeout(()=>{document.getElementById('sudokuMessage').innerHTML='';},2000);}else{const cells=document.querySelectorAll('.sudoku-cell');errors.forEach(({r,c})=>{const idx=r*SZ+c;if(cells[idx])cells[idx].classList.add('error');});document.getElementById('sudokuMessage').innerHTML=`<div style="text-align:center;color:var(--red);padding:8px">❌ Ошибки подсвечены красным</div>`;setTimeout(()=>{document.querySelectorAll('.sudoku-cell.error').forEach(el=>el.classList.remove('error'));document.getElementById('sudokuMessage').innerHTML='';},2000);}}
-function sudokuNewGame(){if(antiSpam()||balance<5){if(balance<5)setQuote('Нет осколков!');return;}balance-=5;updateBalance();sudokuInit();setQuote('🧩 Новая партия. Время пошло!');}
-
-const ROWS=6,COLS=6,RUNES_BET=10,MAX_MOVES=30;const RUNES=['🔥','💧','🌿','⚡','💀','✨'];let runesGrid=[],runesSelected=null,runesScore=0,runesEarned=0,runesCombo=1;let runesActive=false,runesProcessing=false,runesMovesLeft=MAX_MOVES;let hintTimeout=null,hintCells=[];
-function runesNewGame(){if(balance<RUNES_BET){setQuote('Недостаточно осколков!');return;}balance-=RUNES_BET;updateBalance();runesGrid=[];runesSelected=null;runesScore=0;runesEarned=0;runesCombo=1;runesMovesLeft=MAX_MOVES;runesActive=true;runesProcessing=false;clearHints();for(let r=0;r<ROWS;r++){runesGrid[r]=[];for(let c=0;c<COLS;c++)runesGrid[r][c]=randomRune();}removeInitialMatches();updateRunesUI();runesRender();setQuote('🔮 Руны ждут, странник!');document.getElementById('comboOverlay').textContent='';document.getElementById('runesNewBtn').disabled=true;document.getElementById('runesCashBtn').disabled=false;scheduleHint();}
-function runesCashOut(){if(!runesActive)return;runesActive=false;runesProcessing=false;clearHints();runesEarned=calcRunesEarned();balance+=runesEarned;updateBalance();updateRunesUI();document.getElementById('runesNewBtn').disabled=false;document.getElementById('runesCashBtn').disabled=true;document.getElementById('comboOverlay').textContent='';if(runesEarned>RUNES_BET){setQuote(`🏆 Мудрое решение! +${runesEarned}💎`);flashWin();}else if(runesEarned===0)setQuote('💔 Ушёл с пустыми руками...');else setQuote(`🤝 +${runesEarned}💎. Почти отбил своё...`);}
-function calcRunesEarned(){return Math.floor(runesScore*(0.8+runesCombo*0.1));}
-function randomRune(){return RUNES[Math.floor(Math.random()*RUNES.length)];}
-function removeInitialMatches(){let hasMatch=true,iterations=0;while(hasMatch&&iterations<100){hasMatch=false;iterations++;const matches=findRunesMatches();if(matches.length>0){hasMatch=true;for(const m of matches)runesGrid[m.r][m.c]=randomRune();}}}
-function updateRunesUI(){document.getElementById('movesLeft').textContent=runesMovesLeft;document.getElementById('comboCount').textContent='×'+runesCombo;document.getElementById('runesScore').textContent=runesScore;document.getElementById('earned').textContent=runesEarned+' 💎';}
-function runesRender(){const gridEl=document.getElementById('runesGrid');if(!gridEl)return;gridEl.innerHTML='';for(let r=0;r<ROWS;r++){for(let c=0;c<COLS;c++){const cell=document.createElement('div');cell.className='rune-cell';cell.textContent=runesGrid[r][c]||'';if(runesSelected&&runesSelected.r===r&&runesSelected.c===c)cell.classList.add('selected');if(hintCells.some(h=>h.r===r&&h.c===c))cell.classList.add('hint');cell.addEventListener('click',()=>runeClick(r,c));gridEl.appendChild(cell);}}}
-function runeClick(r,c){if(!runesActive||runesProcessing)return;clearHints();if(!runesSelected){runesSelected={r,c};runesRender();scheduleHint();return;}if(runesSelected.r===r&&runesSelected.c===c){runesSelected=null;runesRender();scheduleHint();return;}if(!isRuneAdjacent(runesSelected.r,runesSelected.c,r,c)){runesSelected={r,c};runesRender();scheduleHint();return;}const sr=runesSelected.r,sc=runesSelected.c;swapRunes(sr,sc,r,c);const matches=findRunesMatches();if(matches.length===0){const cell1=document.querySelector(`#runesGrid .rune-cell:nth-child(${sr*COLS+sc+1})`);const cell2=document.querySelector(`#runesGrid .rune-cell:nth-child(${r*COLS+c+1})`);if(cell1)cell1.classList.add('shake');if(cell2)cell2.classList.add('shake');setTimeout(()=>{swapRunes(sr,sc,r,c);runesRender();scheduleHint();},150);runesSelected=null;setQuote('Эти руны не хотят дружить...');runesMovesLeft--;updateRunesUI();if(runesMovesLeft<=0){endRunesGame();return;}return;}runesSelected=null;runesMovesLeft--;updateRunesUI();processRunesMatches(matches);}
-function isRuneAdjacent(r1,c1,r2,c2){return Math.abs(r1-r2)+Math.abs(c1-c2)===1;}
-function swapRunes(r1,c1,r2,c2){[runesGrid[r1][c1],runesGrid[r2][c2]]=[runesGrid[r2][c2],runesGrid[r1][c1]];}
-function findRunesMatches(){const matched=new Set();for(let r=0;r<ROWS;r++){for(let c=0;c<COLS-2;c++){if(runesGrid[r][c]&&runesGrid[r][c]===runesGrid[r][c+1]&&runesGrid[r][c]===runesGrid[r][c+2]){let end=c+2;while(end+1<COLS&&runesGrid[r][end+1]===runesGrid[r][c])end++;for(let i=c;i<=end;i++)matched.add(r*COLS+i);}}}for(let c=0;c<COLS;c++){for(let r=0;r<ROWS-2;r++){if(runesGrid[r][c]&&runesGrid[r][c]===runesGrid[r+1][c]&&runesGrid[r][c]===runesGrid[r+2][c]){let end=r+2;while(end+1<ROWS&&runesGrid[end+1][c]===runesGrid[r][c])end++;for(let i=r;i<=end;i++)matched.add(i*COLS+c);}}}return[...matched].map(i=>({r:Math.floor(i/COLS),c:i%COLS}));}
-function findAnyRuneMove(){for(let r=0;r<ROWS;r++){for(let c=0;c<COLS;c++){if(c+1<COLS){swapRunes(r,c,r,c+1);if(findRunesMatches().length>0){swapRunes(r,c,r,c+1);return[{r,c},{r,c:c+1}];}swapRunes(r,c,r,c+1);}if(r+1<ROWS){swapRunes(r,c,r+1,c);if(findRunesMatches().length>0){swapRunes(r,c,r+1,c);return[{r,c},{r:r+1,c}];}swapRunes(r,c,r+1,c);}}}return null;}
-function clearHints(){hintCells=[];if(hintTimeout){clearTimeout(hintTimeout);hintTimeout=null;}}
-function scheduleHint(){clearHints();if(!runesActive||runesProcessing)return;hintTimeout=setTimeout(()=>{const move=findAnyRuneMove();if(move&&runesActive&&!runesProcessing){hintCells=move;runesRender();setQuote('🐼 ГуангГуанг шепчет: смотри внимательнее...');}},60000);}
-function shuffleRunesGrid(){const all=[];for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)all.push(runesGrid[r][c]);all.sort(()=>Math.random()-0.5);let idx=0;for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)runesGrid[r][c]=all[idx++];removeInitialMatches();}
-async function processRunesMatches(matches){runesProcessing=true;clearHints();let cascadeCount=0;while(matches.length>0&&runesActive){if(matches.length>=5)runesMovesLeft+=2;else if(matches.length===4)runesMovesLeft+=1;for(const m of matches){const idx=m.r*COLS+m.c+1;const cell=document.querySelector(`#runesGrid .rune-cell:nth-child(${idx})`);if(cell)cell.classList.add('glowing');}await sleepRunes(250);if(cascadeCount>0)runesCombo++;const points=matches.length===3?1:matches.length===4?3:matches.length>=5?5:1;runesScore+=points*runesCombo;for(const m of matches)runesGrid[m.r][m.c]=null;runesRender();await sleepRunes(200);collapseRunesGrid();runesRender();await sleepRunes(200);for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(!runesGrid[r][c])runesGrid[r][c]=randomRune();runesRender();await sleepRunes(350);matches=findRunesMatches();cascadeCount++;}if(cascadeCount>2){document.getElementById('comboOverlay').textContent=`🔥 КОМБО ×${runesCombo}!`;setQuote(`Каскад ×${cascadeCount}!`);}else if(cascadeCount>0){document.getElementById('comboOverlay').textContent=`✨ Комбо ×${runesCombo}`;setQuote('Руны сложились!');}else{runesCombo=Math.max(1,runesCombo-1);document.getElementById('comboOverlay').textContent='';}updateRunesUI();setTimeout(()=>{document.getElementById('comboOverlay').textContent='';},1500);if(!findAnyRuneMove()){document.getElementById('comboOverlay').textContent='🔄 Перемешивание...';shuffleRunesGrid();runesRender();await sleepRunes(400);if(!findAnyRuneMove()){shuffleRunesGrid();runesRender();await sleepRunes(400);}runesCombo=1;setQuote('✨ Руны перемешались! Продолжай!');updateRunesUI();document.getElementById('comboOverlay').textContent='';const newMatches=findRunesMatches();if(newMatches.length>0){await processRunesMatches(newMatches);return;}}if(runesMovesLeft<=0){endRunesGame();return;}runesProcessing=false;scheduleHint();}
-function collapseRunesGrid(){for(let c=0;c<COLS;c++){let writeRow=ROWS-1;for(let r=ROWS-1;r>=0;r--){if(runesGrid[r][c]!==null&&runesGrid[r][c]!==undefined){runesGrid[writeRow][c]=runesGrid[r][c];writeRow--;}}for(let r=writeRow;r>=0;r--)runesGrid[r][c]=null;}}
-function endRunesGame(){runesActive=false;runesProcessing=false;clearHints();runesEarned=calcRunesEarned();balance+=runesEarned;updateBalance();updateRunesUI();document.getElementById('runesNewBtn').disabled=false;document.getElementById('runesCashBtn').disabled=true;document.getElementById('comboOverlay').textContent='';if(runesEarned>RUNES_BET){setQuote(`🏆 Игра окончена! +${runesEarned}💎`);flashWin();}else if(runesEarned===0)setQuote('💔 Ходы кончились. Пусто...');else setQuote(`⏰ Ходы кончились. +${runesEarned}💎`);}
-function sleepRunes(ms){return new Promise(r=>setTimeout(r,ms));}
-
-// ==================== СУНДУКИ РАСКОЛА ====================
-let gachaPool=[],gachaReady=false;
-let gachaCollection=JSON.parse(localStorage.getItem('gachaCollection'))||[];
-let gachaRecent=JSON.parse(localStorage.getItem('gachaRecent'))||[];
-let gachaFilter='all';
-let gachaSelected=new Set();
-const RARITY_ORDER=['legendary','epic','rare','uncommon','common'];
-const RARITY_LABELS={legendary:'ЛЕГЕНДАРНЫЙ',epic:'Эпический',rare:'Редкий',uncommon:'Необычный',common:'Обычный'};
-const RARITY_COLORS={legendary:'#ffaa00',epic:'#c471ed',rare:'#4a90d9',uncommon:'#3fb950',common:'var(--muted)'};
-const SELL_PRICES={legendary:50,epic:20,rare:8,uncommon:3,common:1};
-const CHEST_COSTS={common:10,rare:50,epic:200};
-const CHEST_LOOT={
-    common:[{r:'common',w:3},{r:'uncommon',w:1}],
-    rare:[{r:'rare',w:3},{r:'epic',w:1}],
-    epic:[{r:'epic',w:3},{r:'legendary',w:1}]
-};
-
-function gachaSaveCollection(){localStorage.setItem('gachaCollection',JSON.stringify(gachaCollection));}
-function gachaSaveRecent(){localStorage.setItem('gachaRecent',JSON.stringify(gachaRecent));}
-
-async function loadGachaPool(){
-    const area=document.getElementById('gachaResultArea');
-    if(area)area.innerHTML='<div style="color:var(--muted);text-align:center;">Загрузка сундуков...</div>';
-    try{
-        const r=await fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json');
-        if(!r.ok)throw new Error('HTTP '+r.status);
-        const data=await r.json();
-        const players=(data.players||[]).filter(p=>p.name&&p.name!=='Unknown');
-        const pool=[];
-        const seen=new Set();
-        const add=(emoji,name,rarity,desc='')=>{const k=name+'|'+rarity;if(seen.has(k))return;seen.add(k);pool.push({emoji,name,rarity,desc});};
-
-        // Обычные
-        ['🦴','🍂','🍺','🕯️','🧦','🗑️','🍭','🍄','👟','📎'].forEach((e,i)=>add(e,['Кость','Лист','Кружка','Огарок','Носок','Мусор','Леденец','Гриб','Тапок','Скрепка'][i],'common'));
-        // Необычные
-        ['🧪','🛡️','✨','📜','💎','🔮','🗡️','🧿'].forEach((e,i)=>add(e,['Зелье','Благословение','Чудо','Свиток','Осколок','Кристалл','Кинжал','Амулет'][i],'uncommon'));
-        // Редкие
-        add('⚔️','Меч Аэлиона','rare','Первый клинок');
-        add('🏹','Лук Следопыта','rare','Бьёт без промаха');
-        add('🪓','Топор Варвара','rare','Ярость внутри');
-        add('🗡️','Клинок Тени','rare','Невидим во тьме');
-        add('🛡️','Щит Паладина','rare','Свет отражает');
-        add('💎','Двойной осколок','rare','Двойная мощь');
-        // Эпические
-        ['🏰','🌑','🎭','🔥','🌫️','👑'].forEach((e,i)=>add(e,['Сияющий Шпиль','Эпицентр Раскола','Арена Тысячи Эхо','Кузня Расколотых','Зал Повествователя','Корона Раскола'][i],'epic'));
-        // Игроки
-        players.forEach(p=>add(p.emoji||'⚔️',p.display,'uncommon',p.name));
-        players.filter(p=>(p.wins||0)+(p.losses||0)>=50).forEach(p=>add(p.emoji||'⚔️',p.display,'rare',p.name));
-        [...players].sort((a,b)=>(b.wins||0)-(a.wins||0)).slice(0,15).forEach(p=>add(p.emoji||'⚔️',p.display,'epic',p.name));
-        players.filter(p=>p.tournamentWins>0||p.champion).forEach(p=>add(p.emoji||'👑',p.display,'legendary',p.name+' | Чемпион'));
-        // Легендарные
-        add('🐼','ГуангГуанг','legendary','Трактирщик');
-        add('🔮','Осколок Клинка','legendary','Артефакт');
-        add('☀️','Солнечный Клинок','legendary','Восстановленный');
-
-        gachaPool=pool;
-        gachaReady=true;
-        if(area)area.innerHTML='<div style="color:var(--muted);text-align:center;">Выбери сундук, странник...</div>';
-        gachaRenderCollection();
-        gachaRenderRecent();
-    }catch(e){
-        if(area)area.innerHTML='<div style="color:var(--red);text-align:center;">❌ Ошибка загрузки</div>';
+    if (!gameScripts[name]) {
+        await new Promise((resolve, reject) => {
+            const s = document.createElement('script')
+            s.src = `game/${name}.js`
+            s.onload = resolve
+            s.onerror = reject
+            document.head.appendChild(s)
+        })
+        gameScripts[name] = true
     }
-}
 
-function openChest(type){
-    if(!gachaReady){setQuote('Сундуки загружаются...');return;}
-    if(balance<CHEST_COSTS[type]){setQuote('Недостаточно осколков!');shakeBalance();return;}
-    balance-=CHEST_COSTS[type];updateBalance();
-
-    const lootTable=CHEST_LOOT[type];
-    const drops=[];
-    lootTable.forEach(({r,w})=>{
-        const pool=gachaPool.filter(p=>p.rarity===r);
-        for(let i=0;i<w;i++)drops.push(pool[Math.floor(Math.random()*pool.length)]);
-    });
-
-    drops.forEach(d=>gachaCollection.push({...d,time:Date.now()}));
-    if(gachaCollection.length>300)gachaCollection=gachaCollection.slice(-300);
-    gachaSaveCollection();
-
-    const best=[...drops].sort((a,b)=>RARITY_ORDER.indexOf(a.rarity)-RARITY_ORDER.indexOf(b.rarity))[0];
-    const area=document.getElementById('gachaResultArea');
-    if(area)area.innerHTML=`<div class="drop-card ${best.rarity}">
-        <div class="drop-emoji">${best.emoji}</div>
-        <div class="drop-name">${best.name}</div>
-        ${best.desc?`<div style="color:var(--sub);font-size:0.8rem;margin-top:4px;">${best.desc}</div>`:''}
-        <div class="drop-rarity rarity-${best.rarity}">${RARITY_LABELS[best.rarity]}</div>
-        <div style="display:flex;gap:6px;justify-content:center;margin-top:12px;">${drops.map(d=>`<span style="font-size:1.5rem;" title="${d.name}">${d.emoji}</span>`).join('')}</div>
-    </div>`;
-
-    best.time=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
-    gachaRecent.unshift(best);
-    if(gachaRecent.length>8)gachaRecent.pop();
-    gachaSaveRecent();
-
-    if(best.rarity==='legendary'){setQuote('🐼 БАМБУК ПОТРЯСЁН! ЛЕГЕНДАРКА!!!');flashWin();}
-    else if(best.rarity==='epic'){setQuote('✨ Эпик! ГуангГуанг одобряет!');flashWin();}
-    else if(best.rarity==='rare')setQuote('👀 Ого, редкая штука!');
-    else if(best.rarity==='uncommon')setQuote('🙂 Неплохо, странник.');
-    else setQuote('🗑️ Мусор... но ты заходи ещё!');
-
-    gachaRenderCollection();
-    gachaRenderRecent();
-}
-
-function gachaSetFilter(filter,btn){
-    gachaFilter=filter;
-    document.querySelectorAll('#gachaFilters .filter-btn').forEach(b=>b.classList.remove('active'));
-    if(btn)btn.classList.add('active');
-    gachaSelected.clear();
-    gachaRenderCollection();
-}
-
-function getSelectedRealCount(){
-    let count=0;
-    for(const key of gachaSelected){
-        const [name,rarity]=key.split('|');
-        for(const item of gachaCollection)if(item.name===name&&item.rarity===rarity)count++;
-    }
-    return count;
-}
-
-function gachaRenderCollection(){
-    const grid=document.getElementById('gachaCollectionGrid');
-    if(!grid)return;
-    const count=document.getElementById('gachaCollectionCount');
-    const progressText=document.getElementById('gachaProgressText');
-    const progressFill=document.getElementById('gachaProgressFill');
-    const searchText=(document.getElementById('gachaSearch')?.value||'').toLowerCase();
-
-    let items=[...gachaCollection];
-    if(gachaFilter!=='all')items=items.filter(i=>i.rarity===gachaFilter);
-    if(searchText)items=items.filter(i=>i.name.toLowerCase().includes(searchText));
-
-    const grouped={};
-    items.forEach(i=>{const k=i.name+'|'+i.rarity;if(!grouped[k])grouped[k]={...i,count:0};grouped[k].count++;});
-    const uniqueItems=Object.values(grouped);
-
-    const totalUnique=new Set(gachaPool.map(p=>p.name+'|'+p.rarity)).size;
-    const collectedUnique=new Set(gachaCollection.map(i=>i.name+'|'+i.rarity)).size;
-    const pct=totalUnique>0?(collectedUnique/totalUnique*100):0;
-
-    if(count)count.textContent=collectedUnique+' / '+totalUnique;
-    if(progressText)progressText.textContent=collectedUnique+' / '+totalUnique;
-    if(progressFill)progressFill.style.width=pct+'%';
-
-    grid.innerHTML=uniqueItems.map(i=>{
-        const isSelected=gachaSelected.has(i.name+'|'+i.rarity);
-        return`<div class="collection-item ${i.rarity} ${isSelected?'selected':''}" onclick="showItemModal('${i.name.replace(/'/g,"\\'")}','${i.rarity}')" title="${i.name} (${RARITY_LABELS[i.rarity]})"><div class="item-emoji">${i.emoji}</div><div class="item-name">${i.name.substring(0,12)}</div>${i.count>1?`<div class="item-count">×${i.count}</div>`:''}</div>`;
-    }).join('');
-
-    const realCount=getSelectedRealCount();
-    const tradeBtn=document.getElementById('gachaTradeBtn');
-    if(tradeBtn){tradeBtn.textContent=`🔄 (${realCount}/5)`;tradeBtn.disabled=realCount<5;}
-    const sellBtn=document.getElementById('gachaSellBtn');
-    if(sellBtn){sellBtn.textContent=`💰 (${realCount})`;sellBtn.disabled=realCount===0;}
-}
-
-function showItemModal(name,rarity){
-    const items=gachaCollection.filter(i=>i.name===name&&i.rarity===rarity);
-    if(!items.length)return;
-    const item=items[0];
-    const count=items.length;
-    const price=SELL_PRICES[rarity]||1;
-    const canTrade=rarity!=='legendary'&&count>=5;
-
-    const overlay=document.createElement('div');
-    overlay.className='modal-overlay';
-    overlay.onclick=e=>{if(e.target===overlay)overlay.remove();};
-    overlay.innerHTML=`<div class="modal-card ${rarity}">
-        <div class="drop-emoji">${item.emoji}</div>
-        <div class="drop-name">${item.name}</div>
-        ${item.desc?`<div style="color:var(--sub);font-size:0.8rem;margin:4px 0;">${item.desc}</div>`:''}
-        <div class="drop-rarity rarity-${rarity}">${RARITY_LABELS[rarity]}</div>
-        <div style="color:var(--muted);font-size:0.8rem;margin:8px 0;">В наличии: ${count} шт.</div>
-        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center;">
-            <button class="btn btn-primary" style="flex:1;min-width:70px;" onclick="sellItem('${name.replace(/'/g,"\\'")}','${rarity}',1);this.closest('.modal-overlay').remove();">💰 1<br>(${price}💎)</button>
-            ${count>1?`<button class="btn btn-primary" style="flex:1;min-width:70px;" onclick="sellItem('${name.replace(/'/g,"\\'")}','${rarity}',${count});this.closest('.modal-overlay').remove();">💰 Все<br>(${price*count}💎)</button>`:''}
-            ${canTrade?`<button class="btn btn-secondary" style="flex:1;min-width:70px;" onclick="tradeSingle('${name.replace(/'/g,"\\'")}','${rarity}');this.closest('.modal-overlay').remove();">🔄 5→1</button>`:''}
-            ${count>=5&&rarity!=='legendary'?`<div style="width:100%;font-size:0.65rem;color:var(--muted);">Можно обменять 5×${name} → предмет редкостью выше</div>`:''}
-            <button class="btn btn-secondary" style="flex:1;min-width:70px;" onclick="this.closest('.modal-overlay').remove();">Закрыть</button>
-        </div>
-    </div>`;
-    document.body.appendChild(overlay);
-}
-
-function sellItem(name,rarity,qty){
-    let sold=0;
-    for(let i=gachaCollection.length-1;i>=0;i--){
-        if(sold>=qty)break;
-        if(gachaCollection[i].name===name&&gachaCollection[i].rarity===rarity){
-            balance+=SELL_PRICES[rarity]||1;
-            gachaCollection.splice(i,1);
-            sold++;
+    const container = document.getElementById('gameContainer')
+    if (window[name] && window[name].render) {
+        window[name].render(container)
+        currentGame = window[name]
+        const gameQuotes = {
+            ochko: '🃏 Не лопни, странник!',
+            pig: '🐷 Хрюкающий банк открыт!',
+            sudoku: '🧩 Девять кругов бамбука...',
+            runes: '🔮 Руны шепчут твоё имя...',
+            gacha: '🎰 Сундуки ждут!',
+            math: '🎋 Бамбук спрашивает...'
         }
+        setQuote(gameQuotes[name] || randomQuote())
+    } else {
+        container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--red)">Ошибка загрузки игры</div>'
     }
-    gachaSaveCollection();
-    updateBalance();
-    gachaRenderCollection();
-    setQuote(`💰 Продано ×${sold} за ${(SELL_PRICES[rarity]||1)*sold}💎`);
-    flashWin();
 }
 
-function tradeSingle(name,rarity){
-    const count=gachaCollection.filter(i=>i.name===name&&i.rarity===rarity).length;
-    if(count<5){setQuote(`⚠️ Нужно 5× ${name}, у тебя ${count}`);return;}
-    if(rarity==='legendary'){setQuote('⚠️ Легендарки не обмениваются!');return;}
-
-    let removed=0;
-    for(let i=gachaCollection.length-1;i>=0;i--){
-        if(removed>=5)break;
-        if(gachaCollection[i].name===name&&gachaCollection[i].rarity===rarity){gachaCollection.splice(i,1);removed++;}
-    }
-
-    const nextRarity={common:'uncommon',uncommon:'rare',rare:'epic',epic:'legendary'}[rarity];
-    const pool=gachaPool.filter(p=>p.rarity===nextRarity);
-    const reward=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:{emoji:'✨',name:'Случайный апгрейд',rarity:nextRarity};
-    gachaCollection.push({...reward,time:Date.now()});
-    gachaSaveCollection();
-
-    const area=document.getElementById('gachaResultArea');
-    if(area)area.innerHTML=`<div class="drop-card ${reward.rarity}"><div style="color:var(--muted);font-size:0.7rem;margin-bottom:8px;">🔄 5×${name} →</div><div class="drop-emoji">${reward.emoji}</div><div class="drop-name">${reward.name}</div><div class="drop-rarity rarity-${reward.rarity}">${RARITY_LABELS[reward.rarity]}</div></div>`;
-
-    gachaRenderCollection();
-    setQuote(`🔄 Обмен! +${reward.emoji} ${reward.name}`);
-    flashWin();
+window.goMenu = function(){
+    if (currentGame && currentGame.destroy) currentGame.destroy()
+    currentGame = null
+    document.getElementById('gameContainer').innerHTML = `
+        <div class="game-grid">
+            <div class="game-card" onclick="loadGame('ochko')"><div class="game-emoji">🃏</div><div class="game-name">Не лопни!</div><div class="game-cost">Ставка: 10 💎</div></div>
+            <div class="game-card" onclick="loadGame('pig')"><div class="game-emoji">🐷</div><div class="game-name">Сало или золото?</div><div class="game-cost">Ставка: 5 💎</div></div>
+            <div class="game-card" onclick="loadGame('sudoku')"><div class="game-emoji">🧩</div><div class="game-name">Мозголомка</div><div class="game-cost">Ставка: 5 💎</div></div>
+            <div class="game-card" onclick="loadGame('runes')"><div class="game-emoji">🔮</div><div class="game-name">Руны Раскола</div><div class="game-cost">Ставка: 10 💎</div></div>
+            <div class="game-card" onclick="loadGame('gacha')"><div class="game-emoji">🎰</div><div class="game-name">Сундуки</div><div class="game-cost">от 10 💎</div></div>
+            <div class="game-card" onclick="loadGame('math')"><div class="game-emoji">🎋</div><div class="game-name">Бамбуковый счёт</div><div class="game-cost">Ставка: 5 💎</div></div>
+        </div>`
+    setQuote(randomQuote())
 }
-
-function gachaSellSelected(){
-    if(gachaSelected.size===0)return;
-    let total=0;
-    const toRemove=[];
-    for(const key of gachaSelected){
-        const [name,rarity]=key.split('|');
-        for(let i=gachaCollection.length-1;i>=0;i--){
-            if(gachaCollection[i].name===name&&gachaCollection[i].rarity===rarity){
-                total+=SELL_PRICES[rarity]||1;
-                toRemove.push(i);
-            }
-        }
-    }
-    toRemove.sort((a,b)=>b-a).forEach(i=>gachaCollection.splice(i,1));
-    gachaSelected.clear();
-    gachaSaveCollection();
-    balance+=total;
-    updateBalance();
-    gachaRenderCollection();
-    setQuote(`💰 Продано за ${total}💎`);
-    flashWin();
-}
-
-function gachaTradeUp(){
-    if(gachaSelected.size===0)return;
-    const realCount=getSelectedRealCount();
-    if(realCount<5){setQuote(`⚠️ Нужно 5 предметов, выбрано ${realCount}`);return;}
-
-    const firstKey=[...gachaSelected][0];
-    const rarity=firstKey.split('|')[1];
-    if(rarity==='legendary'){setQuote('⚠️ Легендарки не обмениваются!');return;}
-
-    let removed=0;
-    for(const key of gachaSelected){
-        const [name,rarity]=key.split('|');
-        for(let i=gachaCollection.length-1;i>=0;i--){
-            if(removed>=5)break;
-            if(gachaCollection[i].name===name&&gachaCollection[i].rarity===rarity){gachaCollection.splice(i,1);removed++;}
-        }
-    }
-    gachaSelected.clear();
-
-    const nextRarity={common:'uncommon',uncommon:'rare',rare:'epic',epic:'legendary'}[rarity];
-    const pool=gachaPool.filter(p=>p.rarity===nextRarity);
-    const reward=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:{emoji:'✨',name:'Случайный апгрейд',rarity:nextRarity};
-    gachaCollection.push({...reward,time:Date.now()});
-    gachaSaveCollection();
-
-    const area=document.getElementById('gachaResultArea');
-    if(area)area.innerHTML=`<div class="drop-card ${reward.rarity}"><div style="color:var(--muted);font-size:0.7rem;margin-bottom:8px;">🔄 ОБМЕН 5→1</div><div class="drop-emoji">${reward.emoji}</div><div class="drop-name">${reward.name}</div><div class="drop-rarity rarity-${reward.rarity}">${RARITY_LABELS[reward.rarity]}</div></div>`;
-
-    gachaRenderCollection();
-    setQuote(`🔄 Обмен! +${reward.emoji} ${reward.name}`);
-    flashWin();
-}
-
-function gachaRenderRecent(){
-    const list=document.getElementById('gachaRecentList');
-    if(!list)return;
-    if(!gachaRecent.length){list.innerHTML='<span style="color:var(--muted);">Пока ничего...</span>';return;}
-    list.innerHTML=gachaRecent.map(d=>`<div class="recent-item"><span style="color:${RARITY_COLORS[d.rarity]||'var(--muted)'};">${d.emoji} ${d.name}</span> <span style="color:var(--muted);">${d.time||''}</span></div>`).join('');
-}
-
-function gachaPanel(){
-    return`<div class="game-area"><h3>🎰 Сундуки Раскола</h3>
-    <div class="chest-grid">
-        <div class="chest-card common" onclick="openChest('common')"><div class="chest-icon">🟢</div><div class="chest-name">Обычный</div><div class="chest-cost">10 💎</div><div class="chest-desc">Обычные и необычные</div></div>
-        <div class="chest-card rare" onclick="openChest('rare')"><div class="chest-icon">🔵</div><div class="chest-name">Редкий</div><div class="chest-cost">50 💎</div><div class="chest-desc">Редкие+ · 25% эпик</div></div>
-        <div class="chest-card epic" onclick="openChest('epic')"><div class="chest-icon">🟣</div><div class="chest-name">Эпический</div><div class="chest-cost">200 💎</div><div class="chest-desc">Эпик+ · 15% легендарка</div></div>
-    </div>
-    <div class="result-area" id="gachaResultArea"><div style="color:var(--muted);text-align:center;">Загрузка сундуков...</div></div>
-    <div class="recent-log"><h4>📋 Последние дропы</h4><div id="gachaRecentList" style="color:var(--muted);">Пока ничего...</div></div>
-    <div style="margin-top:20px;">
-        <div class="collection-progress"><div class="progress-header"><span>📦 Коллекция</span><span id="gachaProgressText">0 / 0</span></div><div class="progress-bar-sm"><div id="gachaProgressFill" class="progress-fill-sm" style="width:0%"></div></div></div>
-        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
-            <input type="text" class="search-input" id="gachaSearch" placeholder="🔍 Поиск..." oninput="gachaRenderCollection()">
-            <button class="btn btn-secondary" id="gachaTradeBtn" onclick="gachaTradeUp()" disabled style="flex:0;font-size:0.75rem;">🔄 (0/5)</button>
-            <button class="btn btn-secondary" id="gachaSellBtn" onclick="gachaSellSelected()" disabled style="flex:0;font-size:0.75rem;">💰 (0)</button>
-        </div>
-        <div class="filter-bar" id="gachaFilters">
-            <button class="filter-btn active" onclick="gachaSetFilter('all',this)">Все</button>
-            <button class="filter-btn" onclick="gachaSetFilter('legendary',this)">👑</button>
-            <button class="filter-btn" onclick="gachaSetFilter('epic',this)">🟣</button>
-            <button class="filter-btn" onclick="gachaSetFilter('rare',this)">🔵</button>
-            <button class="filter-btn" onclick="gachaSetFilter('uncommon',this)">🟢</button>
-            <button class="filter-btn" onclick="gachaSetFilter('common',this)">⚪</button>
-        </div>
-        <div class="collection-grid" id="gachaCollectionGrid"></div>
-        <div style="font-size:0.65rem;color:var(--muted);margin-top:4px;">Клик — продать/обменять · Ctrl+клик — выбрать несколько</div>
-    </div>
-    <div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;
-}
-
-let mathActive=false,mathCorrect=0,mathAnswer=0,mathTimer=null,mathTimeLeft=0;
-const MATH_BET=5;
-function mathGetTime(){if(mathCorrect<5)return 5;if(mathCorrect<15)return 4;if(mathCorrect<30)return 3;return 2;}
-function mathGetReward(){if(mathCorrect<5)return 2;if(mathCorrect<15)return 3;if(mathCorrect<30)return 5;return 10;}
-function mathPanel(){return `<div class="game-area"><h3>🎋 Бамбуковый счёт</h3><div style="text-align:center;margin:10px 0;"><span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Правильных</span><br><span style="font-size:1.4rem;font-weight:800;color:var(--gold)" id="mathScore">0</span></div><div style="text-align:center;margin:16px 0;padding:20px;background:var(--card);border-radius:16px;border:1px solid var(--border);"><div style="font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:8px;" id="mathProblem">5 + 2 = ?</div><div style="display:flex;align-items:center;justify-content:center;gap:10px;"><div style="flex:1;max-width:200px;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;"><div id="mathProgress" style="height:100%;background:var(--gold);border-radius:3px;width:100%;transition:width 0.05s linear;"></div></div><span style="color:var(--muted);font-size:0.75rem;min-width:40px;text-align:right;" id="mathTimerBox">⏱ <span id="mathTimer" style="color:var(--gold);font-weight:700;">5</span>с</span></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;" id="mathAnswers"></div><div class="bet-info">🎲 Ставка: <span>${MATH_BET} 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="mathStartBtn" onclick="mathStart()">🎋 Начать</button></div><div id="mathMessage" style="text-align:center;margin-top:8px;min-height:24px;"></div><div class="back-btn" onclick="mathStop();backToSelect()">← Назад</div></div>`;}
-function mathGenerate(){const lvl=mathCorrect;const ops=['+','-','·',':'];const op=ops[Math.floor(Math.random()*ops.length)];let a,b,min,max;switch(op){case '+':min=Math.min(5+lvl,50);max=Math.min(25+lvl*3,200);a=mathRand(min,max);b=mathRand(min,max);mathAnswer=a+b;break;case '-':min=Math.min(5+lvl,50);max=Math.min(20+lvl*3,200);b=mathRand(min,max);mathAnswer=mathRand(min,max);a=b+mathAnswer;break;case '·':min=2;max=Math.min(9+Math.floor(lvl/3),20);a=mathRand(min,max);b=mathRand(min,max);mathAnswer=a*b;break;case ':':min=2;max=Math.min(9+Math.floor(lvl/3),20);b=mathRand(min,max);mathAnswer=mathRand(min,max);a=b*mathAnswer;break;}return `${a} ${op} ${b}`;}
-function mathRand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
-function mathShuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
-function mathNewRound(){if(!mathActive)return;clearInterval(mathTimer);mathTimeLeft=mathGetTime();mathUpdateTimer();document.getElementById('mathProblem').textContent=mathGenerate()+' = ?';const ans=new Set([mathAnswer]);while(ans.size<3){const f=mathAnswer+mathRand(-5,5);if(f!==mathAnswer&&f>=0&&!ans.has(f))ans.add(f);}document.getElementById('mathAnswers').innerHTML=mathShuffle([...ans]).map(a=>`<button class="btn btn-primary" style="font-size:1.2rem;" onclick="mathGuess(${a})">${a}</button>`).join('');const start=Date.now();mathTimer=setInterval(()=>{const elapsed=(Date.now()-start)/1000;mathTimeLeft=Math.max(0,mathGetTime()-elapsed);mathUpdateTimer();if(mathTimeLeft<=0){clearInterval(mathTimer);mathTimeout();}},50);}
-function mathUpdateTimer(){const total=mathGetTime();const pct=(mathTimeLeft/total)*100;const fill=document.getElementById('mathProgress');const box=document.getElementById('mathTimerBox');const el=document.getElementById('mathTimer');if(fill)fill.style.width=pct+'%';if(el)el.textContent=Math.ceil(mathTimeLeft);if(mathTimeLeft<=2||pct<=40){if(fill)fill.style.background='var(--red)';if(box)box.style.color='var(--red)';}else{if(fill)fill.style.background='var(--gold)';if(box)box.style.color='';}}
-function mathGuess(num){if(!mathActive)return;clearInterval(mathTimer);if(num===mathAnswer){mathCorrect++;const reward=mathGetReward();document.getElementById('mathScore').textContent=mathCorrect;balance+=reward;updateBalance();document.getElementById('mathMessage').innerHTML=`<span style="color:var(--green);">✅ +${reward}💎</span>`;setTimeout(()=>document.getElementById('mathMessage').innerHTML='',600);const quotes=['🎋 Верно! Бамбук доволен!','🌿 ГуангГуанг кивает!','⚡ Мозг работает!','🔥 Продолжай!'];setQuote(quotes[Math.floor(Math.random()*quotes.length)]);mathNewRound();}else{mathActive=false;document.getElementById('mathAnswers').innerHTML='';document.getElementById('mathMessage').innerHTML=`<span style="color:var(--red);">❌ Неверно! Правильно: ${mathAnswer}</span>`;document.getElementById('mathStartBtn').disabled=false;setQuote(`💔 Ошибка! ${mathCorrect} правильных подряд.`);shakeBalance();}}
-function mathTimeout(){if(!mathActive)return;mathActive=false;document.getElementById('mathAnswers').innerHTML='';document.getElementById('mathMessage').innerHTML=`<span style="color:var(--red);">⏰ Время вышло! Правильно: ${mathAnswer}</span>`;document.getElementById('mathStartBtn').disabled=false;setQuote('⏰ Слишком долго!');shakeBalance();}
-function mathStart(){if(balance<MATH_BET){setQuote('Недостаточно осколков!');return;}balance-=MATH_BET;updateBalance();mathActive=true;mathCorrect=0;document.getElementById('mathScore').textContent='0';document.getElementById('mathStartBtn').disabled=true;document.getElementById('mathMessage').innerHTML='';setQuote('🎋 Бамбук спрашивает...');mathNewRound();}
-function mathStop(){clearInterval(mathTimer);mathActive=false;}
-
-function ochkoPanel(){return `<div class="game-area"><h3>🃏 Не лопни!</h3><div class="table-felt"><div class="table-label">🐼 ГуангГуанг</div><div class="cards-row" id="dealerCards"></div><div class="score">Сумма: <span class="score-value" id="dealerScore">0</span></div></div><div class="table-felt"><div class="table-label">👤 Твоя рука</div><div class="cards-row" id="playerCards"></div><div class="score">Сумма: <span class="score-value" id="playerScore">0</span></div></div><div class="bet-info">🎲 Ставка: <span>10 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="startBtn" onclick="ochko.startGame()">🃏 Играем</button><button class="btn btn-secondary" id="hitBtn" onclick="ochko.hit()" disabled>➕ Ещё</button><button class="btn btn-secondary" id="standBtn" onclick="ochko.stand()" disabled>✋ Я всё</button></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
-function pigPanel(){return `<div class="game-area"><h3>🐷 Сало или золото?</h3><div class="last-card-info" id="lastCardInfo"></div><div class="table-felt"><div class="table-label">🐷 Выложенные карты</div><div class="cards-row" id="drawnCards"></div></div><div style="text-align:center"><div class="multiplier-box"><span style="color:var(--muted)">Множитель </span><span class="multiplier-value" id="multiplier">x1</span><span style="color:var(--muted);font-size:0.8rem"> → <span id="nextMultiplier">x2</span></span></div></div><div class="bet-info">🎲 Ставка: <span>5 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="pigStartBtn" onclick="pigGame.start()">🐷 Новая</button><button class="btn btn-secondary" id="pigDrawBtn" onclick="pigGame.draw()" disabled>🃏 Тянуть</button><button class="btn btn-secondary" id="pigStopBtn" onclick="pigGame.stop()" disabled>✋ Хватит</button></div><div class="history-box" id="historyBox"></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
-function sudokuPanel(){const nums=[1,2,3,4,5,6,7,8,9].map(n=>`<button class="num-btn" onclick="sudokuPlace(${n})">${n}</button>`).join('');return `<div class="game-area"><h3>🧩 Мозголомка</h3><div class="sudoku-timer">⏱ <span id="sudokuTimer">00:00</span></div><div class="sudoku-grid" id="sudokuGrid"></div><div class="num-pad">${nums}<button class="num-btn clear-btn" onclick="sudokuPlace(0)" style="grid-column:span 9">✕ Очистить</button></div><div class="bet-info">🎲 Ставка: <span>5 💎</span> | 🏆 Выигрыш: <span id="sudokuMulti">×3</span></div><div class="game-buttons"><button class="btn btn-primary" onclick="sudokuNewGame()">🆕 Новая</button><button class="btn btn-secondary" id="sudokuCheckBtn" onclick="sudokuCheck()" disabled>✅ Проверить</button></div><div id="sudokuMessage"></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
-function runesPanel(){return `<div class="game-area"><h3>🔮 Руны Раскола</h3><div class="combo-overlay" id="comboOverlay"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Ходов</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="movesLeft">30</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Комбо</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="comboCount">×1</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Очки</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="runesScore">0</div></div><div style="text-align:center"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Выигрыш</div><div style="font-size:1.2rem;font-weight:800;color:var(--gold)" id="earned">0 💎</div></div></div><div class="runes-grid" id="runesGrid"></div><div class="bet-info">🎲 Ставка: <span>10 💎</span></div><div class="game-buttons"><button class="btn btn-primary" id="runesNewBtn" onclick="runesNewGame()">🆕 Новая игра</button><button class="btn btn-secondary" id="runesCashBtn" onclick="runesCashOut()" disabled>💰 Забрать</button></div><div class="back-btn" onclick="backToSelect()">← Назад</div></div>`;}
-
-function selectGame(g){
-    document.querySelectorAll('.game-panel').forEach(p=>{if(p.id!=='panel-select'){p.classList.remove('active');p.innerHTML='';}});
-    document.getElementById('panel-select').classList.remove('active');
-    const panel=document.getElementById(`panel-${g}`);
-    panel.classList.add('active');
-    if(g==='ochko'){panel.innerHTML=ochkoPanel();setQuote('🃏 '+randomQuote());}
-    else if(g==='pig'){panel.innerHTML=pigPanel();setQuote('🐷 '+randomQuote());pigGame.renderHistory();}
-    else if(g==='sudoku'){panel.innerHTML=sudokuPanel();setQuote('🧩 '+randomQuote());sudokuInit();}
-    else if(g==='runes'){panel.innerHTML=runesPanel();setQuote('🔮 '+randomQuote());runesNewGame();}
-    else if(g==='gacha'){panel.innerHTML=gachaPanel();setQuote('🎰 '+randomQuote());loadGachaPool();}
-    else if(g==='math'){panel.innerHTML=mathPanel();setQuote('🎋 '+randomQuote());}
-}
-window.selectGame=selectGame;
-
-updateBalance();setQuote(randomQuote());
-if(window.location.hash==='#pig')selectGame('pig');else if(window.location.hash==='#ochko')selectGame('ochko');else if(window.location.hash==='#sudoku')selectGame('sudoku');else if(window.location.hash==='#runes')selectGame('runes');else if(window.location.hash==='#gacha')selectGame('gacha');else if(window.location.hash==='#math')selectGame('math');
 </script>
 </body>
 </html>

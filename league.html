@@ -6,191 +6,153 @@
     <title>Лига Этерниса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
-	<style>
-		:root {
-			--bg: #06040a; --card: #0e0a14; --elevated: #140c1a;
-			--text: #e8ddf0; --sub: #8a7d94; --muted: #5e5268;
-			--border: rgba(180,100,140,0.15);
-			--gold: #f0b90b; --red: #e85d3a; --purple: #a371f7; --green: #10b981;
-			--radius: 16px; --radius-sm: 10px;
-		}
-		[data-theme="light"] {
-			--bg: #f7f2eb; --card: #fefcf8; --elevated: #fbf8f3;
-			--text: #2d1a1a; --sub: #6b4e4e; --muted: #8b6b6b;
-			--border: rgba(180,80,60,0.12);
-			--gold: #b8860b; --red: #a03020; --purple: #7b5ea7; --green: #27ae60;
-		}
-		* { box-sizing: border-box; margin: 0; padding: 0; }
-		html { scroll-behavior: smooth; scroll-padding-top: 100px; }
-		body { font-family: 'Inter',system-ui,sans-serif; background: var(--bg); background-image: radial-gradient(ellipse at 50% 0%, rgba(200,40,40,0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(163,113,247,0.04) 0%, transparent 50%); color: var(--text); min-height: 100vh; line-height: 1.5; }
-		.container { max-width: 1300px; margin: 0 auto; padding: 24px 20px 60px; }
+<style>
+    .container { max-width: 1300px; }
+    #tab-playoffs { max-width: none !important; padding: 0; }
 
-		.header { text-align: center; padding: 32px 0 8px; position: relative; }
-		.header-title { font-size: clamp(2.2rem,6vw,3.2rem); font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg,#8b0000 0%,#e85d3a 40%,#ffd700 70%,#e85d3a 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(232,93,58,0.5)); animation: shimmer 3s linear infinite; margin-bottom: 4px; }
-		@keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
-		.header-subtitle { font-size: 0.9rem; color: var(--red); font-weight: 500; letter-spacing: 0.04em; }
-		.theme-toggle { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
-		.theme-toggle:hover { background: var(--card); color: var(--red); border-color: var(--red); }
+    .faction-switch { display: flex; gap: 8px; margin-bottom: 8px; }
+    .faction-btn { flex: 1; padding: 12px; border: 1px solid var(--border); background: var(--elevated); color: var(--sub); border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 0.9rem; font-family: inherit; transition: 0.2s; }
+    .faction-btn.light.active { border-color: var(--gold); color: var(--gold); background: rgba(240,185,11,0.08); }
+    .faction-btn.dark.active { border-color: var(--purple); color: var(--purple); background: rgba(163,113,247,0.08); }
+    .faction-note { text-align: center; color: var(--muted); font-size: 0.7rem; margin-bottom: 16px; font-style: italic; }
 
-		.nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
-		.nav-toggle { display: none; width: 100%; padding: 13px 18px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--gold); font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: left; }
-		.nav-bar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 6px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
-		.nav-link { padding: 8px 14px; border-radius: 20px; color: var(--sub); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: 0.2s; }
-		.nav-link:hover { color: var(--text); background: var(--elevated); }
-		.nav-link.active { background: linear-gradient(135deg,var(--red),var(--gold)); color: #000; font-weight: 700; }
+    th { cursor: pointer; }
+    tr:hover td { background: rgba(240,185,11,0.06); }
+    tr.playoff-row.light td { background: rgba(240,185,11,0.08); }
+    tr.playoff-row.dark td { background: rgba(163,113,247,0.08); }
+    tr.cutoff td { border-bottom: 2px solid var(--gold); }
+    .pos { width: 40px; text-align: center; font-weight: 700; }
+    .pos.top-1 { color: #ffd700; } .pos.top-2 { color: #c0c0c0; } .pos.top-3 { color: #cd7f32; }
+    .skill { color: var(--gold); font-weight: 700; }
 
-		.tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-		.tab-btn { padding: 10px 24px; border: 1px solid var(--border); background: var(--elevated); color: var(--sub); border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.85rem; font-family: inherit; transition: 0.2s; }
-		.tab-btn:hover { border-color: var(--gold); color: var(--gold); }
-		.tab-btn.active { background: linear-gradient(135deg,var(--red),var(--gold)); color: #000; border-color: transparent; font-weight: 700; }
-		.tab-content { display: none; }
-		.tab-content.active { display: block; }
+    .pos-change-cell { width: 30px; text-align: center; padding: 0 !important; }
+    .pos-change { font-size: 0.7rem; font-weight: 700; animation: slideIn 0.5s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+    .pos-up { color: var(--green); } .pos-down { color: #ef4444; } .pos-same { color: var(--muted); } .pos-new { font-size: 1.2rem; }
 
-		.faction-switch { display: flex; gap: 8px; margin-bottom: 8px; }
-		.faction-btn { flex: 1; padding: 12px; border: 1px solid var(--border); background: var(--elevated); color: var(--sub); border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 0.9rem; font-family: inherit; transition: 0.2s; }
-		.faction-btn.light.active { border-color: var(--gold); color: var(--gold); background: rgba(240,185,11,0.08); }
-		.faction-btn.dark.active { border-color: var(--purple); color: var(--purple); background: rgba(163,113,247,0.08); }
-		.faction-note { text-align: center; color: var(--muted); font-size: 0.7rem; margin-bottom: 16px; font-style: italic; }
+    .po-grid { display: flex; justify-content: center; align-items: stretch; gap: 1.5%; padding: 40px 1.5%; width: 100%; }
+    .po-col { display: flex; flex-direction: column; justify-content: center; gap: 10px; flex: 1; min-width: 0; }
+    .po-col.wide { flex: 1.6; }
+    .po-col h3 { text-align: center; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 8px; padding: 8px 0; border-bottom: 2px solid var(--border); white-space: nowrap; }
+    .po-col h3.light { color: var(--gold); border-color: rgba(240,185,11,0.3); }
+    .po-col h3.dark { color: var(--purple); border-color: rgba(163,113,247,0.3); }
 
-		.table-container { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
-		table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-		th { background: var(--elevated); color: var(--gold); padding: 10px 12px; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; }
-		td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
-		tr:hover td { background: rgba(255,255,255,0.02); }
-		tr.playoff-row.light td { background: rgba(240,185,11,0.08); }
-		tr.playoff-row.dark td { background: rgba(163,113,247,0.08); }
-		tr.cutoff td { border-bottom: 2px solid var(--gold); }
-		.pos { width: 40px; text-align: center; font-weight: 700; }
-		.pos.top-1 { color: #ffd700; } .pos.top-2 { color: #c0c0c0; } .pos.top-3 { color: #cd7f32; }
-		.skill { color: var(--gold); font-weight: 700; }
-		.player-link { color: inherit; text-decoration: none; }
-		.player-link:hover { color: var(--gold); }
+    .po-match { background: var(--card); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .po-p { padding: 10px 12px; font-size: 0.78rem; display: flex; align-items: center; gap: 8px; transition: 0.15s; }
+    .po-p + .po-p { border-top: 1px solid var(--border); }
+    .po-p .sd { color: var(--muted); font-size: 0.6rem; font-weight: 600; min-width: 20px; }
+    .po-p .nm { flex: 1; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .po-p .mk { font-size: 0.65rem; flex-shrink: 0; }
+    .po-p.win { background: rgba(16,185,129,0.06); } .po-p.win .nm { color: var(--green); font-weight: 700; }
+    .po-p.lose { opacity: 0.2; }
+    .po-p.clk { cursor: pointer; } .po-p.clk:hover { background: rgba(240,185,11,0.05); }
+    .po-p.empty { color: var(--muted); opacity: 0.3; justify-content: center; }
 
-		.bracket-wrapper { overflow-x: auto; padding: 10px 0; }
-		.bracket { display: flex; justify-content: center; gap: 0; padding: 20px 0; min-width: fit-content; }
-		.round { display: flex; flex-direction: column; justify-content: center; gap: 8px; flex: 1; min-width: 140px; max-width: 180px; }
-		.round.final { flex: 1.8; min-width: 200px; max-width: 260px; }
-		.round-title { text-align: center; font-size: 0.65rem; font-weight: 700; padding: 5px 8px; border-radius: 6px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-		.round.light .round-title { background: rgba(240,185,11,0.12); color: var(--gold); }
-		.round.dark .round-title { background: rgba(163,113,247,0.12); color: var(--purple); }
-		.round-title.final-title { background: linear-gradient(90deg, rgba(240,185,11,0.3), rgba(163,113,247,0.3)); color: #fff; }
-		.match { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 6px; margin: 0 3px 3px 3px; }
-		.match .p { padding: 5px 6px; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
-		.match .p.clickable { cursor: pointer; }
-		.match .p.clickable:hover { background: rgba(255,255,255,0.05); }
-		.match .p.winner { background: rgba(16,185,129,0.15); color: var(--green); font-weight: 700; }
-		.match .p.loser { opacity: 0.3; }
-		.match .seed { color: var(--muted); font-size: 0.55rem; min-width: 18px; font-weight: 600; }
-		.match .divider { height: 1px; background: var(--border); margin: 3px 0; }
-		.grand-final { border: 2px solid transparent; border-radius: var(--radius-sm); padding: 14px; text-align: center; background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(135deg, var(--gold), var(--purple), var(--gold)) border-box; background-size: 200% 200%; animation: glow 4s ease infinite; }
-		@keyframes glow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-		.grand-final .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 6px; }
-		.grand-final .champ { font-size: 0.8rem; font-weight: 800; }
-		.grand-final .champ.light { color: var(--gold); } .grand-final .champ.dark { color: var(--purple); }
-		.grand-final .champ.clickable { cursor: pointer; }
-		.grand-final .champ.clickable:hover { opacity: 0.8; }
-		.grand-final .champ.winner { color: #fff; text-shadow: 0 0 8px rgba(240,185,11,0.6); }
-		.grand-final .vs { color: var(--muted); font-size: 0.65rem; margin: 6px 0; font-weight: 700; }
+    .gf-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 40px 28px; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; position: relative; overflow: hidden; }
+    .gf-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--gold)); opacity: 0.6; }
+    .gf-card .gfl { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 4px; color: var(--muted); margin-bottom: 24px; }
+    .gf-card .gfp { font-size: 0.9rem; font-weight: 700; padding: 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .gf-card .gfp.light { color: var(--gold); } .gf-card .gfp.dark { color: var(--purple); }
+    .gf-card .gfp.win { color: #fff; font-weight: 800; font-size: 1rem; }
+    .gf-card .gfp.win.light { text-shadow: 0 0 12px rgba(240,185,11,0.4); }
+    .gf-card .gfp.win.dark { text-shadow: 0 0 12px rgba(163,113,247,0.4); }
+    .gf-card .gfp.clk { cursor: pointer; } .gf-card .gfp.clk:hover { opacity: 0.7; }
+    .gf-card .gfvs { color: var(--muted); font-size: 0.65rem; font-weight: 700; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 6px 0; letter-spacing: 1px; }
 
-		.admin-trigger { position: fixed; bottom: 24px; left: 24px; width: 40px; height: 40px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; font-size: 1rem; z-index: 999; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
-		.admin-trigger:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.2); }
-		.admin-trigger.active { color: var(--gold); border-color: var(--gold); background: rgba(240,185,11,0.1); }
-		.admin-panel { position: fixed; bottom: 80px; left: 24px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; display: none; z-index: 999; min-width: 180px; }
-		.admin-panel.visible { display: block; }
-		.admin-panel button { display: block; width: 100%; padding: 8px 16px; margin-bottom: 6px; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.75rem; font-weight: 600; font-family: inherit; text-align: left; transition: all 0.2s; }
-		.admin-panel button:last-child { margin-bottom: 0; }
-		.btn-save { background: var(--green); color: #fff; border: none; }
-		.btn-save:hover { opacity: 0.9; }
-		.btn-export { background: var(--elevated); color: var(--sub); border: 1px solid var(--border); }
-		.btn-export:hover { color: var(--gold); border-color: var(--gold); }
-		.btn-clear { background: transparent; color: var(--muted); border: 1px solid transparent; }
-		.btn-clear:hover { color: var(--red); border-color: var(--red); }
-		.admin-hint { font-size: 0.6rem; color: var(--muted); margin-top: 6px; text-align: center; }
+	.admin-trigger { position: fixed; top: 16px; right: 16px; width: 30px; height: 30px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.08); border-radius: 50%; cursor: pointer; font-size: 0.7rem; z-index: 999; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+	.admin-trigger:hover { color: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.08); }
+	.admin-trigger.active { color: var(--gold); border-color: rgba(240,185,11,0.25); background: rgba(240,185,11,0.06); }
+	.admin-panel { position: fixed; top: 52px; right: 16px; background: rgba(10,15,30,0.9); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 6px; display: none; z-index: 999; white-space: nowrap; }
+	.admin-panel.visible { display: block; }
+	.admin-panel button { display: inline-block; width: auto; padding: 5px 7px; margin: 0 2px 0 0; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.65rem; font-weight: 600; font-family: inherit; transition: all 0.2s; border: none; vertical-align: middle; }
+	.admin-panel button:last-child { margin-right: 0; }
+	.btn-save { background: var(--green); color: #fff; } .btn-save:hover { opacity: 0.85; }
+	.btn-export { background: var(--elevated); color: var(--sub); border: 1px solid var(--border) !important; } .btn-export:hover { color: var(--gold); border-color: var(--gold) !important; }
+	.btn-clear { background: transparent; color: var(--muted); } .btn-clear:hover { color: var(--red); }
 
-		.beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: 0 4px 16px rgba(240,185,11,0.3); z-index: 998; transition: transform 0.2s; animation: float 3s ease-in-out infinite; }
-		.beer-btn:hover { transform: scale(1.1); }
-		@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-		
-		::-webkit-scrollbar { width: 6px; height: 6px; }
-		::-webkit-scrollbar-track { background: var(--bg); }
-		::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-		::-webkit-scrollbar-thumb:hover { background: #ffd700; }
-		* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
-
-		@media (max-width: 768px) {
-			.container { padding: 12px 14px 80px; }
-			.header { padding: 20px 0 8px; }
-			.header-title { font-size: 1.8rem; }
-			.theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
-			.nav-toggle { display: block; }
-			.nav-bar { display: none; flex-direction: column; margin-top: 8px; }
-			.nav-bar.show { display: flex; }
-			.nav-link { padding: 12px 16px; border-radius: var(--radius-sm); justify-content: center; }
-			.bracket { flex-direction: column; align-items: center; }
-			.round { min-width: 100%; max-width: 100%; }
-			.round.final { min-width: 100%; max-width: 100%; }
-			.admin-trigger { bottom: 16px; left: 16px; }
-			.admin-panel { bottom: 70px; left: 16px; }
-			.beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
-		}
-	</style>
+    @media (max-width: 768px) {
+        .po-grid { flex-direction: column; align-items: center; gap: 16px; }
+        .po-col, .po-col.wide { width: 100%; max-width: 400px; }
+        .admin-trigger { top: 10px; right: 10px; } .admin-panel { top: 48px; right: 10px; }
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1 class="header-title">ЛИГА ЭТЕРНИСА</h1>
-            <p class="header-subtitle">Турнирная таблица и плей-офф</p>
-            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-        </header>
-        <div class="nav-wrapper">
-            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
-            <nav class="nav-bar" id="pageNav">
-                <a href="index.html" class="nav-link">📊 Статистика</a>
-				<a href="logs.html" class="nav-link">📜 Логи</a>
-                <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-				<a href="balance.html" class="nav-link">⚖️ Баланс</a>
-                <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-				<a href="gradient.html" class="nav-link">📈 Градиент</a>
-                <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-				<a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-                <a href="lore.html" class="nav-link">📜 Лор</a>
-				<a href="tavern.html" class="nav-link">🍺 Таверна</a>
-                <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
-                <a href="league.html" class="nav-link active">🏟 Лига</a>
-				<a href="form.html" class="nav-link">🔥 Форма</a>
-				<a href="player.html" class="nav-link">👤 Профиль</a>
-            </nav>
-        </div>
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('standings')">📊 Таблица</button>
-            <button class="tab-btn" onclick="switchTab('playoffs')">🏆 Плей-офф</button>
-        </div>
-        <div id="tab-standings" class="tab-content active">
-            <div class="faction-switch">
-                <button class="faction-btn light active" onclick="showFaction('light')">🌝 Орден Света</button>
-                <button class="faction-btn dark" onclick="showFaction('dark')">🌚 Культ Тьмы</button>
-            </div>
-            <p class="faction-note">Топ-8 выходят в плей-офф</p>
-            <div id="standings-content"><div style="text-align:center;padding:40px;color:var(--sub);">Загрузка...</div></div>
-        </div>
-        <div id="tab-playoffs" class="tab-content">
-            <div id="playoffs-content"><div style="text-align:center;padding:40px;color:var(--sub);">Загрузка...</div></div>
-        </div>
-    </div>
+	<div class="container">
+		<header class="header">
+			<h1 class="header-title">ЛИГА ЭТЕРНИСА</h1>
+			<p class="header-subtitle">Турнирная таблица и плей-офф</p>
+			<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+		</header>
+
+		<div class="nav-wrapper">
+			<button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+			<nav class="nav-bar" id="pageNav">
+				<div class="nav-group">
+					<span class="nav-label">⚔️ Арена ▾</span>
+					<div class="nav-dropdown">
+						<a href="index.html" class="nav-link">📊 Статистика</a>
+						<a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+						<a href="league.html" class="nav-link active">🏟 Лига</a>
+						<a href="logs.html" class="nav-link">📜 Логи</a>
+						<a href="player.html" class="nav-link">👤 Профиль</a>
+					</div>
+				</div>
+				<div class="nav-group">
+					<span class="nav-label">📐 Аналитика ▾</span>
+					<div class="nav-dropdown">
+						<a href="balance.html" class="nav-link">⚖️ Баланс</a>
+						<a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+						<a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+						<a href="gradient.html" class="nav-link">📈 Градиент</a>
+						<a href="form.html" class="nav-link">🔥 Форма</a>
+					</div>
+				</div>
+				<div class="nav-group">
+					<span class="nav-label">🌍 Мир ▾</span>
+					<div class="nav-dropdown">
+						<a href="guide.html" class="nav-link">⚔️ Гайд</a>
+						<a href="lore.html" class="nav-link">📜 Лор</a>
+						<a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+						<a href="tavern.html" class="nav-link">🍺 Таверна</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+
+		<div class="tabs">
+			<button class="tab-btn active" onclick="switchTab('standings')">📊 Таблица</button>
+			<button class="tab-btn" onclick="switchTab('playoffs')">🏆 Плей-офф</button>
+		</div>
+
+		<div id="tab-standings" class="tab-content active">
+			<div class="faction-switch">
+				<button class="faction-btn light active" onclick="showFaction('light')">🌝 Орден Света</button>
+				<button class="faction-btn dark" onclick="showFaction('dark')">🌚 Культ Тьмы</button>
+			</div>
+			<p class="faction-note">Топ-8 выходят в плей-офф</p>
+			<div id="standings-content">
+				<div style="text-align:center;padding:40px;color:var(--sub);">Загрузка...</div>
+			</div>
+		</div>
+
+		<div id="tab-playoffs" class="tab-content">
+			<div id="playoffs-content">
+				<div style="text-align:center;padding:40px;color:var(--sub);">Загрузка...</div>
+			</div>
+		</div>
+	</div>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
     <button class="admin-trigger" id="adminTrigger" onclick="toggleAdmin()" title="Управление">🛠</button>
-    <div class="admin-panel" id="adminPanel">
-        <button class="btn-save" onclick="savePlayoffs()">💾 Сохранить</button>
-        <button class="btn-export" onclick="exportPlayoffs()">📋 Копировать JSON</button>
-        <button class="btn-clear" onclick="clearPlayoffs()">🗑 Сбросить всё</button>
-        <div class="admin-hint">Клик по игроку в сетке = автовыбор победителя</div>
-    </div>
+    <div class="admin-panel" id="adminPanel"><button class="btn-save" onclick="savePlayoffs()">💾</button><button class="btn-export" onclick="exportPlayoffs()">📋</button><button class="btn-clear" onclick="clearPlayoffs()">🗑</button></div>
     <script>
         function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
         (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
         function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
         document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
+        document.querySelectorAll('.nav-label').forEach(label=>{label.addEventListener('click',function(e){if(window.innerWidth>768)return;e.preventDefault();const dd=this.nextElementSibling;if(dd&&dd.classList.contains('nav-dropdown')){const isOpen=dd.style.display==='block';document.querySelectorAll('.nav-dropdown').forEach(d=>d.style.display='none');dd.style.display=isOpen?'none':'block';}});});
         const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
         let allPlayers=[],lightPlayers=[],darkPlayers=[],currentFaction='light',isAdmin=false;
         let PLAYOFFS=JSON.parse(localStorage.getItem('eternis-playoffs'))||{light_round1:['','','',''],light_round2:['',''],light_champion:'',dark_round1:['','','',''],dark_round2:['',''],dark_champion:'',grand_champion:''};
@@ -201,11 +163,30 @@
         function shortName(n){return n&&n.length>3?n.substring(0,3).toUpperCase():(n?n.toUpperCase():'???');}
         function switchTab(t){document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));document.getElementById('tab-'+t).classList.add('active');event.target.classList.add('active');if(t==='playoffs')renderPlayoffs();}
         function showFaction(f){currentFaction=f;document.querySelectorAll('.faction-btn').forEach(e=>e.classList.remove('active'));event.target.classList.add('active');renderStandings();}
-        function renderStandings(){const p=currentFaction==='light'?[...lightPlayers]:[...darkPlayers];const c=document.getElementById('standings-content');if(!p.length){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">Нет данных.</div>';return;}const rc='playoff-row '+currentFaction;let h='<div class="table-container"><table><thead><tr><th class="pos">#</th><th>Игрок</th><th>Класс</th><th>W</th><th>L</th><th>%</th><th>🌟</th></tr></thead><tbody>';p.forEach((p,i)=>{const t=(p.wins||0)+(p.losses||0),wr=t>0?((p.wins||0)*100/t).toFixed(1):'0.0',pc=i===0?' top-1':i===1?' top-2':i===2?' top-3':'';h+=`<tr class="${i<8?rc:''} ${i===7?'cutoff':''}"><td class="pos${pc}">${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display||'')}" class="player-link">${p.emoji||'⚔️'} ${p.display||''}</a></td><td>${p.name||''}</td><td>${p.wins||0}</td><td>${p.losses||0}</td><td>${wr}%</td><td class="skill">${p.skill||0}</td></tr>`;});h+='</tbody></table></div>';c.innerHTML=h;}
         function findPlayer(n){return n?allPlayers.find(p=>p.display===n)||null:null;}
         function clickPlayer(mt,idx,name,isFinal){if(!isAdmin)return;if(isFinal){PLAYOFFS[mt]=PLAYOFFS[mt]===name?'':name;}else{const a=PLAYOFFS[mt];a[idx]=a[idx]===name?'':name;}localStorage.setItem('eternis-playoffs',JSON.stringify(PLAYOFFS));renderPlayoffs();}
-        function renderPlayoffs(){const light=lightPlayers.slice(0,8),dark=darkPlayers.slice(0,8);const c=document.getElementById('playoffs-content');if(light.length<8||dark.length<8){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">Нужно по 8 игроков в каждой фракции.</div>';return;}light.forEach((p,i)=>p.seed=i+1);dark.forEach((p,i)=>p.seed=i+1);const pr=(p,mt,idx,isFinal,ow)=>{if(!p)return '<div class="p" style="opacity:0.2">—</div>';const won=isFinal?PLAYOFFS[mt]===p.display:(PLAYOFFS[mt]||[])[idx]===p.display;const lost=ow&&!won;const cls=won?' winner':(lost?' loser':'');const mark=won?' ✅':'';const cl=isAdmin?' clickable':'';const oc=isAdmin?`onclick="clickPlayer('${mt}',${idx},'${p.display.replace(/'/g,"\\'")}',${isFinal})"`:'';return `<div class="p${cls}${cl}" ${oc}><span class="seed">#${p.seed}</span>${p.emoji||''} ${shortName(p.display)}${mark}</div>`;};const m=(a,b,mt,idx)=>{const wa=(PLAYOFFS[mt]||[])[idx]===(a?.display||'');const wb=(PLAYOFFS[mt]||[])[idx]===(b?.display||'');return `<div class="match">${pr(a,mt,idx,false,wb)}<div class="divider"></div>${pr(b,mt,idx,false,wa)}</div>`;};const fm=(a,b,mt)=>{const wa=PLAYOFFS[mt]===(a?.display||'');const wb=PLAYOFFS[mt]===(b?.display||'');return `<div class="match">${pr(a,mt,0,true,wb)}<div class="divider"></div>${pr(b,mt,0,true,wa)}</div>`;};const lr1=PLAYOFFS.light_round1.map(findPlayer);const lr2=PLAYOFFS.light_round2.map(findPlayer);const lc=findPlayer(PLAYOFFS.light_champion);const dr1=PLAYOFFS.dark_round1.map(findPlayer);const dr2=PLAYOFFS.dark_round2.map(findPlayer);const dc=findPlayer(PLAYOFFS.dark_champion);const gc=findPlayer(PLAYOFFS.grand_champion);let gf='';if(gc){const il=gc.faction==='Орден Света';gf=`<div class="champ ${il?'light':'dark'} winner">👑 ${gc.emoji||''} ${shortName(gc.display)} 👑</div>`;}else if(lc&&dc){const lw=PLAYOFFS.grand_champion===lc.display;const dw=PLAYOFFS.grand_champion===dc.display;const cl=isAdmin?' clickable':'';const clL=isAdmin?`onclick="clickPlayer('grand_champion',0,'${lc.display.replace(/'/g,"\\'")}',true)"`:'';const clD=isAdmin?`onclick="clickPlayer('grand_champion',0,'${dc.display.replace(/'/g,"\\'")}',true)"`:'';gf=`<div class="champ light${lw?' winner':''}${cl}" ${clL}>🌝 ${lc.emoji||''} ${shortName(lc.display)}${lw?' ✅':''}</div><div class="vs">⚔️ VS ⚔️</div><div class="champ dark${dw?' winner':''}${cl}" ${clD}>🌚 ${dc.emoji||''} ${shortName(dc.display)}${dw?' ✅':''}</div>`;}else{gf=`<div class="champ light">🌝 ${lc?lc.emoji+' '+shortName(lc.display):'Чемпион Света'}</div><div class="vs">⚔️ VS ⚔️</div><div class="champ dark">🌚 ${dc?dc.emoji+' '+shortName(dc.display):'Чемпион Тьмы'}</div>`;}c.innerHTML=`<div class="bracket-wrapper"><div class="bracket"><div class="round light"><div class="round-title">1/8 Света</div>${m(light[0],light[7],'light_round1',0)}${m(light[1],light[6],'light_round1',1)}${m(light[2],light[5],'light_round1',2)}${m(light[3],light[4],'light_round1',3)}</div><div class="round light"><div class="round-title">1/4 Света</div>${m(lr1[0],lr1[1],'light_round2',0)}${m(lr1[2],lr1[3],'light_round2',1)}</div><div class="round light"><div class="round-title">Финал</div>${fm(lr2[0],lr2[1],'light_champion')}</div><div class="round final"><div class="round-title final-title">🏆 ГРАНД-ФИНАЛ</div><div class="grand-final"><div class="label">ЧЕМПИОН ЛИГИ ЭТЕРНИСА</div>${gf}</div></div><div class="round dark"><div class="round-title">Финал</div>${fm(dr2[0],dr2[1],'dark_champion')}</div><div class="round dark"><div class="round-title">1/4 Тьмы</div>${m(dr1[0],dr1[1],'dark_round2',0)}${m(dr1[2],dr1[3],'dark_round2',1)}</div><div class="round dark"><div class="round-title">1/8 Тьмы</div>${m(dark[0],dark[7],'dark_round1',0)}${m(dark[1],dark[6],'dark_round1',1)}${m(dark[2],dark[5],'dark_round1',2)}${m(dark[3],dark[4],'dark_round1',3)}</div></div></div>`;}
-        async function init(){try{const r=await fetch(DATA_URL);const d=await r.json();allPlayers=(d.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);allPlayers.sort((a,b)=>b.skill-a.skill);lightPlayers=allPlayers.filter(p=>p.faction==='Орден Света');darkPlayers=allPlayers.filter(p=>p.faction==='Культ Тьмы');renderStandings();}catch(e){document.getElementById('standings-content').innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">❌ Ошибка загрузки</div>';}}
+        function renderStandings(){
+            const p=currentFaction==='light'?[...lightPlayers]:[...darkPlayers];const c=document.getElementById('standings-content');
+            if(!p.length){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">Нет данных.</div>';return;}
+            const rc='playoff-row '+currentFaction,storageKey='league-old-'+currentFaction,prevRank=JSON.parse(localStorage.getItem(storageKey)||'{}');
+            let h='<div class="table-container"><table><thead><tr><th class="pos">#</th><th style="width:30px;"></th><th>Игрок</th><th>Класс</th><th>W</th><th>L</th><th>%</th><th>🌟</th></tr></thead><tbody>';
+            p.forEach((pl,i)=>{const t=(pl.wins||0)+(pl.losses||0),wr=t>0?((pl.wins||0)*100/t).toFixed(1):'0.0',pc=i===0?' top-1':i===1?' top-2':i===2?' top-3':'';let changeHtml='';const oldPos=prevRank[pl.display];if(oldPos){const diff=oldPos-(i+1);if(diff>0)changeHtml=`<span class="pos-change pos-up">▲${diff}</span>`;else if(diff<0)changeHtml=`<span class="pos-change pos-down">▼${Math.abs(diff)}</span>`;else changeHtml=`<span class="pos-change pos-same">●</span>`;}else{changeHtml=`<span class="pos-change pos-new">🆕</span>`;}h+=`<tr class="${i<8?rc:''} ${i===7?'cutoff':''}"><td class="pos${pc}">${i+1}</td><td class="pos-change-cell">${changeHtml}</td><td><a href="player.html?name=${encodeURIComponent(pl.display||'')}" class="player-link">${pl.emoji||'⚔️'} ${pl.display||''}</a></td><td>${pl.name||''}</td><td>${pl.wins||0}</td><td>${pl.losses||0}</td><td>${wr}%</td><td class="skill">${pl.skill||0}</td></tr>`;});
+            h+='</tbody></table></div>';c.innerHTML=h;
+        }
+        function renderPlayoffs(){
+            const light=lightPlayers.slice(0,8),dark=darkPlayers.slice(0,8);const c=document.getElementById('playoffs-content');
+            if(light.length<8||dark.length<8){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">Нужно по 8 игроков в каждой фракции.</div>';return;}
+            light.forEach((p,i)=>p.seed=i+1);dark.forEach((p,i)=>p.seed=i+1);
+            const pr=(p,mt,idx,isFinal,ow)=>{if(!p)return '<div class="po-p empty">—</div>';const won=isFinal?PLAYOFFS[mt]===p.display:(PLAYOFFS[mt]||[])[idx]===p.display;const lost=ow&&!won;const cls=won?' win':(lost?' lose':'');const mark=won?'<span class="mk">✅</span>':'';const cl=isAdmin?' clk':'';const oc=isAdmin?`onclick="clickPlayer('${mt}',${idx},'${p.display.replace(/'/g,"\\'")}',${isFinal})"`:'';return `<div class="po-p${cls}${cl}" ${oc}><span class="sd">#${p.seed}</span><span class="nm">${p.emoji||''} ${shortName(p.display)}</span>${mark}</div>`;};
+            const m=(a,b,mt,idx)=>{const wa=(PLAYOFFS[mt]||[])[idx]===(a?.display||'');const wb=(PLAYOFFS[mt]||[])[idx]===(b?.display||'');return `<div class="po-match">${pr(a,mt,idx,false,wb)}${pr(b,mt,idx,false,wa)}</div>`;};
+            const fm=(a,b,mt)=>{const wa=PLAYOFFS[mt]===(a?.display||'');const wb=PLAYOFFS[mt]===(b?.display||'');return `<div class="po-match">${pr(a,mt,0,true,wb)}${pr(b,mt,0,true,wa)}</div>`;};
+            const lr1=PLAYOFFS.light_round1.map(findPlayer);const lr2=PLAYOFFS.light_round2.map(findPlayer);const lc=findPlayer(PLAYOFFS.light_champion);
+            const dr1=PLAYOFFS.dark_round1.map(findPlayer);const dr2=PLAYOFFS.dark_round2.map(findPlayer);const dc=findPlayer(PLAYOFFS.dark_champion);
+            const gc=findPlayer(PLAYOFFS.grand_champion);
+            let gf='';if(gc){const il=gc.faction==='Орден Света';gf=`<div class="gfp ${il?'light':'dark'} win">👑 ${gc.emoji||''} ${gc.display} 👑</div>`;}else if(lc&&dc){const lw=PLAYOFFS.grand_champion===lc.display;const dw=PLAYOFFS.grand_champion===dc.display;const cl=isAdmin?' clk':'';const clL=isAdmin?`onclick="clickPlayer('grand_champion',0,'${lc.display.replace(/'/g,"\\'")}',true)"`:'';const clD=isAdmin?`onclick="clickPlayer('grand_champion',0,'${dc.display.replace(/'/g,"\\'")}',true)"`:'';gf=`<div class="gfp light${lw?' win':''}${cl}" ${clL}>🌝 ${lc.emoji||''} ${shortName(lc.display)}${lw?' ✅':''}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark${dw?' win':''}${cl}" ${clD}>🌚 ${dc.emoji||''} ${shortName(dc.display)}${dw?' ✅':''}</div>`;}else{gf=`<div class="gfp light">🌝 ${lc?lc.emoji+' '+shortName(lc.display):'Чемпион Света'}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark">🌚 ${dc?dc.emoji+' '+shortName(dc.display):'Чемпион Тьмы'}</div>`;}
+            c.innerHTML=`<div class="po-grid"><div class="po-col"><h3 class="light">1/8 Света</h3>${m(light[0],light[7],'light_round1',0)}${m(light[1],light[6],'light_round1',1)}${m(light[2],light[5],'light_round1',2)}${m(light[3],light[4],'light_round1',3)}</div><div class="po-col"><h3 class="light">1/4 Света</h3>${m(lr1[0],lr1[1],'light_round2',0)}${m(lr1[2],lr1[3],'light_round2',1)}</div><div class="po-col"><h3 class="light">Финал</h3>${fm(lr2[0],lr2[1],'light_champion')}</div><div class="po-col wide"><div class="gf-card"><div class="gfl">ГРАНД-ФИНАЛ</div>${gf}</div></div><div class="po-col"><h3 class="dark">Финал</h3>${fm(dr2[0],dr2[1],'dark_champion')}</div><div class="po-col"><h3 class="dark">1/4 Тьмы</h3>${m(dr1[0],dr1[1],'dark_round2',0)}${m(dr1[2],dr1[3],'dark_round2',1)}</div><div class="po-col"><h3 class="dark">1/8 Тьмы</h3>${m(dark[0],dark[7],'dark_round1',0)}${m(dark[1],dark[6],'dark_round1',1)}${m(dark[2],dark[5],'dark_round1',2)}${m(dark[3],dark[4],'dark_round1',3)}</div></div>`;
+        }
+        async function init(){try{const r=await fetch(DATA_URL);const d=await r.json();allPlayers=(d.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);allPlayers.sort((a,b)=>b.skill-a.skill);lightPlayers=allPlayers.filter(p=>p.faction==='Орден Света');darkPlayers=allPlayers.filter(p=>p.faction==='Культ Тьмы');const commitsUrl='https://api.github.com/repos/rvotaenotaTTV/dnd-stats/commits?path=stats_data.json&per_page=30';const commits=await fetch(commitsUrl).then(r=>r.json());if(commits.length>0){const target=commits[commits.length-1];const oldUrl=`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/${target.sha}/stats_data.json`;try{const oldData=await fetch(oldUrl).then(r=>r.json());const oldPlayers=(oldData.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);oldPlayers.sort((a,b)=>b.skill-a.skill);const oldLight=oldPlayers.filter(p=>p.faction==='Орден Света');const oldDark=oldPlayers.filter(p=>p.faction==='Культ Тьмы');const lightRanks={};oldLight.forEach((p,i)=>{lightRanks[p.display]=i+1;});localStorage.setItem('league-old-light',JSON.stringify(lightRanks));const darkRanks={};oldDark.forEach((p,i)=>{darkRanks[p.display]=i+1;});localStorage.setItem('league-old-dark',JSON.stringify(darkRanks));}catch(e){}}renderStandings();}catch(e){document.getElementById('standings-content').innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">❌ Ошибка загрузки</div>';}}
         init();
     </script>
 </body>
