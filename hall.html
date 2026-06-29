@@ -60,6 +60,15 @@
     tr.row-silver td:first-child{border-left:3px solid var(--silver)}
     tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
 
+    .timeline-nav{display:flex;justify-content:center;gap:0;margin-bottom:30px;padding:0 20px;position:relative;overflow-x:auto}
+    .timeline-nav::before{content:'';position:absolute;top:50%;left:5%;right:5%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--purple),var(--ice),transparent);z-index:0}
+    .tl-item{position:relative;z-index:1;padding:8px 16px;cursor:pointer;text-align:center;transition:.3s;flex-shrink:0;min-width:60px}
+    .tl-item .tl-dot{width:38px;height:38px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;transition:.3s;background:var(--elevated);border:2px solid var(--border);color:var(--muted)}
+    .tl-item.active .tl-dot{background:var(--gold);border-color:var(--gold);color:#000;box-shadow:0 0 20px rgba(240,185,11,.4);transform:scale(1.15)}
+    .tl-item.passed .tl-dot{border-color:var(--gold);color:var(--gold);background:rgba(240,185,11,.08)}
+    .tl-item .tl-label{font-size:.55rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;white-space:nowrap}
+    .tl-item.active .tl-label{color:var(--gold);font-weight:700}
+
     @media(max-width:768px){
         .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
         .stat-value{font-size:1.3rem}
@@ -68,6 +77,9 @@
         .tables-grid{grid-template-columns:1fr}
         .table-card.full-width{grid-column:span 1}
         .crown-bar-visual{height:32px}
+        .timeline-nav{justify-content:flex-start}
+        .tl-item{padding:6px 10px;min-width:50px}
+        .tl-item .tl-dot{width:30px;height:30px;font-size:.65rem}
     }
 </style>
 </head>
@@ -113,7 +125,7 @@
             </nav>
         </div>
 
-        <div class="tabs" id="season-tabs"></div>
+        <div class="timeline-nav" id="season-tabs"></div>
         <div id="tab-content-container"></div>
     </div>
     <a href="https://www.donalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
@@ -131,6 +143,7 @@
 
         let currentSeasonNum = -1;
         let seasonTabs = [];
+        let activeSeason = -1;
         let dungeonPlayers = {};
 
         function getRankClass(index) {
@@ -184,7 +197,6 @@
             html += `<div class="season-title">${seasonName} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'LIVE' : 'ЗАВЕРШЁН'}</span></div>`;
             if (subtitle) html += `<div class="season-quote">«${subtitle}»</div>`;
 
-            // Арена
             html += '<div class="section-subtitle">🏟 Арена</div><div class="stats-grid">';
             html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
             html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
@@ -200,7 +212,6 @@
             if (battleLight + battleDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
             html += '</div>';
 
-            // Корона Раскола
             if (totalTerritory > 0) {
                 html += '<div class="section-subtitle">👑 Корона Раскола</div><div class="crown-section">';
                 html += '<div class="crown-bar-visual">';
@@ -212,7 +223,6 @@
                 html += '</div>';
             }
 
-            // Подземелье
             const dungeonKeys = isCurrent ? Object.keys(data.dungeon?.players || {}) : Object.keys(dungeonPlayers);
             if (dungeonKeys.length > 0) {
                 html += '<div class="section-subtitle">🏔 Подземелье</div><div class="stats-grid">';
@@ -223,31 +233,21 @@
                 html += '</div>';
             }
 
-            // Чемпионы
             if (champions.length > 0) {
                 html += '<div class="champion-section"><div class="champion-section-title">👑 Чемпионы сезона</div><div class="champion-grid">';
-				champions.slice(0, 4).forEach((p, i) => {
-					const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
-					const wins = p.tournamentWins || 0;
-					let crownsHtml;
-					if (wins <= 5) {
-						crownsHtml = '👑'.repeat(wins);
-					} else {
-						crownsHtml = `👑 ×${wins}`;
-					}
-					html += `<div class="champion-card ${rankClass}">
-						<div class="champ-avatar">${p.emoji || '⚔️'}</div>
-						<div class="champ-name">${p.display}</div>
-						<div class="champ-crowns">${crownsHtml || '👑'}</div>
-						<div class="champ-wins-text">${wins} побед</div>
-					</div>`;
-				});
+                champions.slice(0, 4).forEach((p, i) => {
+                    const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
+                    const wins = p.tournamentWins || 0;
+                    let crownsHtml;
+                    if (wins <= 5) { crownsHtml = '👑'.repeat(wins); }
+                    else { crownsHtml = `👑 ×${wins}`; }
+                    html += `<div class="champion-card ${rankClass}"><div class="champ-avatar">${p.emoji || '⚔️'}</div><div class="champ-name">${p.display}</div><div class="champ-crowns">${crownsHtml || '👑'}</div><div class="champ-wins-text">${wins} побед</div></div>`;
+                });
                 html += '</div></div>';
             } else if (!isCurrent) {
                 html += '<div class="champion-section" style="opacity:0.5;text-align:center;padding:20px;color:var(--muted);font-style:italic;">Турниры не проводились — эпоха чистых дуэлей</div>';
             }
 
-            // Таблицы
             html += '<div class="section-subtitle">📊 Таблицы лидеров</div><div class="tables-grid">';
 
             if (seasonTop.length > 0) {
@@ -288,78 +288,59 @@
             return html;
         }
 
-        async function detectSeasons() {
+        function renderTimeline(){
+            const container = document.getElementById('season-tabs');
+            container.innerHTML = seasonTabs.map(sn => {
+                const isActive = sn === activeSeason;
+                const isPassed = sn < activeSeason;
+                return `<div class="tl-item${isActive ? ' active' : ''}${isPassed ? ' passed' : ''}" onclick="switchSeason(${sn})"><div class="tl-dot">${sn}</div><div class="tl-label">Сезон ${sn}</div></div>`;
+            }).join('');
+        }
+
+        function switchSeason(sn){
+            if (sn === activeSeason) return;
+            activeSeason = sn;
+            renderTimeline();
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            const tabId = `tab-s${sn}`;
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        async function detectSeasons(){
             const foundSeasons = [];
-            let num = 0;
-            const maxSearch = 20;
-            while (num < maxSearch) {
-                try {
-                    const resp = await fetch(`${ARCHIVE_BASE}${num}.json`);
-                    if (!resp.ok) break;
-                    foundSeasons.push(num);
-                } catch (e) { break; }
-                num++;
+            for (let n = 0; n < 20; n++) {
+                try { const r = await fetch(`${ARCHIVE_BASE}${n}.json`); if (!r.ok) break; foundSeasons.push(n); }
+                catch (e) { break; }
             }
             currentSeasonNum = foundSeasons.length;
             seasonTabs = [...foundSeasons, currentSeasonNum];
-
-            const tabsContainer = document.getElementById('season-tabs');
             const contentContainer = document.getElementById('tab-content-container');
-            tabsContainer.innerHTML = '';
             contentContainer.innerHTML = '';
-
             seasonTabs.forEach((sn, idx) => {
                 const isCurrent = sn === currentSeasonNum;
-                const name = `${SEASON_ICONS[sn] || '📋'} Сезон ${sn}`;
                 const tabId = `tab-s${sn}`;
-
-                const btn = document.createElement('button');
-                btn.className = `tab-btn ${isCurrent ? 'active' : ''}`;
-                btn.dataset.season = `s${sn}`;
-                btn.innerHTML = isCurrent ? `<span class="live-dot"></span>${name}` : name;
-                btn.addEventListener('click', () => switchTab(sn));
-                tabsContainer.appendChild(btn);
-
                 const div = document.createElement('div');
                 div.id = tabId;
-                div.className = `tab-content ${isCurrent ? 'active' : ''}`;
+                div.className = `tab-content${isCurrent ? ' active' : ''}`;
                 div.innerHTML = '<div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div>';
                 contentContainer.appendChild(div);
-
-                if (isCurrent) {
-                    loadCurrentSeason(sn, tabId);
-                } else {
-                    loadArchiveSeason(sn, tabId);
-                }
+                if (isCurrent) loadCurrentSeason(sn, tabId);
+                else loadArchiveSeason(sn, tabId);
             });
+            activeSeason = currentSeasonNum;
+            renderTimeline();
         }
 
-        function switchTab(sn) {
-            document.querySelectorAll('#season-tabs .tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector(`[data-season="s${sn}"]`).classList.add('active');
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(`tab-s${sn}`).classList.add('active');
-        }
-
-        async function loadCurrentSeason(sn, tabId) {
+        async function loadCurrentSeason(sn, tabId){
             const container = document.getElementById(tabId);
-            try {
-                const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json());
-                container.innerHTML = renderSeason(d, sn, true);
-            } catch {
-                container.innerHTML = `<div class="season-frame live"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Не удалось загрузить данные</div></div>`;
-            }
+            try { const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json()); container.innerHTML = renderSeason(d, sn, true); }
+            catch { container.innerHTML = `<div class="season-frame live"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Не удалось загрузить данные</div></div>`; }
         }
 
-        async function loadArchiveSeason(sn, tabId) {
+        async function loadArchiveSeason(sn, tabId){
             const container = document.getElementById(tabId);
-            try {
-                const d = await fetch(`${ARCHIVE_BASE}${sn}.json`).then(r => r.json());
-                if (sn === 0) d.dungeon = { players: {} };
-                container.innerHTML = renderSeason(d, sn, false);
-            } catch {
-                container.innerHTML = `<div class="season-frame ended"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Архив недоступен</div></div>`;
-            }
+            try { const d = await fetch(`${ARCHIVE_BASE}${sn}.json`).then(r => r.json()); if (sn === 0) d.dungeon = { players: {} }; container.innerHTML = renderSeason(d, sn, false); }
+            catch { container.innerHTML = `<div class="season-frame ended"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Архив недоступен</div></div>`; }
         }
 
         detectSeasons();
