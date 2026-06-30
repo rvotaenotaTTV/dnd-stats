@@ -460,7 +460,7 @@ async function detectSeasons() {
     }
 
     currentSeasonNum = foundSeasons.length;
-    seasonTabs = [...foundSeasons, currentSeasonNum]; // архивные + текущий
+    seasonTabs = [...foundSeasons, currentSeasonNum];
 
     const contentContainer = document.getElementById('tab-content-container');
     contentContainer.innerHTML = '';
@@ -482,7 +482,7 @@ async function detectSeasons() {
         }
     });
 
-    activeSeason = currentSeasonNum; // по умолчанию текущий
+    activeSeason = currentSeasonNum;
     renderTimeline();
 }
 
@@ -500,7 +500,7 @@ async function loadArchiveSeason(sn, tabId) {
     const container = document.getElementById(tabId);
     try {
         const d = await fetch(`${ARCHIVE_BASE}${sn}.json`).then(r => r.json());
-        if (sn === 0) d.dungeon = { players: {} }; // в 0-м сезоне не было данжа
+        if (sn === 0) d.dungeon = { players: {} };
         container.innerHTML = renderSeason(d, sn, false);
     } catch {
         container.innerHTML = `<div class="season-frame ended"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Архив недоступен</div></div>`;
