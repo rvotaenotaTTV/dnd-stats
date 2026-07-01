@@ -121,31 +121,31 @@
         <!-- ПУТЬ ГЕРОЯ (ТАЙМЛАЙН) -->
         <div class="path-timeline">
 
-            <!-- Шаг 1: Создание героя -->
-            <div class="path-step" id="step-start">
-                <div class="step-number">Шаг 1</div>
-                <div class="step-title">🩸 Создание героя</div>
-                <div class="step-desc">
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px;">
-                        <div style="background:var(--elevated);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border);">
-                            <div style="font-size:1.5rem;margin-bottom:4px;">🎁</div>
-                            <div style="font-weight:700;color:var(--gold);font-size:0.85rem;">Активируй награду</div>
-                            <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;">«Создать героя»</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border);">
-                            <div style="font-size:1.5rem;margin-bottom:4px;">🎲</div>
-                            <div style="font-weight:700;color:var(--gold);font-size:0.85rem;">Выбери героя</div>
-                            <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;"><code>!1</code> <code>!2</code> или <code>!3</code> за 3 мин</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border);">
-                            <div style="font-size:1.5rem;margin-bottom:4px;">✅</div>
-                            <div style="font-weight:700;color:var(--gold);font-size:0.85rem;">Готово</div>
-                            <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;"><code>!инфо</code> — твои статы</div>
-                        </div>
-                    </div>
-                    <p>Бот предложит 3 случайные комбинации: <span class="highlight">раса + класс + фракция</span>. Классы не повторяются. Расы влияют на статы.</p>
-                </div>
-            </div>
+			<!-- Шаг 1: Создание героя -->
+			<div class="path-step" id="step-start">
+				<div class="step-number">Шаг 1</div>
+				<div class="step-title">🩸 Создание героя</div>
+				<div class="step-desc">
+					<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px;">
+						<div style="background:var(--elevated);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border);">
+							<div style="font-size:1.5rem;margin-bottom:4px;">🎁</div>
+							<div style="font-weight:700;color:var(--gold);font-size:0.85rem;">Активируй награду</div>
+							<div style="font-size:0.7rem;color:var(--muted);margin-top:2px;">«Создать героя»</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border);">
+							<div style="font-size:1.5rem;margin-bottom:4px;">🎲</div>
+							<div style="font-weight:700;color:var(--gold);font-size:0.85rem;">Выбери героя</div>
+							<div style="font-size:0.7rem;color:var(--muted);margin-top:2px;">напиши номер в чат (3 мин)</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border);">
+							<div style="font-size:1.5rem;margin-bottom:4px;">✅</div>
+							<div style="font-weight:700;color:var(--gold);font-size:0.85rem;">Готово</div>
+							<div style="font-size:0.7rem;color:var(--muted);margin-top:2px;"><code>!инфо</code> — твои статы</div>
+						</div>
+					</div>
+					<p>Бот предложит случайные комбинации <span class="highlight">раса + класс</span>. Фракция назначается автоматически. Классы не повторяются.</p>
+				</div>
+			</div>
 
             <!-- Шаг 2: Боевая система -->
             <div class="path-step" id="step-battle">
