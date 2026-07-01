@@ -182,7 +182,9 @@
         <!-- ТАБЛИЦА КЛАССОВ -->
         <!-- ========================================== -->
         <div class="section gold">
-            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px">Кликните на класс чтобы выбрать для сравнения</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px">
+                Выбери расу сверху, затем класс снизу. Можно выбрать две разных пары для сравнения.
+            </div>
             <div class="table-wrapper">
                 <table id="classes-balance-table">
                     <thead><tr><th data-sort="name">Класс</th><th data-sort="hp">HP</th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th><th data-sort="dex">DEX</th><th data-sort="min">MIN</th><th data-sort="max">MAX</th><th data-sort="avg">AVG</th><th data-sort="acc">ACC</th><th data-sort="surv">SURV</th><th data-sort="dmg5">DMG/5</th><th data-sort="power">POWER</th></tr></thead>
@@ -230,7 +232,8 @@ document.querySelectorAll('.nav-label').forEach(label=>{label.addEventListener('
 // ДАННЫЕ
 // ==========================================
 const URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-let CLASSES = [], RACES = [], CONFIG = {}, selRace = '', pickA = null, pickB = null;
+let CLASSES = [], RACES = [], CONFIG = {}, selRace = '';
+let pickA = null, pickB = null, pickRaceA = null, pickRaceB = null;
 let currentSortKey = 'power', currentSortDir = 'asc';
 
 // ==========================================
@@ -266,7 +269,7 @@ function initRaceBar(){
 }
 
 function selectRace(name){
-    selRace=name;pickA=null;pickB=null;closeCompare();
+    selRace=name;
     document.querySelectorAll('.race-chip').forEach(c=>c.classList.remove('active'));
     const chips=document.querySelectorAll('.race-chip');
     const idx=name?RACES.findIndex(r=>r.Name===name)+1:0;
@@ -288,7 +291,7 @@ function calc(cls, race) {
         dx += race.BonusDex; mn += race.BonusMin; mx += race.BonusMax;
     }
     const avg = (mn + mx) / 2;
-    const enemyDef = 2; // дефолтная защита врага для расчёта ACC
+    const enemyDef = 2;
     const acc = Math.round(Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - enemyDef) / 20)) * 100);
     const surv = Math.round(h * (1 + d * CONFIG.defReduction));
     const avgDmg = (mn + mx) / 2;
@@ -308,7 +311,8 @@ function renderClasses(){
     const tbody=document.getElementById('classes-balance-tbody');
     tbody.innerHTML=data.map(c=>{
         const s=c.s;
-        return`<tr class="selectable${pickA===c.Name||pickB===c.Name?' selected':''}" data-name="${c.Name}" data-hp="${s.hp}" data-atk="${s.atk}" data-def="${s.def}" data-dex="${s.dex}" data-min="${s.min}" data-max="${s.max}" data-avg="${s.avg}" data-acc="${s.acc}" data-surv="${s.surv}" data-dmg5="${s.dmg5}" data-power="${s.power}" onclick="pickClass('${c.Name}')"><td>${c.Emoji} ${c.Name}</td><td class="number">${s.hp}</td><td class="number">${s.atk}</td><td class="number">${s.def}</td><td class="number">${s.dex}</td><td class="number">${s.min}</td><td class="number">${s.max}</td><td class="number">${s.avg}</td><td class="number">${s.acc}%</td><td class="number">${s.surv}</td><td class="number">${s.dmg5}</td><td class="number" style="font-weight:700;color:var(--gold)">${s.power.toFixed(1)}</td></tr>`;
+        const isSelected = pickA===c.Name||pickB===c.Name;
+        return`<tr class="selectable${isSelected?' selected':''}" data-name="${c.Name}" data-hp="${s.hp}" data-atk="${s.atk}" data-def="${s.def}" data-dex="${s.dex}" data-min="${s.min}" data-max="${s.max}" data-avg="${s.avg}" data-acc="${s.acc}" data-surv="${s.surv}" data-dmg5="${s.dmg5}" data-power="${s.power}" onclick="pickClass('${c.Name}')"><td>${c.Emoji} ${c.Name}</td><td class="number">${s.hp}</td><td class="number">${s.atk}</td><td class="number">${s.def}</td><td class="number">${s.dex}</td><td class="number">${s.min}</td><td class="number">${s.max}</td><td class="number">${s.avg}</td><td class="number">${s.acc}%</td><td class="number">${s.surv}</td><td class="number">${s.dmg5}</td><td class="number" style="font-weight:700;color:var(--gold)">${s.power.toFixed(1)}</td></tr>`;
     }).join('');
     sortTable(currentSortKey, currentSortDir);
     document.querySelectorAll('#classes-balance-table th').forEach(h=>h.classList.remove('asc','desc'));
@@ -317,18 +321,18 @@ function renderClasses(){
 }
 
 // ==========================================
-// ВЫБОР КЛАССОВ ДЛЯ СРАВНЕНИЯ
+// ВЫБОР КЛАССОВ ДЛЯ СРАВНЕНИЯ (с запоминанием расы)
 // ==========================================
 function pickClass(name){
-    if(pickA===name){pickA=null;}
-    else if(pickB===name){pickB=null;}
-    else if(!pickA){pickA=name;}
-    else if(!pickB){pickB=name;}
-    else{pickA=name;pickB=null;}
+    if(pickA===name && pickRaceA===selRace){pickA=null;pickRaceA=null;}
+    else if(pickB===name && pickRaceB===selRace){pickB=null;pickRaceB=null;}
+    else if(!pickA){pickA=name;pickRaceA=selRace;}
+    else if(!pickB){pickB=name;pickRaceB=selRace;}
+    else{pickA=name;pickRaceA=selRace;pickB=null;pickRaceB=null;}
     renderClasses();updateCompare();
 }
 
-function closeCompare(){pickA=null;pickB=null;renderClasses();updateCompare();}
+function closeCompare(){pickA=null;pickB=null;pickRaceA=null;pickRaceB=null;renderClasses();updateCompare();}
 
 // ==========================================
 // ОТОБРАЖЕНИЕ СРАВНЕНИЯ
@@ -338,13 +342,20 @@ function updateCompare(){
     const winner=document.getElementById('compareWinner');
     if(!pickA||!pickB){section.classList.remove('active');winner.innerHTML='';return;}
     section.classList.add('active');
-    const race=selRace?RACES.find(r=>r.Name===selRace):null;
+
+    const raceA=pickRaceA?RACES.find(r=>r.Name===pickRaceA):null;
+    const raceB=pickRaceB?RACES.find(r=>r.Name===pickRaceB):null;
     const clsA=CLASSES.find(c=>c.Name===pickA);
     const clsB=CLASSES.find(c=>c.Name===pickB);
     if(!clsA||!clsB)return;
-    const sA=calc(clsA,race),sB=calc(clsB,race);
-    document.getElementById('compareNameA').textContent=`${clsA.Emoji} ${clsA.Name}`;
-    document.getElementById('compareNameB').textContent=`${clsB.Emoji} ${clsB.Name}`;
+
+    const sA=calc(clsA,raceA),sB=calc(clsB,raceB);
+
+    // Заголовок с полными именами
+    const nameA=raceA?`${raceA.Emoji} ${raceA.Name}-${clsA.Emoji} ${clsA.Name}`:`${clsA.Emoji} ${clsA.Name}`;
+    const nameB=raceB?`${raceB.Emoji} ${raceB.Name}-${clsB.Emoji} ${clsB.Name}`:`${clsB.Emoji} ${clsB.Name}`;
+    document.getElementById('compareNameA').textContent=nameA;
+    document.getElementById('compareNameB').textContent=nameB;
 
     const stats=[
         {label:'HP',icon:'❤️',a:sA.hp,b:sB.hp},
@@ -383,8 +394,8 @@ function updateCompare(){
     }).join('');
 
     const total=winsA+winsB;
-    if(winsA>winsB)winner.innerHTML=`<div class="winner-text">🏆 ${clsA.Emoji} ${clsA.Name} сильнее</div><div class="winner-sub">Счёт по статам: ${winsA}:${winsB} (из ${total})</div>`;
-    else if(winsB>winsA)winner.innerHTML=`<div class="winner-text">🏆 ${clsB.Emoji} ${clsB.Name} сильнее</div><div class="winner-sub">Счёт по статам: ${winsB}:${winsA} (из ${total})</div>`;
+    if(winsA>winsB)winner.innerHTML=`<div class="winner-text">🏆 ${nameA} сильнее</div><div class="winner-sub">Счёт по статам: ${winsA}:${winsB} (из ${total})</div>`;
+    else if(winsB>winsA)winner.innerHTML=`<div class="winner-text">🏆 ${nameB} сильнее</div><div class="winner-sub">Счёт по статам: ${winsB}:${winsA} (из ${total})</div>`;
     else winner.innerHTML=`<div class="winner-text">⚖️ Полное равенство</div><div class="winner-sub">Одинаковые статы (${winsA}:${winsB})</div>`;
 }
 
