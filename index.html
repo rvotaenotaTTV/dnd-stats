@@ -391,52 +391,74 @@
 			});
 			html+='</tbody></table></div></div></div>';
 
-            // РЕКОРДЫ
-            html+='<div id="tab-records" class="tab-content">';
-            const allHeroes = [...players];
-            const heroArchiveData = data.heroArchive || {};
-            Object.entries(heroArchiveData).forEach(([playerKey, heroes]) => {
-                heroes.forEach(h => {
-                    allHeroes.push({
-                        display: playerKey,
-                        emoji: h.emoji || '',
-                        name: h.name || '',
-                        wins: h.wins || 0,
-                        losses: h.losses || 0,
-                        best: h.best || 0,
-                        worst: h.worst || 0,
-                        tournamentWins: h.tournamentWins || 0,
-                        shards: 0,
-                        level: 0,
-                        faction: '',
-                        factionWins: 0
-                    });
-                });
-            });
-            const maxWins=allHeroes.reduce((max,p)=>p.wins>max.wins?p:max,allHeroes[0]);
-            const maxStreak=allHeroes.reduce((max,p)=>p.best>max.best?p:max,allHeroes[0]);
-            const maxShards=players.reduce((max,p)=>p.shards>max.shards?p:max,players[0]);
-            const maxFights=allHeroes.reduce((max,p)=>(p.wins+p.losses)>(max.wins+max.losses)?p:max,allHeroes[0]);
-            const maxFaction=players.reduce((max,p)=>p.factionWins>max.factionWins?p:max,players[0]);
-            const maxTournament=allHeroes.reduce((max,p)=>(p.tournamentWins||0)>(max.tournamentWins||0)?p:max,allHeroes[0]);
-            const maxLevel=players.reduce((max,p)=>p.level>max.level?p:max,players[0]);
-            const maxWinrate=allHeroes.filter(p=>p.wins+p.losses>=50).reduce((max,p)=>{
-                const wr=p.wins/(p.wins+p.losses);
-                const maxWr=max.wins/(max.wins+max.losses);
-                return wr>maxWr?p:max;
-            },allHeroes[0]);
-            const worstStreak=allHeroes.reduce((max,p)=>(p.worst||0)>(max.worst||0)?p:max,allHeroes[0]);
-            const topLight=players.filter(p=>p.faction==='Орден Света').sort((a,b)=>b.factionWins-a.factionWins)[0];
-            const topDark=players.filter(p=>p.faction==='Культ Тьмы').sort((a,b)=>b.factionWins-a.factionWins)[0];
-            const mostLossesPlayer=allHeroes.reduce((max,p)=>p.losses>max.losses?p:max,allHeroes[0]);
-            const recordCounts={};[maxWins,maxStreak,maxShards,maxFights,maxFaction,maxTournament,maxLevel,maxWinrate,worstStreak,topLight,topDark,mostLossesPlayer].forEach(p=>{if(p)recordCounts[p.display]=(recordCounts[p.display]||0)+1;});
-            const topRecorder=Object.entries(recordCounts).sort((a,b)=>b[1]-a[1])[0];
-            html+='<div style="text-align:center;margin-bottom:20px;"><div style="font-size:2.5rem;color:var(--gold);">👑</div><h2 style="color:var(--gold);margin:8px 0;">РЕКОРДСМЕНЫ ЭТЕРНИСА</h2></div>';
-            html+=`<div class="champion-block"><div style="font-size:1.2rem;color:var(--gold);margin-bottom:8px;">🏆 ЛЕГЕНДА ЭТЕРНИСА</div><div class="champion-emoji">${allHeroes.find(p=>p.display===topRecorder[0])?.emoji||'🏆'}</div><div class="champion-name">${topRecorder[0]}</div><div class="champion-class">${topRecorder[1]} рекордов</div></div>`;
-            const records=[{icon:'🏆',name:'ПОБЕДЫ',value:maxWins.wins,player:maxWins.display,emoji:maxWins.emoji,desc:'побед'},{icon:'🔥',name:'СТРИК',value:maxStreak.best,player:maxStreak.display,emoji:maxStreak.emoji,desc:'побед подряд'},{icon:'💎',name:'ОСКОЛКИ',value:maxShards.shards,player:maxShards.display,emoji:maxShards.emoji,desc:'осколков'},{icon:'⚔️',name:'БОИ',value:maxFights.wins+maxFights.losses,player:maxFights.display,emoji:maxFights.emoji,desc:'боёв'},{icon:'🌍',name:'ФРАКЦИЯ',value:maxFaction.factionWins,player:maxFaction.display,emoji:maxFaction.emoji,desc:'побед за фракцию'},{icon:'👑',name:'ЧЕМПИОН',value:maxTournament.tournamentWins||0,player:maxTournament.display,emoji:maxTournament.emoji,desc:'побед в турнирах'},{icon:'📊',name:'УРОВЕНЬ',value:maxLevel.level,player:maxLevel.display,emoji:maxLevel.emoji,desc:'уровень'},{icon:'📈',name:'ВИНРЕЙТ',value:(maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1),player:maxWinrate.display,emoji:maxWinrate.emoji,desc:'% побед (50+ боёв)'},{icon:'💀',name:'АНТИСТРИК',value:worstStreak.worst||0,player:worstStreak.display,emoji:worstStreak.emoji,desc:'поражений подряд'},{icon:'🌝',name:'СВЕТ',value:topLight?.factionWins||0,player:topLight?.display||'—',emoji:topLight?.emoji||'',desc:'побед за Свет'},{icon:'🌚',name:'ТЬМА',value:topDark?.factionWins||0,player:topDark?.display||'—',emoji:topDark?.emoji||'',desc:'побед за Тьму'},{icon:'💔',name:'ПОРАЖЕНИЯ',value:mostLossesPlayer.losses,player:mostLossesPlayer.display,emoji:mostLossesPlayer.emoji,desc:'поражений'}];
-            html+='<div class="titles-gallery" style="grid-template-columns:repeat(4,1fr);">';
-            records.forEach(r=>{html+=`<div class="title-card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:6px;">${r.icon}</div><div style="color:var(--muted);font-size:0.7rem;">${r.name}</div><div style="font-size:1.5rem;color:var(--gold);font-weight:800;">${r.value}</div><div style="color:var(--muted);font-size:0.68rem;">${r.desc}</div><div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:0.8rem;">${r.emoji} ${r.player}</div></div>`;});
-            html+='</div></div>';
+			// РЕКОРДЫ
+			html+='<div id="tab-records" class="tab-content">';
+			const allHeroes = [...players];
+			const heroArchiveData = data.heroArchive || {};
+			Object.entries(heroArchiveData).forEach(([playerKey, heroes]) => {
+				heroes.forEach(h => {
+					allHeroes.push({
+						display: playerKey,
+						emoji: h.emoji || '',
+						name: h.name || '',
+						wins: h.wins || 0,
+						losses: h.losses || 0,
+						best: h.best || 0,
+						worst: h.worst || 0,
+						tournamentWins: h.tournamentWins || 0,
+						shards: 0,
+						level: 0,
+						faction: '',
+						factionWins: 0
+					});
+				});
+			});
+			const maxWins=allHeroes.reduce((max,p)=>p.wins>max.wins?p:max,allHeroes[0]);
+			const maxStreak=allHeroes.reduce((max,p)=>p.best>max.best?p:max,allHeroes[0]);
+			const maxShards=players.reduce((max,p)=>p.shards>max.shards?p:max,players[0]);
+			const maxFights=allHeroes.reduce((max,p)=>(p.wins+p.losses)>(max.wins+max.losses)?p:max,allHeroes[0]);
+			const maxFaction=players.reduce((max,p)=>p.factionWins>max.factionWins?p:max,players[0]);
+			const maxTournament=allHeroes.reduce((max,p)=>(p.tournamentWins||0)>(max.tournamentWins||0)?p:max,allHeroes[0]);
+			const maxLevel=players.reduce((max,p)=>p.level>max.level?p:max,players[0]);
+			const wrFiltered=allHeroes.filter(p=>p.wins+p.losses>=50);
+			const maxWinrate=wrFiltered.length>0?wrFiltered.reduce((max,p)=>{
+				const wr=p.wins/(p.wins+p.losses);
+				const maxWr=max.wins/(max.wins+max.losses);
+				return wr>maxWr?p:max;
+			}):null;
+			const worstStreak=allHeroes.reduce((max,p)=>(p.worst||0)>(max.worst||0)?p:max,allHeroes[0]);
+			const topLight=players.filter(p=>p.faction==='Орден Света').sort((a,b)=>b.factionWins-a.factionWins)[0];
+			const topDark=players.filter(p=>p.faction==='Культ Тьмы').sort((a,b)=>b.factionWins-a.factionWins)[0];
+			const mostLossesPlayer=allHeroes.reduce((max,p)=>p.losses>max.losses?p:max,allHeroes[0]);
+			const recordCounts={};[maxWins,maxStreak,maxShards,maxFights,maxFaction,maxTournament,maxLevel,maxWinrate,worstStreak,topLight,topDark,mostLossesPlayer].forEach(p=>{if(p)recordCounts[p.display]=(recordCounts[p.display]||0)+1;});
+			const topRecorder=Object.entries(recordCounts).sort((a,b)=>b[1]-a[1])[0];
+			html+='<div style="text-align:center;margin-bottom:20px;"><div style="font-size:2.5rem;color:var(--gold);">👑</div><h2 style="color:var(--gold);margin:8px 0;">РЕКОРДСМЕНЫ ЭТЕРНИСА</h2></div>';
+			html+=`<div class="champion-block"><div style="font-size:1.2rem;color:var(--gold);margin-bottom:8px;">🏆 ЛЕГЕНДА ЭТЕРНИСА</div><div class="champion-emoji">${allHeroes.find(p=>p.display===topRecorder[0])?.emoji||'🏆'}</div><div class="champion-name">${topRecorder[0]}</div><div class="champion-class">${topRecorder[1]} рекордов</div></div>`;
+			const records=[
+				{icon:'🏆',name:'ПОБЕДЫ',value:maxWins.wins,player:maxWins.display,emoji:maxWins.emoji,desc:'побед'},
+				{icon:'🔥',name:'СТРИК',value:maxStreak.best,player:maxStreak.display,emoji:maxStreak.emoji,desc:'побед подряд'},
+				{icon:'💎',name:'ОСКОЛКИ',value:maxShards.shards,player:maxShards.display,emoji:maxShards.emoji,desc:'осколков'},
+				{icon:'⚔️',name:'БОИ',value:maxFights.wins+maxFights.losses,player:maxFights.display,emoji:maxFights.emoji,desc:'боёв'},
+				{icon:'🌍',name:'ФРАКЦИЯ',value:maxFaction.factionWins,player:maxFaction.display,emoji:maxFaction.emoji,desc:'побед за фракцию'},
+				{icon:'👑',name:'ЧЕМПИОН',value:maxTournament.tournamentWins||0,player:maxTournament.display,emoji:maxTournament.emoji,desc:'побед в турнирах'},
+				{icon:'📊',name:'УРОВЕНЬ',value:maxLevel.level,player:maxLevel.display,emoji:maxLevel.emoji,desc:'уровень'},
+				{icon:'📈',name:'ВИНРЕЙТ',value:maxWinrate?(maxWinrate.wins*100/(maxWinrate.wins+maxWinrate.losses)).toFixed(1):'—',player:maxWinrate?maxWinrate.display:'—',emoji:maxWinrate?maxWinrate.emoji:'',desc:'% побед (50+ боёв)'},
+				{icon:'💀',name:'АНТИСТРИК',value:worstStreak.worst||0,player:worstStreak.display,emoji:worstStreak.emoji,desc:'поражений подряд'},
+				{icon:'🌝',name:'СВЕТ',value:topLight?.factionWins||0,player:topLight?.display||'—',emoji:topLight?.emoji||'',desc:'побед за Свет'},
+				{icon:'🌚',name:'ТЬМА',value:topDark?.factionWins||0,player:topDark?.display||'—',emoji:topDark?.emoji||'',desc:'побед за Тьму'},
+				{icon:'💔',name:'ПОРАЖЕНИЯ',value:mostLossesPlayer.losses,player:mostLossesPlayer.display,emoji:mostLossesPlayer.emoji,desc:'поражений'}
+			];
+			html+='<div class="titles-gallery" style="grid-template-columns:repeat(4,1fr);">';
+			records.forEach(r=>{
+				html+=`<div class="title-card" style="text-align:center;">
+					<div style="font-size:2rem;margin-bottom:6px;">${r.icon}</div>
+					<div style="color:var(--muted);font-size:0.7rem;">${r.name}</div>
+					<div style="font-size:1.5rem;color:var(--gold);font-weight:800;">${r.value}</div>
+					<div style="color:var(--muted);font-size:0.68rem;">${r.desc}</div>
+					<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:0.8rem;">${r.emoji} ${r.player}</div>
+				</div>`;
+			});
+			html+='</div></div>';
 
             // ЧЕМПИОНЫ
             html+='<div id="tab-champions" class="tab-content">';
