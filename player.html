@@ -196,10 +196,14 @@ const ACH = [
     {e:"⚡",n:"Непобедимый",t:"best",v:10},
     {e:"🏹",n:"Мастер",t:"winrate",v:70,m:30},
     {e:"📿",n:"Собиратель",t:"level",v:10},
+    {e:"✨",n:"Сосед Аэлиона",t:"dungeon_record",v:25},
+    {e:"👁️",n:"Там внизу кто-то есть... и это я",t:"dungeon_record",v:20},
     {e:"🐉",n:"Король Подземелья",t:"dungeon_record",v:15},
     {e:"🏔",n:"Покоритель глубин",t:"dungeon_record",v:10},
-    {e:"👑",n:"Трофейный магнат",t:"dungeon_trophies",v:30},
-    {e:"💀",n:"Охотник на боссов",t:"dungeon_bosses",v:10},
+    {e:"💰",n:"Кладмен",t:"dungeon_trophies",v:1000},
+    {e:"👑",n:"Трофейный магнат",t:"dungeon_trophies",v:100},
+    {e:"⚔️",n:"Убийца боссов",t:"dungeon_bosses",v:1000},
+    {e:"💀",n:"Охотник на боссов",t:"dungeon_bosses",v:100},
     {e:"🌊",n:"Волнорез",t:"dungeon_waves",v:100},
     {e:"🔱",n:"Избранный светом",t:"faction",v:150,f:"Орден Света"},
     {e:"🌋",n:"Владыка тьмы",t:"faction",v:150,f:"Культ Тьмы"},
@@ -224,7 +228,9 @@ const ACH = [
     {e:"🥊",n:"Боец",t:"losses",v:10},
     {e:"☯️",n:"Инь-Янь",t:"balance",m:20},
     {e:"⚙️",n:"Железный",t:"losses",v:100},
-    {e:"🪀",n:"Груша для битья",t:"losses",v:50}
+    {e:"💀",n:"Мясо",t:"losses",v:50},
+    {e:"🍐",n:"Груша для битья",t:"worst",v:10},
+    {e:"🧻",n:"Тряпка",t:"worst",v:5}
 ];
 
 // ==========================================
@@ -427,6 +433,7 @@ function renderAchievements() {
             case "wins": return p.wins >= a.v;
             case "losses": return p.losses >= a.v;
             case "best": return p.best >= a.v;
+            case "worst": return p.worst >= a.v;
             case "fights": return total >= a.v;
             case "tournament": return p.tournamentWins >= a.v;
             case "faction": return p.faction === a.f && p.factionWins >= a.v;
@@ -461,6 +468,7 @@ function renderAchievements() {
                 case "wins": condText = a.v + ' побед'; break;
                 case "losses": condText = a.v + ' поражений'; break;
                 case "best": condText = 'Стрик ' + a.v; break;
+                case "worst": condText = 'Лузстрик ' + a.v; break;
                 case "fights": condText = a.v + ' боёв'; break;
                 case "tournament": condText = a.v + ' турнирных побед'; break;
                 case "faction": condText = a.v + ' побед за ' + a.f; break;
@@ -488,6 +496,7 @@ function renderAchievements() {
                 case "wins": cur = p.wins; max = a.v; condText = a.v + ' побед'; break;
                 case "losses": cur = p.losses; max = a.v; condText = a.v + ' поражений'; break;
                 case "best": cur = p.best; max = a.v; condText = 'Стрик ' + a.v; break;
+                case "worst": cur = p.worst; max = a.v; condText = 'Лузстрик ' + a.v; break;
                 case "fights": cur = total; max = a.v; condText = a.v + ' боёв'; break;
                 case "tournament": cur = p.tournamentWins; max = a.v; condText = a.v + ' турнирных побед'; break;
                 case "faction": cur = p.faction === a.f ? p.factionWins : 0; max = a.v; condText = a.v + ' побед за ' + a.f; break;
@@ -508,7 +517,7 @@ function renderAchievements() {
             h += `<div class="ach-emoji">${a.e}</div>`;
             h += `<div class="ach-name">${a.n}</div>`;
             h += `<div style="font-size:.65rem;color:var(--muted)">${condText}</div>`;
-            if (a.t !== 'balance') {
+            if (a.t !== 'balance' && a.t !== 'champion') {
                 h += `<div style="font-size:.65rem;color:var(--muted)">${cur}/${max}</div>`;
                 h += `<div class="ach-progress"><div class="ach-fill" style="width:${pct}%"></div></div>`;
             }
