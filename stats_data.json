@@ -25,7 +25,7 @@
       "best": 5,
       "worst": 4,
       "champion": false,
-      "shards": 147,
+      "shards": 149,
       "level": 7,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -57,7 +57,7 @@
       "best": 4,
       "worst": 6,
       "champion": true,
-      "shards": 236,
+      "shards": 240,
       "level": 9,
       "faction": "Орден Света",
       "tournamentWins": 1,
@@ -89,7 +89,7 @@
       "best": 7,
       "worst": 7,
       "champion": false,
-      "shards": 288,
+      "shards": 290,
       "level": 11,
       "faction": "Орден Света",
       "tournamentWins": 1,
@@ -105,7 +105,7 @@
       "best": 8,
       "worst": 0,
       "champion": false,
-      "shards": 160,
+      "shards": 164,
       "level": 7,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -1625,7 +1625,7 @@
       "best": 1,
       "worst": 0,
       "champion": false,
-      "shards": 6,
+      "shards": 10,
       "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -1634,15 +1634,15 @@
     }
   ],
   "factionScore": {
-    "duelLight": 151,
+    "duelLight": 153,
     "duelDark": 169,
     "battleLight": 3,
     "battleDark": 3
   },
   "tournaments": 6,
   "territory": {
-    "light": 876,
-    "dark": 767
+    "light": 907,
+    "dark": 783
   },
   "territoryControl": {
     "🌑 Эпицентр Раскола": "dark",
@@ -1696,9 +1696,9 @@
         "crits": 22,
         "misses": 15,
         "blocks": 14,
-        "trophies": 121,
-        "bosses": 58,
-        "totalWaves": 389,
+        "trophies": 124,
+        "bosses": 60,
+        "totalWaves": 402,
         "swings": 298,
         "hits": 269,
         "passive": "💚 Стойкость"
@@ -1730,9 +1730,9 @@
         "crits": 8,
         "misses": 10,
         "blocks": 3,
-        "trophies": 35,
-        "bosses": 19,
-        "totalWaves": 135,
+        "trophies": 37,
+        "bosses": 20,
+        "totalWaves": 143,
         "swings": 201,
         "hits": 188,
         "passive": "🩸 Вампиризм"
@@ -2031,17 +2031,17 @@
         "emoji": "🧑🛡️",
         "name": "Человек-Паладин",
         "faction": "Орден Света",
-        "record": 13,
-        "damage": 1362,
-        "crits": 11,
-        "misses": 12,
-        "blocks": 4,
-        "trophies": 88,
-        "bosses": 42,
-        "totalWaves": 326,
+        "record": 14,
+        "damage": 1538,
+        "crits": 9,
+        "misses": 10,
+        "blocks": 11,
+        "trophies": 90,
+        "bosses": 44,
+        "totalWaves": 340,
         "swings": 171,
-        "hits": 155,
-        "passive": "🔮 Отражение"
+        "hits": 150,
+        "passive": "🧿 Амулет Раскола"
       },
       "t1psywitch": {
         "display": "t1psywitch",
@@ -2078,20 +2078,20 @@
         "passive": "🗡️ Казнь"
       },
       "verdoga": {
-        "display": "Verdoga",
+        "display": "verdoga",
         "emoji": "🧑✨",
         "name": "Человек-Волшебница",
         "faction": "Орден Света",
-        "record": 17,
-        "damage": 2360,
-        "crits": 7,
-        "misses": 9,
-        "blocks": 16,
-        "trophies": 76,
-        "bosses": 34,
-        "totalWaves": 234,
-        "swings": 167,
-        "hits": 142,
+        "record": 18,
+        "damage": 2584,
+        "crits": 9,
+        "misses": 11,
+        "blocks": 6,
+        "trophies": 83,
+        "bosses": 37,
+        "totalWaves": 252,
+        "swings": 183,
+        "hits": 166,
         "passive": "💢 Накопленная ярость"
       },
       "ir0nw0man": {
@@ -2257,9 +2257,9 @@
         "crits": 1,
         "misses": 8,
         "blocks": 9,
-        "trophies": 17,
-        "bosses": 7,
-        "totalWaves": 43,
+        "trophies": 20,
+        "bosses": 8,
+        "totalWaves": 49,
         "swings": 74,
         "hits": 57,
         "passive": "🔮 Отражение"
@@ -2269,39 +2269,21 @@
         "emoji": "🐱🗡️",
         "name": "Табакси-Плут",
         "faction": "Культ Тьмы",
-        "record": 6,
-        "damage": 318,
-        "crits": 1,
-        "misses": 3,
+        "record": 12,
+        "damage": 1186,
+        "crits": 5,
+        "misses": 2,
         "blocks": 0,
-        "trophies": 3,
-        "bosses": 2,
-        "totalWaves": 12,
-        "swings": 42,
-        "hits": 39,
-        "passive": "👻 Призрачный щит"
+        "trophies": 7,
+        "bosses": 4,
+        "totalWaves": 24,
+        "swings": 131,
+        "hits": 129,
+        "passive": "⚔️ Святая ярость"
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "🧑🛡️ ded_evgenius 12:47 ⚡🏆👹🔮 ashen_di | 8:4 | 11:💨 | 11:8 | 💥17:0"
-    },
-    {
-      "FullLog": "⚡🧑🎸 bloodedfuf 32:28 🏆🧑🛡️ ded_evgenius | 9:3 | 4:8 | 6:6 | 💥9:8 | 4:3"
-    },
-    {
-      "FullLog": "⚡🏆💀✝️ stories___ 41:17 🧑🛡️ ded_evgenius | 7:8 | 5:💨 | 7:5 | 11:4 | 11:0"
-    },
-    {
-      "FullLog": "⚡🏆🧑✨ verdoga 31:24 🧑👁️ razendx | 11:12 | 10:12 | 10:0"
-    },
-    {
-      "FullLog": "⚡🏆🧑🛡️ ded_evgenius 32:14 🧑🌿 koldyn_n | 7:💨 | 7:4 | 3:💨 | 6:5 | 5:5 | 4:0"
-    },
-    {
-      "FullLog": "🏆🧝🪓 tkm228 30:20 ⚡🐱📿 lena_segorek2 | 8:💨 | 6:💨 | 💨:9 | 6:8 | 💨:4 | 💨:9"
-    },
     {
       "FullLog": "⚡🏆🧑🎸 bloodedfuf 28:10 🧑👁️ razendx | 8:❌ | 8:10 | 12:0"
     },
@@ -2313,6 +2295,24 @@
     },
     {
       "FullLog": "⚡🏆💀✝️ stories___ 24:9 🧝✨ timateslaa | 💥16:9 | 8:0"
+    },
+    {
+      "FullLog": "⚡🏆🐱🏹 Rattge 31:20 🧑🌿 not__kolya | 8:5 | 5:8 | 💨:💨 | 8:7 | 10:0"
+    },
+    {
+      "FullLog": "🏆💀✝️ stories___ 34:22 ⚡👹🔮 ashen_di | 6:7 | 10:9 | 6:💥18"
+    },
+    {
+      "FullLog": "🏆👹✝️ sirlarson 23:20 ⚡💀⚙️ snorlax47 | 10:💥12 | 10:5 | 💨:6"
+    },
+    {
+      "FullLog": "⚡🧑🛡️ ded_evgenius 18:42 🏆🧑🎸 bloodedfuf | 4:5 | 💨:💨 | 💨:10 | 5:6 | 3:3 | 💨:4 | 💨:❌ | 💨:3 | 6:11"
+    },
+    {
+      "FullLog": "🐱👁️ rvotaenota 20:35 ⚡🏆👹🔮 s1lent071 | 6:8 | 10:❌ | 7:12 | 12:0"
+    },
+    {
+      "FullLog": "🏆👹✝️ sirlarson 29:25 ⚡💀🗡️ velitar_flame | 8:9 | 5:10 | 12:10"
     }
   ],
   "heroArchive": {
