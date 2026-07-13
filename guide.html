@@ -264,142 +264,133 @@
                 </div>
             </div>
 
-            <!-- Шаг 5: Бездна Разлома -->
-            <div class="path-step step-dungeon" id="step-dungeon">
-                <div class="step-number">Шаг 5</div>
-                <div class="step-title">🐲 Бездна Разлома</div>
-                <div class="step-desc">
-                    <p>PvE-режим. <code>!данж</code> — бесконечные волны монстров. Каждая 5-я — <strong>босс</strong>. <span style="color:var(--red);">💀 Смерть перманентна для забега.</span></p>
+			<!-- Шаг 5: Бездна Разлома -->
+			<div class="path-step step-dungeon" id="step-dungeon">
+				<div class="step-number">Шаг 5</div>
+				<div class="step-title">🐲 Бездна Разлома</div>
+				<div class="step-desc">
+					<p>PvE-режим. <code>!данж</code> — бесконечные волны монстров. Каждая 5-я — <strong>босс</strong>. <span style="color:var(--red);">💀 Смерть перманентна для забега.</span></p>
 
-                    <div class="mech-grid">
-                        <div class="mech-card"><div class="mech-title">🚪 Вход</div><div class="mech-body">Случайная пассивка + случайный фамильяр.</div></div>
-                        <div class="mech-card"><div class="mech-title">🌊 Волны</div><div class="mech-body">Бесконечные. Каждая 5-я — <span class="highlight">босс</span> (HP×1.5, ATK+2, DEF+1).</div></div>
-                        <div class="mech-card"><div class="mech-title">💚 Отхил</div><div class="mech-body">14 + волна×2 HP. После босса — полный отхил.</div></div>
-                        <div class="mech-card"><div class="mech-title">🎲 Артефакты</div><div class="mech-body">35% после волны, 70% после босса. +2 к статам.</div></div>
-                        <div class="mech-card"><div class="mech-title">💰 Награда</div><div class="mech-body">+1💎 за 3 волны. Босс: 1–3 трофея фракции.</div></div>
-                        <div class="mech-card"><div class="mech-title">💀 Смерть</div><div class="mech-body">HP = 0 → конец забега. Рекорд сохраняется.</div></div>
-                    </div>
+					<!-- МЕХАНИКИ -->
+					<div class="mech-grid">
+						<div class="mech-card"><div class="mech-title">🚪 Вход</div><div class="mech-body">Случайная пассивка + случайный фамильяр.</div></div>
+						<div class="mech-card"><div class="mech-title">🌊 Волны</div><div class="mech-body">Бесконечные. Каждая 5-я — <span class="highlight">босс</span> (HP×1.5, ATK+2, DEF+1).</div></div>
+						<div class="mech-card"><div class="mech-title">💚 Отхил</div><div class="mech-body">14 + волна×2 HP. После босса — полный отхил.</div></div>
+						<div class="mech-card"><div class="mech-title">🎲 Артефакты</div><div class="mech-body">35% после волны, 70% после босса. +2 к статам.</div></div>
+						<div class="mech-card"><div class="mech-title">💰 Награда</div><div class="mech-body">+1💎 за 3 волны. Босс: 1–3 трофея фракции.</div></div>
+						<div class="mech-card"><div class="mech-title">💀 Смерть</div><div class="mech-body">HP = 0 → конец забега. Рекорд сохраняется.</div></div>
+					</div>
 
-                    <h3>🌿 Пассивки (12)</h3>
-                    <div class="passive-grid-4">
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--red);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">🩸</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Вампиризм</div>
-                            <div style="color:var(--muted);line-height:1.3;">+8 HP к лечению после каждой волны</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--green);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">✨</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Благословение</div>
-                            <div style="color:var(--muted);line-height:1.3;">+15% к шансу найти артефакт</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--ice);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">💫</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Сияние</div>
-                            <div style="color:var(--muted);line-height:1.3;">Боссы выходят с −30% HP</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--blue);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">💚</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Стойкость</div>
-                            <div style="color:var(--muted);line-height:1.3;">+3 DEF на весь забег</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--purple);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">🔮</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Отражение</div>
-                            <div style="color:var(--muted);line-height:1.3;">30% шанс вернуть половину урона врагу</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--red);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">💥</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Жажда крови</div>
-                            <div style="color:var(--muted);line-height:1.3;">Крит = три броска урона вместо двух</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--gold);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">⚔️</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Святая ярость</div>
-                            <div style="color:var(--muted);line-height:1.3;">+4 урона по боссам</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--purple);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">🧿</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Амулет Раскола</div>
-                            <div style="color:var(--muted);line-height:1.3;">Каждый 3-й удар +50% урона</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--orange);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">💢</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Накопленная ярость</div>
-                            <div style="color:var(--muted);line-height:1.3;">Потерял HP → бьёшь сильнее</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--gold);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">🎯</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Метка Охотника</div>
-                            <div style="color:var(--muted);line-height:1.3;">Первый удар в волне — двойной урон</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--blue);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">👻</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Призрачный щит</div>
-                            <div style="color:var(--muted);line-height:1.3;">25% шанс избежать урона полностью</div>
-                        </div>
-                        <div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--red);">
-                            <div style="font-size:1.3rem;margin-bottom:4px;">🗡️</div>
-                            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">Казнь</div>
-                            <div style="color:var(--muted);line-height:1.3;">Добивание при HP врага < 30%</div>
-                        </div>
-                    </div>
+					<!-- ПАССИВКИ -->
+					<h3>🌿 Пассивки (12)</h3>
+					<div class="passive-grid-4">
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--red);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">🩸</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Вампиризм</div><div style="color:var(--muted);line-height:1.3;">+8 HP к лечению после каждой волны</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--green);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">✨</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Благословение</div><div style="color:var(--muted);line-height:1.3;">+15% к шансу найти артефакт</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--ice);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">💫</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Сияние</div><div style="color:var(--muted);line-height:1.3;">Боссы выходят с −30% HP</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--blue);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">💚</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Стойкость</div><div style="color:var(--muted);line-height:1.3;">+3 DEF на весь забег</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--purple);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">🔮</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Отражение</div><div style="color:var(--muted);line-height:1.3;">30% шанс вернуть половину урона врагу</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--red);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">💥</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Жажда крови</div><div style="color:var(--muted);line-height:1.3;">Крит = три броска урона вместо двух</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--gold);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">⚔️</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Святая ярость</div><div style="color:var(--muted);line-height:1.3;">+4 урона по боссам</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--purple);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">🧿</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Амулет Раскола</div><div style="color:var(--muted);line-height:1.3;">Каждый 3-й удар +50% урона</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--orange);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">💢</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Накопленная ярость</div><div style="color:var(--muted);line-height:1.3;">Потерял HP → бьёшь сильнее</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--gold);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">🎯</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Метка Охотника</div><div style="color:var(--muted);line-height:1.3;">Первый удар в волне — двойной урон</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--blue);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">👻</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Призрачный щит</div><div style="color:var(--muted);line-height:1.3;">25% шанс избежать урона полностью</div>
+						</div>
+						<div style="background:var(--elevated);border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid var(--red);">
+							<div style="font-size:1.3rem;margin-bottom:4px;">🗡️</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;">Казнь</div><div style="color:var(--muted);line-height:1.3;">Добивание при HP врага < 30%</div>
+						</div>
+					</div>
 
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
-                        <div>
-                            <h3>🐾 Фамильяры (6)</h3>
-                            <div class="table-container"><table>
-                                <thead><tr><th>Бонус</th><th>Питомцы</th></tr></thead>
-                                <tbody>
-                                    <tr><td>+1 ATK</td><td>🐺 Волк, 🐱 Кот</td></tr>
-                                    <tr><td>+1 DEX</td><td>🦅 Орёл, 🦊 Лиса</td></tr>
-                                    <tr><td>+1 MIN</td><td>🐍 Змея, 🦝 Енот</td></tr>
-                                    <tr><td>+1 MAX</td><td>🐲 Дракончик, 🦉 Сова</td></tr>
-                                    <tr><td>+1 DEF</td><td>🐢 Черепаха, 🦀 Краб</td></tr>
-                                    <tr><td>+2 HP</td><td>🐻 Медведь, 🐗 Кабан</td></tr>
-                                </tbody>
-                            </table></div>
-                        </div>
-                        <div>
-                            <h3>🎲 Артефакты (6)</h3>
-                            <div class="table-container"><table>
-                                <thead><tr><th>Артефакт</th><th>Эффект</th></tr></thead>
-                                <tbody>
-                                    <tr><td>☀️ Осколок Клинка</td><td>+2 ATK, +2 DEX</td></tr>
-                                    <tr><td>🌫️ Плащ Повеств.</td><td>+2 DEF, +2 MAX</td></tr>
-                                    <tr><td>💍 Кольцо Аэлиона</td><td>+2 ATK, +2 DEF</td></tr>
-                                    <tr><td>🔮 Руна Раскола</td><td>+2 MIN, +2 MAX</td></tr>
-                                    <tr><td>🍺 Пиво ГуангГуанга</td><td>+20 HP</td></tr>
-                                    <tr><td>💀 Проклятие Бездны</td><td>-1 к случайной хар-ке</td></tr>
-                                </tbody>
-                            </table></div>
-                        </div>
-                    </div>
+					<!-- ФАМИЛЬЯРЫ + АРТЕФАКТЫ -->
+					<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+						<div>
+							<h3>🐾 Фамильяры (6)</h3>
+							<div class="table-container"><table>
+								<thead><tr><th>Бонус</th><th>Питомцы</th></tr></thead>
+								<tbody>
+									<tr><td>+1 ATK</td><td>🐺 Волк, 🐱 Кот</td></tr>
+									<tr><td>+1 DEX</td><td>🦅 Орёл, 🦊 Лиса</td></tr>
+									<tr><td>+1 MIN</td><td>🐍 Змея, 🦝 Енот</td></tr>
+									<tr><td>+1 MAX</td><td>🐲 Дракончик, 🦉 Сова</td></tr>
+									<tr><td>+1 DEF</td><td>🐢 Черепаха, 🦀 Краб</td></tr>
+									<tr><td>+2 HP</td><td>🐻 Медведь, 🐗 Кабан</td></tr>
+								</tbody>
+							</table></div>
+						</div>
+						<div>
+							<h3>🎲 Артефакты (6)</h3>
+							<div class="table-container"><table>
+								<thead><tr><th>Артефакт</th><th>Эффект</th></tr></thead>
+								<tbody>
+									<tr><td>☀️ Осколок Клинка</td><td>+2 ATK, +2 DEX</td></tr>
+									<tr><td>🌫️ Плащ Повеств.</td><td>+2 DEF, +2 MAX</td></tr>
+									<tr><td>💍 Кольцо Аэлиона</td><td>+2 ATK, +2 DEF</td></tr>
+									<tr><td>🔮 Руна Раскола</td><td>+2 MIN, +2 MAX</td></tr>
+									<tr><td>🍺 Пиво ГуангГуанга</td><td>+20 HP</td></tr>
+									<tr><td>💀 Проклятие Бездны</td><td>−1 к случайной хар-ке</td></tr>
+								</tbody>
+							</table></div>
+						</div>
+					</div>
 
+					<!-- СТАТЫ МОБОВ -->
 					<h3>🐉 Статы мобов</h3>
-					<p style="font-size:0.75rem;color:var(--sub);">
-						HP = 15 + волна×8 (+ (волна-5)×5 после 5 волны) ± 20%<br>
-						ATK = 1 + волна/3, DEF = волна/5<br>
-						Босс: HP×1.5, ATK+2, DEF+1
-					</p>
-					<div class="table-container"><table>
-						<thead><tr><th>Волны</th><th>HP</th><th>ATK</th><th>DEF</th></tr></thead>
-						<tbody>
-							<tr><td>1–4</td><td>18–56</td><td>1–2</td><td>0</td></tr>
-							<tr class="boss-row"><td><strong>5 🐉</strong></td><td><strong>65–98</strong></td><td><strong>4</strong></td><td><strong>2</strong></td></tr>
-							<tr><td>6–9</td><td>54–128</td><td>3–4</td><td>1</td></tr>
-							<tr class="boss-row"><td><strong>10 🐉</strong></td><td><strong>144–216</strong></td><td><strong>6</strong></td><td><strong>3</strong></td></tr>
-							<tr><td>11–14</td><td>106–206</td><td>4–5</td><td>2</td></tr>
-							<tr class="boss-row"><td><strong>15 🐉</strong></td><td><strong>221–332</strong></td><td><strong>8</strong></td><td><strong>4</strong></td></tr>
-							<tr><td>16–19</td><td>158–282</td><td>6–7</td><td>3</td></tr>
-							<tr class="boss-row"><td><strong>20 🐉</strong></td><td><strong>300–450</strong></td><td><strong>9</strong></td><td><strong>5</strong></td></tr>
-							<tr><td>21–24</td><td>210–360</td><td>8–9</td><td>4</td></tr>
-							<tr class="boss-row"><td><strong>25 🐉</strong></td><td><strong>377–566</strong></td><td><strong>11</strong></td><td><strong>6</strong></td></tr>
-							<tr><td>26–29</td><td>262–447</td><td>9–10</td><td>5</td></tr>
-							<tr class="boss-row"><td><strong>30 🐉</strong></td><td><strong>497–746</strong></td><td><strong>13</strong></td><td><strong>7</strong></td></tr>
-						</tbody>
-					</table></div>
-                </div>
-            </div>
+					<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
+						<div>
+							<h4 style="color:var(--gold);font-size:.8rem;margin-bottom:8px">📐 Формулы</h4>
+							<div style="background:var(--elevated);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);font-size:.75rem;color:var(--sub);line-height:2">
+								<div>❤️ <strong>HP</strong> = (15 + волна×8) ± 20%</div>
+								<div style="color:var(--muted);font-size:.68rem;margin-left:16px">после 5 волны + (волна−5)×5</div>
+								<div>⚔️ <strong>ATK</strong> = 1 + волна/3</div>
+								<div>🛡️ <strong>DEF</strong> = волна/5</div>
+								<div style="margin-top:10px;padding:10px;background:rgba(232,93,58,.08);border-radius:8px;border:1px solid rgba(232,93,58,.2)">
+									<div style="color:var(--red);font-weight:700;margin-bottom:4px">🐉 БОСС (каждая 5-я волна)</div>
+									<div style="font-size:.7rem;color:var(--sub)">HP ×1.5 &nbsp;·&nbsp; ATK +2 &nbsp;·&nbsp; DEF +1</div>
+								</div>
+							</div>
+						</div>
+						<div>
+							<h4 style="color:var(--gold);font-size:.8rem;margin-bottom:8px">📊 Боссы по волнам</h4>
+							<div class="table-container"><table style="font-size:.72rem;min-width:auto">
+								<thead><tr><th>🐉</th><th>❤️ HP</th><th>⚔️ ATK</th><th>🛡️ DEF</th></tr></thead>
+								<tbody>
+									<tr><td><strong>5</strong></td><td>65–98</td><td>4</td><td>2</td></tr>
+									<tr><td><strong>10</strong></td><td>144–216</td><td>6</td><td>3</td></tr>
+									<tr><td><strong>15</strong></td><td>221–332</td><td>8</td><td>4</td></tr>
+									<tr><td><strong>20</strong></td><td>300–450</td><td>9</td><td>5</td></tr>
+									<tr><td><strong>25</strong></td><td>377–566</td><td>11</td><td>6</td></tr>
+									<tr><td><strong>30</strong></td><td>497–746</td><td>13</td><td>7</td></tr>
+									<tr><td><strong>35</strong></td><td>617–922</td><td>14</td><td>8</td></tr>
+								</tbody>
+							</table></div>
+							<div style="font-size:.62rem;color:var(--muted);margin-top:6px;text-align:center;font-style:italic">
+								Обычные мобы: статы как у предыдущего босса, HP по формуле
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
             <!-- Шаг 6: Гримуар -->
             <div class="path-step" id="step-grimoire">
