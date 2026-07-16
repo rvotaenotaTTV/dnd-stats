@@ -413,19 +413,38 @@
             </div>
         </div>
 
-        <!-- Земли под контролем -->
-        <div class="section gold" id="territory-section">
-            <div class="section-title">🗺️ Земли под контролем</div>
-            <p style="color:var(--sub);font-size:.85rem;margin-bottom:12px">
-                Семь земель Этерниса. Сияющий Шпиль и Зал Повествователя непоколебимы. Остальные земли переходят из рук в руки — дуэли решают всё. Данные обновляются автоматически.
-            </p>
-            <div class="territory-grid" id="territoryGrid">
-                <div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px">Загрузка данных...</div>
-            </div>
-            <p style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:center">
-                🟡 = Свет &nbsp;|&nbsp; 🟣 = Тьма &nbsp;|&nbsp; 🔵 = Нейтральная / Вольная
-            </p>
-        </div>
+		<!-- Земли под контролем -->
+		<div class="section gold" id="territory-section">
+			<div class="section-title">🗺️ Земли под контролем</div>
+			
+			<!-- Вечные цитадели -->
+			<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+				<div style="background:linear-gradient(160deg,var(--elevated),rgba(240,185,11,.04));border:1px solid rgba(240,185,11,.25);border-radius:var(--radius-sm);padding:16px;text-align:center">
+					<div style="font-size:1.5rem;margin-bottom:4px">✨</div>
+					<div style="font-weight:700;color:var(--gold);font-size:.85rem">Сияющий Шпиль</div>
+					<div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Вечно за Светом</div>
+					<div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё тёплый.</div>
+				</div>
+				<div style="background:linear-gradient(160deg,var(--elevated),rgba(163,113,247,.04));border:1px solid rgba(163,113,247,.25);border-radius:var(--radius-sm);padding:16px;text-align:center">
+					<div style="font-size:1.5rem;margin-bottom:4px">🌫️</div>
+					<div style="font-weight:700;color:var(--purple);font-size:.85rem">Зал Повествователя</div>
+					<div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Вечно за Тьмой</div>
+					<div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</div>
+				</div>
+			</div>
+
+			<p style="color:var(--sub);font-size:.78rem;margin-bottom:14px;text-align:center">
+				Остальные земли переходят из рук в руки — дуэли решают всё.
+			</p>
+
+			<!-- Спорные территории -->
+			<div class="territory-grid" id="territoryGrid">
+				<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px">Загрузка данных...</div>
+			</div>
+			<p style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:center">
+				🟡 = Свет &nbsp;|&nbsp; 🟣 = Тьма &nbsp;|&nbsp; 🔵 = Вольная
+			</p>
+		</div>
 
         <!-- Герои и осколки -->
         <div class="section gold">
@@ -624,13 +643,12 @@
 
 		// === ЗЕМЛИ ПОД КОНТРОЛЕМ ===
 		const territoryData = [
-			{ jsonKey: '✨ Сияющий Шпиль',   icon: '✨', name: 'Сияющий Шпиль',       lore: 'Цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё тёплый.', defaultControl: 'light' },
-			{ jsonKey: '🌫️ Зал Повествователя', icon: '🌫️', name: 'Зал Повествователя',  lore: 'Тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.', defaultControl: 'dark' },
 			{ jsonKey: '🎭 Арена Тысячи Эхо',  icon: '🎭', name: 'Арена Тысячи Эхо',    lore: 'Легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.', defaultControl: 'neutral' },
 			{ jsonKey: '🌑 Эпицентр Раскола',  icon: '🌑', name: 'Эпицентр Раскола',    lore: 'Место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул вниз — и открыл путь в Бездну.', defaultControl: 'neutral' },
 			{ jsonKey: '🗡️ Поле Павшего Клинка', icon: '🗡️', name: 'Поле Павшего Клинка', lore: 'Земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.', defaultControl: 'neutral' },
 			{ jsonKey: '🔥 Кузня Расколотых',   icon: '🔥', name: 'Кузня Расколотых',     lore: 'Здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.', defaultControl: 'neutral' },
-			{ jsonKey: '⚓ Порт Дрейфующих',    icon: '⚓', name: 'Порт Дрейфующих',      lore: 'Единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Порт не принадлежит ни Свету, ни Тьме. Здесь правят Любопытство и Случай.', defaultControl: 'neutral' }
+			{ jsonKey: '⚓ Порт Дрейфующих',    icon: '⚓', name: 'Порт Дрейфующих',      lore: 'Единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Порт не принадлежит ни Свету, ни Тьме. Здесь правят Любопытство и Случай.', defaultControl: 'neutral' },
+			//{ jsonKey: '🌌 Бездна', icon: '🌌', name: 'Бездна', lore: 'Сюда не светит солнце. Сюда не долетают молитвы. Разлом, открывшийся при падении Клинка, ведёт в мир, где время застыло, а тишина говорит громче слов. Тысячу лет Аэлион сидел здесь на троне — и стал тем, чего не понять живым. Экспедиция вернулась не полностью: что-то осталось внизу. Что-то ждёт. Те, кто спускается слишком глубоко, слышат своё имя — произнесённое голосом, которого не может быть. Вход открыт. Подземелье дышит. Арена решит, кто осмелится контролировать то, что не предназначено для контроля.', defaultControl: 'neutral' }
 		];
 
         async function loadTerritoryControl() {
