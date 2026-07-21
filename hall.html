@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
+    /* ========================================== */
+    /* СЕЗОННЫЙ ФРЕЙМ                            */
+    /* ========================================== */
     .season-frame{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;margin-bottom:20px;position:relative;overflow:hidden;animation:fadeSlideIn .4s ease}
     .season-frame::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:.6;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
     .season-frame.live{border-color:rgba(240,185,11,.4)}
@@ -19,19 +22,36 @@
     .season-badge.live{background:var(--gold);color:#000;animation:softGlow 2s ease infinite}
     @keyframes softGlow{0%,100%{box-shadow:0 0 8px rgba(240,185,11,.3)}50%{box-shadow:0 0 16px rgba(240,185,11,.6)}}
     .season-quote{background:var(--elevated);border-left:3px solid var(--gold);padding:10px 16px;margin:12px 0 20px;color:var(--sub);font-size:.85rem;font-style:italic;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+
+    /* ========================================== */
+    /* ПОДЗАГОЛОВКИ СЕКЦИЙ                        */
+    /* ========================================== */
     .section-subtitle{display:flex;align-items:center;gap:8px;color:var(--gold);font-size:.85rem;font-weight:700;margin:22px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:2px}
     .section-subtitle::before{content:'';display:inline-block;width:4px;height:16px;background:var(--gold);border-radius:2px}
-    .stats-grid{grid-template-columns:repeat(4,1fr);margin-bottom:20px}
-    .stat-card{padding:16px 12px;transition:transform .2s,box-shadow .2s}
+
+    /* ========================================== */
+    /* СТАТ-КАРТОЧКИ                              */
+    /* ========================================== */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+    .stat-card{background:var(--elevated);border-radius:var(--radius-sm);padding:16px 12px;text-align:center;border:1px solid var(--border);transition:transform .2s,box-shadow .2s}
     .stat-card:hover{transform:translateY(-2px)}
-    .stat-value{margin-bottom:2px}
+    .stat-value{font-size:1.5rem;font-weight:800;color:var(--gold);margin-bottom:2px}
+    .stat-label{color:var(--muted);font-size:0.65rem;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
     .stat-sub{color:var(--sub);font-size:.65rem;margin-top:2px}
+
+    /* ========================================== */
+    /* КОРОНА РАСКОЛА                             */
+    /* ========================================== */
     .crown-section{margin-bottom:20px}
     .crown-bar-visual{display:flex;height:40px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);margin-bottom:8px;position:relative}
     .crown-light{background:linear-gradient(90deg,rgba(240,185,11,.7),rgba(240,185,11,.4));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#000;transition:flex .5s ease;min-width:40px}
     .crown-dark{background:linear-gradient(90deg,rgba(163,113,247,.4),rgba(163,113,247,.7));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;transition:flex .5s ease;min-width:40px}
     .crown-icon-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;z-index:3;filter:drop-shadow(0 0 6px rgba(240,185,11,.8));transition:left .5s ease}
     .crown-owner{text-align:center;font-size:.8rem;color:var(--sub);font-weight:600}
+
+    /* ========================================== */
+    /* ЧЕМПИОНЫ СЕЗОНА                            */
+    /* ========================================== */
     .champion-section{background:var(--elevated);border:1px solid rgba(240,185,11,.2);border-radius:var(--radius-sm);padding:20px;margin-bottom:20px;animation:fadeSlideIn .4s ease}
     .champion-section-title{color:var(--gold);font-size:.9rem;font-weight:700;text-align:center;margin-bottom:16px;letter-spacing:2px;text-transform:uppercase}
     .champion-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -45,6 +65,10 @@
     .champ-name{color:var(--gold);font-weight:700;font-size:.85rem;word-break:break-word;margin-bottom:4px}
     .champ-crowns{display:flex;justify-content:center;align-items:center;gap:1px;font-size:.85rem;flex-wrap:wrap;max-width:100%}
     .champ-wins-text{color:var(--muted);font-size:.65rem;margin-top:2px}
+
+    /* ========================================== */
+    /* ТАБЛИЦЫ                                    */
+    /* ========================================== */
     .tables-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .table-card{background:var(--elevated);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);animation:fadeSlideIn .3s ease}
     .table-card.full-width{grid-column:span 2}
@@ -53,6 +77,10 @@
     tr.row-gold td:first-child{border-left:3px solid var(--gold)}
     tr.row-silver td:first-child{border-left:3px solid var(--silver)}
     tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
+
+    /* ========================================== */
+    /* ТАЙМЛАЙН СЕЗОНОВ                           */
+    /* ========================================== */
     .timeline-nav{display:flex;justify-content:center;gap:0;margin-bottom:30px;padding:0 20px;position:relative;overflow-x:auto}
     .timeline-nav::before{content:'';position:absolute;top:50%;left:5%;right:5%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--purple),var(--ice),transparent);z-index:0}
     .tl-item{position:relative;z-index:1;padding:8px 16px;cursor:pointer;text-align:center;transition:.3s;flex-shrink:0;min-width:60px}
@@ -62,6 +90,31 @@
     .tl-item .tl-label{font-size:.55rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;white-space:nowrap}
     .tl-item.active .tl-label{color:var(--gold);font-weight:700}
 
+    /* ========================================== */
+    /* ВКЛАДКИ                                    */
+    /* ========================================== */
+    .hall-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border)}
+    .hall-tab{padding:12px 24px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:600;font-family:inherit;transition:.2s;position:relative;border-bottom:2px solid transparent;margin-bottom:-2px}
+    .hall-tab:hover{color:var(--text)}
+    .hall-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .hall-tab-content{display:none;animation:fadeSlideIn .3s ease}
+    .hall-tab-content.active{display:block}
+
+    /* ========================================== */
+    /* ТАБЛИЦА ЗА ВСЁ ВРЕМЯ                       */
+    /* ========================================== */
+    .sortable-header{cursor:pointer;user-select:none;position:relative;padding-right:18px}
+    .sortable-header:hover{color:var(--gold)}
+    .sortable-header::after{content:' ↕';position:absolute;right:4px;opacity:0.4;font-size:0.7rem}
+    .sortable-header.asc::after{content:' ↑';opacity:1;color:var(--gold)}
+    .sortable-header.desc::after{content:' ↓';opacity:1;color:var(--gold)}
+    .search-input{padding:10px 16px;background:var(--elevated);border:1px solid var(--border);border-radius:20px;color:var(--text);font-size:.85rem;font-family:inherit;transition:.2s;width:100%}
+    .search-input:focus{outline:none;border-color:var(--gold)}
+    .search-input::placeholder{color:var(--muted)}
+
+    /* ========================================== */
+    /* МОБИЛЬНАЯ АДАПТАЦИЯ                        */
+    /* ========================================== */
     @media(max-width:768px){
         .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
         .stat-value{font-size:1.3rem}
@@ -73,6 +126,7 @@
         .timeline-nav{justify-content:flex-start}
         .tl-item{padding:6px 10px;min-width:50px}
         .tl-item .tl-dot{width:30px;height:30px;font-size:.65rem}
+        .hall-tab{padding:10px 16px;font-size:.75rem}
     }
 </style>
 </head>
@@ -127,14 +181,55 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- ТАЙМЛАЙН СЕЗОНОВ -->
+        <!-- ВКЛАДКИ -->
         <!-- ========================================== -->
-        <div class="timeline-nav" id="season-tabs"></div>
+        <div class="hall-tabs">
+            <button class="hall-tab active" onclick="switchHallTab('seasons')">🏆 По сезонам</button>
+            <button class="hall-tab" onclick="switchHallTab('alltime')">📊 За всё время</button>
+        </div>
 
         <!-- ========================================== -->
-        <!-- КОНТЕНТ СЕЗОНА -->
+        <!-- ВКЛАДКА: ЗАЛ СЛАВЫ (по сезонам) -->
         <!-- ========================================== -->
-        <div id="tab-content-container"></div>
+        <div id="hall-tab-seasons" class="hall-tab-content active">
+            <div class="timeline-nav" id="season-tabs"></div>
+            <div id="tab-content-container"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ВКЛАДКА: ЗА ВСЁ ВРЕМЯ -->
+        <!-- ========================================== -->
+        <div id="hall-tab-alltime" class="hall-tab-content">
+            <div class="section gold" id="total-stats-section">
+                <div class="section-title">📊 За всё время</div>
+                <div style="margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap" id="total-summary"></div>
+                <div style="margin-bottom:16px">
+                    <input type="text" class="search-input" id="totalSearch" placeholder="🔍 Найти игрока..." oninput="filterTotalTable()" style="max-width:320px">
+                </div>
+                <div class="table-container" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+                    <table id="total-table" style="min-width:750px">
+                        <thead>
+                            <tr>
+                                <th class="sortable-header" data-sort="display">Игрок</th>
+                                <th class="sortable-header" data-sort="wins">⚔️</th>
+                                <th class="sortable-header" data-sort="losses">💀</th>
+                                <th class="sortable-header" data-sort="winrate">WR</th>
+                                <th class="sortable-header" data-sort="fights">Боёв</th>
+                                <th class="sortable-header" data-sort="best">🔥</th>
+                                <th class="sortable-header" data-sort="shards">💎</th>
+                                <th class="sortable-header" data-sort="tournaments">👑</th>
+                                <th class="sortable-header" data-sort="dungeonRecord">🏔</th>
+                                <th class="sortable-header" data-sort="dungeonWaves">🌊</th>
+                                <th class="sortable-header" data-sort="dungeonBosses">🐉</th>
+                            </tr>
+                        </thead>
+                        <tbody id="total-table-body">
+                            <tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Загрузка...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -174,7 +269,6 @@ document.querySelectorAll('.nav-link').forEach(l => {
 // ==========================================
 const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 const ARCHIVE_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
-//const ARCHIVE_BASE = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_';
 const SEASON_ICONS = ['🏁','🔥','💫','🩸','🕯️'];
 const SEASON_SUBTITLES = ['Первые дуэли. Рождение Арены.','Эра Раскола.','Время перемен.','Кровь Бездны.','Экспедиция.'];
 
@@ -182,6 +276,7 @@ let currentSeasonNum = -1;
 let seasonTabs = [];
 let activeSeason = -1;
 let dungeonPlayers = {};
+let totalPlayersData = [];
 
 // ==========================================
 // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
@@ -191,6 +286,18 @@ function getRankClass(index) {
     if (index === 1) return 'row-silver';
     if (index === 2) return 'row-bronze';
     return '';
+}
+
+function switchHallTab(tab) {
+    document.querySelectorAll('.hall-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.hall-tab-content').forEach(c => c.classList.remove('active'));
+    if (tab === 'seasons') {
+        document.querySelector('.hall-tab:nth-child(1)').classList.add('active');
+        document.getElementById('hall-tab-seasons').classList.add('active');
+    } else {
+        document.querySelector('.hall-tab:nth-child(2)').classList.add('active');
+        document.getElementById('hall-tab-alltime').classList.add('active');
+    }
 }
 
 // ==========================================
@@ -421,7 +528,208 @@ function renderSeason(data, seasonNum, isCurrent) {
 }
 
 // ==========================================
-// ТАЙМЛАЙН
+// ТОТАЛЬНАЯ СТАТИСТИКА ЗА ВСЕ СЕЗОНЫ
+// ==========================================
+async function loadTotalStats() {
+    const tbody = document.getElementById('total-table-body');
+    const summary = document.getElementById('total-summary');
+    if (!tbody) return;
+
+    const aggregated = {};
+
+    function addPlayer(p, dp) {
+        const key = p.display;
+        if (!key) return;
+        if (!aggregated[key]) {
+            aggregated[key] = {
+                display: key,
+                wins: 0, losses: 0, best: 0, shards: 0,
+                tournaments: 0,
+                dungeonRecord: 0, dungeonWaves: 0, dungeonBosses: 0,
+                fights: 0, winrate: 0
+            };
+        }
+        const a = aggregated[key];
+        a.wins += p.wins || 0;
+        a.losses += p.losses || 0;
+        a.best = Math.max(a.best, p.best || 0);
+        a.shards += p.shards || 0;
+        a.tournaments += p.tournamentWins || 0;
+        if (dp) {
+            a.dungeonRecord = Math.max(a.dungeonRecord, dp.record || 0);
+            a.dungeonWaves += dp.totalWaves || 0;
+            a.dungeonBosses += dp.bosses || 0;
+        }
+    }
+
+    // Текущий сезон
+    try {
+        const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json());
+        (d.players || []).forEach(p => {
+            const dp = d.dungeon?.players?.[p.display];
+            addPlayer(p, dp);
+        });
+    } catch (e) {}
+
+    // Архивные сезоны
+    for (let n = 0; n < 20; n++) {
+        try {
+            const r = await fetch(`${ARCHIVE_BASE}${n}.json`);
+            if (!r.ok) break;
+            const d = await r.json();
+            (d.players || []).forEach(p => {
+                const dp = d.dungeon?.players?.[p.display];
+                addPlayer(p, dp);
+            });
+        } catch (e) { break; }
+    }
+
+    totalPlayersData = Object.values(aggregated).map(p => {
+        p.fights = p.wins + p.losses;
+        p.winrate = p.fights > 0 ? parseFloat((p.wins * 100 / p.fights).toFixed(1)) : 0;
+        return p;
+    });
+
+    if (totalPlayersData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Нет данных</td></tr>';
+        return;
+    }
+
+    totalPlayersData.sort((a, b) => b.wins - a.wins);
+
+    // Сводка
+    const totalWins = totalPlayersData.reduce((s, p) => s + p.wins, 0);
+    const totalLosses = totalPlayersData.reduce((s, p) => s + p.losses, 0);
+    const totalFightsAll = Math.floor((totalWins + totalLosses) / 2);
+    const totalShardsAll = totalPlayersData.reduce((s, p) => s + p.shards, 0);
+    const totalTournamentsAll = totalPlayersData.reduce((s, p) => s + p.tournaments, 0);
+    const totalDungeonWavesAll = totalPlayersData.reduce((s, p) => s + p.dungeonWaves, 0);
+    const totalDungeonBossesAll = totalPlayersData.reduce((s, p) => s + p.dungeonBosses, 0);
+
+    summary.innerHTML = `
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalPlayersData.length}</div>
+            <div style="font-size:0.6rem;color:var(--muted)">👥 Игроков</div>
+        </div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalFightsAll}</div>
+            <div style="font-size:0.6rem;color:var(--muted)">⚔️ Боёв</div>
+        </div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalShardsAll.toLocaleString()}</div>
+            <div style="font-size:0.6rem;color:var(--muted)">💎 Осколков</div>
+        </div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalTournamentsAll}</div>
+            <div style="font-size:0.6rem;color:var(--muted)">👑 Турниров</div>
+        </div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalDungeonWavesAll.toLocaleString()}</div>
+            <div style="font-size:0.6rem;color:var(--muted)">🌊 Волн данжа</div>
+        </div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalDungeonBossesAll.toLocaleString()}</div>
+            <div style="font-size:0.6rem;color:var(--muted)">🐉 Боссов</div>
+        </div>
+    `;
+
+    renderTotalTableFromSorted();
+    initTotalSortable();
+}
+
+// ==========================================
+// ТАБЛИЦА «ЗА ВСЁ ВРЕМЯ»
+// ==========================================
+function filterTotalTable() {
+    const query = document.getElementById('totalSearch').value.toLowerCase().trim();
+    const tbody = document.getElementById('total-table-body');
+    if (!tbody || !totalPlayersData.length) return;
+    if (!query) { renderTotalTableFromSorted(); return; }
+    const filtered = totalPlayersData.filter(p => p.display.toLowerCase().includes(query));
+    if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Никого не найдено</td></tr>';
+        return;
+    }
+    tbody.innerHTML = filtered.map((p, i) => {
+        const wrColor = p.winrate >= 55 ? 'var(--green)' : p.winrate >= 45 ? 'var(--gold)' : 'var(--red)';
+        return `<tr class="${i === 0 ? 'row-gold' : i === 1 ? 'row-silver' : i === 2 ? 'row-bronze' : ''}">
+            <td>${p.display}</td>
+            <td class="number">${p.wins}</td>
+            <td class="number">${p.losses}</td>
+            <td class="number" style="color:${wrColor};font-weight:700">${p.winrate}%</td>
+            <td class="number">${p.fights}</td>
+            <td class="number">${p.best}</td>
+            <td class="number">${p.shards}</td>
+            <td class="number">${p.tournaments}</td>
+            <td class="number">${p.dungeonRecord || '—'}</td>
+            <td class="number">${p.dungeonWaves || '—'}</td>
+            <td class="number">${p.dungeonBosses || '—'}</td>
+        </tr>`;
+    }).join('');
+}
+
+function renderTotalTableFromSorted() {
+    const tbody = document.getElementById('total-table-body');
+    if (!tbody || !totalPlayersData.length) return;
+    const query = document.getElementById('totalSearch').value.toLowerCase().trim();
+    const data = query ? totalPlayersData.filter(p => p.display.toLowerCase().includes(query)) : totalPlayersData;
+    if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Никого не найдено</td></tr>';
+        return;
+    }
+    tbody.innerHTML = data.map((p, i) => {
+        const wrColor = p.winrate >= 55 ? 'var(--green)' : p.winrate >= 45 ? 'var(--gold)' : 'var(--red)';
+        return `<tr class="${i === 0 ? 'row-gold' : i === 1 ? 'row-silver' : i === 2 ? 'row-bronze' : ''}">
+            <td>${p.display}</td>
+            <td class="number">${p.wins}</td>
+            <td class="number">${p.losses}</td>
+            <td class="number" style="color:${wrColor};font-weight:700">${p.winrate}%</td>
+            <td class="number">${p.fights}</td>
+            <td class="number">${p.best}</td>
+            <td class="number">${p.shards}</td>
+            <td class="number">${p.tournaments}</td>
+            <td class="number">${p.dungeonRecord || '—'}</td>
+            <td class="number">${p.dungeonWaves || '—'}</td>
+            <td class="number">${p.dungeonBosses || '—'}</td>
+        </tr>`;
+    }).join('');
+}
+
+function initTotalSortable() {
+    const table = document.getElementById('total-table');
+    if (!table) return;
+    const headers = table.querySelectorAll('.sortable-header');
+    let currentSort = 'wins';
+    let currentDir = 'desc';
+
+    headers.forEach(th => {
+        th.addEventListener('click', () => {
+            const sortBy = th.dataset.sort;
+            headers.forEach(h => h.classList.remove('asc', 'desc'));
+            if (currentSort === sortBy) {
+                currentDir = currentDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort = sortBy;
+                currentDir = 'desc';
+            }
+            th.classList.add(currentDir);
+            if (sortBy === 'display') {
+                totalPlayersData.sort((a, b) => currentDir === 'asc' ? a.display.localeCompare(b.display) : b.display.localeCompare(a.display));
+            } else if (sortBy === 'winrate') {
+                totalPlayersData.sort((a, b) => currentDir === 'asc' ? a.winrate - b.winrate : b.winrate - a.winrate);
+            } else {
+                totalPlayersData.sort((a, b) => currentDir === 'asc' ? (a[sortBy] || 0) - (b[sortBy] || 0) : (b[sortBy] || 0) - (a[sortBy] || 0));
+            }
+            filterTotalTable();
+        });
+    });
+
+    const defaultHeader = table.querySelector('[data-sort="wins"]');
+    if (defaultHeader) defaultHeader.classList.add('desc');
+}
+
+// ==========================================
+// ТАЙМЛАЙН СЕЗОНОВ
 // ==========================================
 function renderTimeline() {
     const container = document.getElementById('season-tabs');
@@ -439,9 +747,8 @@ function switchSeason(sn) {
     if (sn === activeSeason) return;
     activeSeason = sn;
     renderTimeline();
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    const tabId = `tab-s${sn}`;
-    document.getElementById(tabId).classList.add('active');
+    document.querySelectorAll('#hall-tab-seasons .tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(`tab-s${sn}`).classList.add('active');
 }
 
 // ==========================================
@@ -454,9 +761,7 @@ async function detectSeasons() {
             const r = await fetch(`${ARCHIVE_BASE}${n}.json`);
             if (!r.ok) break;
             foundSeasons.push(n);
-        } catch (e) {
-            break;
-        }
+        } catch (e) { break; }
     }
 
     currentSeasonNum = foundSeasons.length;
@@ -527,6 +832,7 @@ document.querySelectorAll('.nav-label').forEach(label => {
 // ЗАПУСК
 // ==========================================
 detectSeasons();
+loadTotalStats();
 </script>
 </body>
 </html>
