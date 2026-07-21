@@ -103,14 +103,32 @@
     /* ========================================== */
     /* ТАБЛИЦА ЗА ВСЁ ВРЕМЯ                       */
     /* ========================================== */
-    .sortable-header{cursor:pointer;user-select:none;position:relative;padding-right:18px}
+    .sortable-header{cursor:pointer;user-select:none;position:relative;padding-right:18px;transition:color .2s}
     .sortable-header:hover{color:var(--gold)}
     .sortable-header::after{content:' ↕';position:absolute;right:4px;opacity:0.4;font-size:0.7rem}
     .sortable-header.asc::after{content:' ↑';opacity:1;color:var(--gold)}
     .sortable-header.desc::after{content:' ↓';opacity:1;color:var(--gold)}
-    .search-input{padding:10px 16px;background:var(--elevated);border:1px solid var(--border);border-radius:20px;color:var(--text);font-size:.85rem;font-family:inherit;transition:.2s;width:100%}
-    .search-input:focus{outline:none;border-color:var(--gold)}
+    .search-row{display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+    .search-input{padding:10px 16px;background:var(--elevated);border:1px solid var(--border);border-radius:20px;color:var(--text);font-size:.85rem;font-family:inherit;transition:.2s;width:100%;max-width:340px}
+    .search-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,185,11,0.1)}
     .search-input::placeholder{color:var(--muted)}
+    .search-clear{background:var(--elevated);border:1px solid var(--border);color:var(--sub);padding:8px 14px;border-radius:20px;cursor:pointer;font-size:.75rem;font-family:inherit;transition:.2s;white-space:nowrap}
+    .search-clear:hover{border-color:var(--gold);color:var(--gold)}
+
+    /* Стили строк таблицы */
+    #total-table tbody tr{transition:background .2s}
+    #total-table tbody tr:hover{background:var(--card)}
+    #total-table tbody tr.row-gold{background:rgba(240,185,11,0.06)}
+    #total-table tbody tr.row-gold:hover{background:rgba(240,185,11,0.12)}
+    #total-table tbody tr.row-silver{background:rgba(192,192,192,0.04)}
+    #total-table tbody tr.row-silver:hover{background:rgba(192,192,192,0.1)}
+    #total-table tbody tr.row-bronze{background:rgba(205,127,50,0.04)}
+    #total-table tbody tr.row-bronze:hover{background:rgba(205,127,50,0.1)}
+    #total-table tbody td{padding:10px 12px;font-size:0.82rem}
+    #total-table tbody td.number{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+    #total-table thead th{position:sticky;top:0;background:var(--elevated);z-index:2;padding:10px 12px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px}
+    .player-link{color:var(--gold);text-decoration:none;font-weight:600;transition:color .2s}
+    .player-link:hover{color:var(--text);text-decoration:underline}
 
     /* ========================================== */
     /* МОБИЛЬНАЯ АДАПТАЦИЯ                        */
@@ -127,6 +145,10 @@
         .tl-item{padding:6px 10px;min-width:50px}
         .tl-item .tl-dot{width:30px;height:30px;font-size:.65rem}
         .hall-tab{padding:10px 16px;font-size:.75rem}
+        .search-row{flex-direction:column;align-items:stretch}
+        .search-input{max-width:100%}
+        #total-table thead th{font-size:0.6rem;padding:8px 6px}
+        #total-table tbody td{padding:8px 6px;font-size:0.72rem}
     }
 </style>
 </head>
@@ -202,11 +224,18 @@
         <div id="hall-tab-alltime" class="hall-tab-content">
             <div class="section gold" id="total-stats-section">
                 <div class="section-title">📊 За всё время</div>
-                <div style="margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap" id="total-summary"></div>
-                <div style="margin-bottom:16px">
-                    <input type="text" class="search-input" id="totalSearch" placeholder="🔍 Найти игрока..." oninput="filterTotalTable()" style="max-width:320px">
+                
+                <!-- Сводка -->
+                <div style="margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap" id="total-summary"></div>
+                
+                <!-- Поиск -->
+                <div class="search-row">
+                    <input type="text" class="search-input" id="totalSearch" placeholder="🔍 Найти игрока..." oninput="filterTotalTable()">
+                    <button class="search-clear" onclick="clearSearch()">✕ Сбросить</button>
                 </div>
-                <div class="table-container" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+                
+                <!-- Таблица -->
+                <div class="table-container" style="overflow-x:auto;max-height:70vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-sm)">
                     <table id="total-table" style="min-width:750px">
                         <thead>
                             <tr>
@@ -224,7 +253,10 @@
                             </tr>
                         </thead>
                         <tbody id="total-table-body">
-                            <tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Загрузка...</td></tr>
+                            <tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">
+                                <div style="font-size:2rem;margin-bottom:8px">⏳</div>
+                                <div>Загрузка данных...</div>
+                            </td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -300,11 +332,15 @@ function switchHallTab(tab) {
     }
 }
 
+function clearSearch() {
+    document.getElementById('totalSearch').value = '';
+    filterTotalTable();
+}
+
 // ==========================================
 // РЕНДЕР СЕЗОНА
 // ==========================================
 function renderSeason(data, seasonNum, isCurrent) {
-    // Данные данжа
     if (data.dungeon && data.dungeon.players) {
         dungeonPlayers = data.dungeon.players;
     } else if (isCurrent) {
@@ -314,7 +350,6 @@ function renderSeason(data, seasonNum, isCurrent) {
     const players = data.players || [];
     const heroArchive = data.heroArchive || {};
 
-    // Сезонный топ
     const seasonTop = data.seasonTop && data.seasonTop.length > 0
         ? data.seasonTop
         : [...players].filter(p => (p.skill || 0) > 0).sort((a, b) => (b.skill || 0) - (a.skill || 0));
@@ -322,9 +357,6 @@ function renderSeason(data, seasonNum, isCurrent) {
     const factionScore = data.factionScore || {};
     const territory = data.territory || (data.dungeon && data.dungeon.territory) || { light: 0, dark: 0 };
 
-    // ==========================================
-    // АРЕНА — ОБЩИЕ ЦИФРЫ
-    // ==========================================
     const totalPlayers = players.length;
     let totalFights = Math.floor(players.reduce((s, p) => s + (p.wins || 0) + (p.losses || 0), 0) / 2);
     let maxStreak = players.reduce((m, p) => (p.best || 0) > m ? (p.best || 0) : m, 0);
@@ -333,7 +365,6 @@ function renderSeason(data, seasonNum, isCurrent) {
     let maxFactionWins = players.reduce((m, p) => (p.factionWins || 0) > m ? (p.factionWins || 0) : m, 0);
     let worstStreak = players.reduce((m, p) => (p.worst || 0) > m ? (p.worst || 0) : m, 0);
 
-    // Винрейт с учётом архива
     let allForWR = [...players];
     Object.values(heroArchive).forEach(heroes => {
         heroes.forEach(h => {
@@ -353,7 +384,6 @@ function renderSeason(data, seasonNum, isCurrent) {
         });
     const maxWinrate = topWR.length > 0 ? topWR[0] : null;
 
-    // Чемпионы
     const champions = players.filter(p => (p.tournamentWins || 0) > 0).sort((a, b) => (b.tournamentWins || 0) - (a.tournamentWins || 0));
     Object.entries(heroArchive).forEach(([playerKey, heroes]) => {
         heroes.forEach(h => {
@@ -373,7 +403,6 @@ function renderSeason(data, seasonNum, isCurrent) {
     });
     champions.sort((a, b) => (b.tournamentWins || 0) - (a.tournamentWins || 0));
 
-    // Данж
     const maxDungeonBosses = players.reduce((m, p) => {
         const d = dungeonPlayers[p.display];
         return d && d.bosses > m ? d.bosses : m;
@@ -395,7 +424,6 @@ function renderSeason(data, seasonNum, isCurrent) {
         .filter(p => p.record > 0)
         .sort((a, b) => b.record - a.record || b.trophies - a.trophies);
 
-    // Фракции и территории
     const duelLight = factionScore.duelLight || 0;
     const duelDark = factionScore.duelDark || 0;
     const battleLight = factionScore.battleLight || 0;
@@ -408,14 +436,10 @@ function renderSeason(data, seasonNum, isCurrent) {
     const seasonName = `${SEASON_ICONS[seasonNum] || '📋'} Сезон ${seasonNum}`;
     const subtitle = SEASON_SUBTITLES[seasonNum] || '';
 
-    // ==========================================
-    // СБОРКА HTML
-    // ==========================================
     let html = `<div class="season-frame ${isCurrent ? 'live' : 'ended'}">`;
     html += `<div class="season-title">${seasonName} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'LIVE' : 'ЗАВЕРШЁН'}</span></div>`;
     if (subtitle) html += `<div class="season-quote">«${subtitle}»</div>`;
 
-    // --- Арена ---
     html += '<div class="section-subtitle">🏟 Арена</div><div class="stats-grid">';
     html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
     html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
@@ -431,7 +455,6 @@ function renderSeason(data, seasonNum, isCurrent) {
     if (battleLight + battleDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
     html += '</div>';
 
-    // --- Корона Раскола ---
     if (totalTerritory > 0) {
         html += '<div class="section-subtitle">👑 Корона Раскола</div><div class="crown-section">';
         html += '<div class="crown-bar-visual">';
@@ -443,7 +466,6 @@ function renderSeason(data, seasonNum, isCurrent) {
         html += '</div>';
     }
 
-    // --- Подземелье ---
     const dungeonKeys = isCurrent ? Object.keys(data.dungeon?.players || {}) : Object.keys(dungeonPlayers);
     if (dungeonKeys.length > 0) {
         html += '<div class="section-subtitle">🏔 Подземелье</div><div class="stats-grid">';
@@ -454,7 +476,6 @@ function renderSeason(data, seasonNum, isCurrent) {
         html += '</div>';
     }
 
-    // --- Чемпионы сезона ---
     if (champions.length > 0) {
         html += '<div class="champion-section"><div class="champion-section-title">👑 Чемпионы сезона</div><div class="champion-grid">';
         champions.slice(0, 4).forEach((p, i) => {
@@ -473,10 +494,8 @@ function renderSeason(data, seasonNum, isCurrent) {
         html += '<div class="champion-section" style="opacity:0.5;text-align:center;padding:20px;color:var(--muted);font-style:italic;">Турниры не проводились — эпоха чистых дуэлей</div>';
     }
 
-    // --- Таблицы лидеров ---
     html += '<div class="section-subtitle">📊 Таблицы лидеров</div><div class="tables-grid">';
 
-    // Сезонный рейтинг
     if (seasonTop.length > 0) {
         html += '<div class="table-card full-width"><h3><span class="table-icon">🏆</span> Сезонный рейтинг (SKILL)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Skill</th><th>Победы</th></tr></thead><tbody>';
         seasonTop.slice(0, 5).forEach((p, i) => {
@@ -485,32 +504,27 @@ function renderSeason(data, seasonNum, isCurrent) {
         html += '</tbody></table></div></div>';
     }
 
-    // Самые активные
     const mostActive = [...players].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0))).slice(0, 5);
     html += '<div class="table-card"><h3><span class="table-icon">🔥</span> Самые активные</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Боёв</th></tr></thead><tbody>';
     mostActive.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${(p.wins || 0) + (p.losses || 0)}</td></tr>`);
     html += '</tbody></table></div></div>';
 
-    // Коллекционеры осколков
     const topShards = [...players].sort((a, b) => (b.shards || 0) - (a.shards || 0)).slice(0, 5);
     html += '<div class="table-card"><h3><span class="table-icon">💎</span> Коллекционеры осколков</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Осколков</th></tr></thead><tbody>';
     topShards.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.shards || 0}</td></tr>`);
     html += '</tbody></table></div></div>';
 
-    // Лучшие стрики
     const topStreaks = [...players].sort((a, b) => (b.best || 0) - (a.best || 0)).slice(0, 5);
     html += '<div class="table-card"><h3><span class="table-icon">🔥</span> Лучшие серии побед</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Побед</th></tr></thead><tbody>';
     topStreaks.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.best || 0}</td></tr>`);
     html += '</tbody></table></div></div>';
 
-    // Винрейт
     html += '<div class="table-card"><h3><span class="table-icon">📈</span> Винрейт (30+ боёв)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>WR</th><th>W/L</th></tr></thead><tbody>';
     topWR.slice(0, 5).forEach((p, i) => {
         html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display || p.name || ''}</td><td class="number">${((p.wins || 0) * 100 / ((p.wins || 0) + (p.losses || 0) || 1)).toFixed(1)}%</td><td class="number">${p.wins || 0}-${p.losses || 0}</td></tr>`;
     });
     html += '</tbody></table></div></div>';
 
-    // Данж-рекорды
     if (topDungeon.length > 0) {
         html += '<div class="table-card"><h3><span class="table-icon">🏔</span> Рекордсмены данжа</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Волн</th></tr></thead><tbody>';
         topDungeon.slice(0, 5).forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.record}</td></tr>`);
@@ -564,14 +578,10 @@ async function loadTotalStats() {
     // Текущий сезон
     try {
         const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json());
-        
-        // Активные игроки
         (d.players || []).forEach(p => {
             const dp = d.dungeon?.players?.[p.display];
             addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp);
         });
-
-        // Архивные герои текущего сезона
         if (d.heroArchive) {
             Object.entries(d.heroArchive).forEach(([playerName, heroes]) => {
                 heroes.forEach(h => {
@@ -587,14 +597,10 @@ async function loadTotalStats() {
             const r = await fetch(`${ARCHIVE_BASE}${n}.json`);
             if (!r.ok) break;
             const d = await r.json();
-            
-            // Активные игроки сезона
             (d.players || []).forEach(p => {
                 const dp = d.dungeon?.players?.[p.display];
                 addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp);
             });
-
-            // Архивные герои сезона
             if (d.heroArchive) {
                 Object.entries(d.heroArchive).forEach(([playerName, heroes]) => {
                     heroes.forEach(h => {
@@ -612,13 +618,12 @@ async function loadTotalStats() {
     });
 
     if (totalPlayersData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Нет данных</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">Нет данных</td></tr>';
         return;
     }
 
     totalPlayersData.sort((a, b) => b.wins - a.wins);
 
-    // Сводка
     const totalWins = totalPlayersData.reduce((s, p) => s + p.wins, 0);
     const totalLosses = totalPlayersData.reduce((s, p) => s + p.losses, 0);
     const totalFightsAll = Math.floor((totalWins + totalLosses) / 2);
@@ -628,29 +633,29 @@ async function loadTotalStats() {
     const totalDungeonBossesAll = totalPlayersData.reduce((s, p) => s + p.dungeonBosses, 0);
 
     summary.innerHTML = `
-        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
-            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalPlayersData.length}</div>
-            <div style="font-size:0.6rem;color:var(--muted)">👥 Игроков</div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalPlayersData.length}</div>
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:2px">👥 Игроков</div>
         </div>
-        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
-            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalFightsAll}</div>
-            <div style="font-size:0.6rem;color:var(--muted)">⚔️ Боёв</div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalFightsAll.toLocaleString()}</div>
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:2px">⚔️ Боёв</div>
         </div>
-        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
-            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalShardsAll.toLocaleString()}</div>
-            <div style="font-size:0.6rem;color:var(--muted)">💎 Осколков</div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalShardsAll.toLocaleString()}</div>
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:2px">💎 Осколков</div>
         </div>
-        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
-            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalTournamentsAll}</div>
-            <div style="font-size:0.6rem;color:var(--muted)">👑 Турниров</div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalTournamentsAll}</div>
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:2px">👑 Турниров</div>
         </div>
-        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
-            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalDungeonWavesAll.toLocaleString()}</div>
-            <div style="font-size:0.6rem;color:var(--muted)">🌊 Волн данжа</div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalDungeonWavesAll.toLocaleString()}</div>
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:2px">🌊 Волн данжа</div>
         </div>
-        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;flex:1;min-width:100px">
-            <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">${totalDungeonBossesAll.toLocaleString()}</div>
-            <div style="font-size:0.6rem;color:var(--muted)">🐉 Боссов</div>
+        <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalDungeonBossesAll.toLocaleString()}</div>
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:2px">🐉 Боссов</div>
         </div>
     `;
 
@@ -668,25 +673,10 @@ function filterTotalTable() {
     if (!query) { renderTotalTableFromSorted(); return; }
     const filtered = totalPlayersData.filter(p => p.display.toLowerCase().includes(query));
     if (!filtered.length) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Никого не найдено</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">🔍 Никого не найдено</td></tr>';
         return;
     }
-    tbody.innerHTML = filtered.map((p, i) => {
-        const wrColor = p.winrate >= 55 ? 'var(--green)' : p.winrate >= 45 ? 'var(--gold)' : 'var(--red)';
-        return `<tr class="${i === 0 ? 'row-gold' : i === 1 ? 'row-silver' : i === 2 ? 'row-bronze' : ''}">
-            <td>${p.display}</td>
-            <td class="number">${p.wins}</td>
-            <td class="number">${p.losses}</td>
-            <td class="number" style="color:${wrColor};font-weight:700">${p.winrate}%</td>
-            <td class="number">${p.fights}</td>
-            <td class="number">${p.best}</td>
-            <td class="number">${p.shards}</td>
-            <td class="number">${p.tournaments}</td>
-            <td class="number">${p.dungeonRecord || '—'}</td>
-            <td class="number">${p.dungeonWaves || '—'}</td>
-            <td class="number">${p.dungeonBosses || '—'}</td>
-        </tr>`;
-    }).join('');
+    renderRows(filtered);
 }
 
 function renderTotalTableFromSorted() {
@@ -695,23 +685,29 @@ function renderTotalTableFromSorted() {
     const query = document.getElementById('totalSearch').value.toLowerCase().trim();
     const data = query ? totalPlayersData.filter(p => p.display.toLowerCase().includes(query)) : totalPlayersData;
     if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Никого не найдено</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">🔍 Никого не найдено</td></tr>';
         return;
     }
+    renderRows(data);
+}
+
+function renderRows(data) {
+    const tbody = document.getElementById('total-table-body');
     tbody.innerHTML = data.map((p, i) => {
         const wrColor = p.winrate >= 55 ? 'var(--green)' : p.winrate >= 45 ? 'var(--gold)' : 'var(--red)';
+        const wrBg = p.winrate >= 55 ? 'rgba(16,185,129,0.08)' : p.winrate >= 45 ? 'rgba(240,185,11,0.06)' : 'rgba(232,93,58,0.06)';
         return `<tr class="${i === 0 ? 'row-gold' : i === 1 ? 'row-silver' : i === 2 ? 'row-bronze' : ''}">
-            <td>${p.display}</td>
-            <td class="number">${p.wins}</td>
-            <td class="number">${p.losses}</td>
+            <td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td>
+            <td class="number">${p.wins.toLocaleString()}</td>
+            <td class="number">${p.losses.toLocaleString()}</td>
             <td class="number" style="color:${wrColor};font-weight:700">${p.winrate}%</td>
-            <td class="number">${p.fights}</td>
+            <td class="number">${p.fights.toLocaleString()}</td>
             <td class="number">${p.best}</td>
-            <td class="number">${p.shards}</td>
+            <td class="number">${p.shards.toLocaleString()}</td>
             <td class="number">${p.tournaments}</td>
             <td class="number">${p.dungeonRecord || '—'}</td>
-            <td class="number">${p.dungeonWaves || '—'}</td>
-            <td class="number">${p.dungeonBosses || '—'}</td>
+            <td class="number">${p.dungeonWaves.toLocaleString() || '—'}</td>
+            <td class="number">${p.dungeonBosses.toLocaleString() || '—'}</td>
         </tr>`;
     }).join('');
 }
