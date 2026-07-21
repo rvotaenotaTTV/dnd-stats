@@ -537,24 +537,23 @@ async function loadTotalStats() {
 
     const aggregated = {};
 
-    function addPlayer(p, dp) {
-        const key = p.display;
-        if (!key) return;
-        if (!aggregated[key]) {
-            aggregated[key] = {
-                display: key,
+    function addPlayer(display, wins, losses, best, shards, tournaments, dp) {
+        if (!display) return;
+        if (!aggregated[display]) {
+            aggregated[display] = {
+                display: display,
                 wins: 0, losses: 0, best: 0, shards: 0,
                 tournaments: 0,
                 dungeonRecord: 0, dungeonWaves: 0, dungeonBosses: 0,
                 fights: 0, winrate: 0
             };
         }
-        const a = aggregated[key];
-        a.wins += p.wins || 0;
-        a.losses += p.losses || 0;
-        a.best = Math.max(a.best, p.best || 0);
-        a.shards += p.shards || 0;
-        a.tournaments += p.tournamentWins || 0;
+        const a = aggregated[display];
+        a.wins += wins || 0;
+        a.losses += losses || 0;
+        a.best = Math.max(a.best, best || 0);
+        a.shards += shards || 0;
+        a.tournaments += tournaments || 0;
         if (dp) {
             a.dungeonRecord = Math.max(a.dungeonRecord, dp.record || 0);
             a.dungeonWaves += dp.totalWaves || 0;
@@ -565,10 +564,21 @@ async function loadTotalStats() {
     // Текущий сезон
     try {
         const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json());
+        
+        // Активные игроки
         (d.players || []).forEach(p => {
             const dp = d.dungeon?.players?.[p.display];
-            addPlayer(p, dp);
+            addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp);
         });
+
+        // Архивные герои текущего сезона
+        if (d.heroArchive) {
+            Object.entries(d.heroArchive).forEach(([playerName, heroes]) => {
+                heroes.forEach(h => {
+                    addPlayer(playerName, h.wins, h.losses, h.best, 0, h.tournamentWins, null);
+                });
+            });
+        }
     } catch (e) {}
 
     // Архивные сезоны
@@ -577,10 +587,21 @@ async function loadTotalStats() {
             const r = await fetch(`${ARCHIVE_BASE}${n}.json`);
             if (!r.ok) break;
             const d = await r.json();
+            
+            // Активные игроки сезона
             (d.players || []).forEach(p => {
                 const dp = d.dungeon?.players?.[p.display];
-                addPlayer(p, dp);
+                addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp);
             });
+
+            // Архивные герои сезона
+            if (d.heroArchive) {
+                Object.entries(d.heroArchive).forEach(([playerName, heroes]) => {
+                    heroes.forEach(h => {
+                        addPlayer(playerName, h.wins, h.losses, h.best, 0, h.tournamentWins, null);
+                    });
+                });
+            }
         } catch (e) { break; }
     }
 
