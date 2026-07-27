@@ -544,7 +544,7 @@
                     html+=`</tr>`;
                 });
                 html+='</tbody></table></div>';
-                html+='<div style="margin-top:12px;padding:12px;background:var(--elevated);border-radius:var(--radius-sm);border:1px solid var(--border);font-size:0.75rem;color:var(--muted);line-height:1.6;"><span style="color:var(--gold);">📐 Как считается рейтинг:</span><br><code style="color:var(--sub);">Skill ≈ (Победы × Винрейт × 10 + Стрик × 5 + Уровень × 2 + 🏆 × 25) ÷ √(Боёв / 100 + 1)</code></div>';
+                html+='<div style="margin-top:12px;padding:12px;background:var(--elevated);border-radius:var(--radius-sm);border:1px solid var(--border);font-size:0.75rem;color:var(--muted);line-height:1.6;"><span style="color:var(--gold);">📐 Как считается рейтинг:</span><br><code style="color:var(--sub);">Skill ≈ (Победы × Винрейт × 7 + Стрик × 10 + Уровень × 2 + 🏆 × 25 + Фракционные × 2) ÷ √(Боёв / 75 + 1)</code></div>';
             }else{
                 html+='<div style="text-align:center;padding:40px;color:var(--muted);">Нет данных рейтинга</div>';
             }
