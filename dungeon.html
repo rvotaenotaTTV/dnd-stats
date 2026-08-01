@@ -136,7 +136,7 @@
                 const dungeon = d.dungeon || {};
                 const players = Object.values(dungeon.players || {});
                 const territory = d.territory || { light: 0, dark: 0 };
-                if (!players.length) { container.innerHTML = `<div class="section ice" style="text-align:center;padding:40px 20px;"><div class="section-title" style="justify-content:center;">🩸 Разлом Бездны пустует</div><p style="color:var(--sub);">Напиши <code>!данж</code> и спустись в Бездну</p></div>`; return; }
+                if (!players.length) { container.innerHTML = `<div class="section ice" style="text-align:center;padding:40px 20px;"><div class="section-title" style="justify-content:center;">Нет данных.</div></div>`; return; }
                 renderAll(players, territory);
             })
             .catch(e => { container.innerHTML = `<div class="section ice" style="text-align:center;padding:40px 20px;"><div class="section-title" style="justify-content:center;">🩸 Разлом Бездны</div><p style="color:var(--red);">❌ Ошибка загрузки</p></div>`; });
