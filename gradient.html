@@ -190,11 +190,26 @@
         setOptimalRace();loadClassStats();
     }
 
-    function setOptimalRace(){
-        const opt={'Варвар':'Орк','Следопыт':'Эльф','Бард':'Человек','Паладин':'Дворф','Колдун':'Нежить','Чародей':'Нежить','Изобретатель':'Эльф','Воин':'Дворф','Жрец':'Человек','Друид':'Эльф','Плут':'Орк','Некромант':'Дворф','Монах':'Человек','Волшебница':'Эльф'};
-        currentRace=opt[currentClass]||'';
-        document.getElementById('raceSelect').value=currentRace;
-    }
+	function setOptimalRace(){
+		const opt = {
+			'Воин':         'Дворф',
+			'Паладин':      'Дворф',
+			'Плут':         'Орк',
+			'Монах':        'Эльф',
+			'Следопыт':     'Табакси',
+			'Чародей':      'Нежить',
+			'Бард':         'Орк',
+			'Друид':        'Табакси',
+			'Изобретатель': 'Табакси',
+			'Варвар':       'Орк',
+			'Волшебница':   'Табакси',
+			'Некромант':    'Эльф',
+			'Жрец':         'Орк',
+			'Колдун':       'Табакси'
+		};
+		currentRace = opt[currentClass] || '';
+		document.getElementById('raceSelect').value = currentRace;
+	}
 
     function loadClassStats(){
         const cls=classesData.find(c=>c.Name===currentClass);
