@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Экспедиция</title>
+    <title>Подземелье</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="theme.css">
@@ -13,80 +13,6 @@
     .section.white::after { background: linear-gradient(90deg,transparent,var(--text),transparent); opacity: 0.3; }
     .section.ice .section-title { color: var(--ice); }
     .section.white .section-title { color: var(--text); }
-
-    .timeline { display: flex; align-items: flex-start; justify-content: center; gap: 0; margin-bottom: 16px; padding: 4px 0; flex-wrap: wrap; }
-    .tl-step { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; z-index: 1; min-width: 56px; }
-    .tl-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; transition: all 0.3s ease; border: 2px solid var(--border); background: var(--card); color: var(--muted); }
-    .tl-dot.passed { border-color: var(--gold); background: rgba(240,185,11,0.08); color: var(--gold); cursor: pointer; }
-    .tl-dot.active { border-color: var(--ice); background: var(--ice); color: #000; box-shadow: 0 0 20px rgba(91,192,235,0.5); animation: tlPulse 2s ease-in-out infinite; cursor: pointer; }
-    .tl-dot.locked { cursor: default; opacity: 0.35; }
-    .tl-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; font-weight: 600; text-align: center; color: var(--muted); }
-    .tl-step.passed .tl-label { color: var(--gold); }
-    .tl-step.active .tl-label { color: var(--ice); }
-    .tl-line { width: 28px; height: 2px; margin-top: 17px; background: var(--border); flex-shrink: 0; transition: all 0.4s ease; }
-    .tl-line.done { background: var(--gold); }
-    @keyframes tlPulse { 0%,100%{box-shadow:0 0 20px rgba(91,192,235,0.5)} 50%{box-shadow:0 0 32px rgba(91,192,235,0.8)} }
-
-    .diary-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .diary-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; border: 2px solid var(--border); }
-    .diary-author { font-weight: 700; font-size: 0.9rem; color: var(--text); }
-    .diary-role { font-size: 0.65rem; color: var(--muted); }
-    .diary-week-tag { margin-left: auto; background: var(--ice); color: #000; padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 0.7rem; }
-
-    .diary-entry {
-        background: var(--elevated);
-        border-radius: var(--radius-sm);
-        padding: 22px 18px;
-        font-size: 0.86rem;
-        line-height: 1.85;
-        color: var(--sub);
-        border-left: 3px solid var(--ice);
-        position: relative;
-        font-family: 'Georgia', 'Times New Roman', serif;
-        letter-spacing: 0.02em;
-    }
-    [data-theme="dark"] .diary-entry {
-        background: linear-gradient(180deg, #1a1520 0%, #0f1428 100%);
-        color: #c8bfc4;
-        box-shadow: inset 0 0 60px rgba(0,0,0,0.35);
-        text-shadow: 0 0 1px rgba(200,191,196,0.3);
-    }
-    [data-theme="light"] .diary-entry {
-        background: linear-gradient(180deg, #fdf8f5 0%, #f5f0ec 100%);
-        color: #3d2a2a;
-        box-shadow: inset 0 0 40px rgba(0,0,0,0.04);
-        text-shadow: none;
-    }
-    .diary-entry b, .diary-entry strong { color: var(--text); }
-    .diary-entry::before { content: '🕯️'; position: absolute; top: -12px; right: 14px; font-size: 1.3rem; filter: drop-shadow(0 0 5px rgba(240,185,11,0.4)); animation: candleFlicker 3s ease-in-out infinite; z-index: 2; }
-    @keyframes candleFlicker { 0%,100%{opacity:1;transform:translateY(0)} 30%{opacity:0.7;transform:translateY(-1px)} 60%{opacity:0.9;transform:translateY(0.5px)} 80%{opacity:0.6;transform:translateY(-1px)} }
-    .diary-entry.fade-text { animation: textReveal 0.4s ease; }
-    @keyframes textReveal { from{opacity:0;filter:blur(3px);transform:translateY(6px)} to{opacity:1;filter:blur(0);transform:translateY(0)} }
-    .diary-entry.author-narrator { border-left-color: var(--ice); }
-    .diary-entry.author-zara { border-left-color: var(--purple); }
-    .diary-entry.author-seraphim { border-left-color: var(--gold); }
-    .diary-entry.author-aelion { border-left-color: #c0c0c0; }
-    .diary-avatar.avatar-narrator { background: rgba(91,192,235,0.15); border-color: var(--ice); }
-    .diary-avatar.avatar-zara { background: rgba(163,113,247,0.15); border-color: var(--purple); }
-    .diary-avatar.avatar-seraphim { background: rgba(240,185,11,0.15); border-color: var(--gold); }
-    .diary-avatar.avatar-aelion { background: rgba(192,192,192,0.1); border-color: #c0c0c0; }
-
-    .diary-collapsed { max-height: 60px; overflow: hidden; position: relative; }
-	.diary-collapsed::after {
-		content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
-		z-index: 1; border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-		background: linear-gradient(transparent, var(--elevated));
-	}
-	[data-theme="dark"] .diary-collapsed::after { background: linear-gradient(transparent, #0f1428); }
-	[data-theme="light"] .diary-collapsed::after { background: linear-gradient(transparent, #f5f0ec); }
-    .diary-expanded { max-height: none; }
-    .diary-toggle { display: block; width: 100%; margin-top: 10px; padding: 7px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--ice); cursor: pointer; font-family: inherit; font-size: 0.78rem; text-align: center; }
-    .diary-toggle:hover { border-color: var(--ice); }
-
-    .diary-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-    .diary-nav-btn { background: var(--elevated); border: 1px solid var(--border); color: var(--sub); padding: 5px 12px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.73rem; }
-    .diary-nav-btn:hover:not(:disabled) { border-color: var(--ice); color: var(--ice); }
-    .diary-nav-btn:disabled { opacity: 0.3; cursor: default; }
 
     .crown-section { text-align: center; padding: 10px 0; }
     .crown-icon { font-size: 3rem; display: block; animation: float 3s ease-in-out infinite; }
@@ -138,18 +64,14 @@
         .records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
         #leaderboard-table, #all-table { min-width: 600px; font-size: 0.7rem; }
         th, td { padding: 6px 8px; white-space: nowrap; }
-        .diary-entry { padding: 16px 12px; font-size: 0.8rem; line-height: 1.7; }
-        .diary-entry::before { right: 8px; font-size: 1.1rem; top: -10px; }
-        .tl-line { width: 18px; }
-        .tl-dot { width: 30px; height: 30px; font-size: 0.85rem; }
     }
 </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1 class="header-title">ЭКСПЕДИЦИЯ В БЕЗДНУ</h1>
-            <p class="header-subtitle">Дневник участников · Разлом Бездны</p>
+			<h1 class="header-title">БЕЗДНА РАЗЛОМА</h1>
+			<p class="header-subtitle">Подземелье · Статистика</p>
             <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         </header>
 
@@ -188,41 +110,6 @@
             </nav>
         </div>
 
-        <!-- ===== ДНЕВНИК ===== -->
-        <div class="section ice" style="border-color:rgba(91,192,235,0.25);">
-            <div class="section-title">📓 Дневник экспедиции <span class="diary-week-tag" id="diary-week-tag" style="margin-left:8px;">Неделя 1</span></div>
-
-            <!-- Таймлайн -->
-            <div class="timeline" id="timeline">
-                <div class="tl-step" data-week="1" onclick="selectWeek(1)"><div class="tl-dot">1</div><span class="tl-label">Порог</span></div>
-                <div class="tl-line"></div>
-                <div class="tl-step" data-week="2" onclick="selectWeek(2)"><div class="tl-dot">2</div><span class="tl-label">Осколок</span></div>
-                <div class="tl-line"></div>
-                <div class="tl-step" data-week="3" onclick="selectWeek(3)"><div class="tl-dot">3</div><span class="tl-label">Глубь</span></div>
-                <div class="tl-line"></div>
-                <div class="tl-step" data-week="4" onclick="selectWeek(4)"><div class="tl-dot">4</div><span class="tl-label">Трон</span></div>
-            </div>
-
-            <!-- Автор -->
-            <div class="diary-header">
-                <div class="diary-avatar" id="diary-avatar">🕯️</div>
-                <div>
-                    <div class="diary-author" id="diary-author">Повествовательница</div>
-                    <div class="diary-role" id="diary-role">Хронист экспедиции</div>
-                </div>
-            </div>
-
-            <!-- Текст -->
-            <div id="diary-entry" class="diary-entry diary-collapsed fade-text author-narrator">Загрузка...</div>
-            <button class="diary-toggle" id="diary-toggle-btn" onclick="toggleDiary()">Читать дальше ↓</button>
-
-            <!-- Навигация -->
-            <div class="diary-nav">
-                <button class="diary-nav-btn" id="diary-prev" onclick="prevWeek()">← Назад</button>
-                <button class="diary-nav-btn" id="diary-next" onclick="nextWeek()">Вперёд →</button>
-            </div>
-        </div>
-
         <!-- ===== СТАТИСТИКА ===== -->
         <div id="stats-container">
             <div class="section ice" style="text-align:center;padding:40px 20px;">
@@ -235,64 +122,6 @@
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Поддержать 🕯️">🕯️</a>
 
     <script>
-        const CURRENT_WEEK = 4;
-        let diaryExpanded = false;
-        let currentWeek = CURRENT_WEEK;
-
-		const diaryData = [
-			{ week: 0, author: "???", role: "Скоро", avatar: "🔒", avatarClass: "avatar-narrator", entryClass: "author-narrator", text: "Эта страница дневника ещё не написана.<br><br>Бездна ждёт. Экспедиция продолжается.<br><br>Возвращайся позже." },
-			{ week: 1, author: "Повествовательница", role: "Хронист экспедиции", avatar: "🕯️", avatarClass: "avatar-narrator", entryClass: "author-narrator", text: "Мы вошли. Серафим молчал. Он ждал этого дня двадцать лет — и когда шагнул в Разлом, не проронил ни слова. <b>Зара</b> улыбалась: «Тифлинги не спускаются в Разлом. Они возвращаются домой.» В её глазах плясали отблески — не страх, не радость. Узнавание. Будто Бездна окликнула её по имени, и она откликнулась раньше, чем поняла это.<br><br><b>ГуангГуанг</b> открыл первое пиво. Пена потекла по пальцам — он засмеялся и сказал: «За вход. Всегда платишь за вход. Даже если не знаешь цену.»<br><br><b>Чемпион</b> проверил меч. Трижды. Я записала: «Экспедиция началась. Глубина: 0 шагов. Нас пятеро.»<br><br>К концу первой недели мы нашли первые осколки. Тёплые. Один пульсировал — медленно, как сердце спящего. Серафим держал его в ладони и сказал: <b>«Он был здесь. Давно. Идём глубже.»</b> Зара коснулась стены: «Бездна узнаёт нас. Она ждала.»<br><br>Лагерь. ГуангГуанг поёт. Чемпион молчит. Я спросила Серафима — что он надеется найти. Он ответил: <b>«Учителя. Правду. Себя.»</b> Я записала это. Но карандаш дрогнул. Мне показалось — или Бездна тоже записывает нас?" },
-			{ week: 2, author: "Зара", role: "Тёмная владычица", avatar: "😈", avatarClass: "avatar-zara", entryClass: "author-zara", text: "Повествовательница сунула дневник мне в руки и сказала: «У тебя другой взгляд. Пиши.» Я не спорю с ней. Особенно когда она права. Я не смотрю на Разлом. Я слушаю его.<br><br>Мы нашли большой осколок. Пульсирует в такт сердцу — но не нашему. Чему-то глубже. Это часть Клинка, что пробила границу миров. Отсюда вышли Тифлинги. Моя кровь помнит этот путь. Я не была здесь — но я знаю дорогу. Каждый поворот отзывается в костях.<br><br><b>Чемпион</b> перестал считать волны. «Здесь нет верха и низа. Только глубже.» Он сказал это так спокойно, будто принял Бездну как данность. Я уважаю это. Мало кто способен принять то, что не может измерить.<br><br><b>Серафим</b> идёт первым. Всегда. Боится опоздать. Я вижу — он не с нами. Он на двадцать лет в прошлом, когда учитель ушёл, а он остался. Каждый шаг вниз — это шаг назад во времени.<br><br><b>ГуангГуанг</b> поставил на то, что мы найдём ещё три таких осколка. Я не знаю, с кем он спорит. Он всегда с кем-то спорит. Даже когда молчит. Его улыбка стала шире. Мне это не нравится. Я видела такие улыбки у тех, кто не вернулся.<br><br>Воздух гуще. Время течёт иначе. Мы не спим — мы просто моргаем реже. Бездна дышит. И мы дышим с ней в унисон." },
-			{ week: 3, author: "Серафим", role: "Глава Ордена Света", avatar: "⚔️", avatarClass: "avatar-seraphim", entryClass: "author-seraphim", text: "ГуангГуанг пропал.<br><br>Мы нашли кружку. Топор. Записку: «Я тут кое с кем встретился. Догоняйте. Пиво не трогайте.» Почерк его. Но бумага — не наша. Такая не рвётся. Я пробовал.<br><br>Зара сказала: «Бездна говорит с ним. Он не потерялся. Он слушает.» Я хотел вернуться. Оставить группу, найти его, вернуть. Чемпион остановил: «Он сделал выбор. Уважай.» Я сжал осколок в кулаке. Он был тёплым. Как рука учителя.<br><br>Мы пошли дальше. Втроём и дневник. Тишина стала громче. Или это не тишина — это шёпот, который маскируется под тишину.<br><br>Повествовательница слышит голоса. Зара говорит: «Это он. Аэлион. Он ждёт.» Я не сплю третьи сутки — или третью вечность, здесь не разберёшь. Она спросила — зачем я иду. Я ответил: <b>«Я должен спросить. Почему он ушёл. Почему оставил нас.»</b><br><br>«Ты хочешь обвинить его?»<br><br><b>«Я хочу понять.»</b><br><br>Я не сказал ей всей правды. Я боюсь, что когда найду его — мне придётся выбирать. Вернуть учителя. Или занять его место. Ордену нужен лидер. Но ученик не становится мастером, пока мастер жив. Я молюсь, чтобы он был мёртв. И ненавижу себя за эту молитву." },
-			{ week: 4, author: "Аэлион", role: "Основатель Ордена Света", avatar: "💀", avatarClass: "avatar-aelion", entryClass: "author-aelion", text: "Они нашли меня.<br><br>Я сидел на троне в центре Разлома и ждал. Тысячу лет. Один. С Бездной. Она говорила со мной — не словами, а тишиной между ударами сердца. Тысяча лет тишины. И вот — шаги. Четверо. Нет, трое и дневник. ГуангГуанг уже здесь — он пришёл раньше, сидит у костра и открывает второе пиво. Говорит, первое выпил со мной. Я не помню. Но он смеётся — значит, так и было.<br><br>Серафим стоял передо мной и не мог говорить. Двадцать лет. Мальчик, которого я никогда не знал, стал мужчиной. Он ждал меня не тысячу лет — только двадцать. Но эти двадцать лет он ждал с моим осколком в руках. Осколок выбрал его раньше, чем я. Значит, он и есть мой ученик. В его глазах — боль и надежда. И ещё что-то. Вина? Да. Он молился о моей смерти. Я знаю. Бездна рассказала. Я не злюсь. Ученик не становится мастером, пока мастер жив. Он прав.<br><br>«Я держал Разлом открытым. Чтобы ты нашёл дорогу. Тысячу лет.»<br><br>«Но ты стал...»<br><br><b>«Нежитью. Да. Смерть — не конец. Смерть — начало слушания. Я слушал Бездну тысячу лет. Она говорила о тебе.»</b><br><br>Я отдал осколок. «Я не вернусь. Моё время прошло. Ордену нужен новый лидер. Не такой как я. Лучше.»<br><br>Зара засмеялась. Чемпион улыбнулся — впервые за всю экспедицию. Чемпион, который победил всех и остался без врагов. Я узнал этот взгляд. Бездна — его новый противник. Я пожелал ему удачи. Ему она понадобится.<br><br>Повествовательница записала всё. Кроме конца. Потому что конец ещё не наступил.<br><br>Экспедиция закончилась. То, что начнётся дальше, уже не моя история.<br><br>А мы с ГуангГуангом сидим у костра. Я рассказываю тысячу лет одиночества. Он открывает пиво. И говорит: «Я поставил на тебя. Ещё тогда, тысячу лет назад. Когда ты шагнул в Разлом. Я поставил не что ты выживешь. Я поставил, что когда ты выйдешь — ты выберешь правильную сторону.»<br><br>«И какая правильная?»<br><br>Он смотрит на меня. Улыбается. Но глаза не улыбаются.<br><br>«Узнаешь в пятом сезоне.»<br><br><em>Продолжение в 5 сезоне — Раскол Ордена.</em>" }
-		];
-
-        function renderTimeline() {
-            document.querySelectorAll('.tl-step').forEach(step => {
-                const w = parseInt(step.dataset.week);
-                const dot = step.querySelector('.tl-dot');
-                dot.classList.remove('active', 'passed', 'locked');
-                if (w < CURRENT_WEEK) { dot.classList.add('passed'); step.classList.add('passed'); }
-                else if (w === CURRENT_WEEK) { dot.classList.add('active'); step.classList.add('active'); }
-                else { dot.classList.add('locked'); }
-            });
-            document.querySelectorAll('.tl-line').forEach((line, i) => {
-                line.classList.remove('done');
-                if (i < CURRENT_WEEK - 1) line.classList.add('done');
-            });
-        }
-
-        function selectWeek(week) { if (week > CURRENT_WEEK) return; currentWeek = week; showWeek(); renderTimeline(); }
-
-        function showWeek() {
-            const data = diaryData.find(d => d.week === currentWeek) || diaryData[0];
-            const el = document.getElementById('diary-entry');
-            el.classList.remove('fade-text'); void el.offsetWidth; el.classList.add('fade-text');
-            el.innerHTML = data.text;
-            el.className = `diary-entry diary-collapsed fade-text ${data.entryClass}`;
-            document.getElementById('diary-author').textContent = data.author;
-            document.getElementById('diary-role').textContent = data.role;
-            document.getElementById('diary-avatar').textContent = data.avatar;
-            document.getElementById('diary-avatar').className = `diary-avatar ${data.avatarClass}`;
-            document.getElementById('diary-week-tag').textContent = `Неделя ${data.week}`;
-            document.getElementById('diary-prev').disabled = currentWeek === 1;
-            document.getElementById('diary-next').disabled = currentWeek >= CURRENT_WEEK;
-            diaryExpanded = false;
-            document.getElementById('diary-toggle-btn').textContent = 'Читать дальше ↓';
-        }
-
-        function toggleDiary() {
-            const el = document.getElementById('diary-entry'), btn = document.getElementById('diary-toggle-btn');
-            diaryExpanded = !diaryExpanded;
-            if (diaryExpanded) { el.classList.remove('diary-collapsed'); el.classList.add('diary-expanded'); btn.textContent = 'Свернуть ↑'; }
-            else { el.classList.remove('diary-expanded'); el.classList.add('diary-collapsed'); btn.textContent = 'Читать дальше ↓'; }
-        }
-
-        function nextWeek() { if (currentWeek < CURRENT_WEEK && currentWeek < 4) { currentWeek++; showWeek(); renderTimeline(); } }
-        function prevWeek() { if (currentWeek > 1) { currentWeek--; showWeek(); renderTimeline(); } }
-
-        renderTimeline(); showWeek();
-
         function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
         (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
         function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}

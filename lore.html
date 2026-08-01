@@ -8,157 +8,144 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
-    <style>
-        .section h3{color:var(--gold);font-size:.9rem;font-weight:700;margin:18px 0 8px}
-        .flavor{font-style:italic;color:var(--muted)}
-        .lore-block{background:var(--elevated);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;font-style:italic;line-height:1.7;color:var(--sub);font-size:.85rem;border-left:3px solid var(--border);transition:.2s}
-        .cta-block{text-align:center;padding:10px 0}
-        .cta-block p{font-size:.9rem;color:var(--sub)}
-        .cta-block .big-text{font-size:1.2rem;color:var(--gold);font-weight:700;margin-top:12px}
+<style>
+    .section h3{color:var(--gold);font-size:.9rem;font-weight:700;margin:18px 0 8px}
+    .flavor{font-style:italic;color:var(--muted)}
+    .lore-block{background:var(--elevated);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;font-style:italic;line-height:1.7;color:var(--sub);font-size:.85rem;border-left:3px solid var(--border);transition:.2s}
+    .cta-block{text-align:center;padding:10px 0}
+    .cta-block p{font-size:.9rem;color:var(--sub)}
+    .cta-block .big-text{font-size:1.2rem;color:var(--gold);font-weight:700;margin-top:12px}
 
-        .hero-lore{text-align:center;padding:60px 20px 40px;position:relative;overflow:hidden;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);margin-bottom:20px}
-        .hero-lore::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(240,185,11,0.04) 0%,transparent 40%),radial-gradient(circle at 70% 60%,rgba(163,113,247,0.04) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(91,192,235,0.03) 0%,transparent 50%);animation:heroFloat 20s ease-in-out infinite;z-index:0}
-        @keyframes heroFloat{0%,100%{transform:translate(0,0) rotate(0deg)}33%{transform:translate(1%,-1%) rotate(1deg)}66%{transform:translate(-1%,1%) rotate(-1deg)}}
-        .hero-lore>*{position:relative;z-index:1}
-        .path-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
-        .path-card{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px 16px;text-align:center;cursor:pointer;transition:all .25s ease;text-decoration:none;color:inherit;display:block}
-        .path-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 8px 24px rgba(240,185,11,0.1)}
-        .path-icon{font-size:2rem;margin-bottom:10px;display:block}
-        .path-title{font-weight:700;font-size:.9rem;color:var(--text);margin-bottom:4px}
-        .path-desc{font-size:.7rem;color:var(--muted);line-height:1.5}
+    .hero-lore{text-align:center;padding:60px 20px 40px;position:relative;overflow:hidden;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);margin-bottom:20px}
+    .hero-lore::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(240,185,11,0.04) 0%,transparent 40%),radial-gradient(circle at 70% 60%,rgba(163,113,247,0.04) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(91,192,235,0.03) 0%,transparent 50%);animation:heroFloat 20s ease-in-out infinite;z-index:0}
+    @keyframes heroFloat{0%,100%{transform:translate(0,0) rotate(0deg)}33%{transform:translate(1%,-1%) rotate(1deg)}66%{transform:translate(-1%,1%) rotate(-1deg)}}
+    .hero-lore>*{position:relative;z-index:1}
+    .path-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+    .path-card{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px 16px;text-align:center;cursor:pointer;transition:all .25s ease;text-decoration:none;color:inherit;display:block}
+    .path-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 8px 24px rgba(240,185,11,0.1)}
+    .path-icon{font-size:2rem;margin-bottom:10px;display:block}
+    .path-title{font-weight:700;font-size:.9rem;color:var(--text);margin-bottom:4px}
+    .path-desc{font-size:.7rem;color:var(--muted);line-height:1.5}
 
-        .faction-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-        .faction-tab{flex:1;min-width:120px;padding:14px 18px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);cursor:pointer;text-align:center;transition:all .25s ease;font-family:inherit;font-size:.85rem;color:var(--sub);font-weight:600}
-        .faction-tab:hover{border-color:var(--gold);color:var(--text)}
-        .faction-tab.active{border-color:transparent;color:#000;font-weight:700}
-        .faction-tab.light.active{background:var(--gold);box-shadow:0 4px 16px rgba(240,185,11,0.3)}
-        .faction-tab.dark.active{background:var(--purple);box-shadow:0 4px 16px rgba(163,113,247,0.3)}
-        .faction-content{display:none;animation:fadeSlideIn .3s ease}
-        .faction-content.active{display:block}
-        @keyframes fadeSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        .faction-motto{font-style:italic;font-size:1rem;padding:16px 20px;border-radius:var(--radius-sm);margin-bottom:16px;text-align:center;font-weight:600}
-        .faction-motto.light{background:rgba(240,185,11,0.08);color:var(--gold);border-left:4px solid var(--gold)}
-        .faction-motto.dark{background:rgba(163,113,247,0.08);color:var(--purple);border-left:4px solid var(--purple)}
-        .faction-detail{margin-bottom:10px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
-        .faction-detail summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.85rem;color:var(--text);background:var(--elevated);list-style:none;display:flex;align-items:center;gap:8px;transition:background .2s}
-        .faction-detail summary:hover{background:var(--card)}
-        .faction-detail summary::before{content:'▸';font-size:.7rem;transition:transform .2s;color:var(--gold)}
-        .faction-detail[open] summary::before{transform:rotate(90deg)}
-        .faction-detail .detail-content{padding:14px 16px;font-size:.8rem;color:var(--sub);line-height:1.7;border-top:1px solid var(--border)}
+    .faction-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+    .faction-tab{flex:1;min-width:120px;padding:14px 18px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);cursor:pointer;text-align:center;transition:all .25s ease;font-family:inherit;font-size:.85rem;color:var(--sub);font-weight:600}
+    .faction-tab:hover{border-color:var(--gold);color:var(--text)}
+    .faction-tab.active{border-color:transparent;color:#000;font-weight:700}
+    .faction-tab.light.active{background:var(--gold);box-shadow:0 4px 16px rgba(240,185,11,0.3)}
+    .faction-tab.dark.active{background:var(--purple);box-shadow:0 4px 16px rgba(163,113,247,0.3)}
+    .faction-content{display:none;animation:fadeSlideIn .3s ease}
+    .faction-content.active{display:block}
+    @keyframes fadeSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .faction-motto{font-style:italic;font-size:1rem;padding:16px 20px;border-radius:var(--radius-sm);margin-bottom:16px;text-align:center;font-weight:600}
+    .faction-motto.light{background:rgba(240,185,11,0.08);color:var(--gold);border-left:4px solid var(--gold)}
+    .faction-motto.dark{background:rgba(163,113,247,0.08);color:var(--purple);border-left:4px solid var(--purple)}
+    .faction-detail{margin-bottom:10px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    .faction-detail summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.85rem;color:var(--text);background:var(--elevated);list-style:none;display:flex;align-items:center;gap:8px;transition:background .2s}
+    .faction-detail summary:hover{background:var(--card)}
+    .faction-detail summary::before{content:'▸';font-size:.7rem;transition:transform .2s;color:var(--gold)}
+    .faction-detail[open] summary::before{transform:rotate(90deg)}
+    .faction-detail .detail-content{padding:14px 16px;font-size:.8rem;color:var(--sub);line-height:1.7;border-top:1px solid var(--border)}
 
-        .race-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
-        .race-card{background:var(--elevated);border-radius:var(--radius-sm);padding:20px;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .3s ease;cursor:default}
-        .race-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.2)}
-        .race-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;transition:all .3s ease}
-        .race-card.light::before{background:var(--gold)}
-        .race-card.dark::before{background:var(--purple)}
-        .race-card.neutral-dwarf::before{background:var(--orange)}
-        .race-card.neutral-tabaxi::before{background:var(--ice)}
-        .race-card.light:hover{box-shadow:0 8px 28px rgba(240,185,11,0.1);border-color:rgba(240,185,11,0.3)}
-        .race-card.dark:hover{box-shadow:0 8px 28px rgba(163,113,247,0.1);border-color:rgba(163,113,247,0.3)}
-        .race-card.neutral-dwarf:hover{box-shadow:0 8px 28px rgba(255,153,0,0.08);border-color:rgba(255,153,0,0.25)}
-        .race-card.neutral-tabaxi:hover{box-shadow:0 8px 28px rgba(91,192,235,0.08);border-color:rgba(91,192,235,0.25)}
-        .race-card .race-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-        .race-card .race-icon{font-size:1.8rem;flex-shrink:0}
-        .race-card .race-info{flex:1}
-        .race-card h4{font-size:.9rem;font-weight:700;margin:0 0 2px}
-        .race-card .race-affiliation{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-        .race-card .race-quote{font-style:italic;padding:10px 14px;border-radius:8px;margin-bottom:10px;font-size:.84rem;line-height:1.5;background:rgba(0,0,0,0.12)}
-        .race-card.light .race-quote{border-left:3px solid var(--gold);color:var(--gold)}
-        .race-card.dark .race-quote{border-left:3px solid var(--purple);color:var(--purple)}
-        .race-card.neutral-dwarf .race-quote{border-left:3px solid var(--orange);color:var(--orange)}
-        .race-card.neutral-tabaxi .race-quote{border-left:3px solid var(--ice);color:var(--ice)}
-        .race-card p{font-size:.8rem;color:var(--sub);line-height:1.65;margin:0}
+    .race-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+    .race-card{background:var(--elevated);border-radius:var(--radius-sm);padding:20px;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .3s ease;cursor:default}
+    .race-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.2)}
+    .race-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;transition:all .3s ease}
+    .race-card.light::before{background:var(--gold)}
+    .race-card.dark::before{background:var(--purple)}
+    .race-card.neutral-dwarf::before{background:var(--orange)}
+    .race-card.neutral-tabaxi::before{background:var(--ice)}
+    .race-card.light:hover{box-shadow:0 8px 28px rgba(240,185,11,0.1);border-color:rgba(240,185,11,0.3)}
+    .race-card.dark:hover{box-shadow:0 8px 28px rgba(163,113,247,0.1);border-color:rgba(163,113,247,0.3)}
+    .race-card.neutral-dwarf:hover{box-shadow:0 8px 28px rgba(255,153,0,0.08);border-color:rgba(255,153,0,0.25)}
+    .race-card.neutral-tabaxi:hover{box-shadow:0 8px 28px rgba(91,192,235,0.08);border-color:rgba(91,192,235,0.25)}
+    .race-card .race-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .race-card .race-icon{font-size:1.8rem;flex-shrink:0}
+    .race-card .race-info{flex:1}
+    .race-card h4{font-size:.9rem;font-weight:700;margin:0 0 2px}
+    .race-card .race-affiliation{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .race-card .race-quote{font-style:italic;padding:10px 14px;border-radius:8px;margin-bottom:10px;font-size:.84rem;line-height:1.5;background:rgba(0,0,0,0.12)}
+    .race-card.light .race-quote{border-left:3px solid var(--gold);color:var(--gold)}
+    .race-card.dark .race-quote{border-left:3px solid var(--purple);color:var(--purple)}
+    .race-card.neutral-dwarf .race-quote{border-left:3px solid var(--orange);color:var(--orange)}
+    .race-card.neutral-tabaxi .race-quote{border-left:3px solid var(--ice);color:var(--ice)}
+    .race-card p{font-size:.8rem;color:var(--sub);line-height:1.65;margin:0}
 
-        .territory-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-        .territory-card{background:var(--elevated);border:2px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:all .3s ease;position:relative;overflow:hidden}
-        .territory-card.light{border-color:rgba(240,185,11,0.35);box-shadow:0 0 20px rgba(240,185,11,0.06)}
-        .territory-card.dark{border-color:rgba(163,113,247,0.35);box-shadow:0 0 20px rgba(163,113,247,0.06)}
-        .territory-card.neutral{border-color:rgba(91,192,235,0.2);box-shadow:0 0 16px rgba(91,192,235,0.04)}
-        .territory-card:hover{transform:translateY(-2px)}
-        .territory-card.light:hover{box-shadow:0 6px 24px rgba(240,185,11,0.1)}
-        .territory-card.dark:hover{box-shadow:0 6px 24px rgba(163,113,247,0.1)}
-        .territory-card.neutral:hover{box-shadow:0 6px 20px rgba(91,192,235,0.06)}
-        .territory-card .territory-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-        .territory-card .territory-name{font-size:.85rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
-        .territory-card .territory-icon{font-size:1.3rem}
-        .territory-card .territory-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:.65rem;font-weight:700}
-        .territory-badge.light{background:rgba(240,185,11,0.15);color:var(--gold)}
-        .territory-badge.dark{background:rgba(163,113,247,0.15);color:var(--purple)}
-        .territory-badge.neutral{background:rgba(91,192,235,0.12);color:var(--ice)}
-        .territory-card .territory-lore{font-size:.75rem;color:var(--muted);line-height:1.6;font-style:italic}
-        .territory-card::after{content:'';position:absolute;top:0;right:0;width:50px;height:50px;border-radius:0 0 0 50px;opacity:0.04;transition:opacity .3s}
-        .territory-card.light::after{background:var(--gold)}
-        .territory-card.dark::after{background:var(--purple)}
-        .territory-card.neutral::after{background:var(--ice)}
+    .territory-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .territory-card{background:var(--elevated);border:2px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:all .3s ease;position:relative;overflow:hidden}
+    .territory-card.light{border-color:rgba(240,185,11,0.35);box-shadow:0 0 20px rgba(240,185,11,0.06)}
+    .territory-card.dark{border-color:rgba(163,113,247,0.35);box-shadow:0 0 20px rgba(163,113,247,0.06)}
+    .territory-card.neutral{border-color:rgba(91,192,235,0.2);box-shadow:0 0 16px rgba(91,192,235,0.04)}
+    .territory-card:hover{transform:translateY(-2px)}
+    .territory-card.light:hover{box-shadow:0 6px 24px rgba(240,185,11,0.1)}
+    .territory-card.dark:hover{box-shadow:0 6px 24px rgba(163,113,247,0.1)}
+    .territory-card.neutral:hover{box-shadow:0 6px 20px rgba(91,192,235,0.06)}
+    .territory-card .territory-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .territory-card .territory-name{font-size:.85rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
+    .territory-card .territory-icon{font-size:1.3rem}
+    .territory-card .territory-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:.65rem;font-weight:700}
+    .territory-badge.light{background:rgba(240,185,11,0.15);color:var(--gold)}
+    .territory-badge.dark{background:rgba(163,113,247,0.15);color:var(--purple)}
+    .territory-badge.neutral{background:rgba(91,192,235,0.12);color:var(--ice)}
+    .territory-card .territory-lore{font-size:.75rem;color:var(--muted);line-height:1.6;font-style:italic}
+    .territory-card::after{content:'';position:absolute;top:0;right:0;width:50px;height:50px;border-radius:0 0 0 50px;opacity:0.04;transition:opacity .3s}
+    .territory-card.light::after{background:var(--gold)}
+    .territory-card.dark::after{background:var(--purple)}
+    .territory-card.neutral::after{background:var(--ice)}
 
-        .shard-box{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:28px 24px;min-height:180px;text-align:center;cursor:pointer;transition:.2s;user-select:none;max-width:520px;margin:0 auto}
-        .shard-box:hover{border-color:var(--gold)}
+    .shard-box{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:28px 24px;min-height:180px;text-align:center;cursor:pointer;transition:.2s;user-select:none;max-width:520px;margin:0 auto}
+    .shard-box:hover{border-color:var(--gold)}
 
-        .season-progress{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px;padding:0 10px;flex-wrap:wrap}
-        .season-dot{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;transition:all .3s ease}
-        .season-dot .dot-icon{font-size:1.1rem;position:absolute;top:-18px;transition:all .3s ease}
-        .season-dot .dot-label{font-size:.7rem;font-weight:800;color:#000;z-index:1}
-        .season-dot.done{background:var(--gold);box-shadow:0 0 16px rgba(240,185,11,0.3)}
-        .season-dot.done .dot-icon{opacity:0.9}
-        .season-dot.current{background:var(--ice);box-shadow:0 0 20px rgba(91,192,235,0.5);animation:dotGlow 2s ease-in-out infinite}
-        .season-dot.current .dot-icon{opacity:1;animation:iconFloat 3s ease-in-out infinite}
-        .season-dot.future{background:var(--elevated);border:2px dashed var(--border)}
-        .season-dot.future .dot-label{color:var(--muted)}
-        .season-dot.future .dot-icon{opacity:0.4}
-        .pulse{position:absolute;width:100%;height:100%;border-radius:50%;border:2px solid var(--ice);animation:pulseRing 2s ease-out infinite;pointer-events:none}
-        .season-line{width:36px;height:2px;flex-shrink:0;border-radius:1px}
-        .season-line.done{background:var(--gold)}
-        .season-line.active{background:linear-gradient(90deg,var(--gold),var(--ice));animation:lineShimmer 2s ease-in-out infinite}
-        .season-line.future{background:var(--border);border-style:dashed;border-width:1px;height:0}
+    /* ХРОНИКИ РАСКОЛА */
+    .chronicle-container{max-width:800px;margin:0 auto;position:relative;padding-left:30px}
+    .chronicle-container::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--purple),var(--ice));opacity:0.3}
+    .chronicle-season{margin-bottom:40px;position:relative;animation:fadeInUp .5s ease forwards;opacity:0}
+    .chronicle-season:nth-child(1){animation-delay:.1s}
+    .chronicle-season:nth-child(2){animation-delay:.2s}
+    .chronicle-season:nth-child(3){animation-delay:.3s}
+    .chronicle-season:nth-child(4){animation-delay:.4s}
+    .chronicle-season:nth-child(5){animation-delay:.5s}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .season-marker{position:absolute;left:-38px;top:5px;width:16px;height:16px;border-radius:50%;background:var(--card);border:2px solid var(--border);z-index:2}
+    .season-marker.current{background:var(--ice);border-color:var(--ice);box-shadow:0 0 15px rgba(91,192,235,0.6)}
 
-        @keyframes dotGlow{0%,100%{box-shadow:0 0 20px rgba(91,192,235,0.5)}50%{box-shadow:0 0 32px rgba(91,192,235,0.8)}}
-        @keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-        @keyframes pulseRing{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.8);opacity:0}}
-        @keyframes lineShimmer{0%,100%{background-position:0% center}50%{background-position:100% center}}
+    .chronicle-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .3s ease;background:var(--elevated)}
+    .chronicle-card:hover{border-color:var(--gold);box-shadow:0 8px 20px rgba(0,0,0,0.2)}
 
-        .timeline-enhanced{position:relative;padding:20px 0}
-        .timeline-season{display:flex;gap:16px;margin-bottom:20px;animation:slideIn .5s ease forwards;align-items:flex-start}
-        .timeline-season:nth-child(2){animation-delay:.1s}
-        .timeline-season:nth-child(3){animation-delay:.2s}
-        .timeline-season:nth-child(4){animation-delay:.3s}
-        .timeline-season:nth-child(5){animation-delay:.4s}
-        @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-        .season-marker{flex-shrink:0;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;border:2px solid var(--border);background:var(--card)}
-        .season-marker.s1{color:var(--gold);border-color:var(--gold)}
-        .season-marker.s2{color:var(--red);border-color:var(--red)}
-        .season-marker.s3{color:var(--purple);border-color:var(--purple)}
-        .season-marker.s4{color:var(--ice);border-color:var(--ice);animation:markerPulse 3s ease-in-out infinite}
-        .season-marker.s5{color:var(--gold);border-style:dashed;opacity:0.6}
-        @keyframes markerPulse{0%,100%{box-shadow:0 0 8px rgba(91,192,235,0.3)}50%{box-shadow:0 0 20px rgba(91,192,235,0.6)}}
-        .season-card{flex:1;background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;position:relative}
-        .season-card h4{font-size:.9rem;margin-bottom:10px}
-        .season-card p{font-size:.78rem;color:var(--sub);line-height:1.7;margin-bottom:6px}
-        .season-card p strong{color:var(--text)}
-        .season-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.65rem;font-weight:700;margin-bottom:10px}
-        .season-badge.done{background:rgba(240,185,11,0.12);color:var(--gold)}
-        .season-badge.current{background:rgba(91,192,235,0.15);color:var(--ice);animation:badgePulse 2s ease-in-out infinite}
-        .season-badge.future{background:rgba(255,255,255,0.04);color:var(--muted)}
-        @keyframes badgePulse{0%,100%{opacity:1}50%{opacity:0.7}}
+    .chronicle-card summary{cursor:pointer;list-style:none;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);border-bottom:1px solid transparent;transition:border-color .2s}
+    .chronicle-card summary::-webkit-details-marker{display:none}
+    .chronicle-card summary::after{content:'▸';font-size:.8rem;color:var(--gold);transition:transform .3s;margin-left:12px;flex-shrink:0}
+    .chronicle-card[open] summary{border-bottom-color:var(--border)}
+    .chronicle-card[open] summary::after{transform:rotate(90deg)}
 
-        .current-season .season-card{border-color:rgba(91,192,235,0.2);box-shadow:0 0 24px rgba(91,192,235,0.06)}
-        .future-season .season-card{opacity:0.6;border-style:dashed}
+    .chronicle-summary-row{display:flex;justify-content:space-between;align-items:center;width:100%;gap:12px}
+    .chronicle-title{font-weight:800;font-size:1.1rem;white-space:nowrap}
+    .chronicle-badge{padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+    .chronicle-badge.completed{background:rgba(240,185,11,0.1);color:var(--gold)}
+    .chronicle-badge.ongoing{background:rgba(91,192,235,0.15);color:var(--ice);animation:pulseBadge 2s infinite}
+    .chronicle-badge.upcoming{background:rgba(163,113,247,0.1);color:var(--purple)}
+    @keyframes pulseBadge{0%,100%{opacity:1}50%{opacity:0.6}}
 
-        @media(max-width:768px){
-            .path-grid{grid-template-columns:1fr}
-            .faction-tabs{flex-direction:column}
-            .race-grid{grid-template-columns:1fr}
-            .territory-grid{grid-template-columns:1fr}
-            .timeline-season{flex-direction:column;gap:8px}
-            .season-marker{width:36px;height:36px;font-size:.8rem}
-            .shard-box{padding:20px 16px;min-height:150px}
-            .season-progress{gap:4px}
-            .season-dot{width:36px;height:36px}
-            .season-dot .dot-icon{font-size:.9rem;top:-14px}
-            .season-dot .dot-label{font-size:.65rem}
-            .season-line{width:20px}
-        }
-    </style>
+    .chronicle-content{padding:20px}
+    .chronicle-event{margin-bottom:15px}
+    .chronicle-event h4{font-size:.9rem;font-weight:700;margin:0 0 5px;display:flex;align-items:center;gap:8px}
+    .chronicle-event p{font-size:.85rem;color:var(--sub);line-height:1.6;margin:0}
+    .chronicle-quote{margin:15px 0;padding:12px 15px;background:rgba(240,185,11,0.05);border-left:3px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-style:italic;color:var(--text);font-size:.9rem}
+    .chronicle-quote span{display:block;margin-top:5px;font-size:.75rem;color:var(--gold);font-weight:600;font-style:normal}
+    .chronicle-aftermath{background:var(--card);padding:12px 15px;border-radius:var(--radius-sm);font-size:.8rem;color:var(--muted);border:1px dashed var(--border)}
+    .chronicle-aftermath strong{color:var(--text)}
+
+    @media(max-width:768px){
+        .path-grid{grid-template-columns:1fr}
+        .faction-tabs{flex-direction:column}
+        .race-grid{grid-template-columns:1fr}
+        .territory-grid{grid-template-columns:1fr}
+        .shard-box{padding:20px 16px;min-height:150px}
+        .chronicle-container{padding-left:20px}
+        .season-marker{left:-28px;width:12px;height:12px;top:8px}
+        .chronicle-content{padding:15px}
+        .chronicle-title{font-size:.95rem}
+    }
+</style>
 </head>
 <body>
     <div class="container">
@@ -280,13 +267,13 @@
                         <em>«Сила — это ответственность. Мы не прячемся во тьме, мы освещаем её.»</em>
                     </div>
                 </details>
-                <details class="faction-detail">
-                    <summary>👤 Ключевые фигуры</summary>
-                    <div class="detail-content">
-                        <strong>Аэлион</strong> — основатель Ордена, шагнувший в Раскол, чтобы удержать мир. Его осколок до сих пор хранится в Сияющем Шпиле, и говорят, он всё ещё тёплый.<br>
-                        <strong>Серафим</strong> — действующий глава Ордена, ученик Аэлиона. Готовит экспедицию в Бездну на поиски учителя.
-                    </div>
-                </details>
+				<details class="faction-detail">
+					<summary>👤 Ключевые фигуры</summary>
+					<div class="detail-content">
+						<strong>Аэлион</strong> — основатель Ордена, шагнувший в Раскол во время Великой Битвы. Его осколок веками хранится в Сияющем Шпиле.<br>
+						<strong>Серафим</strong> — ученик Аэлиона, связанный с ним через осколок. Лидер Ордена в новую эпоху.
+					</div>
+				</details>
             </div>
 
             <!-- Культ Тьмы -->
@@ -294,11 +281,11 @@
                 <div class="faction-motto dark">«Истинная сила рождается в тени»</div>
                 <details class="faction-detail" open>
                     <summary>📖 История</summary>
-                    <div class="detail-content">
-                        Никто не знает имени основателя Культа. Говорят, это был маг, который первым понял, что осколки Клинка можно не только подчинить, но и сломать, вырвав из них ещё больше силы. Его называют Повествователем — он наблюдал за Битвой Раскола и ушёл в тень, когда Аэлион шагнул в центр раскола.<br><br>
-                        Он никогда не сражался сам. Вместо этого он находил тех, кто сразится за него. Никто не знает, сколько у него было учеников. Говорят, десятки. Говорят, сотни.<br><br>
-                        Культ не скрывается — его храмы открыты для всех, кто ищет могущество. Их символ — новолуние — напоминает, что даже в полной темноте можно разглядеть путь.
-                    </div>
+					<div class="detail-content">
+						Никто не знает имени основателя Культа. Говорят, это была древняя эльфийка, которая первой поняла, что осколки Клинка можно не только подчинить, но и сломать, вырвав из них ещё больше силы. Её называют Повествовательницей — она наблюдала за Битвой Раскола и ушла в тень, когда Аэлион шагнул в центр раскола.<br><br>
+						Она никогда не сражалась сама. Вместо этого она находила тех, кто сразится за неё. Никто не знает, сколько у неё было учеников. Говорят, десятки. Говорят, сотни.<br><br>
+						Культ не скрывается — его храмы открыты для всех, кто ищет могущество. Их символ — новолуние — напоминает, что даже в полной темноте можно разглядеть путь.
+					</div>
                 </details>
                 <details class="faction-detail">
                     <summary>🕯️ Философия</summary>
@@ -306,16 +293,16 @@
                         <em>«Свет обжигает. Тьма принимает. Выбирай, кем ты хочешь стать.»</em>
                     </div>
                 </details>
-                <details class="faction-detail">
-                    <summary>👤 Ключевые фигуры</summary>
-                    <div class="detail-content">
-                        <strong>Повествователь</strong> — основатель Культа, наблюдавший за Битвой Раскола и ушедший в тень. Говорят, он никогда не сражался сам — только находил тех, кто сразится за него.<br>
-                        <strong>Зара</strong> — тёмная владычица, тифлинг. Вызвалась вести экспедицию в Бездну. Говорят, она слышит Разлом иначе — не как угрозу, а как зов. Редко появляется в Зале Повествователя, предпочитает действовать, а не говорить.
-                    </div>
-                </details>
+				<details class="faction-detail">
+					<summary>👤 Ключевые фигуры</summary>
+					<div class="detail-content">
+						<strong>Повествовательница</strong> — древняя эльфийка-летописец. Её слово становится реальностью. Основала Культ Тьмы и ведёт хронику мира.<br>
+						<strong>Зара</strong> — тёмная владычица, тифлинг. Та, кто слышит Бездну как дом.
+					</div>
+				</details>
             </div>
-		</div>
-		
+        </div>
+
         <!-- Расы -->
         <div class="section gold" id="races-section">
             <div class="section-title">🌍 Расы Этерниса</div>
@@ -413,38 +400,38 @@
             </div>
         </div>
 
-		<!-- Земли под контролем -->
-		<div class="section gold" id="territory-section">
-			<div class="section-title">🗺️ Земли под контролем</div>
-			
-			<!-- Вечные цитадели -->
-			<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-				<div style="background:linear-gradient(160deg,var(--elevated),rgba(240,185,11,.04));border:1px solid rgba(240,185,11,.25);border-radius:var(--radius-sm);padding:16px;text-align:center">
-					<div style="font-size:1.5rem;margin-bottom:4px">✨</div>
-					<div style="font-weight:700;color:var(--gold);font-size:.85rem">Сияющий Шпиль</div>
-					<div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Вечно за Светом</div>
-					<div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё тёплый.</div>
-				</div>
-				<div style="background:linear-gradient(160deg,var(--elevated),rgba(163,113,247,.04));border:1px solid rgba(163,113,247,.25);border-radius:var(--radius-sm);padding:16px;text-align:center">
-					<div style="font-size:1.5rem;margin-bottom:4px">🌫️</div>
-					<div style="font-weight:700;color:var(--purple);font-size:.85rem">Зал Повествователя</div>
-					<div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Вечно за Тьмой</div>
-					<div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</div>
-				</div>
-			</div>
+        <!-- Земли под контролем -->
+        <div class="section gold" id="territory-section">
+            <div class="section-title">🗺️ Земли под контролем</div>
 
-			<p style="color:var(--sub);font-size:.78rem;margin-bottom:14px;text-align:center">
-				Остальные земли переходят из рук в руки — дуэли решают всё.
-			</p>
+            <!-- Вечные цитадели -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+                <div style="background:linear-gradient(160deg,var(--elevated),rgba(240,185,11,.04));border:1px solid rgba(240,185,11,.25);border-radius:var(--radius-sm);padding:16px;text-align:center">
+                    <div style="font-size:1.5rem;margin-bottom:4px">✨</div>
+                    <div style="font-weight:700;color:var(--gold);font-size:.85rem">Сияющий Шпиль</div>
+                    <div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Вечно за Светом</div>
+                    <div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё тёплый.</div>
+                </div>
+                <div style="background:linear-gradient(160deg,var(--elevated),rgba(163,113,247,.04));border:1px solid rgba(163,113,247,.25);border-radius:var(--radius-sm);padding:16px;text-align:center">
+                    <div style="font-size:1.5rem;margin-bottom:4px">🌫️</div>
+                    <div style="font-weight:700;color:var(--purple);font-size:.85rem">Зал Повествователя</div>
+                    <div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Вечно за Тьмой</div>
+                    <div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</div>
+                </div>
+            </div>
 
-			<!-- Спорные территории -->
-			<div class="territory-grid" id="territoryGrid">
-				<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px">Загрузка данных...</div>
-			</div>
-			<p style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:center">
-				🟡 = Свет &nbsp;|&nbsp; 🟣 = Тьма &nbsp;|&nbsp; 🔵 = Вольная
-			</p>
-		</div>
+            <p style="color:var(--sub);font-size:.78rem;margin-bottom:14px;text-align:center">
+                Остальные земли переходят из рук в руки — дуэли решают всё.
+            </p>
+
+            <!-- Спорные территории -->
+            <div class="territory-grid" id="territoryGrid">
+                <div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px">Загрузка данных...</div>
+            </div>
+            <p style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:center">
+                🟡 = Свет &nbsp;|&nbsp; 🟣 = Тьма &nbsp;|&nbsp; 🔵 = Вольная
+            </p>
+        </div>
 
         <!-- Герои и осколки -->
         <div class="section gold">
@@ -481,101 +468,185 @@
             </p>
         </div>
 
-        <!-- Таймлайн -->
+        <!-- ХРОНИКИ РАСКОЛА -->
         <div class="section gold" id="timeline-section">
-            <div class="section-title">📅 Хроника Этерниса</div>
+            <div class="section-title">📜 Хроники Раскола</div>
 
-            <!-- Прогресс-бар сезонов -->
-            <div class="season-progress">
-                <div class="season-dot done" title="Сезон 1 — Рождение Арены">
-                    <span class="dot-icon">🏁</span>
-                    <span class="dot-label">1</span>
-                </div>
-                <div class="season-line done"></div>
-                <div class="season-dot done" title="Сезон 2 — Эпоха легенд">
-                    <span class="dot-icon">🔥</span>
-                    <span class="dot-label">2</span>
-                </div>
-                <div class="season-line done"></div>
-                <div class="season-dot done" title="Сезон 3 — Кровь Бездны">
-                    <span class="dot-icon">🩸</span>
-                    <span class="dot-label">3</span>
-                </div>
-                <div class="season-line active"></div>
-                <div class="season-dot current" title="Сезон 4 — Экспедиция (идёт сейчас)">
-                    <span class="dot-icon">🕯️</span>
-                    <span class="dot-label">4</span>
-                    <span class="pulse"></span>
-                </div>
-                <div class="season-line future"></div>
-                <div class="season-dot future" title="Сезон 5 — скоро">
-                    <span class="dot-icon">⚡</span>
-                    <span class="dot-label">5</span>
-                </div>
-            </div>
-
-            <div class="timeline-enhanced">
+            <div class="chronicle-container">
                 <!-- Сезон 1 -->
-                <div class="timeline-season">
-                    <div class="season-marker s1">1</div>
-                    <div class="season-card">
-                        <div class="season-badge done">Завершён</div>
-                        <h4>🏁 Сезон 1 — Рождение Арены</h4>
-                        <p>Солнечный Клинок — артефакт, тысячелетиями хранивший равновесие — пал с небес. Его осколки разлетелись по миру, наделяя смертных невиданной силой. Паладин Аэлион первым поднял осколок над головой и основал Орден Света.</p>
-                        <p>Первые дуэли прошли без правил. Насмерть. Арена Тысячи Эхо ещё не знала пощады. Аэлион не проиграл ни одного боя — но и не убил ни одного врага. Некоторые из побеждённых присоединились к Ордену.</p>
-                        <p>Великая Битва Раскола. Аэлион шагнул в эпицентр — и исчез. Мир решил, что он погиб. Повествовательница начала вести хроники.</p>
-                    </div>
+                <div class="chronicle-season">
+                    <div class="season-marker"></div>
+                    <details class="chronicle-card">
+                        <summary>
+                            <span class="chronicle-summary-row">
+                                <span class="chronicle-title" style="color:var(--gold)">🏁 Сезон 1: Рождение Арены</span>
+                                <span class="chronicle-badge completed">Завершён</span>
+                            </span>
+                        </summary>
+                        <div class="chronicle-content">
+                            <div class="chronicle-event">
+                                <h4>⚡ Падение Клинка</h4>
+                                <p>Солнечный Клинок пал с небес, расколов реальность. Его осколки разлетелись по миру, наделяя смертных невиданной силой. Паладин Аэлион первым поднял осколок над головой и основал Орден Света. Его цитадель — Сияющий Шпиль — выросла на месте падения Клинка.</p>
+                            </div>
+                            <div class="chronicle-event">
+                                <h4>⚔️ Первые дуэли</h4>
+                                <p>Арена Тысячи Эхо ещё не знала правил. Бои шли насмерть. Аэлион не проиграл ни одного сражения — но и не убил ни одного врага. Некоторые из побеждённых... присоединялись к Ордену.</p>
+                            </div>
+                            <div class="chronicle-event">
+                                <h4>🌑 Великая Битва Раскола</h4>
+                                <p>Аэлион шагнул в эпицентр Раскола — и исчез. Мир решил, что он погиб. Но его осколок остался в Сияющем Шпиле. И он всё ещё тёплый.</p>
+                            </div>
+                            <div class="chronicle-quote">
+                                «Я думал, что спасаю мир. Я ошибался. Я спасал только себя... Клинок не падал. Его отпустили.»
+                                <span>— Осколок Аэлиона</span>
+                            </div>
+                            <div class="chronicle-aftermath">
+                                <strong>Итог:</strong> Повествовательница, чьё слово становится реальностью, начала вести Хроники. Никто не знает, что она не дописала Аэлиону финал.
+                            </div>
+                        </div>
+                    </details>
                 </div>
 
                 <!-- Сезон 2 -->
-                <div class="timeline-season">
-                    <div class="season-marker s2">2</div>
-                    <div class="season-card">
-                        <div class="season-badge done">Завершён</div>
-                        <h4>🔥 Сезон 2 — Эра Раскола</h4>
-                        <p>Корабли без капитанов вошли в Порт Дрейфующих. С них сошли Табакси — кошачий народ без памяти о прошлом. Никто не помнит их до Раскола. Они принесли с собой любопытство, игральные кости и вопросы без ответов.</p>
-                        <p>Дворфы ударили в молоты. Кузня Расколотых загорелась — и не гаснет до сих пор. Орки спустились с гор: не за войной — за испытанием. Эльфы ушли глубже в леса. Нежить проснулась.</p>
-                        <p>Мир перестал быть чёрно-белым. К Свету и Тьме добавились те, кто не выбирал сторону.</p>
-                    </div>
+                <div class="chronicle-season">
+                    <div class="season-marker"></div>
+                    <details class="chronicle-card">
+                        <summary>
+                            <span class="chronicle-summary-row">
+                                <span class="chronicle-title" style="color:var(--red)">🔥 Сезон 2: Эпоха Легенд</span>
+                                <span class="chronicle-badge completed">Завершён</span>
+                            </span>
+                        </summary>
+                        <div class="chronicle-content">
+                            <div class="chronicle-event">
+                                <h4>🐱 Прибытие Табакси</h4>
+                                <p>Корабли без капитанов вошли в Порт Дрейфующих. С них сошли Табакси — кошачий народ без памяти о прошлом. Никто не помнит их до Раскола. Они принесли с собой любопытство, игральные кости и вопросы без ответов.</p>
+                            </div>
+                            <div class="chronicle-event">
+                                <h4>🔥 Кузня зажглась</h4>
+                                <p>Дворфы ударили в молоты. Кузня Расколотых загорелась — и не гаснет до сих пор. Орки спустились с гор: не за войной — за испытанием. Эльфы ушли глубже в леса. Нежить проснулась.</p>
+                            </div>
+                            <div class="chronicle-event">
+                                <h4>⚖️ Третья сила</h4>
+                                <p>Мир перестал быть чёрно-белым. К Свету и Тьме добавились те, кто не выбирал сторону — и не собирался выбирать.</p>
+                            </div>
+                            <div class="chronicle-quote">
+                                «Нас было девять, когда мы вошли в Порт. Нас стало восемь, когда мы вышли. Но мы не помним, кто ушёл. Мы проверили имена. Все девять на месте.»
+                                <span>— Табакси-капитан</span>
+                            </div>
+                            <div class="chronicle-aftermath">
+                                <strong>Итог:</strong> Сформировался баланс сил. Арена Тысячи Эхо стала местом, где решаются судьбы земель.
+                            </div>
+                        </div>
+                    </details>
                 </div>
 
                 <!-- Сезон 3 -->
-                <div class="timeline-season">
-                    <div class="season-marker s3">3</div>
-                    <div class="season-card">
-                        <div class="season-badge done">Завершён</div>
-                        <h4>🩸 Сезон 3 — Кровь Бездны</h4>
-                        <p>Разлом открылся. Из глубин вышли Тифлинги — потомки союза смертных и демонов. Их не ждали. Их боялись. Но первый же Тифлинг, поднявший осколок, услышал голос Бездны — не как хозяина, а как равного.</p>
-                        <p>Стало известно: <strong>Аэлион жив</strong>. Тысячу лет он провёл в Бездне. Один. Его осколок всё ещё тёплый — он хранится в Сияющем Шпиле и зовёт.</p>
-                        <p>Орден Света и Культ Тьмы начали готовить экспедицию. Серафим — ученик Аэлиона — поклялся найти учителя. Зара — тифлинг, слышащая зов Бездны — вызвалась вести. Чемпион Великой Лиги и ГуангГуанг присоединились.</p>
-                    </div>
+                <div class="chronicle-season">
+                    <div class="season-marker"></div>
+                    <details class="chronicle-card">
+                        <summary>
+                            <span class="chronicle-summary-row">
+                                <span class="chronicle-title" style="color:var(--purple)">🩸 Сезон 3: Кровь Бездны</span>
+                                <span class="chronicle-badge completed">Завершён</span>
+                            </span>
+                        </summary>
+                        <div class="chronicle-content">
+                            <div class="chronicle-event">
+                                <h4>😈 Пришествие Тифлингов</h4>
+                                <p>Разлом открылся. Из глубин вышли Тифлинги — потомки союза смертных и демонов. Их не ждали. Их боялись. Но первый же Тифлинг, поднявший осколок, услышал голос Бездны — не как хозяина, а как равного.</p>
+                            </div>
+                            <div class="chronicle-event">
+                                <h4>🕯️ Зов из Бездны</h4>
+                                <p>Стало известно: <strong>Аэлион жив</strong>. Тысячу лет он провёл в Бездне. Один. Его осколок всё ещё тёплый — он хранится в Сияющем Шпиле и зовёт.</p>
+                            </div>
+                            <div class="chronicle-event">
+                                <h4>🧭 Сбор экспедиции</h4>
+                                <p>Серафим — ученик Аэлиона — поклялся найти учителя. Зара — тифлинг, слышащая зов Бездны — вызвалась вести. Чемпион Великой Лиги и ГуангГуанг присоединились. Повествовательница согласилась записывать.</p>
+                            </div>
+                            <div class="chronicle-quote">
+                                «Аэлион жив. Тысячу лет он провёл в Бездне. Один. Я отправляюсь за ним. Не ждите нас. Но молитесь.»
+                                <span>— Из манифеста Серафима</span>
+                            </div>
+                            <div class="chronicle-aftermath">
+                                <strong>Итог:</strong> Орден Света и Культ Тьмы снарядили экспедицию в Разлом. Серафим, Зара, ГуангГуанг, Чемпион и Повествовательница спустились в Бездну.
+                            </div>
+                        </div>
+                    </details>
                 </div>
 
-                <!-- Сезон 4 — текущий -->
-                <div class="timeline-season current-season">
-                    <div class="season-marker s4">4</div>
-                    <div class="season-card">
-                        <div class="season-badge current">Идёт сейчас</div>
-                        <h4 style="color:var(--ice)">🕯️ Сезон 4 — Экспедиция</h4>
-                        <p>Серафим, Зара, ГуангГуанг, Чемпион и Повествовательница спустились в Разлом. Глубина: неизвестно. Время: течёт иначе. Цель: найти Аэлиона и его осколок.</p>
-                        <p>То, что они найдут — изменит Этернис навсегда. Дневник Повествовательницы — единственное свидетельство. Он открывается тем, кто проходит Подземелье.</p>
-                        <p style="color:var(--ice);font-style:italic;margin-top:8px">📓 Записи экспедиции — в Подземелье. Каждая волна открывает новую страницу.</p>
-                    </div>
+                <!-- Сезон 4 -->
+                <div class="chronicle-season">
+                    <div class="season-marker"></div>
+                    <details class="chronicle-card">
+                        <summary>
+                            <span class="chronicle-summary-row">
+                                <span class="chronicle-title" style="color:var(--ice)">🕯️ Сезон 4: Экспедиция</span>
+                                <span class="chronicle-badge completed">Завершён</span>
+                            </span>
+                        </summary>
+                        <div class="chronicle-content">
+                            <div class="chronicle-event">
+                                <h4>🕳️ Спуск в Бездну</h4>
+                                <p>Серафим, Зара, ГуангГуанг, Чемпион и Повествовательница спустились в Разлом. Четыре недели пути через Бездну. ГуангГуанг исчез на третьей неделе и оказался у цели раньше всех — сидел у костра с Аэлионом и пил пиво.</p>
+                            </div>
+                            <div class="chronicle-event">
+                                <h4>💀 Трон в Бездне</h4>
+                                <p>В центре Разлома они нашли Аэлиона на троне. Тысяча лет одиночества превратили его в нежить. Он держал Разлом открытым, чтобы Серафим нашёл дорогу. Он передал осколок ученику и отказался возвращаться.</p>
+                            </div>
+                            <div class="chronicle-event">
+                                <h4>🎲 Ставка ГуангГуанга</h4>
+                                <p>Аэлион и ГуангГуанг остались у костра. ГуангГуанг признался: он поставил на Аэлиона тысячу лет назад — на то, что тот выберет правильную сторону. Ставка ещё не сыграла.</p>
+                            </div>
+                            <div class="chronicle-quote">
+                                «Я держал Разлом открытым, чтобы ты нашёл дорогу. Ты пришёл. Теперь веди. Я свой путь закончил.»
+                                <span>— Аэлион, Серафиму</span>
+                            </div>
+                            <div class="chronicle-aftermath">
+                                <strong>Итог:</strong> Серафим получил право вести Орден. Но его тайная молитва о смерти учителя осталась в дневнике Повествовательницы. Мир замер в ожидании.
+                            </div>
+                        </div>
+                    </details>
                 </div>
 
-                <!-- Сезон 5 — тизер -->
-                <div class="timeline-season future-season">
-                    <div class="season-marker s5">5</div>
-                    <div class="season-card">
-                        <div class="season-badge future">Скоро</div>
-                        <h4 style="color:var(--gold)">⚡ Сезон 5 — ???</h4>
-                        <p>Что принесёт пятый сезон — не знает никто. Даже Повествовательница ещё не дописала эту главу.</p>
-                        <p style="color:var(--muted);font-style:italic">Продолжение следует...</p>
-                    </div>
+                <!-- Сезон 5 (текущий) -->
+                <div class="chronicle-season">
+                    <div class="season-marker current"></div>
+                    <details class="chronicle-card" open>
+                        <summary>
+                            <span class="chronicle-summary-row">
+                                <span class="chronicle-title" style="color:var(--orange)">⚡ Сезон 5: Раскол Ордена</span>
+                                <span class="chronicle-badge ongoing">Идёт сейчас</span>
+                            </span>
+                        </summary>
+						<div class="chronicle-content">
+							<div class="chronicle-event">
+								<h4>📓 Дневник прочитан</h4>
+								<p>Серафим вернулся с осколком. Дневник Повествовательницы прочитан. Орден Света раскололся на три фракции.</p>
+							</div>
+							<div class="chronicle-event">
+								<h4>🛡️ Хранители</h4>
+								<p>«Аэлион жив. Мы ждём.» Хотят оставить трон пустым. Лидеры — старые рыцари, потомки первых паладинов, хранящие традицию тысячу лет. Цвет: тёплое золото.</p>
+							</div>
+							<div class="chronicle-event">
+								<h4>⚔️ Реформаторы</h4>
+								<p>«Учитель выбрал ученика. Мы идём дальше.» Признают Серафима новым главой. Лидер — Серафим и молодые рыцари. Цвет: ледяное золото.</p>
+							</div>
+							<div class="chronicle-event">
+								<h4>🔥 Инквизиторы</h4>
+								<p>«Он молился о смерти учителя. Бездна слышала.» Обвиняют Серафима в предательстве. Но их подозрения идут дальше: Аэлион провёл в Бездне тысячу лет — дневник намекает, что он изменился. Инквизиторы требуют забыть старого основателя и построить новый Орден. Ни ученик, ни учитель им не нужны. Цвет: белое золото.</p>
+							</div>
+							<div class="chronicle-quote">
+								«Он молился о смерти учителя. И Бездна слышала эту молитву. А учитель — разве он всё ещё наш? Тысяча лет в Бездне не делает святым.»
+								<span>— Инквизитор</span>
+							</div>
+							<div class="chronicle-aftermath">
+								<strong>Итог:</strong> Игроки выбирают сторону. Дуэли решат, кто поведёт Орден в будущее — и будет ли в этом будущем место Аэлиону. Бездна открывается как восьмая локация. Культ Тьмы наблюдает и набирает силу.
+							</div>
+						</div>
+                    </details>
                 </div>
             </div>
-
-            <p style="margin-top:12px;color:var(--muted);text-align:center">Каждый сезон — новая глава. Статистика обнуляется, чемпионы уходят в Зал Славы, герои начинают с чистого листа.</p>
         </div>
 
         <!-- Легенда о восстановлении -->
@@ -600,7 +671,6 @@
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
     <script>
-        // === ТЕМА ===
         function toggleTheme() {
             const html = document.documentElement;
             const current = html.getAttribute('data-theme');
@@ -613,7 +683,6 @@
             if (saved) document.documentElement.setAttribute('data-theme', saved);
         })();
 
-        // === НАВИГАЦИЯ ===
         function toggleNav() {
             const nav = document.getElementById('pageNav');
             const btn = document.querySelector('.nav-toggle');
@@ -633,7 +702,6 @@
             });
         });
 
-        // === ПЕРЕКЛЮЧЕНИЕ ФРАКЦИЙ ===
         function switchFaction(faction) {
             document.querySelectorAll('.faction-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.faction-content').forEach(content => content.classList.remove('active'));
@@ -641,15 +709,14 @@
             document.getElementById(`faction-${faction}`).classList.add('active');
         }
 
-		// === ЗЕМЛИ ПОД КОНТРОЛЕМ ===
-		const territoryData = [
-			{ jsonKey: '🎭 Арена Тысячи Эхо',  icon: '🎭', name: 'Арена Тысячи Эхо',    lore: 'Легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.', defaultControl: 'neutral' },
-			{ jsonKey: '🌑 Эпицентр Раскола',  icon: '🌑', name: 'Эпицентр Раскола',    lore: 'Место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул вниз — и открыл путь в Бездну.', defaultControl: 'neutral' },
-			{ jsonKey: '🗡️ Поле Павшего Клинка', icon: '🗡️', name: 'Поле Павшего Клинка', lore: 'Земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.', defaultControl: 'neutral' },
-			{ jsonKey: '🔥 Кузня Расколотых',   icon: '🔥', name: 'Кузня Расколотых',     lore: 'Здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.', defaultControl: 'neutral' },
-			{ jsonKey: '⚓ Порт Дрейфующих',    icon: '⚓', name: 'Порт Дрейфующих',      lore: 'Единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Порт не принадлежит ни Свету, ни Тьме. Здесь правят Любопытство и Случай.', defaultControl: 'neutral' },
-			//{ jsonKey: '🌌 Бездна', icon: '🌌', name: 'Бездна', lore: 'Сюда не светит солнце. Сюда не долетают молитвы. Разлом, открывшийся при падении Клинка, ведёт в мир, где время застыло, а тишина говорит громче слов. Тысячу лет Аэлион сидел здесь на троне — и стал тем, чего не понять живым. Экспедиция вернулась не полностью: что-то осталось внизу. Что-то ждёт. Те, кто спускается слишком глубоко, слышат своё имя — произнесённое голосом, которого не может быть. Вход открыт. Подземелье дышит. Арена решит, кто осмелится контролировать то, что не предназначено для контроля.', defaultControl: 'neutral' }
-		];
+        const territoryData = [
+            { jsonKey: '🎭 Арена Тысячи Эхо',  icon: '🎭', name: 'Арена Тысячи Эхо',    lore: 'Легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.', defaultControl: 'neutral' },
+            { jsonKey: '🌑 Эпицентр Раскола',  icon: '🌑', name: 'Эпицентр Раскола',    lore: 'Место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул вниз — и открыл путь в Бездну.', defaultControl: 'neutral' },
+            { jsonKey: '🗡️ Поле Павшего Клинка', icon: '🗡️', name: 'Поле Павшего Клинка', lore: 'Земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.', defaultControl: 'neutral' },
+            { jsonKey: '🔥 Кузня Расколотых',   icon: '🔥', name: 'Кузня Расколотых',     lore: 'Здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.', defaultControl: 'neutral' },
+            { jsonKey: '⚓ Порт Дрейфующих',    icon: '⚓', name: 'Порт Дрейфующих',      lore: 'Единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Портовые менялы принимают любую валюту: золото, осколки, историю. Кто владеет Портом — владеет всеми морскими путями Этерниса. Арена решит, кому они достанутся.', defaultControl: 'neutral' },
+            { jsonKey: '🌌 Бездна', icon: '🌌', name: 'Бездна', lore: 'Сюда не светит солнце. Сюда не долетают молитвы. Разлом, открывшийся при падении Клинка, ведёт в мир, где время застыло, а тишина говорит громче слов. Тысячу лет Аэлион сидел здесь на троне — и стал тем, чего не понять живым. Экспедиция вернулась не полностью: что-то осталось внизу. Что-то ждёт. Те, кто спускается слишком глубоко, слышат своё имя — произнесённое голосом, которого не может быть. Вход открыт. Подземелье дышит. Арена решит, кто осмелится контролировать то, что не предназначено для контроля.', defaultControl: 'neutral' }
+        ];
 
         async function loadTerritoryControl() {
             const urls = [
@@ -694,7 +761,6 @@
         }
         loadTerritoryControl();
 
-        // === ОСКОЛКИ ===
         const shards = [
             { voice: "Аэлион", text: "«Я думал, что спасаю мир. Я ошибался. Я спасал только себя. Когда я шагнул в Раскол — я не жертвовал собой. Я бежал. От неё. От себя. От правды, которую знал с самого начала: Клинок не падал. Его отпустили.»" },
             { voice: "Повествователь", text: "«Я не начинала эту историю. Я просто записывала. Но однажды заметила, что мои слова... меняют написанное. Я написала: 'Аэлион победил'. Он победил. Я написала: 'Клинок пал'. Он пал. Я никогда не писала: 'Повествователь умерла'. И вот я здесь. Тысячу лет спустя. Всё ещё пишу. Помоги мне закончить.»" },
