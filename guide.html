@@ -165,14 +165,14 @@
         .faction-box.dark .fb-name { color: var(--purple); }
         .faction-box .fb-sub { font-size: 0.72rem; color: var(--muted); }
 
-        .territories {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-top: 14px;
-            font-size: 0.72rem;
-            text-align: center;
-        }
+		.territories {
+			display: grid;
+			grid-template-columns: repeat(6, 1fr);
+			gap: 8px;
+			margin-top: 14px;
+			font-size: 0.72rem;
+			text-align: center;
+		}
 
         .territories div {
             background: var(--elevated);
@@ -415,25 +415,25 @@
             </div>
         </div>
 
-        <!-- Шаг 2: Война фракций -->
-        <div class="path-step faction" id="step-faction">
-            <div class="path-num">Шаг 2</div>
-            <div class="path-title">🌝🌚 Война фракций</div>
-            <div class="path-desc">
-                <p>Ты сражаешься за <strong>Орден Света</strong> или <strong>Культ Тьмы</strong>. Победа над вражеской фракцией приносит удвоенную награду.</p>
-                <p>Каждые <span class="hl">50 побед</span> фракция захватывает территорию. Контроль над картой Этерниса зависит от каждого бойца.</p>
-                <div class="duo">
-                    <div class="faction-box light"><div class="fb-icon">🌝</div><div class="fb-name">Орден Света</div><div class="fb-sub">✨ Сияющий Шпиль — вечно за Светом</div></div>
-                    <div class="faction-box dark"><div class="fb-icon">🌚</div><div class="fb-name">Культ Тьмы</div><div class="fb-sub">🌫️ Зал Повествователя — вечно за Тьмой</div></div>
-                </div>
-                <div class="territories">
-                    <div>🗡️ Поле Клинка</div><div>🌑 Эпицентр</div><div>🎭 Арена Эхо</div><div>🔥 Кузня</div><div>⚓ Порт</div>
-                </div>
-                <p style="font-size:0.7rem; color:var(--muted); margin-top:10px; text-align:center">
-                    5 нейтральных территорий — дуэли решают всё
-                </p>
-            </div>
-        </div>
+		<!-- Шаг 2: Война фракций -->
+		<div class="path-step faction" id="step-faction">
+			<div class="path-num">Шаг 2</div>
+			<div class="path-title">🌝🌚 Война фракций</div>
+			<div class="path-desc">
+				<p>Ты сражаешься за <strong>Орден Света</strong> или <strong>Культ Тьмы</strong>. Победа над вражеской фракцией приносит удвоенную награду.</p>
+				<p>Каждые <span class="hl">50 побед</span> фракция захватывает территорию. Контроль над картой Этерниса зависит от каждого бойца.</p>
+				<div class="duo">
+					<div class="faction-box light"><div class="fb-icon">🌝</div><div class="fb-name">Орден Света</div><div class="fb-sub">✨ Сияющий Шпиль — вечно за Светом</div></div>
+					<div class="faction-box dark"><div class="fb-icon">🌚</div><div class="fb-name">Культ Тьмы</div><div class="fb-sub">🌫️ Зал Повествователя — вечно за Тьмой</div></div>
+				</div>
+				<div class="territories">
+					<div>🗡️ Поле Клинка</div><div>🌑 Эпицентр</div><div>🎭 Арена Эхо</div><div>🔥 Кузня</div><div>⚓ Порт</div><div>🌌 Бездна</div>
+				</div>
+				<p style="font-size:0.7rem; color:var(--muted); margin-top:10px; text-align:center">
+					6 территорий — дуэли решают всё
+				</p>
+			</div>
+		</div>
 
         <!-- Шаг 3: Боевая система -->
         <div class="path-step" id="step-battle">
@@ -443,7 +443,7 @@
                 <p><code>!бой</code> — рейтинговая дуэль. <code>!бой @ник</code> — товарищеский бой.</p>
                 <h3>🎲 Как работает бой</h3>
                 <div class="mech-grid">
-                    <div class="mech l"><div class="m-icon">⚡</div><div><div class="m-title">Инициатива</div><div class="m-body">Оба бросают <strong>d20 + DEX</strong>. Победитель ходит первым. Равенство — случай.</div></div></div>
+                    <div class="mech l"><div class="m-icon">⚡</div><div><div class="m-title">Инициатива</div><div class="m-body">Оба бросают <strong>d10 + DEX</strong>. Победитель ходит первым. Равенство — случай.</div></div></div>
                     <div class="mech i"><div class="m-icon">🎯</div><div><div class="m-title">Попадание</div><div class="m-body"><strong>d20 + ATK ≥ 10 + DEF</strong> защитника → попал. Иначе → 🛡️ блок.</div></div></div>
                     <div class="mech r"><div class="m-icon">💥</div><div><div class="m-title">Крит / Провал</div><div class="m-body">d20 = <strong>20</strong> → двойной урон. d20 = <strong>1</strong> → урон 0.</div></div></div>
                     <div class="mech m"><div class="m-icon">💨</div><div><div class="m-title">Уклонение</div><div class="m-body">d20 ≤ <strong>2 + DEX</strong> защитника → урон 0.</div></div></div>

@@ -187,7 +187,7 @@
             html+=`<div class="stat-card"><div class="stat-value"><span style="color:var(--gold);">${lightRemaining}</span> <span style="color:var(--muted);">·</span> <span style="color:var(--purple);">${darkRemaining}</span></div><div class="stat-label">побед до захвата</div></div>`;
             html+='</div>';
 
-            html+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px">';
+            html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px">';
             html+=`<div style="background:linear-gradient(160deg,var(--elevated),rgba(240,185,11,.03));border:1px solid rgba(240,185,11,.15);border-radius:var(--radius-sm);padding:16px;text-align:center">`;
             html+=`<div style="font-size:1.8rem;margin-bottom:4px">🛡️</div>`;
             html+=`<div style="font-size:1.4rem;font-weight:800;color:var(--gold);margin-bottom:2px">${subKeepers}</div>`;
