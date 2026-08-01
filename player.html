@@ -721,6 +721,9 @@ let cachedAllHeroes = [];
 let currentSeasonFilter = 'all';
 window._seasonNames = [];
 
+// Иконки для сезонов
+const SEASON_ICONS = ['🏁','🔥','💫','🩸','🕯️','⚡','💀','👑'];
+
 async function loadAllSeasons(playerName) {
     const container = document.getElementById('allFormerHeroes');
     if (!container) return;
@@ -743,15 +746,14 @@ async function loadAllSeasons(playerName) {
                 ...h,
                 level: cpd?.level || h.level || 0,
                 record: cdp?.record || h.record || 0,
-                season: '🕯️ Текущий',
-                seasonIndex: -1,
+                season: `${SEASON_ICONS[999] || '📋'} Текущий`,
+                seasonIndex: 999,
                 isCurrent: true
             });
         }
     });
 
     // Архивные сезоны
-    const si = ['🏁','🔥','💫','🩸','🕯️'];
     const sn = [];
     let sii = 0;
 
@@ -760,14 +762,14 @@ async function loadAllSeasons(playerName) {
         let data = null;
         try {
             const r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/${fn}`);
-			// const r = await fetch(`https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/${fn}`);
             if (!r.ok) break;
             data = await r.json();
         } catch (e) {
             break;
         }
 
-        sn[sii] = `${si[sii] || '📋'} Сезон ${sii}`;
+        const icon = SEASON_ICONS[sii] || '📋';
+        sn[sii] = `${icon} Сезон ${sii}`;
 
         // Игрок в players этого сезона
         const player = data.players?.find(p => p.display?.toLowerCase() === pk);
@@ -815,13 +817,15 @@ async function loadAllSeasons(playerName) {
         sii++;
     }
 
-    // Обновляем индексы для текущих героев
-    const csn = sii;
+    // Обновляем текущий сезон: теперь sii = количество архивных сезонов = номер текущего
+    const currentIcon = SEASON_ICONS[sii] || '📋';
+    const currentSeasonName = `${currentIcon} Сезон ${sii}`;
+    sn[sii] = currentSeasonName;
+
     cachedAllHeroes.forEach(h => {
         if (h.isCurrent) {
-            h.seasonIndex = csn;
-            h.season = `${si[csn] || '📋'} Сезон ${csn}`;
-            sn[csn] = h.season;
+            h.seasonIndex = sii;
+            h.season = currentSeasonName;
         }
     });
 
