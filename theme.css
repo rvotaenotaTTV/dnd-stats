@@ -1,4 +1,4 @@
-/* === ТЕМА === */
+/* === ТЕМА: РАСКОЛ ОРДЕНА (огонь + лёд) === */
 :root {
     --bg: #060a14; --card: #0a0f1e; --elevated: #0f1428;
     --text: #dde4f0; --sub: #8a94a8; --muted: #5e6478;
@@ -15,20 +15,20 @@
     --cell-same-bg: rgba(240,185,11,0.1);
     --cell-same-num-bg: rgba(240,185,11,0.2);
     --shadow-lg: 0 20px 40px rgba(0,0,0,0.4);
-    --shadow-gold: 0 4px 12px rgba(240,185,11,0.3);
+    --shadow-gold: 0 4px 12px rgba(255,69,0,0.5);
     --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
     --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
     --collection-height: 400px;
     --abyss: #0a1a2e; --abyss-accent: #5bc0eb; --candle: #8fbc5e;
-    --header-gradient: linear-gradient(135deg, var(--ice) 0%, var(--purple) 50%, var(--gold) 100%);
-    --btn-primary-bg: linear-gradient(135deg, var(--gold), #e0a800);
-    --tab-active-bg: linear-gradient(135deg, var(--ice), var(--gold));
-    --beer-shadow: 0 4px 16px rgba(91,192,235,0.3);
-    --beer-shadow-hover: 0 6px 24px rgba(91,192,235,0.5);
-    --bg-pattern: radial-gradient(ellipse at 50% 0%, rgba(91,192,235,0.05) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(100,140,180,0.03) 0%, transparent 50%);
-    --gold-gradient: linear-gradient(90deg, transparent, var(--gold), transparent);
-    --ice-gradient: linear-gradient(90deg, transparent, var(--ice), transparent);
-    --purple-gradient: linear-gradient(90deg, transparent, var(--purple), transparent);
+    --header-gradient: linear-gradient(135deg, #ff4500 0%, var(--orange) 30%, var(--gold) 60%, #ff6347 100%);
+    --btn-primary-bg: linear-gradient(135deg, #ff4500, var(--orange));
+    --tab-active-bg: linear-gradient(135deg, #ff4500, var(--orange), var(--gold));
+    --beer-shadow: 0 4px 16px rgba(255,69,0,0.4);
+    --beer-shadow-hover: 0 6px 24px rgba(255,140,0,0.6);
+    --bg-pattern: radial-gradient(ellipse at 50% 0%, rgba(255,69,0,0.06) 0%, transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(255,140,0,0.04) 0%, transparent 50%);
+    --gold-gradient: linear-gradient(90deg, transparent, #ff4500, var(--orange), var(--gold), transparent);
+    --ice-gradient: linear-gradient(90deg, transparent, var(--orange), var(--gold), transparent);
+    --purple-gradient: linear-gradient(90deg, transparent, #ff4500, var(--orange), transparent);
     --candle-gradient: linear-gradient(90deg, transparent, var(--candle), transparent);
 }
 
@@ -48,16 +48,17 @@
     --cell-same-num-bg: #c0d8ec;
     --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
     --abyss: #0d2b4e; --abyss-accent: #3a90c0; --candle: #6b8e3a;
-    --header-gradient: linear-gradient(135deg, var(--ice) 0%, var(--purple) 50%, var(--gold) 100%);
-    --btn-primary-bg: linear-gradient(135deg, var(--gold), #c8960a);
-    --tab-active-bg: linear-gradient(135deg, var(--ice), var(--gold));
-    --beer-shadow: 0 4px 16px rgba(58,144,192,0.25);
-    --beer-shadow-hover: 0 6px 24px rgba(58,144,192,0.4);
-    --bg-pattern: radial-gradient(ellipse at 50% 0%, rgba(58,144,192,0.04) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(80,120,180,0.02) 0%, transparent 50%);
-    --gold-gradient: linear-gradient(90deg, transparent, var(--gold), transparent);
-    --ice-gradient: linear-gradient(90deg, transparent, var(--ice), transparent);
-    --purple-gradient: linear-gradient(90deg, transparent, var(--purple), transparent);
+    --header-gradient: linear-gradient(135deg, #e04500 0%, var(--orange) 30%, var(--gold) 60%, #e05530 100%);
+    --btn-primary-bg: linear-gradient(135deg, #e04500, var(--orange));
+    --tab-active-bg: linear-gradient(135deg, #e04500, var(--orange), var(--gold));
+    --beer-shadow: 0 4px 16px rgba(224,69,0,0.35);
+    --beer-shadow-hover: 0 6px 24px rgba(230,126,34,0.5);
+    --bg-pattern: radial-gradient(ellipse at 50% 0%, rgba(224,69,0,0.05) 0%, transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(230,126,34,0.03) 0%, transparent 50%);
+    --gold-gradient: linear-gradient(90deg, transparent, #e04500, var(--orange), var(--gold), transparent);
+    --ice-gradient: linear-gradient(90deg, transparent, var(--orange), var(--gold), transparent);
+    --purple-gradient: linear-gradient(90deg, transparent, #e04500, var(--orange), transparent);
     --candle-gradient: linear-gradient(90deg, transparent, var(--candle), transparent);
+    --shadow-gold: 0 4px 12px rgba(224,69,0,0.4);
 }
 
 /* === ПЛАВНЫЙ ПЕРЕХОД ТЕМЫ === */
