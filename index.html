@@ -177,6 +177,9 @@
             const subInquisitors=data.subInquisitors||0;
             const lightRemaining = 50 - (duelLight % 50);
             const darkRemaining = 50 - (duelDark % 50);
+			const keepersCount = players.filter(p => p.subfaction === 'Хранители').length;
+			const reformersCount = players.filter(p => p.subfaction === 'Реформаторы').length;
+			const inquisitorsCount = players.filter(p => p.subfaction === 'Инквизиторы').length;
             let html='';
             html+='<div class="stats-grid">';
             html+=`<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
@@ -191,19 +194,19 @@
             html+=`<div style="background:linear-gradient(160deg,var(--elevated),rgba(240,185,11,.03));border:1px solid rgba(240,185,11,.15);border-radius:var(--radius-sm);padding:16px;text-align:center">`;
             html+=`<div style="font-size:1.8rem;margin-bottom:4px">🛡️</div>`;
             html+=`<div style="font-size:1.4rem;font-weight:800;color:var(--gold);margin-bottom:2px">${subKeepers}</div>`;
-            html+=`<div style="font-weight:700;color:var(--gold);font-size:.8rem">Хранители</div>`;
+            html+=`<div style="font-weight:700;color:var(--gold);font-size:.8rem">Хранители (${keepersCount})</div>`;
             html+=`<div style="font-size:.65rem;color:var(--muted);margin-top:4px;font-style:italic">«Основателю — верность.»</div></div>`;
 
             html+=`<div style="background:linear-gradient(160deg,var(--elevated),rgba(91,192,235,.03));border:1px solid rgba(91,192,235,.15);border-radius:var(--radius-sm);padding:16px;text-align:center">`;
             html+=`<div style="font-size:1.8rem;margin-bottom:4px">⚡</div>`;
             html+=`<div style="font-size:1.4rem;font-weight:800;color:var(--ice);margin-bottom:2px">${subReformers}</div>`;
-            html+=`<div style="font-weight:700;color:var(--ice);font-size:.8rem">Реформаторы</div>`;
+            html+=`<div style="font-weight:700;color:var(--ice);font-size:.8rem">Реформаторы (${reformersCount})</div>`;
             html+=`<div style="font-size:.65rem;color:var(--muted);margin-top:4px;font-style:italic">«Ученику — власть.»</div></div>`;
 
             html+=`<div style="background:linear-gradient(160deg,var(--elevated),rgba(255,180,80,.03));border:1px solid rgba(255,180,80,.15);border-radius:var(--radius-sm);padding:16px;text-align:center">`;
             html+=`<div style="font-size:1.8rem;margin-bottom:4px">🔥</div>`;
             html+=`<div style="font-size:1.4rem;font-weight:800;color:#ffb850;margin-bottom:2px">${subInquisitors}</div>`;
-            html+=`<div style="font-weight:700;color:#ffb850;font-size:.8rem">Инквизиторы</div>`;
+            html+=`<div style="font-weight:700;color:#ffb850;font-size:.8rem">Инквизиторы (${inquisitorsCount})</div>`;
             html+=`<div style="font-size:.65rem;color:var(--muted);margin-top:4px;font-style:italic">«Павшим — забвение.»</div></div>`;
             html+='</div>';
 
