@@ -347,6 +347,7 @@ function renderProfile(p) {
     h += `<div class="profile-badges">`;
     if (p.champion) h += '<span class="badge badge-gold">👑 Хранитель</span>';
     if (faction) h += `<span class="badge ${faction === 'Орден Света' ? 'badge-light' : 'badge-dark'}">${fi} ${faction}</span>`;
+	if (p.subfaction) h += `<span class="badge badge-gold">${p.subfaction}</span>`;
     if (sR > 0) h += `<span class="badge badge-light">🏆 Топ-${sR} сезона</span>`;
     h += `</div>`;
     h += `<button class="btn btn-secondary" onclick="copyProfileLink()">🔗 Копировать ссылку</button>`;
