@@ -163,52 +163,43 @@
         fetchWithTimeout(DATA_URL_RAW).catch(()=>fetch(DATA_URL_CDN)).then(r=>r.json()).then(data=>{classesData=data.classes;racesData=data.races;classEmojis=Object.fromEntries(classesData.map(c=>[c.Name,c.Emoji]));raceEmojis=Object.fromEntries(racesData.map(r=>[r.Name,r.Emoji]));return fetchWithTimeout(JSON_URL_RAW).catch(()=>fetch(JSON_URL_CDN));}).then(r=>r.json()).then(data=>{players=data.players.filter(p=>p.name&&p.name!=='Unknown');if(data.dungeon?.players){window._dungeonPlayers={};Object.values(data.dungeon.players).forEach(dp=>{window._dungeonPlayers[dp.display]=dp;});}renderFullStats(data);}).catch(err=>{document.getElementById('content').innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--red);">❌ Ошибка загрузки данных<br>${err.message}</div>`;});
 
 		function renderFullStats(data){
-            const totalPlayers=players.length;
-            const totalFights=Math.floor(players.reduce((sum,p)=>sum+p.wins+p.losses,0)/2);
-            const lightCount=players.filter(p=>p.faction==='Орден Света').length;
-            const darkCount=players.filter(p=>p.faction==='Культ Тьмы').length;
-            const fs=data.factionScore||{};
-            const factionLight=fs.battleLight||0;
-            const factionDark=fs.battleDark||0;
-            const duelLight=fs.duelLight||0;
-            const duelDark=fs.duelDark||0;
-            const subKeepers=data.subKeepers||0;
-            const subReformers=data.subReformers||0;
-            const subInquisitors=data.subInquisitors||0;
-            const lightRemaining = 50 - (duelLight % 50);
-            const darkRemaining = 50 - (duelDark % 50);
-			const keepersCount = players.filter(p => p.subfaction === 'Хранители').length;
-			const reformersCount = players.filter(p => p.subfaction === 'Реформаторы').length;
-			const inquisitorsCount = players.filter(p => p.subfaction === 'Инквизиторы').length;
-            let html='';
-            html+='<div class="stats-grid">';
-            html+=`<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-value">${factionLight} : ${factionDark}</div><div class="stat-label">🌝 Свет vs Тьма 🌚</div></div>`;
-            html+=`<div class="stat-card"><div class="stat-value"><span style="color:var(--gold);">${lightRemaining}</span> <span style="color:var(--muted);">·</span> <span style="color:var(--purple);">${darkRemaining}</span></div><div class="stat-label">побед до захвата</div></div>`;
-            html+='</div>';
+			const totalPlayers = players.length;
+			const totalFights = Math.floor(players.reduce((s, p) => s + p.wins + p.losses, 0) / 2);
+			const lightCount = players.filter(p => p.faction === 'Орден Света').length;
+			const darkCount = players.filter(p => p.faction === 'Культ Тьмы').length;
+			const { battleLight = 0, battleDark = 0, duelLight = 0, duelDark = 0 } = data.factionScore || {};
+			const { subKeepers = 0, subReformers = 0, subInquisitors = 0 } = data;
+			const lightRemaining = 50 - (duelLight % 50);
+			const darkRemaining = 50 - (duelDark % 50);
+			
+			const sf = {};
+			players.forEach(p => { if (p.subfaction) sf[p.subfaction] = (sf[p.subfaction] || 0) + 1; });
 
-            html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px">';
-            html+=`<div style="background:linear-gradient(160deg,var(--elevated),rgba(240,185,11,.03));border:1px solid rgba(240,185,11,.15);border-radius:var(--radius-sm);padding:16px;text-align:center">`;
-            html+=`<div style="font-size:1.8rem;margin-bottom:4px">🛡️</div>`;
-            html+=`<div style="font-size:1.4rem;font-weight:800;color:var(--gold);margin-bottom:2px">${subKeepers}</div>`;
-            html+=`<div style="font-weight:700;color:var(--gold);font-size:.8rem">Хранители (${keepersCount})</div>`;
-            html+=`<div style="font-size:.65rem;color:var(--muted);margin-top:4px;font-style:italic">«Основателю — верность.»</div></div>`;
+			let html = '';
+			html += '<div class="stats-grid">';
+			html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${lightCount} <span class="faction-light">🌝</span></div><div class="stat-label">Орден Света</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${darkCount} <span class="faction-dark">🌚</span></div><div class="stat-label">Культ Тьмы</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🌝 Свет vs Тьма 🌚</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value"><span style="color:var(--gold);">${lightRemaining}</span> <span style="color:var(--muted);">·</span> <span style="color:var(--purple);">${darkRemaining}</span></div><div class="stat-label">побед до захвата</div></div>`;
+			html += '</div>';
 
-            html+=`<div style="background:linear-gradient(160deg,var(--elevated),rgba(91,192,235,.03));border:1px solid rgba(91,192,235,.15);border-radius:var(--radius-sm);padding:16px;text-align:center">`;
-            html+=`<div style="font-size:1.8rem;margin-bottom:4px">⚡</div>`;
-            html+=`<div style="font-size:1.4rem;font-weight:800;color:var(--ice);margin-bottom:2px">${subReformers}</div>`;
-            html+=`<div style="font-weight:700;color:var(--ice);font-size:.8rem">Реформаторы (${reformersCount})</div>`;
-            html+=`<div style="font-size:.65rem;color:var(--muted);margin-top:4px;font-style:italic">«Ученику — власть.»</div></div>`;
+			const subs = [
+				{ icon: '🛡️', n: 'Хранители', val: subKeepers, cnt: sf['Хранители'] || 0, color: 'var(--gold)', bg: 'rgba(240,185,11,.03)', border: 'rgba(240,185,11,.15)', q: 'Основателю — верность.' },
+				{ icon: '⚡', n: 'Реформаторы', val: subReformers, cnt: sf['Реформаторы'] || 0, color: 'var(--ice)', bg: 'rgba(91,192,235,.03)', border: 'rgba(91,192,235,.15)', q: 'Ученику — власть.' },
+				{ icon: '🔥', n: 'Инквизиторы', val: subInquisitors, cnt: sf['Инквизиторы'] || 0, color: '#ffb850', bg: 'rgba(255,180,80,.03)', border: 'rgba(255,180,80,.15)', q: 'Павшим — забвение.' }
+			];
 
-            html+=`<div style="background:linear-gradient(160deg,var(--elevated),rgba(255,180,80,.03));border:1px solid rgba(255,180,80,.15);border-radius:var(--radius-sm);padding:16px;text-align:center">`;
-            html+=`<div style="font-size:1.8rem;margin-bottom:4px">🔥</div>`;
-            html+=`<div style="font-size:1.4rem;font-weight:800;color:#ffb850;margin-bottom:2px">${subInquisitors}</div>`;
-            html+=`<div style="font-weight:700;color:#ffb850;font-size:.8rem">Инквизиторы (${inquisitorsCount})</div>`;
-            html+=`<div style="font-size:.65rem;color:var(--muted);margin-top:4px;font-style:italic">«Павшим — забвение.»</div></div>`;
-            html+='</div>';
+			html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px">';
+			subs.forEach(s => {
+				html += `<div style="background:linear-gradient(160deg,var(--elevated),${s.bg});border:1px solid ${s.border};border-radius:var(--radius-sm);padding:16px;text-align:center">`;
+				html += `<div style="font-size:1.8rem;margin-bottom:4px">${s.icon}</div>`;
+				html += `<div style="font-size:1.4rem;font-weight:800;color:${s.color};margin-bottom:2px">${s.val}</div>`;
+				html += `<div style="font-weight:700;color:${s.color};font-size:.8rem">${s.n} (${s.cnt})</div>`;
+				html += `<div style="font-size:.65rem;color:var(--muted);margin-top:4px;font-style:italic">«${s.q}»</div></div>`;
+			});
+			html += '</div>';
 
             html+='<div class="nav-tabs">';
             html+='<button class="tab-btn active" onclick="switchTab(\'tops\')">🏆 Топы</button>';
