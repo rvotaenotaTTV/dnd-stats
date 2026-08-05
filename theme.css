@@ -149,6 +149,10 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
 .beer-btn { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--ice); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: var(--beer-shadow); z-index: 99; animation: float 3s ease-in-out infinite; }
 .beer-btn:hover { transform: scale(1.1); box-shadow: var(--beer-shadow-hover); }
 
+/* === КНОПКА РАСШИРЕНИЯ === */
+.extension-btn { position: fixed; bottom: 76px; right: 20px; width: 48px; height: 48px; background: linear-gradient(135deg, var(--orange), var(--gold)); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; box-shadow: var(--shadow-gold); z-index: 99; animation: float 3s ease-in-out infinite; animation-delay: 1.5s; }
+.extension-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(255,140,0,0.6); }
+
 /* === СПИННЕР === */
 .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top: 3px solid var(--ice); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
 
@@ -207,4 +211,5 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     .nav-dropdown .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); }
     .section { padding: 18px 14px; }
     .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
+	.extension-btn { bottom: 66px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
 }
