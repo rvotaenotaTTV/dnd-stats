@@ -1,10 +1,10 @@
-# ⚔️ Арена Этерниса
+## ⚔️ Арена Этерниса
 
 Статистика D&D арены на стриме [rvotaenota](https://twitch.tv/rvotaenota).
 
 ## 🌐 Сайт
 
-**[eternis-arena.github.io](https://rvotaenotattv.github.io/dnd-stats/)**
+**[rvotaenotattv.github.io](https://rvotaenotattv.github.io/dnd-stats/)**
 
 Статистика, подземелье, лига, профили игроков, зал славы, лор, гайд.
 
