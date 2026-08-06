@@ -10,7 +10,7 @@
 
 ## 🧩 Расширение
 
-[Скачать v1.0](https://github.com/rvotaenotaTTV/dnd-stats/releases/tag/v1.0) — живая статистика в браузере
+**[Скачать](https://github.com/rvotaenotaTTV/dnd-stats/releases/latest)**
 
 ## 📡 Данные
 
