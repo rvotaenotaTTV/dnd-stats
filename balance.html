@@ -458,37 +458,37 @@ function renderFormulas() {
                 <div class="formula-card">
                     <div class="f-title">🏃 Инициатива</div>
                     <div class="f-body">d20 + DEX</div>
-                    <div class="f-note">Кто выше — ходит первым. При равенстве — случайный выбор.</div>
+                    <div class="f-note">Кто бросает больше — тот ходит первым. Если выпало одинаково — решает случай.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">🎯 Попадание</div>
                     <div class="f-body">d20 + ATK ≥ ${CONFIG.baseAC || 10} + DEF врага</div>
-                    <div class="f-note">Если меньше — блок или уклонение.</div>
+                    <div class="f-note">Брось d20, прибавь свою атаку. Если сумма больше защиты врага — попал.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">❌ Провал</div>
                     <div class="f-body">d20 = 1</div>
-                    <div class="f-note">Урон = 0.</div>
+                    <div class="f-note">Критический промах. Даже не попытался — урон 0.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">💥 Крит</div>
                     <div class="f-body">d20 = 20 → двойной бросок урона</div>
-                    <div class="f-note">Урон = random(MIN,MAX) + random(MIN,MAX).</div>
+                    <div class="f-note">Выбиваешь два кубика урона и складываешь. Больше шансов на жирный удар.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">🛡️ Промах</div>
                     <div class="f-body">d20 + ATK < ${CONFIG.baseAC || 10} + DEF врага</div>
-                    <div class="f-note">Если d20 ≤ 2 + DEX — 💨 уклонение. Иначе — 🛡 блок. Урон = 0.</div>
+                    <div class="f-note">Не попал. Если бросок маленький (≤ 2 + DEX врага) — он уклоняется, иначе — просто блок.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">🛡️ Редукция</div>
                     <div class="f-body">Урон × (1 − DEF × ${CONFIG.defReduction || 0.05})</div>
-                    <div class="f-note">Минимальный урон = 1.</div>
+                    <div class="f-note">Броня гасит часть урона. Каждое очко DEF снижает урон на ${(CONFIG.defReduction * 100).toFixed(0)}%. Минимум 1 урон.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">⏱ Лимит раундов</div>
                     <div class="f-body">MAX_ROUNDS = ${CONFIG.maxRounds || 20}</div>
-                    <div class="f-note">Бой до HP ≤ 0 или до лимита раундов.</div>
+                    <div class="f-note">Если за ${CONFIG.maxRounds || 20} раундов никто не умер — побеждает тот, у кого больше HP.</div>
                 </div>
             </div>
         </div>
@@ -498,17 +498,17 @@ function renderFormulas() {
                 <div class="formula-card">
                     <div class="f-title">🎯 ACC</div>
                     <div class="f-body">(${CONFIG.hitChanceBase || 9} + ATK − 2) / 20</div>
-                    <div class="f-note">Ограничен ${(CONFIG.hitChanceMin*100).toFixed(0)}%–${(CONFIG.hitChanceMax*100).toFixed(0)}%.</div>
+                    <div class="f-note">Шанс попасть по среднестатистическому врагу с DEF = 2. Показывается в процентах в таблице.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">💥 DMG/5</div>
                     <div class="f-body">ACC × AVG × ${(1 + 0.05 * (CONFIG.critMultiplier || 2)).toFixed(2)} × 5</div>
-                    <div class="f-note">Ожидаемый урон за 5 раундов с учётом крита (5% шанс, +100% урона).</div>
+                    <div class="f-note">Сколько урона класс нанесёт за 5 ударов. Учитывает шанс попадания и криты.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">🛡️ SURV</div>
                     <div class="f-body">HP / (1 − DEF × ${CONFIG.defReduction || 0.05})</div>
-                    <div class="f-note">Эффективное HP: сколько урона нужно, чтобы убить класс с учётом редукции DEF.</div>
+                    <div class="f-note">Сколько урона класс выдержит до смерти. Чем выше DEF — тем больше эффективного HP.</div>
                 </div>
             </div>
         </div>
