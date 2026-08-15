@@ -211,6 +211,7 @@ const URL_CLASSES = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/m
 let CLASSES = [], RACES = [], selRace = '';
 let pickA = null, pickB = null, pickRaceA = null, pickRaceB = null;
 let classWR = {};
+let CONFIG = {};
 
 async function loadData() {
     try {
@@ -219,6 +220,7 @@ async function loadData() {
         const classesData = await classesRes.json();
         CLASSES = classesData.classes;
         RACES = classesData.races;
+		CONFIG = classesData.config || {};
         aggregateStats(statsData);
         initRaceBar();
         renderClasses();
@@ -288,9 +290,14 @@ function calc(cls, race) {
     }
     const avg = (mn + mx) / 2;
     const enemyDef = 2;
-    const acc = Math.min(0.95, Math.max(0.05, (9 + a - enemyDef) / 20));
-    const dpr = acc * avg * 1.05;
-    const surv = Math.round(h / (1 - d * 0.05));
+	const defReduction = CONFIG.defReduction || 0.05;
+	const critMultiplier = CONFIG.critMultiplier || 2;
+	const hitChanceBase = CONFIG.hitChanceBase || 9;
+	const hitChanceMin = CONFIG.hitChanceMin || 0.05;
+	const hitChanceMax = CONFIG.hitChanceMax || 0.95;
+	const acc = Math.min(hitChanceMax, Math.max(hitChanceMin, (hitChanceBase + a - enemyDef) / 20));
+	const dpr = acc * avg * (1 + 0.05 * critMultiplier);
+	const surv = Math.round(h / (1 - d * defReduction));
     const dmg5 = Math.round(dpr * 5);
     return { hp: h, atk: a, def: d, dex: dx, min: mn, max: mx, avg: Math.round(avg * 10) / 10, acc: Math.round(acc * 100), surv, dmg5 };
 }
@@ -455,7 +462,7 @@ function renderFormulas() {
                 </div>
                 <div class="formula-card">
                     <div class="f-title">🎯 Попадание</div>
-                    <div class="f-body">d20 + ATK ≥ 10 + DEF врага</div>
+                    <div class="f-body">d20 + ATK ≥ ${CONFIG.baseAC || 10} + DEF врага</div>
                     <div class="f-note">Если меньше — блок или уклонение.</div>
                 </div>
                 <div class="formula-card">
@@ -470,17 +477,17 @@ function renderFormulas() {
                 </div>
                 <div class="formula-card">
                     <div class="f-title">🛡️ Промах</div>
-                    <div class="f-body">d20 + ATK < 10 + DEF врага</div>
+                    <div class="f-body">d20 + ATK < ${CONFIG.baseAC || 10} + DEF врага</div>
                     <div class="f-note">Если d20 ≤ 2 + DEX — 💨 уклонение. Иначе — 🛡 блок. Урон = 0.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">🛡️ Редукция</div>
-                    <div class="f-body">Урон × (1 − DEF × 0.05)</div>
+                    <div class="f-body">Урон × (1 − DEF × ${CONFIG.defReduction || 0.05})</div>
                     <div class="f-note">Минимальный урон = 1.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">⏱ Лимит раундов</div>
-                    <div class="f-body">MAX_ROUNDS = 20</div>
+                    <div class="f-body">MAX_ROUNDS = ${CONFIG.maxRounds || 20}</div>
                     <div class="f-note">Бой до HP ≤ 0 или до лимита раундов.</div>
                 </div>
             </div>
@@ -490,17 +497,17 @@ function renderFormulas() {
             <div class="formula-grid">
                 <div class="formula-card">
                     <div class="f-title">🎯 ACC</div>
-                    <div class="f-body">(9 + ATK − 2) / 20</div>
-                    <div class="f-note">Шанс попасть по среднему врагу (DEF = 2). Ограничен 5%–95%.</div>
+                    <div class="f-body">(${CONFIG.hitChanceBase || 9} + ATK − 2) / 20</div>
+                    <div class="f-note">Ограничен ${(CONFIG.hitChanceMin*100).toFixed(0)}%–${(CONFIG.hitChanceMax*100).toFixed(0)}%.</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">💥 DMG/5</div>
-                    <div class="f-body">ACC × AVG × 1.05 × 5</div>
+                    <div class="f-body">ACC × AVG × ${(1 + 0.05 * (CONFIG.critMultiplier || 2)).toFixed(2)} × 5</div>
                     <div class="f-note">Ожидаемый урон за 5 раундов с учётом крита (5% шанс, +100% урона).</div>
                 </div>
                 <div class="formula-card">
                     <div class="f-title">🛡️ SURV</div>
-                    <div class="f-body">HP / (1 − DEF × 0.05)</div>
+                    <div class="f-body">HP / (1 − DEF × ${CONFIG.defReduction || 0.05})</div>
                     <div class="f-note">Эффективное HP: сколько урона нужно, чтобы убить класс с учётом редукции DEF.</div>
                 </div>
             </div>
