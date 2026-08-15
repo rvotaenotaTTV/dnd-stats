@@ -55,16 +55,24 @@
     .compare-winner .winner-sub{font-size:.7rem;color:var(--sub);margin-top:4px}
 
     .table-wrapper{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-sm);border:1px solid var(--border)}
-    table{min-width:950px}
+    table{min-width:900px}
     th{padding:8px 10px;text-align:center;font-size:.68rem;cursor:pointer;user-select:none;padding-right:20px!important;position:relative}
     th::after{content:'⇅';position:absolute;right:5px;opacity:.4;font-size:10px}
     th.asc::after{content:'↑';opacity:1;color:var(--gold)}
     th.desc::after{content:'↓';opacity:1;color:var(--gold)}
     td{padding:7px 10px;text-align:center}
-    tr.selected td{background:rgba(240,185,11,.06)!important}
     tr.selectable td:first-child{cursor:pointer}
     tr.selectable td:first-child:hover{color:var(--gold)!important}
     td:first-child{font-weight:600;color:var(--gold);text-align:left}
+
+    tr.selected-a td{background:rgba(91,192,235,.08)!important;box-shadow:inset 3px 0 0 var(--ice)}
+    tr.selected-b td{background:rgba(163,113,247,.08)!important;box-shadow:inset 3px 0 0 var(--purple)}
+
+    .aura-S{color:#ff4444;font-weight:700;font-size:0.8rem}
+    .aura-A{color:var(--gold);font-weight:700;font-size:0.8rem}
+    .aura-B{color:var(--ice);font-weight:700;font-size:0.8rem}
+    .aura-C{color:var(--muted);font-weight:700;font-size:0.8rem}
+    .aura-dash{color:var(--muted);font-size:0.8rem}
 
     .formulas-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--sub);font-size:.85rem;font-weight:600;margin-bottom:12px;user-select:none}
     .formulas-toggle:hover{color:var(--gold)}
@@ -79,12 +87,6 @@
     .formula-card .f-body{font-size:.75rem;color:var(--sub);line-height:1.6;font-family:'SF Mono','Consolas',monospace}
     .formula-card .f-note{font-size:.65rem;color:var(--muted);margin-top:4px}
 
-    tbody tr:nth-child(1){animation-delay:.02s}tbody tr:nth-child(2){animation-delay:.04s}tbody tr:nth-child(3){animation-delay:.06s}
-    tbody tr:nth-child(4){animation-delay:.08s}tbody tr:nth-child(5){animation-delay:.1s}tbody tr:nth-child(6){animation-delay:.12s}
-    tbody tr:nth-child(7){animation-delay:.14s}tbody tr:nth-child(8){animation-delay:.16s}tbody tr:nth-child(9){animation-delay:.18s}
-    tbody tr:nth-child(10){animation-delay:.2s}tbody tr:nth-child(11){animation-delay:.22s}tbody tr:nth-child(12){animation-delay:.24s}
-    tbody tr:nth-child(13){animation-delay:.26s}tbody tr:nth-child(14){animation-delay:.28s}tbody tr:nth-child(15){animation-delay:.3s}
-
     @media(max-width:768px){
         .race-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
         .race-chip{flex:none;min-width:0;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 6px}
@@ -92,7 +94,7 @@
         .race-chip .chip-emoji{font-size:1.1rem}
         .race-chip .chip-name{font-size:.65rem}
         .race-chip .chip-bonus{font-size:.55rem}
-        table{font-size:.68rem;min-width:780px}
+        table{font-size:.68rem;min-width:700px}
         th,td{padding:5px 7px}
         .formula-grid{grid-template-columns:1fr}
         .compare-grid{grid-template-columns:repeat(3,1fr)}
@@ -102,18 +104,12 @@
 <body>
     <div class="container">
 
-        <!-- ========================================== -->
-        <!-- ШАПКА -->
-        <!-- ========================================== -->
         <header class="header">
             <h1 class="header-title">БАЛАНС</h1>
-            <p class="header-subtitle">Статы, мощь и расчёты каждого класса</p>
+            <p class="header-subtitle">Статы, расчёты и аура классов</p>
             <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         </header>
 
-        <!-- ========================================== -->
-        <!-- НАВИГАЦИЯ -->
-        <!-- ========================================== -->
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
@@ -149,9 +145,6 @@
             </nav>
         </div>
 
-        <!-- ========================================== -->
-        <!-- ВЫБОР РАСЫ -->
-        <!-- ========================================== -->
         <div class="section gold">
             <div class="race-bar" id="raceBar">
                 <div class="race-chip active" onclick="selectRace('')">
@@ -162,9 +155,6 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- СРАВНЕНИЕ КЛАССОВ -->
-        <!-- ========================================== -->
         <div class="compare-section" id="compareSection">
             <div class="compare-header">
                 <div class="compare-vs">
@@ -178,24 +168,18 @@
             <div class="compare-winner" id="compareWinner"></div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- ТАБЛИЦА КЛАССОВ -->
-        <!-- ========================================== -->
         <div class="section gold">
             <div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px">
-                Выбери расу сверху, затем класс снизу. Можно выбрать две разных пары для сравнения.
+                Кликни по классу, чтобы выбрать для сравнения. Первый — <span style="color:var(--ice)">ледяная</span> подсветка, второй — <span style="color:var(--purple)">фиолетовая</span>.
             </div>
             <div class="table-wrapper">
                 <table id="classes-balance-table">
-                    <thead><tr><th data-sort="name">Класс</th><th data-sort="hp">HP</th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th><th data-sort="dex">DEX</th><th data-sort="min">MIN</th><th data-sort="max">MAX</th><th data-sort="avg">AVG</th><th data-sort="acc">ACC</th><th data-sort="surv">SURV</th><th data-sort="dmg5">DMG/5</th><th data-sort="power">POWER</th></tr></thead>
+                    <thead><tr><th data-sort="name">Класс</th><th data-sort="hp">HP</th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th><th data-sort="dex">DEX</th><th data-sort="min">MIN</th><th data-sort="max">MAX</th><th data-sort="avg">AVG</th><th data-sort="acc">ACC</th><th data-sort="surv">SURV</th><th data-sort="dmg5">DMG/5</th><th data-sort="aura">Аура</th></tr></thead>
                     <tbody id="classes-balance-tbody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- ТАБЛИЦА РАС -->
-        <!-- ========================================== -->
         <div class="section gold">
             <div class="table-wrapper">
                 <table id="races-balance-table">
@@ -205,9 +189,6 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- ФОРМУЛЫ -->
-        <!-- ========================================== -->
         <div class="section gold">
             <div class="formulas-toggle" onclick="toggleFormulas()">
                 <span class="arrow">▶</span> Формулы и расчёты
@@ -219,38 +200,60 @@
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
 <script>
-// ==========================================
-// ТЕМА И НАВИГАЦИЯ
-// ==========================================
 function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n)}
 (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s)})()
 function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню'}
 document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню'}))
 document.querySelectorAll('.nav-label').forEach(label=>{label.addEventListener('click',function(e){if(window.innerWidth>768)return;e.preventDefault();const dd=this.nextElementSibling;if(dd&&dd.classList.contains('nav-dropdown')){const o=dd.style.display==='block';document.querySelectorAll('.nav-dropdown').forEach(d=>d.style.display='none');dd.style.display=o?'none':'block'}})})
 
-// ==========================================
-// ДАННЫЕ
-// ==========================================
-const URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-let CLASSES = [], RACES = [], CONFIG = {}, selRace = '';
+const URL_STATS = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const URL_CLASSES = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+let CLASSES = [], RACES = [], selRace = '';
 let pickA = null, pickB = null, pickRaceA = null, pickRaceB = null;
-let currentSortKey = 'power', currentSortDir = 'asc';
+let classWR = {};
 
-// ==========================================
-// ЗАГРУЗКА
-// ==========================================
-fetch(URL).then(r=>r.json()).then(d=>{
-    CONFIG=d.config;CLASSES=d.classes;RACES=d.races;
-    initRaceBar();renderClasses();renderRaces();renderFormulas();initSort();
-    document.querySelector('#classes-balance-table th[data-sort="power"]').classList.add('desc');
-    sortTable('power','asc');
-}).catch(()=>{
-    document.getElementById('classes-balance-tbody').innerHTML='<tr><td colspan="12" style="text-align:center;color:var(--red);">Ошибка загрузки</td></tr>';
-});
+async function loadData() {
+    try {
+        const [statsRes, classesRes] = await Promise.all([fetch(URL_STATS), fetch(URL_CLASSES)]);
+        const statsData = await statsRes.json();
+        const classesData = await classesRes.json();
+        CLASSES = classesData.classes;
+        RACES = classesData.races;
+        aggregateStats(statsData);
+        initRaceBar();
+        renderClasses();
+        renderRaces();
+        renderFormulas();
+        initSort();
+        document.querySelector('#classes-balance-table th[data-sort="aura"]').classList.add('desc');
+        sortTable('aura', 'desc');
+    } catch (e) {
+        document.getElementById('classes-balance-tbody').innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--red);">Ошибка загрузки данных</td></tr>';
+    }
+}
 
-// ==========================================
-// ПАНЕЛЬ ВЫБОРА РАСЫ
-// ==========================================
+function aggregateStats(statsData) {
+    const stats = {};
+    (statsData.players || []).filter(p => p.name && p.name !== 'Unknown').forEach(p => {
+        const cn = p.name.split('-')[1] || p.name;
+        if (!stats[cn]) stats[cn] = { wins: 0, losses: 0 };
+        stats[cn].wins += p.wins || 0;
+        stats[cn].losses += p.losses || 0;
+    });
+    Object.entries(stats).forEach(([cn, s]) => {
+        const total = s.wins + s.losses;
+        classWR[cn] = { wr: total > 0 ? (s.wins * 100 / total) : 50, battles: total };
+    });
+}
+
+function getTier(wr, battles) {
+    if (battles < 30) return { tier: '—', cls: 'aura-dash' };
+    if (wr >= 53) return { tier: 'S', cls: 'aura-S' };
+    if (wr >= 50) return { tier: 'A', cls: 'aura-A' };
+    if (wr >= 47) return { tier: 'B', cls: 'aura-B' };
+    return { tier: 'C', cls: 'aura-C' };
+}
+
 function initRaceBar(){
     const bar=document.getElementById('raceBar');
     const icons={'Человек':'🧑','Орк':'👹','Дворф':'🧔','Нежить':'💀','Эльф':'🧝','Табакси':'🐱','Тифлинг':'😈'};
@@ -275,15 +278,8 @@ function selectRace(name){
     const idx=name?RACES.findIndex(r=>r.Name===name)+1:0;
     if(chips[idx])chips[idx].classList.add('active');
     renderClasses();
-    document.querySelectorAll('#classes-balance-table th').forEach(h=>h.classList.remove('asc','desc'));
-    const th=document.querySelector(`#classes-balance-table th[data-sort="${currentSortKey}"]`);
-    if(th)th.classList.add(currentSortDir);
-    sortTable(currentSortKey,currentSortDir);
 }
 
-// ==========================================
-// РАСЧЁТ СТАТОВ
-// ==========================================
 function calc(cls, race) {
     let h = cls.Hp, a = cls.Atk, d = cls.Def, dx = cls.Dex || 0, mn = cls.Min, mx = cls.Max;
     if (race) {
@@ -292,71 +288,79 @@ function calc(cls, race) {
     }
     const avg = (mn + mx) / 2;
     const enemyDef = 2;
-    const acc = Math.round(Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - enemyDef) / 20)) * 100);
-    const surv = Math.round(h * (1 + d * CONFIG.defReduction));
-    const avgDmg = (mn + mx) / 2;
-    const survivability = Math.pow(h, CONFIG.cpiHpPower) * (1 + d * CONFIG.effHpDefMult);
-    const damage = Math.pow(avgDmg, CONFIG.cpiDmgPower) * Math.pow(CONFIG.accBaseCPI + a, CONFIG.cpiAtkPower);
-    const power = Math.round(survivability * damage / 6.5 * 10) / 10;
-    const dmg5 = Math.round(avg * Math.min(CONFIG.hitChanceMax, Math.max(CONFIG.hitChanceMin, (CONFIG.hitChanceBase + a - enemyDef) / 20)) * 5);
-    return { hp: h, atk: a, def: d, dex: dx, min: mn, max: mx, avg: Math.round(avg * 10) / 10, acc, surv, dmg5, power };
+    const acc = Math.min(0.95, Math.max(0.05, (9 + a - enemyDef) / 20));
+    const dpr = acc * avg * 1.05;
+    const surv = Math.round(h / (1 - d * 0.05));
+    const dmg5 = Math.round(dpr * 5);
+    return { hp: h, atk: a, def: d, dex: dx, min: mn, max: mx, avg: Math.round(avg * 10) / 10, acc: Math.round(acc * 100), surv, dmg5 };
 }
 
-// ==========================================
-// ТАБЛИЦА КЛАССОВ
-// ==========================================
 function renderClasses(){
-    const race=selRace?RACES.find(r=>r.Name===selRace):null;
-    const data=CLASSES.map(c=>({...c,s:calc(c,race)})).sort((a,b)=>b.s.power-a.s.power);
-    const tbody=document.getElementById('classes-balance-tbody');
-    tbody.innerHTML=data.map(c=>{
-        const s=c.s;
-        const isSelected = pickA===c.Name||pickB===c.Name;
-        return`<tr class="selectable${isSelected?' selected':''}" data-name="${c.Name}" data-hp="${s.hp}" data-atk="${s.atk}" data-def="${s.def}" data-dex="${s.dex}" data-min="${s.min}" data-max="${s.max}" data-avg="${s.avg}" data-acc="${s.acc}" data-surv="${s.surv}" data-dmg5="${s.dmg5}" data-power="${s.power}" onclick="pickClass('${c.Name}')"><td>${c.Emoji} ${c.Name}</td><td class="number">${s.hp}</td><td class="number">${s.atk}</td><td class="number">${s.def}</td><td class="number">${s.dex}</td><td class="number">${s.min}</td><td class="number">${s.max}</td><td class="number">${s.avg}</td><td class="number">${s.acc}%</td><td class="number">${s.surv}</td><td class="number">${s.dmg5}</td><td class="number" style="font-weight:700;color:var(--gold)">${s.power.toFixed(1)}</td></tr>`;
+    const race = selRace ? RACES.find(r => r.Name === selRace) : null;
+    const data = CLASSES.map(c => ({ ...c, s: calc(c, race) }));
+    const tbody = document.getElementById('classes-balance-tbody');
+    tbody.innerHTML = data.map(c => {
+        const s = c.s;
+        const wrData = classWR[c.Name] || { wr: 50, battles: 0 };
+        const tier = getTier(wrData.wr, wrData.battles);
+        return `<tr class="selectable" data-name="${c.Name}" data-hp="${s.hp}" data-atk="${s.atk}" data-def="${s.def}" data-dex="${s.dex}" data-min="${s.min}" data-max="${s.max}" data-avg="${s.avg}" data-acc="${s.acc}" data-surv="${s.surv}" data-dmg5="${s.dmg5}" data-aura="${wrData.wr.toFixed(1)}" onclick="pickClass('${c.Name}')">
+            <td>${c.Emoji} ${c.Name}</td>
+            <td class="number">${s.hp}</td>
+            <td class="number">${s.atk}</td>
+            <td class="number">${s.def}</td>
+            <td class="number">${s.dex}</td>
+            <td class="number">${s.min}</td>
+            <td class="number">${s.max}</td>
+            <td class="number">${s.avg}</td>
+            <td class="number">${s.acc}%</td>
+            <td class="number">${s.surv}</td>
+            <td class="number">${s.dmg5}</td>
+            <td class="number"><span class="${tier.cls}">${tier.tier}</span></td>
+        </tr>`;
     }).join('');
-    sortTable(currentSortKey, currentSortDir);
-    document.querySelectorAll('#classes-balance-table th').forEach(h=>h.classList.remove('asc','desc'));
-    const activeTh=document.querySelector(`#classes-balance-table th[data-sort="${currentSortKey}"]`);
-    if(activeTh)activeTh.classList.add(currentSortDir);
+    updateSelection();
 }
 
-// ==========================================
-// ВЫБОР КЛАССОВ ДЛЯ СРАВНЕНИЯ (с запоминанием расы)
-// ==========================================
 function pickClass(name){
     if(pickA===name && pickRaceA===selRace){pickA=null;pickRaceA=null;}
     else if(pickB===name && pickRaceB===selRace){pickB=null;pickRaceB=null;}
     else if(!pickA){pickA=name;pickRaceA=selRace;}
     else if(!pickB){pickB=name;pickRaceB=selRace;}
     else{pickA=name;pickRaceA=selRace;pickB=null;pickRaceB=null;}
-    renderClasses();updateCompare();
+    updateSelection();
+    updateCompare();
 }
 
-function closeCompare(){pickA=null;pickB=null;pickRaceA=null;pickRaceB=null;renderClasses();updateCompare();}
+function updateSelection(){
+    document.querySelectorAll('#classes-balance-tbody tr').forEach(tr=>{
+        const name = tr.dataset.name;
+        tr.classList.remove('selected-a', 'selected-b');
+        if(pickA===name && pickRaceA===selRace) tr.classList.add('selected-a');
+        if(pickB===name && pickRaceB===selRace) tr.classList.add('selected-b');
+    });
+}
 
-// ==========================================
-// ОТОБРАЖЕНИЕ СРАВНЕНИЯ
-// ==========================================
+function closeCompare(){
+    pickA=null;pickB=null;pickRaceA=null;pickRaceB=null;
+    updateSelection();
+    updateCompare();
+}
+
 function updateCompare(){
     const section=document.getElementById('compareSection');
     const winner=document.getElementById('compareWinner');
     if(!pickA||!pickB){section.classList.remove('active');winner.innerHTML='';return;}
     section.classList.add('active');
-
     const raceA=pickRaceA?RACES.find(r=>r.Name===pickRaceA):null;
     const raceB=pickRaceB?RACES.find(r=>r.Name===pickRaceB):null;
     const clsA=CLASSES.find(c=>c.Name===pickA);
     const clsB=CLASSES.find(c=>c.Name===pickB);
     if(!clsA||!clsB)return;
-
     const sA=calc(clsA,raceA),sB=calc(clsB,raceB);
-
-    // Заголовок с полными именами
     const nameA=raceA?`${raceA.Emoji} ${raceA.Name}-${clsA.Emoji} ${clsA.Name}`:`${clsA.Emoji} ${clsA.Name}`;
     const nameB=raceB?`${raceB.Emoji} ${raceB.Name}-${clsB.Emoji} ${clsB.Name}`:`${clsB.Emoji} ${clsB.Name}`;
     document.getElementById('compareNameA').textContent=nameA;
     document.getElementById('compareNameB').textContent=nameB;
-
     const stats=[
         {label:'HP',icon:'❤️',a:sA.hp,b:sB.hp},
         {label:'ATK',icon:'⚔️',a:sA.atk,b:sB.atk},
@@ -365,10 +369,8 @@ function updateCompare(){
         {label:'MIN',icon:'📉',a:sA.min,b:sB.min},
         {label:'MAX',icon:'📈',a:sA.max,b:sB.max}
     ];
-
     let winsA=0,winsB=0;
     const maxVal=Math.max(...stats.map(s=>Math.max(s.a,s.b)),1);
-
     document.getElementById('compareGrid').innerHTML=stats.map(s=>{
         const delta=s.a-s.b;
         const cls=delta>0?'win':delta<0?'lose':'draw';
@@ -392,23 +394,16 @@ function updateCompare(){
             <div class="c-delta ${cls}">${delta>0?'+'+delta:delta===0?'0':delta}</div>
         </div>`;
     }).join('');
-
     const total=winsA+winsB;
     if(winsA>winsB)winner.innerHTML=`<div class="winner-text">🏆 ${nameA} сильнее</div><div class="winner-sub">Счёт по статам: ${winsA}:${winsB} (из ${total})</div>`;
     else if(winsB>winsA)winner.innerHTML=`<div class="winner-text">🏆 ${nameB} сильнее</div><div class="winner-sub">Счёт по статам: ${winsB}:${winsA} (из ${total})</div>`;
     else winner.innerHTML=`<div class="winner-text">⚖️ Полное равенство</div><div class="winner-sub">Одинаковые статы (${winsA}:${winsB})</div>`;
 }
 
-// ==========================================
-// ТАБЛИЦА РАС
-// ==========================================
 function renderRaces(){
     document.getElementById('races-balance-tbody').innerHTML=RACES.map(r=>`<tr data-name="${r.Name}" data-hp="${r.BonusHp}" data-atk="${r.BonusAtk}" data-def="${r.BonusDef}" data-dex="${r.BonusDex}" data-min="${r.BonusMin}" data-max="${r.BonusMax}"><td>${r.Emoji} ${r.Name}</td><td class="number">${r.BonusHp>0?'+':''}${r.BonusHp}</td><td class="number">${r.BonusAtk>0?'+':''}${r.BonusAtk}</td><td class="number">${r.BonusDef>0?'+':''}${r.BonusDef}</td><td class="number">${r.BonusDex>0?'+':''}${r.BonusDex}</td><td class="number">${r.BonusMin>0?'+':''}${r.BonusMin}</td><td class="number">${r.BonusMax>0?'+':''}${r.BonusMax}</td></tr>`).join('');
 }
 
-// ==========================================
-// СОРТИРОВКА ТАБЛИЦ
-// ==========================================
 function sortTable(key,dir){
     const tbody=document.querySelector('#classes-balance-table tbody');
     const rows=Array.from(tbody.querySelectorAll('tr'));
@@ -428,9 +423,7 @@ function initSort(){
             table.querySelectorAll('th').forEach(h=>h.classList.remove('asc','desc'));
             th.classList.add(isAsc?'desc':'asc');
             if(table.id==='classes-balance-table'){
-                currentSortKey=key;
-                currentSortDir=isAsc?'desc':'asc';
-                sortTable(key,currentSortDir);
+                sortTable(key,isAsc?'desc':'asc');
             }else{
                 const tbody=table.querySelector('tbody');
                 const rows=Array.from(tbody.querySelectorAll('tr'));
@@ -445,35 +438,77 @@ function initSort(){
     });
 }
 
-// ==========================================
-// ФОРМУЛЫ
-// ==========================================
 function toggleFormulas(){
     document.querySelector('.formulas-toggle').classList.toggle('open');
     document.getElementById('formulasContainer').classList.toggle('open');
 }
 
 function renderFormulas() {
-    const c = CONFIG;
     document.getElementById('formulasContainer').innerHTML = `
         <div>
-            <div class="formula-cat-title">⚔️ Боевые</div>
+            <div class="formula-cat-title">⚔️ Боевая система</div>
             <div class="formula-grid">
-                <div class="formula-card"><div class="f-title">🎯 Точность в бою</div><div class="f-body">(${c.hitChanceBase} + ATK − DEF) / 20</div><div class="f-note">Шанс попасть. Ограничена ${(c.hitChanceMin*100).toFixed(0)}%–${(c.hitChanceMax*100).toFixed(0)}%</div></div>
-                <div class="formula-card"><div class="f-title">💥 DMG/5</div><div class="f-body">AVG × ACC × 5</div><div class="f-note">Ожидаемый урон за 5 раундов (ACC из боя, с DEF врага)</div></div>
-                <div class="formula-card"><div class="f-title">🏃 DEX</div><div class="f-body">Инициатива = d20 + DEX</div><div class="f-note">Не влияет на POWER</div></div>
+                <div class="formula-card">
+                    <div class="f-title">🏃 Инициатива</div>
+                    <div class="f-body">d20 + DEX</div>
+                    <div class="f-note">Кто выше — ходит первым. При равенстве — случайный выбор.</div>
+                </div>
+                <div class="formula-card">
+                    <div class="f-title">🎯 Попадание</div>
+                    <div class="f-body">d20 + ATK ≥ 10 + DEF врага</div>
+                    <div class="f-note">Если меньше — блок или уклонение.</div>
+                </div>
+                <div class="formula-card">
+                    <div class="f-title">❌ Провал</div>
+                    <div class="f-body">d20 = 1</div>
+                    <div class="f-note">Урон = 0.</div>
+                </div>
+                <div class="formula-card">
+                    <div class="f-title">💥 Крит</div>
+                    <div class="f-body">d20 = 20 → двойной бросок урона</div>
+                    <div class="f-note">Урон = random(MIN,MAX) + random(MIN,MAX).</div>
+                </div>
+                <div class="formula-card">
+                    <div class="f-title">🛡️ Промах</div>
+                    <div class="f-body">d20 + ATK < 10 + DEF врага</div>
+                    <div class="f-note">Если d20 ≤ 2 + DEX — 💨 уклонение. Иначе — 🛡 блок. Урон = 0.</div>
+                </div>
+                <div class="formula-card">
+                    <div class="f-title">🛡️ Редукция</div>
+                    <div class="f-body">Урон × (1 − DEF × 0.05)</div>
+                    <div class="f-note">Минимальный урон = 1.</div>
+                </div>
+                <div class="formula-card">
+                    <div class="f-title">⏱ Лимит раундов</div>
+                    <div class="f-body">MAX_ROUNDS = 20</div>
+                    <div class="f-note">Бой до HP ≤ 0 или до лимита раундов.</div>
+                </div>
             </div>
         </div>
         <div>
             <div class="formula-cat-title">📐 Расчётные</div>
             <div class="formula-grid">
-                <div class="formula-card"><div class="f-title">📊 POWER</div><div class="f-body">POWER = (HP<sup>${c.cpiHpPower}</sup> × (1+DEF×${c.effHpDefMult}) × AVG<sup>${c.cpiDmgPower}</sup> × (${c.accBaseCPI}+ATK)<sup>${c.cpiAtkPower}</sup>) / 6.5</div><div class="f-note">Итоговая боевая мощь класса (масштаб ~100)</div></div>
-                <div class="formula-card"><div class="f-title">🛡️ Выживаемость</div><div class="f-body">HP<sup>${c.cpiHpPower}</sup> × (1 + DEF × ${c.effHpDefMult})</div><div class="f-note">HP в степени ${c.cpiHpPower}, +${(c.effHpDefMult*100).toFixed(0)}% за очко DEF</div></div>
-                <div class="formula-card"><div class="f-title">⚔️ Урон</div><div class="f-body">AVG<sup>${c.cpiDmgPower}</sup> × (${c.accBaseCPI} + ATK)<sup>${c.cpiAtkPower}</sup></div><div class="f-note">AVG = (MIN+MAX)/2. ATK влияет через степень ${c.cpiAtkPower}</div></div>
+                <div class="formula-card">
+                    <div class="f-title">🎯 ACC</div>
+                    <div class="f-body">(9 + ATK − 2) / 20</div>
+                    <div class="f-note">Шанс попасть по среднему врагу (DEF = 2). Ограничен 5%–95%.</div>
+                </div>
+                <div class="formula-card">
+                    <div class="f-title">💥 DMG/5</div>
+                    <div class="f-body">ACC × AVG × 1.05 × 5</div>
+                    <div class="f-note">Ожидаемый урон за 5 раундов с учётом крита (5% шанс, +100% урона).</div>
+                </div>
+                <div class="formula-card">
+                    <div class="f-title">🛡️ SURV</div>
+                    <div class="f-body">HP / (1 − DEF × 0.05)</div>
+                    <div class="f-note">Эффективное HP: сколько урона нужно, чтобы убить класс с учётом редукции DEF.</div>
+                </div>
             </div>
         </div>
     `;
 }
+
+loadData();
 </script>
 </body>
 </html>
