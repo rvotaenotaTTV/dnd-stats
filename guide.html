@@ -505,40 +505,101 @@
             </div>
         </div>
 
-        <!-- Шаг 5: Испытание чемпионов -->
-        <div class="path-step tournament" id="step-tournament">
-            <div class="path-num">Шаг 5</div>
-            <div class="path-title">👑 Испытание чемпионов</div>
-            <div class="path-desc">
-                <p>Турнир <strong>дважды за стрим</strong> — в 12:00 и 14:00. 16 бойцов, олимпийская система: проиграл — вылетел.</p>
-                <p>Гарантированное место — <code>!резерв @ник N</code>. Остальные — через <code>!рега</code>.</p>
-                <div class="quote-box">«Шестнадцать клинков. Четыре круга. Один чемпион.»</div>
-                <div class="duo">
-                    <div>
-                        <h3>🏆 Награды турнира</h3>
-                        <div class="reward-table">
-                            <div class="reward-row"><span class="reward-act">Победа в бою</span><span class="reward-val">+4💎</span></div>
-                            <div class="reward-row"><span class="reward-act">Поражение в бою</span><span class="reward-val">+2💎</span></div>
-                            <div class="reward-row"><span class="reward-act">👑 Чемпион</span><span class="reward-val">+10💎 + титул + бонус SKILL</span></div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3>🏟 Структура</h3>
-                        <div class="level-card">
-                            <div style="display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--sub); flex-wrap:wrap; justify-content:center">
-                                <span style="background:var(--bg); padding:5px 10px; border-radius:6px">16 бойцов</span><span>→</span>
-                                <span style="background:var(--bg); padding:5px 10px; border-radius:6px">1/8</span><span>→</span>
-                                <span style="background:var(--bg); padding:5px 10px; border-radius:6px">1/4</span><span>→</span>
-                                <span style="background:var(--bg); padding:5px 10px; border-radius:6px">1/2</span><span>→</span>
-                                <span style="background:rgba(240,185,11,.12); padding:5px 10px; border-radius:6px; color:var(--gold); font-weight:700">👑 Чемпион</span>
-                            </div>
-                            <div class="lv-note" style="margin-top:8px">4 победы до титула. Каждый бой — на вылет.</div>
-                        </div>
-                    </div>
-                </div>
-                <p style="margin-top:14px">В <strong>последний день сезона</strong> — <span class="hl">Лига Этерниса</span>: топ-8 Света против топ-8 Тьмы.</p>
-            </div>
-        </div>
+		<!-- Шаг 5: Испытание чемпионов -->
+		<div class="path-step tournament" id="step-tournament">
+			<div class="path-num">Шаг 5</div>
+			<div class="path-title">👑 Испытание чемпионов</div>
+			<div class="path-desc">
+
+				<!-- 1v1 турнир -->
+				<div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:6px;">
+					<span style="background:var(--gold); color:#0a0a0a; font-weight:800; font-size:0.7rem; padding:3px 12px; border-radius:12px;">1v1</span>
+					<span style="font-weight:600; color:var(--muted); font-size:0.75rem;">⚔️ 12:00 / 14:00</span>
+				</div>
+				<p style="margin-bottom:12px;"><strong>Дважды за стрим.</strong> 16 бойцов. Олимпийская система: проиграл → вылетел.</p>
+
+				<div class="quote-box">«Шестнадцать клинков. Четыре круга. Один чемпион.»</div>
+
+				<div class="duo">
+					<div>
+						<h3>🏆 Награды</h3>
+						<div class="reward-table">
+							<div class="reward-row"><span class="reward-act">Победа в бою</span><span class="reward-val">+4 💎</span></div>
+							<div class="reward-row"><span class="reward-act">Поражение в бою</span><span class="reward-val">+2 💎</span></div>
+							<div class="reward-row" style="background:rgba(240,185,11,0.06); border-bottom:none;">
+								<span class="reward-act" style="font-weight:700; color:var(--gold);">👑 Чемпион</span>
+								<span class="reward-val" style="color:var(--gold);">+10 💎 + титул + бонус SKILL</span>
+							</div>
+						</div>
+					</div>
+					<div>
+						<h3>🏟 Структура</h3>
+						<div class="level-card">
+							<div style="display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--sub); flex-wrap:wrap; justify-content:center;">
+								<span style="background:var(--bg); padding:5px 12px; border-radius:6px; font-weight:700;">16</span><span>→</span>
+								<span style="background:var(--bg); padding:5px 12px; border-radius:6px;">⅛</span><span>→</span>
+								<span style="background:var(--bg); padding:5px 12px; border-radius:6px;">¼</span><span>→</span>
+								<span style="background:var(--bg); padding:5px 12px; border-radius:6px;">½</span><span>→</span>
+								<span style="background:rgba(240,185,11,0.15); padding:5px 14px; border-radius:6px; color:var(--gold); font-weight:800;">👑</span>
+							</div>
+							<div class="lv-note">4 победы до титула. Каждый бой — на вылет.</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 2v2 турнир -->
+				<div style="display:inline-flex; align-items:center; gap:8px; margin-top:28px; margin-bottom:6px;">
+					<span style="background:var(--purple); color:#fff; font-weight:800; font-size:0.7rem; padding:3px 12px; border-radius:12px;">2v2</span>
+					<span style="font-weight:600; color:var(--muted); font-size:0.75rem;">👥 Командный формат</span>
+				</div>
+				<p style="margin-bottom:12px;"><strong>Пары.</strong> Мир больше не верит в одиночек. Победители войдут в хронику как <strong style="color:var(--purple);">Наследники Осколка</strong>.</p>
+
+				<h3>🛡️ Роли классов</h3>
+				<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:16px;">
+					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+						<div style="font-weight:700; color:var(--gold); font-size:0.8rem; margin-bottom:4px;">🛡️ Танк</div>
+						<div style="color:var(--sub); font-size:0.78rem;">Воин · Паладин · Варвар</div>
+						<div style="color:var(--muted); font-size:0.7rem; margin-top:4px; font-style:italic;">Стена, о которую ломаются клинки.</div>
+					</div>
+					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+						<div style="font-weight:700; color:var(--purple); font-size:0.8rem; margin-bottom:4px;">🔮 Маг</div>
+						<div style="color:var(--sub); font-size:0.78rem;">Чародей · Волшебница · Некромант · Колдун</div>
+						<div style="color:var(--muted); font-size:0.7rem; margin-top:4px; font-style:italic;">Воля, разрывающая реальность.</div>
+					</div>
+					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+						<div style="font-weight:700; color:var(--ice); font-size:0.8rem; margin-bottom:4px;">🗡️ Рога</div>
+						<div style="color:var(--sub); font-size:0.78rem;">Плут · Следопыт · Монах</div>
+						<div style="color:var(--muted); font-size:0.7rem; margin-top:4px; font-style:italic;">Тень, что бьёт из-за спины.</div>
+					</div>
+					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+						<div style="font-weight:700; color:var(--green); font-size:0.8rem; margin-bottom:4px;">✨ Саппорт</div>
+						<div style="color:var(--sub); font-size:0.78rem;">Жрец · Друид · Изобретатель · Бард</div>
+						<div style="color:var(--muted); font-size:0.7rem; margin-top:4px; font-style:italic;">Тот, кто не даёт упасть.</div>
+					</div>
+				</div>
+
+				<h3>⚡ Синергии пар</h3>
+				<div style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px; font-size:0.7rem;">
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--gold);"><div style="font-size:1.2rem; margin-bottom:4px;">🧱</div><div style="font-weight:700; color:var(--text);">Танк+Танк</div><div style="color:var(--gold); font-weight:600;">+5 HP</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--gold);"><div style="font-size:1.2rem; margin-bottom:4px;">☄️</div><div style="font-weight:700; color:var(--text);">Маг+Маг</div><div style="color:var(--gold); font-weight:600;">+1 ATK<br>+1 MAX</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--gold);"><div style="font-size:1.2rem; margin-bottom:4px;">🌪️</div><div style="font-weight:700; color:var(--text);">Рога+Рога</div><div style="color:var(--gold); font-weight:600;">+1 ATK<br>+1 DEX</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--gold);"><div style="font-size:1.2rem; margin-bottom:4px;">🕊️</div><div style="font-weight:700; color:var(--text);">Сап+Сап</div><div style="color:var(--gold); font-weight:600;">+3 HP<br>+1 DEF</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">🔥</div><div style="font-weight:700; color:var(--text);">Танк+Маг</div><div style="color:var(--orange); font-weight:600;">+2 DEF</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">⚡</div><div style="font-weight:700; color:var(--text);">Танк+Рога</div><div style="color:var(--orange); font-weight:600;">+2 ATK</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">🌿</div><div style="font-weight:700; color:var(--text);">Танк+Сап</div><div style="color:var(--orange); font-weight:600;">+4 HP</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">💥</div><div style="font-weight:700; color:var(--text);">Маг+Рога</div><div style="color:var(--orange); font-weight:600;">+1 MIN<br>+1 MAX</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">💫</div><div style="font-weight:700; color:var(--text);">Маг+Сап</div><div style="color:var(--orange); font-weight:600;">+2 HP<br>+2 MAX</div></div>
+					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">🍃</div><div style="font-weight:700; color:var(--text);">Рога+Сап</div><div style="color:var(--orange); font-weight:600;">+1 ATK<br>+1 DEX</div></div>
+				</div>
+
+				<!-- Лига Этерниса -->
+				<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.03)); border:1px solid rgba(240,185,11,0.1); border-radius:var(--radius-sm); padding:16px 20px; margin-top:20px; text-align:center;">
+					<span style="color:var(--gold); font-weight:700;">⚡ Лига Этерниса</span>
+					<span style="color:var(--sub);"> — в последний день сезона: топ‑8 Света против топ‑8 Тьмы.</span>
+				</div>
+
+			</div>
+		</div>
 
         <!-- Шаг 6: Бездна Разлома -->
         <div class="path-step dungeon" id="step-dungeon">

@@ -376,6 +376,10 @@ function renderProfile(p) {
     h += `<div class="stat-card"><div class="stat-num">${p.factionWins || 0}</div><div class="stat-label">🌍 Фракция</div></div>`;
     h += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.record : '-'}</div><div class="stat-label">🏔 Рекорд данжа</div></div>`;
     h += `<div class="stat-card"><div class="stat-num">${dungeon ? dungeon.trophies : '-'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
+	h += `<div class="stat-card"><div class="stat-num">${p.teamWins || 0}</div><div class="stat-label">⚔️ 2v2 Победы</div></div>`;
+	h += `<div class="stat-card"><div class="stat-num">${p.teamLoses || 0}</div><div class="stat-label">💀 2v2 Поражения</div></div>`;
+	h += `<div class="stat-card"><div class="stat-num">${(() => { const tW = p.teamWins || 0; const tL = p.teamLoses || 0; const tT = tW + tL; return tT > 0 ? (tW * 100 / tT).toFixed(1) + '%' : '—'; })()}</div><div class="stat-label">📊 2v2 Винрейт</div></div>`;
+	h += `<div class="stat-card"><div class="stat-num">${p.teamTournamentWins || 0}</div><div class="stat-label">👑 2v2 Турниры</div></div>`;
     h += '</div>';
 
     // Ранги
@@ -723,7 +727,7 @@ let currentSeasonFilter = 'all';
 window._seasonNames = [];
 
 // Иконки для сезонов
-const SEASON_ICONS = ['🏁','🔥','💫','🩸','🕯️','⚡','💀','👑'];
+const SEASON_ICONS = ['🏁','🔥','💫','🩸','🕯️','⚡','💀'];
 
 async function loadAllSeasons(playerName) {
     const container = document.getElementById('allFormerHeroes');
