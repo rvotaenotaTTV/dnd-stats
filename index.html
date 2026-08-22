@@ -588,8 +588,31 @@
 			// 2v2
 			html+='<div id="tab-twovtwo" class="tab-content">';
 			const teamPlayers = players.filter(p => (p.teamWins || 0) + (p.teamLoses || 0) + (p.teamTournamentWins || 0) > 0);
+
 			if(teamPlayers.length > 0){
 				const teamTop = [...teamPlayers].sort((a,b) => (b.teamElo || 1000) - (a.teamElo || 1000));
+				
+				const top3 = teamTop.slice(0, 3);
+				const medals = ['🥇', '🥈', '🥉'];
+				
+				html+='<div class="hunters-top">';
+				top3.forEach((p, i) => {
+					const tW = p.teamWins || 0;
+					const tL = p.teamLoses || 0;
+					const tTotal = tW + tL;
+					const tWR = tTotal > 0 ? (tW * 100 / tTotal).toFixed(1) : '0.0';
+					const tT = p.teamTournamentWins || 0;
+					const tElo = p.teamElo || 1000;
+					
+					html+=`<div class="hunter-card">
+						<div class="hunter-medal">${medals[i]}</div>
+						<div style="font-size:2rem;margin:4px 0;">${p.emoji||'⚔️'}</div>
+						<div class="hunter-name">${p.display}</div>
+						<div class="hunter-count">ELO: ${tElo} · ${tW}W/${tL}L · ${tWR}% WR</div>
+						${tT > 0 ? `<div style="color:var(--gold);font-size:0.7rem;margin-top:4px;">👑 Турнирные победы: ${tT}</div>` : ''}
+					</div>`;
+				});
+				html+='</div>';
 				
 				html+='<div class="card"><div class="card-title">⚔️ 2v2 Дивизион</div><div class="table-container"><table id="twovtwo-table"><thead><tr>';
 				html+='<th class="sortable-header" data-sort="rank">#</th>';
