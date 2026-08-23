@@ -4,17 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Гайд · Путь героя</title>
-
-    <!-- Подключение шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
-
-    <!-- Основные стили темы -->
     <link rel="stylesheet" href="theme.css">
 
     <style>
-        /* === ОСНОВНЫЕ СЕТКИ И КАРТОЧКИ === */
         .guide-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -62,7 +57,6 @@
         .infocard .ic-title { font-weight: 700; color: var(--gold); font-size: 0.85rem; margin-bottom: 4px; }
         .infocard .ic-sub { font-size: 0.72rem; color: var(--muted); }
 
-        /* === ПУТЬ ГЕРОЯ (ТАЙМЛАЙН) === */
         .path {
             display: flex;
             flex-direction: column;
@@ -93,7 +87,6 @@
 
         .path-step:hover { border-color: var(--gold); }
 
-        /* Точки на линии */
         .path-step::before {
             content: '';
             position: absolute;
@@ -138,7 +131,6 @@
 
         .hl { color: var(--gold); font-weight: 600; }
 
-        /* === ДОПОЛНИТЕЛЬНЫЕ БЛОКИ === */
         .duo {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -181,7 +173,6 @@
             padding: 10px 6px;
         }
 
-        /* === МЕХАНИКИ === */
         .mech-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -216,7 +207,6 @@
         .mech.g .m-title { color: var(--green); }
         .mech .m-body { font-size: 0.78rem; color: var(--sub); line-height: 1.5; }
 
-        /* === ПАССИВКИ, КОМАНДЫ, ТАБЛИЦЫ === */
         .passive-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -315,7 +305,6 @@
         .level-card .lv-body { font-size: 0.78rem; color: var(--sub); }
         .level-card .lv-note { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
 
-        /* === АДАПТИВНОСТЬ === */
         @media (max-width: 768px) {
             .guide-grid, .infocards, .duo, .mech-grid, .passive-grid {
                 grid-template-columns: 1fr;
@@ -328,17 +317,13 @@
 </head>
 <body>
 
-<!-- ===== ОСНОВНОЙ КОНТЕЙНЕР ===== -->
 <div class="container">
-
-    <!-- ===== ШАПКА ===== -->
     <header class="header">
         <h1 class="header-title">ПУТЬ ГЕРОЯ</h1>
         <p class="header-subtitle">От первого боя до легенды Этерниса</p>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">🌓</button>
     </header>
-
-    <!-- ===== НАВИГАЦИЯ ===== -->
+	
     <div class="nav-wrapper">
         <button class="nav-toggle" onclick="toggleNav()" aria-label="Меню">☰ Меню</button>
         <nav class="nav-bar" id="pageNav">
@@ -373,8 +358,7 @@
             </div>
         </nav>
     </div>
-
-    <!-- ===== БЛОК БЫСТРЫХ ДЕЙСТВИЙ ===== -->
+	
     <div class="guide-grid">
         <div class="guide-card" onclick="document.getElementById('step-battle').scrollIntoView({behavior:'smooth'})">
             <span class="gc-icon">⚔️</span>
@@ -396,7 +380,6 @@
         </div>
     </div>
 
-    <!-- ===== ОСНОВНОЙ ПУТЬ ГЕРОЯ ===== -->
     <div class="path">
 
         <!-- Шаг 1: Создание героя -->
@@ -747,16 +730,12 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-    </div> <!-- / .path -->
-</div> <!-- / .container -->
-
-<!-- Кнопка доната -->
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺" aria-label="Донат">🍺</a>
 
-<!-- ===== СКРИПТЫ ===== -->
 <script>
-    // Переключение темы
     function toggleTheme() {
         const html = document.documentElement;
         const currentTheme = html.getAttribute('data-theme');
@@ -765,7 +744,6 @@
         localStorage.setItem('eternis-theme', newTheme);
     }
 
-    // Применение сохраненной темы при загрузке
     (function() {
         const savedTheme = localStorage.getItem('eternis-theme');
         if (savedTheme) {
@@ -773,7 +751,6 @@
         }
     })();
 
-    // Переключение навигации на мобильных устройствах
     function toggleNav() {
         const nav = document.getElementById('pageNav');
         const toggleBtn = document.querySelector('.nav-toggle');
@@ -781,7 +758,6 @@
         toggleBtn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
     }
 
-    // Закрытие навигации при клике на ссылку
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             document.getElementById('pageNav').classList.remove('show');
@@ -789,7 +765,6 @@
         });
     });
 
-    // Раскрытие подменю навигации на мобильных устройствах
     document.querySelectorAll('.nav-label').forEach(label => {
         label.addEventListener('click', function(e) {
             if (window.innerWidth > 768) return;
@@ -803,6 +778,5 @@
         });
     });
 </script>
-
 </body>
 </html>

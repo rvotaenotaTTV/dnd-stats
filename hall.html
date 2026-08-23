@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
-    /* ========================================== */
-    /* СЕЗОННЫЙ ФРЕЙМ                            */
-    /* ========================================== */
     .season-frame{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;margin-bottom:20px;position:relative;overflow:hidden;animation:fadeSlideIn .4s ease}
     .season-frame::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:.6;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
     .season-frame.live{border-color:rgba(240,185,11,.4)}
@@ -23,15 +20,9 @@
     @keyframes softGlow{0%,100%{box-shadow:0 0 8px rgba(240,185,11,.3)}50%{box-shadow:0 0 16px rgba(240,185,11,.6)}}
     .season-quote{background:var(--elevated);border-left:3px solid var(--gold);padding:10px 16px;margin:12px 0 20px;color:var(--sub);font-size:.85rem;font-style:italic;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
 
-    /* ========================================== */
-    /* ПОДЗАГОЛОВКИ СЕКЦИЙ                        */
-    /* ========================================== */
     .section-subtitle{display:flex;align-items:center;gap:8px;color:var(--gold);font-size:.85rem;font-weight:700;margin:22px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:2px}
     .section-subtitle::before{content:'';display:inline-block;width:4px;height:16px;background:var(--gold);border-radius:2px}
 
-    /* ========================================== */
-    /* СТАТ-КАРТОЧКИ                              */
-    /* ========================================== */
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
     .stat-card{background:var(--elevated);border-radius:var(--radius-sm);padding:16px 12px;text-align:center;border:1px solid var(--border);transition:transform .2s,box-shadow .2s}
     .stat-card:hover{transform:translateY(-2px)}
@@ -39,9 +30,6 @@
     .stat-label{color:var(--muted);font-size:0.65rem;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
     .stat-sub{color:var(--sub);font-size:.65rem;margin-top:2px}
 
-    /* ========================================== */
-    /* КОРОНА РАСКОЛА                             */
-    /* ========================================== */
     .crown-section{margin-bottom:20px}
     .crown-bar-visual{display:flex;height:40px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);margin-bottom:8px;position:relative}
     .crown-light{background:linear-gradient(90deg,rgba(240,185,11,.7),rgba(240,185,11,.4));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#000;transition:flex .5s ease;min-width:40px}
@@ -49,9 +37,6 @@
     .crown-icon-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;z-index:3;filter:drop-shadow(0 0 6px rgba(240,185,11,.8));transition:left .5s ease}
     .crown-owner{text-align:center;font-size:.8rem;color:var(--sub);font-weight:600}
 
-    /* ========================================== */
-    /* ЧЕМПИОНЫ СЕЗОНА                            */
-    /* ========================================== */
     .champion-section{background:var(--elevated);border:1px solid rgba(240,185,11,.2);border-radius:var(--radius-sm);padding:20px;margin-bottom:20px;animation:fadeSlideIn .4s ease}
     .champion-section-title{color:var(--gold);font-size:.9rem;font-weight:700;text-align:center;margin-bottom:16px;letter-spacing:2px;text-transform:uppercase}
     .champion-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -66,9 +51,6 @@
     .champ-crowns{display:flex;justify-content:center;align-items:center;gap:1px;font-size:.85rem;flex-wrap:wrap;max-width:100%}
     .champ-wins-text{color:var(--muted);font-size:.65rem;margin-top:2px}
 
-    /* ========================================== */
-    /* ТАБЛИЦЫ                                    */
-    /* ========================================== */
     .tables-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .table-card{background:var(--elevated);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);animation:fadeSlideIn .3s ease}
     .table-card.full-width{grid-column:span 2}
@@ -78,9 +60,6 @@
     tr.row-silver td:first-child{border-left:3px solid var(--silver)}
     tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
 
-    /* ========================================== */
-    /* ТАЙМЛАЙН СЕЗОНОВ                           */
-    /* ========================================== */
     .timeline-nav{display:flex;justify-content:center;gap:0;margin-bottom:30px;padding:0 20px;position:relative;overflow-x:auto}
     .timeline-nav::before{content:'';position:absolute;top:50%;left:5%;right:5%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--purple),var(--ice),transparent);z-index:0}
     .tl-item{position:relative;z-index:1;padding:8px 16px;cursor:pointer;text-align:center;transition:.3s;flex-shrink:0;min-width:60px}
@@ -90,9 +69,6 @@
     .tl-item .tl-label{font-size:.55rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;white-space:nowrap}
     .tl-item.active .tl-label{color:var(--gold);font-weight:700}
 
-    /* ========================================== */
-    /* ВКЛАДКИ                                    */
-    /* ========================================== */
     .tabs{display:flex;gap:8px;margin-bottom:24px;justify-content:center}
     .tab-btn{padding:10px 24px;border:1px solid var(--border);background:var(--elevated);color:var(--sub);border-radius:var(--radius);cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:all .2s}
     .tab-btn:hover{border-color:var(--gold);color:var(--text);background:var(--card)}
@@ -100,9 +76,7 @@
     .tab-content{display:none;animation:fadeSlideIn .3s ease}
     .tab-content.active{display:block}
 
-    /* ========================================== */
-    /* ТАБЛИЦА ЗА ВСЁ ВРЕМЯ                       */
-    /* ========================================== */
+
     .sortable-header{cursor:pointer;user-select:none;position:relative;padding-right:18px;transition:color .2s}
     .sortable-header:hover{color:var(--gold)}
     .sortable-header::after{content:' ↕';position:absolute;right:4px;opacity:0.4;font-size:0.7rem}
@@ -115,7 +89,6 @@
     .search-clear{background:var(--elevated);border:1px solid var(--border);color:var(--sub);padding:8px 14px;border-radius:20px;cursor:pointer;font-size:.75rem;font-family:inherit;transition:.2s;white-space:nowrap}
     .search-clear:hover{border-color:var(--gold);color:var(--gold)}
 
-    /* Стили строк таблицы */
     #total-table tbody tr{transition:background .2s}
     #total-table tbody tr:hover{background:var(--card)}
     #total-table tbody tr.row-gold{background:rgba(240,185,11,0.06)}
@@ -130,9 +103,6 @@
     .player-link{color:var(--gold);text-decoration:none;font-weight:600;transition:color .2s}
     .player-link:hover{color:var(--text);text-decoration:underline}
 
-    /* ========================================== */
-    /* МОБИЛЬНАЯ АДАПТАЦИЯ                        */
-    /* ========================================== */
     @media(max-width:768px){
         .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
         .stat-value{font-size:1.3rem}
@@ -155,18 +125,12 @@
 <body>
     <div class="container">
 
-        <!-- ========================================== -->
-        <!-- ШАПКА -->
-        <!-- ========================================== -->
         <header class="header">
             <h1 class="header-title">ЗАЛ СЛАВЫ</h1>
             <p class="header-subtitle">История величайших героев Этерниса</p>
             <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         </header>
 
-        <!-- ========================================== -->
-        <!-- НАВИГАЦИЯ -->
-        <!-- ========================================== -->
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
             <nav class="nav-bar" id="pageNav">
@@ -202,25 +166,16 @@
             </nav>
         </div>
 
-        <!-- ========================================== -->
-        <!-- ВКЛАДКИ -->
-        <!-- ========================================== -->
         <div class="tabs">
             <button class="tab-btn active" onclick="switchHallTab('seasons')">🏆 Зал Славы</button>
             <button class="tab-btn" onclick="switchHallTab('alltime')">📊 Легенды</button>
         </div>
 
-        <!-- ========================================== -->
-        <!-- ВКЛАДКА: ЗАЛ СЛАВЫ (по сезонам) -->
-        <!-- ========================================== -->
         <div id="hall-tab-seasons" class="tab-content active">
             <div class="timeline-nav" id="season-tabs"></div>
             <div id="tab-content-container"></div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- ВКЛАДКА: ЗА ВСЁ ВРЕМЯ -->
-        <!-- ========================================== -->
         <div id="hall-tab-alltime" class="tab-content">
             <div class="section gold" id="total-stats-section">
                 
@@ -267,9 +222,6 @@
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
 <script>
-// ==========================================
-// ТЕМА И НАВИГАЦИЯ
-// ==========================================
 function toggleTheme() {
     const h = document.documentElement;
     const c = h.getAttribute('data-theme');
@@ -295,9 +247,6 @@ document.querySelectorAll('.nav-link').forEach(l => {
     });
 });
 
-// ==========================================
-// КОНФИГУРАЦИЯ
-// ==========================================
 const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 const ARCHIVE_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
 const SEASON_ICONS = ['🏁','🔥','💫','🩸','🕯️','⚡','💀'];
@@ -309,9 +258,6 @@ let activeSeason = -1;
 let dungeonPlayers = {};
 let totalPlayersData = [];
 
-// ==========================================
-// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-// ==========================================
 function getRankClass(index) {
     if (index === 0) return 'row-gold';
     if (index === 1) return 'row-silver';
@@ -336,9 +282,6 @@ function clearSearch() {
     filterTotalTable();
 }
 
-// ==========================================
-// РЕНДЕР СЕЗОНА
-// ==========================================
 function renderSeason(data, seasonNum, isCurrent) {
     if (data.dungeon && data.dungeon.players) {
         dungeonPlayers = data.dungeon.players;
@@ -540,9 +483,6 @@ function renderSeason(data, seasonNum, isCurrent) {
     return html;
 }
 
-// ==========================================
-// ТОТАЛЬНАЯ СТАТИСТИКА ЗА ВСЕ СЕЗОНЫ
-// ==========================================
 async function loadTotalStats() {
     const tbody = document.getElementById('total-table-body');
     const summary = document.getElementById('total-summary');
@@ -574,7 +514,6 @@ async function loadTotalStats() {
         }
     }
 
-    // Текущий сезон
     try {
         const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json());
         (d.players || []).forEach(p => {
@@ -590,7 +529,6 @@ async function loadTotalStats() {
         }
     } catch (e) {}
 
-    // Архивные сезоны
     for (let n = 0; n < 20; n++) {
         try {
             const r = await fetch(`${ARCHIVE_BASE}${n}.json`);
@@ -662,9 +600,6 @@ async function loadTotalStats() {
     initTotalSortable();
 }
 
-// ==========================================
-// ТАБЛИЦА «ЗА ВСЁ ВРЕМЯ»
-// ==========================================
 function filterTotalTable() {
     const query = document.getElementById('totalSearch').value.toLowerCase().trim();
     const tbody = document.getElementById('total-table-body');
@@ -744,9 +679,6 @@ function initTotalSortable() {
     if (defaultHeader) defaultHeader.classList.add('desc');
 }
 
-// ==========================================
-// ТАЙМЛАЙН СЕЗОНОВ
-// ==========================================
 function renderTimeline() {
     const container = document.getElementById('season-tabs');
     container.innerHTML = seasonTabs.map(sn => {
@@ -767,9 +699,6 @@ function switchSeason(sn) {
     document.getElementById(`tab-s${sn}`).classList.add('active');
 }
 
-// ==========================================
-// ПОИСК И ЗАГРУЗКА СЕЗОНОВ
-// ==========================================
 async function detectSeasons() {
     const foundSeasons = [];
     for (let n = 0; n < 20; n++) {
@@ -828,9 +757,6 @@ async function loadArchiveSeason(sn, tabId) {
     }
 }
 
-// ==========================================
-// МОБИЛЬНАЯ НАВИГАЦИЯ
-// ==========================================
 document.querySelectorAll('.nav-label').forEach(label => {
     label.addEventListener('click', function(e) {
         if (window.innerWidth > 768) return;
@@ -844,9 +770,6 @@ document.querySelectorAll('.nav-label').forEach(label => {
     });
 });
 
-// ==========================================
-// ЗАПУСК
-// ==========================================
 detectSeasons();
 loadTotalStats();
 </script>
