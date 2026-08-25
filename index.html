@@ -600,17 +600,20 @@
 					const tW = p.teamWins || 0;
 					const tL = p.teamLoses || 0;
 					const tTotal = tW + tL;
-					const tWR = tTotal > 0 ? (tW * 100 / tTotal).toFixed(1) : '0.0';
+					const tWR = tTotal > 0 ? (tW * 100 / tTotal) : 0;
 					const tT = p.teamTournamentWins || 0;
 					const tPoints = p.teamElo || 0;
 					const tRank = getTeamRank(tW, tL).rank;
+					const tRankColor = getTeamRankColor(tW, tL);
 					
-					html+=`<div class="hunter-card">
+					html+=`<div class="hunter-card" style="border:2px solid ${tRankColor};">
 						<div class="hunter-medal">${medals[i]}</div>
 						<div style="font-size:2rem;margin:4px 0;">${p.emoji||'⚔️'}</div>
 						<div class="hunter-name">${p.display}</div>
-						<div class="hunter-count">${tRank} · ${tPoints} очков · ${tW}W/${tL}L · ${tWR}% WR</div>
-						${tT > 0 ? `<div style="color:var(--gold);font-size:0.7rem;margin-top:4px;">👑 Турнирные победы: ${tT}</div>` : ''}
+						<div class="hunter-count" style="color:${tRankColor};">${tRank}</div>
+						<div class="hunter-count">${tPoints} очков</div>
+						<div class="hunter-count">${tW}W / ${tL}L · ${tWR.toFixed(1)}%</div>
+						${tT > 0 ? `<div style="color:var(--gold);font-size:0.7rem;margin-top:4px;">👑 ×${tT}</div>` : ''}
 					</div>`;
 				});
 				html+='</div>';
@@ -621,9 +624,8 @@
 				html+='<th class="sortable-header" data-sort="class">Герой</th>';
 				html+='<th class="sortable-header" data-sort="telo">Очки</th>';
 				html+='<th class="sortable-header" data-sort="trank">Ранг</th>';
-				html+='<th class="sortable-header" data-sort="twins">W</th>';
-				html+='<th class="sortable-header" data-sort="tlosses">L</th>';
 				html+='<th class="sortable-header" data-sort="twr">Винрейт</th>';
+				html+='<th class="sortable-header" data-sort="twins">W/L</th>';
 				html+='<th class="sortable-header" data-sort="ttournament">👑</th>';
 				html+='</tr></thead><tbody id="twovtwo-tbody">';
 				
@@ -637,18 +639,26 @@
 					const teamRank = getTeamRank(tW, tL);
 					const tRank = teamRank.rank;
 					const tRankValue = teamRank.value;
-					const wrColor = tWR >= 55 ? 'var(--green)' : tWR >= 45 ? 'var(--gold)' : 'var(--red)';
+					const tRankColor = getTeamRankColor(tW, tL);
+					const progress = getTeamRankProgress(tW, tL, tRankValue);
+					const rowStyle = i < 3 ? 'background:rgba(255,215,0,0.03);' : '';
 					
-					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-telo="${tPoints}" data-trank="${tRankValue}" data-twins="${tW}" data-tlosses="${tL}" data-twr="${tWR.toFixed(1)}" data-ttournament="${tT}">`;
+					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-telo="${tPoints}" data-trank="${tRankValue}" data-twins="${tW}" data-tlosses="${tL}" data-twr="${tWR.toFixed(1)}" data-ttournament="${tT}" style="${rowStyle}">`;
 					html+=`<td class="number">${i+1}</td>`;
 					html+=`<td style="text-align:left;"><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.emoji||'⚔️'} ${p.display}</a></td>`;
 					html+=`<td style="text-align:left;color:var(--sub);">${p.name}</td>`;
 					html+=`<td class="number" style="color:var(--ice);font-weight:700;">${tPoints}</td>`;
-					html+=`<td class="number" style="font-weight:600;">${tRank}</td>`;
-					html+=`<td class="number" style="color:var(--gold);font-weight:700;">${tW}</td>`;
-					html+=`<td class="number">${tL}</td>`;
-					html+=`<td class="number" style="color:${wrColor};font-weight:600;">${tWR.toFixed(1)}%</td>`;
-					html+=`<td class="number" style="color:var(--gold);">${tT > 0 ? tT : '—'}</td>`;
+					html+=`<td class="number"><span style="color:${tRankColor};font-weight:700;">${tRank}</span></td>`;
+					html+=`<td class="number">
+						<div style="display:flex;align-items:center;gap:6px;justify-content:center;">
+							<span style="color:${tWR >= 55 ? 'var(--green)' : tWR >= 45 ? 'var(--gold)' : 'var(--red)'};font-weight:600;">${tWR.toFixed(0)}%</span>
+							<div style="width:50px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
+								<div style="width:${Math.min(100, progress)}%;height:100%;background:${tRankColor};border-radius:3px;transition:width 0.3s;"></div>
+							</div>
+						</div>
+					</td>`;
+					html+=`<td class="number"><span style="color:var(--gold);">${tW}</span>/${tL}</td>`;
+					html+=`<td class="number" style="color:var(--gold);">${tT > 0 ? '👑×'+tT : '—'}</td>`;
 					html+=`</tr>`;
 				});
 				html+='</tbody></table></div></div>';
@@ -679,6 +689,39 @@
 			if (wr >= 50) return { rank: '🥇 Золото', value: 3 };
 			if (wr >= 45) return { rank: '🥈 Серебро', value: 2 };
 			return { rank: '🥉 Бронза', value: 1 };
+		}
+
+		function getTeamRankColor(wins, losses) {
+			const total = wins + losses;
+			if (total < 5) return '#888888';
+			const wr = wins * 100 / total;
+			if (wr >= 60) return '#5cc8ff';
+			if (wr >= 55) return '#b57edc';
+			if (wr >= 50) return '#ffd700';
+			if (wr >= 45) return '#c0c0c0';
+			return '#cd7f32';
+		}
+
+		function getTeamRankProgress(wins, losses, currentValue) {
+			const total = wins + losses;
+			if (total < 5) return 0;
+			const wr = wins * 100 / total;
+			
+			const thresholds = [
+				{ min: 0, max: 45, value: 1 },
+				{ min: 45, max: 50, value: 2 },
+				{ min: 50, max: 55, value: 3 },
+				{ min: 55, max: 60, value: 4 },
+				{ min: 60, max: 100, value: 5 }
+			];
+			
+			const current = thresholds.find(t => t.value === currentValue);
+			if (!current || current.value >= 5) return 100;
+			
+			const next = thresholds.find(t => t.value === currentValue + 1);
+			if (!next) return 100;
+			
+			return ((wr - current.min) / (next.min - current.min)) * 100;
 		}
 		
 		document.querySelectorAll('.nav-label').forEach(label=>{
