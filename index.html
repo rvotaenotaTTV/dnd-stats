@@ -593,7 +593,12 @@
 				const teamTop = [...teamPlayers].sort((a,b) => (b.teamElo || 0) - (a.teamElo || 0));
 				
 				const top3 = teamTop.slice(0, 3);
-				const medals = ['🥇', '🥈', '🥉'];
+				const medals = ['👑', '🥈', '🥉'];
+				const crownStyles = [
+					'background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(255,215,0,0.05));border:2px solid #ffd700;box-shadow:0 0 20px rgba(255,215,0,0.3);',
+					'background:linear-gradient(135deg,rgba(192,192,192,0.12),rgba(192,192,192,0.03));border:2px solid #c0c0c0;',
+					'background:linear-gradient(135deg,rgba(205,127,50,0.12),rgba(205,127,50,0.03));border:2px solid #cd7f32;'
+				];
 				
 				html+='<div class="hunters-top">';
 				top3.forEach((p, i) => {
@@ -606,14 +611,17 @@
 					const tRank = getTeamRank(tW, tL).rank;
 					const tRankColor = getTeamRankColor(tW, tL);
 					
-					html+=`<div class="hunter-card" style="border:2px solid ${tRankColor};">
-						<div class="hunter-medal">${medals[i]}</div>
-						<div style="font-size:2rem;margin:4px 0;">${p.emoji||'⚔️'}</div>
-						<div class="hunter-name">${p.display}</div>
-						<div class="hunter-count" style="color:${tRankColor};">${tRank}</div>
-						<div class="hunter-count">${tPoints} очков</div>
-						<div class="hunter-count">${tW}W / ${tL}L · ${tWR.toFixed(1)}%</div>
-						${tT > 0 ? `<div style="color:var(--gold);font-size:0.7rem;margin-top:4px;">👑 ×${tT}</div>` : ''}
+					html+=`<div class="hunter-card" style="${crownStyles[i]};position:relative;transition:transform 0.2s;cursor:pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+						<div style="position:absolute;top:-10px;right:10px;font-size:1.5rem;">${medals[i]}</div>
+						<div style="font-size:2.5rem;margin:8px 0 4px;">${p.emoji||'⚔️'}</div>
+						<div class="hunter-name" style="font-size:1rem;font-weight:700;">${p.display}</div>
+						<div style="color:${tRankColor};font-weight:700;font-size:0.85rem;margin:4px 0;">${tRank}</div>
+						<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0;">
+							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;color:var(--ice);">💎 ${tPoints}</span>
+							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;">${tW}W/${tL}L</span>
+							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;color:${tWR >= 55 ? 'var(--green)' : tWR >= 45 ? 'var(--gold)' : 'var(--red)'};">${tWR.toFixed(0)}%</span>
+						</div>
+						${tT > 0 ? `<div style="font-size:0.7rem;color:var(--gold);">👑 Турнирные победы: ${tT}</div>` : ''}
 					</div>`;
 				});
 				html+='</div>';
@@ -622,7 +630,7 @@
 				html+='<th class="sortable-header" data-sort="rank">#</th>';
 				html+='<th class="sortable-header" data-sort="name">Имя</th>';
 				html+='<th class="sortable-header" data-sort="class">Герой</th>';
-				html+='<th class="sortable-header" data-sort="telo">Очки</th>';
+				html+='<th class="sortable-header" data-sort="telo">💎</th>';
 				html+='<th class="sortable-header" data-sort="trank">Ранг</th>';
 				html+='<th class="sortable-header" data-sort="twr">Винрейт</th>';
 				html+='<th class="sortable-header" data-sort="twins">W/L</th>';
@@ -642,22 +650,23 @@
 					const tRankColor = getTeamRankColor(tW, tL);
 					const progress = getTeamRankProgress(tW, tL, tRankValue);
 					const rowStyle = i < 3 ? 'background:rgba(255,215,0,0.03);' : '';
+					const hoverStyle = 'onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'"';
 					
-					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-telo="${tPoints}" data-trank="${tRankValue}" data-twins="${tW}" data-tlosses="${tL}" data-twr="${tWR.toFixed(1)}" data-ttournament="${tT}" style="${rowStyle}">`;
-					html+=`<td class="number">${i+1}</td>`;
+					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-telo="${tPoints}" data-trank="${tRankValue}" data-twins="${tW}" data-tlosses="${tL}" data-twr="${tWR.toFixed(1)}" data-ttournament="${tT}" style="${rowStyle}" ${hoverStyle}>`;
+					html+=`<td class="number" style="font-weight:700;${i < 3 ? 'color:var(--gold);' : ''}">${i+1}</td>`;
 					html+=`<td style="text-align:left;"><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.emoji||'⚔️'} ${p.display}</a></td>`;
 					html+=`<td style="text-align:left;color:var(--sub);">${p.name}</td>`;
 					html+=`<td class="number" style="color:var(--ice);font-weight:700;">${tPoints}</td>`;
-					html+=`<td class="number"><span style="color:${tRankColor};font-weight:700;">${tRank}</span></td>`;
+					html+=`<td class="number"><span style="background:${tRankColor}22;color:${tRankColor};padding:2px 8px;border-radius:10px;font-weight:700;font-size:0.8rem;">${tRank}</span></td>`;
 					html+=`<td class="number">
 						<div style="display:flex;align-items:center;gap:6px;justify-content:center;">
 							<span style="color:${tWR >= 55 ? 'var(--green)' : tWR >= 45 ? 'var(--gold)' : 'var(--red)'};font-weight:600;">${tWR.toFixed(0)}%</span>
-							<div style="width:50px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
-								<div style="width:${Math.min(100, progress)}%;height:100%;background:${tRankColor};border-radius:3px;transition:width 0.3s;"></div>
+							<div style="width:60px;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;">
+								<div style="width:${Math.max(5, Math.min(100, progress))}%;height:100%;background:linear-gradient(90deg,${tRankColor}88,${tRankColor});border-radius:4px;transition:width 0.5s;"></div>
 							</div>
 						</div>
 					</td>`;
-					html+=`<td class="number"><span style="color:var(--gold);">${tW}</span>/${tL}</td>`;
+					html+=`<td class="number"><span style="color:var(--gold);font-weight:700;">${tW}</span><span style="color:var(--muted);">/</span>${tL}</td>`;
 					html+=`<td class="number" style="color:var(--gold);">${tT > 0 ? '👑×'+tT : '—'}</td>`;
 					html+=`</tr>`;
 				});
