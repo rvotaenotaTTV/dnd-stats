@@ -10,52 +10,11 @@
     <link rel="stylesheet" href="theme.css">
 
     <style>
-        .guide-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 28px;
-        }
-
-        .guide-card {
-            background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03));
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 20px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
         .guide-card:hover {
             border-color: var(--gold);
             transform: translateY(-3px);
             box-shadow: 0 8px 28px rgba(240, 185, 11, 0.1);
         }
-
-        .guide-card .gc-icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
-        .guide-card .gc-title { font-weight: 800; font-size: 0.9rem; color: var(--gold); margin-bottom: 6px; }
-        .guide-card .gc-cmd { font-family: 'SF Mono', Consolas, monospace; background: rgba(240, 185, 11, 0.12); padding: 3px 10px; border-radius: 10px; font-size: 0.78rem; color: var(--gold); display: inline-block; }
-        .guide-card .gc-sub { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
-
-        .infocards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .infocard {
-            background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03));
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 18px 14px;
-            text-align: center;
-        }
-
-        .infocard .ic-icon { font-size: 2rem; margin-bottom: 8px; }
-        .infocard .ic-title { font-weight: 700; color: var(--gold); font-size: 0.85rem; margin-bottom: 4px; }
-        .infocard .ic-sub { font-size: 0.72rem; color: var(--muted); }
 
         .path {
             display: flex;
@@ -131,13 +90,6 @@
 
         .hl { color: var(--gold); font-weight: 600; }
 
-        .duo {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
         .faction-box {
             background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.04));
             border: 1px solid rgba(240, 185, 11, 0.2);
@@ -157,27 +109,20 @@
         .faction-box.dark .fb-name { color: var(--purple); }
         .faction-box .fb-sub { font-size: 0.72rem; color: var(--muted); }
 
-		.territories {
-			display: grid;
-			grid-template-columns: repeat(6, 1fr);
-			gap: 8px;
-			margin-top: 14px;
-			font-size: 0.72rem;
-			text-align: center;
-		}
+        .territories {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 14px;
+            font-size: 0.72rem;
+            text-align: center;
+        }
 
         .territories div {
             background: var(--elevated);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 10px 6px;
-        }
-
-        .mech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 10px;
-            margin-top: 8px;
         }
 
         .mech {
@@ -207,13 +152,6 @@
         .mech.g .m-title { color: var(--green); }
         .mech .m-body { font-size: 0.78rem; color: var(--sub); line-height: 1.5; }
 
-        .passive-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            font-size: 0.72rem;
-        }
-
         .passive {
             background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03));
             border-radius: 8px;
@@ -232,12 +170,6 @@
         .passive .p-emoji { font-size: 1.4rem; margin-bottom: 4px; }
         .passive .p-name { font-weight: 700; color: var(--text); margin-bottom: 3px; }
         .passive .p-desc { color: var(--muted); line-height: 1.3; }
-
-        .cmd-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
 
         .cmd {
             background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03));
@@ -261,12 +193,6 @@
         .cmd:not(.admin) .c-name { color: var(--gold); }
         .cmd.admin .c-name { color: var(--ice); }
         .cmd .c-desc { color: var(--muted); font-size: 0.75rem; margin-top: 3px; }
-
-        .reward-table {
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-        }
 
         .reward-row {
             display: flex;
@@ -305,8 +231,98 @@
         .level-card .lv-body { font-size: 0.78rem; color: var(--sub); }
         .level-card .lv-note { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
 
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+
+        .infocard, .guide-card {
+            background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 18px 14px;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        .infocard .ic-icon { font-size: 2rem; margin-bottom: 8px; }
+        .infocard .ic-title { font-weight: 700; color: var(--gold); font-size: 0.85rem; margin-bottom: 4px; }
+        .infocard .ic-sub { font-size: 0.72rem; color: var(--muted); }
+
+        .guide-card { cursor: pointer; }
+        .guide-card .gc-icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+        .guide-card .gc-title { font-weight: 800; font-size: 0.9rem; color: var(--gold); margin-bottom: 6px; }
+        .guide-card .gc-cmd { font-family: 'SF Mono', Consolas, monospace; background: rgba(240, 185, 11, 0.12); padding: 3px 10px; border-radius: 10px; font-size: 0.78rem; color: var(--gold); display: inline-block; }
+        .guide-card .gc-sub { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+
+        .synergy-pick {
+            text-align: center;
+            cursor: pointer;
+            min-width: 120px;
+        }
+        .synergy-emoji { font-size: 2.5rem; }
+        .synergy-role { color: var(--sub); font-size: 0.65rem; }
+        .synergy-placeholder { color: var(--muted); font-size: 0.75rem; }
+
+        .class-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+        .class-option {
+            background: var(--elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .class-option.selected { background: rgba(240,185,11,0.15); border-color: var(--gold); }
+        .class-option .co-emoji { font-size: 1.8rem; }
+        .class-option .co-name { font-weight: 700; font-size: 0.7rem; }
+        .class-option .co-role { font-size: 0.6rem; }
+
+        .stat-display {
+            background: var(--elevated);
+            border-radius: 8px;
+            padding: 6px;
+        }
+        .stat-display .sd-label { color: var(--sub); font-size: 0.65rem; }
+        .stat-display .sd-value { font-weight: 700; font-size: 0.85rem; }
+
+        .synergy-bonus { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+
+        .info-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+        .info-chip.gold { background: rgba(240,185,11,0.15); color: var(--gold); }
+        .info-chip.white { background: var(--bg); }
+        .info-chip.gold-dark { background: var(--gold); color: #0a0a0a; font-weight: 800; font-size: 0.7rem; padding: 3px 12px; border-radius: 12px; }
+
+        .role-box {
+            background: var(--elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+        .role-box .rb-title { font-weight: 700; font-size: 0.8rem; margin-bottom: 4px; }
+        .role-box .rb-classes { color: var(--sub); font-size: 0.78rem; }
+        .role-box .rb-note { color: var(--muted); font-size: 0.7rem; margin-top: 4px; font-style: italic; }
+
+        .cta-box {
+            background: linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.03));
+            border: 1px solid rgba(240,185,11,0.1);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
-            .guide-grid, .infocards, .duo, .mech-grid, .passive-grid {
+            .grid-3, .grid-2, .grid-4, .grid-auto {
                 grid-template-columns: 1fr;
             }
             .territories {
@@ -323,12 +339,13 @@
         <p class="header-subtitle">От первого боя до легенды Этерниса</p>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">🌓</button>
     </header>
-	
+    
+    <!-- НАВИГАЦИЯ -->
     <div class="nav-wrapper">
         <button class="nav-toggle" onclick="toggleNav()" aria-label="Меню">☰ Меню</button>
         <nav class="nav-bar" id="pageNav">
             <div class="nav-group">
-                <span class="nav-label">⚔️ Арена ▾</span>
+                <span class="nav-label" tabindex="0">⚔️ Арена ▾</span>
                 <div class="nav-dropdown">
                     <a href="index.html" class="nav-link">📊 Статистика</a>
                     <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
@@ -338,7 +355,7 @@
                 </div>
             </div>
             <div class="nav-group">
-                <span class="nav-label">📐 Аналитика ▾</span>
+                <span class="nav-label" tabindex="0">📐 Аналитика ▾</span>
                 <div class="nav-dropdown">
                     <a href="balance.html" class="nav-link">⚖️ Баланс</a>
                     <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
@@ -348,7 +365,7 @@
                 </div>
             </div>
             <div class="nav-group">
-                <span class="nav-label">🌍 Мир ▾</span>
+                <span class="nav-label" tabindex="0">🌍 Мир ▾</span>
                 <div class="nav-dropdown">
                     <a href="guide.html" class="nav-link active">⚔️ Гайд</a>
                     <a href="lore.html" class="nav-link">📜 Лор</a>
@@ -358,80 +375,82 @@
             </div>
         </nav>
     </div>
-	
-    <div class="guide-grid">
-        <div class="guide-card" onclick="document.getElementById('step-battle').scrollIntoView({behavior:'smooth'})">
+
+    <!-- БЫСТРЫЙ ДОСТУП -->
+    <section class="grid-3" style="margin-bottom: 28px;" aria-label="Быстрый доступ">
+        <article class="guide-card" onclick="scrollToId('step-battle')" tabindex="0" role="button" aria-label="В бой">
             <span class="gc-icon">⚔️</span>
             <span class="gc-title">В бой!</span>
             <span class="gc-cmd">!бой</span>
             <div class="gc-sub">Рейтинговая дуэль</div>
-        </div>
-        <div class="guide-card" onclick="document.getElementById('step-dungeon').scrollIntoView({behavior:'smooth'})">
+        </article>
+        <article class="guide-card" onclick="scrollToId('step-dungeon')" tabindex="0" role="button" aria-label="В Разлом">
             <span class="gc-icon">🐲</span>
             <span class="gc-title">В Разлом</span>
             <span class="gc-cmd">!данж</span>
             <div class="gc-sub">Подземелье</div>
-        </div>
-        <div class="guide-card" onclick="document.getElementById('step-tournament').scrollIntoView({behavior:'smooth'})">
+        </article>
+        <article class="guide-card" onclick="scrollToId('step-tournament')" tabindex="0" role="button" aria-label="На турнир">
             <span class="gc-icon">👑</span>
             <span class="gc-title">На турнир</span>
             <span class="gc-cmd">!рега</span>
             <div class="gc-sub">16 чемпионов</div>
-        </div>
-    </div>
+        </article>
+    </section>
 
-    <div class="path">
+    <!-- ОСНОВНОЙ ПУТЬ -->
+    <main class="path">
 
-        <!-- Шаг 1: Создание героя -->
-        <div class="path-step" id="step-start">
+        <!-- ШАГ 1 -->
+        <article class="path-step" id="step-start">
             <div class="path-num">Шаг 1</div>
-            <div class="path-title">🩸 Создание героя</div>
+            <h2 class="path-title">🩸 Создание героя</h2>
             <div class="path-desc">
-                <div class="infocards">
+                <section class="grid-3" aria-label="Этапы создания">
                     <div class="infocard"><div class="ic-icon">🎁</div><div class="ic-title">Активируй награду</div><div class="ic-sub">«Создать героя»</div></div>
                     <div class="infocard"><div class="ic-icon">🎲</div><div class="ic-title">Выбери героя</div><div class="ic-sub">Напиши номер в чат<br><strong style="color:var(--text)">3 минуты</strong> на ответ</div></div>
                     <div class="infocard"><div class="ic-icon">✅</div><div class="ic-title">Готово</div><div class="ic-sub"><code>!инфо</code> — твои статы</div></div>
-                </div>
+                </section>
                 <p style="text-align:center; max-width:500px; margin:0 auto">
                     Бот предложит <span class="hl">три случайные комбинации</span> раса + класс. Фракция назначается автоматически. Классы не повторяются.
                 </p>
             </div>
-        </div>
+        </article>
 
-		<!-- Шаг 2: Война фракций -->
-		<div class="path-step faction" id="step-faction">
-			<div class="path-num">Шаг 2</div>
-			<div class="path-title">🌝🌚 Война фракций</div>
-			<div class="path-desc">
-				<p>Ты сражаешься за <strong>Орден Света</strong> или <strong>Культ Тьмы</strong>. Победа над вражеской фракцией приносит удвоенную награду.</p>
-				<p>Каждые <span class="hl">50 побед</span> фракция захватывает территорию. Контроль над картой Этерниса зависит от каждого бойца.</p>
-				<div class="duo">
-					<div class="faction-box light"><div class="fb-icon">🌝</div><div class="fb-name">Орден Света</div><div class="fb-sub">✨ Сияющий Шпиль — вечно за Светом</div></div>
-					<div class="faction-box dark"><div class="fb-icon">🌚</div><div class="fb-name">Культ Тьмы</div><div class="fb-sub">🌫️ Зал Повествователя — вечно за Тьмой</div></div>
-				</div>
-				<div class="territories">
-					<div>🗡️ Поле Клинка</div><div>🌑 Эпицентр</div><div>🎭 Арена Эхо</div><div>🔥 Кузня</div><div>⚓ Порт</div><div>🌌 Бездна</div>
-				</div>
-				<p style="font-size:0.7rem; color:var(--muted); margin-top:10px; text-align:center">
-					6 территорий — дуэли решают всё
-				</p>
-			</div>
-		</div>
+        <!-- ШАГ 2 -->
+        <article class="path-step faction" id="step-faction">
+            <div class="path-num">Шаг 2</div>
+            <h2 class="path-title">🌝🌚 Война фракций</h2>
+            <div class="path-desc">
+                <p>Ты сражаешься за <strong>Орден Света</strong> или <strong>Культ Тьмы</strong>. Победа над вражеской фракцией приносит удвоенную награду.</p>
+                <p>Каждые <span class="hl">50 побед</span> фракция захватывает территорию. Контроль над картой Этерниса зависит от каждого бойца.</p>
+                <div class="grid-2">
+                    <div class="faction-box light"><div class="fb-icon">🌝</div><div class="fb-name">Орден Света</div><div class="fb-sub">✨ Сияющий Шпиль — вечно за Светом</div></div>
+                    <div class="faction-box dark"><div class="fb-icon">🌚</div><div class="fb-name">Культ Тьмы</div><div class="fb-sub">🌫️ Зал Повествователя — вечно за Тьмой</div></div>
+                </div>
+                <div class="territories">
+                    <div>🗡️ Поле Клинка</div><div>🌑 Эпицентр</div><div>🎭 Арена Эхо</div><div>🔥 Кузня</div><div>⚓ Порт</div><div>🌌 Бездна</div>
+                </div>
+                <p style="font-size:0.7rem; color:var(--muted); margin-top:10px; text-align:center">
+                    6 территорий — дуэли решают всё
+                </p>
+            </div>
+        </article>
 
-        <!-- Шаг 3: Боевая система -->
-        <div class="path-step" id="step-battle">
+        <!-- ШАГ 3 -->
+        <article class="path-step" id="step-battle">
             <div class="path-num">Шаг 3</div>
-            <div class="path-title">⚔️ Боевая система</div>
+            <h2 class="path-title">⚔️ Боевая система</h2>
             <div class="path-desc">
                 <p><code>!бой</code> — рейтинговая дуэль. <code>!бой @ник</code> — товарищеский бой.</p>
                 <h3>🎲 Как работает бой</h3>
-                <div class="mech-grid">
-                    <div class="mech l"><div class="m-icon">⚡</div><div><div class="m-title">Инициатива</div><div class="m-body">Оба бросают <strong>d20 + DEX</strong>. Победитель ходит первым. Равенство — случай.</div></div></div>
-                    <div class="mech i"><div class="m-icon">🎯</div><div><div class="m-title">Попадание</div><div class="m-body"><strong>d20 + ATK ≥ 10 + DEF</strong> защитника → попал. Иначе → 🛡️ блок.</div></div></div>
-                    <div class="mech r"><div class="m-icon">💥</div><div><div class="m-title">Крит / Провал</div><div class="m-body">d20 = <strong>20</strong> → двойной урон. d20 = <strong>1</strong> → урон 0.</div></div></div>
-                    <div class="mech m"><div class="m-icon">💨</div><div><div class="m-title">Уклонение</div><div class="m-body">d20 ≤ <strong>2 + DEX</strong> защитника → урон 0.</div></div></div>
-                    <div class="mech p"><div class="m-icon">🛡️</div><div><div class="m-title">Редукция</div><div class="m-body">Каждое очко DEF снижает урон на <strong>5%</strong>. Минимум 1 урон.</div></div></div>
-                    <div class="mech g"><div class="m-icon">⏱</div><div><div class="m-title">Ход боя</div><div class="m-body">Атакующий ↔ защитник до HP ≤ 0. Лимит <strong>20 раундов</strong>. Ничья → победа по HP.</div></div></div>
+                <div class="grid-auto">
+                    <div class="mech l"><div class="m-icon">⚡</div><div><h4 class="m-title">Инициатива</h4><div class="m-body">Оба бросают <strong>d20 + DEX</strong>. Победитель ходит первым. Равенство — случай.</div></div></div>
+                    <div class="mech i"><div class="m-icon">🎯</div><div><h4 class="m-title">Попадание</h4><div class="m-body"><strong>d20 + ATK ≥ 10 + DEF</strong> защитника → попал. Иначе → 🛡️ блок.</div></div></div>
+                    <div class="mech r"><div class="m-icon">💥</div><div><h4 class="m-title">Крит / Провал</h4><div class="m-body">d20 = <strong>20</strong> → двойной урон. d20 = <strong>1</strong> → урон 0.</div></div></div>
+                    <div class="mech m"><div class="m-icon">💨</div><div><h4 class="m-title">Уклонение</h4><div class="m-body">d20 ≤ <strong>2 + DEX</strong> защитника → урон 0.</div></div></div>
+                    <div class="mech p"><div class="m-icon">🛡️</div><div><h4 class="m-title">Редукция</h4><div class="m-body">Каждое очко DEF снижает урон на <strong>5%</strong>. Минимум 1 урон.</div></div></div>
+                    <div class="mech g"><div class="m-icon">⏱</div><div><h4 class="m-title">Ход боя</h4><div class="m-body">Атакующий ↔ защитник до HP ≤ 0. Лимит <strong>20 раундов</strong>. Ничья → победа по HP.</div></div></div>
                 </div>
                 <h3>📝 Обозначения в логах</h3>
                 <div class="table-container">
@@ -449,19 +468,19 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </article>
 
-        <!-- Шаг 4: Развитие героя -->
-        <div class="path-step" id="step-shards">
+        <!-- ШАГ 4 -->
+        <article class="path-step" id="step-shards">
             <div class="path-num">Шаг 4</div>
-            <div class="path-title">💎 Развитие героя</div>
+            <h2 class="path-title">💎 Развитие героя</h2>
             <div class="path-desc">
                 <p>Осколки (💎) — валюта прогресса. Получаешь за победы, поражения, турниры и данж. Тратишь на повышение уровня.</p>
                 <p>Уровни 1–10: каждый следующий дороже на 5💎. Уровни 11+: ровно +10💎 за уровень. <span style="color:var(--muted)">Максимума нет.</span></p>
-                <div class="duo" style="margin-top:16px">
+                <div class="grid-2" style="margin-top:16px">
                     <div>
                         <h3>📊 Награды</h3>
-                        <div class="reward-table">
+                        <div class="table-container" style="border-radius: var(--radius-sm); overflow: hidden;">
                             <div class="reward-row"><span class="reward-act">🏆 Победа</span><span class="reward-val">+2💎</span></div>
                             <div class="reward-row"><span class="reward-act">💔 Поражение</span><span class="reward-val">+1💎</span></div>
                             <div class="reward-row"><span class="reward-act">🌝🌚 Враг фракции</span><span class="reward-val">+4💎</span></div>
@@ -486,150 +505,133 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </article>
 
-		<!-- Шаг 5: Испытание чемпионов -->
-		<div class="path-step tournament" id="step-tournament">
-			<div class="path-num">Шаг 5</div>
-			<div class="path-title">👑 Испытание чемпионов</div>
-			<div class="path-desc">
+        <!-- ШАГ 5 -->
+        <article class="path-step tournament" id="step-tournament">
+            <div class="path-num">Шаг 5</div>
+            <h2 class="path-title">👑 Испытание чемпионов</h2>
+            <div class="path-desc">
 
-				<!-- 1v1 турнир -->
-				<div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:6px;">
-					<span style="background:var(--gold); color:#0a0a0a; font-weight:800; font-size:0.7rem; padding:3px 12px; border-radius:12px;">1v1</span>
-					<span style="font-weight:600; color:var(--muted); font-size:0.75rem;">⚔️ 12:00</span>
-				</div>
-				<p style="margin-bottom:12px;"><strong>16 бойцов.</strong> Олимпийская система: проиграл → вылетел. Победитель получит звание <strong style="color:var(--gold);">Хранитель Раскола</strong>.</p>
+                <!-- 1v1 -->
+                <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+                    <span class="info-chip gold-dark">1v1</span>
+                    <span style="font-weight:600; color:var(--muted); font-size:0.75rem;">⚔️ 12:00</span>
+                </div>
+                <p style="margin-bottom:12px;"><strong>16 бойцов.</strong> Олимпийская система: проиграл → вылетел. Победитель получит звание <strong style="color:var(--gold);">Хранитель Раскола</strong>.</p>
 
-				<div class="quote-box">«Шестнадцать клинков. Четыре круга. Один чемпион.»</div>
+                <div class="quote-box">«Шестнадцать клинков. Четыре круга. Один чемпион.»</div>
 
-				<div class="duo">
-					<div>
-						<h3>🏆 Награды</h3>
-						<div class="reward-table">
-							<div class="reward-row"><span class="reward-act">Победа в бою</span><span class="reward-val">+4 💎</span></div>
-							<div class="reward-row"><span class="reward-act">Поражение в бою</span><span class="reward-val">+2 💎</span></div>
-							<div class="reward-row" style="background:rgba(240,185,11,0.06); border-bottom:none;">
-								<span class="reward-act" style="font-weight:700; color:var(--gold);">👑 Чемпион</span>
-								<span class="reward-val" style="color:var(--gold);">+10 💎 + титул + бонус SKILL</span>
-							</div>
-						</div>
-					</div>
-					<div>
-						<h3>🏟 Структура</h3>
-						<div class="level-card">
-							<div style="display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--sub); flex-wrap:wrap; justify-content:center;">
-								<span style="background:var(--bg); padding:5px 12px; border-radius:6px; font-weight:700;">16</span><span>→</span>
-								<span style="background:var(--bg); padding:5px 12px; border-radius:6px;">⅛</span><span>→</span>
-								<span style="background:var(--bg); padding:5px 12px; border-radius:6px;">¼</span><span>→</span>
-								<span style="background:var(--bg); padding:5px 12px; border-radius:6px;">½</span><span>→</span>
-								<span style="background:rgba(240,185,11,0.15); padding:5px 14px; border-radius:6px; color:var(--gold); font-weight:800;">👑</span>
-							</div>
-							<div class="lv-note">4 победы до титула. Каждый бой — на вылет.</div>
-						</div>
-					</div>
-				</div>
+                <div class="grid-2">
+                    <div>
+                        <h3>🏆 Награды</h3>
+                        <div class="table-container" style="border-radius: var(--radius-sm); overflow: hidden;">
+                            <div class="reward-row"><span class="reward-act">Победа в бою</span><span class="reward-val">+4 💎</span></div>
+                            <div class="reward-row"><span class="reward-act">Поражение в бою</span><span class="reward-val">+2 💎</span></div>
+                            <div class="reward-row" style="background:rgba(240,185,11,0.06); border-bottom:none;">
+                                <span class="reward-act" style="font-weight:700; color:var(--gold);">👑 Чемпион</span>
+                                <span class="reward-val" style="color:var(--gold);">+10 💎 + титул + бонус SKILL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>🏟 Структура</h3>
+                        <div class="level-card">
+                            <div style="display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--sub); flex-wrap:wrap; justify-content:center;">
+                                <span class="info-chip white">16</span><span>→</span>
+                                <span class="info-chip white">⅛</span><span>→</span>
+                                <span class="info-chip white">¼</span><span>→</span>
+                                <span class="info-chip white">½</span><span>→</span>
+                                <span class="info-chip gold">👑</span>
+                            </div>
+                            <div class="lv-note">4 победы до титула. Каждый бой — на вылет.</div>
+                        </div>
+                    </div>
+                </div>
 
-				<!-- 2v2 турнир -->
-				<div style="display:inline-flex; align-items:center; gap:8px; margin-top:28px; margin-bottom:6px;">
-					<span style="background:var(--purple); color:#fff; font-weight:800; font-size:0.7rem; padding:3px 12px; border-radius:12px;">2v2</span>
-					<span style="font-weight:600; color:var(--muted); font-size:0.75rem;">👥 14:00</span>
-				</div>
-				<p style="margin-bottom:12px;"><strong>Пары.</strong> Мир больше не верит в одиночек. Победители получат звание <strong style="color:var(--purple);">Наследники Осколка</strong>.</p>
+                <!-- 2v2 -->
+                <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:28px; margin-bottom:6px;">
+                    <span style="background:var(--purple); color:#fff; font-weight:800; font-size:0.7rem; padding:3px 12px; border-radius:12px;">2v2</span>
+                    <span style="font-weight:600; color:var(--muted); font-size:0.75rem;">👥 14:00</span>
+                </div>
+                <p style="margin-bottom:12px;"><strong>Пары.</strong> Мир больше не верит в одиночек. Победители получат звание <strong style="color:var(--purple);">Наследники Осколка</strong>.</p>
 
-				<h3>🛡️ Роли классов</h3>
-				<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:16px;">
-					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
-						<div style="font-weight:700; color:var(--gold); font-size:0.8rem; margin-bottom:4px;">🛡️ Танк</div>
-						<div style="color:var(--sub); font-size:0.78rem;">Воин · Паладин · Варвар</div>
-						<div style="color:var(--muted); font-size:0.7rem; margin-top:4px; font-style:italic;">Стена, о которую ломаются клинки.</div>
-					</div>
-					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
-						<div style="font-weight:700; color:var(--purple); font-size:0.8rem; margin-bottom:4px;">🔮 Маг</div>
-						<div style="color:var(--sub); font-size:0.78rem;">Чародей · Волшебница · Некромант · Колдун</div>
-						<div style="color:var(--muted); font-size:0.7rem; margin-top:4px; font-style:italic;">Воля, разрывающая реальность.</div>
-					</div>
-					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
-						<div style="font-weight:700; color:var(--ice); font-size:0.8rem; margin-bottom:4px;">🗡️ Рога</div>
-						<div style="color:var(--sub); font-size:0.78rem;">Плут · Следопыт · Монах</div>
-						<div style="color:var(--muted); font-size:0.7rem; margin-top:4px; font-style:italic;">Тень, что бьёт из-за спины.</div>
-					</div>
-					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
-						<div style="font-weight:700; color:var(--green); font-size:0.8rem; margin-bottom:4px;">✨ Саппорт</div>
-						<div style="color:var(--sub); font-size:0.78rem;">Жрец · Друид · Изобретатель · Бард</div>
-						<div style="color:var(--muted); font-size:0.7rem; margin-top:4px; font-style:italic;">Тот, кто не даёт упасть.</div>
-					</div>
-				</div>
+                <h3>🛡️ Роли классов</h3>
+                <div class="grid-2" style="margin-bottom:16px;">
+                    <div class="role-box"><div class="rb-title" style="color:var(--gold);">🛡️ Танк</div><div class="rb-classes">Воин · Паладин · Варвар</div><div class="rb-note">Стена, о которую ломаются клинки.</div></div>
+                    <div class="role-box"><div class="rb-title" style="color:var(--purple);">🔮 Маг</div><div class="rb-classes">Чародей · Волшебница · Некромант · Колдун</div><div class="rb-note">Воля, разрывающая реальность.</div></div>
+                    <div class="role-box"><div class="rb-title" style="color:var(--ice);">🗡️ Рога</div><div class="rb-classes">Плут · Следопыт · Монах</div><div class="rb-note">Тень, что бьёт из-за спины.</div></div>
+                    <div class="role-box"><div class="rb-title" style="color:var(--green);">✨ Саппорт</div><div class="rb-classes">Жрец · Друид · Изобретатель · Бард</div><div class="rb-note">Тот, кто не даёт упасть.</div></div>
+                </div>
 
-				<!-- Калькулятор синергий -->
-				<div class="card" style="margin-top:20px;">
-					<div class="card-title">🔮 Калькулятор синергий</div>
-					
-					<!-- Выбранные классы -->
-					<div style="display:flex; justify-content:center; align-items:center; gap:12px; padding:15px; flex-wrap:wrap;">
-						<div id="synergy-pick1" style="text-align:center; cursor:pointer; min-width:120px;" onclick="toggleClassPicker(1)">
-							<div style="font-size:2.5rem; opacity:0.3;">❔</div>
-							<div style="color:var(--muted); font-size:0.75rem;">Выбрать класс</div>
-						</div>
-						<div style="font-size:1.5rem; color:var(--sub); font-weight:700;">+</div>
-						<div id="synergy-pick2" style="text-align:center; cursor:pointer; min-width:120px;" onclick="toggleClassPicker(2)">
-							<div style="font-size:2.5rem; opacity:0.3;">❔</div>
-							<div style="color:var(--muted); font-size:0.75rem;">Выбрать класс</div>
-						</div>
-					</div>
-					
-					<!-- Сетка классов для выбора -->
-					<div id="class-picker" style="display:none; padding:0 15px 15px;">
-						<div id="class-picker-title" style="text-align:center; color:var(--gold); font-size:0.8rem; margin-bottom:10px;"></div>
-						<div id="class-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px;"></div>
-					</div>
-					
-					<!-- Результат -->
-					<div id="synergy-result" style="text-align:center; padding:20px; font-size:1rem; color:var(--muted);">
-						Выбери два класса
-					</div>
-				</div>
+                <!-- Калькулятор синергий -->
+                <section class="card" style="margin-top:20px;">
+                    <div class="card-title">🔮 Калькулятор синергий</div>
+                    
+                    <div style="display:flex; justify-content:center; align-items:center; gap:12px; padding:15px; flex-wrap:wrap;">
+                        <div class="synergy-pick" id="synergy-pick1" onclick="toggleClassPicker(1)" role="button" aria-label="Выбрать первый класс">
+                            <div class="synergy-emoji" id="sp1-emoji">❔</div>
+                            <div class="synergy-role" id="sp1-role"></div>
+                            <div class="synergy-placeholder" id="sp1-placeholder">Выбрать класс</div>
+                        </div>
+                        <div style="font-size:1.5rem; color:var(--sub); font-weight:700;">+</div>
+                        <div class="synergy-pick" id="synergy-pick2" onclick="toggleClassPicker(2)" role="button" aria-label="Выбрать второй класс">
+                            <div class="synergy-emoji" id="sp2-emoji">❔</div>
+                            <div class="synergy-role" id="sp2-role"></div>
+                            <div class="synergy-placeholder" id="sp2-placeholder">Выбрать класс</div>
+                        </div>
+                    </div>
+                    
+                    <div id="class-picker" style="display:none; padding:0 15px 15px;">
+                        <div id="class-picker-title" style="text-align:center; color:var(--gold); font-size:0.8rem; margin-bottom:10px;"></div>
+                        <div id="class-grid" class="class-grid"></div>
+                    </div>
+                    
+                    <div id="synergy-result" style="text-align:center; padding:20px; font-size:1rem; color:var(--muted);">
+                        Выбери два класса
+                    </div>
+                </section>
 
-				<!-- Лига Этерниса -->
-				<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.03)); border:1px solid rgba(240,185,11,0.1); border-radius:var(--radius-sm); padding:16px 20px; margin-top:20px; text-align:center;">
-					<span style="color:var(--gold); font-weight:700;">⚡ Лига Этерниса</span>
-					<span style="color:var(--sub);"> — в последний день сезона: топ‑8 Света против топ‑8 Тьмы.</span>
-				</div>
-			</div>
-		</div>
+                <!-- Лига -->
+                <div class="cta-box">
+                    <span style="color:var(--gold); font-weight:700;">⚡ Лига Этерниса</span>
+                    <span style="color:var(--sub);"> — в последний день сезона: топ‑8 Света против топ‑8 Тьмы.</span>
+                </div>
+            </div>
+        </article>
 
-        <!-- Шаг 6: Бездна Разлома -->
-        <div class="path-step dungeon" id="step-dungeon">
+        <!-- ШАГ 6 -->
+        <article class="path-step dungeon" id="step-dungeon">
             <div class="path-num">Шаг 6</div>
-            <div class="path-title">🐲 Бездна Разлома</div>
+            <h2 class="path-title">🐲 Бездна Разлома</h2>
             <div class="path-desc">
                 <p>PvE-режим. Бесконечные волны монстров. Каждая 5-я — <strong>босс</strong>. <span style="color:var(--red);">💀 Смерть перманентна для забега.</span></p>
-				<div class="mech-grid">
-					<div class="mech l"><div class="m-icon">🚪</div><div><div class="m-title">Вход в подземелье</div><div class="m-body">Герой получает <span class="hl">случайную пассивку</span> и <span class="hl">случайного фамильяра</span>, который дает бонус к статам на весь забег.</div></div></div>
-					<div class="mech l"><div class="m-icon">🌊</div><div><div class="m-title">Бесконечные волны</div><div class="m-body">Каждая волна сильнее предыдущей. Каждая <span class="hl">5-я волна — босс</span>: HP×1.5, ATK+2, DEF+1.</div></div></div>
-					<div class="mech l"><div class="m-icon">💚</div><div><div class="m-title">Лечение после волны</div><div class="m-body"><span class="hl">14 + волна×2 HP</span>. После босса — <span class="hl">возврат к HP до боя</span> (не полное восстановление).</div></div></div>
-					<div class="mech l"><div class="m-icon">🎲</div><div><div class="m-title">Артефакты</div><div class="m-body"><span class="hl">35%</span> шанс после обычной волны, <span class="hl">70%</span> после босса. Увеличивают статы героя.</div></div></div>
-					<div class="mech l"><div class="m-icon">💰</div><div><div class="m-title">Награды</div><div class="m-body">Каждые <span class="hl">3 волны</span> — +1 💎. За босса — <span class="hl">1-3 трофея</span> в копилку фракции.</div></div></div>
-					<div class="mech l"><div class="m-icon">💀</div><div><div class="m-title">Гибель</div><div class="m-body">При <span class="hl">HP = 0</span> забег завершается. Рекорд (количество волн) сохраняется в статистику героя.</div></div></div>
-				</div>
+                <div class="grid-auto">
+                    <div class="mech l"><div class="m-icon">🚪</div><div><h4 class="m-title">Вход в подземелье</h4><div class="m-body">Герой получает <span class="hl">случайную пассивку</span> и <span class="hl">случайного фамильяра</span>, который дает бонус к статам на весь забег.</div></div></div>
+                    <div class="mech l"><div class="m-icon">🌊</div><div><h4 class="m-title">Бесконечные волны</h4><div class="m-body">Каждая волна сильнее предыдущей. Каждая <span class="hl">5-я волна — босс</span>: HP×1.5, ATK+2, DEF+1.</div></div></div>
+                    <div class="mech l"><div class="m-icon">💚</div><div><h4 class="m-title">Лечение после волны</h4><div class="m-body"><span class="hl">14 + волна×2 HP</span>. После босса — <span class="hl">возврат к HP до боя</span> (не полное восстановление).</div></div></div>
+                    <div class="mech l"><div class="m-icon">🎲</div><div><h4 class="m-title">Артефакты</h4><div class="m-body"><span class="hl">35%</span> шанс после обычной волны, <span class="hl">70%</span> после босса. Увеличивают статы героя.</div></div></div>
+                    <div class="mech l"><div class="m-icon">💰</div><div><h4 class="m-title">Награды</h4><div class="m-body">Каждые <span class="hl">3 волны</span> — +1 💎. За босса — <span class="hl">1-3 трофея</span> в копилку фракции.</div></div></div>
+                    <div class="mech l"><div class="m-icon">💀</div><div><h4 class="m-title">Гибель</h4><div class="m-body">При <span class="hl">HP = 0</span> забег завершается. Рекорд (количество волн) сохраняется в статистику героя.</div></div></div>
+                </div>
 
-				<h3>🌿 Пассивки (12)</h3>
-				<div class="passive-grid">
-					<div class="passive red"><div class="p-emoji">🩸</div><div class="p-name">Вампиризм</div><div class="p-desc">+10 HP к лечению после каждой волны</div></div>
-					<div class="passive green"><div class="p-emoji">✨</div><div class="p-name">Благословение</div><div class="p-desc">+15% к шансу найти артефакт</div></div>
-					<div class="passive ice"><div class="p-emoji">💫</div><div class="p-name">Сияние</div><div class="p-desc">−15% HP у всех врагов</div></div>
-					<div class="passive blue"><div class="p-emoji">💚</div><div class="p-name">Стойкость</div><div class="p-desc">+2 DEF на весь забег</div></div>
-					<div class="passive purple"><div class="p-emoji">🔮</div><div class="p-name">Отражение</div><div class="p-desc">30% шанс вернуть половину урона врагу</div></div>
-					<div class="passive red"><div class="p-emoji">💥</div><div class="p-name">Жажда крови</div><div class="p-desc">+2 АТК на весь забег. Крит = три броска урона</div></div>
-					<div class="passive gold"><div class="p-emoji">⚔️</div><div class="p-name">Святая ярость</div><div class="p-desc">+4 урона ко всем врагам</div></div>
-					<div class="passive purple"><div class="p-emoji">🧿</div><div class="p-name">Амулет Раскола</div><div class="p-desc">Каждый 3-й удар x2 урона</div></div>
-					<div class="passive orange"><div class="p-emoji">💢</div><div class="p-name">Накопленная ярость</div><div class="p-desc">Потерял HP → бьёшь сильнее</div></div>
-					<div class="passive gold"><div class="p-emoji">🎯</div><div class="p-name">Метка Охотника</div><div class="p-desc">Первые 3 удара — двойной урон</div></div>
-					<div class="passive blue"><div class="p-emoji">👻</div><div class="p-name">Призрачный щит</div><div class="p-desc">25% шанс избежать урона полностью</div></div>
-					<div class="passive red"><div class="p-emoji">🗡️</div><div class="p-name">Казнь</div><div class="p-desc">Добивание при HP врага < 30%</div></div>
-				</div>
+                <h3>🌿 Пассивки (12)</h3>
+                <div class="grid-4" style="font-size:0.72rem;">
+                    <div class="passive red"><div class="p-emoji">🩸</div><div class="p-name">Вампиризм</div><div class="p-desc">+10 HP к лечению после каждой волны</div></div>
+                    <div class="passive green"><div class="p-emoji">✨</div><div class="p-name">Благословение</div><div class="p-desc">+15% к шансу найти артефакт</div></div>
+                    <div class="passive ice"><div class="p-emoji">💫</div><div class="p-name">Сияние</div><div class="p-desc">−15% HP у всех врагов</div></div>
+                    <div class="passive blue"><div class="p-emoji">💚</div><div class="p-name">Стойкость</div><div class="p-desc">+2 DEF на весь забег</div></div>
+                    <div class="passive purple"><div class="p-emoji">🔮</div><div class="p-name">Отражение</div><div class="p-desc">30% шанс вернуть половину урона врагу</div></div>
+                    <div class="passive red"><div class="p-emoji">💥</div><div class="p-name">Жажда крови</div><div class="p-desc">+2 АТК на весь забег. Крит = три броска урона</div></div>
+                    <div class="passive gold"><div class="p-emoji">⚔️</div><div class="p-name">Святая ярость</div><div class="p-desc">+4 урона ко всем врагам</div></div>
+                    <div class="passive purple"><div class="p-emoji">🧿</div><div class="p-name">Амулет Раскола</div><div class="p-desc">Каждый 3-й удар x2 урона</div></div>
+                    <div class="passive orange"><div class="p-emoji">💢</div><div class="p-name">Накопленная ярость</div><div class="p-desc">Потерял HP → бьёшь сильнее</div></div>
+                    <div class="passive gold"><div class="p-emoji">🎯</div><div class="p-name">Метка Охотника</div><div class="p-desc">Первые 3 удара — двойной урон</div></div>
+                    <div class="passive blue"><div class="p-emoji">👻</div><div class="p-name">Призрачный щит</div><div class="p-desc">25% шанс избежать урона полностью</div></div>
+                    <div class="passive red"><div class="p-emoji">🗡️</div><div class="p-name">Казнь</div><div class="p-desc">Добивание при HP врага < 30%</div></div>
+                </div>
 
-                <div class="duo" style="margin-top:16px">
+                <div class="grid-2" style="margin-top:16px">
                     <div>
                         <h3>🐾 Фамильяры (6)</h3>
                         <div class="table-container"><table>
@@ -661,7 +663,7 @@
                 </div>
 
                 <h3>🐉 Статы мобов</h3>
-                <div class="duo" style="margin-top:10px">
+                <div class="grid-2" style="margin-top:10px">
                     <div>
                         <h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📐 Формулы</h4>
                         <div class="level-card">
@@ -697,301 +699,327 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </article>
 
-		<!-- Шаг 7: Гримуар -->
-        <div class="path-step" id="step-grimoire">
+        <!-- ШАГ 7 -->
+        <article class="path-step" id="step-grimoire">
             <div class="path-num">Шаг 7</div>
-            <div class="path-title">📜 Гримуар</div>
+            <h2 class="path-title">📜 Гримуар</h2>
             <div class="path-desc">
                 <p>Все команды чата. <span style="color:var(--gold)">⚡</span> — только для стримера.</p>
-                <div class="duo" style="margin-top:12px">
+                <div class="grid-2" style="margin-top:12px">
                     <div>
                         <h3>🎮 Игровые</h3>
-						<div class="cmd-list">
-							<div class="cmd"><div class="c-name">!бой</div><div class="c-desc">Рейтинговая дуэль</div></div>
-							<div class="cmd"><div class="c-name">!бой @ник</div><div class="c-desc">🤝 Товарищеский бой</div></div>
-							<div class="cmd"><div class="c-name">!2x2</div><div class="c-desc">Командная дуэль. <code>!2x2 @ник</code> — с напарником</div></div>
-							<div class="cmd"><div class="c-name">!инфо</div><div class="c-desc">Статы героя. <code>!инфо @ник</code> — посмотреть чужого</div></div>
-							<div class="cmd"><div class="c-name">!данж</div><div class="c-desc">Вход в подземелье</div></div>
-							<div class="cmd"><div class="c-name">!харакири</div><div class="c-desc">Сброс героя в архив</div></div>
-							<div class="cmd"><div class="c-name">!рега</div><div class="c-desc">Запись в текущий турнир (1v1 или 2v2)</div></div>
-							<div class="cmd"><div class="c-name">!сетка</div><div class="c-desc">Участники и сетка текущего турнира</div></div>
-							<div class="cmd"><div class="c-name">!1–!5</div><div class="c-desc">Выбор героя при создании (3 мин)</div></div>
-						</div>
+                        <div class="cmd-list">
+                            <div class="cmd"><div class="c-name">!бой</div><div class="c-desc">Рейтинговая дуэль</div></div>
+                            <div class="cmd"><div class="c-name">!бой @ник</div><div class="c-desc">🤝 Товарищеский бой</div></div>
+                            <div class="cmd"><div class="c-name">!2x2</div><div class="c-desc">Командная дуэль. <code>!2x2 @ник</code> — с напарником</div></div>
+                            <div class="cmd"><div class="c-name">!инфо</div><div class="c-desc">Статы героя. <code>!инфо @ник</code> — посмотреть чужого</div></div>
+                            <div class="cmd"><div class="c-name">!данж</div><div class="c-desc">Вход в подземелье</div></div>
+                            <div class="cmd"><div class="c-name">!харакири</div><div class="c-desc">Сброс героя в архив</div></div>
+                            <div class="cmd"><div class="c-name">!рега</div><div class="c-desc">Запись в текущий турнир (1v1 или 2v2)</div></div>
+                            <div class="cmd"><div class="c-name">!сетка</div><div class="c-desc">Участники и сетка текущего турнира</div></div>
+                            <div class="cmd"><div class="c-name">!1–!5</div><div class="c-desc">Выбор героя при создании (3 мин)</div></div>
+                        </div>
                     </div>
                     <div>
                         <h3 style="color:var(--ice)">⚡ Админские</h3>
-						<div class="cmd-list">
-							<div class="cmd admin"><div class="c-name">!режим</div><div class="c-desc">Турнир 1v1 / дуэли</div></div>
-							<div class="cmd admin"><div class="c-name">!турнир</div><div class="c-desc">Турнир 2v2 / дуэли</div></div>
-							<div class="cmd admin"><div class="c-name">!старт</div><div class="c-desc">Запуск турнира 1v1</div></div>
-							<div class="cmd admin"><div class="c-name">!добор</div><div class="c-desc">Автозаполнение текущего турнира</div></div>
-							<div class="cmd admin"><div class="c-name">!лига</div><div class="c-desc">Запуск Лиги</div></div>
-							<div class="cmd admin"><div class="c-name">!резерв @ник N</div><div class="c-desc">Бронь места в турнире</div></div>
-							<div class="cmd admin"><div class="c-name">!создать @ник Раса-Класс</div><div class="c-desc">Создать героя вручную</div></div>
-							<div class="cmd admin"><div class="c-name">!удалить @ник</div><div class="c-desc">Удалить героя</div></div>
-							<div class="cmd admin"><div class="c-name">!сменить @ник Имя</div><div class="c-desc">Сменить имя героя</div></div>
-							<div class="cmd admin"><div class="c-name">!воскресить @ник Имя</div><div class="c-desc">Вернуть из архива</div></div>
-							<div class="cmd admin"><div class="c-name">!перенос @старый @новый</div><div class="c-desc">Смена ника Twitch</div></div>
-							<div class="cmd admin"><div class="c-name">!сезон</div><div class="c-desc">Сброс статистики</div></div>
-							<div class="cmd admin"><div class="c-name">!save</div><div class="c-desc">Принудительное сохранение</div></div>
-							<div class="cmd admin"><div class="c-name">!логи</div><div class="c-desc">Логи боёв. <code>!логи @ник</code> — по игроку</div></div>
-						</div>
+                        <div class="cmd-list">
+                            <div class="cmd admin"><div class="c-name">!режим</div><div class="c-desc">Турнир 1v1 / дуэли</div></div>
+                            <div class="cmd admin"><div class="c-name">!турнир</div><div class="c-desc">Турнир 2v2 / дуэли</div></div>
+                            <div class="cmd admin"><div class="c-name">!старт</div><div class="c-desc">Запуск турнира 1v1</div></div>
+                            <div class="cmd admin"><div class="c-name">!добор</div><div class="c-desc">Автозаполнение текущего турнира</div></div>
+                            <div class="cmd admin"><div class="c-name">!лига</div><div class="c-desc">Запуск Лиги</div></div>
+                            <div class="cmd admin"><div class="c-name">!резерв @ник N</div><div class="c-desc">Бронь места в турнире</div></div>
+                            <div class="cmd admin"><div class="c-name">!создать @ник Раса-Класс</div><div class="c-desc">Создать героя вручную</div></div>
+                            <div class="cmd admin"><div class="c-name">!удалить @ник</div><div class="c-desc">Удалить героя</div></div>
+                            <div class="cmd admin"><div class="c-name">!сменить @ник Имя</div><div class="c-desc">Сменить имя героя</div></div>
+                            <div class="cmd admin"><div class="c-name">!воскресить @ник Имя</div><div class="c-desc">Вернуть из архива</div></div>
+                            <div class="cmd admin"><div class="c-name">!перенос @старый @новый</div><div class="c-desc">Смена ника Twitch</div></div>
+                            <div class="cmd admin"><div class="c-name">!сезон</div><div class="c-desc">Сброс статистики</div></div>
+                            <div class="cmd admin"><div class="c-name">!save</div><div class="c-desc">Принудительное сохранение</div></div>
+                            <div class="cmd admin"><div class="c-name">!логи</div><div class="c-desc">Логи боёв. <code>!логи @ник</code> — по игроку</div></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </article>
+    </main>
 </div>
 
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺" aria-label="Донат">🍺</a>
 
 <script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('eternis-theme', newTheme);
-    }
-
     (function() {
+        // --- Утилиты ---
+        const $ = (sel, ctx = document) => ctx.querySelector(sel);
+        const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+        // --- Переключение темы ---
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('eternis-theme', newTheme);
+        };
+
+        // Применение сохраненной темы
         const savedTheme = localStorage.getItem('eternis-theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
-    })();
 
-    function toggleNav() {
-        const nav = document.getElementById('pageNav');
-        const toggleBtn = document.querySelector('.nav-toggle');
-        nav.classList.toggle('show');
-        toggleBtn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-    }
+        // --- Мобильная навигация ---
+        window.toggleNav = function() {
+            const nav = $('#pageNav');
+            const toggleBtn = $('.nav-toggle');
+            nav.classList.toggle('show');
+            toggleBtn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+        };
 
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            document.getElementById('pageNav').classList.remove('show');
-            document.querySelector('.nav-toggle').textContent = '☰ Меню';
-        });
-    });
-
-    document.querySelectorAll('.nav-label').forEach(label => {
-        label.addEventListener('click', function(e) {
-            if (window.innerWidth > 768) return;
-            e.preventDefault();
-            const dropdown = this.nextElementSibling;
-            if (dropdown && dropdown.classList.contains('nav-dropdown')) {
-                const isOpen = dropdown.style.display === 'block';
-                document.querySelectorAll('.nav-dropdown').forEach(d => d.style.display = 'none');
-                dropdown.style.display = isOpen ? 'none' : 'block';
+        // Закрытие мобильного меню при клике на ссылку
+        $('#pageNav').addEventListener('click', (e) => {
+            if (e.target.classList.contains('nav-link')) {
+                $('#pageNav').classList.remove('show');
+                $('.nav-toggle').textContent = '☰ Меню';
             }
         });
-    });
-	
-let CLASSES_SYNERGY = {};
-let selectedClass1 = null;
-let selectedClass2 = null;
-let pickingFor = 1;
 
-const SYNERGY_BONUSES = {
-    "tank_tank": { hp: 4, atk: 0, min: 0, max: 0, emoji: "🧱", text: "+4 HP" },
-    "mage_mage": { hp: 0, atk: 0, min: 0, max: 2, emoji: "☄️", text: "+2 MAX" },
-    "rogue_rogue": { hp: 0, atk: 2, min: 0, max: 0, emoji: "🌪️", text: "+2 ATK" },
-    "support_support": { hp: 2, atk: 0, min: 2, max: 0, emoji: "🕊️", text: "+2 HP, +2 MIN" },
-    "tank_mage": { hp: 2, atk: 0, min: 0, max: 1, emoji: "🔥", text: "+2 HP, +1 MAX" },
-    "tank_rogue": { hp: 2, atk: 1, min: 0, max: 0, emoji: "⚡", text: "+2 HP, +1 ATK" },
-    "tank_support": { hp: 3, atk: 0, min: 1, max: 0, emoji: "💚", text: "+3 HP, +1 MIN" },
-    "mage_rogue": { hp: 0, atk: 1, min: 0, max: 1, emoji: "💥", text: "+1 ATK, +1 MAX" },
-    "mage_support": { hp: 1, atk: 0, min: 1, max: 1, emoji: "💫", text: "+1 HP, +1 MIN, +1 MAX" },
-    "rogue_support": { hp: 1, atk: 1, min: 1, max: 0, emoji: "🍃", text: "+1 HP, +1 ATK, +1 MIN" }
-};
-
-function getRoleFromClass(className) {
-    if (["Воин", "Паладин", "Варвар"].includes(className)) return "tank";
-    if (["Чародей", "Волшебница", "Некромант", "Колдун"].includes(className)) return "mage";
-    if (["Плут", "Следопыт", "Монах"].includes(className)) return "rogue";
-    if (["Жрец", "Друид", "Изобретатель", "Бард"].includes(className)) return "support";
-    return "unknown";
-}
-
-function getRoleName(role) {
-    switch(role) {
-        case "tank": return "Танк";
-        case "mage": return "Маг";
-        case "rogue": return "Рога";
-        case "support": return "Сап";
-    }
-    return "";
-}
-
-function toggleClassPicker(slot) {
-    const picker = document.getElementById('class-picker');
-    const title = document.getElementById('class-picker-title');
-    
-    if (picker.style.display === 'block' && pickingFor === slot) {
-        picker.style.display = 'none';
-        return;
-    }
-    
-    pickingFor = slot;
-    title.textContent = `Выбери ${slot === 1 ? 'первый' : 'второй'} класс:`;
-    renderClassGrid();
-    picker.style.display = 'block';
-}
-
-function renderClassGrid() {
-    const grid = document.getElementById('class-grid');
-    const classNames = Object.keys(CLASSES_SYNERGY);
-    
-    grid.innerHTML = classNames.map(name => {
-        const c = CLASSES_SYNERGY[name];
-        const isSelected = (pickingFor === 1 && selectedClass1 === name) || 
-                          (pickingFor === 2 && selectedClass2 === name);
-        const roleColor = {
-            tank: 'var(--gold)',
-            mage: 'var(--purple)',
-            rogue: 'var(--ice)',
-            support: 'var(--green)'
-        }[c.role] || 'var(--sub)';
-        
-        return `<div onclick="selectClass('${name}')" style="
-            background: ${isSelected ? 'rgba(240,185,11,0.15)' : 'var(--elevated)'};
-            border: 1px solid ${isSelected ? 'var(--gold)' : 'var(--border)'};
-            border-radius: 8px;
-            padding: 10px 6px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-        ">
-            <div style="font-size:1.8rem;">${c.emoji}</div>
-            <div style="font-weight:700; font-size:0.7rem;">${name}</div>
-            <div style="color:${roleColor}; font-size:0.6rem;">${getRoleName(c.role)}</div>
-        </div>`;
-    }).join('');
-}
-
-function selectClass(name) {
-    if (pickingFor === 1) {
-        selectedClass1 = name;
-    } else {
-        selectedClass2 = name;
-    }
-    
-    document.getElementById('class-picker').style.display = 'none';
-    updateSynergy();
-}
-
-function updateSynergy() {
-    const pick1 = document.getElementById('synergy-pick1');
-    const pick2 = document.getElementById('synergy-pick2');
-    const result = document.getElementById('synergy-result');
-    
-    // Обновляем отображение выбранных классов
-    if (selectedClass1 && CLASSES_SYNERGY[selectedClass1]) {
-        const c = CLASSES_SYNERGY[selectedClass1];
-        pick1.innerHTML = `<div style="font-size:2.5rem;">${c.emoji}</div>
-            <div style="color:var(--text); font-weight:700; font-size:0.75rem;">${selectedClass1}</div>
-            <div style="color:var(--sub); font-size:0.65rem;">${getRoleName(c.role)}</div>`;
-    } else {
-        pick1.innerHTML = `<div style="font-size:2.5rem; opacity:0.3;">❔</div>
-            <div style="color:var(--muted); font-size:0.75rem;">Выбрать класс</div>`;
-    }
-    
-    if (selectedClass2 && CLASSES_SYNERGY[selectedClass2]) {
-        const c = CLASSES_SYNERGY[selectedClass2];
-        pick2.innerHTML = `<div style="font-size:2.5rem;">${c.emoji}</div>
-            <div style="color:var(--text); font-weight:700; font-size:0.75rem;">${selectedClass2}</div>
-            <div style="color:var(--sub); font-size:0.65rem;">${getRoleName(c.role)}</div>`;
-    } else {
-        pick2.innerHTML = `<div style="font-size:2.5rem; opacity:0.3;">❔</div>
-            <div style="color:var(--muted); font-size:0.75rem;">Выбрать класс</div>`;
-    }
-    
-    if (!selectedClass1 || !selectedClass2) {
-        result.innerHTML = 'Выбери два класса';
-        return;
-    }
-    
-    const class1 = CLASSES_SYNERGY[selectedClass1];
-    const class2 = CLASSES_SYNERGY[selectedClass2];
-    
-    const combo1 = class1.role + "_" + class2.role;
-    const combo2 = class2.role + "_" + class1.role;
-    const bonus = SYNERGY_BONUSES[combo1] || SYNERGY_BONUSES[combo2];
-    
-    const hp = class1.hp + class2.hp;
-    const atk = Math.round((class1.atk + class2.atk) / 2);
-    const def = Math.round((class1.def + class2.def) / 2);
-    const dex = Math.round((class1.dex + class2.dex) / 2);
-    const min = Math.round((class1.min + class2.min) / 2);
-    const max = Math.round((class1.max + class2.max) / 2);
-    
-    let fHp = hp, fAtk = atk, fMin = min, fMax = max;
-    let bonusEmoji = "", bonusText = "";
-    
-    if (bonus) {
-        fHp += bonus.hp; fAtk += bonus.atk; fMin += bonus.min; fMax += bonus.max;
-        bonusEmoji = bonus.emoji;
-        bonusText = bonus.text;
-    }
-    
-    const stat = (label, val, final) => 
-        `<div style="background:var(--elevated); border-radius:8px; padding:6px;">
-            <div style="color:var(--sub); font-size:0.65rem;">${label}</div>
-            <div style="font-weight:700; font-size:0.85rem;">${final !== undefined && final !== val ? val + ' → ' + final : val}</div>
-        </div>`;
-    
-    result.innerHTML = `
-        <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
-            ${bonusEmoji ? `
-            <div style="text-align:center;">
-                <div style="font-size:1.5rem;">${bonusEmoji}</div>
-                <div style="font-weight:700; font-size:0.7rem; color:var(--gold);">${bonusText}</div>
-            </div>` : ''}
-        </div>
-        
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
-            ${stat('HP', hp, fHp)}
-            ${stat('ATK', atk, fAtk)}
-            ${stat('DEF', def)}
-            ${stat('DEX', dex)}
-            ${stat('MIN', min, fMin)}
-            ${stat('MAX', max, fMax)}
-        </div>
-    `;
-}
-
-function initSynergyCalculator() {
-    const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-    
-    fetch(DATA_URL)
-        .then(r => r.json())
-        .then(data => {
-            if (!data.classes) return;
-            
-            data.classes.forEach(c => {
-                CLASSES_SYNERGY[c.Name] = {
-                    role: getRoleFromClass(c.Name),
-                    hp: c.Hp,
-                    atk: c.Atk,
-                    def: c.Def,
-                    dex: c.Dex,
-                    min: c.Min,
-                    max: c.Max,
-                    emoji: c.Emoji
-                };
+        // Обработка кликов по заголовкам групп на мобильных
+        $$('.nav-label').forEach(label => {
+            label.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    const dropdown = this.nextElementSibling;
+                    if (dropdown && dropdown.classList.contains('nav-dropdown')) {
+                        const isOpen = dropdown.style.display === 'block';
+                        $$('.nav-dropdown').forEach(d => d.style.display = 'none');
+                        dropdown.style.display = isOpen ? 'none' : 'block';
+                    }
+                }
             });
-            
-            updateSynergy();
-        })
-        .catch(() => {
-            document.getElementById('synergy-result').innerHTML = 'Ошибка загрузки классов';
         });
-}
 
-initSynergyCalculator();
+        // --- Плавный скролл ---
+        window.scrollToId = function(id) {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // --- Калькулятор синергий ---
+        const CLASSES_SYNERGY = {};
+        let selectedClass1 = null;
+        let selectedClass2 = null;
+        let pickingFor = 1;
+
+        const SYNERGY_BONUSES = {
+            "tank_tank": { hp: 4, atk: 0, min: 0, max: 0, emoji: "🧱", text: "+4 HP" },
+            "mage_mage": { hp: 0, atk: 0, min: 0, max: 2, emoji: "☄️", text: "+2 MAX" },
+            "rogue_rogue": { hp: 0, atk: 2, min: 0, max: 0, emoji: "🌪️", text: "+2 ATK" },
+            "support_support": { hp: 2, atk: 0, min: 2, max: 0, emoji: "🕊️", text: "+2 HP, +2 MIN" },
+            "tank_mage": { hp: 2, atk: 0, min: 0, max: 1, emoji: "🔥", text: "+2 HP, +1 MAX" },
+            "tank_rogue": { hp: 2, atk: 1, min: 0, max: 0, emoji: "⚡", text: "+2 HP, +1 ATK" },
+            "tank_support": { hp: 3, atk: 0, min: 1, max: 0, emoji: "💚", text: "+3 HP, +1 MIN" },
+            "mage_rogue": { hp: 0, atk: 1, min: 0, max: 1, emoji: "💥", text: "+1 ATK, +1 MAX" },
+            "mage_support": { hp: 1, atk: 0, min: 1, max: 1, emoji: "💫", text: "+1 HP, +1 MIN, +1 MAX" },
+            "rogue_support": { hp: 1, atk: 1, min: 1, max: 0, emoji: "🍃", text: "+1 HP, +1 ATK, +1 MIN" }
+        };
+
+        const ROLE_CLASSES = {
+            tank: ["Воин", "Паладин", "Варвар"],
+            mage: ["Чародей", "Волшебница", "Некромант", "Колдун"],
+            rogue: ["Плут", "Следопыт", "Монах"],
+            support: ["Жрец", "Друид", "Изобретатель", "Бард"]
+        };
+        const ROLE_NAMES = { tank: "Танк", mage: "Маг", rogue: "Рога", support: "Сап" };
+        const ROLE_COLORS = { tank: 'var(--gold)', mage: 'var(--purple)', rogue: 'var(--ice)', support: 'var(--green)' };
+
+        function getRoleFromClass(className) {
+            for (const [role, classes] of Object.entries(ROLE_CLASSES)) {
+                if (classes.includes(className)) return role;
+            }
+            return "unknown";
+        }
+
+        window.toggleClassPicker = function(slot) {
+            const picker = $('#class-picker');
+            const title = $('#class-picker-title');
+            
+            if (picker.style.display === 'block' && pickingFor === slot) {
+                picker.style.display = 'none';
+                return;
+            }
+            
+            pickingFor = slot;
+            title.textContent = `Выбери ${slot === 1 ? 'первый' : 'второй'} класс:`;
+            renderClassGrid();
+            picker.style.display = 'block';
+        };
+
+        function renderClassGrid() {
+            const grid = $('#class-grid');
+            const classNames = Object.keys(CLASSES_SYNERGY);
+            
+            grid.innerHTML = classNames.map(name => {
+                const c = CLASSES_SYNERGY[name];
+                const isSelected = (pickingFor === 1 && selectedClass1 === name) || 
+                                  (pickingFor === 2 && selectedClass2 === name);
+                const roleColor = ROLE_COLORS[c.role] || 'var(--sub)';
+                
+                return `<div class="class-option ${isSelected ? 'selected' : ''}" data-class="${name}" role="button" tabindex="0">
+                    <div class="co-emoji">${c.emoji}</div>
+                    <div class="co-name">${name}</div>
+                    <div class="co-role" style="color:${roleColor}">${ROLE_NAMES[c.role] || ''}</div>
+                </div>`;
+            }).join('');
+
+            // Обработчики для выбора класса
+            $$('.class-option', grid).forEach(opt => {
+                opt.addEventListener('click', () => selectClass(opt.dataset.class));
+                opt.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectClass(opt.dataset.class);
+                    }
+                });
+            });
+        }
+
+        function selectClass(name) {
+            if (pickingFor === 1) {
+                selectedClass1 = name;
+            } else {
+                selectedClass2 = name;
+            }
+            
+            $('#class-picker').style.display = 'none';
+            updateSynergy();
+        }
+
+        function updateSynergy() {
+            const pick1 = $('#synergy-pick1');
+            const pick2 = $('#synergy-pick2');
+            const result = $('#synergy-result');
+            
+            // Обновляем отображение первого класса
+            if (selectedClass1 && CLASSES_SYNERGY[selectedClass1]) {
+                const c = CLASSES_SYNERGY[selectedClass1];
+                $('#sp1-emoji').textContent = c.emoji;
+                $('#sp1-role').textContent = ROLE_NAMES[c.role] || '';
+                $('#sp1-placeholder').textContent = selectedClass1;
+                $('#sp1-placeholder').style.color = 'var(--text)';
+                $('#sp1-emoji').style.opacity = '1';
+            } else {
+                $('#sp1-emoji').textContent = '❔';
+                $('#sp1-role').textContent = '';
+                $('#sp1-placeholder').textContent = 'Выбрать класс';
+                $('#sp1-placeholder').style.color = '';
+                $('#sp1-emoji').style.opacity = '0.3';
+            }
+            
+            // Обновляем отображение второго класса
+            if (selectedClass2 && CLASSES_SYNERGY[selectedClass2]) {
+                const c = CLASSES_SYNERGY[selectedClass2];
+                $('#sp2-emoji').textContent = c.emoji;
+                $('#sp2-role').textContent = ROLE_NAMES[c.role] || '';
+                $('#sp2-placeholder').textContent = selectedClass2;
+                $('#sp2-placeholder').style.color = 'var(--text)';
+                $('#sp2-emoji').style.opacity = '1';
+            } else {
+                $('#sp2-emoji').textContent = '❔';
+                $('#sp2-role').textContent = '';
+                $('#sp2-placeholder').textContent = 'Выбрать класс';
+                $('#sp2-placeholder').style.color = '';
+                $('#sp2-emoji').style.opacity = '0.3';
+            }
+            
+            if (!selectedClass1 || !selectedClass2) {
+                result.innerHTML = 'Выбери два класса';
+                return;
+            }
+            
+            const class1 = CLASSES_SYNERGY[selectedClass1];
+            const class2 = CLASSES_SYNERGY[selectedClass2];
+            
+            const combo1 = class1.role + "_" + class2.role;
+            const combo2 = class2.role + "_" + class1.role;
+            const bonus = SYNERGY_BONUSES[combo1] || SYNERGY_BONUSES[combo2];
+            
+            const hp = class1.hp + class2.hp;
+            const atk = Math.round((class1.atk + class2.atk) / 2);
+            const def = Math.round((class1.def + class2.def) / 2);
+            const dex = Math.round((class1.dex + class2.dex) / 2);
+            const min = Math.round((class1.min + class2.min) / 2);
+            const max = Math.round((class1.max + class2.max) / 2);
+            
+            let fHp = hp, fAtk = atk, fMin = min, fMax = max;
+            let bonusEmoji = "", bonusText = "";
+            
+            if (bonus) {
+                fHp += bonus.hp; fAtk += bonus.atk; fMin += bonus.min; fMax += bonus.max;
+                bonusEmoji = bonus.emoji;
+                bonusText = bonus.text;
+            }
+            
+            const stat = (label, val, final) => 
+                `<div class="stat-display">
+                    <div class="sd-label">${label}</div>
+                    <div class="sd-value">${final !== undefined && final !== val ? val + ' → ' + final : val}</div>
+                </div>`;
+            
+            result.innerHTML = `
+                <div class="synergy-bonus">
+                    ${bonusEmoji ? `
+                    <div style="text-align:center;">
+                        <div style="font-size:1.5rem;">${bonusEmoji}</div>
+                        <div style="font-weight:700; font-size:0.7rem; color:var(--gold);">${bonusText}</div>
+                    </div>` : ''}
+                </div>
+                
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+                    ${stat('HP', hp, fHp)}
+                    ${stat('ATK', atk, fAtk)}
+                    ${stat('DEF', def)}
+                    ${stat('DEX', dex)}
+                    ${stat('MIN', min, fMin)}
+                    ${stat('MAX', max, fMax)}
+                </div>
+            `;
+        }
+
+        function initSynergyCalculator() {
+            const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+            
+            fetch(DATA_URL)
+                .then(r => {
+                    if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+                    return r.json();
+                })
+                .then(data => {
+                    if (!data.classes) return;
+                    
+                    data.classes.forEach(c => {
+                        CLASSES_SYNERGY[c.Name] = {
+                            role: getRoleFromClass(c.Name),
+                            hp: c.Hp,
+                            atk: c.Atk,
+                            def: c.Def,
+                            dex: c.Dex,
+                            min: c.Min,
+                            max: c.Max,
+                            emoji: c.Emoji
+                        };
+                    });
+                    
+                    updateSynergy();
+                })
+                .catch(err => {
+                    console.error('Ошибка загрузки классов:', err);
+                    $('#synergy-result').innerHTML = 'Ошибка загрузки классов';
+                });
+        }
+
+        // Инициализация
+        initSynergyCalculator();
+    })();
 </script>
 </body>
 </html>
