@@ -561,18 +561,17 @@
 					</div>
 				</div>
 
-				<h3>⚡ Синергии пар</h3>
-				<div style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px; font-size:0.7rem;">
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--gold);"><div style="font-size:1.2rem; margin-bottom:4px;">🧱</div><div style="font-weight:700; color:var(--text);">Танк+Танк</div><div style="color:var(--gold); font-weight:600;">+5 HP</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--gold);"><div style="font-size:1.2rem; margin-bottom:4px;">☄️</div><div style="font-weight:700; color:var(--text);">Маг+Маг</div><div style="color:var(--gold); font-weight:600;">+1 ATK<br>+1 MAX</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--gold);"><div style="font-size:1.2rem; margin-bottom:4px;">🌪️</div><div style="font-weight:700; color:var(--text);">Рога+Рога</div><div style="color:var(--gold); font-weight:600;">+1 ATK<br>+1 DEX</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--gold);"><div style="font-size:1.2rem; margin-bottom:4px;">🕊️</div><div style="font-weight:700; color:var(--text);">Сап+Сап</div><div style="color:var(--gold); font-weight:600;">+3 HP<br>+1 DEF</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">🔥</div><div style="font-weight:700; color:var(--text);">Танк+Маг</div><div style="color:var(--orange); font-weight:600;">+2 DEF</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">⚡</div><div style="font-weight:700; color:var(--text);">Танк+Рога</div><div style="color:var(--orange); font-weight:600;">+2 ATK</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">🌿</div><div style="font-weight:700; color:var(--text);">Танк+Сап</div><div style="color:var(--orange); font-weight:600;">+4 HP</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">💥</div><div style="font-weight:700; color:var(--text);">Маг+Рога</div><div style="color:var(--orange); font-weight:600;">+1 MIN<br>+1 MAX</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">💫</div><div style="font-weight:700; color:var(--text);">Маг+Сап</div><div style="color:var(--orange); font-weight:600;">+2 HP<br>+2 MAX</div></div>
-					<div style="background:linear-gradient(160deg, var(--elevated), rgba(255,140,0,0.05)); border-radius:8px; padding:10px 6px; text-align:center; border-top:3px solid var(--orange);"><div style="font-size:1.2rem; margin-bottom:4px;">🍃</div><div style="font-weight:700; color:var(--text);">Рога+Сап</div><div style="color:var(--orange); font-weight:600;">+1 ATK<br>+1 DEX</div></div>
+				<!-- Калькулятор синергий -->
+				<div class="card" style="margin-top:20px;">
+					<div class="card-title">🔮 Калькулятор синергий</div>
+					<div style="display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; padding:15px;">
+						<select id="synergy-class1" style="background:var(--elevated); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:0.9rem; width:100%;"></select>
+						<div style="font-size:1.5rem; color:var(--sub); font-weight:700;">+</div>
+						<select id="synergy-class2" style="background:var(--elevated); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:0.9rem; width:100%;"></select>
+					</div>
+					<div id="synergy-result" style="text-align:center; padding:20px; font-size:1rem; color:var(--muted);">
+						Загрузка классов...
+					</div>
 				</div>
 
 				<!-- Лига Этерниса -->
@@ -580,9 +579,8 @@
 					<span style="color:var(--gold); font-weight:700;">⚡ Лига Этерниса</span>
 					<span style="color:var(--sub);"> — в последний день сезона: топ‑8 Света против топ‑8 Тьмы.</span>
 				</div>
-
 			</div>
-</div>
+		</div>
 
         <!-- Шаг 6: Бездна Разлома -->
         <div class="path-step dungeon" id="step-dungeon">
@@ -775,6 +773,154 @@
             }
         });
     });
+	
+	let CLASSES_SYNERGY = {};
+
+	const SYNERGY_BONUSES = {
+		"tank_tank": { hp: 4, atk: 0, min: 0, max: 0, emoji: "🧱", text: "+4 HP" },
+		"mage_mage": { hp: 0, atk: 0, min: 0, max: 2, emoji: "☄️", text: "+2 MAX" },
+		"rogue_rogue": { hp: 0, atk: 2, min: 0, max: 0, emoji: "🌪️", text: "+2 ATK" },
+		"support_support": { hp: 2, atk: 0, min: 2, max: 0, emoji: "🕊️", text: "+2 HP, +2 MIN" },
+		"tank_mage": { hp: 2, atk: 0, min: 0, max: 1, emoji: "🔥", text: "+2 HP, +1 MAX" },
+		"tank_rogue": { hp: 2, atk: 1, min: 0, max: 0, emoji: "⚡", text: "+2 HP, +1 ATK" },
+		"tank_support": { hp: 3, atk: 0, min: 1, max: 0, emoji: "💚", text: "+3 HP, +1 MIN" },
+		"mage_rogue": { hp: 0, atk: 1, min: 0, max: 1, emoji: "💥", text: "+1 ATK, +1 MAX" },
+		"mage_support": { hp: 1, atk: 0, min: 1, max: 1, emoji: "💫", text: "+1 HP, +1 MIN, +1 MAX" },
+		"rogue_support": { hp: 1, atk: 1, min: 1, max: 0, emoji: "🍃", text: "+1 HP, +1 ATK, +1 MIN" }
+	};
+
+	function getRoleFromClass(className) {
+		if (["Воин", "Паладин", "Варвар"].includes(className)) return "tank";
+		if (["Чародей", "Волшебница", "Некромант", "Колдун"].includes(className)) return "mage";
+		if (["Плут", "Следопыт", "Монах"].includes(className)) return "rogue";
+		if (["Жрец", "Друид", "Изобретатель", "Бард"].includes(className)) return "support";
+		return "unknown";
+	}
+
+	function getRoleName(role) {
+		switch(role) {
+			case "tank": return "Танк";
+			case "mage": return "Маг";
+			case "rogue": return "Рога";
+			case "support": return "Сап";
+		}
+		return "";
+	}
+
+	function updateSynergy() {
+		const c1 = document.getElementById('synergy-class1').value;
+		const c2 = document.getElementById('synergy-class2').value;
+		const result = document.getElementById('synergy-result');
+		
+		if (!c1 || !c2 || !CLASSES_SYNERGY[c1] || !CLASSES_SYNERGY[c2]) {
+			result.innerHTML = 'Выбери два класса';
+			return;
+		}
+		
+		const class1 = CLASSES_SYNERGY[c1];
+		const class2 = CLASSES_SYNERGY[c2];
+		
+		const combo1 = class1.role + "_" + class2.role;
+		const combo2 = class2.role + "_" + class1.role;
+		
+		const bonus = SYNERGY_BONUSES[combo1] || SYNERGY_BONUSES[combo2];
+		
+		const hp = class1.hp + class2.hp;
+		const atk = Math.round((class1.atk + class2.atk) / 2);
+		const def = Math.round((class1.def + class2.def) / 2);
+		const dex = Math.round((class1.dex + class2.dex) / 2);
+		const min = Math.round((class1.min + class2.min) / 2);
+		const max = Math.round((class1.max + class2.max) / 2);
+		
+		let fHp = hp, fAtk = atk, fMin = min, fMax = max;
+		let bonusText = "⚖️ Без синергии";
+		let bonusEmoji = "";
+		
+		if (bonus) {
+			fHp += bonus.hp;
+			fAtk += bonus.atk;
+			fMin += bonus.min;
+			fMax += bonus.max;
+			bonusText = bonus.text;
+			bonusEmoji = bonus.emoji;
+		}
+		
+		result.innerHTML = `
+			<div style="font-size:2rem; margin-bottom:8px;">${class1.emoji}${class2.emoji}</div>
+			<div style="font-weight:700; font-size:1.1rem;">${c1} + ${c2}</div>
+			<div style="color:var(--sub); margin:6px 0;">${getRoleName(class1.role)} + ${getRoleName(class2.role)}</div>
+			${bonusEmoji ? `<div style="font-size:1.3rem; margin:10px 0;">${bonusEmoji}</div>
+			<div style="color:var(--gold); font-weight:700; margin-bottom:15px;">${bonusText}</div>` : '<div style="color:var(--muted); margin:10px 0;">Без синергии</div>'}
+			<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; text-align:center;">
+				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
+					<div style="color:var(--sub); font-size:0.7rem;">HP</div>
+					<div style="font-weight:700;">${hp}${fHp !== hp ? ' → ' + fHp : ''}</div>
+				</div>
+				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
+					<div style="color:var(--sub); font-size:0.7rem;">ATK</div>
+					<div style="font-weight:700;">${atk}${fAtk !== atk ? ' → ' + fAtk : ''}</div>
+				</div>
+				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
+					<div style="color:var(--sub); font-size:0.7rem;">DEF</div>
+					<div style="font-weight:700;">${def}</div>
+				</div>
+				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
+					<div style="color:var(--sub); font-size:0.7rem;">DEX</div>
+					<div style="font-weight:700;">${dex}</div>
+				</div>
+				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
+					<div style="color:var(--sub); font-size:0.7rem;">MIN</div>
+					<div style="font-weight:700;">${min}${fMin !== min ? ' → ' + fMin : ''}</div>
+				</div>
+				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
+					<div style="color:var(--sub); font-size:0.7rem;">MAX</div>
+					<div style="font-weight:700;">${max}${fMax !== max ? ' → ' + fMax : ''}</div>
+				</div>
+			</div>
+		`;
+	}
+
+	function initSynergyCalculator() {
+		const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+		
+		fetch(DATA_URL)
+			.then(r => r.json())
+			.then(data => {
+				if (!data.classes) return;
+				
+				data.classes.forEach(c => {
+					CLASSES_SYNERGY[c.Name] = {
+						role: getRoleFromClass(c.Name),
+						hp: c.Hp,
+						atk: c.Atk,
+						def: c.Def,
+						dex: c.Dex,
+						min: c.Min,
+						max: c.Max,
+						emoji: c.Emoji
+					};
+				});
+				
+				const selects = ['synergy-class1', 'synergy-class2'];
+				selects.forEach(id => {
+					const select = document.getElementById(id);
+					Object.keys(CLASSES_SYNERGY).forEach(name => {
+						const opt = document.createElement('option');
+						opt.value = name;
+						opt.textContent = CLASSES_SYNERGY[name].emoji + ' ' + name;
+						select.appendChild(opt);
+					});
+					select.addEventListener('change', updateSynergy);
+				});
+				
+				document.getElementById('synergy-result').innerHTML = 'Выбери два класса';
+			})
+			.catch(() => {
+				document.getElementById('synergy-result').innerHTML = 'Ошибка загрузки классов';
+			});
+	}
+
+	initSynergyCalculator();
 </script>
 </body>
 </html>
