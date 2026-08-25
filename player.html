@@ -418,7 +418,7 @@ function renderSkill(p) {
     const component5 = (p.factionWins || 0) * 2;
     
     const numerator = component1 + component2 + component3 + component4 + component5;
-    const calculatedSkill = Math.round(numerator / denominator);
+    const calculatedSkill = Math.floor(numerator / denominator);
     
     const totalComponents = numerator;
     const pct1 = totalComponents > 0 ? (component1 / totalComponents) * 100 : 0;
