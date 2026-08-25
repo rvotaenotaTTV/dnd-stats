@@ -590,7 +590,8 @@
 			const teamPlayers = players.filter(p => (p.teamWins || 0) + (p.teamLoses || 0) + (p.teamTournamentWins || 0) > 0);
 
 			if(teamPlayers.length > 0){
-				const teamTop = [...teamPlayers].sort((a,b) => (b.teamElo || 1000) - (a.teamElo || 1000));
+				// Сортировка по очкам (TeamElo = сезонные очки)
+				const teamTop = [...teamPlayers].sort((a,b) => (b.teamElo || 0) - (a.teamElo || 0));
 				
 				const top3 = teamTop.slice(0, 3);
 				const medals = ['🥇', '🥈', '🥉'];
@@ -602,13 +603,14 @@
 					const tTotal = tW + tL;
 					const tWR = tTotal > 0 ? (tW * 100 / tTotal).toFixed(1) : '0.0';
 					const tT = p.teamTournamentWins || 0;
-					const tElo = p.teamElo || 1000;
+					const tPoints = p.teamElo || 0;
+					const tRank = getTeamRank(tW, tL);
 					
 					html+=`<div class="hunter-card">
 						<div class="hunter-medal">${medals[i]}</div>
 						<div style="font-size:2rem;margin:4px 0;">${p.emoji||'⚔️'}</div>
 						<div class="hunter-name">${p.display}</div>
-						<div class="hunter-count">ELO: ${tElo} · ${tW}W/${tL}L · ${tWR}% WR</div>
+						<div class="hunter-count">${tRank} · ${tPoints} очков · ${tW}W/${tL}L · ${tWR}% WR</div>
 						${tT > 0 ? `<div style="color:var(--gold);font-size:0.7rem;margin-top:4px;">👑 Турнирные победы: ${tT}</div>` : ''}
 					</div>`;
 				});
@@ -618,7 +620,7 @@
 				html+='<th class="sortable-header" data-sort="rank">#</th>';
 				html+='<th class="sortable-header" data-sort="name">Имя</th>';
 				html+='<th class="sortable-header" data-sort="class">Герой</th>';
-				html+='<th class="sortable-header" data-sort="telo">ELO</th>';
+				html+='<th class="sortable-header" data-sort="telo">Очки</th>';
 				html+='<th class="sortable-header" data-sort="twins">W</th>';
 				html+='<th class="sortable-header" data-sort="tlosses">L</th>';
 				html+='<th class="sortable-header" data-sort="twr">Винрейт</th>';
@@ -631,14 +633,15 @@
 					const tTotal = tW + tL;
 					const tWR = tTotal > 0 ? (tW * 100 / tTotal) : 0;
 					const tT = p.teamTournamentWins || 0;
-					const tElo = p.teamElo || 1000;
+					const tPoints = p.teamElo || 0;
+					const tRank = getTeamRank(tW, tL);
 					const wrColor = tWR >= 55 ? 'var(--green)' : tWR >= 45 ? 'var(--gold)' : 'var(--red)';
 					
-					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-telo="${tElo}" data-twins="${tW}" data-tlosses="${tL}" data-twr="${tWR.toFixed(1)}" data-ttournament="${tT}">`;
+					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-telo="${tPoints}" data-twins="${tW}" data-tlosses="${tL}" data-twr="${tWR.toFixed(1)}" data-ttournament="${tT}">`;
 					html+=`<td class="number">${i+1}</td>`;
 					html+=`<td style="text-align:left;"><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.emoji||'⚔️'} ${p.display}</a></td>`;
 					html+=`<td style="text-align:left;color:var(--sub);">${p.name}</td>`;
-					html+=`<td class="number" style="color:var(--ice);font-weight:700;">${tElo}</td>`;
+					html+=`<td class="number" style="color:var(--ice);font-weight:700;">${tRank} <span style="color:var(--muted);font-weight:400;">(${tPoints})</span></td>`;
 					html+=`<td class="number" style="color:var(--gold);font-weight:700;">${tW}</td>`;
 					html+=`<td class="number">${tL}</td>`;
 					html+=`<td class="number" style="color:${wrColor};font-weight:600;">${tWR.toFixed(1)}%</td>`;
@@ -664,6 +667,16 @@
         function initPlayersTable(){setTimeout(()=>{const tbody=document.getElementById('players-tbody');const searchInput=document.getElementById('player-search');const clearBtn=document.getElementById('clear-search');const resultSpan=document.getElementById('search-result');const headers=document.querySelectorAll('#players-table .sortable-header');if(!tbody)return;let currentSort='wl',currentDir='desc';const allRows=Array.from(tbody.querySelectorAll('tr'));function filterAndSort(){const searchText=searchInput?.value.toLowerCase()||'';let filtered=allRows.filter(row=>{if(!searchText)return true;const name=row.dataset.name?.toLowerCase()||'';const cls=row.dataset.class?.toLowerCase()||'';return name.includes(searchText)||cls.includes(searchText);});filtered.sort((a,b)=>{let va=a.dataset[currentSort],vb=b.dataset[currentSort];if(currentSort==='name'||currentSort==='class'||currentSort==='faction')return currentDir==='asc'?va.localeCompare(vb):vb.localeCompare(va);va=parseFloat(va)||0;vb=parseFloat(vb)||0;return currentDir==='asc'?va-vb:vb-va;});filtered.forEach((row,idx)=>{row.cells[0].textContent=idx+1;});tbody.innerHTML='';filtered.forEach(row=>tbody.appendChild(row));if(resultSpan)resultSpan.textContent=searchText?`Найдено: ${filtered.length}`:'';}headers.forEach(th=>{th.addEventListener('click',()=>{const sortBy=th.dataset.sort;headers.forEach(h=>h.classList.remove('asc','desc'));if(currentSort===sortBy)currentDir=currentDir==='asc'?'desc':'asc';else{currentSort=sortBy;currentDir='desc';}th.classList.add(currentDir);filterAndSort();});});if(searchInput)searchInput.addEventListener('input',filterAndSort);if(clearBtn)clearBtn.addEventListener('click',()=>{searchInput.value='';filterAndSort();});const wlHeader=document.querySelector('[data-sort="wl"]');if(wlHeader){wlHeader.classList.add('desc');filterAndSort();}},200);}
         window.switchTab=function(tabName){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));const tab=document.getElementById('tab-'+tabName);if(tab)tab.classList.add('active');const tabMap={tops:'Топы',classes:'Классы',races:'Расы',combos:'Комбинации',rating:'Рейтинг',shards:'Осколки',records:'Рекорды',champions:'Чемпионы',titles:'Титулы',twovtwo:'2v2',allplayers:'Игроки'};const label=tabMap[tabName];document.querySelectorAll('.tab-btn').forEach(btn=>{if(label&&btn.textContent.includes(label))btn.classList.add('active');});history.replaceState(null,null,'#'+tabName);};
     
+		function getTeamRank(wins, losses) {
+			const total = wins + losses;
+			if (total < 5) return '⚪ Без ранга';
+			const wr = wins * 100 / total;
+			if (wr >= 60) return '💠 Алмаз';
+			if (wr >= 55) return '💎 Платина';
+			if (wr >= 50) return '🥇 Золото';
+			if (wr >= 45) return '🥈 Серебро';
+			return '🥉 Бронза';
+		}
 		document.querySelectorAll('.nav-label').forEach(label=>{
 		label.addEventListener('click',function(e){
 			if(window.innerWidth>768)return;
