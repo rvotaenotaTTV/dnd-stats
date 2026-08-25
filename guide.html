@@ -564,13 +564,29 @@
 				<!-- Калькулятор синергий -->
 				<div class="card" style="margin-top:20px;">
 					<div class="card-title">🔮 Калькулятор синергий</div>
-					<div style="display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; padding:15px;">
-						<select id="synergy-class1" style="background:var(--elevated); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:0.9rem; width:100%;"></select>
+					
+					<!-- Выбранные классы -->
+					<div style="display:flex; justify-content:center; align-items:center; gap:12px; padding:15px; flex-wrap:wrap;">
+						<div id="synergy-pick1" style="text-align:center; cursor:pointer; min-width:120px;" onclick="toggleClassPicker(1)">
+							<div style="font-size:2.5rem; opacity:0.3;">❔</div>
+							<div style="color:var(--muted); font-size:0.75rem;">Выбрать класс</div>
+						</div>
 						<div style="font-size:1.5rem; color:var(--sub); font-weight:700;">+</div>
-						<select id="synergy-class2" style="background:var(--elevated); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:0.9rem; width:100%;"></select>
+						<div id="synergy-pick2" style="text-align:center; cursor:pointer; min-width:120px;" onclick="toggleClassPicker(2)">
+							<div style="font-size:2.5rem; opacity:0.3;">❔</div>
+							<div style="color:var(--muted); font-size:0.75rem;">Выбрать класс</div>
+						</div>
 					</div>
+					
+					<!-- Сетка классов для выбора -->
+					<div id="class-picker" style="display:none; padding:0 15px 15px;">
+						<div id="class-picker-title" style="text-align:center; color:var(--gold); font-size:0.8rem; margin-bottom:10px;"></div>
+						<div id="class-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px;"></div>
+					</div>
+					
+					<!-- Результат -->
 					<div id="synergy-result" style="text-align:center; padding:20px; font-size:1rem; color:var(--muted);">
-						Загрузка классов...
+						Выбери два класса
 					</div>
 				</div>
 
@@ -774,153 +790,208 @@
         });
     });
 	
-	let CLASSES_SYNERGY = {};
+let CLASSES_SYNERGY = {};
+let selectedClass1 = null;
+let selectedClass2 = null;
+let pickingFor = 1;
 
-	const SYNERGY_BONUSES = {
-		"tank_tank": { hp: 4, atk: 0, min: 0, max: 0, emoji: "🧱", text: "+4 HP" },
-		"mage_mage": { hp: 0, atk: 0, min: 0, max: 2, emoji: "☄️", text: "+2 MAX" },
-		"rogue_rogue": { hp: 0, atk: 2, min: 0, max: 0, emoji: "🌪️", text: "+2 ATK" },
-		"support_support": { hp: 2, atk: 0, min: 2, max: 0, emoji: "🕊️", text: "+2 HP, +2 MIN" },
-		"tank_mage": { hp: 2, atk: 0, min: 0, max: 1, emoji: "🔥", text: "+2 HP, +1 MAX" },
-		"tank_rogue": { hp: 2, atk: 1, min: 0, max: 0, emoji: "⚡", text: "+2 HP, +1 ATK" },
-		"tank_support": { hp: 3, atk: 0, min: 1, max: 0, emoji: "💚", text: "+3 HP, +1 MIN" },
-		"mage_rogue": { hp: 0, atk: 1, min: 0, max: 1, emoji: "💥", text: "+1 ATK, +1 MAX" },
-		"mage_support": { hp: 1, atk: 0, min: 1, max: 1, emoji: "💫", text: "+1 HP, +1 MIN, +1 MAX" },
-		"rogue_support": { hp: 1, atk: 1, min: 1, max: 0, emoji: "🍃", text: "+1 HP, +1 ATK, +1 MIN" }
-	};
+const SYNERGY_BONUSES = {
+    "tank_tank": { hp: 4, atk: 0, min: 0, max: 0, emoji: "🧱", text: "+4 HP" },
+    "mage_mage": { hp: 0, atk: 0, min: 0, max: 2, emoji: "☄️", text: "+2 MAX" },
+    "rogue_rogue": { hp: 0, atk: 2, min: 0, max: 0, emoji: "🌪️", text: "+2 ATK" },
+    "support_support": { hp: 2, atk: 0, min: 2, max: 0, emoji: "🕊️", text: "+2 HP, +2 MIN" },
+    "tank_mage": { hp: 2, atk: 0, min: 0, max: 1, emoji: "🔥", text: "+2 HP, +1 MAX" },
+    "tank_rogue": { hp: 2, atk: 1, min: 0, max: 0, emoji: "⚡", text: "+2 HP, +1 ATK" },
+    "tank_support": { hp: 3, atk: 0, min: 1, max: 0, emoji: "💚", text: "+3 HP, +1 MIN" },
+    "mage_rogue": { hp: 0, atk: 1, min: 0, max: 1, emoji: "💥", text: "+1 ATK, +1 MAX" },
+    "mage_support": { hp: 1, atk: 0, min: 1, max: 1, emoji: "💫", text: "+1 HP, +1 MIN, +1 MAX" },
+    "rogue_support": { hp: 1, atk: 1, min: 1, max: 0, emoji: "🍃", text: "+1 HP, +1 ATK, +1 MIN" }
+};
 
-	function getRoleFromClass(className) {
-		if (["Воин", "Паладин", "Варвар"].includes(className)) return "tank";
-		if (["Чародей", "Волшебница", "Некромант", "Колдун"].includes(className)) return "mage";
-		if (["Плут", "Следопыт", "Монах"].includes(className)) return "rogue";
-		if (["Жрец", "Друид", "Изобретатель", "Бард"].includes(className)) return "support";
-		return "unknown";
-	}
+function getRoleFromClass(className) {
+    if (["Воин", "Паладин", "Варвар"].includes(className)) return "tank";
+    if (["Чародей", "Волшебница", "Некромант", "Колдун"].includes(className)) return "mage";
+    if (["Плут", "Следопыт", "Монах"].includes(className)) return "rogue";
+    if (["Жрец", "Друид", "Изобретатель", "Бард"].includes(className)) return "support";
+    return "unknown";
+}
 
-	function getRoleName(role) {
-		switch(role) {
-			case "tank": return "Танк";
-			case "mage": return "Маг";
-			case "rogue": return "Рога";
-			case "support": return "Сап";
-		}
-		return "";
-	}
+function getRoleName(role) {
+    switch(role) {
+        case "tank": return "Танк";
+        case "mage": return "Маг";
+        case "rogue": return "Рога";
+        case "support": return "Сап";
+    }
+    return "";
+}
 
-	function updateSynergy() {
-		const c1 = document.getElementById('synergy-class1').value;
-		const c2 = document.getElementById('synergy-class2').value;
-		const result = document.getElementById('synergy-result');
-		
-		if (!c1 || !c2 || !CLASSES_SYNERGY[c1] || !CLASSES_SYNERGY[c2]) {
-			result.innerHTML = 'Выбери два класса';
-			return;
-		}
-		
-		const class1 = CLASSES_SYNERGY[c1];
-		const class2 = CLASSES_SYNERGY[c2];
-		
-		const combo1 = class1.role + "_" + class2.role;
-		const combo2 = class2.role + "_" + class1.role;
-		
-		const bonus = SYNERGY_BONUSES[combo1] || SYNERGY_BONUSES[combo2];
-		
-		const hp = class1.hp + class2.hp;
-		const atk = Math.round((class1.atk + class2.atk) / 2);
-		const def = Math.round((class1.def + class2.def) / 2);
-		const dex = Math.round((class1.dex + class2.dex) / 2);
-		const min = Math.round((class1.min + class2.min) / 2);
-		const max = Math.round((class1.max + class2.max) / 2);
-		
-		let fHp = hp, fAtk = atk, fMin = min, fMax = max;
-		let bonusText = "⚖️ Без синергии";
-		let bonusEmoji = "";
-		
-		if (bonus) {
-			fHp += bonus.hp;
-			fAtk += bonus.atk;
-			fMin += bonus.min;
-			fMax += bonus.max;
-			bonusText = bonus.text;
-			bonusEmoji = bonus.emoji;
-		}
-		
-		result.innerHTML = `
-			<div style="font-size:2rem; margin-bottom:8px;">${class1.emoji}${class2.emoji}</div>
-			<div style="font-weight:700; font-size:1.1rem;">${c1} + ${c2}</div>
-			<div style="color:var(--sub); margin:6px 0;">${getRoleName(class1.role)} + ${getRoleName(class2.role)}</div>
-			${bonusEmoji ? `<div style="font-size:1.3rem; margin:10px 0;">${bonusEmoji}</div>
-			<div style="color:var(--gold); font-weight:700; margin-bottom:15px;">${bonusText}</div>` : '<div style="color:var(--muted); margin:10px 0;">Без синергии</div>'}
-			<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; text-align:center;">
-				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
-					<div style="color:var(--sub); font-size:0.7rem;">HP</div>
-					<div style="font-weight:700;">${hp}${fHp !== hp ? ' → ' + fHp : ''}</div>
-				</div>
-				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
-					<div style="color:var(--sub); font-size:0.7rem;">ATK</div>
-					<div style="font-weight:700;">${atk}${fAtk !== atk ? ' → ' + fAtk : ''}</div>
-				</div>
-				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
-					<div style="color:var(--sub); font-size:0.7rem;">DEF</div>
-					<div style="font-weight:700;">${def}</div>
-				</div>
-				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
-					<div style="color:var(--sub); font-size:0.7rem;">DEX</div>
-					<div style="font-weight:700;">${dex}</div>
-				</div>
-				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
-					<div style="color:var(--sub); font-size:0.7rem;">MIN</div>
-					<div style="font-weight:700;">${min}${fMin !== min ? ' → ' + fMin : ''}</div>
-				</div>
-				<div style="background:var(--elevated); border-radius:8px; padding:8px;">
-					<div style="color:var(--sub); font-size:0.7rem;">MAX</div>
-					<div style="font-weight:700;">${max}${fMax !== max ? ' → ' + fMax : ''}</div>
-				</div>
-			</div>
-		`;
-	}
+function toggleClassPicker(slot) {
+    const picker = document.getElementById('class-picker');
+    const title = document.getElementById('class-picker-title');
+    
+    if (picker.style.display === 'block' && pickingFor === slot) {
+        picker.style.display = 'none';
+        return;
+    }
+    
+    pickingFor = slot;
+    title.textContent = `Выбери ${slot === 1 ? 'первый' : 'второй'} класс:`;
+    renderClassGrid();
+    picker.style.display = 'block';
+}
 
-	function initSynergyCalculator() {
-		const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-		
-		fetch(DATA_URL)
-			.then(r => r.json())
-			.then(data => {
-				if (!data.classes) return;
-				
-				data.classes.forEach(c => {
-					CLASSES_SYNERGY[c.Name] = {
-						role: getRoleFromClass(c.Name),
-						hp: c.Hp,
-						atk: c.Atk,
-						def: c.Def,
-						dex: c.Dex,
-						min: c.Min,
-						max: c.Max,
-						emoji: c.Emoji
-					};
-				});
-				
-				const selects = ['synergy-class1', 'synergy-class2'];
-				selects.forEach(id => {
-					const select = document.getElementById(id);
-					Object.keys(CLASSES_SYNERGY).forEach(name => {
-						const opt = document.createElement('option');
-						opt.value = name;
-						opt.textContent = CLASSES_SYNERGY[name].emoji + ' ' + name;
-						select.appendChild(opt);
-					});
-					select.addEventListener('change', updateSynergy);
-				});
-				
-				document.getElementById('synergy-result').innerHTML = 'Выбери два класса';
-			})
-			.catch(() => {
-				document.getElementById('synergy-result').innerHTML = 'Ошибка загрузки классов';
-			});
-	}
+function renderClassGrid() {
+    const grid = document.getElementById('class-grid');
+    const classNames = Object.keys(CLASSES_SYNERGY);
+    
+    grid.innerHTML = classNames.map(name => {
+        const c = CLASSES_SYNERGY[name];
+        const isSelected = (pickingFor === 1 && selectedClass1 === name) || 
+                          (pickingFor === 2 && selectedClass2 === name);
+        const roleColor = {
+            tank: 'var(--gold)',
+            mage: 'var(--purple)',
+            rogue: 'var(--ice)',
+            support: 'var(--green)'
+        }[c.role] || 'var(--sub)';
+        
+        return `<div onclick="selectClass('${name}')" style="
+            background: ${isSelected ? 'rgba(240,185,11,0.15)' : 'var(--elevated)'};
+            border: 1px solid ${isSelected ? 'var(--gold)' : 'var(--border)'};
+            border-radius: 8px;
+            padding: 10px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        ">
+            <div style="font-size:1.8rem;">${c.emoji}</div>
+            <div style="font-weight:700; font-size:0.7rem;">${name}</div>
+            <div style="color:${roleColor}; font-size:0.6rem;">${getRoleName(c.role)}</div>
+        </div>`;
+    }).join('');
+}
 
-	initSynergyCalculator();
+function selectClass(name) {
+    if (pickingFor === 1) {
+        selectedClass1 = name;
+    } else {
+        selectedClass2 = name;
+    }
+    
+    document.getElementById('class-picker').style.display = 'none';
+    updateSynergy();
+}
+
+function updateSynergy() {
+    const pick1 = document.getElementById('synergy-pick1');
+    const pick2 = document.getElementById('synergy-pick2');
+    const result = document.getElementById('synergy-result');
+    
+    // Обновляем отображение выбранных классов
+    if (selectedClass1 && CLASSES_SYNERGY[selectedClass1]) {
+        const c = CLASSES_SYNERGY[selectedClass1];
+        pick1.innerHTML = `<div style="font-size:2.5rem;">${c.emoji}</div>
+            <div style="color:var(--text); font-weight:700; font-size:0.75rem;">${selectedClass1}</div>
+            <div style="color:var(--sub); font-size:0.65rem;">${getRoleName(c.role)}</div>`;
+    } else {
+        pick1.innerHTML = `<div style="font-size:2.5rem; opacity:0.3;">❔</div>
+            <div style="color:var(--muted); font-size:0.75rem;">Выбрать класс</div>`;
+    }
+    
+    if (selectedClass2 && CLASSES_SYNERGY[selectedClass2]) {
+        const c = CLASSES_SYNERGY[selectedClass2];
+        pick2.innerHTML = `<div style="font-size:2.5rem;">${c.emoji}</div>
+            <div style="color:var(--text); font-weight:700; font-size:0.75rem;">${selectedClass2}</div>
+            <div style="color:var(--sub); font-size:0.65rem;">${getRoleName(c.role)}</div>`;
+    } else {
+        pick2.innerHTML = `<div style="font-size:2.5rem; opacity:0.3;">❔</div>
+            <div style="color:var(--muted); font-size:0.75rem;">Выбрать класс</div>`;
+    }
+    
+    if (!selectedClass1 || !selectedClass2) {
+        result.innerHTML = 'Выбери два класса';
+        return;
+    }
+    
+    const class1 = CLASSES_SYNERGY[selectedClass1];
+    const class2 = CLASSES_SYNERGY[selectedClass2];
+    
+    const combo1 = class1.role + "_" + class2.role;
+    const combo2 = class2.role + "_" + class1.role;
+    const bonus = SYNERGY_BONUSES[combo1] || SYNERGY_BONUSES[combo2];
+    
+    const hp = class1.hp + class2.hp;
+    const atk = Math.round((class1.atk + class2.atk) / 2);
+    const def = Math.round((class1.def + class2.def) / 2);
+    const dex = Math.round((class1.dex + class2.dex) / 2);
+    const min = Math.round((class1.min + class2.min) / 2);
+    const max = Math.round((class1.max + class2.max) / 2);
+    
+    let fHp = hp, fAtk = atk, fMin = min, fMax = max;
+    let bonusEmoji = "", bonusText = "";
+    
+    if (bonus) {
+        fHp += bonus.hp; fAtk += bonus.atk; fMin += bonus.min; fMax += bonus.max;
+        bonusEmoji = bonus.emoji;
+        bonusText = bonus.text;
+    }
+    
+    const stat = (label, val, final) => 
+        `<div style="background:var(--elevated); border-radius:8px; padding:6px;">
+            <div style="color:var(--sub); font-size:0.65rem;">${label}</div>
+            <div style="font-weight:700; font-size:0.85rem;">${final !== undefined && final !== val ? val + ' → ' + final : val}</div>
+        </div>`;
+    
+    result.innerHTML = `
+        <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+            ${bonusEmoji ? `
+            <div style="text-align:center;">
+                <div style="font-size:1.5rem;">${bonusEmoji}</div>
+                <div style="font-weight:700; font-size:0.7rem; color:var(--gold);">${bonusText}</div>
+            </div>` : ''}
+        </div>
+        
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+            ${stat('HP', hp, fHp)}
+            ${stat('ATK', atk, fAtk)}
+            ${stat('DEF', def)}
+            ${stat('DEX', dex)}
+            ${stat('MIN', min, fMin)}
+            ${stat('MAX', max, fMax)}
+        </div>
+    `;
+}
+
+function initSynergyCalculator() {
+    const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+    
+    fetch(DATA_URL)
+        .then(r => r.json())
+        .then(data => {
+            if (!data.classes) return;
+            
+            data.classes.forEach(c => {
+                CLASSES_SYNERGY[c.Name] = {
+                    role: getRoleFromClass(c.Name),
+                    hp: c.Hp,
+                    atk: c.Atk,
+                    def: c.Def,
+                    dex: c.Dex,
+                    min: c.Min,
+                    max: c.Max,
+                    emoji: c.Emoji
+                };
+            });
+            
+            updateSynergy();
+        })
+        .catch(() => {
+            document.getElementById('synergy-result').innerHTML = 'Ошибка загрузки классов';
+        });
+}
+
+initSynergyCalculator();
 </script>
 </body>
 </html>
