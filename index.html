@@ -617,7 +617,7 @@
 						<div class="hunter-name" style="font-size:1rem;font-weight:700;">${p.display}</div>
 						<div style="color:${tRankColor};font-weight:700;font-size:0.85rem;margin:4px 0;">${tRank}</div>
 						<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0;">
-							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;color:var(--ice);">💎 ${tPoints}</span>
+							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;color:var(--ice);">Pts ${tPoints}</span>
 							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;">${tW}W/${tL}L</span>
 							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;color:${tWR >= 55 ? 'var(--green)' : tWR >= 45 ? 'var(--gold)' : 'var(--red)'};">${tWR.toFixed(0)}%</span>
 						</div>
@@ -630,7 +630,7 @@
 				html+='<th class="sortable-header" data-sort="rank">#</th>';
 				html+='<th class="sortable-header" data-sort="name">Имя</th>';
 				html+='<th class="sortable-header" data-sort="class">Герой</th>';
-				html+='<th class="sortable-header" data-sort="telo">💎</th>';
+				html+='<th class="sortable-header" data-sort="telo">Pts</th>';
 				html+='<th class="sortable-header" data-sort="trank">Ранг</th>';
 				html+='<th class="sortable-header" data-sort="twr">Винрейт</th>';
 				html+='<th class="sortable-header" data-sort="twins">W/L</th>';
