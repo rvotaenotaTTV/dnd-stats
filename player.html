@@ -726,33 +726,40 @@
         const teamTotal = teamWins + teamLosses;
         const teamWinrate = teamTotal > 0 ? (teamWins * 100 / teamTotal).toFixed(1) + '%' : '—';
         
-        const stats = [
-            { value: p.wins || 0, label: '⚔️ Победы' },
-            { value: p.losses || 0, label: '💀 Поражения' },
-            { value: winrate + '%', label: '📊 Винрейт' },
-            { value: total, label: '⚡ Всего боёв' },
-            { value: p.best || 0, label: '🔥 Лучший стрик' },
-            { value: p.worst || 0, label: '💔 Худший стрик' },
-            { value: p.shards || 0, label: '💎 Осколки' },
-            { value: p.level || 0, label: '📈 Уровень' },
-            { value: p.tournamentWins || 0, label: '👑 Турниры' },
-            { value: p.factionWins || 0, label: '🌍 Фракция' },
-            { value: dungeon ? dungeon.record : '-', label: '🏔 Рекорд данжа' },
-            { value: dungeon ? dungeon.trophies : '-', label: '🐉 Трофеев' },
-            { value: teamWins, label: '⚔️ 2v2 Победы' },
-            { value: teamLosses, label: '💀 2v2 Поражения' },
-            { value: teamWinrate, label: '📊 2v2 Винрейт' },
-            { value: p.teamTournamentWins || 0, label: '👑 2v2 Турниры' }
-        ];
+		const stats = [
+			// Ряд 1: Арена 1v1 (4)
+			{ value: p.wins || 0, label: '⚔️ Победы' },
+			{ value: p.losses || 0, label: '💀 Поражения' },
+			{ value: winrate + '%', label: '📊 Винрейт' },
+			{ value: p.tournamentWins || 0, label: '👑 Турниры' },
+			
+			// Ряд 2: Арена 2v2 (4)
+			{ value: teamWins, label: '⚔️ 2v2 Победы' },
+			{ value: teamLosses, label: '💀 2v2 Поражения' },
+			{ value: teamWinrate, label: '📊 2v2 Винрейт' },
+			{ value: p.teamTournamentWins || 0, label: '👑 2v2 Турниры' },
+			
+			// Ряд 3: Общее (4)
+			{ value: total, label: '⚡ Всего боёв' },
+			{ value: p.best || 0, label: '🔥 Лучший стрик' },
+			{ value: p.worst || 0, label: '💔 Худший стрик' },
+			{ value: p.factionWins || 0, label: '🌍 Фракционные победы' },
+			
+			// Ряд 4: Прогресс + PvE (4)
+			{ value: p.level || 0, label: '📈 Уровень' },
+			{ value: p.shards || 0, label: '💎 Осколки' },
+			{ value: dungeon ? dungeon.record : '-', label: '🏔 Рекорд данжа' },
+			{ value: dungeon ? dungeon.trophies : '-', label: '🐉 Трофеев' }
+		];
         
-        const ranks = [
-            { rank: winRank, label: 'По победам' },
-            { rank: winrateRank, label: 'По винрейту' },
-            { rank: shardsRank, label: 'По осколкам' },
-            { rank: dungeonRank, label: 'По данжу' },
-            { rank: seasonRank, label: 'По рейтингу' },
-            { rank: factionRank, label: 'По фракционным победам' }
-        ];
+		const ranks = [
+			{ rank: seasonRank, label: 'По SKILL' },
+			{ rank: winRank, label: 'По победам' },
+			{ rank: winrateRank, label: 'По винрейту' },
+			{ rank: factionRank, label: 'По фракционным победам' },
+			{ rank: shardsRank, label: 'По осколкам' },
+			{ rank: dungeonRank, label: 'По данжу' }
+		];
         
         return `
         <div id="ptab-current" class="player-tab-content active">
@@ -804,12 +811,28 @@
         return sorted.findIndex(x => x.display === p.display) + 1;
     }
 
-    function getRankByDungeon(p) {
-        const sorted = allPlayers
-            .map(x => ({ display: x.display, record: dungeonPlayers[x.display]?.record || 0 }))
-            .sort((a, b) => b.record - a.record);
-        return sorted.findIndex(x => x.display === p.display && x.record > 0) + 1;
-    }
+	function getRankByDungeon(p) {
+		const playerRecord = dungeonPlayers[p.display]?.record || 0;
+		const playerDamage = dungeonPlayers[p.display]?.damage || 0;
+		
+		const sorted = allPlayers
+			.filter(x => {
+				const d = dungeonPlayers[x.display];
+				return d && d.record > 0;
+			})
+			.sort((a, b) => {
+				const dA = dungeonPlayers[a.display];
+				const dB = dungeonPlayers[b.display];
+				
+				// Сначала по рекорду
+				if (dB.record !== dA.record) return dB.record - dA.record;
+				
+				// Потом по урону
+				return (dB.damage || 0) - (dA.damage || 0);
+			});
+		
+		return sorted.findIndex(x => x.display === p.display) + 1;
+	}
 
     function getRankByFaction(p) {
         const sorted = [...allPlayers].sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0));
