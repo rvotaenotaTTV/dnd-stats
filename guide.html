@@ -556,41 +556,76 @@
                 </div>
                 <p style="margin-bottom:12px;"><strong>Пары.</strong> Мир больше не верит в одиночек. Победители получат звание <strong style="color:var(--purple);">Наследники Осколка</strong>.</p>
 
-                <h3>🛡️ Роли классов</h3>
-                <div class="grid-2" style="margin-bottom:16px;">
-                    <div class="role-box"><div class="rb-title" style="color:var(--gold);">🛡️ Танк</div><div class="rb-classes">Воин · Паладин · Варвар</div><div class="rb-note">Стена, о которую ломаются клинки.</div></div>
-                    <div class="role-box"><div class="rb-title" style="color:var(--purple);">🔮 Маг</div><div class="rb-classes">Чародей · Волшебница · Некромант · Колдун</div><div class="rb-note">Воля, разрывающая реальность.</div></div>
-                    <div class="role-box"><div class="rb-title" style="color:var(--ice);">🗡️ Рога</div><div class="rb-classes">Плут · Следопыт · Монах</div><div class="rb-note">Тень, что бьёт из-за спины.</div></div>
-                    <div class="role-box"><div class="rb-title" style="color:var(--green);">✨ Саппорт</div><div class="rb-classes">Жрец · Друид · Изобретатель · Бард</div><div class="rb-note">Тот, кто не даёт упасть.</div></div>
-                </div>
+				<h3>🛡️ Роли классов</h3>
+				<div class="grid-2" style="margin-bottom:16px;">
+					<div class="role-box" style="border-left:3px solid var(--gold);">
+						<div class="rb-title" style="color:var(--gold);">🛡️ Танк</div>
+						<div class="rb-classes">Воин · Паладин · Варвар</div>
+						<div class="rb-note">Стена, о которую ломаются клинки.</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--purple);">
+						<div class="rb-title" style="color:var(--purple);">🔮 Маг</div>
+						<div class="rb-classes">Чародей · Волшебница · Некромант · Колдун</div>
+						<div class="rb-note">Воля, разрывающая реальность.</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--ice);">
+						<div class="rb-title" style="color:var(--ice);">🗡️ Рога</div>
+						<div class="rb-classes">Плут · Следопыт · Монах</div>
+						<div class="rb-note">Тень, что бьёт из-за спины.</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--green);">
+						<div class="rb-title" style="color:var(--green);">✨ Саппорт</div>
+						<div class="rb-classes">Жрец · Друид · Изобретатель · Бард</div>
+						<div class="rb-note">Тот, кто не даёт упасть.</div>
+					</div>
+				</div>
 
-                <!-- Калькулятор синергий -->
-                <section class="card" style="margin-top:20px;">
-                    <div class="card-title">🔮 Калькулятор синергий</div>
-                    
-                    <div style="display:flex; justify-content:center; align-items:center; gap:12px; padding:15px; flex-wrap:wrap;">
-                        <div class="synergy-pick" id="synergy-pick1" onclick="toggleClassPicker(1)" role="button" aria-label="Выбрать первый класс">
-                            <div class="synergy-emoji" id="sp1-emoji">❔</div>
-                            <div class="synergy-role" id="sp1-role"></div>
-                            <div class="synergy-placeholder" id="sp1-placeholder">Выбрать класс</div>
-                        </div>
-                        <div style="font-size:1.5rem; color:var(--sub); font-weight:700;">+</div>
-                        <div class="synergy-pick" id="synergy-pick2" onclick="toggleClassPicker(2)" role="button" aria-label="Выбрать второй класс">
-                            <div class="synergy-emoji" id="sp2-emoji">❔</div>
-                            <div class="synergy-role" id="sp2-role"></div>
-                            <div class="synergy-placeholder" id="sp2-placeholder">Выбрать класс</div>
-                        </div>
-                    </div>
-                    
-                    <div id="class-picker" style="display:none; padding:0 15px 15px;">
-                        <div id="class-picker-title" style="text-align:center; color:var(--gold); font-size:0.8rem; margin-bottom:10px;"></div>
-                        <div id="class-grid" class="class-grid"></div>
-                    </div>
-                    
-                    <div id="synergy-result" style="text-align:center; padding:20px; font-size:1rem; color:var(--muted);">
-                        Выбери два класса
-                    </div>
-                </section>
+				<h3>⚡ Синергии пар</h3>
+				<div class="grid-2" style="margin-bottom:16px;">
+					<!-- Одинаковые роли -->
+					<div class="role-box" style="border-left:3px solid var(--gold);">
+						<div class="rb-title" style="color:var(--gold);">🧱 Танк + Танк</div>
+						<div class="rb-classes">+5 HP</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--gold);">
+						<div class="rb-title" style="color:var(--gold);">☄️ Маг + Маг</div>
+						<div class="rb-classes">+1 ATK, +1 MAX</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--gold);">
+						<div class="rb-title" style="color:var(--gold);">🌪️ Рога + Рога</div>
+						<div class="rb-classes">+1 ATK, +1 DEX</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--gold);">
+						<div class="rb-title" style="color:var(--gold);">🕊️ Сап + Сап</div>
+						<div class="rb-classes">+3 HP, +1 DEF</div>
+					</div>
+					
+					<!-- Смешанные роли -->
+					<div class="role-box" style="border-left:3px solid var(--orange);">
+						<div class="rb-title" style="color:var(--orange);">🔥 Танк + Маг</div>
+						<div class="rb-classes">+2 DEF</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--orange);">
+						<div class="rb-title" style="color:var(--orange);">⚡ Танк + Рога</div>
+						<div class="rb-classes">+2 ATK</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--orange);">
+						<div class="rb-title" style="color:var(--orange);">🌿 Танк + Сап</div>
+						<div class="rb-classes">+4 HP</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--orange);">
+						<div class="rb-title" style="color:var(--orange);">💥 Маг + Рога</div>
+						<div class="rb-classes">+1 MIN, +1 MAX</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--orange);">
+						<div class="rb-title" style="color:var(--orange);">💫 Маг + Сап</div>
+						<div class="rb-classes">+2 HP, +2 MAX</div>
+					</div>
+					<div class="role-box" style="border-left:3px solid var(--orange);">
+						<div class="rb-title" style="color:var(--orange);">🍃 Рога + Сап</div>
+						<div class="rb-classes">+1 ATK, +1 DEX</div>
+					</div>
+				</div>
 
                 <!-- Лига -->
                 <div class="cta-box">
@@ -803,222 +838,6 @@
         window.scrollToId = function(id) {
             document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
         };
-
-        // --- Калькулятор синергий ---
-        const CLASSES_SYNERGY = {};
-        let selectedClass1 = null;
-        let selectedClass2 = null;
-        let pickingFor = 1;
-
-        const SYNERGY_BONUSES = {
-            "tank_tank": { hp: 4, atk: 0, min: 0, max: 0, emoji: "🧱", text: "+4 HP" },
-            "mage_mage": { hp: 0, atk: 0, min: 0, max: 2, emoji: "☄️", text: "+2 MAX" },
-            "rogue_rogue": { hp: 0, atk: 2, min: 0, max: 0, emoji: "🌪️", text: "+2 ATK" },
-            "support_support": { hp: 2, atk: 0, min: 2, max: 0, emoji: "🕊️", text: "+2 HP, +2 MIN" },
-            "tank_mage": { hp: 2, atk: 0, min: 0, max: 1, emoji: "🔥", text: "+2 HP, +1 MAX" },
-            "tank_rogue": { hp: 2, atk: 1, min: 0, max: 0, emoji: "⚡", text: "+2 HP, +1 ATK" },
-            "tank_support": { hp: 3, atk: 0, min: 1, max: 0, emoji: "💚", text: "+3 HP, +1 MIN" },
-            "mage_rogue": { hp: 0, atk: 1, min: 0, max: 1, emoji: "💥", text: "+1 ATK, +1 MAX" },
-            "mage_support": { hp: 1, atk: 0, min: 1, max: 1, emoji: "💫", text: "+1 HP, +1 MIN, +1 MAX" },
-            "rogue_support": { hp: 1, atk: 1, min: 1, max: 0, emoji: "🍃", text: "+1 HP, +1 ATK, +1 MIN" }
-        };
-
-        const ROLE_CLASSES = {
-            tank: ["Воин", "Паладин", "Варвар"],
-            mage: ["Чародей", "Волшебница", "Некромант", "Колдун"],
-            rogue: ["Плут", "Следопыт", "Монах"],
-            support: ["Жрец", "Друид", "Изобретатель", "Бард"]
-        };
-        const ROLE_NAMES = { tank: "Танк", mage: "Маг", rogue: "Рога", support: "Сап" };
-        const ROLE_COLORS = { tank: 'var(--gold)', mage: 'var(--purple)', rogue: 'var(--ice)', support: 'var(--green)' };
-
-        function getRoleFromClass(className) {
-            for (const [role, classes] of Object.entries(ROLE_CLASSES)) {
-                if (classes.includes(className)) return role;
-            }
-            return "unknown";
-        }
-
-        window.toggleClassPicker = function(slot) {
-            const picker = $('#class-picker');
-            const title = $('#class-picker-title');
-            
-            if (picker.style.display === 'block' && pickingFor === slot) {
-                picker.style.display = 'none';
-                return;
-            }
-            
-            pickingFor = slot;
-            title.textContent = `Выбери ${slot === 1 ? 'первый' : 'второй'} класс:`;
-            renderClassGrid();
-            picker.style.display = 'block';
-        };
-
-        function renderClassGrid() {
-            const grid = $('#class-grid');
-            const classNames = Object.keys(CLASSES_SYNERGY);
-            
-            grid.innerHTML = classNames.map(name => {
-                const c = CLASSES_SYNERGY[name];
-                const isSelected = (pickingFor === 1 && selectedClass1 === name) || 
-                                  (pickingFor === 2 && selectedClass2 === name);
-                const roleColor = ROLE_COLORS[c.role] || 'var(--sub)';
-                
-                return `<div class="class-option ${isSelected ? 'selected' : ''}" data-class="${name}" role="button" tabindex="0">
-                    <div class="co-emoji">${c.emoji}</div>
-                    <div class="co-name">${name}</div>
-                    <div class="co-role" style="color:${roleColor}">${ROLE_NAMES[c.role] || ''}</div>
-                </div>`;
-            }).join('');
-
-            // Обработчики для выбора класса
-            $$('.class-option', grid).forEach(opt => {
-                opt.addEventListener('click', () => selectClass(opt.dataset.class));
-                opt.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        selectClass(opt.dataset.class);
-                    }
-                });
-            });
-        }
-
-        function selectClass(name) {
-            if (pickingFor === 1) {
-                selectedClass1 = name;
-            } else {
-                selectedClass2 = name;
-            }
-            
-            $('#class-picker').style.display = 'none';
-            updateSynergy();
-        }
-
-        function updateSynergy() {
-            const pick1 = $('#synergy-pick1');
-            const pick2 = $('#synergy-pick2');
-            const result = $('#synergy-result');
-            
-            // Обновляем отображение первого класса
-            if (selectedClass1 && CLASSES_SYNERGY[selectedClass1]) {
-                const c = CLASSES_SYNERGY[selectedClass1];
-                $('#sp1-emoji').textContent = c.emoji;
-                $('#sp1-role').textContent = ROLE_NAMES[c.role] || '';
-                $('#sp1-placeholder').textContent = selectedClass1;
-                $('#sp1-placeholder').style.color = 'var(--text)';
-                $('#sp1-emoji').style.opacity = '1';
-            } else {
-                $('#sp1-emoji').textContent = '❔';
-                $('#sp1-role').textContent = '';
-                $('#sp1-placeholder').textContent = 'Выбрать класс';
-                $('#sp1-placeholder').style.color = '';
-                $('#sp1-emoji').style.opacity = '0.3';
-            }
-            
-            // Обновляем отображение второго класса
-            if (selectedClass2 && CLASSES_SYNERGY[selectedClass2]) {
-                const c = CLASSES_SYNERGY[selectedClass2];
-                $('#sp2-emoji').textContent = c.emoji;
-                $('#sp2-role').textContent = ROLE_NAMES[c.role] || '';
-                $('#sp2-placeholder').textContent = selectedClass2;
-                $('#sp2-placeholder').style.color = 'var(--text)';
-                $('#sp2-emoji').style.opacity = '1';
-            } else {
-                $('#sp2-emoji').textContent = '❔';
-                $('#sp2-role').textContent = '';
-                $('#sp2-placeholder').textContent = 'Выбрать класс';
-                $('#sp2-placeholder').style.color = '';
-                $('#sp2-emoji').style.opacity = '0.3';
-            }
-            
-            if (!selectedClass1 || !selectedClass2) {
-                result.innerHTML = 'Выбери два класса';
-                return;
-            }
-            
-            const class1 = CLASSES_SYNERGY[selectedClass1];
-            const class2 = CLASSES_SYNERGY[selectedClass2];
-            
-            const combo1 = class1.role + "_" + class2.role;
-            const combo2 = class2.role + "_" + class1.role;
-            const bonus = SYNERGY_BONUSES[combo1] || SYNERGY_BONUSES[combo2];
-            
-            const hp = class1.hp + class2.hp;
-            const atk = Math.round((class1.atk + class2.atk) / 2);
-            const def = Math.round((class1.def + class2.def) / 2);
-            const dex = Math.round((class1.dex + class2.dex) / 2);
-            const min = Math.round((class1.min + class2.min) / 2);
-            const max = Math.round((class1.max + class2.max) / 2);
-            
-            let fHp = hp, fAtk = atk, fMin = min, fMax = max;
-            let bonusEmoji = "", bonusText = "";
-            
-            if (bonus) {
-                fHp += bonus.hp; fAtk += bonus.atk; fMin += bonus.min; fMax += bonus.max;
-                bonusEmoji = bonus.emoji;
-                bonusText = bonus.text;
-            }
-            
-            const stat = (label, val, final) => 
-                `<div class="stat-display">
-                    <div class="sd-label">${label}</div>
-                    <div class="sd-value">${final !== undefined && final !== val ? val + ' → ' + final : val}</div>
-                </div>`;
-            
-            result.innerHTML = `
-                <div class="synergy-bonus">
-                    ${bonusEmoji ? `
-                    <div style="text-align:center;">
-                        <div style="font-size:1.5rem;">${bonusEmoji}</div>
-                        <div style="font-weight:700; font-size:0.7rem; color:var(--gold);">${bonusText}</div>
-                    </div>` : ''}
-                </div>
-                
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
-                    ${stat('HP', hp, fHp)}
-                    ${stat('ATK', atk, fAtk)}
-                    ${stat('DEF', def)}
-                    ${stat('DEX', dex)}
-                    ${stat('MIN', min, fMin)}
-                    ${stat('MAX', max, fMax)}
-                </div>
-            `;
-        }
-
-        function initSynergyCalculator() {
-            const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
-            
-            fetch(DATA_URL)
-                .then(r => {
-                    if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
-                    return r.json();
-                })
-                .then(data => {
-                    if (!data.classes) return;
-                    
-                    data.classes.forEach(c => {
-                        CLASSES_SYNERGY[c.Name] = {
-                            role: getRoleFromClass(c.Name),
-                            hp: c.Hp,
-                            atk: c.Atk,
-                            def: c.Def,
-                            dex: c.Dex,
-                            min: c.Min,
-                            max: c.Max,
-                            emoji: c.Emoji
-                        };
-                    });
-                    
-                    updateSynergy();
-                })
-                .catch(err => {
-                    console.error('Ошибка загрузки классов:', err);
-                    $('#synergy-result').innerHTML = 'Ошибка загрузки классов';
-                });
-        }
-
-        // Инициализация
-        initSynergyCalculator();
     })();
 </script>
 </body>
