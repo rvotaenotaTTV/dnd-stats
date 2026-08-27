@@ -866,63 +866,69 @@
         }
     };
 
-    // ============ SKILL ============
-    function renderSkill(p) {
-        const total = (p.wins || 0) + (p.losses || 0);
-        const wr = total > 0 ? (p.wins / total) : 0;
-        const skill = p.skill || 0;
-        const denominator = Math.sqrt(total / 75 + 1);
-        
-        const components = [
-            { icon: '⚔️', name: 'Победы × Винрейт', formula: `${p.wins} × ${(wr * 100).toFixed(1)}% × 7`, value: (p.wins || 0) * wr * 7, color: 'var(--gold)' },
-            { icon: '🔥', name: 'Лучший стрик', formula: `${p.best} × 10`, value: (p.best || 0) * 10, color: 'var(--red)' },
-            { icon: '📈', name: 'Уровень', formula: `${p.level} × 2`, value: (p.level || 0) * 2, color: 'var(--green)' },
-            { icon: '👑', name: 'Турнирные победы', formula: `${p.tournamentWins} × 25`, value: (p.tournamentWins || 0) * 25, color: 'var(--purple)' },
-            { icon: '🌍', name: 'Фракционные победы', formula: `${p.factionWins} × 2`, value: (p.factionWins || 0) * 2, color: 'var(--ice)' }
-        ];
-        
-        const totalValue = components.reduce((sum, c) => sum + c.value, 0);
-        
-        return `
-        <div class="skill-hero">
-            <div class="skill-value">${skill}</div>
-            <div style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;">Текущий SKILL</div>
-        </div>
-        
-        <div class="skill-formula-box">
-            <div style="color:var(--gold);font-weight:700;margin-bottom:10px;">📐 Формула расчёта</div>
-            <div style="font-family:monospace;font-size:0.75rem;color:var(--sub);line-height:1.8;">
-                (${components.map(c => c.value.toFixed(0)).join(' + ')}) ÷ ${denominator.toFixed(2)}
-            </div>
-        </div>
-        
-        <div class="skill-breakdown">
-            <div style="color:var(--gold);font-weight:700;margin-bottom:12px;">🔍 Разбор вклада</div>
-            ${components.map(c => {
-                const percent = totalValue > 0 ? (c.value / totalValue) * 100 : 0;
-                return `
-                <div class="skill-component">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                        <span style="font-size:0.8rem;color:var(--text);font-weight:600;">${c.icon} ${c.name}</span>
-                        <span style="font-size:0.75rem;color:${c.color};font-weight:700;">${percent.toFixed(1)}%</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-bottom:4px;">
-                        <span>${c.formula}</span>
-                        <span>= ${c.value.toFixed(0)}</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-bar-fill" style="width:${percent}%;background:${c.color};"></div>
-                    </div>
-                </div>`;
-            }).join('')}
-        </div>
-        
-        <div class="skill-total">
-            <div style="font-size:0.8rem;color:var(--sub);margin-bottom:4px;">Сумма компонентов</div>
-            <div style="font-size:1.2rem;font-weight:800;color:var(--gold);">${totalValue.toFixed(0)}</div>
-            <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;">Делитель: √(${total} / 75 + 1) = ${denominator.toFixed(2)}</div>
-        </div>`;
-    }
+	// ============ SKILL ============
+	function renderSkill(p) {
+		const total = (p.wins || 0) + (p.losses || 0);
+		const wr = total > 0 ? (p.wins / total) : 0;
+		const skill = p.skill || 0;
+		const denominator = Math.sqrt(total / 75 + 1);
+		
+		const components = [
+			{ icon: '⚔️', name: 'Победы × Винрейт', detail: `${p.wins} × ${(wr * 100).toFixed(1)}% × 7`, value: (p.wins || 0) * wr * 7, color: 'var(--gold)' },
+			{ icon: '🔥', name: 'Лучший стрик', detail: `${p.best} × 10`, value: (p.best || 0) * 10, color: 'var(--red)' },
+			{ icon: '📈', name: 'Уровень', detail: `${p.level} × 2`, value: (p.level || 0) * 2, color: 'var(--green)' },
+			{ icon: '👑', name: 'Турнирные победы', detail: `${p.tournamentWins} × 25`, value: (p.tournamentWins || 0) * 25, color: 'var(--purple)' },
+			{ icon: '🌍', name: 'Фракционные победы', detail: `${p.factionWins} × 2`, value: (p.factionWins || 0) * 2, color: 'var(--ice)' }
+		];
+		
+		const totalValue = components.reduce((sum, c) => sum + c.value, 0);
+		const calculatedSkill = Math.floor(totalValue / denominator);
+		
+		return `
+		<div class="section gold" style="padding:24px 20px; text-align:center;">
+			<div style="font-size:3rem; font-weight:900; color:var(--gold); line-height:1;">${skill}</div>
+			<div style="font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-top:4px;">Текущий SKILL</div>
+		</div>
+		
+		<div class="section gold" style="padding:20px;">
+			<div class="section-title" style="justify-content:center; margin-bottom:16px;">📐 Формула</div>
+			<div style="text-align:center; font-family:monospace; font-size:0.8rem; color:var(--sub); line-height:1.8;">
+				(${components.map(c => c.value.toFixed(0)).join(' + ')}) ÷ ${denominator.toFixed(2)}
+			</div>
+			<div style="text-align:center; font-family:monospace; font-size:1.1rem; color:var(--gold); font-weight:700; margin-top:8px;">
+				= ${calculatedSkill}
+			</div>
+		</div>
+		
+		<div class="section gold" style="padding:20px;">
+			<div class="section-title" style="justify-content:center; margin-bottom:16px;">🔍 Вклад</div>
+			<div style="display:flex; flex-direction:column; gap:12px;">
+				${components.map(c => {
+					const percent = totalValue > 0 ? (c.value / totalValue) * 100 : 0;
+					return `
+					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; border-left:3px solid ${c.color};">
+						<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+							<span style="font-size:0.85rem; color:var(--text); font-weight:600;">${c.icon} ${c.name}</span>
+							<span style="font-size:0.8rem; color:${c.color}; font-weight:700;">${percent.toFixed(1)}%</span>
+						</div>
+						<div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-bottom:8px;">
+							<span>${c.detail}</span>
+							<span>= ${c.value.toFixed(0)}</span>
+						</div>
+						<div style="background:var(--bg); height:6px; border-radius:3px; overflow:hidden;">
+							<div style="width:${percent}%; height:6px; background:${c.color}; border-radius:3px;"></div>
+						</div>
+					</div>`;
+				}).join('')}
+			</div>
+		</div>
+		
+		<div class="section gold" style="padding:20px; text-align:center;">
+			<div style="font-size:0.8rem; color:var(--sub);">Сумма компонентов</div>
+			<div style="font-size:1.3rem; font-weight:800; color:var(--gold); margin-top:4px;">${totalValue.toFixed(0)}</div>
+			<div style="font-size:0.7rem; color:var(--muted); margin-top:6px;">Делитель: √(${total} / 75 + 1) = ${denominator.toFixed(2)}</div>
+		</div>`;
+	}
 
     // ============ ДОСТИЖЕНИЯ ============
     function renderAchievements() {
