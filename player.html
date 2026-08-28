@@ -666,7 +666,6 @@
                 <div class="profile-badges">
                     ${p.champion ? '<span class="badge badge-gold">👑 Хранитель</span>' : ''}
                     ${faction ? `<span class="badge ${faction === 'Орден Света' ? 'badge-light' : 'badge-dark'}">${factionIcon} ${faction}</span>` : ''}
-                    ${p.subfaction ? `<span class="badge badge-gold">${p.subfaction}</span>` : ''}
                     ${seasonRank > 0 ? `<span class="badge badge-light">🏆 Топ-${seasonRank} сезона</span>` : ''}
                 </div>
                 <button class="btn btn-secondary" onclick="copyProfileLink()">🔗 Копировать ссылку</button>
