@@ -123,6 +123,12 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 10px 6px;
+            transition: all 0.2s ease;
+        }
+
+        .territories div:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
         }
 
         .mech {
@@ -133,6 +139,12 @@
             display: flex;
             align-items: flex-start;
             gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .mech:hover {
+            transform: translateX(4px);
+            border-color: var(--gold);
         }
 
         .mech.l { border-left: 3px solid var(--gold); }
@@ -157,6 +169,13 @@
             border-radius: 8px;
             padding: 12px 8px;
             text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .passive:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .passive.red { border-top: 3px solid var(--red); }
@@ -168,8 +187,8 @@
         .passive.orange { border-top: 3px solid var(--orange); }
 
         .passive .p-emoji { font-size: 1.4rem; margin-bottom: 4px; }
-        .passive .p-name { font-weight: 700; color: var(--text); margin-bottom: 3px; }
-        .passive .p-desc { color: var(--muted); line-height: 1.3; }
+        .passive .p-name { font-weight: 700; color: var(--text); margin-bottom: 3px; font-size: 0.75rem; }
+        .passive .p-desc { color: var(--muted); line-height: 1.3; font-size: 0.7rem; }
 
         .cmd {
             background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03));
@@ -177,6 +196,15 @@
             border-radius: var(--radius-sm);
             padding: 12px 14px;
             border-left: 3px solid var(--gold);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .cmd:hover {
+            transform: translateX(4px);
+            border-left-color: var(--ice);
         }
 
         .cmd.admin {
@@ -194,6 +222,18 @@
         .cmd.admin .c-name { color: var(--ice); }
         .cmd .c-desc { color: var(--muted); font-size: 0.75rem; margin-top: 3px; }
 
+        .cmd .copy-hint {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .cmd:hover .copy-hint { opacity: 1; }
+
         .reward-row {
             display: flex;
             justify-content: space-between;
@@ -202,6 +242,11 @@
             border-bottom: 1px solid var(--border);
             font-size: 0.82rem;
             background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03));
+            transition: background 0.2s;
+        }
+
+        .reward-row:hover {
+            background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.08));
         }
 
         .reward-row:last-child { border-bottom: none; }
@@ -255,40 +300,6 @@
         .guide-card .gc-cmd { font-family: 'SF Mono', Consolas, monospace; background: rgba(240, 185, 11, 0.12); padding: 3px 10px; border-radius: 10px; font-size: 0.78rem; color: var(--gold); display: inline-block; }
         .guide-card .gc-sub { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
 
-        .synergy-pick {
-            text-align: center;
-            cursor: pointer;
-            min-width: 120px;
-        }
-        .synergy-emoji { font-size: 2.5rem; }
-        .synergy-role { color: var(--sub); font-size: 0.65rem; }
-        .synergy-placeholder { color: var(--muted); font-size: 0.75rem; }
-
-        .class-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
-        .class-option {
-            background: var(--elevated);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 6px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .class-option.selected { background: rgba(240,185,11,0.15); border-color: var(--gold); }
-        .class-option .co-emoji { font-size: 1.8rem; }
-        .class-option .co-name { font-weight: 700; font-size: 0.7rem; }
-        .class-option .co-role { font-size: 0.6rem; }
-
-        .stat-display {
-            background: var(--elevated);
-            border-radius: 8px;
-            padding: 6px;
-        }
-        .stat-display .sd-label { color: var(--sub); font-size: 0.65rem; }
-        .stat-display .sd-value { font-weight: 700; font-size: 0.85rem; }
-
-        .synergy-bonus { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-
         .info-chip {
             display: inline-flex;
             align-items: center;
@@ -302,16 +313,6 @@
         .info-chip.white { background: var(--bg); }
         .info-chip.gold-dark { background: var(--gold); color: #0a0a0a; font-weight: 800; font-size: 0.7rem; padding: 3px 12px; border-radius: 12px; }
 
-        .role-box {
-            background: var(--elevated);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 14px;
-        }
-        .role-box .rb-title { font-weight: 700; font-size: 0.8rem; margin-bottom: 4px; }
-        .role-box .rb-classes { color: var(--sub); font-size: 0.78rem; }
-        .role-box .rb-note { color: var(--muted); font-size: 0.7rem; margin-top: 4px; font-style: italic; }
-
         .cta-box {
             background: linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.03));
             border: 1px solid rgba(240,185,11,0.1);
@@ -321,6 +322,94 @@
             text-align: center;
         }
 
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red));
+            transform-origin: 0 50%;
+            transform: scaleX(0);
+            z-index: 1000;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: var(--card);
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 98;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .scroll-top:hover {
+            background: var(--gold);
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dashed var(--gold);
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: var(--elevated);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.7rem;
+            color: var(--text);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        .synergy-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .synergy-row:hover {
+            background: rgba(240,185,11,0.05) !important;
+        }
+
+        .synergy-row.highlighted {
+            background: rgba(240,185,11,0.1) !important;
+        }
+
         @media (max-width: 768px) {
             .grid-3, .grid-2, .grid-4, .grid-auto {
                 grid-template-columns: 1fr;
@@ -328,10 +417,21 @@
             .territories {
                 grid-template-columns: repeat(3, 1fr);
             }
+            .tooltip::after {
+                display: none;
+            }
+            .scroll-top {
+                bottom: 70px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+            }
         }
     </style>
 </head>
 <body>
+
+<div class="reading-progress" id="readingProgress"></div>
 
 <div class="container">
     <header class="header">
@@ -412,7 +512,7 @@
                     <div class="infocard"><div class="ic-icon">✅</div><div class="ic-title">Готово</div><div class="ic-sub"><code>!инфо</code> — твои статы</div></div>
                 </section>
                 <p style="text-align:center; max-width:500px; margin:0 auto">
-                    Бот предложит <span class="hl">три случайные комбинации</span> раса + класс. Фракция назначается автоматически. Классы не повторяются.
+                    Бот предложит <span class="tooltip" data-tooltip="Раса + класс + фракция">три случайные комбинации</span>. Фракция назначается автоматически. Классы не повторяются.
                 </p>
             </div>
         </article>
@@ -587,43 +687,43 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">🧱 Танк + Танк<br><span style="color:var(--muted); font-size:0.65rem;">Воин · Паладин · Варвар</span></td>
 								<td style="color:var(--gold); font-weight:700;">+4 HP</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">☄️ Маг + Маг<br><span style="color:var(--muted); font-size:0.65rem;">Чародей · Волшебница · Некромант · Колдун</span></td>
 								<td style="color:var(--gold); font-weight:700;">+2 MAX</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">🌪️ Рога + Рога<br><span style="color:var(--muted); font-size:0.65rem;">Плут · Следопыт · Монах</span></td>
 								<td style="color:var(--gold); font-weight:700;">+2 ATK</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">🕊️ Сап + Сап<br><span style="color:var(--muted); font-size:0.65rem;">Жрец · Друид · Изобретатель · Бард</span></td>
 								<td style="color:var(--gold); font-weight:700;">+2 HP, +2 MIN</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">🔥 Танк + Маг<br><span style="color:var(--muted); font-size:0.65rem;">Воин/Паладин/Варвар + Чародей/Волшебница/Некромант/Колдун</span></td>
 								<td style="color:var(--orange); font-weight:700;">+2 HP, +1 MAX</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">⚡ Танк + Рога<br><span style="color:var(--muted); font-size:0.65rem;">Воин/Паладин/Варвар + Плут/Следопыт/Монах</span></td>
 								<td style="color:var(--orange); font-weight:700;">+2 HP, +1 ATK</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">💚 Танк + Сап<br><span style="color:var(--muted); font-size:0.65rem;">Воин/Паладин/Варвар + Жрец/Друид/Изобретатель/Бард</span></td>
 								<td style="color:var(--orange); font-weight:700;">+3 HP, +1 MIN</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">💥 Маг + Рога<br><span style="color:var(--muted); font-size:0.65rem;">Чародей/Волшебница/Некромант/Колдун + Плут/Следопыт/Монах</span></td>
 								<td style="color:var(--orange); font-weight:700;">+1 ATK, +1 MAX</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">💫 Маг + Сап<br><span style="color:var(--muted); font-size:0.65rem;">Чародей/Волшебница/Некромант/Колдун + Жрец/Друид/Изобретатель/Бард</span></td>
 								<td style="color:var(--orange); font-weight:700;">+1 HP, +1 MIN, +1 MAX</td>
 							</tr>
-							<tr>
+							<tr class="synergy-row" onclick="this.classList.toggle('highlighted')">
 								<td style="text-align:left;">🍃 Рога + Сап<br><span style="color:var(--muted); font-size:0.65rem;">Плут/Следопыт/Монах + Жрец/Друид/Изобретатель/Бард</span></td>
 								<td style="color:var(--orange); font-weight:700;">+1 HP, +1 ATK, +1 MIN</td>
 							</tr>
@@ -639,106 +739,105 @@
 			</div>
 		</article>
 
-        <!-- ШАГ 6 -->
-        <article class="path-step dungeon" id="step-dungeon">
-            <div class="path-num">Шаг 6</div>
-            <h2 class="path-title">🐲 Бездна Разлома</h2>
-            <div class="path-desc">
-                <p>PvE-режим. Бесконечные волны монстров. Каждая 5-я — <strong>босс</strong>. <span style="color:var(--red);">💀 Смерть перманентна для забега.</span></p>
-                <div class="grid-auto">
-                    <div class="mech l"><div class="m-icon">🚪</div><div><h4 class="m-title">Вход в подземелье</h4><div class="m-body">Герой получает <span class="hl">случайную пассивку</span> и <span class="hl">случайного фамильяра</span>, который дает бонус к статам на весь забег.</div></div></div>
-                    <div class="mech l"><div class="m-icon">🌊</div><div><h4 class="m-title">Бесконечные волны</h4><div class="m-body">Каждая волна сильнее предыдущей. Каждая <span class="hl">5-я волна — босс</span>: HP×1.5, ATK+2, DEF+1.</div></div></div>
-                    <div class="mech l"><div class="m-icon">💚</div><div><h4 class="m-title">Лечение после волны</h4><div class="m-body"><span class="hl">14 + волна×2 HP</span>. После босса — <span class="hl">возврат к HP до боя</span> (не полное восстановление).</div></div></div>
-                    <div class="mech l"><div class="m-icon">🎲</div><div><h4 class="m-title">Артефакты</h4><div class="m-body"><span class="hl">35%</span> шанс после обычной волны, <span class="hl">70%</span> после босса. Увеличивают статы героя.</div></div></div>
-                    <div class="mech l"><div class="m-icon">💰</div><div><h4 class="m-title">Награды</h4><div class="m-body">Каждые <span class="hl">3 волны</span> — +1 💎. За босса — <span class="hl">1-3 трофея</span> в копилку фракции.</div></div></div>
-                    <div class="mech l"><div class="m-icon">💀</div><div><h4 class="m-title">Гибель</h4><div class="m-body">При <span class="hl">HP = 0</span> забег завершается. Рекорд (количество волн) сохраняется в статистику героя.</div></div></div>
-                </div>
+		<!-- ШАГ 6 -->
+		<article class="path-step dungeon" id="step-dungeon">
+			<div class="path-num">Шаг 6</div>
+			<h2 class="path-title">🐲 Бездна Разлома</h2>
+			<div class="path-desc">
+				<p>PvE-режим. Бесконечные волны монстров. Каждая 5-я — <strong>босс</strong>. <span style="color:var(--red);">💀 Смерть перманентна для забега.</span></p>
+				<div class="grid-auto">
+					<div class="mech l"><div class="m-icon">🚪</div><div><h4 class="m-title">Вход в подземелье</h4><div class="m-body">Герой получает <span class="hl">случайную пассивку</span> и <span class="hl">случайного фамильяра</span>, который дает бонус к статам на весь забег.</div></div></div>
+					<div class="mech l"><div class="m-icon">🌊</div><div><h4 class="m-title">Бесконечные волны</h4><div class="m-body">Каждая волна сильнее предыдущей. Каждая <span class="hl">5-я волна — босс</span>: HP×1.5, ATK+2, DEF+1.</div></div></div>
+					<div class="mech l"><div class="m-icon">💚</div><div><h4 class="m-title">Лечение после волны</h4><div class="m-body"><span class="hl">14 + волна×2 HP</span>. После босса — <span class="hl">возврат к HP до боя</span> (не полное восстановление).</div></div></div>
+					<div class="mech l"><div class="m-icon">🎲</div><div><h4 class="m-title">Артефакты</h4><div class="m-body"><span class="hl">35%</span> шанс после обычной волны, <span class="hl">70%</span> после босса. Увеличивают статы героя.</div></div></div>
+					<div class="mech l"><div class="m-icon">💰</div><div><h4 class="m-title">Награды</h4><div class="m-body">Каждые <span class="hl">3 волны</span> — +1 💎. За босса — <span class="hl">1-3 трофея</span> в копилку фракции.</div></div></div>
+					<div class="mech l"><div class="m-icon">💀</div><div><h4 class="m-title">Гибель</h4><div class="m-body">При <span class="hl">HP = 0</span> забег завершается. Рекорд (количество волн) сохраняется в статистику героя.</div></div></div>
+				</div>
 
-                <h3>🌿 Пассивки (12)</h3>
-                <div class="grid-4" style="font-size:0.72rem;">
-                    <div class="passive red"><div class="p-emoji">🩸</div><div class="p-name">Вампиризм</div><div class="p-desc">+10 HP к лечению после каждой волны</div></div>
-                    <div class="passive green"><div class="p-emoji">✨</div><div class="p-name">Благословение</div><div class="p-desc">+15% к шансу найти артефакт</div></div>
-                    <div class="passive ice"><div class="p-emoji">💫</div><div class="p-name">Сияние</div><div class="p-desc">−15% HP у всех врагов</div></div>
-                    <div class="passive blue"><div class="p-emoji">💚</div><div class="p-name">Стойкость</div><div class="p-desc">+2 DEF на весь забег</div></div>
-                    <div class="passive purple"><div class="p-emoji">🔮</div><div class="p-name">Отражение</div><div class="p-desc">30% шанс вернуть половину урона врагу</div></div>
-                    <div class="passive red"><div class="p-emoji">💥</div><div class="p-name">Жажда крови</div><div class="p-desc">+2 АТК на весь забег. Крит = три броска урона</div></div>
-                    <div class="passive gold"><div class="p-emoji">⚔️</div><div class="p-name">Святая ярость</div><div class="p-desc">+4 урона ко всем врагам</div></div>
-                    <div class="passive purple"><div class="p-emoji">🧿</div><div class="p-name">Амулет Раскола</div><div class="p-desc">Каждый 3-й удар x2 урона</div></div>
-                    <div class="passive orange"><div class="p-emoji">💢</div><div class="p-name">Накопленная ярость</div><div class="p-desc">Потерял HP → бьёшь сильнее</div></div>
-                    <div class="passive gold"><div class="p-emoji">🎯</div><div class="p-name">Метка Охотника</div><div class="p-desc">Первые 3 удара — двойной урон</div></div>
-                    <div class="passive blue"><div class="p-emoji">👻</div><div class="p-name">Призрачный щит</div><div class="p-desc">25% шанс избежать урона полностью</div></div>
-                    <div class="passive red"><div class="p-emoji">🗡️</div><div class="p-name">Казнь</div><div class="p-desc">Добивание при HP врага < 30%</div></div>
-                </div>
+				<h3>🌿 Пассивки (12)</h3>
+				<div class="grid-4" style="font-size:0.72rem;">
+					<div class="passive red"><div class="p-emoji">🩸</div><div class="p-name">Вампиризм</div><div class="p-desc">+10 HP к лечению после каждой волны</div></div>
+					<div class="passive green"><div class="p-emoji">✨</div><div class="p-name">Благословение</div><div class="p-desc">+15% к шансу найти артефакт</div></div>
+					<div class="passive ice"><div class="p-emoji">💫</div><div class="p-name">Сияние</div><div class="p-desc">−15% HP у всех врагов</div></div>
+					<div class="passive blue"><div class="p-emoji">💚</div><div class="p-name">Стойкость</div><div class="p-desc">+2 DEF на весь забег</div></div>
+					<div class="passive purple"><div class="p-emoji">🔮</div><div class="p-name">Отражение</div><div class="p-desc">30% шанс вернуть половину урона врагу</div></div>
+					<div class="passive red"><div class="p-emoji">💥</div><div class="p-name">Жажда крови</div><div class="p-desc">+2 АТК на весь забег. Крит = три броска урона</div></div>
+					<div class="passive gold"><div class="p-emoji">⚔️</div><div class="p-name">Святая ярость</div><div class="p-desc">+4 урона ко всем врагам</div></div>
+					<div class="passive purple"><div class="p-emoji">🧿</div><div class="p-name">Амулет Раскола</div><div class="p-desc">Каждый 3-й удар x2 урона</div></div>
+					<div class="passive orange"><div class="p-emoji">💢</div><div class="p-name">Накопленная ярость</div><div class="p-desc">Потерял HP → бьёшь сильнее</div></div>
+					<div class="passive gold"><div class="p-emoji">🎯</div><div class="p-name">Метка Охотника</div><div class="p-desc">Первые 3 удара — двойной урон</div></div>
+					<div class="passive blue"><div class="p-emoji">👻</div><div class="p-name">Призрачный щит</div><div class="p-desc">25% шанс избежать урона полностью</div></div>
+					<div class="passive red"><div class="p-emoji">🗡️</div><div class="p-name">Казнь</div><div class="p-desc">Добивание при HP врага < 30%</div></div>
+				</div>
 
-                <div class="grid-2" style="margin-top:16px">
-                    <div>
-                        <h3>🐾 Фамильяры (6)</h3>
-                        <div class="table-container"><table>
-                            <thead><tr><th>Бонус</th><th>Питомцы</th></tr></thead>
-                            <tbody>
-                                <tr><td>+1 ATK</td><td>🐺 Волк, 🐱 Кот</td></tr>
-                                <tr><td>+1 DEX</td><td>🦅 Орёл, 🦊 Лиса</td></tr>
-                                <tr><td>+1 MIN</td><td>🐍 Змея, 🦝 Енот</td></tr>
-                                <tr><td>+1 MAX</td><td>🐲 Дракончик, 🦉 Сова</td></tr>
-                                <tr><td>+1 DEF</td><td>🐢 Черепаха, 🦀 Краб</td></tr>
-                                <tr><td>+2 HP</td><td>🐻 Медведь, 🐗 Кабан</td></tr>
-                            </tbody>
-                        </table></div>
-                    </div>
-                    <div>
-                        <h3>🎲 Артефакты (6)</h3>
-                        <div class="table-container"><table>
-                            <thead><tr><th>Артефакт</th><th>Эффект</th></tr></thead>
-                            <tbody>
-                                <tr><td>☀️ Осколок Клинка</td><td>+2 ATK, +2 DEX</td></tr>
-                                <tr><td>🌫️ Плащ Повеств.</td><td>+2 DEF, +2 MAX</td></tr>
-                                <tr><td>💍 Кольцо Аэлиона</td><td>+2 ATK, +2 DEF</td></tr>
-                                <tr><td>🔮 Руна Раскола</td><td>+2 MIN, +2 MAX</td></tr>
-                                <tr><td>🍺 Пиво ГуангГуанга</td><td>+20 HP</td></tr>
-                                <tr><td>💀 Проклятие Бездны</td><td>−1 к случайной хар-ке</td></tr>
-                            </tbody>
-                        </table></div>
-                    </div>
-                </div>
+				<div class="grid-2" style="margin-top:16px">
+					<div>
+						<h3>🐾 Фамильяры (6)</h3>
+						<div class="table-container"><table>
+							<thead><tr><th>Бонус</th><th>Питомцы</th></tr></thead>
+							<tbody>
+								<tr><td>+1 ATK</td><td>🐺 Волк, 🐱 Кот</td></tr>
+								<tr><td>+1 DEX</td><td>🦅 Орёл, 🦊 Лиса</td></tr>
+								<tr><td>+1 MIN</td><td>🐍 Змея, 🦝 Енот</td></tr>
+								<tr><td>+1 MAX</td><td>🐲 Дракончик, 🦉 Сова</td></tr>
+								<tr><td>+1 DEF</td><td>🐢 Черепаха, 🦀 Краб</td></tr>
+								<tr><td>+2 HP</td><td>🐻 Медведь, 🐗 Кабан</td></tr>
+							</tbody>
+						</table></div>
+					</div>
+					<div>
+						<h3>🎲 Артефакты (6)</h3>
+						<div class="table-container"><table>
+							<thead><tr><th>Артефакт</th><th>Эффект</th></tr></thead>
+							<tbody>
+								<tr><td>☀️ Осколок Аэлиона</td><td>+4 ATK</td></tr>
+								<tr><td>🌫️ Страница Повест.</td><td>+4 DEF</td></tr>
+								<tr><td>💍 Кольцо Бездны</td><td>+4 MIN</td></tr>
+								<tr><td>🔮 Руна Раскола</td><td>+4 MAX</td></tr>
+								<tr><td>🍺 Пиво ГуангГуанга</td><td>+25 HP</td></tr>
+								<tr><td>💀 Слово Бездны</td><td>−2 к случайной хар-ке</td></tr>
+							</tbody>
+						</table></div>
+					</div>
+				</div>
 
-                <h3>🐉 Статы мобов</h3>
-                <div class="grid-2" style="margin-top:10px">
-                    <div>
-                        <h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📐 Формулы</h4>
-                        <div class="level-card">
-                            <div style="font-size:0.75rem; color:var(--sub); line-height:2">
-                                <div>❤️ <strong>HP</strong> = (15 + волна×8) ± 20%</div>
-                                <div style="color:var(--muted); font-size:0.68rem; margin-left:16px">после 5 волны + (волна−5)×5</div>
-                                <div>⚔️ <strong>ATK</strong> = 1 + волна/3</div>
-                                <div>🛡️ <strong>DEF</strong> = волна/5</div>
-                            </div>
-                            <div style="margin-top:10px; padding:12px; background:rgba(232,93,58,.06); border-radius:8px; border:1px solid rgba(232,93,58,.15)">
-                                <div style="color:var(--red); font-weight:700; margin-bottom:4px">🐉 БОСС (каждая 5-я волна)</div>
-                                <div style="font-size:0.7rem; color:var(--sub)">HP ×1.5 &nbsp;·&nbsp; ATK +2 &nbsp;·&nbsp; DEF +1</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📊 Боссы по волнам</h4>
-                        <div class="table-container"><table style="font-size:0.72rem; min-width:auto">
-                            <thead><tr><th>🐉</th><th>❤️ HP</th><th>⚔️ ATK</th><th>🛡️ DEF</th></tr></thead>
-                            <tbody>
-                                <tr><td><strong>5</strong></td><td>65–98</td><td>4</td><td>2</td></tr>
-                                <tr><td><strong>10</strong></td><td>144–216</td><td>6</td><td>3</td></tr>
-                                <tr><td><strong>15</strong></td><td>221–332</td><td>8</td><td>4</td></tr>
-                                <tr><td><strong>20</strong></td><td>300–450</td><td>9</td><td>5</td></tr>
-                                <tr><td><strong>25</strong></td><td>377–566</td><td>11</td><td>6</td></tr>
-                                <tr><td><strong>30</strong></td><td>497–746</td><td>13</td><td>7</td></tr>
-                                <tr><td><strong>35</strong></td><td>617–922</td><td>14</td><td>8</td></tr>
-                            </tbody>
-                        </table></div>
-                        <div style="font-size:0.62rem; color:var(--muted); margin-top:6px; text-align:center; font-style:italic">
-                            Обычные мобы: статы как у предыдущего босса, HP по формуле
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
+				<div class="grid-2" style="margin-top:10px">
+					<div>
+						<h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📐 Формулы</h4>
+						<div class="level-card">
+							<div style="font-size:0.75rem; color:var(--sub); line-height:2">
+								<div>❤️ <strong>HP</strong> = (15 + волна×8) ± 20%</div>
+								<div style="color:var(--muted); font-size:0.68rem; margin-left:16px">после 5 волны + (волна−5)×5</div>
+								<div>⚔️ <strong>ATK</strong> = 1 + волна/3</div>
+								<div>🛡️ <strong>DEF</strong> = волна/5</div>
+							</div>
+							<div style="margin-top:10px; padding:12px; background:rgba(232,93,58,.06); border-radius:8px; border:1px solid rgba(232,93,58,.15)">
+								<div style="color:var(--red); font-weight:700; margin-bottom:4px">🐉 БОСС (каждая 5-я волна)</div>
+								<div style="font-size:0.7rem; color:var(--sub)">HP ×1.5 &nbsp;·&nbsp; ATK +2 &nbsp;·&nbsp; DEF +1</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📊 Боссы по волнам</h4>
+						<div class="table-container"><table style="font-size:0.72rem; min-width:auto">
+							<thead><tr><th>🐉</th><th>❤️ HP</th><th>⚔️ ATK</th><th>🛡️ DEF</th></tr></thead>
+							<tbody>
+								<tr><td><strong>5</strong></td><td>65–98</td><td>4</td><td>2</td></tr>
+								<tr><td><strong>10</strong></td><td>144–216</td><td>6</td><td>3</td></tr>
+								<tr><td><strong>15</strong></td><td>221–332</td><td>8</td><td>4</td></tr>
+								<tr><td><strong>20</strong></td><td>300–450</td><td>9</td><td>5</td></tr>
+								<tr><td><strong>25</strong></td><td>377–566</td><td>11</td><td>6</td></tr>
+								<tr><td><strong>30</strong></td><td>497–746</td><td>13</td><td>7</td></tr>
+								<tr><td><strong>35</strong></td><td>617–922</td><td>14</td><td>8</td></tr>
+							</tbody>
+						</table></div>
+						<div style="font-size:0.62rem; color:var(--muted); margin-top:6px; text-align:center; font-style:italic">
+							Обычные мобы: статы как у предыдущего босса, HP по формуле
+						</div>
+					</div>
+				</div>
+			</div>
+		</article>
 
         <!-- ШАГ 7 -->
         <article class="path-step" id="step-grimoire">
@@ -750,34 +849,35 @@
                     <div>
                         <h3>🎮 Игровые</h3>
                         <div class="cmd-list">
-                            <div class="cmd"><div class="c-name">!бой</div><div class="c-desc">Рейтинговая дуэль</div></div>
-                            <div class="cmd"><div class="c-name">!бой @ник</div><div class="c-desc">🤝 Товарищеский бой</div></div>
-                            <div class="cmd"><div class="c-name">!2x2</div><div class="c-desc">Командная дуэль. <code>!2x2 @ник</code> — с напарником</div></div>
-                            <div class="cmd"><div class="c-name">!инфо</div><div class="c-desc">Статы героя. <code>!инфо @ник</code> — посмотреть чужого</div></div>
-                            <div class="cmd"><div class="c-name">!данж</div><div class="c-desc">Вход в подземелье</div></div>
-                            <div class="cmd"><div class="c-name">!харакири</div><div class="c-desc">Сброс героя в архив</div></div>
-                            <div class="cmd"><div class="c-name">!рега</div><div class="c-desc">Запись в текущий турнир (1v1 или 2v2)</div></div>
-                            <div class="cmd"><div class="c-name">!сетка</div><div class="c-desc">Участники и сетка текущего турнира</div></div>
-                            <div class="cmd"><div class="c-name">!1–!5</div><div class="c-desc">Выбор героя при создании (3 мин)</div></div>
+							<div class="cmd" onclick="copyCommand('!бой')"><div class="c-name">!бой</div><div class="c-desc">Рейтинговая дуэль (стата + осколки)</div><span class="copy-hint"></span></div>
+							<div class="cmd" onclick="copyCommand('!бой @ник')"><div class="c-name">!бой @ник</div><div class="c-desc">🤝 Товарищеский бой (только осколки, без статы)</div><span class="copy-hint"></span></div>
+							<div class="cmd" onclick="copyCommand('!2x2')"><div class="c-name">!2x2</div><div class="c-desc">Командная дуэль. <code>!2x2 @ник</code> — с напарником</div><span class="copy-hint"></span></div>
+							<div class="cmd" onclick="copyCommand('!инфо')"><div class="c-name">!инфо</div><div class="c-desc">Статы героя. <code>!инфо @ник</code> — посмотреть чужого</div><span class="copy-hint"></span></div>
+							<div class="cmd" onclick="copyCommand('!данж')"><div class="c-name">!данж</div><div class="c-desc">Вход в подземелье</div><span class="copy-hint"></span></div>
+							<div class="cmd" onclick="copyCommand('!харакири')"><div class="c-name">!харакири</div><div class="c-desc">Сброс героя в архив (осколки и уровень сохранятся)</div><span class="copy-hint"></span></div>
+							<div class="cmd" onclick="copyCommand('!рега')"><div class="c-name">!рега</div><div class="c-desc">Запись в текущий турнир (1v1 или 2v2)</div><span class="copy-hint"></span></div>
+							<div class="cmd" onclick="copyCommand('!сетка')"><div class="c-name">!сетка</div><div class="c-desc">Участники и сетка текущего турнира</div><span class="copy-hint"></span></div>
+							<div class="cmd" onclick="copyCommand('!1–!5')"><div class="c-name">!1–!5</div><div class="c-desc">Выбор героя при создании (3 мин)</div><span class="copy-hint"></span></div>
                         </div>
                     </div>
                     <div>
                         <h3 style="color:var(--ice)">⚡ Админские</h3>
                         <div class="cmd-list">
-                            <div class="cmd admin"><div class="c-name">!режим</div><div class="c-desc">Турнир 1v1 / дуэли</div></div>
-                            <div class="cmd admin"><div class="c-name">!турнир</div><div class="c-desc">Турнир 2v2 / дуэли</div></div>
-                            <div class="cmd admin"><div class="c-name">!старт</div><div class="c-desc">Запуск турнира 1v1</div></div>
-                            <div class="cmd admin"><div class="c-name">!добор</div><div class="c-desc">Автозаполнение текущего турнира</div></div>
-                            <div class="cmd admin"><div class="c-name">!лига</div><div class="c-desc">Запуск Лиги</div></div>
-                            <div class="cmd admin"><div class="c-name">!резерв @ник N</div><div class="c-desc">Бронь места в турнире</div></div>
-                            <div class="cmd admin"><div class="c-name">!создать @ник Раса-Класс</div><div class="c-desc">Создать героя вручную</div></div>
-                            <div class="cmd admin"><div class="c-name">!удалить @ник</div><div class="c-desc">Удалить героя</div></div>
-                            <div class="cmd admin"><div class="c-name">!сменить @ник Имя</div><div class="c-desc">Сменить имя героя</div></div>
-                            <div class="cmd admin"><div class="c-name">!воскресить @ник Имя</div><div class="c-desc">Вернуть из архива</div></div>
-                            <div class="cmd admin"><div class="c-name">!перенос @старый @новый</div><div class="c-desc">Смена ника Twitch</div></div>
-                            <div class="cmd admin"><div class="c-name">!сезон</div><div class="c-desc">Сброс статистики</div></div>
-                            <div class="cmd admin"><div class="c-name">!save</div><div class="c-desc">Принудительное сохранение</div></div>
-                            <div class="cmd admin"><div class="c-name">!логи</div><div class="c-desc">Логи боёв. <code>!логи @ник</code> — по игроку</div></div>
+							<div class="cmd admin" onclick="copyCommand('!режим')"><div class="c-name">!режим</div><div class="c-desc">Турнир 1v1 / дуэли</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!турнир')"><div class="c-name">!турнир</div><div class="c-desc">Турнир 2v2 / дуэли</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!старт')"><div class="c-name">!старт</div><div class="c-desc">Принудительный запуск турнира</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!добор')"><div class="c-name">!добор</div><div class="c-desc">Автозаполнение до 16</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!лига')"><div class="c-name">!лига</div><div class="c-desc">Лига Этерниса (8v8)</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!резерв @ник N')"><div class="c-name">!резерв @ник N</div><div class="c-desc">Бронь места (N турниров)</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!создать @ник Раса-Класс')"><div class="c-name">!создать @ник Раса-Класс</div><div class="c-desc">Создать героя вручную</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!создать @ник Раса-Класс Фракция')"><div class="c-name">!создать @ник Раса-Класс Фракция</div><div class="c-desc">Создать героя с фракцией (Свет/Тьма)</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!удалить @ник')"><div class="c-name">!удалить @ник</div><div class="c-desc">Удалить героя (осколки сохранятся)</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!сменить @ник Имя')"><div class="c-name">!сменить @ник Имя</div><div class="c-desc">Сменить имя героя</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!воскресить @ник ИмяГероя')"><div class="c-name">!воскресить @ник ИмяГероя</div><div class="c-desc">Воскресить из архива</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!перенос @старый @новый')"><div class="c-name">!перенос @старый @новый</div><div class="c-desc">Смена ника Twitch</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!сезон')"><div class="c-name">!сезон</div><div class="c-desc">Сброс статистики сезона</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!save')"><div class="c-name">!save</div><div class="c-desc">Принудительное сохранение + титулы + JSON</div><span class="copy-hint"></span></div>
+							<div class="cmd admin" onclick="copyCommand('!логи')"><div class="c-name">!логи</div><div class="c-desc">Последний бой. <code>!логи @ник</code> — по игроку</div><span class="copy-hint"></span></div>
                         </div>
                     </div>
                 </div>
@@ -785,6 +885,8 @@
         </article>
     </main>
 </div>
+
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺" aria-label="Донат">🍺</a>
 
@@ -841,6 +943,57 @@
         // --- Плавный скролл ---
         window.scrollToId = function(id) {
             document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // --- Прогресс-бар чтения ---
+        const progressBar = $('#readingProgress');
+        const scrollTopBtn = $('#scrollTop');
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.transform = `scaleX(${progress / 100})`;
+            
+            if (scrollTop > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        // --- Копирование команд ---
+        window.copyCommand = function(command) {
+            navigator.clipboard.writeText(command).then(() => {
+                // Находим элемент команды
+                $$('.cmd').forEach(el => {
+                    if (el.querySelector('.c-name').textContent === command) {
+                        const hint = el.querySelector('.copy-hint');
+                        const originalBorder = el.style.borderLeftColor;
+                        
+                        // Визуальная обратная связь
+                        el.style.borderLeftColor = 'var(--green)';
+                        el.style.background = 'rgba(16,185,129,0.1)';
+                        if (hint) {
+                            hint.textContent = '✅';
+                            hint.style.opacity = '1';
+                            hint.style.color = 'var(--green)';
+                        }
+                        
+                        setTimeout(() => {
+                            el.style.borderLeftColor = originalBorder;
+                            el.style.background = '';
+                            if (hint) {
+                                hint.textContent = '📋';
+                                hint.style.opacity = '';
+                                hint.style.color = '';
+                            }
+                        }, 1500);
+                    }
+                });
+            }).catch(err => {
+                console.error('Ошибка копирования:', err);
+            });
         };
     })();
 </script>
