@@ -39,8 +39,10 @@
     .po-col h3.light { color: var(--gold); border-color: rgba(240,185,11,0.3); }
     .po-col h3.dark { color: var(--purple); border-color: rgba(163,113,247,0.3); }
 
-    .po-match { background: var(--card); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-    .po-p { padding: 10px 12px; font-size: 0.78rem; display: flex; align-items: center; gap: 8px; transition: 0.15s; }
+    .po-match { background: var(--card); border: 1px solid var(--border); border-radius: 6px; overflow: visible; position: relative; transition: border-color 0.2s; }
+    .po-match:hover { border-color: rgba(240,185,11,0.3); }
+
+    .po-p { padding: 10px 12px; font-size: 0.78rem; display: flex; align-items: center; gap: 8px; transition: 0.15s; position: relative; }
     .po-p + .po-p { border-top: 1px solid var(--border); }
     .po-p .sd { color: var(--muted); font-size: 0.6rem; font-weight: 600; min-width: 20px; }
     .po-p .nm { flex: 1; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -61,16 +63,30 @@
     .gf-card .gfp.clk { cursor: pointer; } .gf-card .gfp.clk:hover { opacity: 0.7; }
     .gf-card .gfvs { color: var(--muted); font-size: 0.65rem; font-weight: 700; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 6px 0; letter-spacing: 1px; }
 
-	.admin-trigger { position: fixed; top: 16px; right: 16px; width: 30px; height: 30px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.08); border-radius: 50%; cursor: pointer; font-size: 0.7rem; z-index: 999; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
-	.admin-trigger:hover { color: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.08); }
-	.admin-trigger.active { color: var(--gold); border-color: rgba(240,185,11,0.25); background: rgba(240,185,11,0.06); }
-	.admin-panel { position: fixed; top: 52px; right: 16px; background: rgba(10,15,30,0.9); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 6px; display: none; z-index: 999; white-space: nowrap; }
-	.admin-panel.visible { display: block; }
-	.admin-panel button { display: inline-block; width: auto; padding: 5px 7px; margin: 0 2px 0 0; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.65rem; font-weight: 600; font-family: inherit; transition: all 0.2s; border: none; vertical-align: middle; }
-	.admin-panel button:last-child { margin-right: 0; }
-	.btn-save { background: var(--green); color: #fff; } .btn-save:hover { opacity: 0.85; }
-	.btn-export { background: var(--elevated); color: var(--sub); border: 1px solid var(--border) !important; } .btn-export:hover { color: var(--gold); border-color: var(--gold) !important; }
-	.btn-clear { background: transparent; color: var(--muted); } .btn-clear:hover { color: var(--red); }
+    .admin-trigger { position: fixed; top: 16px; right: 16px; width: 30px; height: 30px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.08); border-radius: 50%; cursor: pointer; font-size: 0.7rem; z-index: 999; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+    .admin-trigger:hover { color: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.08); }
+    .admin-trigger.active { color: var(--gold); border-color: rgba(240,185,11,0.25); background: rgba(240,185,11,0.06); }
+    .admin-panel { position: fixed; top: 52px; right: 16px; background: rgba(10,15,30,0.9); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 6px; display: none; z-index: 999; white-space: nowrap; }
+    .admin-panel.visible { display: block; }
+    .admin-panel button { display: inline-block; width: auto; padding: 5px 7px; margin: 0 2px 0 0; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.65rem; font-weight: 600; font-family: inherit; transition: all 0.2s; border: none; vertical-align: middle; }
+    .admin-panel button:last-child { margin-right: 0; }
+    .btn-save { background: var(--green); color: #fff; } .btn-save:hover { opacity: 0.85; }
+    .btn-export { background: var(--elevated); color: var(--sub); border: 1px solid var(--border) !important; } .btn-export:hover { color: var(--gold); border-color: var(--gold) !important; }
+    .btn-clear { background: transparent; color: var(--muted); } .btn-clear:hover { color: var(--red); }
+
+    #po-tooltip-player, #po-tooltip-match {
+        display: none;
+        position: fixed;
+        background: rgba(10,15,30,0.98);
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        padding: 16px 20px;
+        z-index: 99999;
+        pointer-events: none;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        min-width: 240px;
+        max-width: 300px;
+    }
 
     @media (max-width: 768px) {
         .po-grid { flex-direction: column; align-items: center; gap: 16px; }
@@ -80,73 +96,75 @@
 </style>
 </head>
 <body>
-	<div class="container">
-		<header class="header">
-			<h1 class="header-title">ЛИГА ЭТЕРНИСА</h1>
-			<p class="header-subtitle">Турнирная таблица и плей-офф</p>
-			<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-		</header>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title">ЛИГА ЭТЕРНИСА</h1>
+            <p class="header-subtitle">Турнирная таблица и плей-офф</p>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </header>
 
-		<div class="nav-wrapper">
-			<button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
-			<nav class="nav-bar" id="pageNav">
-				<div class="nav-group">
-					<span class="nav-label">⚔️ Арена ▾</span>
-					<div class="nav-dropdown">
-						<a href="index.html" class="nav-link">📊 Статистика</a>
-						<a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
-						<a href="league.html" class="nav-link active">🏟 Лига</a>
-						<a href="logs.html" class="nav-link">📜 Логи</a>
-						<a href="player.html" class="nav-link">👤 Профиль</a>
-					</div>
-				</div>
-				<div class="nav-group">
-					<span class="nav-label">📐 Аналитика ▾</span>
-					<div class="nav-dropdown">
-						<a href="balance.html" class="nav-link">⚖️ Баланс</a>
-						<a href="calc.html" class="nav-link">🎲 Калькулятор</a>
-						<a href="simulator.html" class="nav-link">🧪 Симулятор</a>
-						<a href="gradient.html" class="nav-link">📈 Градиент</a>
-						<a href="form.html" class="nav-link">🔥 Форма</a>
-					</div>
-				</div>
-				<div class="nav-group">
-					<span class="nav-label">🌍 Мир ▾</span>
-					<div class="nav-dropdown">
-						<a href="guide.html" class="nav-link">⚔️ Гайд</a>
-						<a href="lore.html" class="nav-link">📜 Лор</a>
-						<a href="hall.html" class="nav-link">🏆 Зал Славы</a>
-						<a href="tavern.html" class="nav-link">🍺 Таверна</a>
-					</div>
-				</div>
-			</nav>
-		</div>
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <div class="nav-group">
+                    <span class="nav-label">⚔️ Арена ▾</span>
+                    <div class="nav-dropdown">
+                        <a href="index.html" class="nav-link">📊 Статистика</a>
+                        <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                        <a href="league.html" class="nav-link active">🏟 Лига</a>
+                        <a href="logs.html" class="nav-link">📜 Логи</a>
+                        <a href="player.html" class="nav-link">👤 Профиль</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <span class="nav-label">📐 Аналитика ▾</span>
+                    <div class="nav-dropdown">
+                        <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                        <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                        <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+                        <a href="gradient.html" class="nav-link">📈 Градиент</a>
+                        <a href="form.html" class="nav-link">🔥 Форма</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <span class="nav-label">🌍 Мир ▾</span>
+                    <div class="nav-dropdown">
+                        <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+                        <a href="lore.html" class="nav-link">📜 Лор</a>
+                        <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                        <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
 
-		<div class="tabs">
-			<button class="tab-btn active" onclick="switchTab('standings')">📊 Таблица</button>
-			<button class="tab-btn" onclick="switchTab('playoffs')">🏆 Плей-офф</button>
-		</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('standings')">📊 Таблица</button>
+            <button class="tab-btn" onclick="switchTab('playoffs')">🏆 Плей-офф</button>
+        </div>
 
-		<div id="tab-standings" class="tab-content active">
-			<div class="faction-switch">
-				<button class="faction-btn light active" onclick="showFaction('light')">🌝 Орден Света</button>
-				<button class="faction-btn dark" onclick="showFaction('dark')">🌚 Культ Тьмы</button>
-			</div>
-			<p class="faction-note">Топ-8 выходят в плей-офф</p>
-			<div id="standings-content">
-				<div style="text-align:center;padding:40px;color:var(--sub);">Загрузка...</div>
-			</div>
-		</div>
+        <div id="tab-standings" class="tab-content active">
+            <div class="faction-switch">
+                <button class="faction-btn light active" onclick="showFaction('light')">🌝 Орден Света</button>
+                <button class="faction-btn dark" onclick="showFaction('dark')">🌚 Культ Тьмы</button>
+            </div>
+            <p class="faction-note">Топ-8 выходят в плей-офф</p>
+            <div id="standings-content">
+                <div style="text-align:center;padding:40px;color:var(--sub);">Загрузка...</div>
+            </div>
+        </div>
 
-		<div id="tab-playoffs" class="tab-content">
-			<div id="playoffs-content">
-				<div style="text-align:center;padding:40px;color:var(--sub);">Загрузка...</div>
-			</div>
-		</div>
-	</div>
+        <div id="tab-playoffs" class="tab-content">
+            <div id="playoffs-content">
+                <div style="text-align:center;padding:40px;color:var(--sub);">Загрузка...</div>
+            </div>
+        </div>
+    </div>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
     <button class="admin-trigger" id="adminTrigger" onclick="toggleAdmin()" title="Управление">🛠</button>
     <div class="admin-panel" id="adminPanel"><button class="btn-save" onclick="savePlayoffs()">💾</button><button class="btn-export" onclick="exportPlayoffs()">📋</button><button class="btn-clear" onclick="clearPlayoffs()">🗑</button></div>
+    <div id="po-tooltip-player"></div>
+    <div id="po-tooltip-match"></div>
     <script>
         function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
         (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
@@ -165,6 +183,50 @@
         function showFaction(f){currentFaction=f;document.querySelectorAll('.faction-btn').forEach(e=>e.classList.remove('active'));event.target.classList.add('active');renderStandings();}
         function findPlayer(n){return n?allPlayers.find(p=>p.display===n)||null:null;}
         function clickPlayer(mt,idx,name,isFinal){if(!isAdmin)return;if(isFinal){PLAYOFFS[mt]=PLAYOFFS[mt]===name?'':name;}else{const a=PLAYOFFS[mt];a[idx]=a[idx]===name?'':name;}localStorage.setItem('eternis-playoffs',JSON.stringify(PLAYOFFS));renderPlayoffs();}
+
+        function showTooltip(e, p) {
+            const tooltip = document.getElementById('po-tooltip-player');
+            if (!p) return;
+            const total = (p.wins||0) + (p.losses||0);
+            const wr = total > 0 ? ((p.wins||0)*100/total).toFixed(1) : '0.0';
+            const champMark = p.champion ? ' 👑' : '';
+            tooltip.innerHTML = `<div style="font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:6px">${p.emoji||''} ${p.display}${champMark}</div>
+                <div style="font-size:0.7rem;color:var(--sub);margin-bottom:8px">${p.name||'Unknown'}</div>
+                <div style="font-size:0.7rem;line-height:1.7;color:var(--text)">
+                    W-L: <strong>${p.wins||0}-${p.losses||0}</strong> (${wr}%)<br>
+                    Skill: <strong style="color:var(--gold)">${p.skill||0}</strong><br>
+                    Турниры: <strong>${p.tournamentWins||0}</strong> 🏆<br>
+                    Лучшая серия: <strong>${p.best||0}</strong> ⭐<br>
+                    Худшая серия: <strong>${p.worst||0}</strong> 💀
+                </div>`;
+            tooltip.style.display = 'block';
+            tooltip.style.left = Math.min(e.clientX + 15, window.innerWidth - 260) + 'px';
+            tooltip.style.top = (e.clientY - 10) + 'px';
+        }
+
+        function showMatchTooltip(e, a, b) {
+            const tooltip = document.getElementById('po-tooltip-match');
+            if (!a || !b) return;
+            const s1 = a.skill || 0;
+            const s2 = b.skill || 0;
+            const c1 = s1 + s2 > 0 ? Math.round((s1 / (s1 + s2)) * 100) : 50;
+            tooltip.innerHTML = `<div style="font-size:0.8rem;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">⚔️ ШАНСЫ НА ПОБЕДУ</div>
+                <div style="font-size:0.75rem;line-height:1.8;color:var(--text)">
+                    <div style="display:flex;justify-content:space-between;gap:20px"><span>${a.emoji||''} ${shortName(a.display)}</span><strong style="color:var(--green)">${c1}%</strong></div>
+                    <div style="text-align:center;color:var(--muted);font-size:0.6rem;letter-spacing:2px;padding:2px 0">VS</div>
+                    <div style="display:flex;justify-content:space-between;gap:20px"><span>${b.emoji||''} ${shortName(b.display)}</span><strong style="color:#ef4444">${100-c1}%</strong></div>
+                </div>`;
+            tooltip.style.display = 'block';
+            tooltip.style.left = '50%';
+            tooltip.style.top = '780px';
+            tooltip.style.transform = 'translateX(-50%)';
+        }
+
+        function hideTooltip() {
+            document.getElementById('po-tooltip-player').style.display = 'none';
+            document.getElementById('po-tooltip-match').style.display = 'none';
+        }
+
         function renderStandings(){
             const p=currentFaction==='light'?[...lightPlayers]:[...darkPlayers];const c=document.getElementById('standings-content');
             if(!p.length){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">Нет данных.</div>';return;}
@@ -173,19 +235,50 @@
             p.forEach((pl,i)=>{const t=(pl.wins||0)+(pl.losses||0),wr=t>0?((pl.wins||0)*100/t).toFixed(1):'0.0',pc=i===0?' top-1':i===1?' top-2':i===2?' top-3':'';let changeHtml='';const oldPos=prevRank[pl.display];if(oldPos){const diff=oldPos-(i+1);if(diff>0)changeHtml=`<span class="pos-change pos-up">▲${diff}</span>`;else if(diff<0)changeHtml=`<span class="pos-change pos-down">▼${Math.abs(diff)}</span>`;else changeHtml=`<span class="pos-change pos-same">●</span>`;}else{changeHtml=`<span class="pos-change pos-new">🆕</span>`;}h+=`<tr class="${i<8?rc:''} ${i===7?'cutoff':''}"><td class="pos${pc}">${i+1}</td><td class="pos-change-cell">${changeHtml}</td><td><a href="player.html?name=${encodeURIComponent(pl.display||'')}" class="player-link">${pl.emoji||'⚔️'} ${pl.display||''}</a></td><td>${pl.name||''}</td><td>${pl.wins||0}</td><td>${pl.losses||0}</td><td>${wr}%</td><td class="skill">${pl.skill||0}</td></tr>`;});
             h+='</tbody></table></div>';c.innerHTML=h;
         }
+
         function renderPlayoffs(){
             const light=lightPlayers.slice(0,8),dark=darkPlayers.slice(0,8);const c=document.getElementById('playoffs-content');
             if(light.length<8||dark.length<8){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">Нужно по 8 игроков в каждой фракции.</div>';return;}
             light.forEach((p,i)=>p.seed=i+1);dark.forEach((p,i)=>p.seed=i+1);
-            const pr=(p,mt,idx,isFinal,ow)=>{if(!p)return '<div class="po-p empty">—</div>';const won=isFinal?PLAYOFFS[mt]===p.display:(PLAYOFFS[mt]||[])[idx]===p.display;const lost=ow&&!won;const cls=won?' win':(lost?' lose':'');const mark=won?'<span class="mk">✅</span>':'';const cl=isAdmin?' clk':'';const oc=isAdmin?`onclick="clickPlayer('${mt}',${idx},'${p.display.replace(/'/g,"\\'")}',${isFinal})"`:'';return `<div class="po-p${cls}${cl}" ${oc}><span class="sd">#${p.seed}</span><span class="nm">${p.emoji||''} ${shortName(p.display)}</span>${mark}</div>`;};
-            const m=(a,b,mt,idx)=>{const wa=(PLAYOFFS[mt]||[])[idx]===(a?.display||'');const wb=(PLAYOFFS[mt]||[])[idx]===(b?.display||'');return `<div class="po-match">${pr(a,mt,idx,false,wb)}${pr(b,mt,idx,false,wa)}</div>`;};
-            const fm=(a,b,mt)=>{const wa=PLAYOFFS[mt]===(a?.display||'');const wb=PLAYOFFS[mt]===(b?.display||'');return `<div class="po-match">${pr(a,mt,0,true,wb)}${pr(b,mt,0,true,wa)}</div>`;};
+
+            const pr=(p,mt,idx,isFinal,ow)=>{
+                if(!p)return '<div class="po-p empty">—</div>';
+                const won=isFinal?PLAYOFFS[mt]===p.display:(PLAYOFFS[mt]||[])[idx]===p.display;
+                const lost=ow&&!won;
+                const cls=won?' win':(lost?' lose':'');
+                const mark=won?'<span class="mk"></span>':'';
+                const cl=isAdmin?' clk':'';
+                const oc=isAdmin?`onclick="clickPlayer('${mt}',${idx},'${p.display.replace(/'/g,"\\'")}',${isFinal})"`:'';
+                const hover=`onmousemove="showTooltip(event, findPlayer('${p.display.replace(/'/g,"\\'")}'))" onmouseleave="hideTooltip()"`;
+                return `<div class="po-p${cls}${cl}" ${oc} ${hover}><span class="sd">#${p.seed}</span><span class="nm">${p.emoji||''} ${shortName(p.display)}</span>${mark}</div>`;
+            };
+
+            const m=(a,b,mt,idx)=>{
+                const wa=(PLAYOFFS[mt]||[])[idx]===(a?.display||'');
+                const wb=(PLAYOFFS[mt]||[])[idx]===(b?.display||'');
+                const hover=`onmousemove="showMatchTooltip(event, findPlayer('${a?.display?.replace(/'/g,"\\'")}'), findPlayer('${b?.display?.replace(/'/g,"\\'")}'))" onmouseleave="hideTooltip()"`;
+                return `<div class="po-match" ${hover}>${pr(a,mt,idx,false,wb)}${pr(b,mt,idx,false,wa)}</div>`;
+            };
+
+            const fm=(a,b,mt)=>{
+                const wa=PLAYOFFS[mt]===(a?.display||'');
+                const wb=PLAYOFFS[mt]===(b?.display||'');
+                const hover=`onmousemove="showMatchTooltip(event, findPlayer('${a?.display?.replace(/'/g,"\\'")}'), findPlayer('${b?.display?.replace(/'/g,"\\'")}'))" onmouseleave="hideTooltip()"`;
+                return `<div class="po-match" ${hover}>${pr(a,mt,0,true,wb)}${pr(b,mt,0,true,wa)}</div>`;
+            };
+
             const lr1=PLAYOFFS.light_round1.map(findPlayer);const lr2=PLAYOFFS.light_round2.map(findPlayer);const lc=findPlayer(PLAYOFFS.light_champion);
             const dr1=PLAYOFFS.dark_round1.map(findPlayer);const dr2=PLAYOFFS.dark_round2.map(findPlayer);const dc=findPlayer(PLAYOFFS.dark_champion);
             const gc=findPlayer(PLAYOFFS.grand_champion);
-            let gf='';if(gc){const il=gc.faction==='Орден Света';gf=`<div class="gfp ${il?'light':'dark'} win">👑 ${gc.emoji||''} ${gc.display} 👑</div>`;}else if(lc&&dc){const lw=PLAYOFFS.grand_champion===lc.display;const dw=PLAYOFFS.grand_champion===dc.display;const cl=isAdmin?' clk':'';const clL=isAdmin?`onclick="clickPlayer('grand_champion',0,'${lc.display.replace(/'/g,"\\'")}',true)"`:'';const clD=isAdmin?`onclick="clickPlayer('grand_champion',0,'${dc.display.replace(/'/g,"\\'")}',true)"`:'';gf=`<div class="gfp light${lw?' win':''}${cl}" ${clL}>🌝 ${lc.emoji||''} ${shortName(lc.display)}${lw?' ✅':''}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark${dw?' win':''}${cl}" ${clD}>🌚 ${dc.emoji||''} ${shortName(dc.display)}${dw?' ✅':''}</div>`;}else{gf=`<div class="gfp light">🌝 ${lc?lc.emoji+' '+shortName(lc.display):'Чемпион Света'}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark">🌚 ${dc?dc.emoji+' '+shortName(dc.display):'Чемпион Тьмы'}</div>`;}
+
+            let gf='';
+            if(gc){const il=gc.faction==='Орден Света';gf=`<div class="gfp ${il?'light':'dark'} win">👑 ${gc.emoji||''} ${gc.display} 👑</div>`;}
+            else if(lc&&dc){const lw=PLAYOFFS.grand_champion===lc.display;const dw=PLAYOFFS.grand_champion===dc.display;const cl=isAdmin?' clk':'';const clL=isAdmin?`onclick="clickPlayer('grand_champion',0,'${lc.display.replace(/'/g,"\\'")}',true)"`:'';const clD=isAdmin?`onclick="clickPlayer('grand_champion',0,'${dc.display.replace(/'/g,"\\'")}',true)"`:'';gf=`<div class="gfp light${lw?' win':''}${cl}" ${clL}>🌝 ${lc.emoji||''} ${shortName(lc.display)}${lw?' ✅':''}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark${dw?' win':''}${cl}" ${clD}>🌚 ${dc.emoji||''} ${shortName(dc.display)}${dw?' ✅':''}</div>`;}
+            else{gf=`<div class="gfp light">🌝 ${lc?lc.emoji+' '+shortName(lc.display):'Чемпион Света'}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark">🌚 ${dc?dc.emoji+' '+shortName(dc.display):'Чемпион Тьмы'}</div>`;}
+
             c.innerHTML=`<div class="po-grid"><div class="po-col"><h3 class="light">1/8 Света</h3>${m(light[0],light[7],'light_round1',0)}${m(light[1],light[6],'light_round1',1)}${m(light[2],light[5],'light_round1',2)}${m(light[3],light[4],'light_round1',3)}</div><div class="po-col"><h3 class="light">1/4 Света</h3>${m(lr1[0],lr1[1],'light_round2',0)}${m(lr1[2],lr1[3],'light_round2',1)}</div><div class="po-col"><h3 class="light">Финал</h3>${fm(lr2[0],lr2[1],'light_champion')}</div><div class="po-col wide"><div class="gf-card"><div class="gfl">ГРАНД-ФИНАЛ</div>${gf}</div></div><div class="po-col"><h3 class="dark">Финал</h3>${fm(dr2[0],dr2[1],'dark_champion')}</div><div class="po-col"><h3 class="dark">1/4 Тьмы</h3>${m(dr1[0],dr1[1],'dark_round2',0)}${m(dr1[2],dr1[3],'dark_round2',1)}</div><div class="po-col"><h3 class="dark">1/8 Тьмы</h3>${m(dark[0],dark[7],'dark_round1',0)}${m(dark[1],dark[6],'dark_round1',1)}${m(dark[2],dark[5],'dark_round1',2)}${m(dark[3],dark[4],'dark_round1',3)}</div></div>`;
         }
+
         async function init(){try{const r=await fetch(DATA_URL);const d=await r.json();allPlayers=(d.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);allPlayers.sort((a,b)=>b.skill-a.skill);lightPlayers=allPlayers.filter(p=>p.faction==='Орден Света');darkPlayers=allPlayers.filter(p=>p.faction==='Культ Тьмы');const commitsUrl='https://api.github.com/repos/rvotaenotaTTV/dnd-stats/commits?path=stats_data.json&per_page=30';const commits=await fetch(commitsUrl).then(r=>r.json());if(commits.length>0){const target=commits[commits.length-1];const oldUrl=`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/${target.sha}/stats_data.json`;try{const oldData=await fetch(oldUrl).then(r=>r.json());const oldPlayers=(oldData.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);oldPlayers.sort((a,b)=>b.skill-a.skill);const oldLight=oldPlayers.filter(p=>p.faction==='Орден Света');const oldDark=oldPlayers.filter(p=>p.faction==='Культ Тьмы');const lightRanks={};oldLight.forEach((p,i)=>{lightRanks[p.display]=i+1;});localStorage.setItem('league-old-light',JSON.stringify(lightRanks));const darkRanks={};oldDark.forEach((p,i)=>{darkRanks[p.display]=i+1;});localStorage.setItem('league-old-dark',JSON.stringify(darkRanks));}catch(e){}}renderStandings();}catch(e){document.getElementById('standings-content').innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">❌ Ошибка загрузки</div>';}}
         init();
     </script>
