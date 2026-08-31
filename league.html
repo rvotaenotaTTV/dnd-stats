@@ -74,7 +74,7 @@
     .btn-export { background: var(--elevated); color: var(--sub); border: 1px solid var(--border) !important; } .btn-export:hover { color: var(--gold); border-color: var(--gold) !important; }
     .btn-clear { background: transparent; color: var(--muted); } .btn-clear:hover { color: var(--red); }
 
-    #po-tooltip-player, #po-tooltip-match {
+    #po-tooltip-player {
         display: none;
         position: fixed;
         background: rgba(10,15,30,0.98);
@@ -164,7 +164,6 @@
     <button class="admin-trigger" id="adminTrigger" onclick="toggleAdmin()" title="Управление">🛠</button>
     <div class="admin-panel" id="adminPanel"><button class="btn-save" onclick="savePlayoffs()">💾</button><button class="btn-export" onclick="exportPlayoffs()">📋</button><button class="btn-clear" onclick="clearPlayoffs()">🗑</button></div>
     <div id="po-tooltip-player"></div>
-    <div id="po-tooltip-match"></div>
     <script>
         function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
         (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
@@ -204,27 +203,8 @@
             tooltip.style.top = (e.clientY - 10) + 'px';
         }
 
-        function showMatchTooltip(e, a, b) {
-            const tooltip = document.getElementById('po-tooltip-match');
-            if (!a || !b) return;
-            const s1 = a.skill || 0;
-            const s2 = b.skill || 0;
-            const c1 = s1 + s2 > 0 ? Math.round((s1 / (s1 + s2)) * 100) : 50;
-            tooltip.innerHTML = `<div style="font-size:0.8rem;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">⚔️ ШАНСЫ НА ПОБЕДУ</div>
-                <div style="font-size:0.75rem;line-height:1.8;color:var(--text)">
-                    <div style="display:flex;justify-content:space-between;gap:20px"><span>${a.emoji||''} ${shortName(a.display)}</span><strong style="color:var(--green)">${c1}%</strong></div>
-                    <div style="text-align:center;color:var(--muted);font-size:0.6rem;letter-spacing:2px;padding:2px 0">VS</div>
-                    <div style="display:flex;justify-content:space-between;gap:20px"><span>${b.emoji||''} ${shortName(b.display)}</span><strong style="color:#ef4444">${100-c1}%</strong></div>
-                </div>`;
-            tooltip.style.display = 'block';
-            tooltip.style.left = '50%';
-            tooltip.style.top = '780px';
-            tooltip.style.transform = 'translateX(-50%)';
-        }
-
         function hideTooltip() {
             document.getElementById('po-tooltip-player').style.display = 'none';
-            document.getElementById('po-tooltip-match').style.display = 'none';
         }
 
         function renderStandings(){
@@ -246,7 +226,7 @@
                 const won=isFinal?PLAYOFFS[mt]===p.display:(PLAYOFFS[mt]||[])[idx]===p.display;
                 const lost=ow&&!won;
                 const cls=won?' win':(lost?' lose':'');
-                const mark=won?'<span class="mk"></span>':'';
+                const mark=won?'<span class="mk">✅</span>':'';
                 const cl=isAdmin?' clk':'';
                 const oc=isAdmin?`onclick="clickPlayer('${mt}',${idx},'${p.display.replace(/'/g,"\\'")}',${isFinal})"`:'';
                 const hover=`onmousemove="showTooltip(event, findPlayer('${p.display.replace(/'/g,"\\'")}'))" onmouseleave="hideTooltip()"`;
@@ -256,15 +236,13 @@
             const m=(a,b,mt,idx)=>{
                 const wa=(PLAYOFFS[mt]||[])[idx]===(a?.display||'');
                 const wb=(PLAYOFFS[mt]||[])[idx]===(b?.display||'');
-                const hover=`onmousemove="showMatchTooltip(event, findPlayer('${a?.display?.replace(/'/g,"\\'")}'), findPlayer('${b?.display?.replace(/'/g,"\\'")}'))" onmouseleave="hideTooltip()"`;
-                return `<div class="po-match" ${hover}>${pr(a,mt,idx,false,wb)}${pr(b,mt,idx,false,wa)}</div>`;
+                return `<div class="po-match">${pr(a,mt,idx,false,wb)}${pr(b,mt,idx,false,wa)}</div>`;
             };
 
             const fm=(a,b,mt)=>{
                 const wa=PLAYOFFS[mt]===(a?.display||'');
                 const wb=PLAYOFFS[mt]===(b?.display||'');
-                const hover=`onmousemove="showMatchTooltip(event, findPlayer('${a?.display?.replace(/'/g,"\\'")}'), findPlayer('${b?.display?.replace(/'/g,"\\'")}'))" onmouseleave="hideTooltip()"`;
-                return `<div class="po-match" ${hover}>${pr(a,mt,0,true,wb)}${pr(b,mt,0,true,wa)}</div>`;
+                return `<div class="po-match">${pr(a,mt,0,true,wb)}${pr(b,mt,0,true,wa)}</div>`;
             };
 
             const lr1=PLAYOFFS.light_round1.map(findPlayer);const lr2=PLAYOFFS.light_round2.map(findPlayer);const lc=findPlayer(PLAYOFFS.light_champion);
