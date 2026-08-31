@@ -108,7 +108,7 @@ document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=
 document.querySelectorAll('.nav-label').forEach(l=>{l.addEventListener('click',function(e){if(window.innerWidth>768)return;e.preventDefault();const d=this.nextElementSibling;if(d&&d.classList.contains('nav-dropdown')){const o=d.style.display==='block';document.querySelectorAll('.nav-dropdown').forEach(x=>x.style.display='none');d.style.display=o?'none':'block'}})})
 
 // === РЕЖИМ ТРАКТИРЩИКА ===
-const GG_IN_EXPEDITION = true  // false когда ГуангГуанг вернётся
+const GG_IN_EXPEDITION = false  // false когда ГуангГуанг вернётся
 
 const quotesGG = [
     "Сыграем в очко?","ГуангГуанг верит в твою удачу!","Бамбук шепчет: бери ещё!",
