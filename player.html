@@ -1361,99 +1361,99 @@
         renderSeasonView(playerName);
     }
 
-    function renderSeasonView(playerName) {
-        const container = $('#allFormerHeroes');
-        if (!container || cachedAllHeroes.length === 0) return;
-        
-        const availableSeasons = [...new Set(cachedAllHeroes.map(h => h.seasonIndex))].sort((a, b) => a - b);
-        let filtered = cachedAllHeroes;
-        
-        if (currentSeasonFilter !== 'all') {
-            filtered = cachedAllHeroes.filter(h => h.seasonIndex === parseInt(currentSeasonFilter));
-        }
-        
-        // Сводная статистика
-        const totals = { wins: 0, losses: 0, best: 0, worst: 0, tournaments: 0, maxLevel: 0, maxRecord: 0 };
-        filtered.forEach(hero => {
-            totals.wins += hero.wins || 0;
-            totals.losses += hero.losses || 0;
-            totals.best = Math.max(totals.best, hero.best || 0);
-            totals.worst = Math.max(totals.worst, hero.worst || 0);
-            totals.tournaments += hero.tournamentWins || 0;
-            totals.maxLevel = Math.max(totals.maxLevel, hero.level || 0);
-            totals.maxRecord = Math.max(totals.maxRecord, hero.record || 0);
-        });
-        
-        const totalFights = totals.wins + totals.losses;
-        const totalWinrate = totalFights > 0 ? (totals.wins * 100 / totalFights).toFixed(1) : '0';
-        
-        let html = `
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <h3 style="color:var(--gold);margin:0;">👻 Бывшие герои</h3>
-            <span style="color:var(--muted);font-size:0.75rem;">${cachedAllHeroes.length} всего</span>
-        </div>
-        
-        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-            <div class="summary-stat"><div class="summary-value">${filtered.length}</div><div class="summary-label">Героев</div></div>
-            <div class="summary-stat"><div class="summary-value">${totals.wins}</div><div class="summary-label">Побед</div></div>
-            <div class="summary-stat"><div class="summary-value">${totalWinrate}%</div><div class="summary-label">WR</div></div>
-            <div class="summary-stat"><div class="summary-value">${totals.best}</div><div class="summary-label">🔥 Стрик</div></div>
-            <div class="summary-stat"><div class="summary-value">${totals.tournaments}</div><div class="summary-label">👑 Тур.</div></div>
-            <div class="summary-stat"><div class="summary-value">${totals.maxLevel}</div><div class="summary-label">📈 Ур.</div></div>
-            <div class="summary-stat"><div class="summary-value">${totals.maxRecord || '-'}</div><div class="summary-label">🏔 Волн</div></div>
-        </div>
-        
-        <div class="season-tabs">
-            <button class="season-tab ${currentSeasonFilter === 'all' ? 'active' : ''}" onclick="setSeasonFilter('all')">📋 Все</button>
-            ${availableSeasons.map(si => {
-                const name = seasonNames[si] || cachedAllHeroes.find(h => h.seasonIndex === si)?.season || 'Сезон ' + si;
-                return `<button class="season-tab ${currentSeasonFilter === String(si) ? 'active' : ''}" onclick="setSeasonFilter('${si}')">${name}</button>`;
-            }).join('')}
-        </div>`;
-        
-        const sortedHeroes = [...filtered].sort((a, b) => b.seasonIndex - a.seasonIndex);
-        
-        html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px;">';
-        
-        sortedHeroes.forEach(hero => {
-            const total = (hero.wins || 0) + (hero.losses || 0);
-            const winrate = total > 0 ? (hero.wins * 100 / total).toFixed(1) : '0.0';
-            const winrateNum = parseFloat(winrate);
-            const winrateColor = winrateNum >= 55 ? 'var(--green)' : winrateNum >= 45 ? 'var(--gold)' : 'var(--red)';
-            const winrateBg = winrateNum >= 55 ? 'rgba(16,185,129,0.1)' : winrateNum >= 45 ? 'rgba(240,185,11,0.1)' : 'rgba(232,93,58,0.1)';
-            
-            html += `
-            <div class="hero-card ${hero.isBest ? 'best' : ''}">
-                <div class="hero-card-header">
-                    <div style="font-size:2.5rem;line-height:1;margin-bottom:6px;">${hero.emoji || '⚔️'}</div>
-                    <div style="color:var(--gold);font-weight:700;font-size:0.85rem;margin-bottom:2px;">${hero.name || ''}${hero.isBest ? ' ⭐' : ''}</div>
-                    <div style="color:var(--muted);font-size:0.65rem;margin-bottom:8px;">${hero.season}</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center;font-size:0.7rem;margin-bottom:8px;">
-                        <div class="mini-stat">
-                            <div class="mini-stat-label">⚔️ Бои</div>
-                            <div class="mini-stat-value">${hero.wins || 0}<span style="color:var(--muted);">/</span>${hero.losses || 0}</div>
-                        </div>
-                        <div style="background:${winrateBg};border-radius:8px;padding:6px 4px;">
-                            <div style="color:var(--muted);font-size:0.55rem;">📊 WR</div>
-                            <div style="color:${winrateColor};font-weight:700;">${winrate}%</div>
-                        </div>
-                        <div class="mini-stat">
-                            <div class="mini-stat-label">🔥 Стрик</div>
-                            <div class="mini-stat-value">${hero.best || 0}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-card-footer">
-                    <span>📈 Ур.${hero.level || 0}</span>
-                    ${hero.record ? `<span>🏔 ${hero.record} волн</span>` : '<span></span>'}
-                    <span>👑 ${hero.tournamentWins || 0}</span>
-                </div>
-            </div>`;
-        });
-        
-        html += '</div>';
-        container.innerHTML = html;
-    }
+	function renderSeasonView(playerName) {
+		const container = $('#allFormerHeroes');
+		if (!container || cachedAllHeroes.length === 0) return;
+		
+		const availableSeasons = [...new Set(cachedAllHeroes.map(h => h.seasonIndex))].sort((a, b) => a - b);
+		let filtered = cachedAllHeroes;
+		
+		if (currentSeasonFilter !== 'all') {
+			filtered = cachedAllHeroes.filter(h => h.seasonIndex === parseInt(currentSeasonFilter));
+		}
+		
+		// Сводная статистика
+		const totals = { wins: 0, losses: 0, best: 0, worst: 0, tournaments: 0, maxLevel: 0, maxRecord: 0 };
+		filtered.forEach(hero => {
+			totals.wins += hero.wins || 0;
+			totals.losses += hero.losses || 0;
+			totals.best = Math.max(totals.best, hero.best || 0);
+			totals.worst = Math.max(totals.worst, hero.worst || 0);
+			totals.tournaments += hero.tournamentWins || 0;
+			totals.maxLevel = Math.max(totals.maxLevel, hero.level || 0);
+			totals.maxRecord = Math.max(totals.maxRecord, hero.record || 0);
+		});
+		
+		const totalFights = totals.wins + totals.losses;
+		const totalWinrate = totalFights > 0 ? (totals.wins * 100 / totalFights).toFixed(1) : '0';
+		
+		let html = `
+		<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+			<h3 style="color:var(--gold);margin:0;">👻 Бывшие герои</h3>
+			<span style="color:var(--muted);font-size:0.75rem;">${cachedAllHeroes.length} всего</span>
+		</div>
+		
+		<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+			<div class="summary-stat"><div class="summary-value">${filtered.length}</div><div class="summary-label">Героев</div></div>
+			<div class="summary-stat"><div class="summary-value">${totals.wins}</div><div class="summary-label">Побед</div></div>
+			<div class="summary-stat"><div class="summary-value">${totalWinrate}%</div><div class="summary-label">WR</div></div>
+			<div class="summary-stat"><div class="summary-value">${totals.best}</div><div class="summary-label">🔥 Стрик</div></div>
+			<div class="summary-stat"><div class="summary-value">${totals.tournaments}</div><div class="summary-label">👑 Тур.</div></div>
+			<div class="summary-stat"><div class="summary-value">${totals.maxLevel}</div><div class="summary-label">📈 Ур.</div></div>
+			<div class="summary-stat"><div class="summary-value">${totals.maxRecord || '-'}</div><div class="summary-label">🏔 Волн</div></div>
+		</div>
+		
+		<div class="season-tabs">
+			<button class="season-tab ${currentSeasonFilter === 'all' ? 'active' : ''}" onclick="setSeasonFilter('all')">📋 Все</button>
+			${availableSeasons.map(si => {
+				const name = seasonNames[si] || cachedAllHeroes.find(h => h.seasonIndex === si)?.season || 'Сезон ' + si;
+				return `<button class="season-tab ${currentSeasonFilter === String(si) ? 'active' : ''}" onclick="setSeasonFilter('${si}')">${name}</button>`;
+			}).join('')}
+		</div>`;
+		
+		// Сортировка от 0 сезона вниз (по возрастанию)
+		const sortedHeroes = [...filtered].sort((a, b) => a.seasonIndex - b.seasonIndex);
+		
+		// Компактные карточки
+		html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px;">';
+		
+		sortedHeroes.forEach(hero => {
+			const total = (hero.wins || 0) + (hero.losses || 0);
+			const winrate = total > 0 ? (hero.wins * 100 / total).toFixed(1) : '0.0';
+			const winrateNum = parseFloat(winrate);
+			const winrateColor = winrateNum >= 55 ? 'var(--green)' : winrateNum >= 45 ? 'var(--gold)' : 'var(--red)';
+			
+			html += `
+			<div style="
+				background: var(--elevated);
+				border: 1px solid var(--border);
+				border-radius: var(--radius-sm);
+				padding: 10px;
+				text-align: center;
+				transition: all 0.2s ease;
+			" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+				<div style="font-size:1.5rem;line-height:1;margin-bottom:4px;">${hero.emoji || '⚔️'}</div>
+				<div style="color:var(--text);font-weight:600;font-size:0.75rem;margin-bottom:2px;">${hero.name || ''}</div>
+				<div style="color:var(--muted);font-size:0.6rem;margin-bottom:6px;">${hero.season}</div>
+				
+				<div style="display:flex;justify-content:center;gap:8px;font-size:0.7rem;margin-bottom:6px;">
+					<span style="color:var(--green);">${hero.wins || 0}W</span>
+					<span style="color:var(--red);">${hero.losses || 0}L</span>
+					<span style="color:${winrateColor};font-weight:700;">${winrate}%</span>
+				</div>
+				
+				<div style="display:flex;justify-content:center;gap:10px;font-size:0.65rem;color:var(--muted);">
+					<span title="Лучший стрик">🔥 ${hero.best || 0}</span>
+					<span title="Уровень">📈 ${hero.level || 0}</span>
+					${hero.record ? `<span title="Рекорд данжа">🏔 ${hero.record}</span>` : ''}
+					${hero.tournamentWins ? `<span title="Турнирные победы">👑 ${hero.tournamentWins}</span>` : ''}
+				</div>
+			</div>`;
+		});
+		
+		html += '</div>';
+		container.innerHTML = html;
+	}
 
     window.setSeasonFilter = (seasonIndex) => {
         currentSeasonFilter = seasonIndex;
