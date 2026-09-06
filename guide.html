@@ -544,29 +544,29 @@
             <div class="path-desc">
                 <p><code>!бой</code> — рейтинговая дуэль. <code>!бой @ник</code> — товарищеский бой.</p>
                 <h3>🎲 Как работает бой</h3>
-                <div class="grid-auto">
-                    <div class="mech l"><div class="m-icon">⚡</div><div><h4 class="m-title">Инициатива</h4><div class="m-body">Оба бросают <strong>d20 + DEX</strong>. Победитель ходит первым. Равенство — случай.</div></div></div>
-                    <div class="mech i"><div class="m-icon">🎯</div><div><h4 class="m-title">Попадание</h4><div class="m-body"><strong>d20 + ATK ≥ 10 + DEF</strong> защитника → попал. Иначе → 🛡️ блок.</div></div></div>
-                    <div class="mech r"><div class="m-icon">💥</div><div><h4 class="m-title">Крит / Провал</h4><div class="m-body">d20 = <strong>20</strong> → двойной урон. d20 = <strong>1</strong> → урон 0.</div></div></div>
-                    <div class="mech m"><div class="m-icon">💨</div><div><h4 class="m-title">Уклонение</h4><div class="m-body">d20 ≤ <strong>2 + DEX</strong> защитника → урон 0.</div></div></div>
-                    <div class="mech p"><div class="m-icon">🛡️</div><div><h4 class="m-title">Редукция</h4><div class="m-body">Каждое очко DEF снижает урон на <strong>5%</strong>. Минимум 1 урон.</div></div></div>
-                    <div class="mech g"><div class="m-icon">⏱</div><div><h4 class="m-title">Ход боя</h4><div class="m-body">Атакующий ↔ защитник до HP ≤ 0. Лимит <strong>20 раундов</strong>. Ничья → победа по HP.</div></div></div>
-                </div>
-                <h3>📝 Обозначения в логах</h3>
-                <div class="table-container">
-                    <table>
-                        <thead><tr><th style="width:50px; text-align:center">Символ</th><th>Значение</th><th style="width:80px; text-align:center">d20</th></tr></thead>
-                        <tbody>
-                            <tr><td style="text-align:center">⚡</td><td>Выиграл инициативу</td><td style="text-align:center; color:var(--muted)">—</td></tr>
-                            <tr><td style="text-align:center">💥X</td><td>Критический удар</td><td style="text-align:center; color:var(--red); font-weight:700">20</td></tr>
-                            <tr><td style="text-align:center">❌</td><td>Крит-промах</td><td style="text-align:center; color:var(--red)">1</td></tr>
-                            <tr><td style="text-align:center">💨</td><td>Уклонение</td><td style="text-align:center; color:var(--muted)">≤2+DEX</td></tr>
-                            <tr><td style="text-align:center">🛡️</td><td>Блок (не пробил)</td><td style="text-align:center; color:var(--muted)">—</td></tr>
-                            <tr><td style="text-align:center">X</td><td>Обычное попадание</td><td style="text-align:center; color:var(--muted)">—</td></tr>
-                            <tr><td style="text-align:center">🏆</td><td>Победитель</td><td style="text-align:center; color:var(--gold)">—</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+				<div class="grid-auto">
+					<div class="mech l"><div class="m-icon">⚡</div><div><h4 class="m-title">Инициатива</h4><div class="m-body">Оба бросают <strong>d20 + DEX</strong>. Победитель ходит первым. Равенство — случай.</div></div></div>
+					<div class="mech i"><div class="m-icon">🎯</div><div><h4 class="m-title">Попадание</h4><div class="m-body"><strong>d20 + ATK ≥ 10 + DEF</strong> защитника → попал. Иначе → промах.</div></div></div>
+					<div class="mech r"><div class="m-icon">💥</div><div><h4 class="m-title">Крит / Провал</h4><div class="m-body">d20 = <strong>20</strong> → двойной урон. d20 = <strong>1</strong> → урон 0.</div></div></div>
+					<div class="mech m"><div class="m-icon">💨</div><div><h4 class="m-title">Промах</h4><div class="m-body">d20 + ATK < 10 + DEF → урон 0. 💨 и 🛡️ — просто промах, разница только визуальная.</div></div></div>
+					<div class="mech p"><div class="m-icon">🛡️</div><div><h4 class="m-title">Редукция</h4><div class="m-body">Каждое очко DEF снижает урон на <strong>5%</strong>. Минимум 1 урон.</div></div></div>
+					<div class="mech g"><div class="m-icon">⏱</div><div><h4 class="m-title">Ход боя</h4><div class="m-body">Атакующий ↔ защитник до HP ≤ 0. Лимит <strong>20 раундов</strong>. Ничья → победа по HP.</div></div></div>
+				</div>
+				<h3>📝 Обозначения в логах</h3>
+				<div class="table-container">
+					<table>
+						<thead><tr><th style="width:50px; text-align:center">Символ</th><th>Значение</th><th style="width:80px; text-align:center">d20</th></tr></thead>
+						<tbody>
+							<tr><td style="text-align:center">⚡</td><td>Выиграл инициативу</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+							<tr><td style="text-align:center">💥X</td><td>Критический удар</td><td style="text-align:center; color:var(--red); font-weight:700">20</td></tr>
+							<tr><td style="text-align:center">❌</td><td>Крит-промах</td><td style="text-align:center; color:var(--red)">1</td></tr>
+							<tr><td style="text-align:center">💨</td><td>Промах (низкий бросок)</td><td style="text-align:center; color:var(--muted)">≤2+DEX</td></tr>
+							<tr><td style="text-align:center">🛡️</td><td>Промах (высокий бросок)</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+							<tr><td style="text-align:center">X</td><td>Обычное попадание</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+							<tr><td style="text-align:center">🏆</td><td>Победитель</td><td style="text-align:center; color:var(--gold)">—</td></tr>
+						</tbody>
+					</table>
+				</div>
             </div>
         </article>
 
