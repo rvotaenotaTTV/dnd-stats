@@ -1058,17 +1058,22 @@ function renderRacesView() {
     const seasonLabels = racesData.seasons.map(s => s.name);
     const seasonFullNames = racesData.seasons.map(s => s.fullName);
     
+    // Фильтр + подготовка строк
     let rows = Object.entries(source).map(([name, seasons]) => {
         let totalWins = 0, totalLosses = 0;
+        let maxSeasonGames = 0; // макс. игр в одном сезоне
         Object.values(seasons).forEach(s => {
             totalWins += s.wins;
             totalLosses += s.losses;
+            const g = s.wins + s.losses;
+            if (g > maxSeasonGames) maxSeasonGames = g;
         });
         const total = totalWins + totalLosses;
         const wr = total > 0 ? totalWins / total : 0;
-        return { name, seasons, totalWins, totalLosses, total, wr };
+        return { name, seasons, totalWins, totalLosses, total, wr, maxSeasonGames };
     })
-    .filter(r => r.total >= minGamesFilter);
+    // Оставляем строку, если общий total ИЛИ макс. сезон ≥ фильтра
+    .filter(r => r.total >= minGamesFilter || r.maxSeasonGames >= minGamesFilter);
     
     rows.sort((a, b) => {
         let valA, valB;
@@ -1126,13 +1131,23 @@ function renderRacesView() {
         racesData.seasons.forEach((s, si) => {
             const stats = row.seasons[si];
             if (stats && (stats.wins + stats.losses) > 0) {
-                const cls = getWrClass(stats.wins, stats.losses);
-                const wr = getWrLabel(stats.wins, stats.losses);
                 const games = stats.wins + stats.losses;
-                html += `<td class="${cls}" title="${stats.wins}W / ${stats.losses}L" onclick="showComboDetail('${row.name.replace(/'/g, "\\'")}', ${si})">
-                    <div class="wr-value">${wr}</div>
-                    <div class="wr-games">${games} игр</div>
-                </td>`;
+                const isTooFew = games < minGamesFilter;
+                
+                if (isTooFew) {
+                    // Мало игр — приглушённая ячейка
+                    html += `<td class="wr-none" title="${stats.wins}W / ${stats.losses}L — мало игр (${games} < ${minGamesFilter})" onclick="showComboDetail('${row.name.replace(/'/g, "\\'")}', ${si})">
+                        <div class="wr-value" style="opacity:0.5">${getWrLabel(stats.wins, stats.losses)}</div>
+                        <div class="wr-games">${games} игр ⚠️</div>
+                    </td>`;
+                } else {
+                    const cls = getWrClass(stats.wins, stats.losses);
+                    const wr = getWrLabel(stats.wins, stats.losses);
+                    html += `<td class="${cls}" title="${stats.wins}W / ${stats.losses}L" onclick="showComboDetail('${row.name.replace(/'/g, "\\'")}', ${si})">
+                        <div class="wr-value">${wr}</div>
+                        <div class="wr-games">${games} игр</div>
+                    </td>`;
+                }
             } else {
                 html += `<td class="wr-none">—</td>`;
             }
@@ -1173,10 +1188,13 @@ function renderMatrixControls(mode) {
         <button class="tab-btn ${mode === 'classes' ? 'active' : ''}" onclick="setMatrixMode('classes')">⚔️ Классы</button>
         <button class="tab-btn ${mode === 'combos' ? 'active' : ''}" onclick="setMatrixMode('combos')">🎭 Комбо</button>
         
-        <div class="min-games-filter">
-            <span>Мин. игр:</span>
-            <input type="number" value="${minGamesFilter}" min="1" max="1000" onchange="updateMinGames(this.value)" oninput="updateMinGames(this.value)">
-        </div>
+		<div class="min-games-filter">
+			<span title="Минимум игр: общий или в одном сезоне">Мин. игр:</span>
+			<input type="number" value="${minGamesFilter}" min="1" max="1000" 
+				   onchange="updateMinGames(this.value)" 
+				   oninput="updateMinGames(this.value)"
+				   title="Показывать расы/классы, где общий total ИЛИ сезон ≥ этого числа">
+		</div>
         
         <div class="min-games-filter" style="padding:6px 10px;gap:6px">
             <span>Сорт:</span>
@@ -1209,6 +1227,7 @@ function renderLegend() {
         <div class="legend-item"><div class="legend-swatch" style="background:rgba(240,185,11,0.1)"></div>45-50%</div>
         <div class="legend-item"><div class="legend-swatch" style="background:rgba(255,140,0,0.15)"></div>40-45%</div>
         <div class="legend-item"><div class="legend-swatch" style="background:rgba(232,93,58,0.2)"></div>&lt;40%</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--elevated);border:1px dashed var(--muted)"></div>⚠️ мало игр</div>
         <div class="legend-item" style="color:var(--muted)">Клик по ячейке → игроки</div>
     </div>`;
 }
