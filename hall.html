@@ -1190,9 +1190,9 @@ function renderMatrixControls(mode) {
         
 		<div class="min-games-filter">
 			<span title="Минимум игр: общий или в одном сезоне">Мин. игр:</span>
-			<input type="number" value="${minGamesFilter}" min="1" max="1000" 
-				   onchange="updateMinGames(this.value)" 
-				   oninput="updateMinGames(this.value)"
+			<input type="number" id="minGamesInput" value="${minGamesFilter}" min="1" max="1000" 
+				   onchange="applyMinGames(this.value)" 
+				   onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
 				   title="Показывать расы/классы, где общий total ИЛИ сезон ≥ этого числа">
 		</div>
         
@@ -1238,9 +1238,21 @@ function setMatrixMode(mode) {
     renderRacesView();
 }
 
-function updateMinGames(val) {
-    minGamesFilter = Math.max(1, parseInt(val) || 1);
+function applyMinGames(val) {
+    const parsed = parseInt(val, 10);
+    if (isNaN(parsed) || parsed < 1) {
+        const input = document.getElementById('minGamesInput');
+        if (input) input.value = minGamesFilter;
+        return;
+    }
+    const newVal = Math.min(1000, Math.max(1, parsed));
+    if (newVal === minGamesFilter) return;
+    minGamesFilter = newVal;
     renderRacesView();
+}
+
+function updateMinGames(val) {
+    applyMinGames(val);
 }
 
 function setMatrixSort(col) {
