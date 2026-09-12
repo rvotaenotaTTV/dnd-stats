@@ -219,20 +219,17 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     .nav-bar.show { display: flex; }
     .nav-group { position: static; }
 
-    .nav-label {
-        display: block;
-        padding: 4px 4px 6px;
-        font-size: 0.6rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        color: var(--gold);
-        opacity: 0.75;
-        cursor: default;
-        pointer-events: none;
-        background: transparent;
-        border-bottom: 1px solid var(--border);
-    }
+	.nav-label {
+		display: block;
+		height: 1px;
+		background: var(--border);
+		margin: 8px 0 6px;
+		padding: 0;
+		font-size: 0;
+		overflow: hidden;
+		border: none;
+		pointer-events: none;
+	}
 
     .nav-dropdown,
     .nav-dropdown[style] {
