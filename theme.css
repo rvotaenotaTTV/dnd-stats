@@ -222,21 +222,25 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
         background: transparent;
     }
 
-    .nav-dropdown {
+    .nav-dropdown,
+    .nav-dropdown[style] {
         display: flex !important;
         flex-direction: column;
-        position: static;
-        transform: none;
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
         background: transparent;
         border: none;
         border-radius: 0;
         padding: 0 0 8px 0;
         min-width: 0;
         gap: 2px;
-    }
-
-    .nav-dropdown[style] {
-        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        box-shadow: none !important;
     }
 
     .nav-dropdown .nav-link {
