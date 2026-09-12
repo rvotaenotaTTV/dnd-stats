@@ -410,23 +410,67 @@
             background: rgba(240,185,11,0.1) !important;
         }
 
-        @media (max-width: 768px) {
-            .grid-3, .grid-2, .grid-4, .grid-auto {
-                grid-template-columns: 1fr;
-            }
-            .territories {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .tooltip::after {
-                display: none;
-            }
-            .scroll-top {
-                bottom: 70px;
-                right: 16px;
-                width: 40px;
-                height: 40px;
-            }
-        }
+	@media (max-width: 768px) {
+		.grid-3, .grid-2, .grid-4, .grid-auto { grid-template-columns: 1fr; }
+		.territories { grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 0.68rem; }
+		.territories div { padding: 8px 4px; }
+		section.grid-3[aria-label="Быстрый доступ"] { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; margin-bottom: 20px !important; }
+		section.grid-3[aria-label="Быстрый доступ"] .guide-card { padding: 12px 6px; }
+		section.grid-3[aria-label="Быстрый доступ"] .gc-icon { font-size: 1.6rem; margin-bottom: 6px; }
+		section.grid-3[aria-label="Быстрый доступ"] .gc-title { font-size: 0.75rem; }
+		section.grid-3[aria-label="Быстрый доступ"] .gc-cmd { font-size: 0.65rem; padding: 2px 6px; }
+		section.grid-3[aria-label="Быстрый доступ"] .gc-sub { font-size: 0.6rem; margin-top: 4px; }
+		.path { padding-left: 22px; }
+		.path::before { left: 8px; }
+		.path-step { padding: 16px 14px; margin-bottom: 16px; }
+		.path-step::before { left: -20px; top: 20px; width: 10px; height: 10px; }
+		.path-title { font-size: 1.05rem; }
+		.path-desc { font-size: 0.8rem; line-height: 1.6; }
+		.path-desc h3 { font-size: 0.82rem; margin: 14px 0 6px; }
+		.faction-box { padding: 14px 10px; }
+		.faction-box .fb-icon { font-size: 1.8rem; }
+		.faction-box .fb-name { font-size: 0.82rem; }
+		.faction-box .fb-sub { font-size: 0.68rem; }
+		.mech { padding: 12px 12px; gap: 8px; }
+		.mech:hover { transform: none; }
+		.mech .m-icon { font-size: 1.15rem; }
+		.mech .m-title { font-size: 0.78rem; }
+		.mech .m-body { font-size: 0.72rem; line-height: 1.45; }
+		.grid-4 { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+		.passive { padding: 10px 6px; }
+		.passive .p-emoji { font-size: 1.2rem; }
+		.passive .p-name { font-size: 0.7rem; }
+		.passive .p-desc { font-size: 0.62rem; }
+		section.grid-3[aria-label="Этапы создания"] { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
+		section.grid-3[aria-label="Этапы создания"] .infocard { padding: 12px 6px; }
+		section.grid-3[aria-label="Этапы создания"] .ic-icon { font-size: 1.5rem; margin-bottom: 4px; }
+		section.grid-3[aria-label="Этапы создания"] .ic-title { font-size: 0.7rem; }
+		section.grid-3[aria-label="Этапы создания"] .ic-sub { font-size: 0.62rem; }
+		.cmd { padding: 10px 12px; margin-bottom: 6px; }
+		.cmd:hover { transform: none; }
+		.cmd .c-name { font-size: 0.78rem; }
+		.cmd .c-desc { font-size: 0.68rem; }
+		.cmd .copy-hint { display: none; }
+		.reward-row { padding: 8px 12px; font-size: 0.75rem; }
+		.quote-box { padding: 12px 14px; font-size: 0.78rem; margin: 12px 0; }
+		.level-card { padding: 14px; }
+		.level-card .lv-title { font-size: 0.8rem; }
+		.level-card .lv-body { font-size: 0.72rem; }
+		.level-card .lv-note { font-size: 0.68rem; }
+		.info-chip { font-size: 0.7rem; padding: 4px 10px; }
+		.info-chip.gold-dark { font-size: 0.65rem; padding: 3px 10px; }
+		.cta-box { padding: 14px 16px; font-size: 0.78rem; }
+		.table-container { -webkit-overflow-scrolling: touch; }
+		table { font-size: 0.72rem; }
+		th, td { padding: 6px 8px; }
+		.table-container table[style*="min-width:600px"], .table-container table[style*="min-width: 600px"] { min-width: 480px !important; font-size: 0.68rem; }
+		.table-container table[style*="min-width:auto"] { min-width: auto !important; font-size: 0.68rem; }
+		.tooltip::after { display: none; }
+		.tooltip { border-bottom: 1px dashed rgba(240,185,11,0.5); }
+		.scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
+		.path-desc > div[style*="display:flex; align-items:center"] { font-size: 0.72rem; }
+		.grid-2 > div > h3 { font-size: 0.85rem !important; }
+	}
     </style>
 </head>
 <body>

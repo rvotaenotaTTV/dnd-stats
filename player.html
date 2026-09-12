@@ -11,320 +11,78 @@
     
     <style>
         .search-row { display: flex; gap: 10px; margin-bottom: 24px; align-items: center; flex-wrap: wrap; }
-        .search-input {
-            padding: 10px 16px;
-            background: var(--elevated);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            color: var(--text);
-            font-size: 0.85rem;
-            font-family: inherit;
-            transition: 0.2s;
-            width: 100%;
-        }
+        .search-input { padding: 10px 16px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-size: 0.85rem; font-family: inherit; transition: 0.2s; width: 100%; }
         .search-input:focus { outline: none; border-color: var(--gold); }
         .search-input::placeholder { color: var(--muted); }
         
         .dropdown-wrap { position: relative; flex: 1; }
-        .dropdown-list {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 10;
-            margin-top: 4px;
-        }
-        .dropdown-item {
-            padding: 10px 16px;
-            cursor: pointer;
-            color: var(--text);
-            font-size: 0.85rem;
-            border-bottom: 1px solid var(--border);
-            transition: 0.2s;
-        }
+        .dropdown-list { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); max-height: 200px; overflow-y: auto; z-index: 10; margin-top: 4px; }
+        .dropdown-item { padding: 10px 16px; cursor: pointer; color: var(--text); font-size: 0.85rem; border-bottom: 1px solid var(--border); transition: 0.2s; }
         .dropdown-item:last-child { border-bottom: none; }
         .dropdown-item:hover { background: var(--elevated); color: var(--gold); }
         
-        .profile-hero {
-            text-align: center;
-            padding: 20px 28px;
-            margin-bottom: 16px;
-            animation: fadeSlideIn 0.4s ease;
-        }
+        .profile-hero { text-align: center; padding: 20px 28px; margin-bottom: 16px; animation: fadeSlideIn 0.4s ease; }
         .profile-emoji { font-size: 3rem; margin-bottom: 4px; }
         .profile-name { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
         .profile-class { color: var(--sub); font-size: 0.85rem; margin-bottom: 2px; }
-        .profile-badges {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 8px 0;
-        }
+        .profile-badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 8px 0; }
         
-        .badge {
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 0.65rem;
-            font-weight: 700;
-        }
+        .badge { padding: 3px 10px; border-radius: 15px; font-size: 0.65rem; font-weight: 700; }
         .badge-gold { background: var(--gold); color: #000; }
         .badge-light { background: rgba(240, 185, 11, 0.15); color: var(--gold); }
         .badge-dark { background: rgba(163, 113, 247, 0.2); color: var(--purple); }
         
-        .player-tabs {
-            display: flex;
-            gap: 4px;
-            margin: 16px 0;
-            padding: 4px;
-            background: var(--card);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
-        .player-tab {
-            padding: 8px 14px;
-            border: none;
-            background: transparent;
-            color: var(--sub);
-            border-radius: 14px;
-            cursor: pointer;
-            font-size: 0.78rem;
-            font-weight: 600;
-            font-family: inherit;
-            transition: 0.2s;
-            white-space: nowrap;
-            flex: 1;
-            text-align: center;
-        }
+        .player-tabs { display: flex; gap: 4px; margin: 16px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); flex-wrap: wrap; }
+        .player-tab { padding: 8px 14px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: inherit; transition: 0.2s; white-space: nowrap; flex: 1; text-align: center; }
         .player-tab:hover { background: var(--elevated); color: var(--text); }
         .player-tab.active { background: var(--tab-active-bg); color: #000; font-weight: 700; }
         
         .player-tab-content { display: none; }
         .player-tab-content.active { display: block; }
         
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: var(--elevated);
-            border-radius: var(--radius-sm);
-            padding: 12px 8px;
-            text-align: center;
-            border: 1px solid var(--border);
-            animation: fadeSlideIn 0.3s ease;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
         .stat-num { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
-        .stat-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--muted);
-            margin-top: 2px;
-        }
+        .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
         
-        .ranks-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .rank-card {
-            background: var(--elevated);
-            border-radius: var(--radius-sm);
-            padding: 12px 8px;
-            text-align: center;
-            border: 1px solid var(--border);
-            animation: fadeSlideIn 0.3s ease;
-        }
+        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .rank-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
         .rank-pos { font-size: 1.4rem; font-weight: 800; }
-        .rank-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--muted);
-            margin-top: 2px;
-        }
+        .rank-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
         
-        .season-tabs {
-            display: flex;
-            gap: 4px;
-            margin: 16px 0;
-            flex-wrap: wrap;
-            justify-content: center;
-            background: var(--elevated);
-            padding: 3px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-        .season-tab {
-            padding: 6px 14px;
-            border-radius: 18px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            color: var(--sub);
-            font-family: inherit;
-            transition: 0.2s;
-            white-space: nowrap;
-        }
+        .season-tabs { display: flex; gap: 4px; margin: 16px 0; flex-wrap: wrap; justify-content: center; background: var(--elevated); padding: 3px; border-radius: 20px; border: 1px solid var(--border); }
+        .season-tab { padding: 6px 14px; border-radius: 18px; font-size: 0.72rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--sub); font-family: inherit; transition: 0.2s; white-space: nowrap; }
         .season-tab:hover { color: var(--text); }
-        .season-tab.active {
-            background: var(--gold);
-            color: #000;
-            font-weight: 700;
-            box-shadow: 0 2px 6px rgba(240, 185, 11, 0.25);
-        }
+        .season-tab.active { background: var(--gold); color: #000; font-weight: 700; box-shadow: 0 2px 6px rgba(240, 185, 11, 0.25); }
         
-        .compare-bar {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 14px;
-            background: var(--elevated);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
+        .compare-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; padding: 14px; background: var(--elevated); border-radius: var(--radius-sm); border: 1px solid var(--border); flex-wrap: wrap; }
         .compare-bar span { color: var(--sub); font-size: 0.85rem; white-space: nowrap; }
         
         th, td { text-align: center; }
-        tr.best-hero td { background: rgba(240, 185, 11, 0.06); }
-        tr.best-hero td:first-child::before {
-            content: '⭐';
-            margin-right: 4px;
-            font-size: 0.6rem;
-        }
         .td-better { color: var(--green) !important; font-weight: 700; }
         .td-worse { color: var(--red) !important; }
-        .compare-table th:first-child, .compare-table td:first-child {
-            text-align: left;
-            color: var(--muted);
-            font-weight: 500;
-        }
+        .compare-table th:first-child, .compare-table td:first-child { text-align: left; color: var(--muted); font-weight: 500; }
         
-        #allFormerHeroes table { min-width: 750px; }
-        #allFormerHeroes td { white-space: nowrap; }
+        .chart-placeholder { text-align: center; padding: 20px; background: var(--elevated); border-radius: var(--radius-sm); border: 1px dashed var(--border); margin-top: 12px; }
+        .chart-loader { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
         
-        .chart-placeholder {
-            text-align: center;
-            padding: 20px;
-            background: var(--elevated);
-            border-radius: var(--radius-sm);
-            border: 1px dashed var(--border);
-            margin-top: 12px;
-        }
-        .chart-loader {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        
-        .ach-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 8px;
-        }
-        .ach-card {
-            background: var(--elevated);
-            border-radius: var(--radius-sm);
-            padding: 12px 10px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
+        .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+        .ach-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 10px; text-align: center; border: 1px solid var(--border); }
         .ach-card.earned { border-color: var(--gold); }
         .ach-card.locked { opacity: 0.6; }
         .ach-emoji { font-size: 1.8rem; }
         .ach-name { color: var(--gold); font-weight: 700; font-size: 0.8rem; margin: 4px 0; }
-        .ach-progress {
-            height: 4px;
-            background: var(--bg);
-            border-radius: 2px;
-            margin-top: 6px;
-        }
+        .ach-progress { height: 4px; background: var(--bg); border-radius: 2px; margin-top: 6px; }
         .ach-fill { height: 4px; background: var(--gold); border-radius: 2px; }
         
         .skill-hero { text-align: center; margin-bottom: 20px; }
         .skill-value { font-size: 3rem; font-weight: 900; color: var(--gold); }
-        .skill-formula-box, .skill-breakdown, .skill-total {
-            background: var(--elevated);
-            border-radius: var(--radius-sm);
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-        .skill-component { margin-bottom: 14px; }
-        .skill-bar {
-            background: var(--bg);
-            height: 6px;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .skill-bar-fill { height: 6px; border-radius: 3px; }
         
-        .hero-card {
-            background: var(--elevated);
-            border-radius: var(--radius);
-            padding: 0;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            transition: 0.2s;
-        }
-        .hero-card.best {
-            border-color: var(--gold);
-            box-shadow: 0 0 16px rgba(240, 185, 11, 0.15);
-        }
-        .hero-card-header {
-            padding: 14px 14px 10px 14px;
-            text-align: center;
-        }
-        .hero-card-footer {
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 14px;
-            background: var(--bg);
-            font-size: 0.6rem;
-            color: var(--muted);
-            border-top: 1px solid var(--border);
-        }
-        
-        .summary-stat {
-            flex: 1;
-            min-width: 60px;
-            background: var(--elevated);
-            border-radius: var(--radius-sm);
-            padding: 8px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
+        .summary-stat { flex: 1; min-width: 60px; background: var(--elevated); border-radius: var(--radius-sm); padding: 8px; text-align: center; border: 1px solid var(--border); }
         .summary-value { font-size: 1rem; font-weight: 800; color: var(--gold); }
         .summary-label { font-size: 0.55rem; color: var(--muted); }
         
-        .mini-stat {
-            background: var(--bg);
-            border-radius: 8px;
-            padding: 6px 4px;
-            font-size: 0.7rem;
-        }
-        .mini-stat-label { color: var(--muted); font-size: 0.55rem; }
-        .mini-stat-value { color: var(--text); font-weight: 600; }
+        .former-heroes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 12px; }
         
         tbody tr:nth-child(1) { animation-delay: 0.02s; }
         tbody tr:nth-child(2) { animation-delay: 0.04s; }
@@ -336,16 +94,47 @@
         tbody tr:nth-child(8) { animation-delay: 0.16s; }
         tbody tr:nth-child(9) { animation-delay: 0.18s; }
         tbody tr:nth-child(10) { animation-delay: 0.2s; }
-        tbody tr:nth-child(11) { animation-delay: 0.22s; }
-        tbody tr:nth-child(12) { animation-delay: 0.24s; }
-        tbody tr:nth-child(13) { animation-delay: 0.26s; }
         
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .ranks-grid { grid-template-columns: repeat(2, 1fr); }
-            .player-tabs { flex-wrap: wrap; }
-            .player-tab { font-size: 0.7rem; padding: 6px 8px; }
-            .ach-grid { grid-template-columns: repeat(2, 1fr); }
+            .search-row { flex-direction: column; align-items: stretch; gap: 8px; }
+            .search-row .btn { width: 100%; padding: 12px; }
+            .profile-hero { padding: 16px 14px; }
+            .profile-emoji { font-size: 2.5rem; }
+            .profile-name { font-size: 1.2rem; }
+            .profile-class { font-size: 0.78rem; }
+            .player-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 6px; }
+            .player-tab { padding: 10px 6px; font-size: 0.72rem; flex: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stat-card { padding: 12px 6px; }
+            .stat-num { font-size: 1.1rem; }
+            .stat-label { font-size: 0.55rem; }
+            .ranks-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .rank-card { padding: 12px 6px; }
+            .rank-pos { font-size: 1.15rem; }
+            .rank-label { font-size: 0.55rem; }
+            .ach-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .ach-card { padding: 10px 6px; }
+            .ach-emoji { font-size: 1.5rem; }
+            .ach-name { font-size: 0.72rem; }
+            .season-tabs { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+            .season-tabs::-webkit-scrollbar { display: none; }
+            .season-tab { flex-shrink: 0; font-size: 0.68rem; padding: 6px 12px; }
+            .compare-bar { flex-direction: column; align-items: stretch; }
+            .compare-table th, .compare-table td { padding: 8px 6px; font-size: 0.72rem; }
+            .compare-table th:first-child, .compare-table td:first-child { font-size: 0.68rem; }
+            #allFormerHeroes table { min-width: 500px !important; font-size: 0.7rem; }
+            #allFormerHeroes td { padding: 6px 8px; }
+            #allFormerHeroes td:first-child { min-width: 130px; white-space: nowrap; }
+            .summary-stat { padding: 6px 4px; }
+            .summary-value { font-size: 0.85rem; }
+            .summary-label { font-size: 0.5rem; }
+            .chart-placeholder { padding: 16px 12px; }
+            .chart-placeholder .btn-chart { font-size: 0.72rem; padding: 8px 12px; width: 100%; }
+            .section { padding: 16px 12px; }
+            .section-title { font-size: 0.95rem; }
+            .section.gold svg { max-width: 100%; height: auto; }
+            .skill-value { font-size: 2.2rem; }
+            .former-heroes-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
         }
     </style>
 </head>
@@ -411,12 +200,10 @@
 (() => {
     'use strict';
 
-    // ============ УТИЛИТЫ ============
     const $ = (sel, ctx = document) => ctx.querySelector(sel);
     const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
-    const escapeHtml = (str) => str.replace(/'/g, "\\'");
+    const escapeHtml = (str) => String(str).replace(/'/g, "\\'");
 
-    // ============ СОСТОЯНИЕ ============
     let allPlayers = [];
     let dungeonPlayers = {};
     let heroArchive = {};
@@ -425,10 +212,8 @@
     let currentSeasonFilter = 'all';
     let seasonNames = [];
 
-    // ============ КОНСТАНТЫ ============
     const SEASON_ICONS = ['🏁', '🔥', '💫', '🩸', '🕯️', '⚡', '💀'];
     const MIN_FIGHTS_FOR_BEST = 10;
-    const ROLE_NAMES = { tank: 'Танк', mage: 'Маг', rogue: 'Рога', support: 'Сап' };
 
     const ACHIEVEMENTS = [
         { e: "🌟", n: "Легенда Этерниса", t: "level", v: 150 },
@@ -487,7 +272,6 @@
         { e: "🧻", n: "Тряпка", t: "worst", v: 5 }
     ];
 
-    // ============ ИНИЦИАЛИЗАЦИЯ ============
     function initTheme() {
         const savedTheme = localStorage.getItem('eternis-theme');
         if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
@@ -528,7 +312,6 @@
         });
     }
 
-    // ============ ЗАГРУЗКА ДАННЫХ ============
     async function loadData() {
         const urls = [
             'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
@@ -552,7 +335,6 @@
         return false;
     }
 
-    // ============ ПОИСК ИГРОКОВ ============
     function findPlayer(name) {
         if (!name || !allPlayers.length) return null;
         const searchTerm = name.toLowerCase().trim();
@@ -624,7 +406,6 @@
         compareWith(name);
     };
 
-    // ============ РЕНДЕРИНГ ПРОФИЛЯ ============
     window.loadProfile = async () => {
         if (!allPlayers.length) await loadData();
         
@@ -725,40 +506,33 @@
         const teamTotal = teamWins + teamLosses;
         const teamWinrate = teamTotal > 0 ? (teamWins * 100 / teamTotal).toFixed(1) + '%' : '—';
         
-		const stats = [
-			// Ряд 1: Арена 1v1 (4)
-			{ value: p.wins || 0, label: '⚔️ Победы' },
-			{ value: p.losses || 0, label: '💀 Поражения' },
-			{ value: winrate + '%', label: '📊 Винрейт' },
-			{ value: p.tournamentWins || 0, label: '👑 Турниры' },
-			
-			// Ряд 2: Арена 2v2 (4)
-			{ value: teamWins, label: '⚔️ 2v2 Победы' },
-			{ value: teamLosses, label: '💀 2v2 Поражения' },
-			{ value: teamWinrate, label: '📊 2v2 Винрейт' },
-			{ value: p.teamTournamentWins || 0, label: '👑 2v2 Турниры' },
-			
-			// Ряд 3: Общее (4)
-			{ value: total, label: '⚡ Всего боёв' },
-			{ value: p.best || 0, label: '🔥 Лучший стрик' },
-			{ value: p.worst || 0, label: '💔 Худший стрик' },
-			{ value: p.factionWins || 0, label: '🌍 Фракционные победы' },
-			
-			// Ряд 4: Прогресс + PvE (4)
-			{ value: p.level || 0, label: '📈 Уровень' },
-			{ value: p.shards || 0, label: '💎 Осколки' },
-			{ value: dungeon ? dungeon.record : '-', label: '🏔 Рекорд данжа' },
-			{ value: dungeon ? dungeon.trophies : '-', label: '🐉 Трофеев' }
-		];
+        const stats = [
+            { value: p.wins || 0, label: '⚔️ Победы' },
+            { value: p.losses || 0, label: '💀 Поражения' },
+            { value: winrate + '%', label: '📊 Винрейт' },
+            { value: p.tournamentWins || 0, label: '👑 Турниры' },
+            { value: teamWins, label: '⚔️ 2v2 Победы' },
+            { value: teamLosses, label: '💀 2v2 Поражения' },
+            { value: teamWinrate, label: '📊 2v2 Винрейт' },
+            { value: p.teamTournamentWins || 0, label: '👑 2v2 Турниры' },
+            { value: total, label: '⚡ Всего боёв' },
+            { value: p.best || 0, label: '🔥 Лучший стрик' },
+            { value: p.worst || 0, label: '💔 Худший стрик' },
+            { value: p.factionWins || 0, label: '🌍 Фракционные победы' },
+            { value: p.level || 0, label: '📈 Уровень' },
+            { value: p.shards || 0, label: '💎 Осколки' },
+            { value: dungeon ? dungeon.record : '-', label: '🏔 Рекорд данжа' },
+            { value: dungeon ? dungeon.trophies : '-', label: '🐉 Трофеев' }
+        ];
         
-		const ranks = [
-			{ rank: seasonRank, label: 'По SKILL' },
-			{ rank: winRank, label: 'По победам' },
-			{ rank: winrateRank, label: 'По винрейту' },
-			{ rank: factionRank, label: 'По фракционным победам' },
-			{ rank: shardsRank, label: 'По осколкам' },
-			{ rank: dungeonRank, label: 'По данжу' }
-		];
+        const ranks = [
+            { rank: seasonRank, label: 'По SKILL' },
+            { rank: winRank, label: 'По победам' },
+            { rank: winrateRank, label: 'По винрейту' },
+            { rank: factionRank, label: 'По фракционным победам' },
+            { rank: shardsRank, label: 'По осколкам' },
+            { rank: dungeonRank, label: 'По данжу' }
+        ];
         
         return `
         <div id="ptab-current" class="player-tab-content active">
@@ -781,11 +555,8 @@
         </div>`;
     }
 
-    // ============ РАНГИ ============
     function getSeasonRank(p) {
-        const sorted = [...allPlayers]
-            .filter(x => x.skill > 0)
-            .sort((a, b) => b.skill - a.skill);
+        const sorted = [...allPlayers].filter(x => x.skill > 0).sort((a, b) => b.skill - a.skill);
         return sorted.findIndex(x => x.display === p.display) + 1;
     }
 
@@ -810,35 +581,26 @@
         return sorted.findIndex(x => x.display === p.display) + 1;
     }
 
-	function getRankByDungeon(p) {
-		const playerRecord = dungeonPlayers[p.display]?.record || 0;
-		const playerDamage = dungeonPlayers[p.display]?.damage || 0;
-		
-		const sorted = allPlayers
-			.filter(x => {
-				const d = dungeonPlayers[x.display];
-				return d && d.record > 0;
-			})
-			.sort((a, b) => {
-				const dA = dungeonPlayers[a.display];
-				const dB = dungeonPlayers[b.display];
-				
-				// Сначала по рекорду
-				if (dB.record !== dA.record) return dB.record - dA.record;
-				
-				// Потом по урону
-				return (dB.damage || 0) - (dA.damage || 0);
-			});
-		
-		return sorted.findIndex(x => x.display === p.display) + 1;
-	}
+    function getRankByDungeon(p) {
+        const sorted = allPlayers
+            .filter(x => {
+                const d = dungeonPlayers[x.display];
+                return d && d.record > 0;
+            })
+            .sort((a, b) => {
+                const dA = dungeonPlayers[a.display];
+                const dB = dungeonPlayers[b.display];
+                if (dB.record !== dA.record) return dB.record - dA.record;
+                return (dB.damage || 0) - (dA.damage || 0);
+            });
+        return sorted.findIndex(x => x.display === p.display) + 1;
+    }
 
     function getRankByFaction(p) {
         const sorted = [...allPlayers].sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0));
         return sorted.findIndex(x => x.display === p.display) + 1;
     }
 
-    // ============ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ============
     window.switchTab = (tabId) => {
         $$('.player-tab').forEach(btn => btn.classList.remove('active'));
         $$('.player-tab-content').forEach(content => content.classList.remove('active'));
@@ -865,60 +627,57 @@
         }
     };
 
-	// ============ SKILL ============
-	function renderSkill(p) {
-		const total = (p.wins || 0) + (p.losses || 0);
-		const wr = total > 0 ? (p.wins / total) : 0;
-		const skill = p.skill || 0;
-		const denominator = Math.sqrt(total / 75 + 1);
-		
-		const components = [
-			{ icon: '⚔️', name: 'Победы × Винрейт', detail: `${p.wins} × ${(wr * 100).toFixed(1)}% × 7`, value: (p.wins || 0) * wr * 7, color: 'var(--gold)' },
-			{ icon: '🔥', name: 'Лучший стрик', detail: `${p.best} × 10`, value: (p.best || 0) * 10, color: 'var(--red)' },
-			{ icon: '📈', name: 'Уровень', detail: `${p.level} × 2`, value: (p.level || 0) * 2, color: 'var(--green)' },
-			{ icon: '👑', name: 'Турнирные победы', detail: `${p.tournamentWins} × 25`, value: (p.tournamentWins || 0) * 25, color: 'var(--purple)' },
-			{ icon: '🌍', name: 'Фракционные победы', detail: `${p.factionWins} × 2`, value: (p.factionWins || 0) * 2, color: 'var(--ice)' }
-		];
-		
-		const totalValue = components.reduce((sum, c) => sum + c.value, 0);
-		const calculatedSkill = Math.floor(totalValue / denominator);
-		
-		return `
-		<div class="section gold" style="padding:24px 20px; text-align:center;">
-			<div style="font-size:3rem; font-weight:900; color:var(--gold); line-height:1;">${skill}</div>
-			<div style="font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-top:4px;">Текущий SKILL</div>
-		</div>
-			
-		<div class="section gold" style="padding:20px;">
-			<div style="display:flex; flex-direction:column; gap:12px;">
-				${components.map(c => {
-					const percent = totalValue > 0 ? (c.value / totalValue) * 100 : 0;
-					return `
-					<div style="background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; border-left:3px solid ${c.color};">
-						<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-							<span style="font-size:0.85rem; color:var(--text); font-weight:600;">${c.icon} ${c.name}</span>
-							<span style="font-size:0.8rem; color:${c.color}; font-weight:700;">${percent.toFixed(1)}%</span>
-						</div>
-						<div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-bottom:8px;">
-							<span>${c.detail}</span>
-							<span>= ${c.value.toFixed(0)}</span>
-						</div>
-						<div style="background:var(--bg); height:6px; border-radius:3px; overflow:hidden;">
-							<div style="width:${percent}%; height:6px; background:${c.color}; border-radius:3px;"></div>
-						</div>
-					</div>`;
-				}).join('')}
-			</div>
-		</div>
-		
-		<div class="section gold" style="padding:20px; text-align:center;">
-			<div style="font-size:0.8rem; color:var(--sub);">Сумма компонентов</div>
-			<div style="font-size:1.3rem; font-weight:800; color:var(--gold); margin-top:4px;">${totalValue.toFixed(0)}</div>
-			<div style="font-size:0.7rem; color:var(--muted); margin-top:6px;">Делитель: √(${total} / 75 + 1) = ${denominator.toFixed(2)}</div>
-		</div>`;
-	}
+    function renderSkill(p) {
+        const total = (p.wins || 0) + (p.losses || 0);
+        const wr = total > 0 ? (p.wins / total) : 0;
+        const skill = p.skill || 0;
+        const denominator = Math.sqrt(total / 75 + 1);
+        
+        const components = [
+            { icon: '⚔️', name: 'Победы × Винрейт', detail: `${p.wins} × ${(wr * 100).toFixed(1)}% × 7`, value: (p.wins || 0) * wr * 7, color: 'var(--gold)' },
+            { icon: '🔥', name: 'Лучший стрик', detail: `${p.best} × 10`, value: (p.best || 0) * 10, color: 'var(--red)' },
+            { icon: '📈', name: 'Уровень', detail: `${p.level} × 2`, value: (p.level || 0) * 2, color: 'var(--green)' },
+            { icon: '👑', name: 'Турнирные победы', detail: `${p.tournamentWins} × 25`, value: (p.tournamentWins || 0) * 25, color: 'var(--purple)' },
+            { icon: '🌍', name: 'Фракционные победы', detail: `${p.factionWins} × 2`, value: (p.factionWins || 0) * 2, color: 'var(--ice)' }
+        ];
+        
+        const totalValue = components.reduce((sum, c) => sum + c.value, 0);
+        
+        return `
+        <div class="section gold" style="padding:24px 20px; text-align:center;">
+            <div style="font-size:3rem; font-weight:900; color:var(--gold); line-height:1;">${skill}</div>
+            <div style="font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-top:4px;">Текущий SKILL</div>
+        </div>
+            
+        <div class="section gold" style="padding:20px;">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                ${components.map(c => {
+                    const percent = totalValue > 0 ? (c.value / totalValue) * 100 : 0;
+                    return `
+                    <div style="background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; border-left:3px solid ${c.color};">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span style="font-size:0.85rem; color:var(--text); font-weight:600;">${c.icon} ${c.name}</span>
+                            <span style="font-size:0.8rem; color:${c.color}; font-weight:700;">${percent.toFixed(1)}%</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-bottom:8px;">
+                            <span>${c.detail}</span>
+                            <span>= ${c.value.toFixed(0)}</span>
+                        </div>
+                        <div style="background:var(--bg); height:6px; border-radius:3px; overflow:hidden;">
+                            <div style="width:${percent}%; height:6px; background:${c.color}; border-radius:3px;"></div>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>
+        
+        <div class="section gold" style="padding:20px; text-align:center;">
+            <div style="font-size:0.8rem; color:var(--sub);">Сумма компонентов</div>
+            <div style="font-size:1.3rem; font-weight:800; color:var(--gold); margin-top:4px;">${totalValue.toFixed(0)}</div>
+            <div style="font-size:0.7rem; color:var(--muted); margin-top:6px;">Делитель: √(${total} / 75 + 1) = ${denominator.toFixed(2)}</div>
+        </div>`;
+    }
 
-    // ============ ДОСТИЖЕНИЯ ============
     function renderAchievements() {
         const p = findPlayer($('#playerSearch').value.trim());
         if (!p) return;
@@ -1054,7 +813,6 @@
         </div>`;
     }
 
-    // ============ ГРАФИК ВИНРЕЙТА ============
     window.drawWinrateChart = async (playerName) => {
         const container = $('#ptab-winrate');
         if (!container) return;
@@ -1154,7 +912,7 @@
             <div style="text-align:center;margin-bottom:4px;font-size:.8rem;color:var(--sub)">
                 ${points[0].toFixed(1)}% → <span style="color:${diffColor};font-weight:700">${points[points.length - 1].toFixed(1)}% (${diffText})</span>
             </div>
-            <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block">
+            <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="display:block;max-width:100%">
                 <polygon points="${gX(0)},${H - P} ${svgPoints} ${gX(points.length - 1)},${H - P}" fill="rgba(240,185,11,0.06)"/>
                 <polyline points="${svgPoints}" fill="none" stroke="#f0b90b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 ${circles}${texts}${bottomLabels}
@@ -1172,7 +930,6 @@
         }
     };
 
-    // ============ СРАВНЕНИЕ ============
     window.compareWith = (name) => {
         const p1 = findPlayer($('#playerSearch').value.trim());
         const p2 = findPlayer(name);
@@ -1225,7 +982,6 @@
         return tableHtml;
     }
 
-    // ============ БЫВШИЕ ГЕРОИ ============
     async function loadAllSeasons(playerName) {
         const container = $('#allFormerHeroes');
         if (!container) return;
@@ -1234,7 +990,6 @@
         const seen = new Set();
         const playerKey = playerName.toLowerCase();
         
-        // Текущие герои из архива
         const currentArchive = heroArchive[playerKey] || [];
         const currentDungeon = dungeonPlayers[playerKey] || null;
         const currentPlayer = allPlayers.find(p => p.display?.toLowerCase() === playerKey);
@@ -1254,7 +1009,6 @@
             }
         });
         
-        // Загрузка архивных сезонов
         seasonNames = [];
         let seasonIndex = 0;
         
@@ -1317,7 +1071,6 @@
             seasonIndex++;
         }
         
-        // Обновляем текущий сезон
         const currentSeasonName = `${SEASON_ICONS[seasonIndex] || '📋'} Сезон ${seasonIndex}`;
         seasonNames[seasonIndex] = currentSeasonName;
         
@@ -1333,134 +1086,97 @@
             return;
         }
         
-        // Определяем лучших героев по сезонам
-        const bestPlayers = {};
-        cachedAllHeroes.forEach(hero => {
-            const total = hero.wins + hero.losses;
-            if (total < MIN_FIGHTS_FOR_BEST) return;
-            
-            const winrate = total > 0 ? hero.wins / total : 0;
-            if (!bestPlayers[hero.seasonIndex] || 
-                winrate > bestPlayers[hero.seasonIndex].wr || 
-                (winrate === bestPlayers[hero.seasonIndex].wr && total > bestPlayers[hero.seasonIndex].t)) {
-                bestPlayers[hero.seasonIndex] = { wr: winrate, t: total, name: hero.name };
-            }
-        });
-        
-        const bestNames = {};
-        Object.entries(bestPlayers).forEach(([si, data]) => {
-            bestNames[si] = data.name;
-        });
-        
-        cachedAllHeroes.forEach(hero => {
-            hero.isBest = (bestNames[hero.seasonIndex] === hero.name) && 
-                          ((hero.wins + hero.losses) >= MIN_FIGHTS_FOR_BEST);
-        });
-        
         currentSeasonFilter = 'all';
         renderSeasonView(playerName);
     }
 
-	function renderSeasonView(playerName) {
-		const container = $('#allFormerHeroes');
-		if (!container || cachedAllHeroes.length === 0) return;
-		
-		const availableSeasons = [...new Set(cachedAllHeroes.map(h => h.seasonIndex))].sort((a, b) => a - b);
-		let filtered = cachedAllHeroes;
-		
-		if (currentSeasonFilter !== 'all') {
-			filtered = cachedAllHeroes.filter(h => h.seasonIndex === parseInt(currentSeasonFilter));
-		}
-		
-		// Сводная статистика
-		const totals = { wins: 0, losses: 0, best: 0, worst: 0, tournaments: 0, maxLevel: 0, maxRecord: 0 };
-		filtered.forEach(hero => {
-			totals.wins += hero.wins || 0;
-			totals.losses += hero.losses || 0;
-			totals.best = Math.max(totals.best, hero.best || 0);
-			totals.worst = Math.max(totals.worst, hero.worst || 0);
-			totals.tournaments += hero.tournamentWins || 0;
-			totals.maxLevel = Math.max(totals.maxLevel, hero.level || 0);
-			totals.maxRecord = Math.max(totals.maxRecord, hero.record || 0);
-		});
-		
-		const totalFights = totals.wins + totals.losses;
-		const totalWinrate = totalFights > 0 ? (totals.wins * 100 / totalFights).toFixed(1) : '0';
-		
-		let html = `
-		<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-			<h3 style="color:var(--gold);margin:0;">👻 Бывшие герои</h3>
-			<span style="color:var(--muted);font-size:0.75rem;">${cachedAllHeroes.length} всего</span>
-		</div>
-		
-		<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-			<div class="summary-stat"><div class="summary-value">${filtered.length}</div><div class="summary-label">Героев</div></div>
-			<div class="summary-stat"><div class="summary-value">${totals.wins}</div><div class="summary-label">Побед</div></div>
-			<div class="summary-stat"><div class="summary-value">${totalWinrate}%</div><div class="summary-label">WR</div></div>
-			<div class="summary-stat"><div class="summary-value">${totals.best}</div><div class="summary-label">🔥 Стрик</div></div>
-			<div class="summary-stat"><div class="summary-value">${totals.tournaments}</div><div class="summary-label">👑 Тур.</div></div>
-			<div class="summary-stat"><div class="summary-value">${totals.maxLevel}</div><div class="summary-label">📈 Ур.</div></div>
-			<div class="summary-stat"><div class="summary-value">${totals.maxRecord || '-'}</div><div class="summary-label">🏔 Волн</div></div>
-		</div>
-		
-		<div class="season-tabs">
-			<button class="season-tab ${currentSeasonFilter === 'all' ? 'active' : ''}" onclick="setSeasonFilter('all')">📋 Все</button>
-			${availableSeasons.map(si => {
-				const name = seasonNames[si] || cachedAllHeroes.find(h => h.seasonIndex === si)?.season || 'Сезон ' + si;
-				return `<button class="season-tab ${currentSeasonFilter === String(si) ? 'active' : ''}" onclick="setSeasonFilter('${si}')">${name}</button>`;
-			}).join('')}
-		</div>`;
-		
-		// Сортировка от 0 сезона вниз (по возрастанию)
-		const sortedHeroes = [...filtered].sort((a, b) => a.seasonIndex - b.seasonIndex);
-		
-		// Компактные карточки
-		html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px;">';
-		
-		sortedHeroes.forEach(hero => {
-			const total = (hero.wins || 0) + (hero.losses || 0);
-			const winrate = total > 0 ? (hero.wins * 100 / total).toFixed(1) : '0.0';
-			const winrateNum = parseFloat(winrate);
-			const winrateColor = winrateNum >= 55 ? 'var(--green)' : winrateNum >= 45 ? 'var(--gold)' : 'var(--red)';
-			
-			html += `
-			<div style="
-				background: var(--elevated);
-				border: 1px solid var(--border);
-				border-radius: var(--radius-sm);
-				padding: 10px;
-				text-align: center;
-				transition: all 0.2s ease;
-			" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
-				<div style="font-size:1.5rem;line-height:1;margin-bottom:4px;">${hero.emoji || '⚔️'}</div>
-				<div style="color:var(--text);font-weight:600;font-size:0.75rem;margin-bottom:2px;">${hero.name || ''}</div>
-				<div style="color:var(--muted);font-size:0.6rem;margin-bottom:6px;">${hero.season}</div>
-				
-				<div style="display:flex;justify-content:center;gap:8px;font-size:0.7rem;margin-bottom:6px;">
-					<span style="color:var(--green);">${hero.wins || 0}W</span>
-					<span style="color:var(--red);">${hero.losses || 0}L</span>
-					<span style="color:${winrateColor};font-weight:700;">${winrate}%</span>
-				</div>
-				
-				<div style="display:flex;justify-content:center;gap:10px;font-size:0.65rem;color:var(--muted);">
-					<span title="Лучший стрик">🔥 ${hero.best || 0}</span>
-					<span title="Уровень">📈 ${hero.level || 0}</span>
-					${hero.record ? `<span title="Рекорд данжа">🏔 ${hero.record}</span>` : ''}
-					${hero.tournamentWins ? `<span title="Турнирные победы">👑 ${hero.tournamentWins}</span>` : ''}
-				</div>
-			</div>`;
-		});
-		
-		html += '</div>';
-		container.innerHTML = html;
-	}
+    function renderSeasonView(playerName) {
+        const container = $('#allFormerHeroes');
+        if (!container || cachedAllHeroes.length === 0) return;
+        
+        const availableSeasons = [...new Set(cachedAllHeroes.map(h => h.seasonIndex))].sort((a, b) => a - b);
+        let filtered = cachedAllHeroes;
+        
+        if (currentSeasonFilter !== 'all') {
+            filtered = cachedAllHeroes.filter(h => h.seasonIndex === parseInt(currentSeasonFilter));
+        }
+        
+        const totals = { wins: 0, losses: 0, best: 0, worst: 0, tournaments: 0, maxLevel: 0, maxRecord: 0 };
+        filtered.forEach(hero => {
+            totals.wins += hero.wins || 0;
+            totals.losses += hero.losses || 0;
+            totals.best = Math.max(totals.best, hero.best || 0);
+            totals.worst = Math.max(totals.worst, hero.worst || 0);
+            totals.tournaments += hero.tournamentWins || 0;
+            totals.maxLevel = Math.max(totals.maxLevel, hero.level || 0);
+            totals.maxRecord = Math.max(totals.maxRecord, hero.record || 0);
+        });
+        
+        const totalFights = totals.wins + totals.losses;
+        const totalWinrate = totalFights > 0 ? (totals.wins * 100 / totalFights).toFixed(1) : '0';
+        
+        let html = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h3 style="color:var(--gold);margin:0;">👻 Бывшие герои</h3>
+            <span style="color:var(--muted);font-size:0.75rem;">${cachedAllHeroes.length} всего</span>
+        </div>
+        
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+            <div class="summary-stat"><div class="summary-value">${filtered.length}</div><div class="summary-label">Героев</div></div>
+            <div class="summary-stat"><div class="summary-value">${totals.wins}</div><div class="summary-label">Побед</div></div>
+            <div class="summary-stat"><div class="summary-value">${totalWinrate}%</div><div class="summary-label">WR</div></div>
+            <div class="summary-stat"><div class="summary-value">${totals.best}</div><div class="summary-label">🔥 Стрик</div></div>
+            <div class="summary-stat"><div class="summary-value">${totals.tournaments}</div><div class="summary-label">👑 Тур.</div></div>
+            <div class="summary-stat"><div class="summary-value">${totals.maxLevel}</div><div class="summary-label">📈 Ур.</div></div>
+            <div class="summary-stat"><div class="summary-value">${totals.maxRecord || '-'}</div><div class="summary-label">🏔 Волн</div></div>
+        </div>
+        
+        <div class="season-tabs">
+            <button class="season-tab ${currentSeasonFilter === 'all' ? 'active' : ''}" onclick="setSeasonFilter('all')">📋 Все</button>
+            ${availableSeasons.map(si => {
+                const name = seasonNames[si] || cachedAllHeroes.find(h => h.seasonIndex === si)?.season || 'Сезон ' + si;
+                return `<button class="season-tab ${currentSeasonFilter === String(si) ? 'active' : ''}" onclick="setSeasonFilter('${si}')">${name}</button>`;
+            }).join('')}
+        </div>`;
+        
+        const sortedHeroes = [...filtered].sort((a, b) => a.seasonIndex - b.seasonIndex);
+        
+        html += '<div class="former-heroes-grid">';
+        
+        sortedHeroes.forEach(hero => {
+            const total = (hero.wins || 0) + (hero.losses || 0);
+            const winrate = total > 0 ? (hero.wins * 100 / total).toFixed(1) : '0.0';
+            const winrateNum = parseFloat(winrate);
+            const winrateColor = winrateNum >= 55 ? 'var(--green)' : winrateNum >= 45 ? 'var(--gold)' : 'var(--red)';
+            
+            html += `
+            <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center;transition:all 0.2s ease;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:1.5rem;line-height:1;margin-bottom:4px;">${hero.emoji || '⚔️'}</div>
+                <div style="color:var(--text);font-weight:600;font-size:0.75rem;margin-bottom:2px;">${hero.name || ''}</div>
+                <div style="color:var(--muted);font-size:0.6rem;margin-bottom:6px;">${hero.season}</div>
+                <div style="display:flex;justify-content:center;gap:8px;font-size:0.7rem;margin-bottom:6px;">
+                    <span style="color:var(--green);">${hero.wins || 0}W</span>
+                    <span style="color:var(--red);">${hero.losses || 0}L</span>
+                    <span style="color:${winrateColor};font-weight:700;">${winrate}%</span>
+                </div>
+                <div style="display:flex;justify-content:center;gap:10px;font-size:0.65rem;color:var(--muted);">
+                    <span title="Лучший стрик">🔥 ${hero.best || 0}</span>
+                    <span title="Уровень">📈 ${hero.level || 0}</span>
+                    ${hero.record ? `<span title="Рекорд данжа">🏔 ${hero.record}</span>` : ''}
+                    ${hero.tournamentWins ? `<span title="Турнирные победы">👑 ${hero.tournamentWins}</span>` : ''}
+                </div>
+            </div>`;
+        });
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
 
     window.setSeasonFilter = (seasonIndex) => {
         currentSeasonFilter = seasonIndex;
         renderSeasonView(currentProfileName);
     };
 
-    // ============ КОПИРОВАНИЕ ССЫЛКИ ============
     window.copyProfileLink = async () => {
         const name = $('#playerSearch').value.trim();
         if (!name) return;
@@ -1488,7 +1204,6 @@
         }
     };
 
-    // ============ ИНИЦИАЛИЗАЦИЯ ============
     initTheme();
     initNavigation();
     
