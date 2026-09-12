@@ -80,9 +80,11 @@
 		.tables-grid { grid-template-columns: 1fr; }
 		.nav-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 6px; }
 		.tab-btn { text-align: center; padding: 8px 6px; font-size: 0.75rem; }
-		#tab-tops .table-container { overflow-x: visible !important; }
-		#tab-tops table { min-width: auto !important; font-size: 0.68rem; }
-		#tab-tops td { white-space: normal !important; word-break: break-word; padding: 5px 6px; }
+		#tab-tops .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+		#tab-tops table { min-width: 420px; font-size: 0.68rem; }
+		#tab-tops td { white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; padding: 5px 6px; }
+		#tab-tops td:nth-child(2), #tab-tops th:nth-child(2) { min-width: 110px; }
+		#tab-tops td:nth-child(3), #tab-tops th:nth-child(3) { min-width: 90px; }
 		#tab-tops td:first-child { min-width: auto; width: 28px; }
 		#tab-tops th:first-child { min-width: auto; width: 28px; }
 		#tab-tops .number { white-space: nowrap; }
