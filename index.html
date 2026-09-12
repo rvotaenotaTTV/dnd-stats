@@ -80,23 +80,33 @@
 		.tables-grid { grid-template-columns: 1fr; }
 		.nav-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 6px; }
 		.tab-btn { text-align: center; padding: 8px 6px; font-size: 0.75rem; }
-		#tab-tops .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-		#tab-tops table { min-width: 420px; font-size: 0.68rem; }
-		#tab-tops td { white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; padding: 5px 6px; }
-		#tab-tops td:nth-child(2), #tab-tops th:nth-child(2) { min-width: 110px; }
-		#tab-tops td:nth-child(3), #tab-tops th:nth-child(3) { min-width: 90px; }
-		#tab-tops td:first-child { min-width: auto; width: 28px; }
-		#tab-tops th:first-child { min-width: auto; width: 28px; }
-		#tab-tops .number { white-space: nowrap; }
-		#classes-table, #races-table, #combos-table, #champions-table, #shards-table, #rating-table, #players-table, #twovtwo-table { min-width: 480px; font-size: 0.7rem; }
+
+		#tab-tops .table-container,
+		#tab-champions .table-container,
+		#tab-shards .table-container,
+		#tab-records .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+		#tab-tops table,
+		#champions-table,
+		#shards-table { min-width: auto !important; font-size: 0.7rem; }
+
 		th, td { padding: 6px 8px; }
 		th { white-space: nowrap; }
 		td { white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
-		#classes-table td:first-child, #races-table td:first-child { white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; min-width: 120px; }
-		#classes-table th:first-child, #races-table th:first-child { min-width: 120px; }
-		#champions-table td:first-child, #shards-table td:first-child, #rating-table td:first-child, #players-table td:first-child, #twovtwo-table td:first-child { min-width: 36px; font-size: 0.65rem; text-align: center; }
-		#champions-table th:first-child, #shards-table th:first-child, #rating-table th:first-child, #players-table th:first-child, #twovtwo-table th:first-child { min-width: 36px; }
-		#combos-table td:first-child { white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; min-width: 130px; }
+		td:first-child, th:first-child { width: 28px; min-width: 28px; }
+
+		#tab-tops td:nth-child(2),
+		#tab-tops th:nth-child(2) { min-width: 90px; }
+		#tab-tops td:nth-child(3),
+		#tab-tops th:nth-child(3) { min-width: 80px; }
+
+		#classes-table, #races-table, #combos-table { min-width: 520px; font-size: 0.7rem; }
+		#rating-table, #players-table, #twovtwo-table { min-width: 500px; font-size: 0.7rem; }
+
+		#classes-table td:first-child,
+		#races-table td:first-child,
+		#combos-table td:first-child { min-width: 120px; }
+
 		.titles-gallery { grid-template-columns: repeat(2, 1fr) !important; }
 		.hunters-top { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 16px 8px 12px; }
 		.hunter-card { padding: 12px 6px; }
