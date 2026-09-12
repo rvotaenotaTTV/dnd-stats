@@ -87,18 +87,42 @@
     .formula-card .f-body{font-size:.75rem;color:var(--sub);line-height:1.6;font-family:'SF Mono','Consolas',monospace}
     .formula-card .f-note{font-size:.65rem;color:var(--muted);margin-top:4px}
 
-    @media(max-width:768px){
-        .race-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
-        .race-chip{flex:none;min-width:0;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 6px}
-        .race-chip:nth-child(4n){border-right:none}
-        .race-chip .chip-emoji{font-size:1.1rem}
-        .race-chip .chip-name{font-size:.65rem}
-        .race-chip .chip-bonus{font-size:.55rem}
-        table{font-size:.68rem;min-width:700px}
-        th,td{padding:5px 7px}
-        .formula-grid{grid-template-columns:1fr}
-        .compare-grid{grid-template-columns:repeat(3,1fr)}
-    }
+	@media (max-width: 768px) {
+		.race-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+		.race-chip { flex: none; min-width: 0; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 4px; }
+		.race-chip:nth-child(4n) { border-right: none; }
+		.race-chip .chip-emoji { font-size: 1.1rem; }
+		.race-chip .chip-name { font-size: 0.65rem; }
+		.race-chip .chip-bonus { font-size: 0.55rem; line-height: 1.2; }
+		.compare-section { padding: 16px 12px; }
+		.compare-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+		.compare-vs { font-size: 0.85rem; gap: 6px; }
+		.compare-close { padding: 5px 12px; font-size: 0.7rem; }
+		.compare-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+		.compare-card { padding: 10px 6px; }
+		.compare-card .c-icon { font-size: 1rem; }
+		.compare-card .c-label { font-size: 0.6rem; }
+		.compare-card .c-bars { height: 44px; gap: 3px; }
+		.compare-card .c-bar-val { font-size: 0.75rem; }
+		.compare-card .c-delta { font-size: 0.65rem; }
+		.compare-winner { padding: 10px; }
+		.compare-winner .winner-text { font-size: 0.8rem; }
+		.compare-winner .winner-sub { font-size: 0.65rem; }
+		.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+		table { min-width: auto; font-size: 0.7rem; }
+		#classes-balance-table { min-width: 720px; }
+		#races-balance-table { min-width: auto; }
+		th, td { padding: 6px 6px; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
+		th { font-size: 0.62rem; padding-right: 16px !important; }
+		th::after { right: 3px; font-size: 9px; }
+		td:first-child { padding-left: 8px; }
+		.formula-grid { grid-template-columns: 1fr; }
+		.formula-card { padding: 12px 14px; }
+		.formula-card .f-title { font-size: 0.75rem; }
+		.formula-card .f-body { font-size: 0.7rem; }
+		.formula-card .f-note { font-size: 0.62rem; }
+		.formulas-toggle { font-size: 0.78rem; }
+	}
 </style>
 </head>
 <body>

@@ -9,53 +9,90 @@
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
-    .innkeeper{display:flex;align-items:center;gap:14px;background:var(--elevated);border-radius:var(--radius-sm);padding:16px 18px;margin-bottom:8px;border-left:3px solid var(--gold)}
-    .innkeeper-avatar{font-size:2.5rem}
-    .innkeeper-text{flex:1}
-    .innkeeper-name{color:var(--gold);font-weight:700;font-size:1rem;margin-bottom:2px}
-    .innkeeper-quote{color:var(--sub);font-style:italic;font-size:0.85rem;line-height:1.5;min-height:2.5em}
-    .balance-badge{background:var(--elevated);border:1px solid var(--gold);border-radius:25px;padding:6px 16px;color:var(--gold);font-weight:700;font-size:0.9rem;white-space:nowrap}
-    .helper-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;color:var(--muted);font-size:0.7rem}
-    .helper-avatar{font-size:1.2rem}
-    .game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .game-card{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px 12px;text-align:center;cursor:pointer;transition:0.2s}
-    .game-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(240,185,11,0.1)}
-    .game-emoji{font-size:2rem;margin-bottom:6px}
-    .game-name{color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:4px}
-    .game-cost{color:var(--muted);font-size:0.7rem}
-    .modal-overlay{position:fixed!important;top:0!important;left:0!important;width:100%!important;height:100%!important;background:rgba(0,0,0,0.85)!important;z-index:99999!important;display:flex!important;align-items:center!important;justify-content:center!important;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);animation:fadeIn .2s ease}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    .modal-card{background:var(--card);border-radius:20px;padding:30px;text-align:center;max-width:400px;width:90%;border:3px solid var(--border);max-height:85vh;overflow-y:auto;position:relative;z-index:100000}
-    #gameContainer{min-height:300px}
-    .table-felt{background:linear-gradient(160deg,#1a3020 0%,#0d1f14 30%,#1a3020 60%,#0f2418 100%);border:3px solid #3d2b1f;border-radius:var(--radius);box-shadow:inset 0 0 60px rgba(0,0,0,0.5),0 8px 32px rgba(0,0,0,0.6);padding:28px 24px;margin-bottom:14px;position:relative;min-height:160px}
-    .poker-card{width:88px;height:124px;background:linear-gradient(160deg,#fff,#e8e8e8);border-radius:10px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:4px;border:3px solid #888;box-shadow:0 4px 0 #666;vertical-align:top;margin:3px;animation:dealCard .3s ease}
-    @keyframes dealCard{from{transform:translateY(-20px) scale(0.8);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
-    .poker-card .corner{font-size:13px;font-weight:800}
-    .poker-card .corner.top{top:3px;left:5px}
-    .poker-card .corner.bottom{bottom:3px;right:5px;transform:rotate(180deg)}
-    .poker-card .emoji{font-size:26px}
-    .poker-card .name{font-size:8px}
-    .card-back{width:88px;height:124px;background:#444;border-radius:10px;border:3px solid #444;box-shadow:0 4px 0 #333;display:inline-block;margin:3px}
-    .sudoku-grid{display:grid;grid-template-columns:repeat(9,1fr);margin:16px 0;gap:1px;background:var(--border-strong);border:3px solid var(--border-strong);border-radius:12px;width:100%}
-    .sudoku-cell{aspect-ratio:1;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;cursor:pointer;transition:all .1s;color:var(--text);user-select:none;border:1px solid rgba(255,255,255,0.05)}
-    .sudoku-cell:nth-child(3n){border-right:4px solid var(--border-strong)}
-    .sudoku-cell:nth-child(9n+1){border-left:4px solid var(--border-strong)}
-    .sudoku-cell:nth-child(n+19):nth-child(-n+27),.sudoku-cell:nth-child(n+46):nth-child(-n+54),.sudoku-cell:nth-child(n+73):nth-child(-n+81){border-bottom:4px solid var(--border-strong)}
-    .sudoku-cell:nth-child(-n+9),.sudoku-cell:nth-child(n+28):nth-child(-n+36),.sudoku-cell:nth-child(n+55):nth-child(-n+63){border-top:4px solid var(--border-strong)}
-    .sudoku-cell:hover{background:var(--elevated)}
-    .sudoku-cell.fixed{color:var(--sudoku-fixed);font-weight:800}
-    .sudoku-cell.selected{outline:3px solid var(--gold);outline-offset:-2px;background:var(--cell-selected-bg);z-index:2;position:relative}
-    .sudoku-cell.same-row-col{background:var(--cell-same-bg)}
-    .sudoku-cell.same-number{background:var(--cell-same-num-bg)}
-    .sudoku-cell.error{color:var(--red);background:rgba(239,68,68,0.25);outline:2px solid var(--red);animation:shake .3s}
-    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
-    .num-pad{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin:12px 0}
-    .num-btn{padding:14px 8px;border-radius:10px;border:2px solid var(--border);background:var(--elevated);color:var(--text);font-size:1rem;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
-    .num-btn:hover{border-color:var(--gold);background:var(--cell-selected-bg)}
-    .num-btn.clear-btn{color:var(--red);border-color:rgba(239,68,68,0.3);font-size:.85rem;grid-column:span 9}
-    .sudoku-timer{text-align:center;font-size:.85rem;color:var(--sub);margin-bottom:4px}
-    .sudoku-timer span{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums}
-    @media(max-width:768px){.game-grid{grid-template-columns:repeat(2,1fr)}.innkeeper{padding:12px 14px}.innkeeper-avatar{font-size:2rem}.poker-card{width:70px;height:98px}.card-back{width:70px;height:98px}.table-felt{padding:18px 12px;min-height:130px}}
+    .innkeeper { display: flex; align-items: center; gap: 14px; background: var(--elevated); border-radius: var(--radius-sm); padding: 16px 18px; margin-bottom: 8px; border-left: 3px solid var(--gold); }
+    .innkeeper-avatar { font-size: 2.5rem; flex-shrink: 0; }
+    .innkeeper-text { flex: 1; min-width: 0; }
+    .innkeeper-name { color: var(--gold); font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
+    .innkeeper-quote { color: var(--sub); font-style: italic; font-size: 0.85rem; line-height: 1.5; min-height: 2.5em; word-break: break-word; }
+    .balance-badge { background: var(--elevated); border: 1px solid var(--gold); border-radius: 25px; padding: 6px 16px; color: var(--gold); font-weight: 700; font-size: 0.9rem; white-space: nowrap; flex-shrink: 0; }
+    .helper-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; color: var(--muted); font-size: 0.7rem; }
+    .helper-avatar { font-size: 1.2rem; flex-shrink: 0; }
+    .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .game-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; }
+    .game-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(240,185,11,0.1); }
+    .game-emoji { font-size: 2rem; margin-bottom: 6px; }
+    .game-name { color: var(--gold); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .game-cost { color: var(--muted); font-size: 0.7rem; }
+    .modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0,0,0,0.85) !important; z-index: 99999 !important; display: flex !important; align-items: center !important; justify-content: center !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); animation: fadeIn .2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal-card { background: var(--card); border-radius: 20px; padding: 30px; text-align: center; max-width: 400px; width: 90%; border: 3px solid var(--border); max-height: 85vh; overflow-y: auto; position: relative; z-index: 100000; }
+    #gameContainer { min-height: 300px; }
+    .table-felt { background: linear-gradient(160deg,#1a3020 0%,#0d1f14 30%,#1a3020 60%,#0f2418 100%); border: 3px solid #3d2b1f; border-radius: var(--radius); box-shadow: inset 0 0 60px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.6); padding: 28px 24px; margin-bottom: 14px; position: relative; min-height: 160px; }
+    .poker-card { width: 88px; height: 124px; background: linear-gradient(160deg,#fff,#e8e8e8); border-radius: 10px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 4px; border: 3px solid #888; box-shadow: 0 4px 0 #666; vertical-align: top; margin: 3px; animation: dealCard .3s ease; }
+    @keyframes dealCard { from { transform: translateY(-20px) scale(0.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+    .poker-card .corner { font-size: 13px; font-weight: 800; }
+    .poker-card .corner.top { top: 3px; left: 5px; }
+    .poker-card .corner.bottom { bottom: 3px; right: 5px; transform: rotate(180deg); }
+    .poker-card .emoji { font-size: 26px; }
+    .poker-card .name { font-size: 8px; }
+    .card-back { width: 88px; height: 124px; background: #444; border-radius: 10px; border: 3px solid #444; box-shadow: 0 4px 0 #333; display: inline-block; margin: 3px; }
+    .sudoku-grid { display: grid; grid-template-columns: repeat(9, 1fr); margin: 16px 0; gap: 1px; background: var(--border-strong); border: 3px solid var(--border-strong); border-radius: 12px; width: 100%; }
+    .sudoku-cell { aspect-ratio: 1; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all .1s; color: var(--text); user-select: none; border: 1px solid rgba(255,255,255,0.05); }
+    .sudoku-cell:nth-child(3n) { border-right: 4px solid var(--border-strong); }
+    .sudoku-cell:nth-child(9n+1) { border-left: 4px solid var(--border-strong); }
+    .sudoku-cell:nth-child(n+19):nth-child(-n+27), .sudoku-cell:nth-child(n+46):nth-child(-n+54), .sudoku-cell:nth-child(n+73):nth-child(-n+81) { border-bottom: 4px solid var(--border-strong); }
+    .sudoku-cell:nth-child(-n+9), .sudoku-cell:nth-child(n+28):nth-child(-n+36), .sudoku-cell:nth-child(n+55):nth-child(-n+63) { border-top: 4px solid var(--border-strong); }
+    .sudoku-cell:hover { background: var(--elevated); }
+    .sudoku-cell.fixed { color: var(--sudoku-fixed); font-weight: 800; }
+    .sudoku-cell.selected { outline: 3px solid var(--gold); outline-offset: -2px; background: var(--cell-selected-bg); z-index: 2; position: relative; }
+    .sudoku-cell.same-row-col { background: var(--cell-same-bg); }
+    .sudoku-cell.same-number { background: var(--cell-same-num-bg); }
+    .sudoku-cell.error { color: var(--red); background: rgba(239,68,68,0.25); outline: 2px solid var(--red); animation: shake .3s; }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+    .num-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin: 12px 0; }
+    .num-btn { padding: 14px 8px; border-radius: 10px; border: 2px solid var(--border); background: var(--elevated); color: var(--text); font-size: 1rem; font-weight: 700; cursor: pointer; transition: .2s; font-family: inherit; }
+    .num-btn:hover { border-color: var(--gold); background: var(--cell-selected-bg); }
+    .num-btn.clear-btn { color: var(--red); border-color: rgba(239,68,68,0.3); font-size: .85rem; grid-column: span 9; }
+    .sudoku-timer { text-align: center; font-size: .85rem; color: var(--sub); margin-bottom: 4px; }
+    .sudoku-timer span { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    @media (max-width: 768px) {
+        .container { padding: 12px 14px 80px; }
+        .header { padding: 20px 0 8px; }
+        .header-title { font-size: 1.4rem; }
+        .header-subtitle { font-size: 0.78rem; }
+        .theme-toggle { position: static; transform: none; margin: 10px auto 0; display: block; width: fit-content; }
+
+        .innkeeper { padding: 12px 14px; gap: 10px; flex-wrap: wrap; }
+        .innkeeper-avatar { font-size: 2rem; }
+        .innkeeper-name { font-size: 0.85rem; }
+        .innkeeper-quote { font-size: 0.75rem; min-height: 2em; }
+        .balance-badge { padding: 4px 12px; font-size: 0.78rem; margin-left: auto; }
+        .helper-row { font-size: 0.65rem; }
+
+        .game-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .game-card { padding: 14px 8px; }
+        .game-emoji { font-size: 1.6rem; margin-bottom: 4px; }
+        .game-name { font-size: 0.8rem; }
+        .game-cost { font-size: 0.62rem; }
+
+        .modal-card { padding: 20px 16px; width: 92%; max-height: 88vh; }
+        #gameContainer { min-height: 260px; }
+
+        .table-felt { padding: 18px 12px; min-height: 130px; }
+        .poker-card { width: 70px; height: 98px; margin: 2px; }
+        .poker-card .corner { font-size: 11px; }
+        .poker-card .emoji { font-size: 22px; }
+        .poker-card .name { font-size: 7px; }
+        .card-back { width: 70px; height: 98px; margin: 2px; }
+
+        .sudoku-grid { margin: 12px 0; }
+        .sudoku-cell { font-size: 0.8rem; }
+        .num-pad { gap: 4px; margin: 10px 0; }
+        .num-btn { padding: 12px 6px; font-size: 0.9rem; }
+        .num-btn.clear-btn { font-size: 0.75rem; padding: 10px 6px; }
+        .sudoku-timer { font-size: 0.78rem; }
+    }
 </style>
 </head>
 <body>

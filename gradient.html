@@ -41,7 +41,29 @@
 	.diff-neutral{background:var(--elevated);color:var(--muted)}
 	.sim-details{margin-top:14px;color:var(--muted);font-size:0.78rem}
 	.info-block{background:var(--elevated);border-radius:var(--radius-sm);padding:16px;border-left:3px solid var(--gold);line-height:1.7;color:var(--sub);font-size:0.85rem}
-	@media(max-width:768px){.selector-row{flex-direction:column;align-items:stretch}select{width:100%;min-width:auto}.stats-grid{grid-template-columns:repeat(3,1fr)}.winrate-value{font-size:1.5rem}}
+	@media (max-width: 768px) {
+    .selector-row { flex-direction: column; align-items: stretch; gap: 8px; }
+    select { width: 100%; min-width: auto; padding: 10px 32px 10px 14px; font-size: 0.8rem; }
+    .btn { width: 100%; padding: 11px 18px; font-size: 0.8rem; }
+    .btn-reset { width: 100%; padding: 10px 14px; font-size: 0.75rem; text-align: center; }
+    .progress { text-align: center; margin-left: 0; font-size: 0.75rem; }
+    .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .stat-card { padding: 10px 6px; }
+    .stat-emoji { font-size: 1rem; }
+    .stat-name { font-size: 0.58rem; }
+    .stat-value { font-size: 1.1rem; margin-bottom: 6px; }
+    .stat-input { width: 100%; padding: 6px 4px; font-size: 0.82rem; }
+    .result-panel { padding: 16px 12px; }
+    .winrate-display { gap: 12px; }
+    .winrate-box { padding: 14px 16px; flex: 1; min-width: 100px; }
+    .winrate-label { font-size: 0.65rem; }
+    .winrate-value { font-size: 1.5rem; }
+    .winrate-arrow { font-size: 1.2rem; }
+    .diff-badge { font-size: 0.75rem; padding: 3px 12px; }
+    .sim-details { font-size: 0.7rem; line-height: 1.5; }
+    .info-block { padding: 12px 14px; font-size: 0.75rem; line-height: 1.6; }
+    .section-title { font-size: 1rem; }
+	}
 </style>
 </head>
 <body>

@@ -8,135 +8,136 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<style>
+    .search-row { display: flex; gap: 10px; margin-bottom: 24px; align-items: center; flex-wrap: wrap; }
+    .search-input { padding: 10px 16px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-size: 0.85rem; font-family: inherit; transition: 0.2s; width: 100%; }
+    .search-input:focus { outline: none; border-color: var(--gold); }
+    .search-input::placeholder { color: var(--muted); }
     
-    <style>
-        .search-row { display: flex; gap: 10px; margin-bottom: 24px; align-items: center; flex-wrap: wrap; }
-        .search-input { padding: 10px 16px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-size: 0.85rem; font-family: inherit; transition: 0.2s; width: 100%; }
-        .search-input:focus { outline: none; border-color: var(--gold); }
-        .search-input::placeholder { color: var(--muted); }
-        
-        .dropdown-wrap { position: relative; flex: 1; }
-        .dropdown-list { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); max-height: 200px; overflow-y: auto; z-index: 10; margin-top: 4px; }
-        .dropdown-item { padding: 10px 16px; cursor: pointer; color: var(--text); font-size: 0.85rem; border-bottom: 1px solid var(--border); transition: 0.2s; }
-        .dropdown-item:last-child { border-bottom: none; }
-        .dropdown-item:hover { background: var(--elevated); color: var(--gold); }
-        
-        .profile-hero { text-align: center; padding: 20px 28px; margin-bottom: 16px; animation: fadeSlideIn 0.4s ease; }
-        .profile-emoji { font-size: 3rem; margin-bottom: 4px; }
-        .profile-name { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
-        .profile-class { color: var(--sub); font-size: 0.85rem; margin-bottom: 2px; }
-        .profile-badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 8px 0; }
-        
-        .badge { padding: 3px 10px; border-radius: 15px; font-size: 0.65rem; font-weight: 700; }
-        .badge-gold { background: var(--gold); color: #000; }
-        .badge-light { background: rgba(240, 185, 11, 0.15); color: var(--gold); }
-        .badge-dark { background: rgba(163, 113, 247, 0.2); color: var(--purple); }
-        
-        .player-tabs { display: flex; gap: 4px; margin: 16px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); flex-wrap: wrap; }
-        .player-tab { padding: 8px 14px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: inherit; transition: 0.2s; white-space: nowrap; flex: 1; text-align: center; }
-        .player-tab:hover { background: var(--elevated); color: var(--text); }
-        .player-tab.active { background: var(--tab-active-bg); color: #000; font-weight: 700; }
-        
-        .player-tab-content { display: none; }
-        .player-tab-content.active { display: block; }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
-        .stat-num { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
-        .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
-        
-        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .rank-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
-        .rank-pos { font-size: 1.4rem; font-weight: 800; }
-        .rank-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
-        
-        .season-tabs { display: flex; gap: 4px; margin: 16px 0; flex-wrap: wrap; justify-content: center; background: var(--elevated); padding: 3px; border-radius: 20px; border: 1px solid var(--border); }
-        .season-tab { padding: 6px 14px; border-radius: 18px; font-size: 0.72rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--sub); font-family: inherit; transition: 0.2s; white-space: nowrap; }
-        .season-tab:hover { color: var(--text); }
-        .season-tab.active { background: var(--gold); color: #000; font-weight: 700; box-shadow: 0 2px 6px rgba(240, 185, 11, 0.25); }
-        
-        .compare-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; padding: 14px; background: var(--elevated); border-radius: var(--radius-sm); border: 1px solid var(--border); flex-wrap: wrap; }
-        .compare-bar span { color: var(--sub); font-size: 0.85rem; white-space: nowrap; }
-        
-        th, td { text-align: center; }
-        .td-better { color: var(--green) !important; font-weight: 700; }
-        .td-worse { color: var(--red) !important; }
-        .compare-table th:first-child, .compare-table td:first-child { text-align: left; color: var(--muted); font-weight: 500; }
-        
-        .chart-placeholder { text-align: center; padding: 20px; background: var(--elevated); border-radius: var(--radius-sm); border: 1px dashed var(--border); margin-top: 12px; }
-        .chart-loader { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
-        
-        .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-        .ach-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 10px; text-align: center; border: 1px solid var(--border); }
-        .ach-card.earned { border-color: var(--gold); }
-        .ach-card.locked { opacity: 0.6; }
-        .ach-emoji { font-size: 1.8rem; }
-        .ach-name { color: var(--gold); font-weight: 700; font-size: 0.8rem; margin: 4px 0; }
-        .ach-progress { height: 4px; background: var(--bg); border-radius: 2px; margin-top: 6px; }
-        .ach-fill { height: 4px; background: var(--gold); border-radius: 2px; }
-        
-        .skill-hero { text-align: center; margin-bottom: 20px; }
-        .skill-value { font-size: 3rem; font-weight: 900; color: var(--gold); }
-        
-        .summary-stat { flex: 1; min-width: 60px; background: var(--elevated); border-radius: var(--radius-sm); padding: 8px; text-align: center; border: 1px solid var(--border); }
-        .summary-value { font-size: 1rem; font-weight: 800; color: var(--gold); }
-        .summary-label { font-size: 0.55rem; color: var(--muted); }
-        
-        .former-heroes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 12px; }
-        
-        tbody tr:nth-child(1) { animation-delay: 0.02s; }
-        tbody tr:nth-child(2) { animation-delay: 0.04s; }
-        tbody tr:nth-child(3) { animation-delay: 0.06s; }
-        tbody tr:nth-child(4) { animation-delay: 0.08s; }
-        tbody tr:nth-child(5) { animation-delay: 0.1s; }
-        tbody tr:nth-child(6) { animation-delay: 0.12s; }
-        tbody tr:nth-child(7) { animation-delay: 0.14s; }
-        tbody tr:nth-child(8) { animation-delay: 0.16s; }
-        tbody tr:nth-child(9) { animation-delay: 0.18s; }
-        tbody tr:nth-child(10) { animation-delay: 0.2s; }
-        
-        @media (max-width: 768px) {
-            .search-row { flex-direction: column; align-items: stretch; gap: 8px; }
-            .search-row .btn { width: 100%; padding: 12px; }
-            .profile-hero { padding: 16px 14px; }
-            .profile-emoji { font-size: 2.5rem; }
-            .profile-name { font-size: 1.2rem; }
-            .profile-class { font-size: 0.78rem; }
-            .player-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 6px; }
-            .player-tab { padding: 10px 6px; font-size: 0.72rem; flex: none; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .stat-card { padding: 12px 6px; }
-            .stat-num { font-size: 1.1rem; }
-            .stat-label { font-size: 0.55rem; }
-            .ranks-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .rank-card { padding: 12px 6px; }
-            .rank-pos { font-size: 1.15rem; }
-            .rank-label { font-size: 0.55rem; }
-            .ach-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .ach-card { padding: 10px 6px; }
-            .ach-emoji { font-size: 1.5rem; }
-            .ach-name { font-size: 0.72rem; }
-            .season-tabs { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-            .season-tabs::-webkit-scrollbar { display: none; }
-            .season-tab { flex-shrink: 0; font-size: 0.68rem; padding: 6px 12px; }
-            .compare-bar { flex-direction: column; align-items: stretch; }
-            .compare-table th, .compare-table td { padding: 8px 6px; font-size: 0.72rem; }
-            .compare-table th:first-child, .compare-table td:first-child { font-size: 0.68rem; }
-            #allFormerHeroes table { min-width: 500px !important; font-size: 0.7rem; }
-            #allFormerHeroes td { padding: 6px 8px; }
-            #allFormerHeroes td:first-child { min-width: 130px; white-space: nowrap; }
-            .summary-stat { padding: 6px 4px; }
-            .summary-value { font-size: 0.85rem; }
-            .summary-label { font-size: 0.5rem; }
-            .chart-placeholder { padding: 16px 12px; }
-            .chart-placeholder .btn-chart { font-size: 0.72rem; padding: 8px 12px; width: 100%; }
-            .section { padding: 16px 12px; }
-            .section-title { font-size: 0.95rem; }
-            .section.gold svg { max-width: 100%; height: auto; }
-            .skill-value { font-size: 2.2rem; }
-            .former-heroes-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-        }
-    </style>
+    .dropdown-wrap { position: relative; flex: 1; }
+    .dropdown-list { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); max-height: 200px; overflow-y: auto; z-index: 10; margin-top: 4px; }
+    .dropdown-item { padding: 10px 16px; cursor: pointer; color: var(--text); font-size: 0.85rem; border-bottom: 1px solid var(--border); transition: 0.2s; }
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover { background: var(--elevated); color: var(--gold); }
+    
+    .profile-hero { text-align: center; padding: 20px 28px; margin-bottom: 16px; animation: fadeSlideIn 0.4s ease; }
+    .profile-emoji { font-size: 3rem; margin-bottom: 4px; }
+    .profile-name { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
+    .profile-class { color: var(--sub); font-size: 0.85rem; margin-bottom: 2px; }
+    .profile-badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 8px 0; }
+    
+    .badge { padding: 3px 10px; border-radius: 15px; font-size: 0.65rem; font-weight: 700; }
+    .badge-gold { background: var(--gold); color: #000; }
+    .badge-light { background: rgba(240, 185, 11, 0.15); color: var(--gold); }
+    .badge-dark { background: rgba(163, 113, 247, 0.2); color: var(--purple); }
+    
+    .player-tabs { display: flex; gap: 4px; margin: 16px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); flex-wrap: wrap; }
+    .player-tab { padding: 8px 14px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: inherit; transition: 0.2s; white-space: nowrap; flex: 1; text-align: center; }
+    .player-tab:hover { background: var(--elevated); color: var(--text); }
+    .player-tab.active { background: var(--tab-active-bg); color: #000; font-weight: 700; }
+    
+    .player-tab-content { display: none; }
+    .player-tab-content.active { display: block; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+    .stat-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
+    .stat-num { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+    .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
+    
+    .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .rank-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
+    .rank-pos { font-size: 1.4rem; font-weight: 800; }
+    .rank-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
+    
+    .season-tabs { display: flex; gap: 4px; margin: 16px 0; flex-wrap: wrap; justify-content: center; background: var(--elevated); padding: 3px; border-radius: 20px; border: 1px solid var(--border); }
+    .season-tab { padding: 6px 14px; border-radius: 18px; font-size: 0.72rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--sub); font-family: inherit; transition: 0.2s; white-space: nowrap; }
+    .season-tab:hover { color: var(--text); }
+    .season-tab.active { background: var(--gold); color: #000; font-weight: 700; box-shadow: 0 2px 6px rgba(240, 185, 11, 0.25); }
+    
+    .compare-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; padding: 14px; background: var(--elevated); border-radius: var(--radius-sm); border: 1px solid var(--border); flex-wrap: wrap; }
+    .compare-bar span { color: var(--sub); font-size: 0.85rem; white-space: nowrap; }
+    
+    th, td { text-align: center; }
+    .td-better { color: var(--green) !important; font-weight: 700; }
+    .td-worse { color: var(--red) !important; }
+    .compare-table th:first-child, .compare-table td:first-child { text-align: left; color: var(--muted); font-weight: 500; }
+    
+    .chart-placeholder { text-align: center; padding: 20px; background: var(--elevated); border-radius: var(--radius-sm); border: 1px dashed var(--border); margin-top: 12px; }
+    .chart-loader { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
+    
+    .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+    .ach-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 10px; text-align: center; border: 1px solid var(--border); }
+    .ach-card.earned { border-color: var(--gold); }
+    .ach-card.locked { opacity: 0.6; }
+    .ach-emoji { font-size: 1.8rem; }
+    .ach-name { color: var(--gold); font-weight: 700; font-size: 0.8rem; margin: 4px 0; }
+    .ach-progress { height: 4px; background: var(--bg); border-radius: 2px; margin-top: 6px; }
+    .ach-fill { height: 4px; background: var(--gold); border-radius: 2px; }
+    
+    .skill-hero { text-align: center; margin-bottom: 20px; }
+    .skill-value { font-size: 3rem; font-weight: 900; color: var(--gold); }
+    
+    .summary-stat { flex: 1; min-width: 60px; background: var(--elevated); border-radius: var(--radius-sm); padding: 8px; text-align: center; border: 1px solid var(--border); }
+    .summary-value { font-size: 1rem; font-weight: 800; color: var(--gold); }
+    .summary-label { font-size: 0.55rem; color: var(--muted); }
+    
+    .former-heroes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 12px; }
+    
+    tbody tr:nth-child(1) { animation-delay: 0.02s; }
+    tbody tr:nth-child(2) { animation-delay: 0.04s; }
+    tbody tr:nth-child(3) { animation-delay: 0.06s; }
+    tbody tr:nth-child(4) { animation-delay: 0.08s; }
+    tbody tr:nth-child(5) { animation-delay: 0.1s; }
+    tbody tr:nth-child(6) { animation-delay: 0.12s; }
+    tbody tr:nth-child(7) { animation-delay: 0.14s; }
+    tbody tr:nth-child(8) { animation-delay: 0.16s; }
+    tbody tr:nth-child(9) { animation-delay: 0.18s; }
+    tbody tr:nth-child(10) { animation-delay: 0.2s; }
+    
+    @media (max-width: 768px) {
+        .search-row { flex-direction: column; align-items: stretch; gap: 8px; }
+        .search-row .btn { width: 100%; padding: 12px; }
+        .profile-hero { padding: 16px 14px; }
+        .profile-emoji { font-size: 2.5rem; }
+        .profile-name { font-size: 1.2rem; }
+        .profile-class { font-size: 0.78rem; }
+        .player-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 6px; }
+        .player-tab { padding: 10px 6px; font-size: 0.72rem; flex: none; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .stat-card { padding: 12px 6px; }
+        .stat-num { font-size: 1.1rem; }
+        .stat-label { font-size: 0.55rem; }
+        .ranks-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .rank-card { padding: 12px 6px; }
+        .rank-pos { font-size: 1.15rem; }
+        .rank-label { font-size: 0.55rem; }
+        .ach-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .ach-card { padding: 10px 6px; }
+        .ach-emoji { font-size: 1.5rem; }
+        .ach-name { font-size: 0.72rem; }
+        .season-tabs { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .season-tabs::-webkit-scrollbar { display: none; }
+        .season-tab { flex-shrink: 0; font-size: 0.68rem; padding: 6px 12px; }
+        .compare-bar { flex-direction: column; align-items: stretch; }
+        .compare-table th, .compare-table td { padding: 8px 6px; font-size: 0.72rem; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
+        .compare-table th:first-child, .compare-table td:first-child { font-size: 0.68rem; }
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        #allFormerHeroes table { min-width: 500px !important; font-size: 0.7rem; }
+        #allFormerHeroes td { padding: 6px 8px; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
+        #allFormerHeroes td:first-child { min-width: 130px; }
+        .summary-stat { padding: 6px 4px; }
+        .summary-value { font-size: 0.85rem; }
+        .summary-label { font-size: 0.5rem; }
+        .chart-placeholder { padding: 16px 12px; }
+        .chart-placeholder .btn-chart { font-size: 0.72rem; padding: 8px 12px; width: 100%; }
+        .section { padding: 16px 12px; }
+        .section-title { font-size: 0.95rem; }
+        .section.gold svg { max-width: 100%; height: auto; }
+        .skill-value { font-size: 2.2rem; }
+        .former-heroes-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .compare-bar .dropdown-wrap { min-width: 0 !important; }
+    }
+</style>
 </head>
 <body>
 <div class="container">

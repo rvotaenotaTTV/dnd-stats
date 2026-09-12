@@ -60,30 +60,33 @@
 	@media (max-width: 768px) {
 		.stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 		.stat-value { font-size: 1.3rem; }
+		.stat-label { font-size: 0.6rem; }
 		.podium { grid-template-columns: 1fr; gap: 8px; }
-		.podium-card { padding: 16px 12px; }
-		.podium-medal { font-size: 2rem; }
+		.podium-card { padding: 14px 12px; }
+		.podium-medal { font-size: 1.8rem; }
 		.podium-name { font-size: 0.9rem; }
 		.podium-record { font-size: 1.5rem; }
-		.podium-detail { font-size: 0.72rem; line-height: 1.5; }
+		.podium-detail { font-size: 0.7rem; line-height: 1.5; }
 		.records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 		.record-item { padding: 12px 8px; }
 		.record-icon { font-size: 1.3rem; }
 		.record-value { font-size: 1.15rem; }
 		.record-label { font-size: 0.6rem; }
-		.record-player { font-size: 0.7rem; }
-		#leaderboard-table, #all-table { min-width: 620px; font-size: 0.72rem; }
-		th, td { padding: 6px 8px; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
-		#leaderboard-table td:nth-child(2), #all-table td:nth-child(1) { white-space: nowrap; min-width: 110px; }
-		#leaderboard-table td:nth-child(3), #all-table td:nth-child(2) { white-space: nowrap; min-width: 110px; }
-		#leaderboard-table th, #all-table th { white-space: nowrap; }
-		.table-container { -webkit-overflow-scrolling: touch; }
+		.record-player { font-size: 0.68rem; }
 		.crown-icon { font-size: 2.4rem; }
 		.crown-title { font-size: 1rem; }
+		.crown-owner { font-size: 0.75rem; }
 		.score-row { font-size: 0.8rem; }
-		.progress-bar { height: 30px; }
-		.progress-fill { font-size: 0.7rem; }
+		.progress-bar { height: 28px; }
+		.progress-fill { font-size: 0.65rem; }
+		.total-trophies { font-size: 0.7rem; }
 		.section-title { font-size: 1rem; }
+		#leaderboard-table { min-width: 700px; font-size: 0.72rem; }
+		#all-table { min-width: 640px; font-size: 0.72rem; }
+		.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+		th, td { padding: 6px 8px; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
+		#leaderboard-table td:nth-child(2), #all-table td:nth-child(1) { min-width: 100px; }
+		#leaderboard-table td:nth-child(3), #all-table td:nth-child(2) { min-width: 100px; }
 	}
 </style>
 </head>
