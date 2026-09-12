@@ -57,14 +57,34 @@
     #all-table th:nth-child(1), #all-table td:nth-child(1),
     #all-table th:nth-child(2), #all-table td:nth-child(2) { text-align: left; padding-left: 14px; }
 
-    @media (max-width: 768px) {
-        .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .stat-value { font-size: 1.3rem; }
-        .podium { grid-template-columns: 1fr; }
-        .records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        #leaderboard-table, #all-table { min-width: 600px; font-size: 0.7rem; }
-        th, td { padding: 6px 8px; white-space: nowrap; }
-    }
+	@media (max-width: 768px) {
+		.stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+		.stat-value { font-size: 1.3rem; }
+		.podium { grid-template-columns: 1fr; gap: 8px; }
+		.podium-card { padding: 16px 12px; }
+		.podium-medal { font-size: 2rem; }
+		.podium-name { font-size: 0.9rem; }
+		.podium-record { font-size: 1.5rem; }
+		.podium-detail { font-size: 0.72rem; line-height: 1.5; }
+		.records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+		.record-item { padding: 12px 8px; }
+		.record-icon { font-size: 1.3rem; }
+		.record-value { font-size: 1.15rem; }
+		.record-label { font-size: 0.6rem; }
+		.record-player { font-size: 0.7rem; }
+		#leaderboard-table, #all-table { min-width: 620px; font-size: 0.72rem; }
+		th, td { padding: 6px 8px; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
+		#leaderboard-table td:nth-child(2), #all-table td:nth-child(1) { white-space: nowrap; min-width: 110px; }
+		#leaderboard-table td:nth-child(3), #all-table td:nth-child(2) { white-space: nowrap; min-width: 110px; }
+		#leaderboard-table th, #all-table th { white-space: nowrap; }
+		.table-container { -webkit-overflow-scrolling: touch; }
+		.crown-icon { font-size: 2.4rem; }
+		.crown-title { font-size: 1rem; }
+		.score-row { font-size: 0.8rem; }
+		.progress-bar { height: 30px; }
+		.progress-fill { font-size: 0.7rem; }
+		.section-title { font-size: 1rem; }
+	}
 </style>
 </head>
 <body>
