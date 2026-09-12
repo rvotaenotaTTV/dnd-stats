@@ -182,51 +182,39 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
 
     .nav-toggle { display: block; }
+
     .nav-bar {
         display: none;
-        flex-direction: column;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
         margin-top: 8px;
-        padding: 6px;
+        padding: 8px;
         background: var(--card);
         border-radius: var(--radius-sm);
         border: 1px solid var(--border);
         max-height: 70vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        gap: 0;
     }
-    .nav-bar.show { display: flex; }
-    .nav-group { position: static; }
+    .nav-bar.show { display: grid; }
 
     .nav-label { display: none !important; }
 
+    .nav-group { display: contents; }
+
     .nav-dropdown,
     .nav-dropdown[style] {
-        display: flex !important;
-        flex-direction: column;
-        position: static !important;
-        top: auto !important;
-        left: auto !important;
-        transform: none !important;
-        background: transparent;
-        border: none;
-        border-radius: 0;
-        padding: 0;
-        min-width: 0;
-        gap: 2px;
-        visibility: visible !important;
-        opacity: 1 !important;
-        max-height: none !important;
-        overflow: visible !important;
-        box-shadow: none !important;
+        display: contents !important;
     }
 
     .nav-dropdown .nav-link {
         display: block;
-        padding: 12px 14px;
-        font-size: 0.9rem;
+        padding: 10px 12px;
+        font-size: 0.8rem;
         color: var(--text);
-        border-radius: 8px;
+        border-radius: 6px;
+        background: var(--elevated);
+        text-align: center;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -236,8 +224,8 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     }
 
     .nav-dropdown .nav-link:active {
-        background: var(--elevated);
-        color: var(--gold);
+        background: var(--tab-active-bg);
+        color: #000;
     }
 
     .nav-dropdown .nav-link.active {
