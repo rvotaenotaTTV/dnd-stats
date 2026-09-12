@@ -204,30 +204,41 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
 
     .nav-toggle { display: block; }
-    .nav-bar { display: none; flex-direction: column; margin-top: 8px; padding: 6px 8px; gap: 0; }
+    .nav-bar {
+        display: none;
+        flex-direction: column;
+        margin-top: 8px;
+        padding: 8px;
+        gap: 6px;
+        background: var(--card);
+        border-radius: var(--radius-sm);
+        max-height: 65vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
     .nav-bar.show { display: flex; }
     .nav-group { position: static; }
 
     .nav-label {
         display: block;
-        padding: 10px 8px 4px;
+        padding: 4px 4px 6px;
         font-size: 0.6rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--muted);
-        opacity: 0.8;
+        letter-spacing: 1.2px;
+        color: var(--gold);
+        opacity: 0.75;
         cursor: default;
         pointer-events: none;
         background: transparent;
         border-bottom: 1px solid var(--border);
-        margin-bottom: 2px;
     }
 
     .nav-dropdown,
     .nav-dropdown[style] {
-        display: flex !important;
-        flex-direction: column;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
         position: static !important;
         top: auto !important;
         left: auto !important;
@@ -235,9 +246,8 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
         background: transparent;
         border: none;
         border-radius: 0;
-        padding: 0 0 4px 0;
+        padding: 0;
         min-width: 0;
-        gap: 0;
         visibility: visible !important;
         opacity: 1 !important;
         max-height: none !important;
@@ -246,18 +256,22 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     }
 
     .nav-dropdown .nav-link {
-        padding: 7px 10px;
-        font-size: 0.82rem;
+        padding: 8px 8px;
+        font-size: 0.75rem;
         color: var(--text);
         border-radius: 6px;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         line-height: 1.3;
+        background: var(--elevated);
+        text-align: center;
     }
 
-    .nav-dropdown .nav-link:hover,
     .nav-dropdown .nav-link:active {
-        background: var(--elevated);
-        color: var(--gold);
+        background: var(--tab-active-bg);
+        color: #000;
+        font-weight: 700;
     }
 
     .nav-dropdown .nav-link.active {
