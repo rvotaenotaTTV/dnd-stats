@@ -723,18 +723,6 @@
 			
 			return ((wr - current.min) / (next.min - current.min)) * 100;
 		}
-		
-		document.querySelectorAll('.nav-label').forEach(label=>{
-		label.addEventListener('click',function(e){
-			if(window.innerWidth>768)return;
-			e.preventDefault();
-			const dd=this.nextElementSibling;
-			if(dd&&dd.classList.contains('nav-dropdown')){
-				const isOpen=dd.style.display==='block';
-				document.querySelectorAll('.nav-dropdown').forEach(d=>d.style.display='none');
-				dd.style.display=isOpen?'none':'block';
-			}
-		});
 	});
 	</script>
 </body>
