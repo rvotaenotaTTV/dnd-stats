@@ -202,14 +202,64 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     .header { padding: 20px 0 8px; }
     .header-title { font-size: 1.8rem; }
     .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
+
     .nav-toggle { display: block; }
-    .nav-bar { display: none; flex-direction: column; margin-top: 8px; }
+    .nav-bar { display: none; flex-direction: column; margin-top: 8px; padding: 8px 6px; gap: 0; }
     .nav-bar.show { display: flex; }
     .nav-group { position: static; }
-    .nav-dropdown { position: static; transform: none; display: none; background: transparent; border: none; padding: 0 0 0 12px; }
-    .nav-label { padding: 10px 14px; font-size: 0.85rem; }
-    .nav-dropdown .nav-link { padding: 12px 16px; border-radius: var(--radius-sm); }
+
+    .nav-label {
+        display: block;
+        padding: 12px 14px 6px;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--gold);
+        opacity: 0.7;
+        cursor: default;
+        pointer-events: none;
+        background: transparent;
+    }
+
+    .nav-dropdown {
+        display: flex !important;
+        flex-direction: column;
+        position: static;
+        transform: none;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 0 0 8px 0;
+        min-width: 0;
+        gap: 2px;
+    }
+
+    .nav-dropdown[style] {
+        display: flex !important;
+    }
+
+    .nav-dropdown .nav-link {
+        padding: 10px 14px 10px 22px;
+        font-size: 0.85rem;
+        color: var(--text);
+        border-radius: 8px;
+        white-space: nowrap;
+    }
+
+    .nav-dropdown .nav-link:hover,
+    .nav-dropdown .nav-link:active {
+        background: var(--elevated);
+        color: var(--gold);
+    }
+
+    .nav-dropdown .nav-link.active {
+        background: var(--tab-active-bg);
+        color: #000;
+        font-weight: 700;
+    }
+
     .section { padding: 18px 14px; }
     .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
-	.extension-btn { bottom: 66px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
+    .extension-btn { bottom: 66px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
 }
