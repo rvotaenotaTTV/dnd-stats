@@ -105,78 +105,24 @@ const REPO='rvotaenotaTTV/dnd-stats',FILE='stats_data.json',CACHE_KEY='eternis-f
 let allChanges=[],currentTab='players',currentSort={key:'diff',dir:'desc'},searchQuery='',filterMode='all';
 let classEmojis={},raceEmojis={};
 
-const GH_TOKEN = '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';
-
 async function loadForm(){
     const c=document.getElementById('content');
     try{
         const dr=await fetch('https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json');
         if(dr.ok){const dd=await dr.json();(dd.classes||[]).forEach(x=>classEmojis[x.Name]=x.Emoji);(dd.races||[]).forEach(x=>raceEmojis[x.Name]=x.Emoji);}
     }catch(e){}
-
-    const headers = { 'Authorization': `Bearer ${GH_TOKEN}`, 'Accept': 'application/vnd.github+json' };
-    let commits;
-
     try{
-        const cached = JSON.parse(localStorage.getItem(CACHE_KEY)||'{}');
-        if(cached.ts && (Date.now()-cached.ts<3600000) && Array.isArray(cached.data) && cached.data.length > 0){
-            commits = cached.data;
-        }
-    }catch(e){}
-
-    if(!commits || commits.length === 0){
-        try{
-            const [p1, p2] = await Promise.all([
-                fetch(`https://api.github.com/repos/${REPO}/commits?path=${FILE}&per_page=30&page=1`, { headers }).then(r=>r.json()),
-                fetch(`https://api.github.com/repos/${REPO}/commits?path=${FILE}&per_page=30&page=2`, { headers }).then(r=>r.json())
-            ]);
-            commits = [...(Array.isArray(p1)?p1:[]), ...(Array.isArray(p2)?p2:[])];
-            if(commits.length > 0){
-                try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ts: Date.now(), data: commits})); }catch(e){}
-            }
-        }catch(e){ commits = []; }
-    }
-
-    if(!commits || !commits.length){
-        c.innerHTML = '<div class="empty-state">❌ Коммиты не найдены</div>';
-        return;
-    }
-
-    try{
-        const target = commits[commits.length - 1];
-        window._commitDate = new Date(target.commit.committer.date);
-        window._hoursAgo = ((new Date() - window._commitDate) / 3600000).toFixed(1);
-        window._sha = target.sha.substring(0, 7);
-
-        const [oldData, newData] = await Promise.all([
-            fetch(`https://raw.githubusercontent.com/${REPO}/${target.sha}/${FILE}`).then(r=>r.json()),
-            fetch(`https://raw.githubusercontent.com/${REPO}/main/${FILE}`).then(r=>r.json())
-        ]);
-
-        const oldPlayers = (oldData.players||[]).filter(p=>p.name && p.name!=='Unknown');
-        const newPlayers = (newData.players||[]).filter(p=>p.name && p.name!=='Unknown');
-        window._oldArchive = oldData.heroArchive || {};
-        window._newArchive = newData.heroArchive || {};
-
-        allChanges = [];
-        newPlayers.forEach(p => {
-            const old = oldPlayers.find(x => x.display === p.display);
-            if(!old || (old.wins === p.wins && old.losses === p.losses)) return;
-            const ot = old.wins + old.losses, nt = p.wins + p.losses;
-            allChanges.push({
-                ...p,
-                oldWr: ot > 0 ? old.wins / ot * 100 : 0,
-                newWr: nt > 0 ? p.wins / nt * 100 : 0,
-                diff: (nt > 0 ? p.wins / nt * 100 : 0) - (ot > 0 ? old.wins / ot * 100 : 0),
-                oldW: old.wins,
-                oldL: old.losses,
-                gamesAdded: nt - ot
-            });
-        });
+        let commits;const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}');
+        if(cached.ts&&(Date.now()-cached.ts<3600000)){commits=cached.data}
+        else{const[p1,p2]=await Promise.all([fetch(`https://api.github.com/repos/${REPO}/commits?path=${FILE}&per_page=30&page=1`).then(r=>r.json()),fetch(`https://api.github.com/repos/${REPO}/commits?path=${FILE}&per_page=30&page=2`).then(r=>r.json())]);commits=[...(Array.isArray(p1)?p1:[]),...(Array.isArray(p2)?p2:[])];localStorage.setItem(CACHE_KEY,JSON.stringify({ts:Date.now(),data:commits}));}
+        if(!commits.length){c.innerHTML='<div class="empty-state">❌ Коммиты не найдены</div>';return;}
+        const target=commits[commits.length-1];window._commitDate=new Date(target.commit.committer.date);window._hoursAgo=((new Date()-window._commitDate)/3600000).toFixed(1);window._sha=target.sha.substring(0,7);
+        const[oldData,newData]=await Promise.all([fetch(`https://raw.githubusercontent.com/${REPO}/${target.sha}/${FILE}`).then(r=>r.json()),fetch(`https://raw.githubusercontent.com/${REPO}/main/${FILE}`).then(r=>r.json())]);
+        const oldPlayers=(oldData.players||[]).filter(p=>p.name&&p.name!=='Unknown'),newPlayers=(newData.players||[]).filter(p=>p.name&&p.name!=='Unknown');
+        window._oldArchive=oldData.heroArchive||{};window._newArchive=newData.heroArchive||{};
+        allChanges=[];newPlayers.forEach(p=>{const old=oldPlayers.find(x=>x.display===p.display);if(!old||(old.wins===p.wins&&old.losses===p.losses))return;const ot=old.wins+old.losses,nt=p.wins+p.losses;allChanges.push({...p,oldWr:ot>0?old.wins/ot*100:0,newWr:nt>0?p.wins/nt*100:0,diff:(nt>0?p.wins/nt*100:0)-(ot>0?old.wins/ot*100:0),oldW:old.wins,oldL:old.losses,gamesAdded:nt-ot});});
         renderAll();
-    }catch(e){
-        c.innerHTML = `<div class="empty-state">❌ Ошибка обработки<br><span style="font-size:0.72rem;color:var(--muted)">${e.message}</span></div>`;
-    }
+    }catch(e){c.innerHTML='<div class="empty-state">❌ Ошибка загрузки</div>';}
 }
 
 function getData(){
