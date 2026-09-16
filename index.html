@@ -20,7 +20,7 @@
     .faction-dark { color: var(--purple); }
 
     .nav-tabs { display: flex; gap: 14px; margin: 20px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); flex-wrap: nowrap; overflow-x: auto; }
-    .tab-btn { padding: 8px 12px; font-size: 0.75rem; white-space: nowrap; flex-shrink: 0; }
+    .tab-btn { padding: 10px 16px; font-size: 0.75rem; white-space: nowrap; flex-shrink: 0; }
     .tab-btn:hover { background: var(--elevated); color: var(--text); }
     .tab-btn.active { background: linear-gradient(135deg, var(--ice), var(--gold)); color: #000; font-weight: 700; }
     .tab-content { display: none; }
@@ -90,7 +90,7 @@
         #tab-tops td:nth-child(2), #tab-tops th:nth-child(2) { min-width: 100px; }
         #tab-tops td:nth-child(3), #tab-tops th:nth-child(3) { min-width: 90px; }
 
-        #champions-table, #shards-table, #rating-table, #players-table, #twovtwo-table { min-width: 480px; font-size: 0.7rem; }
+        #champions-table, #shards-table, #rating-table, #players-table { min-width: 480px; font-size: 0.7rem; }
         #classes-table, #races-table, #combos-table { min-width: 520px; font-size: 0.7rem; }
         #classes-table td:first-child, #races-table td:first-child, #combos-table td:first-child { min-width: 120px; }
 
@@ -204,7 +204,6 @@
             html+='<button class="tab-btn" onclick="switchTab(\'titles\')">🏅 Титулы</button>';
             html+='<button class="tab-btn" onclick="switchTab(\'shards\')">💎 Осколки</button>';
             html+='<button class="tab-btn" onclick="switchTab(\'rating\')">🏆 Рейтинг</button>';
-			html+='<button class="tab-btn" onclick="switchTab(\'twovtwo\')">⚔️ 2v2</button>';
             html+='<button class="tab-btn" onclick="switchTab(\'allplayers\')">👥 Игроки</button>';
             html+='</div>';
 
@@ -247,7 +246,6 @@
 			Object.values(heroArchive).forEach(heroes=>{heroes.forEach(h=>{const cn=h.name.split('-')[1]||h.name;if(!classStats[cn]){classStats[cn]={wins:0,losses:0,players:0,shards:0,best:0,worst:0,skillTotal:0};classChamps[cn]=0;}classStats[cn].wins+=h.wins;classStats[cn].losses+=h.losses;classStats[cn].best=Math.max(classStats[cn].best,h.best||0);classStats[cn].worst=Math.max(classStats[cn].worst,h.worst||0);classChamps[cn]+=(h.tournamentWins||0);});});
 			const classArray=Object.entries(classStats).map(([n,s])=>({name:n,...s,total:s.wins+s.losses,champs:classChamps[n]||0,avgSkill:Math.round(s.skillTotal/s.players)}));
 
-			// Топ-3 классов по винрейту (мин. 50 боёв)
 			const topClasses=classArray.filter(c=>c.total>=50).sort((a,b)=>(b.wins/b.total)-(a.wins/a.total)).slice(0,3);
 			html+='<div class="hunters-top">';
 			topClasses.forEach((c,i)=>{
@@ -262,7 +260,6 @@
 			});
 			html+='</div>';
 
-			// Таблица классов
 			html+='<div class="card"><div class="card-title">⚔️ Статистика по классам</div><div class="table-container"><table id="classes-table"><thead><tr>';
 			html+='<th class="sortable-header" data-sort="name">Класс</th><th class="sortable-header" data-sort="players">👥</th><th class="sortable-header" data-sort="wins">W</th><th class="sortable-header" data-sort="losses">L</th><th class="sortable-header" data-sort="total">Боёв</th><th class="sortable-header" data-sort="winrate">Винрейт</th><th class="sortable-header" data-sort="shards">💎</th><th class="sortable-header" data-sort="streak">🔥</th><th class="sortable-header" data-sort="skill">⭐</th><th class="sortable-header" data-sort="champs">👑</th></tr></thead><tbody id="classes-tbody">';
 			classArray.sort((a,b)=>b.total-a.total).forEach(c=>{
@@ -300,7 +297,6 @@
 			Object.values(heroArchive).forEach(heroes=>{heroes.forEach(h=>{const rn=h.name.split('-')[0];if(!rn)return;if(!raceStats[rn]){raceStats[rn]={wins:0,losses:0,players:0,shards:0};raceChamps[rn]=0;}raceStats[rn].wins+=h.wins;raceStats[rn].losses+=h.losses;raceChamps[rn]+=(h.tournamentWins||0);});});
 			const raceArray=Object.entries(raceStats).map(([n,s])=>({name:n,...s,total:s.wins+s.losses,champs:raceChamps[n]||0}));
 
-			// Топ-3 рас по винрейту (мин. 50 боёв)
 			const topRaces=raceArray.filter(r=>r.total>=50).sort((a,b)=>(b.wins/b.total)-(a.wins/a.total)).slice(0,3);
 			html+='<div class="hunters-top">';
 			topRaces.forEach((r,i)=>{
@@ -315,7 +311,6 @@
 			});
 			html+='</div>';
 
-			// Таблица рас
 			html+='<div class="card"><div class="card-title">🌍 Статистика по расам</div><div class="table-container"><table id="races-table"><thead><tr>';
 			html+='<th class="sortable-header" data-sort="name">Раса</th><th class="sortable-header" data-sort="players">👥</th><th class="sortable-header" data-sort="wins">W</th><th class="sortable-header" data-sort="losses">L</th><th class="sortable-header" data-sort="total">Боёв</th><th class="sortable-header" data-sort="winrate">Винрейт</th><th class="sortable-header" data-sort="shards">💎</th><th class="sortable-header" data-sort="champs">👑</th></tr></thead><tbody id="races-tbody">';
 			raceArray.sort((a,b)=>b.total-a.total).forEach(r=>{
@@ -576,154 +571,19 @@
             // ОСКОЛКИ
             html+='<div id="tab-shards" class="tab-content"><div class="card"><div class="card-title">💎 Топ коллекционеров осколков</div><div class="table-container"><table id="shards-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="shards">Осколки</th><th class="sortable-header" data-sort="level">Уровень</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="shards-tbody">';[...players].sort((a,b)=>b.shards-a.shards).forEach((p,i)=>{const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}"><td>${i+1}</td><td>${p.emoji} ${p.display}</td><td>${p.name}</td><td class="number">${p.shards}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;});html+='</tbody></table></div></div></div>';
 
-			// 2v2
-			html+='<div id="tab-twovtwo" class="tab-content">';
-			const teamPlayers = players.filter(p => (p.teamWins || 0) + (p.teamLoses || 0) + (p.teamTournamentWins || 0) > 0);
-
-			if(teamPlayers.length > 0){
-				const teamTop = [...teamPlayers].sort((a,b) => (b.teamElo || 0) - (a.teamElo || 0));
-				
-				const top3 = teamTop.slice(0, 3);
-				const medals = ['👑', '🥈', '🥉'];
-				const crownStyles = [
-					'background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(255,215,0,0.05));border:2px solid #ffd700;box-shadow:0 0 20px rgba(255,215,0,0.3);',
-					'background:linear-gradient(135deg,rgba(192,192,192,0.12),rgba(192,192,192,0.03));border:2px solid #c0c0c0;',
-					'background:linear-gradient(135deg,rgba(205,127,50,0.12),rgba(205,127,50,0.03));border:2px solid #cd7f32;'
-				];
-				
-				html+='<div class="hunters-top">';
-				top3.forEach((p, i) => {
-					const tW = p.teamWins || 0;
-					const tL = p.teamLoses || 0;
-					const tTotal = tW + tL;
-					const tWR = tTotal > 0 ? (tW * 100 / tTotal) : 0;
-					const tT = p.teamTournamentWins || 0;
-					const tPoints = p.teamElo || 0;
-					const tRank = getTeamRank(tW, tL).rank;
-					const tRankColor = getTeamRankColor(tW, tL);
-					
-					html+=`<div class="hunter-card" style="${crownStyles[i]};position:relative;transition:transform 0.2s;cursor:pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-						<div style="position:absolute;top:-10px;right:10px;font-size:1.5rem;">${medals[i]}</div>
-						<div style="font-size:2.5rem;margin:8px 0 4px;">${p.emoji||'⚔️'}</div>
-						<div class="hunter-name" style="font-size:1rem;font-weight:700;">${p.display}</div>
-						<div style="color:${tRankColor};font-weight:700;font-size:0.85rem;margin:4px 0;">${tRank}</div>
-						<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0;">
-							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;color:var(--ice);">Pts ${tPoints}</span>
-							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;">${tW}W/${tL}L</span>
-							<span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;font-size:0.75rem;color:${tWR >= 55 ? 'var(--green)' : tWR >= 45 ? 'var(--gold)' : 'var(--red)'};">${tWR.toFixed(0)}%</span>
-						</div>
-						${tT > 0 ? `<div style="font-size:0.7rem;color:var(--gold);">👑 Турнирные победы: ${tT}</div>` : ''}
-					</div>`;
-				});
-				html+='</div>';
-				
-				html+='<div class="card"><div class="card-title">⚔️ 2v2 Дивизион</div><div class="table-container"><table id="twovtwo-table"><thead><tr>';
-				html+='<th class="sortable-header" data-sort="rank">#</th>';
-				html+='<th class="sortable-header" data-sort="name">Имя</th>';
-				html+='<th class="sortable-header" data-sort="class">Герой</th>';
-				html+='<th class="sortable-header" data-sort="telo">Pts</th>';
-				html+='<th class="sortable-header" data-sort="trank">Ранг</th>';
-				html+='<th class="sortable-header" data-sort="twr">Винрейт</th>';
-				html+='<th class="sortable-header" data-sort="twins">W/L</th>';
-				html+='<th class="sortable-header" data-sort="ttournament">👑</th>';
-				html+='</tr></thead><tbody id="twovtwo-tbody">';
-				
-				teamTop.forEach((p,i)=>{
-					const tW = p.teamWins || 0;
-					const tL = p.teamLoses || 0;
-					const tTotal = tW + tL;
-					const tWR = tTotal > 0 ? (tW * 100 / tTotal) : 0;
-					const tT = p.teamTournamentWins || 0;
-					const tPoints = p.teamElo || 0;
-					const teamRank = getTeamRank(tW, tL);
-					const tRank = teamRank.rank;
-					const tRankValue = teamRank.value;
-					const tRankColor = getTeamRankColor(tW, tL);
-					const progress = getTeamRankProgress(tW, tL, tRankValue);
-					const rowStyle = i < 3 ? 'background:rgba(255,215,0,0.03);' : '';
-					const hoverStyle = 'onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'"';
-					
-					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-telo="${tPoints}" data-trank="${tRankValue}" data-twins="${tW}" data-tlosses="${tL}" data-twr="${tWR.toFixed(1)}" data-ttournament="${tT}" style="${rowStyle}" ${hoverStyle}>`;
-					html+=`<td class="number" style="font-weight:700;${i < 3 ? 'color:var(--gold);' : ''}">${i+1}</td>`;
-					html+=`<td style="text-align:left;"><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.emoji||'⚔️'} ${p.display}</a></td>`;
-					html+=`<td style="text-align:left;color:var(--sub);">${p.name}</td>`;
-					html+=`<td class="number" style="color:var(--ice);font-weight:700;">${tPoints}</td>`;
-					html+=`<td class="number"><span style="background:${tRankColor}22;color:${tRankColor};padding:2px 8px;border-radius:10px;font-weight:700;font-size:0.8rem;">${tRank}</span></td>`;
-					html+=`<td class="number">
-						<div style="display:flex;align-items:center;gap:6px;justify-content:center;">
-							<span style="color:${tWR >= 55 ? 'var(--green)' : tWR >= 45 ? 'var(--gold)' : 'var(--red)'};font-weight:600;">${tWR.toFixed(0)}%</span>
-							<div style="width:60px;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;">
-								<div style="width:${Math.max(5, Math.min(100, progress))}%;height:100%;background:linear-gradient(90deg,${tRankColor}88,${tRankColor});border-radius:4px;transition:width 0.5s;"></div>
-							</div>
-						</div>
-					</td>`;
-					html+=`<td class="number"><span style="color:var(--gold);font-weight:700;">${tW}</span><span style="color:var(--muted);">/</span>${tL}</td>`;
-					html+=`<td class="number" style="color:var(--gold);">${tT > 0 ? '👑×'+tT : '—'}</td>`;
-					html+=`</tr>`;
-				});
-				html+='</tbody></table></div></div>';
-			}else{
-				html+='<div class="card"><div class="card-title">⚔️ 2v2 Дивизион</div><div style="text-align:center;padding:30px;color:var(--muted);">Пока нет боёв 2v2</div></div>';
-			}
-			html+='</div>';
-			
             // ВСЕ ИГРОКИ
             html+='<div id="tab-allplayers" class="tab-content"><div class="card"><div class="card-title">👥 Все игроки ('+totalPlayers+')</div><div class="search-box"><input type="text" id="player-search" class="search-input" placeholder="🔍 Поиск по имени"><button id="clear-search" class="search-clear">✕</button><span id="search-result" style="color:var(--muted);margin-left:auto;"></span></div><div class="table-container"><table id="players-table"><thead><tr><th class="sortable-header" data-sort="index">#</th><th class="sortable-header" data-sort="name">Name</th><th class="sortable-header" data-sort="class">Class</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Winrate</th><th class="sortable-header" data-sort="streak">Streak</th><th class="sortable-header" data-sort="worst">Worst</th><th class="sortable-header" data-sort="level">Level</th><th class="sortable-header" data-sort="faction">Faction</th></tr></thead><tbody id="players-tbody">';[...players].sort((a,b)=>(b.wins+b.losses)-(a.wins+a.losses)).forEach((p,i)=>{const total=p.wins+p.losses;const wr=total>0?(p.wins*100/total).toFixed(1):'0.0';const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');html+=`<tr data-index="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wl="${total}" data-winrate="${wr}" data-streak="${p.best}" data-worst="${p.worst||0}" data-level="${p.level}" data-faction="${fi}"><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td>${p.name}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td><td class="number">${p.best}</td><td class="number" style="color:var(--red);">${p.worst||0}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;});html+='</tbody></table></div></div></div>';
 
             document.getElementById('content').innerHTML=html;
-            initSortableTable('classes-table','total','desc');initSortableTable('races-table','total','desc');initSortableTable('combos-table','winrate','desc');initSortableTable('rating-table','skill','desc');initSortableTable('shards-table','shards','desc');initSortableTable('champions-table','wins','desc');initSortableTable('twovtwo-table','telo','desc');initPlayersTable();
-            setTimeout(()=>{const hash=window.location.hash.substring(1);const validTabs=['tops','classes','races','combos','rating','shards','records','champions','titles','twovtwo','allplayers'];if(hash&&validTabs.includes(hash))switchTab(hash);},100);
+            initSortableTable('classes-table','total','desc');initSortableTable('races-table','total','desc');initSortableTable('combos-table','winrate','desc');initSortableTable('rating-table','skill','desc');initSortableTable('shards-table','shards','desc');initSortableTable('champions-table','wins','desc');initPlayersTable();
+            setTimeout(()=>{const hash=window.location.hash.substring(1);const validTabs=['tops','classes','races','combos','rating','shards','records','champions','titles','allplayers'];if(hash&&validTabs.includes(hash))switchTab(hash);},100);
             window.showPlayerProgress=function(nickname){const container=document.getElementById('player-progress-result');if(!nickname){container.innerHTML='<span style="color:var(--muted);">Введите ник, чтобы увидеть прогресс</span>';return;}const player=players.find(p=>p.display.toLowerCase()===nickname.toLowerCase());if(!player){container.innerHTML='<span style="color:var(--red);">Игрок не найден</span>';return;}const total=player.wins+player.losses;const winrate=total>0?(player.wins*100/total):0;const faction=player.faction||'';const nextLevel=achievements.filter(a=>a.type==='level'&&a.value>player.level).sort((a,b)=>a.value-b.value)[0];const nextTournament=achievements.filter(a=>a.type==='tournament'&&a.value>player.tournamentWins).sort((a,b)=>a.value-b.value)[0];const nextWins=achievements.filter(a=>a.type==='wins'&&a.value>player.wins).sort((a,b)=>a.value-b.value)[0];const nextBest=achievements.filter(a=>a.type==='best'&&a.value>player.best).sort((a,b)=>a.value-b.value)[0];const nextFaction=achievements.filter(a=>a.type==='faction'&&a.faction===faction&&a.value>player.factionWins).sort((a,b)=>a.value-b.value)[0];const nextWinrate=achievements.filter(a=>a.type==='winrate'&&a.value>winrate&&(!a.minFights||total>=a.minFights)).sort((a,b)=>a.value-b.value)[0];let html='';function bar(label,current,max,nextTitle){const pct=Math.min(100,(current/max)*100);const done=current>=max;return`<div style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>${label}</span><span style="color:var(--muted);font-size:0.7rem;">${current}/${max}</span></div><div style="background:var(--bg);height:6px;border-radius:3px;"><div style="width:${pct}%;background:${done?'var(--gold)':'var(--purple)'};height:6px;border-radius:3px;"></div></div><div style="margin-top:4px;color:var(--gold);font-size:0.7rem;">${nextTitle?'⏩️ '+nextTitle.emoji+' '+nextTitle.name:'✅ Максимум!'}</div></div>`;}if(nextLevel)html+=bar('📈 Уровень',player.level,nextLevel.value,nextLevel);if(nextTournament)html+=bar('🏆 Турнирные победы',player.tournamentWins,nextTournament.value,nextTournament);if(nextWins)html+=bar('⚔️ Всего побед',player.wins,nextWins.value,nextWins);if(nextBest)html+=bar('🔥 Лучший стрик',player.best,nextBest.value,nextBest);if(nextFaction&&faction){const fi=faction==='Орден Света'?'🌝':'🌚';html+=bar(`${fi} ${faction}`,player.factionWins,nextFaction.value,nextFaction);}if(nextWinrate)html+=bar('📊 Винрейт',winrate.toFixed(1),nextWinrate.value,nextWinrate);if(html==='')html='<span style="color:var(--gold);">🏆 Все титулы получены! Ты легенда!</span>';container.innerHTML=html;};}
 
         function initSortableTable(tableId,defaultSort,defaultDir){setTimeout(()=>{const table=document.getElementById(tableId);if(!table)return;const tbody=table.querySelector('tbody');const headers=table.querySelectorAll('.sortable-header');let currentSort=defaultSort,currentDir=defaultDir;function sortTable(sortBy){const rows=Array.from(tbody.querySelectorAll('tr'));rows.sort((a,b)=>{let va=a.dataset[sortBy],vb=b.dataset[sortBy];if (sortBy === 'name' || sortBy === 'class' || (sortBy === 'faction' && tableId !== 'combos-table'))return currentDir==='asc'?va.localeCompare(vb):vb.localeCompare(va);va=parseFloat(va)||0;vb=parseFloat(vb)||0;return currentDir==='asc'?va-vb:vb-va;});rows.forEach(row=>tbody.appendChild(row));}headers.forEach(th=>{th.addEventListener('click',()=>{const sortBy=th.dataset.sort;headers.forEach(h=>h.classList.remove('asc','desc'));if(currentSort===sortBy)currentDir=currentDir==='asc'?'desc':'asc';else{currentSort=sortBy;currentDir='desc';}th.classList.add(currentDir);sortTable(currentSort);});});const dh=table.querySelector(`[data-sort="${defaultSort}"]`);if(dh){dh.classList.add(defaultDir);sortTable(defaultSort);}},200);}
 
         function initPlayersTable(){setTimeout(()=>{const tbody=document.getElementById('players-tbody');const searchInput=document.getElementById('player-search');const clearBtn=document.getElementById('clear-search');const resultSpan=document.getElementById('search-result');const headers=document.querySelectorAll('#players-table .sortable-header');if(!tbody)return;let currentSort='wl',currentDir='desc';const allRows=Array.from(tbody.querySelectorAll('tr'));function filterAndSort(){const searchText=searchInput?.value.toLowerCase()||'';let filtered=allRows.filter(row=>{if(!searchText)return true;const name=row.dataset.name?.toLowerCase()||'';const cls=row.dataset.class?.toLowerCase()||'';return name.includes(searchText)||cls.includes(searchText);});filtered.sort((a,b)=>{let va=a.dataset[currentSort],vb=b.dataset[currentSort];if(currentSort==='name'||currentSort==='class'||currentSort==='faction')return currentDir==='asc'?va.localeCompare(vb):vb.localeCompare(va);va=parseFloat(va)||0;vb=parseFloat(vb)||0;return currentDir==='asc'?va-vb:vb-va;});filtered.forEach((row,idx)=>{row.cells[0].textContent=idx+1;});tbody.innerHTML='';filtered.forEach(row=>tbody.appendChild(row));if(resultSpan)resultSpan.textContent=searchText?`Найдено: ${filtered.length}`:'';}headers.forEach(th=>{th.addEventListener('click',()=>{const sortBy=th.dataset.sort;headers.forEach(h=>h.classList.remove('asc','desc'));if(currentSort===sortBy)currentDir=currentDir==='asc'?'desc':'asc';else{currentSort=sortBy;currentDir='desc';}th.classList.add(currentDir);filterAndSort();});});if(searchInput)searchInput.addEventListener('input',filterAndSort);if(clearBtn)clearBtn.addEventListener('click',()=>{searchInput.value='';filterAndSort();});const wlHeader=document.querySelector('[data-sort="wl"]');if(wlHeader){wlHeader.classList.add('desc');filterAndSort();}},200);}
-        window.switchTab=function(tabName){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));const tab=document.getElementById('tab-'+tabName);if(tab)tab.classList.add('active');const tabMap={tops:'Топы',classes:'Классы',races:'Расы',combos:'Комбинации',rating:'Рейтинг',shards:'Осколки',records:'Рекорды',champions:'Чемпионы',titles:'Титулы',twovtwo:'2v2',allplayers:'Игроки'};const label=tabMap[tabName];document.querySelectorAll('.tab-btn').forEach(btn=>{if(label&&btn.textContent.includes(label))btn.classList.add('active');});history.replaceState(null,null,'#'+tabName);};
+        window.switchTab=function(tabName){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));const tab=document.getElementById('tab-'+tabName);if(tab)tab.classList.add('active');const tabMap={tops:'Топы',classes:'Классы',races:'Расы',combos:'Комбинации',rating:'Рейтинг',shards:'Осколки',records:'Рекорды',champions:'Чемпионы',titles:'Титулы',allplayers:'Игроки'};const label=tabMap[tabName];document.querySelectorAll('.tab-btn').forEach(btn=>{if(label&&btn.textContent.includes(label))btn.classList.add('active');});history.replaceState(null,null,'#'+tabName);};
     
-		function getTeamRank(wins, losses) {
-			const total = wins + losses;
-			if (total < 5) return { rank: '⚪ Без ранга', value: 0 };
-			const wr = wins * 100 / total;
-			if (wr >= 60) return { rank: '💠 Алмаз', value: 5 };
-			if (wr >= 55) return { rank: '💎 Платина', value: 4 };
-			if (wr >= 50) return { rank: '🥇 Золото', value: 3 };
-			if (wr >= 45) return { rank: '🥈 Серебро', value: 2 };
-			return { rank: '🥉 Бронза', value: 1 };
-		}
-
-		function getTeamRankColor(wins, losses) {
-			const total = wins + losses;
-			if (total < 5) return '#888888';
-			const wr = wins * 100 / total;
-			if (wr >= 60) return '#5cc8ff';
-			if (wr >= 55) return '#b57edc';
-			if (wr >= 50) return '#ffd700';
-			if (wr >= 45) return '#c0c0c0';
-			return '#cd7f32';
-		}
-
-		function getTeamRankProgress(wins, losses, currentValue) {
-			const total = wins + losses;
-			if (total < 5) return 0;
-			const wr = wins * 100 / total;
-			
-			const thresholds = [
-				{ min: 0, max: 45, value: 1 },
-				{ min: 45, max: 50, value: 2 },
-				{ min: 50, max: 55, value: 3 },
-				{ min: 55, max: 60, value: 4 },
-				{ min: 60, max: 100, value: 5 }
-			];
-			
-			const current = thresholds.find(t => t.value === currentValue);
-			if (!current || current.value >= 5) return 100;
-			
-			const next = thresholds.find(t => t.value === currentValue + 1);
-			if (!next) return 100;
-			
-			return ((wr - current.min) / (next.min - current.min)) * 100;
-		}
-		
 		document.querySelectorAll('.nav-label').forEach(label=>{
 		label.addEventListener('click',function(e){
 			if(window.innerWidth>768)return;

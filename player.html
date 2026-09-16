@@ -502,20 +502,11 @@
     }
 
     function renderOverviewTab(p, total, winrate, dungeon, winRank, winrateRank, shardsRank, dungeonRank, seasonRank, factionRank, colorForRank) {
-        const teamWins = p.teamWins || 0;
-        const teamLosses = p.teamLoses || 0;
-        const teamTotal = teamWins + teamLosses;
-        const teamWinrate = teamTotal > 0 ? (teamWins * 100 / teamTotal).toFixed(1) + '%' : '—';
-        
         const stats = [
             { value: p.wins || 0, label: '⚔️ Победы' },
             { value: p.losses || 0, label: '💀 Поражения' },
             { value: winrate + '%', label: '📊 Винрейт' },
             { value: p.tournamentWins || 0, label: '👑 Турниры' },
-            { value: teamWins, label: '⚔️ 2v2 Победы' },
-            { value: teamLosses, label: '💀 2v2 Поражения' },
-            { value: teamWinrate, label: '📊 2v2 Винрейт' },
-            { value: p.teamTournamentWins || 0, label: '👑 2v2 Турниры' },
             { value: total, label: '⚡ Всего боёв' },
             { value: p.best || 0, label: '🔥 Лучший стрик' },
             { value: p.worst || 0, label: '💔 Худший стрик' },
