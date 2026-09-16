@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Гайд · Путь героя</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+<style>
+    /* ===== БАЗА ===== */
+    .guide-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(240, 185, 11, 0.1); }
+    .hl { color: var(--gold); font-weight: 600; }
+
+    /* ===== ЛИПКОЕ ОГЛАВЛЕНИЕ ===== */
+    .toc { position: sticky; top: 72px; z-index: 90; margin: 0 -20px 24px; padding: 8px 20px; background: var(--bg); border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .toc::-webkit-scrollbar { display: none; }
+    .toc-inner { display: flex; gap: 6px; white-space: nowrap; }
+    .toc-link { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: var(--card); border: 1px solid var(--border); border-radius: 20px; color: var(--sub); font-size: 0.75rem; font-weight: 600; text-decoration: none; transition: 0.2s; flex-shrink: 0; }
+    .toc-link:hover { color: var(--text); border-color: var(--gold); }
+    .toc-link.active { background: var(--tab-active-bg); color: #000; border-color: transparent; font-weight: 700; }
+    @media (max-width: 768px) { .toc { top: 0; margin: 0 -14px 18px; padding: 8px 14px; } .toc-link { font-size: 0.7rem; padding: 6px 11px; } }
+
+    /* ===== ПУТЬ ===== */
+    .path { display: flex; flex-direction: column; position: relative; padding-left: 30px; }
+    .path::before { content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--gold), var(--purple), var(--ice), var(--red)); opacity: 0.35; }
+    .path-step { position: relative; margin-bottom: 22px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 20px; transition: all 0.2s ease; scroll-margin-top: 130px; }
+    .path-step:hover { border-color: var(--gold); }
+    .path-step::before { content: ''; position: absolute; left: -25px; top: 26px; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px rgba(240, 185, 11, 0.5); z-index: 2; }
+    .path-step.faction::before { background: var(--purple); box-shadow: 0 0 8px rgba(163, 113, 247, 0.5); }
+    .path-step.tournament::before { background: var(--ice); box-shadow: 0 0 8px rgba(91, 192, 235, 0.5); }
+    .path-step.dungeon::before { background: var(--red); box-shadow: 0 0 8px rgba(232, 93, 58, 0.5); }
+    .path-num { font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 4px; }
+    .path-step.faction .path-num { color: var(--purple); }
+    .path-step.tournament .path-num { color: var(--ice); }
+    .path-step.dungeon .path-num { color: var(--red); }
+    .path-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .path-desc { color: var(--sub); font-size: 0.85rem; line-height: 1.7; }
+    .path-desc h3 { color: var(--gold); font-size: 0.88rem; font-weight: 700; margin: 18px 0 8px; }
+    .path-desc h3:first-of-type { margin-top: 8px; }
+    .lead { font-size: 0.92rem; color: var(--text); font-weight: 500; line-height: 1.6; margin-bottom: 12px; }
+
+    /* ===== CTA ===== */
+    .cta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-size: 0.78rem; font-weight: 700; text-decoration: none; cursor: pointer; transition: 0.2s; font-family: inherit; }
+    .cta-btn:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+    .cta-btn.primary { background: var(--btn-primary-bg); color: #000; border-color: transparent; }
+    .cta-btn.primary:hover { color: #000; filter: brightness(1.1); }
+    .cta-btn code { background: rgba(0,0,0,0.2); padding: 1px 6px; border-radius: 4px; color: inherit; font-size: 0.75rem; }
+
+    /* ===== ФРАКЦИИ ===== */
+    .faction-box { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.04)); border: 1px solid rgba(240, 185, 11, 0.2); border-radius: var(--radius-sm); padding: 20px 14px; text-align: center; }
+    .faction-box.dark { background: linear-gradient(160deg, var(--elevated), rgba(163, 113, 247, 0.04)); border-color: rgba(163, 113, 247, 0.2); }
+    .faction-box .fb-icon { font-size: 2.2rem; margin-bottom: 6px; }
+    .faction-box .fb-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; }
+    .faction-box.light .fb-name { color: var(--gold); }
+    .faction-box.dark .fb-name { color: var(--purple); }
+    .faction-box .fb-sub { font-size: 0.72rem; color: var(--muted); }
+
+    .territory-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .territory-cell { background: var(--elevated); border: 1px solid var(--border); border-radius: 10px; padding: 12px 8px; text-align: center; transition: 0.25s; position: relative; overflow: hidden; }
+    .territory-cell::before { content: ''; position: absolute; inset: 0; opacity: 0.08; pointer-events: none; }
+    .territory-cell.light::before { background: var(--gold); }
+    .territory-cell.dark::before { background: var(--purple); }
+    .territory-cell.light { border-color: rgba(240,185,11,0.4); }
+    .territory-cell.dark { border-color: rgba(163,113,247,0.4); }
+    .territory-cell:hover { transform: translateY(-2px); }
+    .territory-icon { font-size: 1.4rem; }
+    .territory-name { font-size: 0.68rem; color: var(--sub); margin-top: 4px; line-height: 1.3; }
+    .territory-owner { font-size: 0.72rem; margin-top: 4px; font-weight: 700; }
+    .territory-cell.light .territory-owner { color: var(--gold); }
+    .territory-cell.dark .territory-owner { color: var(--purple); }
+    @media (max-width: 768px) { .territory-map { grid-template-columns: repeat(2, 1fr); } .territory-name { font-size: 0.62rem; } }
+
+    /* ===== МЕХАНИКИ ===== */
+    .mech { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 14px; display: flex; align-items: flex-start; gap: 10px; transition: all 0.2s ease; }
+    .mech:hover { transform: translateX(4px); border-color: var(--gold); }
+    .mech.l { border-left: 3px solid var(--gold); }
+    .mech.i { border-left: 3px solid var(--ice); }
+    .mech.r { border-left: 3px solid var(--red); }
+    .mech.m { border-left: 3px solid var(--muted); }
+    .mech.p { border-left: 3px solid var(--purple); }
+    .mech.g { border-left: 3px solid var(--green); }
+    .mech .m-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+    .mech .m-title { font-weight: 700; font-size: 0.82rem; margin-bottom: 4px; }
+    .mech.l .m-title { color: var(--gold); }
+    .mech.i .m-title { color: var(--ice); }
+    .mech.r .m-title { color: var(--red); }
+    .mech.m .m-title { color: var(--sub); }
+    .mech.p .m-title { color: var(--purple); }
+    .mech.g .m-title { color: var(--green); }
+    .mech .m-body { font-size: 0.78rem; color: var(--sub); line-height: 1.5; }
+
+    /* ===== БОЕВОЙ ЦИКЛ ===== */
+    .combat-cycle { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
+    .cycle-step { background: var(--elevated); border: 1px solid var(--border); border-radius: 10px; padding: 14px 10px; text-align: center; position: relative; transition: 0.2s; }
+    .cycle-step:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .cycle-step:not(:last-child)::after { content: '→'; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; z-index: 1; }
+    .cycle-icon { font-size: 1.6rem; margin-bottom: 4px; }
+    .cycle-name { font-size: 0.75rem; font-weight: 700; color: var(--gold); margin-bottom: 3px; }
+    .cycle-desc { font-size: 0.65rem; color: var(--muted); line-height: 1.35; }
+    @media (max-width: 768px) { .combat-cycle { grid-template-columns: repeat(2, 1fr); gap: 6px; } .cycle-step:not(:last-child)::after { display: none; } }
+
+    /* ===== ПРИМЕР БОЯ ===== */
+    .battle-example { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; margin-top: 12px; }
+    .battle-log { font-family: 'SF Mono', Consolas, monospace; font-size: 0.78rem; color: var(--text); margin-bottom: 10px; padding: 10px; background: var(--elevated); border-radius: 6px; overflow-x: auto; white-space: nowrap; }
+    .battle-decode { font-size: 0.75rem; color: var(--sub); line-height: 1.7; }
+    .battle-decode span { display: inline-block; }
+
+    /* ===== РАЗВИТИЕ ===== */
+    .progress-visual { text-align: center; padding: 24px 20px; background: linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.03)); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-top: 12px; }
+    .progress-formula { font-size: 1.3rem; font-weight: 800; color: var(--gold); letter-spacing: 2px; margin-bottom: 6px; }
+    .progress-caption { font-size: 0.72rem; color: var(--muted); margin-bottom: 16px; }
+    .reward-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .reward-chip { background: var(--bg); padding: 8px 14px; border-radius: 20px; font-size: 0.75rem; color: var(--sub); border: 1px solid var(--border); }
+
+    /* ===== ДАНЖ: СХЕМА ЗАБЕГА ===== */
+    .run-schema { display: flex; align-items: center; gap: 4px; overflow-x: auto; padding: 16px 4px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); margin: 12px 0; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .run-schema::-webkit-scrollbar { display: none; }
+    .run-node { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }
+    .run-icon { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; border: 2px solid var(--border); background: var(--elevated); }
+    .run-node.boss .run-icon { border-color: var(--red); background: rgba(232,93,58,0.12); box-shadow: 0 0 12px rgba(232,93,58,0.3); }
+    .run-node.death .run-icon { border-color: var(--muted); background: rgba(94,100,120,0.12); opacity: 0.7; }
+    .run-node.artifact .run-icon { border-color: var(--gold); background: rgba(240,185,11,0.12); }
+    .run-label { font-size: 0.6rem; color: var(--muted); font-weight: 600; }
+    .run-node.boss .run-label { color: var(--red); }
+    .run-arrow { color: var(--muted); font-size: 0.7rem; flex-shrink: 0; padding: 0 2px; }
+
+    /* ===== ДАНЖ: ПЛИТКИ БИЛДА ===== */
+    .build-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+    .build-tile { background: linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 12px; text-align: center; transition: 0.2s; cursor: pointer; }
+    .build-tile:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .build-tile .bt-icon { font-size: 2rem; margin-bottom: 6px; }
+    .build-tile .bt-name { font-weight: 800; color: var(--gold); font-size: 0.88rem; margin-bottom: 4px; }
+    .build-tile .bt-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.4; }
+    @media (max-width: 768px) { .build-tiles { grid-template-columns: 1fr; gap: 8px; } }
+
+    /* ===== ПАССИВКИ ПО ГРУППАМ ===== */
+    .passive-group { margin-bottom: 14px; }
+    .passive-group-title { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 800; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .passive-group-title.dmg { color: var(--red); }
+    .passive-group-title.def { color: var(--ice); }
+    .passive-group-title.loot { color: var(--gold); }
+    .passive-group-title.spec { color: var(--purple); }
+    .passive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+    .passive { background: var(--elevated); border-radius: 8px; padding: 12px 10px; text-align: center; transition: 0.2s; border: 1px solid var(--border); }
+    .passive:hover { transform: translateY(-2px); border-color: var(--gold); }
+    .passive .p-emoji { font-size: 1.4rem; margin-bottom: 4px; }
+    .passive .p-name { font-weight: 700; color: var(--text); margin-bottom: 3px; font-size: 0.75rem; }
+    .passive .p-desc { color: var(--muted); line-height: 1.35; font-size: 0.68rem; }
+
+    /* ===== БОССЫ: ШКАЛА ===== */
+    .boss-scale { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 12px 0; }
+    .boss-bar { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .boss-bar-fill { width: 100%; background: linear-gradient(to top, var(--red), var(--orange)); border-radius: 4px 4px 0 0; transition: 0.3s; }
+    .boss-bar-label { font-size: 0.6rem; color: var(--muted); text-align: center; }
+    .boss-bar-wave { font-size: 0.72rem; font-weight: 800; color: var(--red); }
+    @media (max-width: 768px) { .boss-scale { gap: 3px; } .boss-bar-wave { font-size: 0.62rem; } .boss-bar-label { font-size: 0.55rem; } }
+
+    /* ===== DETAILS ===== */
+    details.guide-details { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; margin: 12px 0; transition: 0.2s; }
+    details.guide-details[open] { border-color: var(--gold); }
+    details.guide-details summary { cursor: pointer; font-weight: 700; color: var(--gold); font-size: 0.82rem; list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; }
+    details.guide-details summary::-webkit-details-marker { display: none; }
+    details.guide-details summary::after { content: '▾'; margin-left: auto; transition: 0.2s; font-size: 0.8rem; }
+    details.guide-details[open] summary::after { transform: rotate(180deg); }
+    details.guide-details > *:not(summary) { margin-top: 12px; }
+
+    /* ===== ГРИМУАР ===== */
+    .grimoire-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; align-items: center; }
+    .grimoire-search { flex: 1; min-width: 200px; padding: 10px 16px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-size: 0.82rem; font-family: inherit; }
+    .grimoire-search:focus { outline: none; border-color: var(--gold); }
+    .grimoire-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .grimoire-tab { padding: 8px 14px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--sub); font-size: 0.72rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: 0.2s; }
+    .grimoire-tab:hover { color: var(--text); border-color: var(--gold); }
+    .grimoire-tab.active { background: var(--tab-active-bg); color: #000; border-color: transparent; font-weight: 700; }
+    .cmd-list { display: grid; gap: 6px; }
+    .cmd { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 14px; border-left: 3px solid var(--gold); transition: 0.2s; cursor: pointer; position: relative; }
+    .cmd:hover { transform: translateX(3px); border-left-color: var(--ice); }
+    .cmd.admin { border-left-color: var(--ice); background: linear-gradient(160deg, var(--elevated), rgba(91, 192, 235, 0.03)); }
+    .cmd .c-name { font-weight: 700; font-family: 'SF Mono', Consolas, monospace; font-size: 0.82rem; }
+    .cmd:not(.admin) .c-name { color: var(--gold); }
+    .cmd.admin .c-name { color: var(--ice); }
+    .cmd .c-desc { color: var(--muted); font-size: 0.72rem; margin-top: 3px; }
+    .cmd .copy-hint { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 0.7rem; opacity: 0; transition: opacity 0.2s; }
+    .cmd:hover .copy-hint { opacity: 0.6; }
+    .cmd.hidden { display: none; }
+    .grimoire-empty { text-align: center; padding: 24px; color: var(--muted); font-size: 0.8rem; }
+
+    /* ===== FAQ ===== */
+    .faq-item { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; overflow: hidden; transition: 0.2s; }
+    .faq-item[open] { border-color: var(--gold); }
+    .faq-item summary { padding: 13px 16px; cursor: pointer; font-weight: 700; font-size: 0.82rem; color: var(--text); list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::before { content: '❓'; font-size: 0.85rem; }
+    .faq-item summary::after { content: '+'; margin-left: auto; color: var(--gold); font-weight: 800; font-size: 1.1rem; transition: 0.2s; }
+    .faq-item[open] summary::after { content: '−'; }
+    .faq-answer { padding: 0 16px 14px; color: var(--sub); font-size: 0.78rem; line-height: 1.6; }
+
+    /* ===== ОБЩИЕ СЕТКИ ===== */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .infocard, .guide-card { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px 14px; text-align: center; transition: all 0.25s ease; }
+    .infocard .ic-icon { font-size: 2rem; margin-bottom: 8px; }
+    .infocard .ic-title { font-weight: 700; color: var(--gold); font-size: 0.85rem; margin-bottom: 4px; }
+    .infocard .ic-sub { font-size: 0.72rem; color: var(--muted); }
+    .guide-card { cursor: pointer; }
+    .guide-card .gc-icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+    .guide-card .gc-title { font-weight: 800; font-size: 0.9rem; color: var(--gold); margin-bottom: 6px; }
+    .guide-card .gc-sub { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+    .info-chip { display: inline-flex; align-items: center; gap: 8px; background: var(--bg); padding: 5px 12px; border-radius: 6px; font-weight: 700; }
+    .info-chip.gold { background: rgba(240,185,11,0.15); color: var(--gold); }
+    .info-chip.white { background: var(--bg); }
+    .info-chip.gold-dark { background: var(--gold); color: #0a0a0a; font-weight: 800; font-size: 0.7rem; padding: 3px 12px; border-radius: 12px; }
+    .reward-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 0.82rem; background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); }
+    .reward-row:last-child { border-bottom: none; }
+    .reward-act { color: var(--text); }
+    .reward-val { color: var(--gold); font-weight: 700; }
+    .level-card { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; }
+    .level-card .lv-note { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
+    .quote-box { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.02)); border: 1px solid rgba(240, 185, 11, 0.15); border-radius: var(--radius-sm); padding: 14px 18px; margin: 16px 0; font-style: italic; color: var(--sub); font-size: 0.85rem; text-align: center; }
+    .cta-box { background: linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.03)); border: 1px solid rgba(240,185,11,0.1); border-radius: var(--radius-sm); padding: 16px 20px; margin-top: 20px; text-align: center; }
+
+    /* ===== ПРОЧЕЕ ===== */
+    .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
+    .scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .scroll-top.visible { opacity: 1; pointer-events: all; }
+    .scroll-top:hover { background: var(--gold); color: #000; transform: translateY(-3px); }
+
+    @media (max-width: 768px) {
+        .grid-3, .grid-2, .grid-auto { grid-template-columns: 1fr; }
+        .path { padding-left: 22px; }
+        .path::before { left: 8px; }
+        .path-step { padding: 16px 14px; margin-bottom: 16px; scroll-margin-top: 80px; }
+        .path-step::before { left: -20px; top: 20px; width: 10px; height: 10px; }
+        .path-title { font-size: 1.05rem; }
+        .path-desc { font-size: 0.8rem; line-height: 1.6; }
+        .lead { font-size: 0.85rem; }
+        section.grid-3[aria-label="Быстрый доступ"] { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
+        section.grid-3[aria-label="Быстрый доступ"] .guide-card { padding: 12px 6px; }
+        section.grid-3[aria-label="Быстрый доступ"] .gc-icon { font-size: 1.5rem; margin-bottom: 6px; }
+        section.grid-3[aria-label="Быстрый доступ"] .gc-title { font-size: 0.72rem; }
+        section.grid-3[aria-label="Быстрый доступ"] .gc-sub { font-size: 0.6rem; margin-top: 4px; }
+        .passive-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .passive { padding: 10px 6px; }
+        .passive .p-emoji { font-size: 1.2rem; }
+        .passive .p-name { font-size: 0.7rem; }
+        .passive .p-desc { font-size: 0.62rem; }
+        .cmd { padding: 10px 12px; }
+        .cmd .c-name { font-size: 0.78rem; }
+        .cmd .c-desc { font-size: 0.68rem; }
+        .cmd .copy-hint { display: none; }
+        .reward-row { padding: 8px 12px; font-size: 0.75rem; }
+        .quote-box { padding: 12px 14px; font-size: 0.78rem; margin: 12px 0; }
+        .table-container { -webkit-overflow-scrolling: touch; overflow-x: auto; }
+        table { font-size: 0.72rem; }
+        th, td { padding: 6px 8px; white-space: nowrap; }
+        .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
+        .battle-log { font-size: 0.68rem; }
+        .progress-formula { font-size: 1.1rem; letter-spacing: 1px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<div class="container">
+    <header class="header">
+        <h1 class="header-title">ПУТЬ ГЕРОЯ</h1>
+        <p class="header-subtitle">От первого боя до легенды Этерниса</p>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">🌓</button>
+    </header>
+
+    <!-- НАВИГАЦИЯ -->
+    <div class="nav-wrapper">
+        <button class="nav-toggle" onclick="toggleNav()" aria-label="Меню">☰ Меню</button>
+        <nav class="nav-bar" id="pageNav">
+            <div class="nav-group">
+                <span class="nav-label" tabindex="0">⚔️ Арена ▾</span>
+                <div class="nav-dropdown">
+                    <a href="index.html" class="nav-link">📊 Статистика</a>
+                    <a href="dungeon.html" class="nav-link">🏔 Подземелье</a>
+                    <a href="league.html" class="nav-link">🏟 Лига</a>
+                    <a href="logs.html" class="nav-link">📜 Логи</a>
+                    <a href="player.html" class="nav-link">👤 Профиль</a>
+                </div>
+            </div>
+            <div class="nav-group">
+                <span class="nav-label" tabindex="0">📐 Аналитика ▾</span>
+                <div class="nav-dropdown">
+                    <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                    <a href="calc.html" class="nav-link">🎲 Калькулятор</a>
+                    <a href="simulator.html" class="nav-link">🧪 Симулятор</a>
+                    <a href="gradient.html" class="nav-link">📈 Градиент</a>
+                    <a href="form.html" class="nav-link">🔥 Форма</a>
+                </div>
+            </div>
+            <div class="nav-group">
+                <span class="nav-label" tabindex="0">🌍 Мир ▾</span>
+                <div class="nav-dropdown">
+                    <a href="guide.html" class="nav-link active">⚔️ Гайд</a>
+                    <a href="lore.html" class="nav-link">📜 Лор</a>
+                    <a href="hall.html" class="nav-link">🏆 Зал Славы</a>
+                    <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- ЛИПКОЕ ОГЛАВЛЕНИЕ -->
+    <nav class="toc" id="toc" aria-label="Оглавление гайда">
+        <div class="toc-inner">
+            <a class="toc-link" href="#step-start">🩸 Создание</a>
+            <a class="toc-link" href="#step-faction">🌝 Фракции</a>
+            <a class="toc-link" href="#step-battle">⚔️ Бой</a>
+            <a class="toc-link" href="#step-shards">💎 Развитие</a>
+            <a class="toc-link" href="#step-tournament">👑 Турнир</a>
+            <a class="toc-link" href="#step-dungeon">🐲 Данж</a>
+            <a class="toc-link" href="#step-grimoire">📜 Команды</a>
+            <a class="toc-link" href="#step-faq">❓ FAQ</a>
+        </div>
+    </nav>
+
+    <!-- БЫСТРЫЙ ДОСТУП -->
+    <section class="grid-3" style="margin-bottom: 28px;" aria-label="Быстрый доступ">
+        <article class="guide-card" onclick="scrollToId('step-start')" tabindex="0" role="button" aria-label="Я новичок">
+            <span class="gc-icon">🎮</span>
+            <span class="gc-title">Я новичок</span>
+            <div class="gc-sub">Создание, фракция, первый бой</div>
+        </article>
+        <article class="guide-card" onclick="scrollToId('step-shards')" tabindex="0" role="button" aria-label="Я уже играю">
+            <span class="gc-icon">⚔️</span>
+            <span class="gc-title">Я уже играю</span>
+            <div class="gc-sub">Осколки, турниры, лига</div>
+        </article>
+        <article class="guide-card" onclick="scrollToId('step-dungeon')" tabindex="0" role="button" aria-label="Хочу в данж">
+            <span class="gc-icon">🐲</span>
+            <span class="gc-title">Хочу в данж</span>
+            <div class="gc-sub">Подземелье целиком</div>
+        </article>
+    </section>
+
+    <!-- ОСНОВНОЙ ПУТЬ -->
+    <main class="path">
+
+        <!-- ШАГ 1 -->
+        <article class="path-step" id="step-start">
+            <div class="path-num">Шаг 1</div>
+            <h2 class="path-title">🩸 Создание героя</h2>
+            <div class="path-desc">
+                <p class="lead">Активируй награду «Создать героя». Бот предложит 3 случайные комбинации расы и класса. Фракцию выберет сам. Выбери номер — и ты в игре.</p>
+                <section class="grid-3" aria-label="Этапы создания">
+                    <div class="infocard"><div class="ic-icon">🎁</div><div class="ic-title">Активируй награду</div><div class="ic-sub">«Создать героя»</div></div>
+                    <div class="infocard"><div class="ic-icon">🎲</div><div class="ic-title">Выбери героя</div><div class="ic-sub">Напиши номер в чат<br><strong style="color:var(--text)">3 минуты</strong> на ответ</div></div>
+                    <div class="infocard"><div class="ic-icon">✅</div><div class="ic-title">Готово</div><div class="ic-sub"><code>!инфо</code> — твои статы</div></div>
+                </section>
+                <div class="cta-row">
+                    <button class="cta-btn" onclick="copyCommand('!инфо')">📊 <code>!инфо</code> — посмотреть статы</button>
+                    <button class="cta-btn primary" onclick="copyCommand('!бой')">⚔️ <code>!бой</code> — первый бой</button>
+                </div>
+                <p style="font-size:0.72rem; color:var(--muted); margin-top:12px">💡 Не понравился герой? <code>!харакири</code> отправит его в архив. Осколки и уровень останутся.</p>
+            </div>
+        </article>
+
+        <!-- ШАГ 2 -->
+        <article class="path-step faction" id="step-faction">
+            <div class="path-num">Шаг 2</div>
+            <h2 class="path-title">🌝🌚 Война фракций</h2>
+            <div class="path-desc">
+                <p class="lead">Ты воюешь за Свет или Тьму. Каждые <span class="hl">50 побед</span> над врагом — захват территории. Карта Этерниса — это счёт сезона.</p>
+                <div class="grid-2">
+                    <div class="faction-box light"><div class="fb-icon">🌝</div><div class="fb-name">Орден Света</div><div class="fb-sub">Сияющий Шпиль</div></div>
+                    <div class="faction-box dark"><div class="fb-icon">🌚</div><div class="fb-name">Культ Тьмы</div><div class="fb-sub">Зал Повествователя</div></div>
+                </div>
+                <h3>🗺 Карта территорий</h3>
+                <div class="territory-map" id="territoryMap">
+                    <div class="territory-cell"><div class="territory-icon">🗡️</div><div class="territory-name">Поле Клинка</div><div class="territory-owner">—</div></div>
+                    <div class="territory-cell"><div class="territory-icon">🌑</div><div class="territory-name">Эпицентр</div><div class="territory-owner">—</div></div>
+                    <div class="territory-cell"><div class="territory-icon">🎭</div><div class="territory-name">Арена Эхо</div><div class="territory-owner">—</div></div>
+                    <div class="territory-cell"><div class="territory-icon">🔥</div><div class="territory-name">Кузня</div><div class="territory-owner">—</div></div>
+                    <div class="territory-cell"><div class="territory-icon">⚓</div><div class="territory-name">Порт</div><div class="territory-owner">—</div></div>
+                    <div class="territory-cell"><div class="territory-icon">🌌</div><div class="territory-name">Бездна</div><div class="territory-owner">—</div></div>
+                </div>
+                <p style="font-size:0.72rem; color:var(--muted); margin-top:10px">💡 Захват — не только престиж. Территории влияют на финальный счёт сезона.</p>
+            </div>
+        </article>
+
+        <!-- ШАГ 3 -->
+        <article class="path-step" id="step-battle">
+            <div class="path-num">Шаг 3</div>
+            <h2 class="path-title">⚔️ Боевая система</h2>
+            <div class="path-desc">
+                <p class="lead"><code>!бой</code> — рейтинговая дуэль. <code>!бой @ник</code> — товарищеский бой. Бой идёт по циклу из 4 шагов, пока у кого-то не кончится HP.</p>
+
+                <h3>🎲 Цикл боя</h3>
+                <div class="combat-cycle">
+                    <div class="cycle-step"><div class="cycle-icon">⚡</div><div class="cycle-name">Инициатива</div><div class="cycle-desc">d20 + DEX. Больше — ходит первым</div></div>
+                    <div class="cycle-step"><div class="cycle-icon">🎯</div><div class="cycle-name">Атака</div><div class="cycle-desc">d20 + ATK ≥ 10 + DEF врага</div></div>
+                    <div class="cycle-step"><div class="cycle-icon">💥</div><div class="cycle-name">Урон</div><div class="cycle-desc">Min–Max, минус 5% за DEF</div></div>
+                    <div class="cycle-step"><div class="cycle-icon">🏆</div><div class="cycle-name">Победа</div><div class="cycle-desc">HP врага ≤ 0 или больше HP после 20 раундов</div></div>
+                </div>
+
+                <h3>✨ Особые броски</h3>
+                <div class="grid-auto">
+                    <div class="mech r"><div class="m-icon">💥</div><div><h4 class="m-title">Крит (d20 = 20)</h4><div class="m-body">Двойной бросок урона. В данже с «Жаждой крови» — тройной.</div></div></div>
+                    <div class="mech r"><div class="m-icon">❌</div><div><h4 class="m-title">Крит-промах (d20 = 1)</h4><div class="m-body">Урон 0, всегда. Даже если ATK высокий.</div></div></div>
+                    <div class="mech i"><div class="m-icon">🛡️</div><div><h4 class="m-title">Редукция урона</h4><div class="m-body">Каждое очко DEF срезает 5% урона. Минимум 1 урон.</div></div></div>
+                    <div class="mech m"><div class="m-icon">💨</div><div><h4 class="m-title">Промах</h4><div class="m-body">d20 + ATK < 10 + DEF. 💨 и 🛡️ — просто промах, разница визуальная.</div></div></div>
+                </div>
+
+                <h3>📝 Пример боя</h3>
+                <div class="battle-example">
+                    <div class="battle-log">⚡🏆🧔⚔️ Игрок1 25:20 ⚔️🧔 Игрок2 | 5:💥12 | 8:🛡 | 3:3</div>
+                    <div class="battle-decode">
+                        <span>⚡ — Игрок1 ходил первым</span><br>
+                        <span>🏆 — Игрок1 победил</span><br>
+                        <span>25:20 — урон (победитель : проигравший)</span><br>
+                        <span>5:💥12 — раунд 1: Игрок1 нанёс 5, Игрок2 кританул на 12</span><br>
+                        <span>8:🛡 — раунд 2: Игрок1 нанёс 8, Игрок2 заблокировал (промах)</span><br>
+                        <span>3:3 — раунд 3: оба попали по 3</span>
+                    </div>
+                </div>
+
+                <details class="guide-details">
+                    <summary>📜 Полная таблица символов лога</summary>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th style="width:60px; text-align:center">Символ</th><th>Значение</th><th style="width:90px; text-align:center">d20</th></tr></thead>
+                            <tbody>
+                                <tr><td style="text-align:center">⚡</td><td>Выиграл инициативу</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+                                <tr><td style="text-align:center">💥X</td><td>Критический удар, X — сумма бросков</td><td style="text-align:center; color:var(--red); font-weight:700">20</td></tr>
+                                <tr><td style="text-align:center">❌</td><td>Крит-промах</td><td style="text-align:center; color:var(--red)">1</td></tr>
+                                <tr><td style="text-align:center">💨</td><td>Промах (низкий бросок)</td><td style="text-align:center; color:var(--muted)">≤2+DEX</td></tr>
+                                <tr><td style="text-align:center">🛡️</td><td>Промах (высокий бросок)</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+                                <tr><td style="text-align:center">X</td><td>Обычное попадание</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+                                <tr><td style="text-align:center">🏆</td><td>Победитель</td><td style="text-align:center; color:var(--gold)">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+            </div>
+        </article>
+
+        <!-- ШАГ 4 -->
+        <article class="path-step" id="step-shards">
+            <div class="path-num">Шаг 4</div>
+            <h2 class="path-title">💎 Развитие героя</h2>
+            <div class="path-desc">
+                <p class="lead">Осколки — это опыт. 10 осколков = 1 уровень. Уровень = титул = место в рейтинге. Осколки не сгорают при <code>!харакири</code>, но сгорают при <code>!сезон</code>.</p>
+                <div class="progress-visual">
+                    <div class="progress-formula">💎 × 10 = 📈</div>
+                    <div class="progress-caption">Десять осколков — один уровень. Копи — уровень растёт сам.</div>
+                    <div class="reward-chips">
+                        <span class="reward-chip">🏆 <strong style="color:var(--gold)">+3💎</strong> Победа</span>
+                        <span class="reward-chip">💔 <strong style="color:var(--gold)">+1💎</strong> Поражение</span>
+                        <span class="reward-chip">👑 <strong style="color:var(--gold)">+10💎</strong> Чемпион</span>
+                        <span class="reward-chip">🩸 <strong style="color:var(--gold)">+1💎</strong> Данж 5 волн</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- ШАГ 5 -->
+        <article class="path-step tournament" id="step-tournament">
+            <div class="path-num">Шаг 5</div>
+            <h2 class="path-title">👑 Испытание чемпионов</h2>
+            <div class="path-desc">
+                <p class="lead">16 бойцов, олимпийская система, один чемпион. Победа в турнире даёт титул <strong style="color:var(--gold)">Хранитель Раскола</strong>.</p>
+                <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                    <span class="info-chip gold-dark">1v1</span>
+                    <span style="font-weight:600; color:var(--muted); font-size:0.75rem;">⚔️ 12:00 и 14:00 · <code>!рега</code></span>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <h3>🏆 Награды</h3>
+                        <div class="table-container" style="border-radius: var(--radius-sm); overflow: hidden;">
+                            <div class="reward-row"><span class="reward-act">Победа в бою</span><span class="reward-val">+3 💎</span></div>
+                            <div class="reward-row"><span class="reward-act">Поражение в бою</span><span class="reward-val">+1 💎</span></div>
+                            <div class="reward-row" style="background:rgba(240,185,11,0.06); border-bottom:none;">
+                                <span class="reward-act" style="font-weight:700; color:var(--gold);">👑 Чемпион</span>
+                                <span class="reward-val" style="color:var(--gold);">+10 💎 + титул + SKILL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>🏟 Структура</h3>
+                        <div class="level-card">
+                            <div style="display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--sub); flex-wrap:wrap; justify-content:center;">
+                                <span class="info-chip white">16</span><span>→</span>
+                                <span class="info-chip white">⅛</span><span>→</span>
+                                <span class="info-chip white">¼</span><span>→</span>
+                                <span class="info-chip white">½</span><span>→</span>
+                                <span class="info-chip gold">👑</span>
+                            </div>
+                            <div class="lv-note" style="text-align:center">4 победы до титула</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cta-box" style="margin-top:20px;">
+                    <span style="color:var(--gold); font-weight:700;">⚡ Лига Этерниса</span>
+                    <span style="color:var(--sub);"> — в последний день сезона: топ-8 Света против топ-8 Тьмы. Посев по SKILL.</span>
+                </div>
+                <p style="font-size:0.72rem; color:var(--muted); margin-top:10px">💡 Место можно забронировать: <code>!резерв @ник N</code>.</p>
+            </div>
+        </article>
+
+        <!-- ШАГ 6 — ДАНЖ (редизайн) -->
+        <article class="path-step dungeon" id="step-dungeon">
+            <div class="path-num">Шаг 6</div>
+            <h2 class="path-title">🐲 Бездна Разлома</h2>
+            <div class="path-desc">
+                <p class="lead">Ты один против волн монстров. Каждая 5-я — босс. Умер — забег кончился, рекорд волн пошёл в статистику.</p>
+
+                <!-- 3 ЦИФРЫ -->
+                <div class="grid-3" style="margin:16px 0">
+                    <div class="infocard"><div class="ic-icon">∞</div><div class="ic-title">Волн</div><div class="ic-sub">Бесконечно, пока жив</div></div>
+                    <div class="infocard"><div class="ic-icon">🐉</div><div class="ic-title">5-я волна</div><div class="ic-sub">Босс: HP×1.5, ATK+2, DEF+1</div></div>
+                    <div class="infocard"><div class="ic-icon">💎</div><div class="ic-title">+1💎 / 5 волн</div><div class="ic-sub">+ 1-3 трофея за босса</div></div>
+                </div>
+
+                <!-- СХЕМА ЗАБЕГА -->
+                <h3>🎬 Типичный забег</h3>
+                <div class="run-schema">
+                    <div class="run-node"><div class="run-icon">🌊</div><div class="run-label">1</div></div>
+                    <div class="run-arrow">→</div>
+                    <div class="run-node artifact"><div class="run-icon">💎</div><div class="run-label">лут</div></div>
+                    <div class="run-arrow">→</div>
+                    <div class="run-node"><div class="run-icon">🌊</div><div class="run-label">4</div></div>
+                    <div class="run-arrow">→</div>
+                    <div class="run-node boss"><div class="run-icon">🐉</div><div class="run-label">босс 5</div></div>
+                    <div class="run-arrow">→</div>
+                    <div class="run-node"><div class="run-icon">🌊</div><div class="run-label">6</div></div>
+                    <div class="run-arrow">→</div>
+                    <div class="run-node boss"><div class="run-icon">🐉</div><div class="run-label">босс 10</div></div>
+                    <div class="run-arrow">→</div>
+                    <div class="run-node boss"><div class="run-icon">🐉</div><div class="run-label">босс 15</div></div>
+                    <div class="run-arrow">→</div>
+                    <div class="run-node death"><div class="run-icon">💀</div><div class="run-label">смерть 17</div></div>
+                </div>
+                <p style="font-size:0.72rem; color:var(--muted); text-align:center">Рекорд волн сохраняется в статистику героя. Забег всегда кончается смертью — вопрос только когда.</p>
+
+                <!-- БИЛД -->
+                <h3>🎒 Твой билд на забег</h3>
+                <p style="font-size:0.8rem; margin-bottom:10px">Перед входом ты получаешь три вещи. Это и есть твой билд — от него зависит, как далеко зайдёшь.</p>
+                <div class="build-tiles">
+                    <div class="build-tile" onclick="scrollToId('dungeon-passives')">
+                        <div class="bt-icon">🌿</div>
+                        <div class="bt-name">Пассивка</div>
+                        <div class="bt-desc">Одна из 12. Меняет правила забега</div>
+                    </div>
+                    <div class="build-tile" onclick="scrollToId('dungeon-familiars')">
+                        <div class="bt-icon">🐾</div>
+                        <div class="bt-name">Фамильяр</div>
+                        <div class="bt-desc">Один из 12. +1 к статам на забег</div>
+                    </div>
+                    <div class="build-tile" onclick="scrollToId('dungeon-artifacts')">
+                        <div class="bt-icon">💎</div>
+                        <div class="bt-name">Артефакты</div>
+                        <div class="bt-desc">6 штук. Шанс 35% / 70% (босс)</div>
+                    </div>
+                </div>
+
+                <!-- ПАССИВКИ ПО ГРУППАМ -->
+                <h3 id="dungeon-passives">🌿 Пассивки (12)</h3>
+                <div class="passive-group">
+                    <div class="passive-group-title dmg">⚔️ Больше урона</div>
+                    <div class="passive-grid">
+                        <div class="passive"><div class="p-emoji">💥</div><div class="p-name">Жажда крови</div><div class="p-desc">+2 ATK. Крит = три броска урона</div></div>
+                        <div class="passive"><div class="p-emoji">⚔️</div><div class="p-name">Святая ярость</div><div class="p-desc">+4 урона по боссам</div></div>
+                        <div class="passive"><div class="p-emoji">💢</div><div class="p-name">Накопленная ярость</div><div class="p-desc">Потерял HP → бьёшь сильнее (HP/4)</div></div>
+                        <div class="passive"><div class="p-emoji">🗡️</div><div class="p-name">Казнь</div><div class="p-desc">Добивание при HP врага < 30%</div></div>
+                        <div class="passive"><div class="p-emoji">🎯</div><div class="p-name">Метка Охотника</div><div class="p-desc">Первые 3 удара — двойной урон</div></div>
+                    </div>
+                </div>
+                <div class="passive-group">
+                    <div class="passive-group-title def">🛡️ Больше живучести</div>
+                    <div class="passive-grid">
+                        <div class="passive"><div class="p-emoji">💚</div><div class="p-name">Стойкость</div><div class="p-desc">+2 DEF на весь забег</div></div>
+                        <div class="passive"><div class="p-emoji">👻</div><div class="p-name">Призрачный щит</div><div class="p-desc">25% шанс избежать урона</div></div>
+                        <div class="passive"><div class="p-emoji">🩸</div><div class="p-name">Вампиризм</div><div class="p-desc">+10 HP к лечению после волны</div></div>
+                        <div class="passive"><div class="p-emoji">🔮</div><div class="p-name">Отражение</div><div class="p-desc">30% шанс вернуть половину урона</div></div>
+                    </div>
+                </div>
+                <div class="passive-group">
+                    <div class="passive-group-title loot">💎 Больше лута</div>
+                    <div class="passive-grid">
+                        <div class="passive"><div class="p-emoji">✨</div><div class="p-name">Благословение</div><div class="p-desc">+15% к шансу артефакта</div></div>
+                    </div>
+                </div>
+                <div class="passive-group">
+                    <div class="passive-group-title spec">✨ Особые</div>
+                    <div class="passive-grid">
+                        <div class="passive"><div class="p-emoji">💫</div><div class="p-name">Сияние</div><div class="p-desc">Враги −15% HP</div></div>
+                        <div class="passive"><div class="p-emoji">🧿</div><div class="p-name">Амулет Раскола</div><div class="p-desc">Каждый 3-й удар ×2</div></div>
+                    </div>
+                </div>
+
+                <!-- ФАМИЛЬЯРЫ -->
+                <h3 id="dungeon-familiars">🐾 Фамильяры (12)</h3>
+                <div class="table-container"><table>
+                    <thead><tr><th>Бонус</th><th>Питомцы</th></tr></thead>
+                    <tbody>
+                        <tr><td>+1 ATK</td><td>🐺 Волк, 🐱 Кот</td></tr>
+                        <tr><td>+1 DEX</td><td>🦅 Орёл, 🦊 Лиса</td></tr>
+                        <tr><td>+1 MIN</td><td>🐍 Змея, 🦝 Енот</td></tr>
+                        <tr><td>+1 MAX</td><td>🐲 Дракончик, 🦉 Сова</td></tr>
+                        <tr><td>+1 DEF</td><td>🐢 Черепаха, 🦀 Краб</td></tr>
+                        <tr><td>+2 HP</td><td>🐻 Медведь, 🐗 Кабан</td></tr>
+                    </tbody>
+                </table></div>
+
+                <!-- АРТЕФАКТЫ -->
+                <h3 id="dungeon-artifacts">💎 Артефакты (6)</h3>
+                <div class="table-container"><table>
+                    <thead><tr><th>Артефакт</th><th>Эффект</th></tr></thead>
+                    <tbody>
+                        <tr><td>☀️ Осколок Солнечного Клинка</td><td>+2 ATK, +2 DEX</td></tr>
+                        <tr><td>🌫️ Плащ Повествовательницы</td><td>+2 DEF, +2 MAX</td></tr>
+                        <tr><td>💍 Кольцо Аэлиона</td><td>+2 ATK, +2 DEF</td></tr>
+                        <tr><td>🔮 Руна Раскола</td><td>+2 MIN, +2 MAX</td></tr>
+                        <tr><td>🍺 Пиво ГуангГуанга</td><td>+20 HP</td></tr>
+                        <tr><td>💀 Проклятие Бездны</td><td>−1 к случайной характеристике</td></tr>
+                    </tbody>
+                </table></div>
+
+                <!-- ШКАЛА БОССОВ -->
+                <h3>🐉 Рост сложности</h3>
+                <div class="boss-scale">
+                    <div class="boss-bar"><div class="boss-bar-wave">5</div><div class="boss-bar-fill" style="height:18px"></div><div class="boss-bar-label">78 HP<br>4 ATK</div></div>
+                    <div class="boss-bar"><div class="boss-bar-wave">10</div><div class="boss-bar-fill" style="height:34px"></div><div class="boss-bar-label">171<br>6 ATK</div></div>
+                    <div class="boss-bar"><div class="boss-bar-wave">15</div><div class="boss-bar-fill" style="height:48px"></div><div class="boss-bar-label">263<br>8 ATK</div></div>
+                    <div class="boss-bar"><div class="boss-bar-wave">20</div><div class="boss-bar-fill" style="height:62px"></div><div class="boss-bar-label">356<br>9 ATK</div></div>
+                    <div class="boss-bar"><div class="boss-bar-wave">25</div><div class="boss-bar-fill" style="height:76px"></div><div class="boss-bar-label">448<br>11 ATK</div></div>
+                    <div class="boss-bar"><div class="boss-bar-wave">30</div><div class="boss-bar-fill" style="height:90px"></div><div class="boss-bar-label">542<br>13 ATK</div></div>
+                    <div class="boss-bar"><div class="boss-bar-wave">35</div><div class="boss-bar-fill" style="height:104px"></div><div class="boss-bar-label">634<br>14 ATK</div></div>
+                </div>
+
+                <!-- ФОРМУЛЫ В DETAILS -->
+                <details class="guide-details">
+                    <summary>📐 Для гиков: формулы и таблица боссов</summary>
+                    <div class="grid-2">
+                        <div>
+                            <h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">Формулы мобов</h4>
+                            <div class="level-card">
+                                <div style="font-size:0.75rem; color:var(--sub); line-height:2">
+                                    <div>❤️ <strong>HP</strong> = (15 + волна×8) ± 20%</div>
+                                    <div style="color:var(--muted); font-size:0.68rem; margin-left:16px">после 5 волны + (волна−5)×5</div>
+                                    <div>⚔️ <strong>ATK</strong> = 1 + волна/3</div>
+                                    <div>🛡️ <strong>DEF</strong> = волна/5</div>
+                                </div>
+                                <div style="margin-top:10px; padding:12px; background:rgba(232,93,58,.06); border-radius:8px; border:1px solid rgba(232,93,58,.15)">
+                                    <div style="color:var(--red); font-weight:700; margin-bottom:4px">🐉 БОСС (каждая 5-я)</div>
+                                    <div style="font-size:0.7rem; color:var(--sub)">HP ×1.5 (±5%) · ATK +2 · DEF +1</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">Таблица боссов</h4>
+                            <div class="table-container"><table style="font-size:0.72rem; min-width:auto">
+                                <thead><tr><th>🐉</th><th>❤️ HP</th><th>⚔️ ATK</th><th>🛡️ DEF</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>5</strong></td><td>78–86</td><td>4</td><td>2</td></tr>
+                                    <tr><td><strong>10</strong></td><td>171–189</td><td>6</td><td>3</td></tr>
+                                    <tr><td><strong>15</strong></td><td>263–291</td><td>8</td><td>4</td></tr>
+                                    <tr><td><strong>20</strong></td><td>356–394</td><td>9</td><td>5</td></tr>
+                                    <tr><td><strong>25</strong></td><td>448–496</td><td>11</td><td>6</td></tr>
+                                    <tr><td><strong>30</strong></td><td>542–599</td><td>13</td><td>7</td></tr>
+                                    <tr><td><strong>35</strong></td><td>634–701</td><td>14</td><td>8</td></tr>
+                                </tbody>
+                            </table></div>
+                        </div>
+                    </div>
+                    <div style="margin-top:14px; font-size:0.75rem; color:var(--sub); line-height:1.8">
+                        <div>🩹 <strong>Лечение после волны:</strong> 14 + волна×2 HP (кап: HP + 30)</div>
+                        <div>🩹 <strong>После босса:</strong> возврат к HP до боя (не полное восстановление)</div>
+                        <div>🎲 <strong>Шанс артефакта:</strong> 35% / 70% (босс) + 15% с Благословением</div>
+                        <div>📦 <strong>Лимит артефактов:</strong> базовый стат + 16</div>
+                    </div>
+                </details>
+
+                <div class="cta-row">
+                    <button class="cta-btn primary" onclick="copyCommand('!данж')">🐲 <code>!данж</code> — войти в Разлом</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- ШАГ 7 -->
+        <article class="path-step" id="step-grimoire">
+            <div class="path-num">Шаг 7</div>
+            <h2 class="path-title">📜 Гримуар команд</h2>
+            <div class="path-desc">
+                <p class="lead">Все команды чата. Клик — копирует в буфер. <span style="color:var(--gold)">⚡</span> — только для стримера и модераторов.</p>
+
+                <div class="grimoire-tools">
+                    <input type="text" class="grimoire-search" id="grimoireSearch" placeholder="🔍 Поиск команды...">
+                    <div class="grimoire-tabs">
+                        <button class="grimoire-tab active" data-filter="all">Все</button>
+                        <button class="grimoire-tab" data-filter="game">🎮 Игровые</button>
+                        <button class="grimoire-tab" data-filter="admin">⚡ Админские</button>
+                    </div>
+                </div>
+
+                <div class="cmd-list" id="grimoireList">
+                    <div class="cmd" data-cat="game" onclick="copyCommand('!бой')"><div class="c-name">!бой</div><div class="c-desc">Рейтинговая дуэль (стата + осколки)</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd" data-cat="game" onclick="copyCommand('!бой @ник')"><div class="c-name">!бой @ник</div><div class="c-desc">🤝 Товарищеский бой (только осколки, без статы)</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd" data-cat="game" onclick="copyCommand('!инфо')"><div class="c-name">!инфо</div><div class="c-desc">Статы героя. <code>!инфо @ник</code> — посмотреть чужого</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd" data-cat="game" onclick="copyCommand('!данж')"><div class="c-name">!данж</div><div class="c-desc">Вход в подземелье</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd" data-cat="game" onclick="copyCommand('!харакири')"><div class="c-name">!харакири</div><div class="c-desc">Сброс героя в архив (осколки и уровень сохранятся)</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd" data-cat="game" onclick="copyCommand('!рега')"><div class="c-name">!рега</div><div class="c-desc">Запись в текущий турнир 1v1</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd" data-cat="game" onclick="copyCommand('!сетка')"><div class="c-name">!сетка</div><div class="c-desc">Участники и сетка текущего турнира</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd" data-cat="game" onclick="copyCommand('!1–!5')"><div class="c-name">!1–!5</div><div class="c-desc">Выбор героя при создании (3 мин)</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!режим')"><div class="c-name">!режим</div><div class="c-desc">Турнир 1v1 / дуэли</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!старт')"><div class="c-name">!старт</div><div class="c-desc">Принудительный запуск турнира</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!добор')"><div class="c-name">!добор</div><div class="c-desc">Автозаполнение до 16</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!лига')"><div class="c-name">!лига</div><div class="c-desc">Лига Этерниса (8v8)</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!резерв @ник N')"><div class="c-name">!резерв @ник N</div><div class="c-desc">Бронь места (N турниров)</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!создать @ник Раса-Класс')"><div class="c-name">!создать @ник Раса-Класс</div><div class="c-desc">Создать героя вручную</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!удалить @ник')"><div class="c-name">!удалить @ник</div><div class="c-desc">Удалить героя (осколки сохранятся)</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!сменить @ник Имя')"><div class="c-name">!сменить @ник Имя</div><div class="c-desc">Сменить имя героя</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!воскресить @ник ИмяГероя')"><div class="c-name">!воскресить @ник ИмяГероя</div><div class="c-desc">Воскресить из архива</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!перенос @старый @новый')"><div class="c-name">!перенос @старый @новый</div><div class="c-desc">Смена ника Twitch</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!сезон')"><div class="c-name">!сезон</div><div class="c-desc">Сброс статистики сезона</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!save')"><div class="c-name">!save</div><div class="c-desc">Сохранение + титулы + JSON</div><span class="copy-hint">📋</span></div>
+                    <div class="cmd admin" data-cat="admin" onclick="copyCommand('!логи')"><div class="c-name">!логи</div><div class="c-desc">Последний бой. <code>!логи @ник</code> — по игроку</div><span class="copy-hint">📋</span></div>
+                </div>
+                <div class="grimoire-empty hidden" id="grimoireEmpty">Ничего не найдено 🤷</div>
+            </div>
+        </article>
+
+        <!-- FAQ -->
+        <article class="path-step" id="step-faq">
+            <div class="path-num">FAQ</div>
+            <h2 class="path-title">❓ Частые вопросы</h2>
+            <div class="path-desc">
+                <details class="faq-item"><summary>Я умер в данже — герой удалился?</summary><div class="faq-answer">Нет. Умирает только <strong>забег</strong>. Рекорд волн сохраняется в статистику героя. Герой остаётся жив, можно идти снова.</div></details>
+                <details class="faq-item"><summary>Что будет, если сделаю !харакири?</summary><div class="faq-answer">Герой уйдёт в архив. Осколки и уровень <strong>сохранятся</strong> — можно создать нового героя и играть дальше. Вернуть старого: <code>!воскресить @ник ИмяГероя</code>.</div></details>
+                <details class="faq-item"><summary>Как попасть в турнир?</summary><div class="faq-answer">Написать <code>!рега</code> в чат, когда идёт регистрация, или дождаться автостарта (12:00 / 14:00). Можно забронировать место: <code>!резерв @ник N</code>.</div></details>
+                <details class="faq-item"><summary>Почему меня нет в Лиге?</summary><div class="faq-answer">Лига — это топ-8 по <strong>SKILL</strong> внутри каждой фракции. Нужно минимум 5 боёв для расчёта рейтинга. Формула: (Wins×WR×7 + Best×10 + Level×2 + TournamentWins×25 + FactionWins×2) / √(Fights/75 + 1).</div></details>
+                <details class="faq-item"><summary>Как сменить героя?</summary><div class="faq-answer">Написать <code>!харакири</code> (старый уйдёт в архив), затем активировать награду «Создать героя» и выбрать нового. Осколки и уровень переносятся.</div></details>
+                <details class="faq-item"><summary>Что такое SKILL?</summary><div class="faq-answer">Рейтинг, который считается по формуле. Учитывает победы, винрейт, лучший стрик, уровень, турнирные и фракционные победы, и делится на корень из количества боёв. Нужен минимум 5 боёв. Используется для посева в Лиге.</div></details>
+                <details class="faq-item"><summary>Что сгорает при !сезон?</summary><div class="faq-answer">Сбрасываются осколки, уровни и вся статистика (Wins, Losses, Streak, SKILL). Герои и фракции сохраняются. Территории, данж и архив обнуляются.</div></details>
+            </div>
+        </article>
+    </main>
+</div>
+
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+<a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺" aria-label="Донат">🍺</a>
+
+<script>
+(function() {
+    const $ = (sel, ctx = document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+    // ===== ТЕМА =====
+    window.toggleTheme = function() {
+        const html = document.documentElement;
+        const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('eternis-theme', newTheme);
+    };
+    const savedTheme = localStorage.getItem('eternis-theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // ===== НАВИГАЦИЯ =====
+    window.toggleNav = function() {
+        const nav = $('#pageNav');
+        const toggleBtn = $('.nav-toggle');
+        nav.classList.toggle('show');
+        toggleBtn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+    };
+    $('#pageNav').addEventListener('click', (e) => {
+        if (e.target.classList.contains('nav-link')) {
+            $('#pageNav').classList.remove('show');
+            $('.nav-toggle').textContent = '☰ Меню';
+        }
+    });
+    $$('.nav-label').forEach(label => {
+        label.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                const dropdown = this.nextElementSibling;
+                if (dropdown && dropdown.classList.contains('nav-dropdown')) {
+                    const isOpen = dropdown.style.display === 'block';
+                    $$('.nav-dropdown').forEach(d => d.style.display = 'none');
+                    dropdown.style.display = isOpen ? 'none' : 'block';
+                }
+            }
+        });
+    });
+
+    // ===== СКРОЛЛ К ЯКОРЮ =====
+    window.scrollToId = function(id) {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    // ===== ПРОГРЕСС + КНОПКА НАВЕРХ =====
+    const progressBar = $('#readingProgress');
+    const scrollTopBtn = $('#scrollTop');
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.transform = `scaleX(${progress / 100})`;
+        scrollTopBtn.classList.toggle('visible', scrollTop > 300);
+    });
+
+    // ===== АКТИВНЫЙ ПУНКТ ОГЛАВЛЕНИЯ =====
+    const tocLinks = $$('.toc-link');
+    const sections = tocLinks.map(l => document.getElementById(l.getAttribute('href').slice(1))).filter(Boolean);
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                tocLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+            }
+        });
+    }, { rootMargin: '-120px 0px -70% 0px', threshold: 0 });
+    sections.forEach(s => observer.observe(s));
+
+    // ===== КОПИРОВАНИЕ =====
+    window.copyCommand = function(command) {
+        const doFeedback = () => {
+            $$('.cmd').forEach(el => {
+                const nameEl = el.querySelector('.c-name');
+                if (nameEl && nameEl.textContent === command) {
+                    const hint = el.querySelector('.copy-hint');
+                    const originalBorder = el.style.borderLeftColor;
+                    el.style.borderLeftColor = 'var(--green)';
+                    el.style.background = 'rgba(16,185,129,0.1)';
+                    if (hint) { hint.textContent = '✅'; hint.style.opacity = '1'; hint.style.color = 'var(--green)'; }
+                    setTimeout(() => {
+                        el.style.borderLeftColor = originalBorder;
+                        el.style.background = '';
+                        if (hint) { hint.textContent = '📋'; hint.style.opacity = ''; hint.style.color = ''; }
+                    }, 1500);
+                }
+            });
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(command).then(doFeedback).catch(() => {});
+        } else {
+            const ta = document.createElement('textarea');
+            ta.value = command; document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch(e) {}
+            document.body.removeChild(ta); doFeedback();
+        }
+    };
+
+    // ===== ГРИМУАР: ПОИСК + ФИЛЬТР =====
+    const grimoireList = $('#grimoireList');
+    const grimoireEmpty = $('#grimoireEmpty');
+    const searchInput = $('#grimoireSearch');
+    let currentFilter = 'all';
+
+    function applyGrimoireFilter() {
+        const q = (searchInput.value || '').toLowerCase().trim();
+        let visible = 0;
+        $$('.cmd', grimoireList).forEach(cmd => {
+            const cat = cmd.dataset.cat;
+            const text = cmd.textContent.toLowerCase();
+            const matchCat = currentFilter === 'all' || cat === currentFilter;
+            const matchSearch = !q || text.includes(q);
+            const show = matchCat && matchSearch;
+            cmd.classList.toggle('hidden', !show);
+            if (show) visible++;
+        });
+        grimoireEmpty.classList.toggle('hidden', visible > 0);
+    }
+    searchInput.addEventListener('input', applyGrimoireFilter);
+    $$('.grimoire-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            $$('.grimoire-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentFilter = tab.dataset.filter;
+            applyGrimoireFilter();
+        });
+    });
+
+    // ===== ЖИВАЯ КАРТА ТЕРРИТОРИЙ =====
+    const TERRITORY_ICONS = {
+        '🗡️ Поле Павшего Клинка': '🗡️',
+        '🌑 Эпицентр Раскола': '🌑',
+        '🎭 Арена Тысячи Эхо': '🎭',
+        '🔥 Кузня Расколотых': '🔥',
+        '⚓ Порт Дрейфующих': '⚓',
+        '🌌 Бездна': '🌌'
+    };
+    const SHORT_NAMES = {
+        '🗡️ Поле Павшего Клинка': 'Поле Клинка',
+        '🌑 Эпицентр Раскола': 'Эпицентр',
+        '🎭 Арена Тысячи Эхо': 'Арена Эхо',
+        '🔥 Кузня Расколотых': 'Кузня',
+        '⚓ Порт Дрейфующих': 'Порт',
+        '🌌 Бездна': 'Бездна'
+    };
+
+    async function loadTerritories() {
+        const url = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        try {
+            const res = await fetch(url + '?v=' + Date.now());
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            const control = data.territoryControl || {};
+            const map = $('#territoryMap');
+            if (!map) return;
+            const cells = map.querySelectorAll('.territory-cell');
+            const order = ['🗡️ Поле Павшего Клинка','🌑 Эпицентр Раскола','🎭 Арена Тысячи Эхо','🔥 Кузня Расколотых','⚓ Порт Дрейфующих','🌌 Бездна'];
+            cells.forEach((cell, i) => {
+                const key = order[i];
+                const owner = control[key];
+                cell.classList.remove('light', 'dark');
+                const ownerEl = cell.querySelector('.territory-owner');
+                if (owner === 'light') { cell.classList.add('light'); ownerEl.textContent = '🌝 Свет'; }
+                else if (owner === 'dark') { cell.classList.add('dark'); ownerEl.textContent = '🌚 Тьма'; }
+                else { ownerEl.textContent = '⚪ нейтрал'; }
+            });
+        } catch (e) {
+            // fallback: оставляем статичную разметку
+            console.warn('Не удалось загрузить карту территорий:', e.message);
+        }
+    }
+    loadTerritories();
+})();
+</script>
+</body>
+</html>
