@@ -181,8 +181,8 @@
 			const lightCount = players.filter(p => p.faction === 'Орден Света').length;
 			const darkCount = players.filter(p => p.faction === 'Культ Тьмы').length;
 			const { battleLight = 0, battleDark = 0, duelLight = 0, duelDark = 0 } = data.factionScore || {};
-			const lightRemaining = 50 - (duelLight % 50);
-			const darkRemaining = 50 - (duelDark % 50);
+			const lightRemaining = (50 - (duelLight % 50)) % 50;
+			const darkRemaining = (50 - (duelDark % 50)) % 50;
 			
 			let html = '';
 			html += '<div class="stats-grid">';

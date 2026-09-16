@@ -181,7 +181,9 @@
 		function fight(p1,p2){
 			const s1=p1.stats,s2=p2.stats;
 			const d20=()=>Math.floor(Math.random()*20)+1;
-			const first=d20()+s1.dex!==d20()+s2.dex?d20()+s1.dex>d20()+s2.dex:Math.random()<0.5;
+			const i1=d20()+s1.dex;
+			const i2=d20()+s2.dex;
+			const first=i1!==i2?i1>i2:Math.random()<0.5;
 			let hp1=s1.hp,hp2=s2.hp,d1=0,d2=0,rounds=0;
 			const log=[];
 			while(hp1>0&&hp2>0&&rounds<CONFIG.maxRounds){
