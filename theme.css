@@ -457,12 +457,6 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
    ДОСТУПНОСТЬ: уважение к prefers-reduced-motion
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
     .header-title { animation: none; background-position: 0% center; }
     .beer-btn, .extension-btn { animation: none; }
 }
