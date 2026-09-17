@@ -452,8 +452,24 @@
     window.loadProfile = async () => {
         if (!allPlayers.length) await loadData();
 
-        const player = findPlayer($('#playerSearch').value.trim());
+        const searchName = $('#playerSearch').value.trim();
         const content = $('#profileContent');
+        let player = findPlayer(searchName);
+        let fromArchive = false;
+
+        if (!player && searchName) {
+            content.innerHTML = '<div class="status-message"><div class="spinner"></div><br>Ищем в архиве...</div>';
+            player = await findPlayerInArchive(searchName);
+            fromArchive = !!player;
+        }
+
+        if (player && fromArchive) {
+            currentProfileName = player.display;
+            hasPlayer2x2 = false;
+            content.innerHTML = renderArchiveProfile(player);
+            setTimeout(() => loadAllSeasons(player.display), 100);
+            return;
+        }
 
         if (player) {
             const key = player.display;
@@ -471,6 +487,55 @@
             content.innerHTML = '<div class="status-message">Игрок не найден</div>';
         }
     };
+
+    async function findPlayerInArchive(name) {
+        const search = name.toLowerCase().trim();
+        let lastSeen = null;
+
+        let i = 0;
+        while (i < 20) {
+            let data;
+            try { data = await getSeasonData(i); }
+            catch (e) { break; }
+
+            const p = (data.players || []).find(x => x.display?.toLowerCase() === search);
+            if (p && p.name && p.name !== 'Unknown') {
+                lastSeen = {
+                    display: p.display,
+                    emoji: p.emoji || '⚔️',
+                    name: p.name,
+                    skill: p.skill || 0,
+                    level: p.level || 0,
+                    lastSeason: i
+                };
+            }
+            i++;
+        }
+
+        return lastSeen;
+    }
+
+    function renderArchiveProfile(p) {
+        return `
+        <section class="section gold">
+            <div class="profile-hero">
+                <div class="profile-emoji">${p.emoji || '⚔️'}</div>
+                <div class="profile-name">${p.display}</div>
+                <div class="profile-class">${p.name} · последний сезон: ${p.lastSeason}</div>
+                <div class="profile-badges">
+                    <span class="badge badge-dark">📦 Не в текущем сезоне</span>
+                </div>
+                <button class="btn btn-secondary" onclick="copyProfileLink()">🔗 Копировать ссылку</button>
+            </div>
+        </section>
+        <div id="ptab-former" class="player-tab-content active">
+            <div id="allFormerHeroes" style="min-height:200px">
+                <div style="text-align:center;padding:40px;color:var(--sub)">
+                    <div class="spinner"></div><br>Загружаем историю...
+                </div>
+            </div>
+        </div>`;
+    }
 
     function renderProfile(p) {
         currentProfileName = p.display;
