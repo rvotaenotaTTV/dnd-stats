@@ -41,10 +41,10 @@
     .badge-light { background: rgba(240, 185, 11, 0.15); color: var(--gold); }
     .badge-dark { background: rgba(163, 113, 247, 0.2); color: var(--purple); }
 
-    .player-tabs { display: flex; gap: 4px; margin: 16px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); flex-wrap: wrap; }
-    .player-tab { padding: 8px 14px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: inherit; transition: 0.2s; white-space: nowrap; flex: 1; text-align: center; }
+    .player-tabs { display: flex; gap: 14px; margin: 20px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); justify-content: center; }
+    .player-tab { padding: 10px 16px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 0.75rem; font-family: inherit; transition: 0.2s; white-space: nowrap; }
     .player-tab:hover { background: var(--elevated); color: var(--text); }
-    .player-tab.active { background: var(--tab-active-bg); color: #000; font-weight: 700; }
+    .player-tab.active { background: linear-gradient(135deg, var(--ice), var(--gold)); color: #000; font-weight: 700; }
 
     .player-tab-content { display: none; }
     .player-tab-content.active { display: block; }

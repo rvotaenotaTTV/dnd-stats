@@ -86,15 +86,22 @@
 
     #po-tooltip-player { display: none; position: fixed; background: rgba(10,15,30,0.98); border: 1px solid var(--gold); border-radius: 12px; padding: 16px 20px; z-index: 99999; pointer-events: none; box-shadow: 0 8px 30px rgba(0,0,0,0.6); min-width: 240px; max-width: 300px; }
 
+    
+    /* === ВКЛАДКИ (единый стиль как в index.html) === */
+    .tabs { display: flex; gap: 14px; margin: 20px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); justify-content: center; }
+    .tab-btn { padding: 10px 16px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 0.75rem; font-family: inherit; transition: 0.2s; white-space: nowrap; }
+    .tab-btn:hover { background: var(--elevated); color: var(--text); }
+    .tab-btn.active { background: linear-gradient(135deg, var(--ice), var(--gold)); color: #000; font-weight: 700; }
+
     @media (max-width: 768px) {
+        .tabs { gap: 6px; padding: 4px; }
+        .tab-btn { padding: 9px 12px; font-size: 0.7rem; }
+
         .container { padding: 12px 14px 80px; }
         .header { padding: 20px 0 8px; }
         .header-title { font-size: 1.6rem; }
         .header-subtitle { font-size: 0.8rem; }
         .theme-toggle { position: static; transform: none; margin: 10px auto 0; display: block; width: fit-content; }
-
-        .tabs { gap: 6px; padding: 4px; }
-        .tab-btn { padding: 10px 12px; font-size: 0.75rem; flex: 1; text-align: center; }
 
         .faction-switch { gap: 6px; }
         .faction-btn { padding: 10px 8px; font-size: 0.78rem; }

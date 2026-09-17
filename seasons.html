@@ -72,10 +72,10 @@
     .tl-item.passed .tl-dot{border-color:var(--gold);color:var(--gold);background:rgba(240,185,11,.08)}
     .tl-item .tl-label{font-size:.55rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;white-space:nowrap}
     .tl-item.active .tl-label{color:var(--gold);font-weight:700}
-    .tabs{display:flex;gap:8px;margin-bottom:24px;justify-content:center;flex-wrap:wrap}
-    .tab-btn{padding:10px 24px;border:1px solid var(--border);background:var(--elevated);color:var(--sub);border-radius:var(--radius);cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:all .2s}
-    .tab-btn:hover{border-color:var(--gold);color:var(--text);background:var(--card)}
-    .tab-btn.active{background:var(--tab-active-bg);color:#000;border-color:var(--gold);font-weight:700;box-shadow:0 4px 12px rgba(240,185,11,0.25)}
+    .tabs { display: flex; gap: 14px; margin: 20px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); justify-content: center; }
+    .tab-btn { padding: 10px 16px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 0.75rem; font-family: inherit; transition: 0.2s; white-space: nowrap; }
+    .tab-btn:hover { background: var(--elevated); color: var(--text); }
+    .tab-btn.active { background: linear-gradient(135deg, var(--ice), var(--gold)); color: #000; font-weight: 700; }
     .tab-content{display:none;animation:fadeSlideIn .3s ease}
     .tab-content.active{display:block}
     .sortable-header{cursor:pointer;user-select:none;position:relative;padding-right:18px;transition:color .2s}
