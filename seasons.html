@@ -307,6 +307,7 @@ function switchSeasonsTab(tab, e) {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.querySelector(`.tabs .tab-btn[data-tab="${tab}"]`).classList.add('active');
     document.getElementById('seasons-tab-' + tab).classList.add('active');
+    history.replaceState(null, null, '#' + tab);
 }
 function clearSearch() {
     document.getElementById('totalSearch').value = '';
@@ -608,6 +609,12 @@ function initTotalSortable() {
     });
     const defaultHeader = table.querySelector('[data-sort="wins"]');
     if (defaultHeader) defaultHeader.classList.add('desc');
+}
+// Открыть вкладку из URL
+const validSeasonTabs = ['seasons', 'alltime'];
+const initialHash = window.location.hash.substring(1);
+if (initialHash && validSeasonTabs.includes(initialHash)) {
+    switchSeasonsTab(initialHash);
 }
 detectSeasons();
 loadTotalStats();
