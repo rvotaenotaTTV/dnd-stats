@@ -13,58 +13,58 @@
     .search-input { padding: 10px 16px; background: var(--elevated); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-size: 0.85rem; font-family: inherit; transition: 0.2s; width: 100%; }
     .search-input:focus { outline: none; border-color: var(--gold); }
     .search-input::placeholder { color: var(--muted); }
-    
+
     .dropdown-wrap { position: relative; flex: 1; }
     .dropdown-list { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); max-height: 200px; overflow-y: auto; z-index: 10; margin-top: 4px; }
     .dropdown-item { padding: 10px 16px; cursor: pointer; color: var(--text); font-size: 0.85rem; border-bottom: 1px solid var(--border); transition: 0.2s; }
     .dropdown-item:last-child { border-bottom: none; }
     .dropdown-item:hover { background: var(--elevated); color: var(--gold); }
-    
+
     .profile-hero { text-align: center; padding: 20px 28px; margin-bottom: 16px; animation: fadeSlideIn 0.4s ease; }
     .profile-emoji { font-size: 3rem; margin-bottom: 4px; }
     .profile-name { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
     .profile-class { color: var(--sub); font-size: 0.85rem; margin-bottom: 2px; }
     .profile-badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 8px 0; }
-    
+
     .badge { padding: 3px 10px; border-radius: 15px; font-size: 0.65rem; font-weight: 700; }
     .badge-gold { background: var(--gold); color: #000; }
     .badge-light { background: rgba(240, 185, 11, 0.15); color: var(--gold); }
     .badge-dark { background: rgba(163, 113, 247, 0.2); color: var(--purple); }
-    
+
     .player-tabs { display: flex; gap: 4px; margin: 16px 0; padding: 4px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); flex-wrap: wrap; }
     .player-tab { padding: 8px 14px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: inherit; transition: 0.2s; white-space: nowrap; flex: 1; text-align: center; }
     .player-tab:hover { background: var(--elevated); color: var(--text); }
     .player-tab.active { background: var(--tab-active-bg); color: #000; font-weight: 700; }
-    
+
     .player-tab-content { display: none; }
     .player-tab-content.active { display: block; }
-    
+
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
     .stat-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
     .stat-num { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
     .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
-    
+
     .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
     .rank-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
     .rank-pos { font-size: 1.4rem; font-weight: 800; }
     .rank-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
-    
+
     .season-tabs { display: flex; gap: 4px; margin: 16px 0; flex-wrap: wrap; justify-content: center; background: var(--elevated); padding: 3px; border-radius: 20px; border: 1px solid var(--border); }
     .season-tab { padding: 6px 14px; border-radius: 18px; font-size: 0.72rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--sub); font-family: inherit; transition: 0.2s; white-space: nowrap; }
     .season-tab:hover { color: var(--text); }
     .season-tab.active { background: var(--gold); color: #000; font-weight: 700; box-shadow: 0 2px 6px rgba(240, 185, 11, 0.25); }
-    
+
     .compare-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; padding: 14px; background: var(--elevated); border-radius: var(--radius-sm); border: 1px solid var(--border); flex-wrap: wrap; }
     .compare-bar span { color: var(--sub); font-size: 0.85rem; white-space: nowrap; }
-    
+
     th, td { text-align: center; }
     .td-better { color: var(--green) !important; font-weight: 700; }
     .td-worse { color: var(--red) !important; }
     .compare-table th:first-child, .compare-table td:first-child { text-align: left; color: var(--muted); font-weight: 500; }
-    
+
     .chart-placeholder { text-align: center; padding: 20px; background: var(--elevated); border-radius: var(--radius-sm); border: 1px dashed var(--border); margin-top: 12px; }
     .chart-loader { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
-    
+
     .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
     .ach-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 10px; text-align: center; border: 1px solid var(--border); }
     .ach-card.earned { border-color: var(--gold); }
@@ -73,16 +73,16 @@
     .ach-name { color: var(--gold); font-weight: 700; font-size: 0.8rem; margin: 4px 0; }
     .ach-progress { height: 4px; background: var(--bg); border-radius: 2px; margin-top: 6px; }
     .ach-fill { height: 4px; background: var(--gold); border-radius: 2px; }
-    
+
     .skill-hero { text-align: center; margin-bottom: 20px; }
     .skill-value { font-size: 3rem; font-weight: 900; color: var(--gold); }
-    
+
     .summary-stat { flex: 1; min-width: 60px; background: var(--elevated); border-radius: var(--radius-sm); padding: 8px; text-align: center; border: 1px solid var(--border); }
     .summary-value { font-size: 1rem; font-weight: 800; color: var(--gold); }
     .summary-label { font-size: 0.55rem; color: var(--muted); }
-    
+
     .former-heroes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 12px; }
-    
+
     tbody tr:nth-child(1) { animation-delay: 0.02s; }
     tbody tr:nth-child(2) { animation-delay: 0.04s; }
     tbody tr:nth-child(3) { animation-delay: 0.06s; }
@@ -93,7 +93,7 @@
     tbody tr:nth-child(8) { animation-delay: 0.16s; }
     tbody tr:nth-child(9) { animation-delay: 0.18s; }
     tbody tr:nth-child(10) { animation-delay: 0.2s; }
-    
+
     @media (max-width: 768px) {
         .search-row { flex-direction: column; align-items: stretch; gap: 8px; }
         .search-row .btn { width: 100%; padding: 12px; }
@@ -207,6 +207,23 @@
     const SEASON_ICONS = ['🏁', '🔥', '💫', '🩸', '🕯️', '⚡', '💀'];
     const MIN_FIGHTS_FOR_BEST = 10;
 
+    /* ============================================================
+       КЕШ АРХИВА (sessionStorage, 10 минут)
+       ============================================================ */
+    async function getSeasonData(n) {
+        const KEY = 'eternis-season-' + n;
+        const TTL = 10 * 60 * 1000;
+        try {
+            const cached = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+            if (cached && (Date.now() - cached.ts < TTL)) return cached.data;
+        } catch (e) {}
+        const r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_${n}.json`);
+        if (!r.ok) throw new Error('404');
+        const data = await r.json();
+        try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        return data;
+    }
+
     const ACHIEVEMENTS = [
         { e: "🌟", n: "Легенда Этерниса", t: "level", v: 150 },
         { e: "👑", n: "Легенда Арены", t: "tournament", v: 10 },
@@ -309,7 +326,7 @@
             'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
             'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'
         ];
-        
+
         for (const url of urls) {
             try {
                 const response = await fetch(url);
@@ -339,22 +356,22 @@
         const input = $('#playerSearch');
         const dropdown = $('#playerDropdown');
         const value = input.value.toLowerCase().trim();
-        
+
         if (!value || !allPlayers.length) {
             dropdown.style.display = 'none';
             return;
         }
-        
+
         const filtered = allPlayers
             .filter(p => p.display?.toLowerCase().includes(value))
             .slice(0, 8);
-        
+
         if (!filtered.length) {
             dropdown.style.display = 'none';
             return;
         }
-        
-        dropdown.innerHTML = filtered.map(p => 
+
+        dropdown.innerHTML = filtered.map(p =>
             `<div class="dropdown-item" onclick="selectPlayer('${escapeHtml(p.display)}')">${p.emoji || '⚔️'} ${p.display}</div>`
         ).join('');
         dropdown.style.display = 'block';
@@ -370,23 +387,23 @@
         const input = $('#compareInput');
         const dropdown = $('#compareDropdown');
         if (!input) return;
-        
+
         const value = input.value.toLowerCase().trim();
         if (!value || !allPlayers.length) {
             dropdown.style.display = 'none';
             return;
         }
-        
+
         const filtered = allPlayers
             .filter(p => p.display?.toLowerCase().includes(value))
             .slice(0, 8);
-        
+
         if (!filtered.length) {
             dropdown.style.display = 'none';
             return;
         }
-        
-        dropdown.innerHTML = filtered.map(p => 
+
+        dropdown.innerHTML = filtered.map(p =>
             `<div class="dropdown-item" onclick="selectCompare('${escapeHtml(p.display)}')">${p.emoji || '⚔️'} ${p.display}</div>`
         ).join('');
         dropdown.style.display = 'block';
@@ -400,10 +417,10 @@
 
     window.loadProfile = async () => {
         if (!allPlayers.length) await loadData();
-        
+
         const player = findPlayer($('#playerSearch').value.trim());
         const content = $('#profileContent');
-        
+
         if (player) {
             content.innerHTML = renderProfile(player);
             renderAchievements();
@@ -420,16 +437,16 @@
         const faction = p.faction || '';
         const factionIcon = faction === 'Орден Света' ? '🌝' : (faction === 'Культ Тьмы' ? '🌚' : '');
         const dungeon = dungeonPlayers[p.display];
-        
+
         const seasonRank = getSeasonRank(p);
         const winRank = getRankByWins(p);
         const winrateRank = getRankByWinrate(p);
         const shardsRank = getRankByShards(p);
         const dungeonRank = getRankByDungeon(p);
         const factionRank = getRankByFaction(p);
-        
+
         const colorForRank = (rank) => rank <= 3 ? 'var(--gold)' : rank <= 10 ? 'var(--green)' : 'var(--muted)';
-        
+
         let html = `
         <section class="section gold">
             <div class="profile-hero">
@@ -444,7 +461,7 @@
                 <button class="btn btn-secondary" onclick="copyProfileLink()">🔗 Копировать ссылку</button>
             </div>
         </section>`;
-        
+
         html += renderTabs();
         html += renderOverviewTab(p, total, winrate, dungeon, winRank, winrateRank, shardsRank, dungeonRank, seasonRank, factionRank, colorForRank);
         html += `<div id="ptab-winrate" class="player-tab-content">
@@ -470,7 +487,7 @@
             <div id="compareResult"></div>
         </div>`;
         html += `<div id="ptab-skill" class="player-tab-content"></div>`;
-        
+
         return html;
     }
 
@@ -483,10 +500,10 @@
             ['compare', '⚔️ Сравнить', false],
             ['skill', '📐 Skill', false]
         ];
-        
+
         return `
         <div class="player-tabs">
-            ${tabs.map(([id, label, active]) => 
+            ${tabs.map(([id, label, active]) =>
                 `<button class="player-tab ${active ? 'active' : ''}" onclick="switchTab('${id}')">${label}</button>`
             ).join('')}
         </div>`;
@@ -507,7 +524,7 @@
             { value: dungeon ? dungeon.record : '-', label: '🏔 Рекорд данжа' },
             { value: dungeon ? dungeon.trophies : '-', label: '🐉 Трофеев' }
         ];
-        
+
         const ranks = [
             { rank: seasonRank, label: 'По SKILL' },
             { rank: winRank, label: 'По победам' },
@@ -516,7 +533,7 @@
             { rank: shardsRank, label: 'По осколкам' },
             { rank: dungeonRank, label: 'По данжу' }
         ];
-        
+
         return `
         <div id="ptab-current" class="player-tab-content active">
             <div class="stats-grid">
@@ -587,7 +604,7 @@
     window.switchTab = (tabId) => {
         $$('.player-tab').forEach(btn => btn.classList.remove('active'));
         $$('.player-tab-content').forEach(content => content.classList.remove('active'));
-        
+
         const tabLabels = {
             current: '👤 Обзор',
             winrate: '📈 Винрейт',
@@ -596,14 +613,14 @@
             compare: '⚔️ Сравнить',
             skill: '📐 Skill'
         };
-        
+
         $$('.player-tab').forEach(btn => {
             if (btn.textContent.trim() === tabLabels[tabId]) btn.classList.add('active');
         });
-        
+
         const content = $('#ptab-' + tabId);
         if (content) content.classList.add('active');
-        
+
         if (tabId === 'skill') {
             const player = findPlayer(currentProfileName);
             if (player) $('#ptab-skill').innerHTML = renderSkill(player);
@@ -615,7 +632,7 @@
         const wr = total > 0 ? (p.wins / total) : 0;
         const skill = p.skill || 0;
         const denominator = Math.sqrt(total / 75 + 1);
-        
+
         const components = [
             { icon: '⚔️', name: 'Победы × Винрейт', detail: `${p.wins} × ${(wr * 100).toFixed(1)}% × 7`, value: (p.wins || 0) * wr * 7, color: 'var(--gold)' },
             { icon: '🔥', name: 'Лучший стрик', detail: `${p.best} × 10`, value: (p.best || 0) * 10, color: 'var(--red)' },
@@ -623,15 +640,15 @@
             { icon: '👑', name: 'Турнирные победы', detail: `${p.tournamentWins} × 25`, value: (p.tournamentWins || 0) * 25, color: 'var(--purple)' },
             { icon: '🌍', name: 'Фракционные победы', detail: `${p.factionWins} × 2`, value: (p.factionWins || 0) * 2, color: 'var(--ice)' }
         ];
-        
+
         const totalValue = components.reduce((sum, c) => sum + c.value, 0);
-        
+
         return `
         <div class="section gold" style="padding:24px 20px; text-align:center;">
             <div style="font-size:3rem; font-weight:900; color:var(--gold); line-height:1;">${skill}</div>
             <div style="font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-top:4px;">Текущий SKILL</div>
         </div>
-            
+
         <div class="section gold" style="padding:20px;">
             <div style="display:flex; flex-direction:column; gap:12px;">
                 ${components.map(c => {
@@ -653,7 +670,7 @@
                 }).join('')}
             </div>
         </div>
-        
+
         <div class="section gold" style="padding:20px; text-align:center;">
             <div style="font-size:0.8rem; color:var(--sub);">Сумма компонентов</div>
             <div style="font-size:1.3rem; font-weight:800; color:var(--gold); margin-top:4px;">${totalValue.toFixed(0)}</div>
@@ -664,7 +681,7 @@
     function renderAchievements() {
         const p = findPlayer($('#playerSearch').value.trim());
         if (!p) return;
-        
+
         const dp = dungeonPlayers[p.display];
         if (dp) {
             p.dr = dp.record;
@@ -672,9 +689,9 @@
             p.db = dp.bosses;
             p.dw = dp.totalWaves;
         }
-        
+
         const total = p.wins + p.losses;
-        
+
         const checkAchievement = (a) => {
             if (a.m && total < a.m) return false;
             switch (a.t) {
@@ -696,10 +713,10 @@
                 default: return false;
             }
         };
-        
+
         const earned = ACHIEVEMENTS.filter(checkAchievement);
         const locked = ACHIEVEMENTS.filter(a => !checkAchievement(a));
-        
+
         let html = `
         <div style="text-align:center;margin-bottom:16px">
             <span style="font-size:2rem">🏅</span>
@@ -708,7 +725,7 @@
                 <div style="background:var(--gold);height:8px;border-radius:4px;width:${(earned.length / ACHIEVEMENTS.length) * 100}%"></div>
             </div>
         </div>`;
-        
+
         if (earned.length) {
             html += `
             <section class="section gold">
@@ -724,7 +741,7 @@
                 </div>
             </section>`;
         }
-        
+
         if (locked.length) {
             html += `
             <section class="section">
@@ -734,7 +751,7 @@
                 </div>
             </section>`;
         }
-        
+
         $('#ptab-achievements').innerHTML = html;
     }
 
@@ -763,7 +780,7 @@
         let current = 0;
         let max = a.v || 0;
         let conditionText = getAchievementCondition(a);
-        
+
         switch (a.t) {
             case "level": current = p.level; break;
             case "wins": current = p.wins; break;
@@ -781,9 +798,9 @@
             case "champion": max = 1; break;
             case "balance": current = total >= 20 ? 1 : 0; max = 1; break;
         }
-        
+
         const percent = Math.min(100, (current / max) * 100);
-        
+
         return `
         <div class="ach-card locked">
             <div class="ach-emoji">${a.e}</div>
@@ -799,23 +816,23 @@
     window.drawWinrateChart = async (playerName) => {
         const container = $('#ptab-winrate');
         if (!container) return;
-        
+
         container.innerHTML = '<div class="chart-placeholder"><span class="chart-loader"></span> Загрузка...</div>';
-        
+
         try {
             const player = allPlayers.find(p => p.display === playerName);
             if (!player) return;
-            
+
             const pages = await Promise.all([1, 2, 3, 4, 5, 6].map(page =>
                 fetch(`https://api.github.com/repos/rvotaenotaTTV/dnd-stats/commits?path=stats_data.json&per_page=30&page=${page}`).then(r => r.json())
             ));
-            
+
             const allCommits = pages.flat().filter(c => c?.sha);
             if (allCommits.length < 5) {
                 container.innerHTML = '<div class="chart-placeholder">⚠️ Недостаточно истории</div>';
                 return;
             }
-            
+
             const step = Math.floor(allCommits.length / 4);
             const selectedCommits = [
                 allCommits[allCommits.length - 1],
@@ -824,15 +841,15 @@
                 allCommits[step],
                 null
             ];
-            
+
             const oldSlices = await Promise.all(selectedCommits.slice(0, 4).map(commit =>
                 fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/${commit.sha}/stats_data.json`).then(r => r.json())
             ));
-            
+
             const points = [];
             const labels = [];
             const now = Date.now();
-            
+
             oldSlices.forEach((data, i) => {
                 const p = (data.players || []).find(x => x.display === playerName);
                 if (p) {
@@ -842,17 +859,17 @@
                     labels.push(`${Math.round((now - new Date(selectedCommits[i].commit.committer.date).getTime()) / 3600000)}ч`);
                 }
             });
-            
+
             const t = (player.wins || 0) + (player.losses || 0);
             const currentWr = t > 0 ? (player.wins / t * 100) : 0;
             points.push(currentWr);
             labels.push('Сейчас');
-            
+
             if (points.length < 3) {
                 container.innerHTML = '<div class="chart-placeholder">⚠️ Недостаточно данных</div>';
                 return;
             }
-            
+
             renderWinrateChart(container, points, labels, playerName);
         } catch (e) {
             container.innerHTML = '<div class="chart-placeholder" style="color:var(--red)">❌ Ошибка</div>';
@@ -866,26 +883,26 @@
         const minW = Math.min(...points) - 2;
         const maxW = Math.max(...points) + 2;
         const range = maxW - minW || 1;
-        
+
         const gX = (i) => P + (W - P * 2) * i / (points.length - 1);
         const gY = (v) => H - P - ((v - minW) / range) * (H - P * 2);
-        
+
         const svgPoints = points.map((p, i) => `${gX(i)},${gY(p)}`).join(' ');
         const circles = points.map((p, i) => {
             const color = i === points.length - 1 ? (p >= points[0] ? '#10b981' : '#ef4444') : '#f0b90b';
             return `<circle cx="${gX(i)}" cy="${gY(p)}" r="6" fill="var(--card)" stroke="${color}" stroke-width="2.5"/>`;
         }).join('');
-        const texts = points.map((p, i) => 
+        const texts = points.map((p, i) =>
             `<text x="${gX(i)}" y="${gY(p) - 14}" text-anchor="middle" fill="#f0b90b" font-size="11" font-weight="700">${p.toFixed(1)}%</text>`
         ).join('');
-        const bottomLabels = labels.map((l, i) => 
+        const bottomLabels = labels.map((l, i) =>
             `<text x="${gX(i)}" y="${H - 8}" text-anchor="middle" fill="#8a94a8" font-size="10">${l}</text>`
         ).join('');
-        
+
         const diff = points[points.length - 1] - points[0];
         const diffText = diff >= 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`;
         const diffColor = diff >= 0 ? 'var(--green)' : 'var(--red)';
-        
+
         container.innerHTML = `
         <section class="section gold" style="padding:18px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -922,16 +939,16 @@
 
     function renderCompare(p1, p2) {
         if (!p1 || !p2) return '';
-        
+
         const d1 = dungeonPlayers[p1.display];
         const d2 = dungeonPlayers[p2.display];
-        
+
         const rows = [
             ['Победы', p1.wins || 0, p2.wins || 0, true],
             ['Поражения', p1.losses || 0, p2.losses || 0, false],
-            ['Винрейт', 
-                ((p1.wins || 0) / ((p1.wins || 0) + (p1.losses || 0) || 1) * 100).toFixed(1) + '%', 
-                ((p2.wins || 0) / ((p2.wins || 0) + (p2.losses || 0) || 1) * 100).toFixed(1) + '%', 
+            ['Винрейт',
+                ((p1.wins || 0) / ((p1.wins || 0) + (p1.losses || 0) || 1) * 100).toFixed(1) + '%',
+                ((p2.wins || 0) / ((p2.wins || 0) + (p2.losses || 0) || 1) * 100).toFixed(1) + '%',
                 true],
             ['SKILL', p1.skill || 0, p2.skill || 0, true],
             ['Всего боёв', (p1.wins || 0) + (p1.losses || 0), (p2.wins || 0) + (p2.losses || 0), true],
@@ -941,13 +958,13 @@
             ['Турниры', p1.tournamentWins || 0, p2.tournamentWins || 0, true],
             ['Рекорд данжа', d1 ? d1.record : '-', d2 ? d2.record : '-', true]
         ];
-        
+
         let tableHtml = '<div class="table-container"><table class="compare-table"><thead><tr><th>Стат</th><th>' + p1.display + '</th><th>' + p2.display + '</th></tr></thead><tbody>';
-        
+
         rows.forEach(([label, val1, val2, higherIsBetter]) => {
             let class1 = '';
             let class2 = '';
-            
+
             if (typeof val1 === 'number' && typeof val2 === 'number') {
                 if (val1 > val2) {
                     class1 = higherIsBetter ? 'td-better' : 'td-worse';
@@ -957,10 +974,10 @@
                     class2 = higherIsBetter ? 'td-better' : 'td-worse';
                 }
             }
-            
+
             tableHtml += `<tr><td>${label}</td><td class="${class1}">${val1}</td><td class="${class2}">${val2}</td></tr>`;
         });
-        
+
         tableHtml += '</tbody></table></div>';
         return tableHtml;
     }
@@ -968,15 +985,15 @@
     async function loadAllSeasons(playerName) {
         const container = $('#allFormerHeroes');
         if (!container) return;
-        
+
         cachedAllHeroes = [];
         const seen = new Set();
         const playerKey = playerName.toLowerCase();
-        
+
         const currentArchive = heroArchive[playerKey] || [];
         const currentDungeon = dungeonPlayers[playerKey] || null;
         const currentPlayer = allPlayers.find(p => p.display?.toLowerCase() === playerKey);
-        
+
         currentArchive.forEach(hero => {
             const id = `c-${hero.name}-${hero.wins}-${hero.losses}`;
             if (!seen.has(id)) {
@@ -991,25 +1008,22 @@
                 });
             }
         });
-        
+
         seasonNames = [];
         let seasonIndex = 0;
-        
+
         while (seasonIndex < 20) {
-            const filename = `season_${seasonIndex}.json`;
             let data = null;
-            
+
             try {
-                const response = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/${filename}`);
-                if (!response.ok) break;
-                data = await response.json();
+                data = await getSeasonData(seasonIndex);
             } catch (e) {
                 break;
             }
-            
+
             const icon = SEASON_ICONS[seasonIndex] || '📋';
             seasonNames[seasonIndex] = `${icon} Сезон ${seasonIndex}`;
-            
+
             const player = data.players?.find(p => p.display?.toLowerCase() === playerKey);
             if (player?.name && player.name !== 'Unknown') {
                 const id = `s${seasonIndex}-${player.name}`;
@@ -1032,7 +1046,7 @@
                     });
                 }
             }
-            
+
             const archive = data.heroArchive?.[playerKey];
             if (archive) {
                 archive.forEach(hero => {
@@ -1050,25 +1064,25 @@
                     }
                 });
             }
-            
+
             seasonIndex++;
         }
-        
+
         const currentSeasonName = `${SEASON_ICONS[seasonIndex] || '📋'} Сезон ${seasonIndex}`;
         seasonNames[seasonIndex] = currentSeasonName;
-        
+
         cachedAllHeroes.forEach(hero => {
             if (hero.isCurrent) {
                 hero.seasonIndex = seasonIndex;
                 hero.season = currentSeasonName;
             }
         });
-        
+
         if (cachedAllHeroes.length === 0) {
             container.innerHTML = '';
             return;
         }
-        
+
         currentSeasonFilter = 'all';
         renderSeasonView(playerName);
     }
@@ -1076,14 +1090,14 @@
     function renderSeasonView(playerName) {
         const container = $('#allFormerHeroes');
         if (!container || cachedAllHeroes.length === 0) return;
-        
+
         const availableSeasons = [...new Set(cachedAllHeroes.map(h => h.seasonIndex))].sort((a, b) => a - b);
         let filtered = cachedAllHeroes;
-        
+
         if (currentSeasonFilter !== 'all') {
             filtered = cachedAllHeroes.filter(h => h.seasonIndex === parseInt(currentSeasonFilter));
         }
-        
+
         const totals = { wins: 0, losses: 0, best: 0, worst: 0, tournaments: 0, maxLevel: 0, maxRecord: 0 };
         filtered.forEach(hero => {
             totals.wins += hero.wins || 0;
@@ -1094,16 +1108,16 @@
             totals.maxLevel = Math.max(totals.maxLevel, hero.level || 0);
             totals.maxRecord = Math.max(totals.maxRecord, hero.record || 0);
         });
-        
+
         const totalFights = totals.wins + totals.losses;
         const totalWinrate = totalFights > 0 ? (totals.wins * 100 / totalFights).toFixed(1) : '0';
-        
+
         let html = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
             <h3 style="color:var(--gold);margin:0;">👻 Бывшие герои</h3>
             <span style="color:var(--muted);font-size:0.75rem;">${cachedAllHeroes.length} всего</span>
         </div>
-        
+
         <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
             <div class="summary-stat"><div class="summary-value">${filtered.length}</div><div class="summary-label">Героев</div></div>
             <div class="summary-stat"><div class="summary-value">${totals.wins}</div><div class="summary-label">Побед</div></div>
@@ -1113,7 +1127,7 @@
             <div class="summary-stat"><div class="summary-value">${totals.maxLevel}</div><div class="summary-label">📈 Ур.</div></div>
             <div class="summary-stat"><div class="summary-value">${totals.maxRecord || '-'}</div><div class="summary-label">🏔 Волн</div></div>
         </div>
-        
+
         <div class="season-tabs">
             <button class="season-tab ${currentSeasonFilter === 'all' ? 'active' : ''}" onclick="setSeasonFilter('all')">📋 Все</button>
             ${availableSeasons.map(si => {
@@ -1121,17 +1135,17 @@
                 return `<button class="season-tab ${currentSeasonFilter === String(si) ? 'active' : ''}" onclick="setSeasonFilter('${si}')">${name}</button>`;
             }).join('')}
         </div>`;
-        
+
         const sortedHeroes = [...filtered].sort((a, b) => a.seasonIndex - b.seasonIndex);
-        
+
         html += '<div class="former-heroes-grid">';
-        
+
         sortedHeroes.forEach(hero => {
             const total = (hero.wins || 0) + (hero.losses || 0);
             const winrate = total > 0 ? (hero.wins * 100 / total).toFixed(1) : '0.0';
             const winrateNum = parseFloat(winrate);
             const winrateColor = winrateNum >= 55 ? 'var(--green)' : winrateNum >= 45 ? 'var(--gold)' : 'var(--red)';
-            
+
             html += `
             <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center;transition:all 0.2s ease;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
                 <div style="font-size:1.5rem;line-height:1;margin-bottom:4px;">${hero.emoji || '⚔️'}</div>
@@ -1150,7 +1164,7 @@
                 </div>
             </div>`;
         });
-        
+
         html += '</div>';
         container.innerHTML = html;
     }
@@ -1163,19 +1177,19 @@
     window.copyProfileLink = async () => {
         const name = $('#playerSearch').value.trim();
         if (!name) return;
-        
+
         const url = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
-        
+
         try {
             await navigator.clipboard.writeText(url);
             const btn = $('.btn-secondary');
             if (!btn) return;
-            
+
             btn.innerHTML = '✅ Скопировано!';
             btn.style.background = 'var(--green)';
             btn.style.color = '#fff';
             btn.style.borderColor = 'var(--green)';
-            
+
             setTimeout(() => {
                 btn.innerHTML = '🔗 Копировать ссылку';
                 btn.style.background = '';
@@ -1189,13 +1203,13 @@
 
     initTheme();
     initNavigation();
-    
+
     loadData().then((success) => {
         if (!success) {
             console.warn('Failed to load data');
             return;
         }
-        
+
         const params = new URLSearchParams(window.location.search);
         const name = params.get('name');
         if (name) {

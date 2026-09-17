@@ -430,11 +430,11 @@
 <body>
     <div class="container">
 
-        <header class="header">
-            <h1 class="header-title">АНАЛИТИКА</h1>
-            <p class="header-subtitle">Баланс, калькулятор, прогнозы</p>
-            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-        </header>
+		<header class="header">
+			<h1 class="header-title">БАЛАНС</h1>
+			<p class="header-subtitle">Аналитика · Расчёты</p>
+			<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+		</header>
 
         <div class="nav-wrapper">
             <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
@@ -640,6 +640,23 @@
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
 <script>
+/* ============================================================
+   КЕШ АРХИВА (sessionStorage, 10 минут)
+   ============================================================ */
+async function getSeasonData(n) {
+    const KEY = 'eternis-season-' + n;
+    const TTL = 10 * 60 * 1000;
+    try {
+        const cached = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+        if (cached && (Date.now() - cached.ts < TTL)) return cached.data;
+    } catch (e) {}
+    const r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_${n}.json`);
+    if (!r.ok) throw new Error('404');
+    const data = await r.json();
+    try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+    return data;
+}
+
 /* ============================================================
    ОБЩЕЕ: тема, навигация, переключение вкладок
    ============================================================ */
@@ -1456,7 +1473,6 @@ function form_renderTable() {
    ВКЛАДКА 6: МАТРИЦА
    ============================================================ */
 const MATRIX_STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-const MATRIX_ARCHIVE_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
 
 let matrix_racesData = null;
 let matrix_currentMode = 'races';
@@ -1495,9 +1511,7 @@ async function matrix_loadData() {
         const allSeasons = [];
         for (let n = 1; n < 30; n++) {
             try {
-                const r = await fetch(`${MATRIX_ARCHIVE_BASE}${n}.json`);
-                if (!r.ok) break;
-                const d = await r.json();
+                const d = await getSeasonData(n);
                 allSeasons.push({ num: n, data: d, name: `С${n}`, fullName: `Сезон ${n}` });
             } catch (e) { break; }
         }
