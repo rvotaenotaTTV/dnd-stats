@@ -127,6 +127,7 @@
         .title-cond { font-size: 0.62rem; }
         .title-holders { font-size: 0.62rem; }
     }
+
 </style>
 </head>
 <body>
@@ -163,7 +164,8 @@
     </div>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 	<a href="https://github.com/rvotaenotaTTV/dnd-stats/releases/latest" target="_blank" class="extension-btn" title="Расширение для браузера">🧩</a>
-    <script>
+    
+<script>
         function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('eternis-theme',next);}
         (function(){const saved=localStorage.getItem('eternis-theme');if(saved)document.documentElement.setAttribute('data-theme',saved);})();
         function toggleNav(){const nav=document.getElementById('pageNav'),btn=document.querySelector('.nav-toggle');nav.classList.toggle('show');btn.textContent=nav.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
@@ -599,6 +601,7 @@
 			}
 		});
 	});
-	</script>
+	
+</script>
 </body>
 </html>

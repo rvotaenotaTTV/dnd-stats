@@ -103,9 +103,20 @@
         .num-btn.clear-btn { font-size: 0.75rem; padding: 10px 6px; }
         .sudoku-timer { font-size: 0.78rem; }
     }
+
+/* === SCROLL PROGRESS + SCROLL TOP === */
+.reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
+.scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.scroll-top.visible { opacity: 1; pointer-events: all; }
+.scroll-top:hover { background: var(--gold); color: #000; transform: translateY(-3px); }
+@media (max-width: 768px) {
+    .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
+}
+
 </style>
 </head>
 <body>
+<div class="reading-progress" id="readingProgress"></div>
 <div class="container">
     <header class="header"><h1 class="header-title">ТАВЕРНА «ОЧКО ЭТЕРНИСА»</h1><p class="header-subtitle">Азарт · Ставки · Пиво</p><button class="theme-toggle" onclick="toggleTheme()">🌓</button></header>
 
@@ -145,6 +156,8 @@
 </div>
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
 
+
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 <script>
 // === ТЕМА И НАВИГАЦИЯ ===
 function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-theme'),n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n)}
@@ -289,6 +302,22 @@ window.goMenu = function(){
         </div>`
     setQuote(randomQuote())
 }
+
+/* === SCROLL PROGRESS + SCROLL TOP === */
+(function() {
+    const progressBar = document.getElementById('readingProgress');
+    const scrollTopBtn = document.getElementById('scrollTop');
+    if (!progressBar || !scrollTopBtn) return;
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.transform = `scaleX(${progress / 100})`;
+        if (scrollTop > 300) scrollTopBtn.classList.add('visible');
+        else scrollTopBtn.classList.remove('visible');
+    });
+})();
+
 </script>
 </body>
 </html>

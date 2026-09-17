@@ -61,10 +61,21 @@
         .round-p1, .round-p2 { font-size: 0.7rem; padding: 0 3px; white-space: nowrap; }
         .round-vs { font-size: 0.7rem; }
     }
+
+/* === SCROLL PROGRESS + SCROLL TOP === */
+.reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
+.scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.scroll-top.visible { opacity: 1; pointer-events: all; }
+.scroll-top:hover { background: var(--gold); color: #000; transform: translateY(-3px); }
+@media (max-width: 768px) {
+    .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
+}
+
 </style>
 </head>
 <body>
-    <div class="container">
+    <div class="reading-progress" id="readingProgress"></div>
+<div class="container">
         <header class="header">
             <h1 class="header-title">ЛОГИ БОЁВ</h1>
             <p class="header-subtitle">Последние сражения на Арене</p>
@@ -105,7 +116,9 @@
         <div id="logs-content"><div style="text-align:center;padding:48px 20px;color:var(--sub);"><div class="spinner"></div><p>Загрузка...</p></div></div>
     </div>
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
-    <script>
+    
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+<script>
         function toggleTheme() { const html = document.documentElement; const current = html.getAttribute('data-theme'); const next = current === 'dark' ? 'light' : 'dark'; html.setAttribute('data-theme', next); localStorage.setItem('eternis-theme', next); }
         (function() { const saved = localStorage.getItem('eternis-theme'); if (saved) document.documentElement.setAttribute('data-theme', saved); })();
         function toggleNav() { const nav = document.getElementById('pageNav'); const btn = document.querySelector('.nav-toggle'); nav.classList.toggle('show'); btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню'; }
@@ -187,6 +200,22 @@
 			}
 		});
 	});
-    </script>
+    
+/* === SCROLL PROGRESS + SCROLL TOP === */
+(function() {
+    const progressBar = document.getElementById('readingProgress');
+    const scrollTopBtn = document.getElementById('scrollTop');
+    if (!progressBar || !scrollTopBtn) return;
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.transform = `scaleX(${progress / 100})`;
+        if (scrollTop > 300) scrollTopBtn.classList.add('visible');
+        else scrollTopBtn.classList.remove('visible');
+    });
+})();
+
+</script>
 </body>
 </html>

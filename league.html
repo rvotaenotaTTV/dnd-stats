@@ -132,10 +132,21 @@
         .admin-panel button { padding: 4px 6px; font-size: 0.6rem; }
         #po-tooltip-player { max-width: 240px; min-width: 200px; padding: 12px 14px; }
     }
+
+/* === SCROLL PROGRESS + SCROLL TOP === */
+.reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
+.scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.scroll-top.visible { opacity: 1; pointer-events: all; }
+.scroll-top:hover { background: var(--gold); color: #000; transform: translateY(-3px); }
+@media (max-width: 768px) {
+    .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
+}
+
 </style>
 </head>
 <body>
-    <div class="container">
+    <div class="reading-progress" id="readingProgress"></div>
+<div class="container">
         <header class="header">
             <h1 class="header-title">ЛИГА ЭТЕРНИСА</h1>
             <p class="header-subtitle">Турнирная таблица и плей-офф</p>
@@ -194,7 +205,9 @@
     <button class="admin-trigger" id="adminTrigger" onclick="toggleAdmin()" title="Управление">🛠</button>
     <div class="admin-panel" id="adminPanel"><button class="btn-save" onclick="savePlayoffs()">💾</button><button class="btn-export" onclick="exportPlayoffs()">📋</button><button class="btn-clear" onclick="clearPlayoffs()">🗑</button></div>
     <div id="po-tooltip-player"></div>
-    <script>
+    
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+<script>
         function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
         (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
         function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
@@ -289,6 +302,22 @@
 
         async function init(){try{const r=await fetch(DATA_URL);const d=await r.json();allPlayers=(d.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);allPlayers.sort((a,b)=>b.skill-a.skill);lightPlayers=allPlayers.filter(p=>p.faction==='Орден Света');darkPlayers=allPlayers.filter(p=>p.faction==='Культ Тьмы');const commitsUrl='https://api.github.com/repos/rvotaenotaTTV/dnd-stats/commits?path=stats_data.json&per_page=30';const commits=await fetch(commitsUrl).then(r=>r.json());if(commits.length>0){const target=commits[commits.length-1];const oldUrl=`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/${target.sha}/stats_data.json`;try{const oldData=await fetch(oldUrl).then(r=>r.json());const oldPlayers=(oldData.players||[]).filter(p=>p.name&&p.name!=='Unknown'&&p.skill>0);oldPlayers.sort((a,b)=>b.skill-a.skill);const oldLight=oldPlayers.filter(p=>p.faction==='Орден Света');const oldDark=oldPlayers.filter(p=>p.faction==='Культ Тьмы');const lightRanks={};oldLight.forEach((p,i)=>{lightRanks[p.display]=i+1;});localStorage.setItem('league-old-light',JSON.stringify(lightRanks));const darkRanks={};oldDark.forEach((p,i)=>{darkRanks[p.display]=i+1;});localStorage.setItem('league-old-dark',JSON.stringify(darkRanks));}catch(e){}}renderStandings();}catch(e){document.getElementById('standings-content').innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">❌ Ошибка загрузки</div>';}}
         init();
-    </script>
+    
+/* === SCROLL PROGRESS + SCROLL TOP === */
+(function() {
+    const progressBar = document.getElementById('readingProgress');
+    const scrollTopBtn = document.getElementById('scrollTop');
+    if (!progressBar || !scrollTopBtn) return;
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.transform = `scaleX(${progress / 100})`;
+        if (scrollTop > 300) scrollTopBtn.classList.add('visible');
+        else scrollTopBtn.classList.remove('visible');
+    });
+})();
+
+</script>
 </body>
 </html>
