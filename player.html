@@ -226,6 +226,8 @@
     let cachedAllHeroes = [];
     let currentSeasonFilter = 'all';
     let seasonNames = [];
+    let data2x2 = {};
+    let hasPlayer2x2 = false;
 
     const SEASON_ICONS = ['🏁', '🔥', '💫', '🩸', '🕯️', '⚡', '💀'];
     const MIN_FIGHTS_FOR_BEST = 10;
@@ -344,6 +346,15 @@
         });
     }
 
+    async function load2x2() {
+        try {
+            const r = await fetch('https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/2x2.json?v=' + Date.now());
+            if (!r.ok) return false;
+            data2x2 = await r.json();
+            return true;
+        } catch (e) { return false; }
+    }
+
     async function loadData() {
         const urls = [
             'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
@@ -445,6 +456,14 @@
         const content = $('#profileContent');
 
         if (player) {
+            const key = player.display;
+            let found = data2x2[key];
+            if (!found) {
+                const lower = key.toLowerCase();
+                const foundKey = Object.keys(data2x2).find(k => k.toLowerCase() === lower);
+                if (foundKey) found = data2x2[foundKey];
+            }
+            hasPlayer2x2 = !!(found && ((found.teamWins || 0) + (found.teamLoses || 0)) > 0);
             content.innerHTML = renderProfile(player);
             renderAchievements();
             setTimeout(() => loadAllSeasons(player.display), 200);
@@ -499,6 +518,9 @@
         html += `<div id="ptab-former" class="player-tab-content">
             <div id="allFormerHeroes" style="min-height:200px"></div>
         </div>`;
+        html += `<div id="ptab-team2x2" class="player-tab-content">
+            <div id="team2x2-content" style="text-align:center;padding:40px;color:var(--sub)">Загрузка...</div>
+        </div>`;
         html += `<div id="ptab-compare" class="player-tab-content">
             <div class="compare-bar">
                 <span>⚔️ Сравнить с:</span>
@@ -516,19 +538,21 @@
 
     function renderTabs() {
         const tabs = [
-            ['current', '👤 Обзор', true],
-            ['winrate', '📈 Винрейт', false],
-            ['achievements', '🏅 Достижения', false],
-            ['former', '👻 Бывшие', false],
-            ['compare', '⚔️ Сравнить', false],
-            ['skill', '📐 Skill', false]
+            ['current', '👤 Обзор', true, false],
+            ['winrate', '📈 Винрейт', false, false],
+            ['achievements', '🏅 Достижения', false, false],
+            ['former', '👻 Бывшие', false, false],
+            ['team2x2', '📦 2x2', false, true],
+            ['compare', '⚔️ Сравнить', false, false],
+            ['skill', '📐 Skill', false, false]
         ];
 
         return `
         <div class="player-tabs">
-            ${tabs.map(([id, label, active]) =>
-                `<button class="player-tab ${active ? 'active' : ''}" onclick="switchTab('${id}')">${label}</button>`
-            ).join('')}
+            ${tabs.map(([id, label, active, requires2x2]) => {
+                if (requires2x2 && !hasPlayer2x2) return '';
+                return `<button class="player-tab ${active ? 'active' : ''}" onclick="switchTab('${id}')">${label}</button>`;
+            }).join('')}
         </div>`;
     }
 
@@ -633,6 +657,7 @@
             winrate: '📈 Винрейт',
             achievements: '🏅 Достижения',
             former: '👻 Бывшие',
+            team2x2: '📦 2x2',
             compare: '⚔️ Сравнить',
             skill: '📐 Skill'
         };
@@ -648,7 +673,84 @@
             const player = findPlayer(currentProfileName);
             if (player) $('#ptab-skill').innerHTML = renderSkill(player);
         }
+        if (tabId === 'team2x2') {
+            const player = findPlayer(currentProfileName);
+            if (player) render2x2Tab(player);
+        }
     };
+
+    function render2x2Tab(p) {
+        const container = $('#team2x2-content');
+        if (!container) return;
+
+        const key = p.display;
+        let stats = data2x2[key];
+        if (!stats) {
+            const lower = key.toLowerCase();
+            const foundKey = Object.keys(data2x2).find(k => k.toLowerCase() === lower);
+            if (foundKey) stats = data2x2[foundKey];
+        }
+
+        if (!stats) {
+            container.innerHTML = '<div style="padding:40px;color:var(--sub)">📦 Нет данных 2x2</div>';
+            return;
+        }
+
+        const wins = stats.teamWins || 0;
+        const loses = stats.teamLoses || 0;
+        const tournaments = stats.teamTournamentWins || 0;
+        const elo = stats.teamElo || 0;
+        const total = wins + loses;
+        const wr = total > 0 ? (wins * 100 / total).toFixed(1) : '0.0';
+
+        const allElo = Object.entries(data2x2)
+            .filter(([_, s]) => ((s.teamWins || 0) + (s.teamLoses || 0)) >= 5)
+            .sort((a, b) => (b[1].teamElo || 0) - (a[1].teamElo || 0));
+        const rank = allElo.findIndex(([k]) => k.toLowerCase() === key.toLowerCase()) + 1;
+
+        const rankData = [
+            { min: 60, name: '💠 Алмаз', color: 'var(--ice)' },
+            { min: 55, name: '💎 Платина', color: 'var(--purple)' },
+            { min: 50, name: '🥇 Золото', color: 'var(--gold)' },
+            { min: 45, name: '🥈 Серебро', color: 'var(--silver)' },
+            { min: 0,  name: '🥉 Бронза', color: 'var(--bronze)' }
+        ];
+        let rankName = '⚪ Без ранга';
+        let rankColor = 'var(--muted)';
+        if (total >= 5) {
+            for (const r of rankData) {
+                if (parseFloat(wr) >= r.min) { rankName = r.name; rankColor = r.color; break; }
+            }
+        }
+
+        let html = `
+        <section class="section gold">
+            <div style="text-align:center;margin-bottom:20px">
+                <div style="font-size:1.2rem;font-weight:800;color:var(--gold)">2x2 — ЗАКРЫТЫЙ РЕЖИМ</div>
+                <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Данные сохранены для истории. Вернётся в будущих сезонах.</div>
+            </div>
+
+            <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+                <div class="stat-card"><div class="stat-num">${wins}</div><div class="stat-label">⚔️ Победы</div></div>
+                <div class="stat-card"><div class="stat-num">${loses}</div><div class="stat-label">💀 Поражения</div></div>
+                <div class="stat-card"><div class="stat-num">${wr}%</div><div class="stat-label">📊 Винрейт</div></div>
+            </div>
+
+            <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+                <div class="stat-card"><div class="stat-num">${tournaments}</div><div class="stat-label">👑 Турниры</div></div>
+                <div class="stat-card"><div class="stat-num">${elo}</div><div class="stat-label">🏆 Elo</div></div>
+                <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">⚡ Всего игр</div></div>
+            </div>
+
+            <div style="margin-top:20px;padding:16px;background:var(--elevated);border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border)">
+                <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Ранг</div>
+                <div style="font-size:1.3rem;font-weight:800;color:${rankColor}">${rankName}</div>
+                ${rank > 0 ? `<div style="font-size:0.75rem;color:var(--muted);margin-top:6px">Место в топе по Elo: <strong style="color:var(--gold)">#${rank}</strong> из ${allElo.length}</div>` : ''}
+            </div>
+        </section>`;
+
+        container.innerHTML = html;
+    }
 
     function renderSkill(p) {
         const total = (p.wins || 0) + (p.losses || 0);
@@ -1227,7 +1329,7 @@
     initTheme();
     initNavigation();
 
-    loadData().then((success) => {
+    Promise.all([loadData(), load2x2()]).then(([success]) => {
         if (!success) {
             console.warn('Failed to load data');
             return;
