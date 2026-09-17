@@ -26,6 +26,7 @@
     .path-desc { color: var(--sub); font-size: 0.85rem; line-height: 1.7; }
     .path-desc h3 { color: var(--gold); font-size: 0.88rem; font-weight: 700; margin: 18px 0 8px; }
     .path-desc h3:first-of-type { margin-top: 8px; }
+    .path-desc p { margin-bottom: 10px; }
     .hl { color: var(--gold); font-weight: 600; }
     .faction-box { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.04)); border: 1px solid rgba(240, 185, 11, 0.2); border-radius: var(--radius-sm); padding: 20px 14px; text-align: center; }
     .faction-box.dark { background: linear-gradient(160deg, var(--elevated), rgba(163, 113, 247, 0.04)); border-color: rgba(163, 113, 247, 0.2); }
@@ -66,21 +67,18 @@
     .passive .p-emoji { font-size: 1.4rem; margin-bottom: 4px; }
     .passive .p-name { font-weight: 700; color: var(--text); margin-bottom: 3px; font-size: 0.75rem; }
     .passive .p-desc { color: var(--muted); line-height: 1.3; font-size: 0.7rem; }
-    .cmd { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; border-left: 3px solid var(--gold); transition: all 0.2s ease; cursor: pointer; position: relative; margin-bottom: 8px; }
+    .cmd { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; border-left: 3px solid var(--gold); transition: all 0.2s ease; margin-bottom: 8px; }
     .cmd:hover { transform: translateX(4px); border-left-color: var(--ice); }
     .cmd.admin { background: linear-gradient(160deg, var(--elevated), rgba(91, 192, 235, 0.03)); border-left-color: var(--ice); }
     .cmd .c-name { font-weight: 700; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; }
     .cmd:not(.admin) .c-name { color: var(--gold); }
     .cmd.admin .c-name { color: var(--ice); }
     .cmd .c-desc { color: var(--muted); font-size: 0.75rem; margin-top: 3px; }
-    .cmd .copy-hint { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 0.7rem; opacity: 0; transition: opacity 0.2s; }
-    .cmd:hover .copy-hint { opacity: 1; }
     .reward-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 0.82rem; background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); transition: background 0.2s; }
     .reward-row:hover { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.08)); }
     .reward-row:last-child { border-bottom: none; }
     .reward-act { color: var(--text); }
     .reward-val { color: var(--gold); font-weight: 700; }
-    .quote-box { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.02)); border: 1px solid rgba(240, 185, 11, 0.15); border-radius: var(--radius-sm); padding: 14px 18px; margin: 16px 0; font-style: italic; color: var(--sub); font-size: 0.85rem; text-align: center; }
     .level-card { background: linear-gradient(160deg, var(--elevated), rgba(240, 185, 11, 0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; }
     .level-card .lv-title { font-weight: 700; color: var(--gold); margin-bottom: 6px; font-size: 0.85rem; }
     .level-card .lv-body { font-size: 0.78rem; color: var(--sub); }
@@ -110,6 +108,13 @@
     .tooltip { position: relative; cursor: help; border-bottom: 1px dashed var(--gold); }
     .tooltip::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-8px); background: var(--elevated); border: 1px solid var(--gold); border-radius: 8px; padding: 6px 10px; font-size: 0.7rem; color: var(--text); white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.2s ease; z-index: 10; }
     .tooltip:hover::after { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+    details.gik { background: linear-gradient(160deg, var(--elevated), rgba(91,192,235,0.03)); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-top: 16px; overflow: hidden; }
+    details.gik > summary { padding: 14px 18px; cursor: pointer; font-weight: 700; color: var(--ice); font-size: 0.85rem; list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; }
+    details.gik > summary::-webkit-details-marker { display: none; }
+    details.gik > summary::before { content: '▸'; transition: transform 0.2s; color: var(--ice); font-size: 0.7rem; }
+    details.gik[open] > summary::before { transform: rotate(90deg); }
+    details.gik > summary:hover { background: var(--elevated); }
+    details.gik > .gik-body { padding: 4px 18px 18px; border-top: 1px solid var(--border); }
 
     @media (max-width: 768px) {
         .grid-3, .grid-2, .grid-4, .grid-auto { grid-template-columns: 1fr; }
@@ -151,9 +156,7 @@
         .cmd:hover { transform: none; }
         .cmd .c-name { font-size: 0.78rem; }
         .cmd .c-desc { font-size: 0.68rem; }
-        .cmd .copy-hint { display: none; }
         .reward-row { padding: 8px 12px; font-size: 0.75rem; }
-        .quote-box { padding: 12px 14px; font-size: 0.78rem; margin: 12px 0; }
         .level-card { padding: 14px; }
         .level-card .lv-title { font-size: 0.8rem; }
         .level-card .lv-body { font-size: 0.72rem; }
@@ -171,6 +174,8 @@
         .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
         .path-desc > div[style*="display:flex; align-items:center"] { font-size: 0.72rem; }
         .grid-2 > div > h3 { font-size: 0.85rem !important; }
+        details.gik > summary { padding: 12px 14px; font-size: 0.8rem; }
+        details.gik > .gik-body { padding: 4px 14px 14px; }
     }
 </style>
 </head>
@@ -252,12 +257,12 @@
             <h2 class="path-title">🩸 Создание героя</h2>
             <div class="path-desc">
                 <section class="grid-3" aria-label="Этапы создания">
-                    <div class="infocard"><div class="ic-icon">🎁</div><div class="ic-title">Активируй награду</div><div class="ic-sub">«Создать героя»</div></div>
-                    <div class="infocard"><div class="ic-icon">🎲</div><div class="ic-title">Выбери героя</div><div class="ic-sub">Напиши номер в чат<br><strong style="color:var(--text)">3 минуты</strong> на ответ</div></div>
-                    <div class="infocard"><div class="ic-icon">✅</div><div class="ic-title">Готово</div><div class="ic-sub"><code>!инфо</code> — твои статы</div></div>
+                    <div class="infocard"><div class="ic-icon">🎁</div><div class="ic-title">Активируй награду</div><div class="ic-sub">в наградах канала</div></div>
+                    <div class="infocard"><div class="ic-icon">🎲</div><div class="ic-title">Выбери героя</div><div class="ic-sub">цифрой в чат<br><strong style="color:var(--text)">3 минуты</strong> на ответ</div></div>
+                    <div class="infocard"><div class="ic-icon">✅</div><div class="ic-title">Готово</div><div class="ic-sub">проверь статы — <code>!инфо</code></div></div>
                 </section>
-                <p style="text-align:center; max-width:500px; margin:0 auto">
-                    Бот предложит <span class="tooltip" data-tooltip="Раса + класс + фракция">три случайные комбинации</span>. Фракция назначается автоматически. Классы не повторяются.
+                <p style="text-align:center; max-width:520px; margin:14px auto 0">
+                    Осколки Клинка выбирают героев сами. Бот покажет три судьбы — расу, класс и фракцию. Одну из трёх. Классы не повторяются.
                 </p>
             </div>
         </article>
@@ -267,8 +272,8 @@
             <div class="path-num">Шаг 2</div>
             <h2 class="path-title">🌝🌚 Война фракций</h2>
             <div class="path-desc">
-                <p>Ты сражаешься за <strong>Орден Света</strong> или <strong>Культ Тьмы</strong>. Победа над вражеской фракцией приносит удвоенную награду.</p>
-                <p>Каждые <span class="hl">50 побед</span> фракция захватывает территорию. Контроль над картой Этерниса зависит от каждого бойца.</p>
+                <p>Свет защищает осколки. Тьма подчиняет их. Обе правы — и обе сражаются.</p>
+                <p>Победа над врагом — двойная награда. Каждые <span class="hl">50 побед</span> — захват земли. Шесть территорий ждут своего хозяина.</p>
                 <div class="grid-2">
                     <div class="faction-box light"><div class="fb-icon">🌝</div><div class="fb-name">Орден Света</div><div class="fb-sub">✨ Сияющий Шпиль — вечно за Светом</div></div>
                     <div class="faction-box dark"><div class="fb-icon">🌚</div><div class="fb-name">Культ Тьмы</div><div class="fb-sub">🌫️ Зал Повествователя — вечно за Тьмой</div></div>
@@ -276,8 +281,8 @@
                 <div class="territories">
                     <div>🗡️ Поле Клинка</div><div>🌑 Эпицентр</div><div>🎭 Арена Эхо</div><div>🔥 Кузня</div><div>⚓ Порт</div><div>🌌 Бездна</div>
                 </div>
-                <p style="font-size:0.7rem; color:var(--muted); margin-top:10px; text-align:center">
-                    6 территорий — дуэли решают всё
+                <p style="font-size:0.72rem; color:var(--muted); margin-top:10px; text-align:center; font-style:italic">
+                    Шесть земель. Две силы. Одна Арена.
                 </p>
             </div>
         </article>
@@ -287,8 +292,7 @@
             <div class="path-num">Шаг 3</div>
             <h2 class="path-title">⚔️ Боевая система</h2>
             <div class="path-desc">
-                <p><code>!бой</code> — рейтинговая дуэль. <code>!бой @ник</code> — товарищеский бой.</p>
-                <h3>🎲 Как работает бой</h3>
+                <h3 style="margin-top:8px">🎲 Как работает бой</h3>
 				<div class="grid-auto">
 					<div class="mech l"><div class="m-icon">⚡</div><div><h4 class="m-title">Инициатива</h4><div class="m-body">Оба бросают <strong>d20 + DEX</strong>. Победитель ходит первым. Равенство — случай.</div></div></div>
 					<div class="mech i"><div class="m-icon">🎯</div><div><h4 class="m-title">Попадание</h4><div class="m-body"><strong>d20 + ATK ≥ 10 + DEF</strong> защитника → попал. Иначе → промах.</div></div></div>
@@ -297,21 +301,26 @@
 					<div class="mech p"><div class="m-icon">🛡️</div><div><h4 class="m-title">Редукция</h4><div class="m-body">Каждое очко DEF снижает урон на <strong>5%</strong>. Минимум 1 урон.</div></div></div>
 					<div class="mech g"><div class="m-icon">⏱</div><div><h4 class="m-title">Ход боя</h4><div class="m-body">Атакующий ↔ защитник до HP ≤ 0. Лимит <strong>20 раундов</strong>. Ничья → победа по HP.</div></div></div>
 				</div>
-				<h3>📝 Обозначения в логах</h3>
-				<div class="table-container">
-					<table>
-						<thead><tr><th style="width:50px; text-align:center">Символ</th><th>Значение</th><th style="width:80px; text-align:center">d20</th></tr></thead>
-						<tbody>
-							<tr><td style="text-align:center">⚡</td><td>Выиграл инициативу</td><td style="text-align:center; color:var(--muted)">—</td></tr>
-							<tr><td style="text-align:center">💥X</td><td>Критический удар</td><td style="text-align:center; color:var(--red); font-weight:700">20</td></tr>
-							<tr><td style="text-align:center">❌</td><td>Крит-промах</td><td style="text-align:center; color:var(--red)">1</td></tr>
-							<tr><td style="text-align:center">💨</td><td>Промах (низкий бросок)</td><td style="text-align:center; color:var(--muted)">≤2+DEX</td></tr>
-							<tr><td style="text-align:center">🛡️</td><td>Промах (высокий бросок)</td><td style="text-align:center; color:var(--muted)">—</td></tr>
-							<tr><td style="text-align:center">X</td><td>Обычное попадание</td><td style="text-align:center; color:var(--muted)">—</td></tr>
-							<tr><td style="text-align:center">🏆</td><td>Победитель</td><td style="text-align:center; color:var(--gold)">—</td></tr>
-						</tbody>
-					</table>
-				</div>
+
+				<details class="gik">
+					<summary>📝 Обозначения в логах</summary>
+					<div class="gik-body">
+						<div class="table-container">
+							<table>
+								<thead><tr><th style="width:50px; text-align:center">Символ</th><th>Значение</th><th style="width:80px; text-align:center">d20</th></tr></thead>
+								<tbody>
+									<tr><td style="text-align:center">⚡</td><td>Выиграл инициативу</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+									<tr><td style="text-align:center">💥X</td><td>Критический удар</td><td style="text-align:center; color:var(--red); font-weight:700">20</td></tr>
+									<tr><td style="text-align:center">❌</td><td>Крит-промах</td><td style="text-align:center; color:var(--red)">1</td></tr>
+									<tr><td style="text-align:center">💨</td><td>Промах (низкий бросок)</td><td style="text-align:center; color:var(--muted)">≤2+DEX</td></tr>
+									<tr><td style="text-align:center">🛡️</td><td>Промах (высокий бросок)</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+									<tr><td style="text-align:center">X</td><td>Обычное попадание</td><td style="text-align:center; color:var(--muted)">—</td></tr>
+									<tr><td style="text-align:center">🏆</td><td>Победитель</td><td style="text-align:center; color:var(--gold)">—</td></tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</details>
             </div>
         </article>
 
@@ -320,7 +329,7 @@
 			<div class="path-num">Шаг 4</div>
 			<h2 class="path-title">💎 Развитие героя</h2>
 			<div class="path-desc">
-				<p>Осколки (💎) — валюта прогресса. Получаешь за бои, турниры и данж.</p>
+				<p>Каждый бой оставляет осколок. Каждый осколок — часть силы Клинка. Копи их — и ты станешь сильнее.</p>
 				
 				<div style="text-align:center; padding:24px 20px; background:linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.03)); border-radius:var(--radius-sm); border:1px solid var(--border); margin-top:12px;">
 					<div style="font-size:1.4rem; font-weight:800; color:var(--gold); margin-bottom:4px;">10💎 = 1 📈</div>
@@ -355,9 +364,7 @@
 					<span class="info-chip gold-dark">1v1</span>
 					<span style="font-weight:600; color:var(--muted); font-size:0.75rem;">⚔️ 12:00 и 14:00</span>
 				</div>
-				<p style="margin-bottom:12px;"><strong>16 бойцов.</strong> Олимпийская система: проиграл → вылетел. Победитель получит звание <strong style="color:var(--gold);">Хранитель Раскола</strong>.</p>
-
-				<div class="quote-box">«Шестнадцать клинков. Четыре круга. Один чемпион.»</div>
+				<p style="margin-bottom:14px;">Шестнадцать бойцов. Четыре круга. Один чемпион. Проиграл — вылетел. Победитель становится <strong style="color:var(--gold);">Хранителем Раскола</strong>.</p>
 
 				<div class="grid-2">
 					<div>
@@ -399,7 +406,7 @@
 			<div class="path-num">Шаг 6</div>
 			<h2 class="path-title">🐲 Бездна Разлома</h2>
 			<div class="path-desc">
-				<p>PvE-режим. Бесконечные волны монстров. Каждая 5-я — <strong>босс</strong>. <span style="color:var(--red);">💀 Смерть перманентна для забега.</span></p>
+				<p style="margin-bottom:16px;">Разлом ждёт. Бесконечные волны, каждая пятая — босс. Смерть окончательна — но рекорд остаётся в хрониках.</p>
 				<div class="grid-auto">
 					<div class="mech l"><div class="m-icon">🚪</div><div><h4 class="m-title">Вход в подземелье</h4><div class="m-body">Герой получает <span class="hl">случайную пассивку</span> и <span class="hl">случайного фамильяра</span>, который дает бонус к статам на весь забег.</div></div></div>
 					<div class="mech l"><div class="m-icon">🌊</div><div><h4 class="m-title">Бесконечные волны</h4><div class="m-body">Каждая волна сильнее предыдущей. Каждая <span class="hl">5-я волна — босс</span>: HP×1.5, ATK+2, DEF+1.</div></div></div>
@@ -456,41 +463,46 @@
 					</div>
 				</div>
 
-				<div class="grid-2" style="margin-top:10px">
-					<div>
-						<h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📐 Формулы</h4>
-						<div class="level-card">
-							<div style="font-size:0.75rem; color:var(--sub); line-height:2">
-								<div>❤️ <strong>HP</strong> = (15 + волна×8) ± 20%</div>
-								<div style="color:var(--muted); font-size:0.68rem; margin-left:16px">после 5 волны + (волна−5)×5</div>
-								<div>⚔️ <strong>ATK</strong> = 1 + волна/3</div>
-								<div>🛡️ <strong>DEF</strong> = волна/5</div>
+				<details class="gik">
+					<summary>📐 Для теоретиков: формулы и боссы</summary>
+					<div class="gik-body">
+						<div class="grid-2" style="margin-top:8px">
+							<div>
+								<h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📐 Формулы</h4>
+								<div class="level-card">
+									<div style="font-size:0.75rem; color:var(--sub); line-height:2">
+										<div>❤️ <strong>HP</strong> = (15 + волна×8) ± 20%</div>
+										<div style="color:var(--muted); font-size:0.68rem; margin-left:16px">после 5 волны + (волна−5)×5</div>
+										<div>⚔️ <strong>ATK</strong> = 1 + волна/3</div>
+										<div>🛡️ <strong>DEF</strong> = волна/5</div>
+									</div>
+									<div style="margin-top:10px; padding:12px; background:rgba(232,93,58,.06); border-radius:8px; border:1px solid rgba(232,93,58,.15)">
+										<div style="color:var(--red); font-weight:700; margin-bottom:4px">🐉 БОСС (каждая 5-я волна)</div>
+										<div style="font-size:0.7rem; color:var(--sub)">HP ×1.5 (±5%) &nbsp;·&nbsp; ATK +2 &nbsp;·&nbsp; DEF +1</div>
+									</div>
+								</div>
 							</div>
-							<div style="margin-top:10px; padding:12px; background:rgba(232,93,58,.06); border-radius:8px; border:1px solid rgba(232,93,58,.15)">
-								<div style="color:var(--red); font-weight:700; margin-bottom:4px">🐉 БОСС (каждая 5-я волна)</div>
-								<div style="font-size:0.7rem; color:var(--sub)">HP ×1.5 (±5%) &nbsp;·&nbsp; ATK +2 &nbsp;·&nbsp; DEF +1</div>
+							<div>
+								<h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📊 Боссы по волнам</h4>
+								<div class="table-container"><table style="font-size:0.72rem; min-width:auto">
+									<thead><tr><th>🐉</th><th>❤️ HP</th><th>⚔️ ATK</th><th>🛡️ DEF</th></tr></thead>
+									<tbody>
+										<tr><td><strong>5</strong></td><td>78–86</td><td>4</td><td>2</td></tr>
+										<tr><td><strong>10</strong></td><td>171–189</td><td>6</td><td>3</td></tr>
+										<tr><td><strong>15</strong></td><td>263–291</td><td>8</td><td>4</td></tr>
+										<tr><td><strong>20</strong></td><td>356–394</td><td>9</td><td>5</td></tr>
+										<tr><td><strong>25</strong></td><td>448–496</td><td>11</td><td>6</td></tr>
+										<tr><td><strong>30</strong></td><td>542–599</td><td>13</td><td>7</td></tr>
+										<tr><td><strong>35</strong></td><td>634–701</td><td>14</td><td>8</td></tr>
+									</tbody>
+								</table></div>
+								<div style="font-size:0.62rem; color:var(--muted); margin-top:6px; text-align:center; font-style:italic">
+									Обычные мобы: статы как у предыдущего босса, HP по формуле
+								</div>
 							</div>
 						</div>
 					</div>
-					<div>
-						<h4 style="color:var(--gold); font-size:0.8rem; margin-bottom:8px">📊 Боссы по волнам</h4>
-						<div class="table-container"><table style="font-size:0.72rem; min-width:auto">
-							<thead><tr><th>🐉</th><th>❤️ HP</th><th>⚔️ ATK</th><th>🛡️ DEF</th></tr></thead>
-							<tbody>
-								<tr><td><strong>5</strong></td><td>78–86</td><td>4</td><td>2</td></tr>
-								<tr><td><strong>10</strong></td><td>171–189</td><td>6</td><td>3</td></tr>
-								<tr><td><strong>15</strong></td><td>263–291</td><td>8</td><td>4</td></tr>
-								<tr><td><strong>20</strong></td><td>356–394</td><td>9</td><td>5</td></tr>
-								<tr><td><strong>25</strong></td><td>448–496</td><td>11</td><td>6</td></tr>
-								<tr><td><strong>30</strong></td><td>542–599</td><td>13</td><td>7</td></tr>
-								<tr><td><strong>35</strong></td><td>634–701</td><td>14</td><td>8</td></tr>
-							</tbody>
-						</table></div>
-						<div style="font-size:0.62rem; color:var(--muted); margin-top:6px; text-align:center; font-style:italic">
-							Обычные мобы: статы как у предыдущего босса, HP по формуле
-						</div>
-					</div>
-				</div>
+				</details>
 			</div>
 		</article>
 
@@ -499,41 +511,38 @@
             <div class="path-num">Шаг 7</div>
             <h2 class="path-title">📜 Гримуар</h2>
             <div class="path-desc">
-                <p>Все команды чата. <span style="color:var(--gold)">⚡</span> — только для стримера.</p>
-                <div class="grid-2" style="margin-top:12px">
-                    <div>
-                        <h3>🎮 Игровые</h3>
-                        <div class="cmd-list">
-							<div class="cmd" onclick="copyCommand('!бой')"><div class="c-name">!бой</div><div class="c-desc">Рейтинговая дуэль (стата + осколки)</div><span class="copy-hint"></span></div>
-							<div class="cmd" onclick="copyCommand('!бой @ник')"><div class="c-name">!бой @ник</div><div class="c-desc">🤝 Товарищеский бой (только осколки, без статы)</div><span class="copy-hint"></span></div>
-							<div class="cmd" onclick="copyCommand('!инфо')"><div class="c-name">!инфо</div><div class="c-desc">Статы героя. <code>!инфо @ник</code> — посмотреть чужого</div><span class="copy-hint"></span></div>
-							<div class="cmd" onclick="copyCommand('!данж')"><div class="c-name">!данж</div><div class="c-desc">Вход в подземелье</div><span class="copy-hint"></span></div>
-							<div class="cmd" onclick="copyCommand('!харакири')"><div class="c-name">!харакири</div><div class="c-desc">Сброс героя в архив (осколки и уровень сохранятся)</div><span class="copy-hint"></span></div>
-							<div class="cmd" onclick="copyCommand('!рега')"><div class="c-name">!рега</div><div class="c-desc">Запись в текущий турнир 1v1</div><span class="copy-hint"></span></div>
-							<div class="cmd" onclick="copyCommand('!сетка')"><div class="c-name">!сетка</div><div class="c-desc">Участники и сетка текущего турнира</div><span class="copy-hint"></span></div>
-							<div class="cmd" onclick="copyCommand('!1–!5')"><div class="c-name">!1–!5</div><div class="c-desc">Выбор героя при создании (3 мин)</div><span class="copy-hint"></span></div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 style="color:var(--ice)">⚡ Админские</h3>
-                        <div class="cmd-list">
-							<div class="cmd admin" onclick="copyCommand('!режим')"><div class="c-name">!режим</div><div class="c-desc">Турнир 1v1 / дуэли</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!старт')"><div class="c-name">!старт</div><div class="c-desc">Принудительный запуск турнира</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!добор')"><div class="c-name">!добор</div><div class="c-desc">Автозаполнение до 16</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!лига')"><div class="c-name">!лига</div><div class="c-desc">Лига Этерниса (8v8)</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!резерв @ник N')"><div class="c-name">!резерв @ник N</div><div class="c-desc">Бронь места (N турниров)</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!создать @ник Раса-Класс')"><div class="c-name">!создать @ник Раса-Класс</div><div class="c-desc">Создать героя вручную</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!создать @ник Раса-Класс Фракция')"><div class="c-name">!создать @ник Раса-Класс Фракция</div><div class="c-desc">Создать героя с фракцией (Свет/Тьма)</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!удалить @ник')"><div class="c-name">!удалить @ник</div><div class="c-desc">Удалить героя (осколки сохранятся)</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!сменить @ник Имя')"><div class="c-name">!сменить @ник Имя</div><div class="c-desc">Сменить имя героя</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!воскресить @ник ИмяГероя')"><div class="c-name">!воскресить @ник ИмяГероя</div><div class="c-desc">Воскресить из архива</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!перенос @старый @новый')"><div class="c-name">!перенос @старый @новый</div><div class="c-desc">Смена ника Twitch</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!сезон')"><div class="c-name">!сезон</div><div class="c-desc">Сброс статистики сезона</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!save')"><div class="c-name">!save</div><div class="c-desc">Принудительное сохранение + титулы + JSON</div><span class="copy-hint"></span></div>
-							<div class="cmd admin" onclick="copyCommand('!логи')"><div class="c-name">!логи</div><div class="c-desc">Последний бой. <code>!логи @ник</code> — по игроку</div><span class="copy-hint"></span></div>
-                        </div>
-                    </div>
+                <div class="cmd-list" style="margin-top:12px">
+					<div class="cmd"><div class="c-name">!бой</div><div class="c-desc">Рейтинговая дуэль (стата + осколки)</div></div>
+					<div class="cmd"><div class="c-name">!бой @ник</div><div class="c-desc">🤝 Товарищеский бой (только осколки, без статы)</div></div>
+					<div class="cmd"><div class="c-name">!инфо</div><div class="c-desc">Статы героя. <code>!инфо @ник</code> — посмотреть чужого</div></div>
+					<div class="cmd"><div class="c-name">!данж</div><div class="c-desc">Вход в подземелье</div></div>
+					<div class="cmd"><div class="c-name">!харакири</div><div class="c-desc">Сброс героя в архив (осколки и уровень сохранятся)</div></div>
+					<div class="cmd"><div class="c-name">!рега</div><div class="c-desc">Запись в текущий турнир 1v1</div></div>
+					<div class="cmd"><div class="c-name">!сетка</div><div class="c-desc">Участники и сетка текущего турнира</div></div>
+					<div class="cmd"><div class="c-name">!1–!5</div><div class="c-desc">Выбор героя при создании (3 мин)</div></div>
                 </div>
+
+                <details class="gik" style="margin-top:20px;">
+                    <summary>⚡ Для стримера</summary>
+                    <div class="gik-body">
+                        <div class="cmd-list" style="margin-top:8px">
+							<div class="cmd admin"><div class="c-name">!режим</div><div class="c-desc">Турнир 1v1 / дуэли</div></div>
+							<div class="cmd admin"><div class="c-name">!старт</div><div class="c-desc">Принудительный запуск турнира</div></div>
+							<div class="cmd admin"><div class="c-name">!добор</div><div class="c-desc">Автозаполнение до 16</div></div>
+							<div class="cmd admin"><div class="c-name">!лига</div><div class="c-desc">Лига Этерниса (8v8)</div></div>
+							<div class="cmd admin"><div class="c-name">!резерв @ник N</div><div class="c-desc">Бронь места (N турниров)</div></div>
+							<div class="cmd admin"><div class="c-name">!создать @ник Раса-Класс</div><div class="c-desc">Создать героя вручную</div></div>
+							<div class="cmd admin"><div class="c-name">!создать @ник Раса-Класс Фракция</div><div class="c-desc">Создать героя с фракцией (Свет/Тьма)</div></div>
+							<div class="cmd admin"><div class="c-name">!удалить @ник</div><div class="c-desc">Удалить героя (осколки сохранятся)</div></div>
+							<div class="cmd admin"><div class="c-name">!сменить @ник Имя</div><div class="c-desc">Сменить имя героя</div></div>
+							<div class="cmd admin"><div class="c-name">!воскресить @ник ИмяГероя</div><div class="c-desc">Воскресить из архива</div></div>
+							<div class="cmd admin"><div class="c-name">!перенос @старый @новый</div><div class="c-desc">Смена ника Twitch</div></div>
+							<div class="cmd admin"><div class="c-name">!сезон</div><div class="c-desc">Сброс статистики сезона</div></div>
+							<div class="cmd admin"><div class="c-name">!save</div><div class="c-desc">Принудительное сохранение + титулы + JSON</div></div>
+							<div class="cmd admin"><div class="c-name">!логи</div><div class="c-desc">Последний бой. <code>!логи @ник</code> — по игроку</div></div>
+                        </div>
+                    </div>
+                </details>
             </div>
         </article>
     </main>
@@ -606,37 +615,6 @@
                 scrollTopBtn.classList.remove('visible');
             }
         });
-
-        window.copyCommand = function(command) {
-            navigator.clipboard.writeText(command).then(() => {
-                $$('.cmd').forEach(el => {
-                    if (el.querySelector('.c-name').textContent === command) {
-                        const hint = el.querySelector('.copy-hint');
-                        const originalBorder = el.style.borderLeftColor;
-                        
-                        el.style.borderLeftColor = 'var(--green)';
-                        el.style.background = 'rgba(16,185,129,0.1)';
-                        if (hint) {
-                            hint.textContent = '✅';
-                            hint.style.opacity = '1';
-                            hint.style.color = 'var(--green)';
-                        }
-                        
-                        setTimeout(() => {
-                            el.style.borderLeftColor = originalBorder;
-                            el.style.background = '';
-                            if (hint) {
-                                hint.textContent = '📋';
-                                hint.style.opacity = '';
-                                hint.style.color = '';
-                            }
-                        }, 1500);
-                    }
-                });
-            }).catch(err => {
-                console.error('Ошибка копирования:', err);
-            });
-        };
     })();
 </script>
 </body>
