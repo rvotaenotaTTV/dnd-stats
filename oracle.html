@@ -981,7 +981,6 @@ function analyzeTrend(history) {
 // --- 4.3 Герои (с учётом удалённых) ---
 function analyzeHeroArchive(nickname, seasons) {
     const allHeroes = [];
-    const seen = new Set();
     const playerKey = nickname.toLowerCase();
     const currentSeason = seasons[seasons.length - 1];
 
@@ -997,7 +996,8 @@ function analyzeHeroArchive(nickname, seasons) {
             losses: currentPlayer.losses || 0,
             best: currentPlayer.best || 0,
             worst: currentPlayer.worst || 0,
-            isCurrent: true
+            isCurrent: true,
+            season: currentSeason.num
         });
     }
 
@@ -1011,7 +1011,8 @@ function analyzeHeroArchive(nickname, seasons) {
             losses: h.losses || 0,
             best: h.best || 0,
             worst: h.worst || 0,
-            isCurrent: false
+            isCurrent: false,
+            season: currentSeason.num
         });
     });
 
@@ -1029,7 +1030,8 @@ function analyzeHeroArchive(nickname, seasons) {
                 losses: p.losses || 0,
                 best: p.best || 0,
                 worst: p.worst || 0,
-                isCurrent: false
+                isCurrent: false,
+                season: s.num
             });
         }
         const archive = s.data.heroArchive?.[playerKey] || [];
@@ -1041,7 +1043,8 @@ function analyzeHeroArchive(nickname, seasons) {
                 losses: h.losses || 0,
                 best: h.best || 0,
                 worst: h.worst || 0,
-                isCurrent: false
+                isCurrent: false,
+                season: s.num
             });
         });
     });
@@ -1056,7 +1059,7 @@ function analyzeHeroArchive(nickname, seasons) {
         const parts = h.name.split('-');
         let race = null, cls = null;
         if (parts.length < 2) {
-            cls = parts[0]; // S0 — только класс
+            cls = parts[0];
         } else {
             race = parts[0];
             cls = parts[1];
@@ -1509,8 +1512,9 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     if (trend.trend === 'growth' && leaguePlace && !leaguePlace.inTop8 && leaguePlace.gapToTop8 < 100) {
         memes.push(`До топ-8 осталось <strong>${leaguePlace.gapToTop8} SKILL</strong>. Это уже не мечта — это <span class="meme">план на следующий сезон</span>.`);
     }
-    if (heroAnalysis.best && heroAnalysis.best.wr > 0.6 && heroAnalysis.best.name !== last.name) {
-        memes.push(`Твой лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> — не в текущем сезоне. <span class="meme">Пророчество гласит</span>: верни его, и будет тебе счастье.`);
+    if (heroAnalysis.best && heroAnalysis.best.wr > 0.6 && heroAnalysis.best.name !== last?.name) {
+        const bestSeason = heroAnalysis.best.season ?? '?';
+        memes.push(`Твой лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (S${bestSeason}) — не в текущем сезоне. <span class="meme">Пророчество гласит</span>: верни его, и будет тебе счастье.`);
     }
 
     return memes;
@@ -1590,6 +1594,9 @@ function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history)
     const currentSeason = history[history.length - 1]?.season;
     const currentClass = history[history.length - 1]?.name?.split('-')[1];
 
+    // Защита от undefined
+    if (!history || history.length === 0) return `Продолжай свой путь. <strong>Каждый бой — шаг вперёд.</strong>`;
+
     const records = findPersonalRecords(history);
     if (records && records.worstStreak.worst >= 7 && history[history.length - 1].season === records.worstStreak.season) {
         return `Проигрышная серия <strong>${records.worstStreak.worst}</strong> — это не конец. Это <strong>глава, которую нужно переписать</strong>. Смени героя, смени тактику, смени настроение.`;
@@ -1612,8 +1619,8 @@ function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history)
     }
 
     const best = heroAnalysis.best;
-    const bestClass = best.name.split('-')[1];
-    const bestSeason = best.season;
+    const bestClass = best.name.split('-')[1] || '';
+    const bestSeason = best.season ?? '?';
     const wasInMeta = isInMeta(bestClass, metaBySeason, bestSeason, 'class');
     const isInMetaNow = isInMeta(bestClass, metaBySeason, currentSeason, 'class');
     const bestMetaS = metaBySeason.find(m => m.season === bestSeason);
