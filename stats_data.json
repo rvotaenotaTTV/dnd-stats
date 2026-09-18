@@ -169,12 +169,12 @@
       "best": 3,
       "worst": 4,
       "champion": false,
-      "shards": 78,
-      "level": 7,
+      "shards": 81,
+      "level": 8,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
       "factionWins": 12,
-      "skill": 102
+      "skill": 103
     },
     {
       "display": "verdoga",
@@ -212,17 +212,17 @@
       "display": "kotshiroyama",
       "emoji": "🐱📿",
       "name": "Табакси-Монах",
-      "wins": 3,
+      "wins": 4,
       "losses": 5,
       "best": 2,
       "worst": 3,
       "champion": false,
-      "shards": 253,
+      "shards": 256,
       "level": 25,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 2,
-      "skill": 77
+      "factionWins": 3,
+      "skill": 83
     },
     {
       "display": "b1adstone",
@@ -725,16 +725,16 @@
       "emoji": "😈👁️",
       "name": "Тифлинг-Колдун",
       "wins": 7,
-      "losses": 9,
+      "losses": 10,
       "best": 2,
       "worst": 3,
       "champion": false,
-      "shards": 42,
+      "shards": 43,
       "level": 4,
       "faction": "Орден Света",
       "tournamentWins": 0,
       "factionWins": 0,
-      "skill": 44
+      "skill": 43
     },
     {
       "display": "ds_riasgremoo",
@@ -1317,16 +1317,16 @@
       "emoji": "😈🏹",
       "name": "Тифлинг-Следопыт",
       "wins": 224,
-      "losses": 236,
+      "losses": 237,
       "best": 10,
       "worst": 7,
       "champion": false,
-      "shards": 1063,
+      "shards": 1064,
       "level": 106,
       "faction": "Орден Света",
       "tournamentWins": 0,
       "factionWins": 122,
-      "skill": 494
+      "skill": 492
     },
     {
       "display": "eagallam",
@@ -1621,16 +1621,16 @@
       "emoji": "🧑✝️",
       "name": "Человек-Жрец",
       "wins": 13,
-      "losses": 16,
+      "losses": 17,
       "best": 4,
-      "worst": 4,
+      "worst": 5,
       "champion": false,
-      "shards": 62,
+      "shards": 63,
       "level": 6,
       "faction": "Орден Света",
       "tournamentWins": 0,
       "factionWins": 4,
-      "skill": 85
+      "skill": 84
     },
     {
       "display": "van4enz0",
@@ -1753,7 +1753,7 @@
       "best": 5,
       "worst": 4,
       "champion": false,
-      "shards": 564,
+      "shards": 569,
       "level": 56,
       "faction": "Культ Тьмы",
       "tournamentWins": 2,
@@ -1780,17 +1780,17 @@
       "display": "artem_jz",
       "emoji": "🧑🗡️",
       "name": "Человек-Плут",
-      "wins": 106,
+      "wins": 107,
       "losses": 106,
       "best": 8,
       "worst": 6,
       "champion": false,
-      "shards": 627,
-      "level": 62,
+      "shards": 630,
+      "level": 63,
       "faction": "Орден Света",
       "tournamentWins": 2,
       "factionWins": 47,
-      "skill": 367
+      "skill": 370
     },
     {
       "display": "juckbluck",
@@ -1908,17 +1908,17 @@
       "display": "g3nz3",
       "emoji": "🐱⚔️",
       "name": "Табакси-Воин",
-      "wins": 12,
+      "wins": 13,
       "losses": 15,
       "best": 3,
       "worst": 4,
       "champion": false,
-      "shards": 59,
-      "level": 5,
+      "shards": 62,
+      "level": 6,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 10,
-      "skill": 83
+      "factionWins": 11,
+      "skill": 90
     },
     {
       "display": "akorochan",
@@ -2082,7 +2082,7 @@
     }
   ],
   "factionScore": {
-    "duelLight": 838,
+    "duelLight": 839,
     "duelDark": 830,
     "battleLight": 16,
     "battleDark": 16
@@ -2090,7 +2090,7 @@
   "tournaments": 18,
   "territory": {
     "light": 3157,
-    "dark": 2035
+    "dark": 2051
   },
   "territoryControl": {
     "🎭 Арена Тысячи Эхо": "light",
@@ -2350,9 +2350,9 @@
         "crits": 21,
         "misses": 32,
         "blocks": 1,
-        "trophies": 478,
-        "bosses": 241,
-        "totalWaves": 1584,
+        "trophies": 491,
+        "bosses": 246,
+        "totalWaves": 1613,
         "swings": 559,
         "hits": 526,
         "passive": "🗡️ Казнь"
@@ -2900,16 +2900,27 @@
         "swings": 168,
         "hits": 139,
         "passive": "🗡️ Казнь"
+      },
+      "shs_strapl": {
+        "display": "shs_strapl",
+        "emoji": "🐱⚔️",
+        "name": "Табакси-Воин",
+        "faction": "Культ Тьмы",
+        "record": 9,
+        "damage": 725,
+        "crits": 4,
+        "misses": 6,
+        "blocks": 24,
+        "trophies": 3,
+        "bosses": 1,
+        "totalWaves": 9,
+        "swings": 110,
+        "hits": 80,
+        "passive": "💚 Стойкость"
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "🏆😈🏹 crazy_diamondss 31:21 ⚡💀🦴 gotfat | 4:💨 | ❌:11 | 10:9 | 7:11"
-    },
-    {
-      "FullLog": "⚡🏆😈🏹 crazy_diamondss 29:25 💀⚔️ kolosus13 | 6:9 | 💨:7 | 8:3 | 6:6 | 9:-"
-    },
     {
       "FullLog": "⚡👹🎸 longdayforcat 20:27 🏆🧔📿 juckbluck | 8:4 | 6:4 | 💨:💨 | 3:💥9 | 💨:6 | 3:4"
     },
@@ -2933,6 +2944,12 @@
     },
     {
       "FullLog": "⚡😈🏹 crazy_diamondss 22:29 🏆🐱⚔️ g3nz3 | 7:8 | ❌:6 | 8:❌ | 7:💨 | 💨:9 | 💨:6"
+    },
+    {
+      "FullLog": "⚡🏆🧑🗡️ artem_jz 35:22 🧑✝️ devilman_ich | 5:9 | 10:5 | 10:8 | 10:-"
+    },
+    {
+      "FullLog": "⚡🏆😈🏹 crazy_diamondss 33:21 💀🏹 1foxbomb1 | 10:11 | 4:💨 | 9:10 | 10:-"
     }
   ],
   "heroArchive": {
