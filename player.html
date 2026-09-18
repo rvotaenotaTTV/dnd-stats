@@ -725,8 +725,8 @@ async function getSeasonData(n) {
         if (c && (Date.now() - c.ts < CACHE_TTL)) return c.data;
     } catch (e) {}
 
-    let r = await fetch(`${SEASON_BASE}${n}.json`);
-    if (!r.ok) r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
+    let r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
+    if (!r.ok) r = await fetch(`${SEASON_BASE}${n}.json`);
     if (!r.ok) throw new Error('404');
     const data = await r.json();
     try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
@@ -754,16 +754,16 @@ async function loadAllSeasons(onProgress) {
         );
     }
 
-    const [archivedResults, currentData] = await Promise.all([
-        Promise.all(promises),
+	const [archivedResults, currentData] = await Promise.all([
+		Promise.all(promises),
         (async () => {
             try {
-                let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
-                if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+                let r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+                if (!r.ok) r = await fetch(`${STATS_URL}?v=${Date.now()}`);
                 return await r.json();
             } catch (e) { return null; }
         })()
-    ]);
+	]);
 
     const archived = archivedResults.filter(Boolean);
     archived.sort((a, b) => a.num - b.num);
@@ -786,8 +786,8 @@ async function load2x2() {
     } catch (e) {}
 
     try {
-        let r = await fetch(TWOx2_URL + '?v=' + Date.now());
-        if (!r.ok) r = await fetch(TWOx2_URL_FALLBACK + '?v=' + Date.now());
+        let r = await fetch(TWOx2_URL_FALLBACK + '?v=' + Date.now());
+        if (!r.ok) r = await fetch(TWOx2_URL + '?v=' + Date.now());
         if (!r.ok) return {};
         const data = await r.json();
         try { localStorage.setItem(TWOx2_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
@@ -3007,18 +3007,25 @@ window.copyProfileLink = async function() {
     } catch (e) { console.warn(e); }
 };
 
-// Ранги
+// Ранги (только текущий сезон — stats_data.json)
+function getCurrentSeasonPlayers() {
+    const last = allSeasonsCache[allSeasonsCache.length - 1];
+    return last?.data?.players || [];
+}
 function getSeasonRank(p) {
-    const sorted = allPlayersCache.filter(x => (x.skill || 0) > 0).sort((a, b) => (b.skill || 0) - (a.skill || 0));
+    const sorted = getCurrentSeasonPlayers()
+        .filter(x => (x.skill || 0) > 0)
+        .sort((a, b) => (b.skill || 0) - (a.skill || 0));
     return sorted.findIndex(x => x.display === p.display) + 1;
 }
 function getRankByWins(p) {
-    const sorted = [...allPlayersCache].sort((a, b) => (b.wins || 0) - (a.wins || 0));
+    const sorted = [...getCurrentSeasonPlayers()]
+        .sort((a, b) => (b.wins || 0) - (a.wins || 0));
     return sorted.findIndex(x => x.display === p.display) + 1;
 }
 function getRankByWinrate(p) {
-    const sorted = [...allPlayersCache]
-        .filter(x => ((x.wins || 0) + (x.losses || 0)) >= 20)
+    const sorted = getCurrentSeasonPlayers()
+        .filter(x => ((x.wins || 0) + (x.losses || 0)) >= 30)
         .sort((a, b) => {
             const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0));
             const wb = (b.wins || 0) / ((b.wins || 0) + (b.losses || 0));
@@ -3027,11 +3034,13 @@ function getRankByWinrate(p) {
     return sorted.findIndex(x => x.display === p.display) + 1;
 }
 function getRankByShards(p) {
-    const sorted = [...allPlayersCache].sort((a, b) => (b.shards || 0) - (a.shards || 0));
+    const sorted = [...getCurrentSeasonPlayers()]
+        .sort((a, b) => (b.shards || 0) - (a.shards || 0));
     return sorted.findIndex(x => x.display === p.display) + 1;
 }
 function getRankByFaction(p) {
-    const sorted = [...allPlayersCache].sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0));
+    const sorted = [...getCurrentSeasonPlayers()]
+        .sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0));
     return sorted.findIndex(x => x.display === p.display) + 1;
 }
 function getRankByDungeon(p) {
