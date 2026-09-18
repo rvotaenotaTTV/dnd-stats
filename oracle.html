@@ -203,8 +203,10 @@
 
 <script>
 // ============ КОНСТАНТЫ ============
-const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-const SEASON_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
+const STATS_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+const SEASON_BASE = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_';
+const STATS_URL_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const SEASON_BASE_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
 const MAX_SEASONS = 15;
 const META_TOP = 5;
 const META_MIN_FIGHTS = 30;
@@ -242,7 +244,8 @@ async function getSeasonData(n) {
     const KEY = 'eternis-oracle-season-' + n;
     const TTL = 10 * 60 * 1000;
     try { const c = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (c && (Date.now() - c.ts < TTL)) return c.data; } catch (e) {}
-    const r = await fetch(`${SEASON_BASE}${n}.json`);
+    let r = await fetch(`${SEASON_BASE}${n}.json`);
+    if (!r.ok) r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
     if (!r.ok) throw new Error('404');
     const data = await r.json();
     try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
@@ -257,17 +260,28 @@ function normalizeFaction(f) {
 }
 
 async function loadAllSeasons() {
-    const seasons = [];
+    const archived = [];
+    const promises = [];
     for (let n = 0; n <= MAX_SEASONS; n++) {
-        try { const d = await getSeasonData(n); seasons.push({ num: n, data: d, isCurrent: false }); }
-        catch (e) { break; }
+        promises.push(
+            getSeasonData(n)
+                .then(d => ({ num: n, data: d, isCurrent: false }))
+                .catch(() => null)
+        );
     }
+    const results = await Promise.all(promises);
+    results.forEach(r => { if (r) archived.push(r); });
+    archived.sort((a, b) => a.num - b.num);
+
+    let current = null;
     try {
-        const r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
         const d = await r.json();
-        seasons.push({ num: seasons.length, data: d, isCurrent: true });
+        current = { num: archived.length, data: d, isCurrent: true };
     } catch (e) { console.error(e); }
-    return seasons;
+
+    return current ? [...archived, current] : archived;
 }
 
 // ============ ПОИСК ============
@@ -296,7 +310,7 @@ searchInput.addEventListener('input', function() {
     const query = this.value.trim().toLowerCase();
     if (query.length < 1) { autocompleteList.classList.remove('show'); return; }
     autocompleteTimer = setTimeout(() => {
-        if (!allPlayersCache) { autocompleteList.innerHTML = '<div class="autocomplete-empty">Загрузка...</div>'; autocompleteList.classList.add('show'); return; }
+        if (!allPlayersCache || allPlayersCache.length === 0) { autocompleteList.innerHTML = '<div class="autocomplete-empty">⏳ Загрузка базы игроков...</div>'; autocompleteList.classList.add('show'); return; }
         const matches = allPlayersCache.filter(p => p.display.toLowerCase().includes(query)).slice(0, 10);
         if (matches.length === 0) { autocompleteList.innerHTML = '<div class="autocomplete-empty">Никого не найдено</div>'; autocompleteList.classList.add('show'); return; }
         autocompleteList.innerHTML = matches.map(p => {
@@ -311,7 +325,7 @@ searchInput.addEventListener('input', function() {
         document.querySelectorAll('.autocomplete-item').forEach(item => {
             item.addEventListener('click', () => { searchInput.value = item.dataset.name; autocompleteList.classList.remove('show'); analyzePlayer(); });
         });
-    }, 150);
+    }, 50);
 });
 
 searchInput.addEventListener('keydown', function(e) {
@@ -1175,11 +1189,49 @@ async function analyzePlayer() {
 }
 
 (async function preload() {
-    try { allSeasonsCache = await loadAllSeasons(); allPlayersCache = getAllPlayers(allSeasonsCache); }
-    catch (e) { console.error(e); }
+    // 1. Мгновенно — из localStorage
+    try {
+        const cached = JSON.parse(localStorage.getItem('eternis-oracle-players') || 'null');
+        if (cached && cached.length > 0) {
+            allPlayersCache = cached;
+            console.log('Повествовательница: игроки из кеша —', cached.length);
+        }
+    } catch (e) {}
+
+    // 2. Текущий сезон — быстро
+    try {
+        let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+        const d = await r.json();
+        const currentPlayers = getAllPlayers([{ num: 0, data: d, isCurrent: true }]);
+        const map = new Map();
+        currentPlayers.forEach(p => map.set(p.display.toLowerCase(), p));
+        if (allPlayersCache) {
+            allPlayersCache.forEach(p => {
+                if (!map.has(p.display.toLowerCase())) map.set(p.display.toLowerCase(), p);
+            });
+        }
+        allPlayersCache = [...map.values()].sort((a, b) => a.display.localeCompare(b.display));
+        console.log('Повествовательница: после текущего —', allPlayersCache.length);
+    } catch (e) { console.error('Текущий:', e); }
+
+    // 3. Фоновая догрузка
+    loadAllSeasons().then(seasons => {
+        allSeasonsCache = seasons;
+        allPlayersCache = getAllPlayers(seasons);
+        try {
+            localStorage.setItem('eternis-oracle-players', JSON.stringify(allPlayersCache));
+        } catch (e) {}
+        console.log('Повествовательница: полная загрузка —', allPlayersCache.length);
+    }).catch(e => console.error('Фон:', e));
+
+    // 4. Автозапуск
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name');
-    if (name) { document.getElementById('oracleSearch').value = name; setTimeout(() => analyzePlayer(), 300); }
+    if (name) {
+        document.getElementById('oracleSearch').value = name;
+        setTimeout(() => analyzePlayer(), 500);
+    }
 })();
 
 (function() {

@@ -245,7 +245,8 @@
             const cached = JSON.parse(sessionStorage.getItem(KEY) || 'null');
             if (cached && (Date.now() - cached.ts < TTL)) return cached.data;
         } catch (e) {}
-        const r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_${n}.json`);
+        let r = await fetch(`https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_${n}.json`);
+        if (!r.ok) r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_${n}.json`);
         if (!r.ok) throw new Error('404');
         const data = await r.json();
         try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
