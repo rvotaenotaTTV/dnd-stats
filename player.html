@@ -30,7 +30,10 @@
     .dropdown-item:last-child { border-bottom: none; }
     .dropdown-item:hover { background: var(--elevated); color: var(--gold); }
 
-    .profile-hero { text-align: center; padding: 20px 28px; margin-bottom: 16px; animation: fadeSlideIn 0.4s ease; }
+    .profile-hero { text-align: center; padding: 20px 28px; margin-bottom: 16px; animation: fadeSlideIn 0.4s ease; position: relative; }
+	.profile-oracle-btn { position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, rgba(163,113,247,0.15), rgba(163,113,247,0.05)); border: 1px solid rgba(163,113,247,0.4); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; text-decoration: none; transition: 0.25s; }
+	.profile-oracle-btn:hover { background: linear-gradient(135deg, var(--purple), #8b5cf6); box-shadow: 0 0 24px rgba(163,113,247,0.6); transform: scale(1.12); }
+	.profile-oracle-btn:hover::after { content: 'Повествовательница'; position: absolute; top: 50%; right: calc(100% + 10px); transform: translateY(-50%); background: var(--card); color: var(--purple); border: 1px solid rgba(163,113,247,0.4); padding: 6px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
     .profile-emoji { font-size: 3rem; margin-bottom: 4px; }
     .profile-name { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
     .profile-class { color: var(--sub); font-size: 0.85rem; margin-bottom: 2px; }
@@ -570,11 +573,12 @@
         return lastSeen;
     }
 
-    function renderArchiveProfile(p) {
-        return `
-        <section class="section gold">
-            <div class="profile-hero">
-                <div class="profile-emoji">${p.emoji || '⚔️'}</div>
+	function renderArchiveProfile(p) {
+		return `
+		<section class="section gold">
+			<div class="profile-hero">
+				<a href="oracle.html?name=${encodeURIComponent(p.display)}" class="profile-oracle-btn" title="Открыть Повествовательницу">🔮</a>
+            <div class="profile-emoji">${p.emoji || '⚔️'}</div>
                 <div class="profile-name">${p.display}</div>
                 <div class="profile-class">${p.name} · последний сезон: ${p.lastSeason}</div>
                 <div class="profile-badges">
@@ -609,10 +613,11 @@
 
         const colorForRank = (rank) => rank <= 3 ? 'var(--gold)' : rank <= 10 ? 'var(--green)' : 'var(--muted)';
 
-        let html = `
-        <section class="section gold">
-            <div class="profile-hero">
-                <div class="profile-emoji">${p.emoji || '⚔️'}</div>
+		let html = `
+		<section class="section gold">
+			<div class="profile-hero">
+				<a href="oracle.html?name=${encodeURIComponent(p.display)}" class="profile-oracle-btn" title="Открыть Повествовательницу">🔮</a>
+				<div class="profile-emoji">${p.emoji || '⚔️'}</div>
                 <div class="profile-name">${p.display}${p.champion ? ' 👑' : ''}</div>
                 <div class="profile-class">${p.name || ''} · SKILL ${p.skill || 0} · Ур. ${p.level || 0}</div>
                 <div class="profile-badges">
