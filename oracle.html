@@ -773,7 +773,9 @@ body {
             <div class="autocomplete-list" id="autocompleteList"></div>
         </div>
 
-        <div id="oracleResult"></div>
+        <div id="oracleResult">
+			<div class="status-message">Введи имя игрока для просмотра профиля</div>
+		</div>
     </div>
 
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
@@ -788,7 +790,7 @@ const SEASON_BASE = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/se
 const STATS_URL_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 const SEASON_BASE_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
 
-const MAX_SEASONS = 15;
+const MAX_SEASONS = 10;
 const META_TOP = 5;
 const META_MIN_FIGHTS = 30;
 
@@ -797,7 +799,7 @@ const WR_BAD = 0.45;
 const MIN_FIGHTS_FOR_BEST = 10;
 const MIN_FIGHTS_FOR_RECORD = 15;
 
-const CACHE_TTL = 10 * 60 * 1000;
+const CACHE_TTL = 60 * 60 * 1000;
 const CACHE_KEY_PREFIX = 'eternis-oracle-season-';
 const PLAYERS_CACHE_KEY = 'eternis-oracle-players';
 
@@ -842,39 +844,54 @@ function getAllPlayers(seasons) {
 async function getSeasonData(n) {
     const KEY = CACHE_KEY_PREFIX + n;
     try {
-        const c = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+        const c = JSON.parse(localStorage.getItem(KEY) || 'null');
         if (c && (Date.now() - c.ts < CACHE_TTL)) return c.data;
     } catch (e) {}
     let r = await fetch(`${SEASON_BASE}${n}.json`);
     if (!r.ok) r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
     if (!r.ok) throw new Error('404');
     const data = await r.json();
-    try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
     return data;
 }
 
-async function loadAllSeasons() {
-    const archived = [];
+async function loadAllSeasons(onProgress) {
     const promises = [];
+    let loaded = 0;
+    const total = MAX_SEASONS + 1;
+
     for (let n = 0; n <= MAX_SEASONS; n++) {
         promises.push(
             getSeasonData(n)
-                .then(d => ({ num: n, data: d, isCurrent: false }))
-                .catch(() => null)
+                .then(d => {
+                    loaded++;
+                    if (onProgress) onProgress(loaded, total);
+                    return { num: n, data: d, isCurrent: false };
+                })
+                .catch(() => {
+                    loaded++;
+                    if (onProgress) onProgress(loaded, total);
+                    return null;
+                })
         );
     }
-    const results = await Promise.all(promises);
-    results.forEach(r => { if (r) archived.push(r); });
+
+    // Параллельно: архив + текущий
+    const [archivedResults, currentData] = await Promise.all([
+        Promise.all(promises),
+        (async () => {
+            try {
+                let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+                if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+                return await r.json();
+            } catch (e) { return null; }
+        })()
+    ]);
+
+    const archived = archivedResults.filter(Boolean);
     archived.sort((a, b) => a.num - b.num);
 
-    let current = null;
-    try {
-        let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
-        if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
-        const d = await r.json();
-        current = { num: archived.length, data: d, isCurrent: true };
-    } catch (e) { console.error(e); }
-
+    const current = currentData ? { num: archived.length, data: currentData, isCurrent: true } : null;
     return current ? [...archived, current] : archived;
 }
 
@@ -1191,14 +1208,20 @@ function analyzeMeta(seasons) {
     seasons.forEach(s => {
         const classStats = {}, raceStats = {};
         (s.data.players || []).forEach(p => {
-            if (!p.name || p.name === 'Unknown' || !p.name.includes('-')) return;
-            const [race, cls] = p.name.split('-');
+            if (!p.name || p.name === 'Unknown') return;
+            const parts = p.name.split('-');
+            const cls = parts.length >= 2 ? parts[1] : parts[0];
+            const race = parts.length >= 2 ? parts[0] : null;
             const w = p.wins || 0, l = p.losses || 0, t = w + l;
             if (t < 5) return;
-            if (!classStats[cls]) classStats[cls] = { w: 0, l: 0 };
-            if (!raceStats[race]) raceStats[race] = { w: 0, l: 0 };
-            classStats[cls].w += w; classStats[cls].l += l;
-            raceStats[race].w += w; raceStats[race].l += l;
+            if (cls) {
+                if (!classStats[cls]) classStats[cls] = { w: 0, l: 0 };
+                classStats[cls].w += w; classStats[cls].l += l;
+            }
+            if (race) {
+                if (!raceStats[race]) raceStats[race] = { w: 0, l: 0 };
+                raceStats[race].w += w; raceStats[race].l += l;
+            }
         });
         const allClasses = Object.entries(classStats).map(([n, s]) => ({ name: n, w: s.w, l: s.l, total: s.w + s.l, wr: s.w / (s.w + s.l) })).filter(c => c.total >= META_MIN_FIGHTS).sort((a, b) => b.wr - a.wr);
         const topClasses = allClasses.slice(0, META_TOP);
@@ -1275,15 +1298,25 @@ function findPace(history) {
 
 function findPersonalRecords(history) {
     if (history.length === 0) return null;
+
+    const withBest = history.filter(h => typeof h.best === 'number');
+    const withWorst = history.filter(h => typeof h.worst === 'number');
+    const withWins = history.filter(h => typeof h.wins === 'number');
+    const withTotal = history.filter(h => typeof h.total === 'number');
+    const withTour = history.filter(h => typeof h.tournamentWins === 'number');
+    const withLevel = history.filter(h => typeof h.level === 'number');
+    const withShards = history.filter(h => typeof h.shards === 'number');
+    const withFactionWins = history.filter(h => typeof h.factionWins === 'number');
+
     return {
-        bestStreak: history.reduce((m, h) => h.best > m.best ? h : m),
-        worstStreak: history.reduce((m, h) => h.worst > m.worst ? h : m),
-        mostWins: history.reduce((m, h) => h.wins > m.wins ? h : m),
+        bestStreak: withBest.length > 0 ? withBest.reduce((m, h) => h.best > m.best ? h : m) : { best: 0, season: '—' },
+        worstStreak: withWorst.length > 0 ? withWorst.reduce((m, h) => h.worst > m.worst ? h : m) : { worst: 0, season: '—' },
+        mostWins: withWins.length > 0 ? withWins.reduce((m, h) => h.wins > m.wins ? h : m) : { wins: 0, season: '—' },
         bestWR: history.reduce((m, h) => h.wr > m.wr ? h : m),
-        mostTournaments: history.reduce((m, h) => (h.tournamentWins || 0) > (m.tournamentWins || 0) ? h : m, { tournamentWins: 0 }),
-        maxLevel: history.reduce((m, h) => h.level > m.level ? h : m),
-        maxShards: history.reduce((m, h) => h.shards > m.shards ? h : m),
-        maxFactionWins: history.reduce((m, h) => (h.factionWins || 0) > (m.factionWins || 0) ? h : m, { factionWins: 0 })
+        mostTournaments: withTour.length > 0 ? withTour.reduce((m, h) => (h.tournamentWins || 0) > (m.tournamentWins || 0) ? h : m, { tournamentWins: 0 }) : { tournamentWins: 0, season: '—' },
+        maxLevel: withLevel.length > 0 ? withLevel.reduce((m, h) => h.level > m.level ? h : m) : { level: 0, season: '—' },
+        maxShards: withShards.length > 0 ? withShards.reduce((m, h) => h.shards > m.shards ? h : m) : { shards: 0, season: '—' },
+        maxFactionWins: withFactionWins.length > 0 ? withFactionWins.reduce((m, h) => (h.factionWins || 0) > (m.factionWins || 0) ? h : m, { factionWins: 0 }) : { factionWins: 0, season: '—' }
     };
 }
 
@@ -1592,11 +1625,11 @@ function generateForecastText(forecast, trend) {
 
 // --- 5.3 Совет ---
 function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history) {
-    const currentSeason = history[history.length - 1]?.season;
-    const currentClass = history[history.length - 1]?.name?.split('-')[1];
-
-    // Защита от undefined
     if (!history || history.length === 0) return `Продолжай свой путь. <strong>Каждый бой — шаг вперёд.</strong>`;
+
+    const currentSeason = history[history.length - 1]?.season;
+    const currentHeroName = history[history.length - 1]?.name || '';
+    const currentClass = currentHeroName.split('-')[1] || currentHeroName.split('-')[0] || '';
 
     const records = findPersonalRecords(history);
     if (records && records.worstStreak.worst >= 7 && history[history.length - 1].season === records.worstStreak.season) {
@@ -1620,10 +1653,11 @@ function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history)
     }
 
     const best = heroAnalysis.best;
-    const bestClass = best.name.split('-')[1] || '';
+    const bestName = best.name || '';
+    const bestClass = bestName.split('-')[1] || bestName.split('-')[0] || '';
     const bestSeason = best.season ?? '?';
-    const wasInMeta = isInMeta(bestClass, metaBySeason, bestSeason, 'class');
-    const isInMetaNow = isInMeta(bestClass, metaBySeason, currentSeason, 'class');
+    const wasInMeta = isInMeta(bestClass, metaBySeason, bestSeason, 'class') ?? false;
+    const isInMetaNow = isInMeta(bestClass, metaBySeason, currentSeason, 'class') ?? false;
     const bestMetaS = metaBySeason.find(m => m.season === bestSeason);
     const currentMetaS = metaBySeason.find(m => m.season === currentSeason);
     const bestMetaTop = bestMetaS?.topClasses.map(c => c.name).join(', ') || '—';
@@ -1713,24 +1747,64 @@ function renderFullHistory(history) {
         '<th class="num">💎</th>' +
     '</tr></thead><tbody>';
 
+    // Группируем по сезону
+    const bySeason = new Map();
     history.forEach(h => {
-        const eraIcon = h.era === 'classic' ? ' 📜' : '';
-        const deletedIcon = h.isDeleted ? ' 🗑️' : '';
-        const rowStyle = h.isDeleted ? 'opacity:0.7;' : '';
-        const seasonExtra = h.isDeleted ? '🗑️' : (h.isCurrent ? ' ⚡' : '');
+        if (!bySeason.has(h.season)) bySeason.set(h.season, []);
+        bySeason.get(h.season).push(h);
+    });
 
-        html += `<tr class="${h.isCurrent && !h.isDeleted ? 'current' : ''}" style="${rowStyle}">
-            <td class="season-num" data-label="Сезон">S${h.season}${seasonExtra}${eraIcon}</td>
-            <td data-label="Герой" style="color:var(--sub);">${h.emoji} ${h.name || '—'}${deletedIcon}</td>
-            <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
-            <td class="num" data-label="WR" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
-            <td class="num" data-label="Стрик" style="color:var(--green);font-weight:600;">${h.best || '—'}</td>
-            <td class="num" data-label="Лузстрик" style="color:var(--red);font-weight:600;">${h.worst || '—'}</td>
-            <td class="num" data-label="Скилл" style="color:var(--purple);font-weight:600;">${h.skill || '—'}</td>
-            <td class="num" data-label="Фракция" style="color:var(--ice);font-weight:600;">${h.factionWins || '—'}</td>
-            <td class="num" data-label="Ур.">${h.level}</td>
-            <td class="num" data-label="Осколки">${h.shards}</td>
-        </tr>`;
+    const sortedSeasons = [...bySeason.keys()].sort((a, b) => a - b);
+
+    sortedSeasons.forEach(seasonNum => {
+        const rows = bySeason.get(seasonNum);
+
+        // Строки героев
+        rows.forEach(h => {
+            const eraIcon = h.era === 'classic' ? ' 📜' : '';
+            const deletedIcon = h.isDeleted ? ' 🗑️' : '';
+            const rowStyle = h.isDeleted ? 'opacity:0.7;' : '';
+            const seasonExtra = h.isDeleted ? '🗑️' : (h.isCurrent ? ' ⚡' : '');
+
+            html += `<tr class="${h.isCurrent && !h.isDeleted ? 'current' : ''}" style="${rowStyle}">
+                <td class="season-num" data-label="Сезон">S${h.season}${seasonExtra}${eraIcon}</td>
+                <td data-label="Герой" style="color:var(--sub);">${h.emoji} ${h.name || '—'}${deletedIcon}</td>
+                <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
+                <td class="num" data-label="WR" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
+                <td class="num" data-label="Стрик" style="color:var(--green);font-weight:600;">${h.best || '—'}</td>
+                <td class="num" data-label="Лузстрик" style="color:var(--red);font-weight:600;">${h.worst || '—'}</td>
+                <td class="num" data-label="Скилл" style="color:var(--purple);font-weight:600;">${h.skill || '—'}</td>
+                <td class="num" data-label="Фракция" style="color:var(--ice);font-weight:600;">${h.factionWins || '—'}</td>
+                <td class="num" data-label="Ур.">${h.level}</td>
+                <td class="num" data-label="Осколки">${h.shards}</td>
+            </tr>`;
+        });
+
+        // Итого за сезон — только если героев больше 1
+        if (rows.length > 1) {
+            const sumWins = rows.reduce((s, h) => s + h.wins, 0);
+            const sumLosses = rows.reduce((s, h) => s + h.losses, 0);
+            const sumTotal = sumWins + sumLosses;
+            const sumWR = sumTotal > 0 ? sumWins / sumTotal : 0;
+            const maxLevel = Math.max(...rows.map(h => h.level || 0));
+            const maxBest = Math.max(...rows.map(h => h.best || 0));
+            const maxWorst = Math.max(...rows.map(h => h.worst || 0));
+            const sumFactionWins = rows.reduce((s, h) => s + (h.factionWins || 0), 0);
+            const sumShards = rows.reduce((s, h) => s + (h.shards || 0), 0);
+
+            html += `<tr style="background:rgba(163,113,247,0.06);font-weight:700;">
+                <td class="season-num" data-label="Сезон" style="color:var(--gold);">S${seasonNum} ИТОГО</td>
+                <td data-label="Герой" style="color:var(--muted);font-style:italic;">сумма за сезон</td>
+                <td class="num" data-label="W/L" style="color:var(--text);">${sumWins}-${sumLosses}</td>
+                <td class="num" data-label="WR" style="color:${wrColor(sumWR)};">${(sumWR * 100).toFixed(1)}%</td>
+                <td class="num" data-label="Стрик" style="color:var(--green);">${maxBest}</td>
+                <td class="num" data-label="Лузстрик" style="color:var(--red);">${maxWorst}</td>
+                <td class="num" data-label="Скилл">—</td>
+                <td class="num" data-label="Фракция" style="color:var(--ice);">${sumFactionWins || '—'}</td>
+                <td class="num" data-label="Ур.">${maxLevel}</td>
+                <td class="num" data-label="Осколки">${sumShards}</td>
+            </tr>`;
+        }
     });
 
     html += '</tbody></table></div></div>';
@@ -1832,14 +1906,25 @@ function renderRecords(history) {
 
     // Турниры
     const tourValue = sa.mostTournaments.tournamentWins || 0;
-    const tourSeason = tourValue > 0 && sa.mostTournaments.season !== undefined
+    const tourSeason = tourValue > 0 && sa.mostTournaments.season !== undefined && sa.mostTournaments.season !== '—'
         ? `S${sa.mostTournaments.season}`
         : '—';
 
     // Фракционные победы
     const factionValue = rec.maxFactionWins.factionWins || 0;
-    const factionSeason = factionValue > 0 && rec.maxFactionWins.season !== undefined
+    const factionSeason = factionValue > 0 && rec.maxFactionWins.season !== undefined && rec.maxFactionWins.season !== '—'
         ? `S${rec.maxFactionWins.season}`
+        : '—';
+
+    // Стрики
+    const bestStreakValue = rec.bestStreak.best || 0;
+    const bestStreakSeason = bestStreakValue > 0 && rec.bestStreak.season !== undefined && rec.bestStreak.season !== '—'
+        ? `S${rec.bestStreak.season}`
+        : '—';
+
+    const worstStreakValue = rec.worstStreak.worst || 0;
+    const worstStreakSeason = worstStreakValue > 0 && rec.worstStreak.season !== undefined && rec.worstStreak.season !== '—'
+        ? `S${rec.worstStreak.season}`
         : '—';
 
     let html = '<div class="oracle-block green"><div class="oracle-block-title">🏅 Рекорды</div><div class="season-highlight">';
@@ -1849,8 +1934,8 @@ function renderRecords(history) {
     html += `<div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Больше побед</div><div class="season-value">${sa.mostWins.wins}</div><div class="season-detail">S${sa.mostWins.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">🔥</div><div class="season-title">Больше боёв</div><div class="season-value">${sa.mostFights.total}</div><div class="season-detail">S${sa.mostFights.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">👑</div><div class="season-title">Больше турниров</div><div class="season-value">${tourValue}</div><div class="season-detail">${tourSeason}</div></div>`;
-    html += `<div class="season-card"><div class="season-icon">📈</div><div class="season-title">Лучший стрик</div><div class="season-value">${rec.bestStreak.best}</div><div class="season-detail">S${rec.bestStreak.season}</div></div>`;
-    html += `<div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший стрик</div><div class="season-value">${rec.worstStreak.worst}</div><div class="season-detail">S${rec.worstStreak.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">📈</div><div class="season-title">Лучший стрик</div><div class="season-value">${bestStreakValue}</div><div class="season-detail">${bestStreakSeason}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший стрик</div><div class="season-value">${worstStreakValue}</div><div class="season-detail">${worstStreakSeason}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">👑</div><div class="season-title">Макс. уровень</div><div class="season-value">${rec.maxLevel.level}</div><div class="season-detail">S${rec.maxLevel.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">💎</div><div class="season-title">Макс. осколков</div><div class="season-value">${rec.maxShards.shards}</div><div class="season-detail">S${rec.maxShards.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Макс. фракц. побед</div><div class="season-value">${factionValue}</div><div class="season-detail">${factionSeason}</div></div>`;
@@ -1989,8 +2074,10 @@ function renderMeta(metaBySeason, history) {
     };
 
     const rowCompactHtml = (m, historyItem) => {
-        if (!historyItem || !historyItem.name?.includes('-')) return '';
-        const myClass = historyItem.name.split('-')[1];
+        if (!historyItem || !historyItem.name) return '';
+        const nameParts = historyItem.name.split('-');
+        const myClass = nameParts.length >= 2 ? nameParts[1] : nameParts[0];
+        if (!myClass) return '';
         const myRank = m.allClasses.findIndex(c => c.name === myClass) + 1;
         const myObj = m.allClasses.find(c => c.name === myClass);
         if (!myObj) return '';
@@ -2013,7 +2100,8 @@ function renderMeta(metaBySeason, history) {
     if (currentMeta && currentMeta.topClasses.length > 0) {
         const m = currentMeta;
         const historyItem = history.find(h => h.season === m.season);
-        const myClass = historyItem?.name?.split('-')[1] || null;
+        const nameParts = (historyItem?.name || '').split('-');
+        const myClass = nameParts.length >= 2 ? nameParts[1] : (nameParts[0] || null);
         const myRank = myClass ? m.allClasses.findIndex(c => c.name === myClass) + 1 : 0;
         const myObj = myClass ? m.allClasses.find(c => c.name === myClass) : null;
         const myInMeta = myClass ? isInMeta(myClass, metaBySeason, m.season) : false;
@@ -2059,6 +2147,14 @@ function renderMemeAnalysis(memes) {
 // --- 6.13 Стиль ---
 function renderStyle(heroAnalysis, metaBySeason, history) {
     if (!heroAnalysis) return '';
+
+    // Фолбэк — если данных мало
+    const hasClassData = Object.keys(heroAnalysis.classStats || {}).length > 0;
+    const hasRaceData = Object.keys(heroAnalysis.raceStats || {}).length > 0;
+    const hasCombo = !!heroAnalysis.bestCombo;
+    if (!hasClassData && !hasRaceData && !hasCombo) {
+        return '<div class="oracle-block ice"><div class="oracle-block-title">🎨 Твой стиль</div><div style="text-align:center;color:var(--muted);font-size:0.85rem;padding:20px 0;">Пока мало данных для анализа стиля</div></div>';
+    }
 
     // Классы — сортируем по частоте (total)
     const classArr = Object.entries(heroAnalysis.classStats)
@@ -2620,12 +2716,22 @@ document.addEventListener('click', function(e) { if (!e.target.closest('.search-
         allPlayersCache = [...map.values()].sort((a, b) => a.display.localeCompare(b.display));
         console.log('Повествовательница: после текущего —', allPlayersCache.length);
     } catch (e) { console.error('Текущий:', e); }
-    loadAllSeasons().then(seasons => {
-        allSeasonsCache = seasons;
-        allPlayersCache = getAllPlayers(seasons);
-        try { localStorage.setItem(PLAYERS_CACHE_KEY, JSON.stringify(allPlayersCache)); } catch (e) {}
-        console.log('Повествовательница: полная загрузка —', allPlayersCache.length);
-    }).catch(e => console.error('Фон:', e));
+	const statusEl = document.querySelector('.status-message');
+	
+	loadAllSeasons((loaded, total) => {
+		if (statusEl) {
+			const pct = Math.round((loaded / total) * 100);
+			statusEl.innerHTML = `<div class="spinner"></div><br>Загрузка: ${loaded}/${total} (${pct}%)`;
+		}
+	}).then(seasons => {
+		allSeasonsCache = seasons;
+		allPlayersCache = getAllPlayers(seasons);
+		try { localStorage.setItem(PLAYERS_CACHE_KEY, JSON.stringify(allPlayersCache)); } catch (e) {}
+		console.log('Повествовательница: полная загрузка —', allPlayersCache.length);
+		if (statusEl) {
+			statusEl.textContent = 'Начни вводить ник героя...';
+		}
+	}).catch(e => console.error('Фон:', e));
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name');
     if (name) {
