@@ -772,7 +772,11 @@ async function loadAllSeasons(onProgress) {
         ? { num: archived.length, data: currentData, isCurrent: true }
         : null;
 
-    return current ? [...archived, current] : archived;
+    const filteredArchived = current
+        ? archived.filter(s => s.num < current.num)
+        : archived;
+
+    return current ? [...filteredArchived, current] : filteredArchived;
 }
 
 async function load2x2() {
