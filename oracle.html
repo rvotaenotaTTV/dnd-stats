@@ -146,6 +146,20 @@
         .season-highlight { grid-template-columns: repeat(2, 1fr); }
     }
 
+    .pace-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    .pace-item { background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.02)); border-radius: var(--radius-sm); padding: 12px 6px; text-align: center; border: 1px solid rgba(163,113,247,0.2); }
+    .pace-icon { font-size: 1.3rem; margin-bottom: 4px; }
+    .pace-value { font-size: 1.1rem; font-weight: 800; color: var(--gold); }
+    .pace-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+    @media (max-width: 768px) {
+        .pace-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .pace-item { padding: 10px 4px; }
+        .pace-icon { font-size: 1.1rem; }
+        .pace-value { font-size: 0.95rem; }
+        .pace-label { font-size: 0.55rem; }
+    }
+
     .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--purple), #c4a5ff, var(--gold), var(--purple)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
     .scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--purple); border-radius: 50%; color: var(--purple); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; }
     .scroll-top.visible { opacity: 1; pointer-events: all; }
@@ -652,20 +666,46 @@ function buildForecast(trend, leaguePlace) {
     return { wrForecast: wrF, wrMin, wrMax, placeForecast };
 }
 
+// ============ НОВОЕ: ПРОТИВОСТОЯНИЯ ============
+function analyzeRivalries(nickname, seasons) {
+    const rivals = new Map();
+    seasons.forEach(s => {
+        const me = (s.data.players || []).find(p => p.display?.toLowerCase() === nickname.toLowerCase());
+        if (!me || !me.faction) return;
+        (s.data.players || []).forEach(p => {
+            if (p.display?.toLowerCase() === nickname.toLowerCase()) return;
+            if (!p.display) return;
+            if (normalizeFaction(p.faction) !== normalizeFaction(me.faction)) return;
+            if (!rivals.has(p.display)) {
+                rivals.set(p.display, { display: p.display, emoji: p.emoji || '⚔️', seasons: 0, wins: 0, losses: 0 });
+            }
+            const r = rivals.get(p.display);
+            r.seasons++;
+            r.wins += p.wins || 0;
+            r.losses += p.losses || 0;
+        });
+    });
+    return [...rivals.values()].filter(r => r.seasons >= 3).sort((a, b) => b.seasons - a.seasons).slice(0, 5);
+}
+
 // ============ МЕМЫ ============
 function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace) {
     const memes = [];
     const last = history[history.length - 1];
     const currentSeason = last.season;
     const currentClass = last.name?.split('-')[1];
+    const currentRace = last.name?.split('-')[0];
 
+    // ---------- ТУРНИРЫ ----------
     const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
     const mostTournaments = history.reduce((m, h) => (h.tournamentWins || 0) > (m.tournamentWins || 0) ? h : m, { tournamentWins: 0 });
     if (totalTournaments === 0) memes.push(`<strong>${totalTournaments} турниров.</strong> Ты как тот чувак из мема «я не проиграл — я просто не участвовал». Может, пора?`);
     else if (totalTournaments >= 20) memes.push(`<strong>${totalTournaments} турниров.</strong> Это не хобби — это <span class="meme">турнирная зависимость</span>. Продай одну корону, купи куртку.`);
     else if (totalTournaments >= 10) memes.push(`<strong>${totalTournaments} турниров.</strong> Ты не просто игрок — ты <span class="meme">турнирный волк</span>. Лучший сезон: S${mostTournaments.season} (${mostTournaments.tournamentWins}).`);
+    else if (totalTournaments >= 5) memes.push(`<strong>${totalTournaments} турниров.</strong> Уже не случайность — <span class="meme">система</span>. Но до легенды ещё пилить и пилить.`);
     else memes.push(`<strong>${totalTournaments} турниров.</strong> Это как выиграть в лотерею один раз — приятно, но статистикой не считается.`);
 
+    // ---------- МЕТА ----------
     if (currentClass && metaBySeason.length) {
         const isInMetaNow = isInMeta(currentClass, metaBySeason, currentSeason);
         const currentMeta = metaBySeason.find(m => m.season === currentSeason);
@@ -680,30 +720,145 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     if (seasonsWithMeta.length >= 3) {
         if (inMetaCount > outsideMetaCount) memes.push(`<strong>${inMetaCount} из ${seasonsWithMeta.length} сезонов</strong> ты играл в мете. Ты <span class="meme">следуешь за трендом</span>. Не стыдно, но предсказуемо.`);
         else if (outsideMetaCount > inMetaCount) memes.push(`<strong>${outsideMetaCount} из ${seasonsWithMeta.length} сезонов</strong> ты играл <span class="meme">вне меты</span>. Ты или гений, или упрямец.`);
+        else memes.push(`Ты <span class="meme">ровно на грани</span>: половину сезонов в мете, половину — вне. Как <span class="meme">двуликий Янус</span>, только с мечом.`);
     }
 
-    if (trend.stdDev > 0.08) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Ты как <span class="meme">криптовалюта</span> — то луна, то дно.`);
+    // ---------- СТАБИЛЬНОСТЬ ----------
+    if (trend.stdDev > 0.12) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Это не стабильность, это <span class="meme">американские горки</span>.`);
+    else if (trend.stdDev > 0.08) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Ты как <span class="meme">криптовалюта</span> — то луна, то дно.`);
     else if (trend.stdDev < 0.03 && trend.seasonsCount > 2) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Ты стабилен, как <span class="meme">бабушкин телевизор</span>. Надёжно, но без искры.`);
+    else if (trend.stdDev >= 0.05) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Тебя <span class="meme">кидает из стороны в сторону</span>, как в том самом меме с автобусом.`);
 
-    if (trend.form < 0.75) memes.push(`Ты на <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. Это уже не «передышка» — это <span class="meme">отпуск в Турции</span>. Пора возвращаться.`);
+    // ---------- ФОРМА ----------
+    if (trend.form > 1.1) memes.push(`Форма <strong>${(trend.form * 100).toFixed(0)}%</strong> — ты <span class="meme">превзошёл свой пик</span>. Это новый уровень. Запомни это чувство.`);
+    else if (trend.form < 0.75) memes.push(`Ты на <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. Это уже не «передышка» — это <span class="meme">отпуск в Турции</span>. Пора возвращаться.`);
+    else if (trend.form < 0.9) memes.push(`Ты на <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. <span class="meme">Почти как раньше</span>, но ностальгия уже щекочет.`);
     else if (trend.form >= 1) memes.push(`Ты на <strong>100%+ от пика</strong> — то есть <span class="meme">прямо сейчас творишь историю</span>. Не сбавляй.`);
+    else memes.push(`Форма — <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. <span class="meme">Держишь марку</span>, но до рекорда чуть-чуть.`);
 
+    // ---------- ГЕРОИ ----------
     if (heroAnalysis.count === 1) memes.push(`Один герой за всю карьеру. Ты — <span class="meme">моногамный</span>. Уважение.`);
+    else if (heroAnalysis.count === 2) memes.push(`Два героя. Это как <span class="meme">две жены</span> — и обе ревнуют.`);
+    else if (heroAnalysis.count >= 8) memes.push(`<strong>${heroAnalysis.count} героев</strong>. Это уже <span class="meme">зоопарк</span>. Ты вообще помнишь их всех?`);
     else if (heroAnalysis.count >= 6) memes.push(`<strong>${heroAnalysis.count} героев</strong>. Ты меняешь героев чаще, чем носки. <span class="meme">Найди себя уже</span>.`);
+    else if (heroAnalysis.count >= 4) memes.push(`<strong>${heroAnalysis.count} героев</strong>. <span class="meme">Полигамия в мире мечей</span>. Главное — чтобы все были довольны.`);
+    else memes.push(`<strong>${heroAnalysis.count} героя</strong>. Нормальный <span class="meme">гарем</span>, без излишеств.`);
 
+    // ---------- ЛУЧШИЙ ГЕРОЙ ----------
+    if (heroAnalysis.best) {
+        const bestWR = heroAnalysis.best.wr;
+        if (bestWR > 0.7) memes.push(`WR <strong>${(bestWR * 100).toFixed(0)}%</strong> на лучшем герое. <span class="meme">Ты машина</span>. Либо соперники просто не умеют готовиться.`);
+        else if (bestWR > 0.65) memes.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> с WR <strong>${(bestWR * 100).toFixed(0)}%</strong>. Это не герой — это <span class="meme">имба</span>. Нерфите.`);
+        else if (bestWR > 0.55) memes.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(bestWR * 100).toFixed(0)}%). <span class="meme">Надёжен, как швейцарские часы</span>.`);
+        else memes.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(bestWR * 100).toFixed(0)}%). <span class="meme">Лучший среди равных</span>, но звёзд с неба не хватает.`);
+    }
+
+    // ---------- ЛИГА ----------
     if (leaguePlace && !leaguePlace.inTop8) {
         const gamesToGo = Math.ceil(leaguePlace.gapToTop8 / 15);
         memes.push(`До топ-8 Лиги — <strong>${leaguePlace.gapToTop8} SKILL</strong>. Это <span class="meme">${gamesToGo} хороших вечеров</span>. Не так уж и много.`);
+        if (leaguePlace.gapToTop8 > 200) memes.push(`Разрыв до топ-8 — <strong>${leaguePlace.gapToTop8} SKILL</strong>. Это не разрыв, это <span class="meme">пропасть</span>. Но кто не рискует...`);
     } else if (leaguePlace && leaguePlace.inTop8) memes.push(`Ты в <strong>топ-8 Лиги</strong>. Это как <span class="meme">VIP-ложа</span>. Не позорь.`);
+    if (leaguePlace && leaguePlace.place <= 3) memes.push(`Ты <strong>топ-${leaguePlace.place}</strong> в своей фракции. <span class="meme">Не смотри свысока</span> — на арене все равны.`);
+    if (leaguePlace && leaguePlace.place > 30) memes.push(`Ты <strong>${leaguePlace.place}-й</strong> в Лиге. <span class="meme">Там внизу воздух чище</span>, да?`);
 
+    // ---------- СЕЗОН-ЛЕГЕНДА ----------
     const legend = findLegendSeason(history);
     if (legend && parseFloat(legend.score) > 50) memes.push(`Твой <span class="meme">сезон-легенда</span> — <strong>S${legend.season}</strong> (оценка ${legend.score}/100). Там ты был на коне. Может, стоит <span class="meme">вернуться в эту форму</span>?`);
+    else if (legend && parseFloat(legend.score) < 30) memes.push(`Твой лучший сезон — <strong>S${legend.season}</strong> с оценкой <strong>${legend.score}/100</strong>. <span class="meme">Это не легенда, это черновик</span>.`);
 
+    // ---------- ТЕМП ----------
     const paceLocal = findPace(history);
     if (paceLocal) {
         if (paceLocal.avgFights > 200) memes.push(`Ты играешь <strong>${paceLocal.avgFights} боёв за сезон</strong>. Это как <span class="meme">работа без зарплаты</span>. Хотя, если платят осколками...`);
         else if (paceLocal.avgFights < 30) memes.push(`Всего <strong>${paceLocal.avgFights} боёв за сезон</strong>. Это как <span class="meme">зайти в бар и не выпить</span>. Может, активнее?`);
+        else if (paceLocal.avgFights > 120) memes.push(`<strong>${paceLocal.avgFights} боёв за сезон</strong>. <span class="meme">Ты живёшь на арене</span>. Скажи честно, ты там уже прописан?`);
+        else memes.push(`<strong>${paceLocal.avgFights} боёв за сезон</strong>. <span class="meme">Здоровый темп</span>. Не выгораешь, но и не прохлаждаешься.`);
     }
+
+    // ---------- СТРИКИ ----------
+    const records = findPersonalRecords(history);
+    if (records) {
+        if (records.bestStreak.best >= 15) memes.push(`Лучший стрик — <strong>${records.bestStreak.best} побед</strong> (S${records.bestStreak.season}). Это не стрик, это <span class="meme">конвейер</span>.`);
+        else if (records.bestStreak.best >= 8) memes.push(`Лучший стрик — <strong>${records.bestStreak.best} побед</strong>. <span class="meme">Неплохая серия</span>, но до бессмертия не дотягивает.`);
+        if (records.worstStreak.worst >= 10) memes.push(`Худший стрик — <strong>${records.worstStreak.worst} поражений</strong> (S${records.worstStreak.season}). Это <span class="meme">не полоса, это чёрная дыра</span>.`);
+        else if (records.worstStreak.worst >= 6) memes.push(`Худший стрик — <strong>${records.worstStreak.worst} поражений</strong>. <span class="meme">Бывает</span>. Главное — выбрался.`);
+    }
+
+    // ---------- УРОВЕНЬ ----------
+    const lastLevel = last.level || 0;
+    if (lastLevel >= 80) memes.push(`Уровень <strong>${lastLevel}</strong>. Ты <span class="meme">легенда арены</span>. Тебе уже можно открывать школу.`);
+    else if (lastLevel >= 50) memes.push(`Уровень <strong>${lastLevel}</strong>. Это <span class="meme">элита</span>. Но до максималки ещё есть куда расти.`);
+    else if (lastLevel >= 30) memes.push(`Уровень <strong>${lastLevel}</strong>. <span class="meme">Середина пути</span>. Не новичок, но и не ветеран.`);
+    else if (lastLevel >= 15) memes.push(`Уровень <strong>${lastLevel}</strong>. Ты <span class="meme">подрастающее поколение</span>. Пока что.`);
+    else memes.push(`Уровень <strong>${lastLevel}</strong>. <span class="meme">Юнец</span>. Вся арена ещё впереди.`);
+
+    // ---------- ОСКОЛКИ ----------
+    const lastShards = last.shards || 0;
+    if (lastShards >= 5000) memes.push(`<strong>${lastShards} осколков</strong>. Ты <span class="meme">олигарх арены</span>. Купи уже остров.`);
+    else if (lastShards >= 2000) memes.push(`<strong>${lastShards} осколков</strong>. <span class="meme">Богатенький</span>. Но жадность — не порок, если это осколки.`);
+    else if (lastShards >= 500) memes.push(`<strong>${lastShards} осколков</strong>. <span class="meme">Средний класс</span>. Копишь на что-то серьёзное?`);
+    else memes.push(`<strong>${lastShards} осколков</strong>. <span class="meme">Нищий</span>. Но это временно. Надеюсь.`);
+
+    // ---------- СЕЗОННЫЕ ----------
+    const seasonsWithWRAbove50 = history.filter(h => h.wr > 0.5).length;
+    const seasonsWithWRBelow50 = history.filter(h => h.wr < 0.5).length;
+    if (history.length >= 5) {
+        if (seasonsWithWRAbove50 === history.length) memes.push(`<strong>Все ${history.length} сезонов с WR >50%</strong>. Ты <span class="meme">машина</span>. Или просто играешь с ботами.`);
+        else if (seasonsWithWRBelow50 === history.length) memes.push(`<strong>Все ${history.length} сезонов с WR <50%</strong>. Это <span class="meme">не баг, это фича</span>. Ты упорный. Или мазохист.`);
+        else if (seasonsWithWRAbove50 > seasonsWithWRBelow50 * 2) memes.push(`<strong>${seasonsWithWRAbove50} из ${history.length} сезонов</strong> с положительным WR. <span class="meme">Стабильно хорошо</span>. Скучно, но эффективно.`);
+        else if (seasonsWithWRBelow50 > seasonsWithWRAbove50 * 2) memes.push(`<strong>${seasonsWithWRBelow50} из ${history.length} сезонов</strong> с отрицательным WR. <span class="meme">Полоса невезения</span>. Или руки.`);
+    }
+
+    // ---------- ТУРНИРНЫЕ ----------
+    const bestTournamentSeason = history.reduce((m, h) => (h.tournamentWins || 0) > (m.tournamentWins || 0) ? h : m, { tournamentWins: 0 });
+    if (bestTournamentSeason.tournamentWins >= 10) memes.push(`<strong>${bestTournamentSeason.tournamentWins} турниров за S${bestTournamentSeason.season}</strong>. Это <span class="meme">доминация</span>. Или просто не было конкурентов.`);
+    else if (bestTournamentSeason.tournamentWins >= 5) memes.push(`<strong>${bestTournamentSeason.tournamentWins} турниров за S${bestTournamentSeason.season}</strong>. <span class="meme">Хороший урожай</span>.`);
+    else if (bestTournamentSeason.tournamentWins > 0) memes.push(`Лучший турнирный сезон — S${bestTournamentSeason.season} с ${bestTournamentSeason.tournamentWins} победами. <span class="meme">Скромно, но со вкусом</span>.`);
+
+    // ---------- ФРАКЦИИ ----------
+    const lightSeasons = history.filter(h => h.faction === 'Орден Света').length;
+    const darkSeasons = history.filter(h => h.faction === 'Культ Тьмы').length;
+    if (lightSeasons > 0 && darkSeasons > 0) {
+        if (lightSeasons > darkSeasons * 2) memes.push(`Ты <strong>${lightSeasons} сезонов за Свет</strong> и только ${darkSeasons} за Тьму. <span class="meme">Светлый до мозга костей</span>. Или просто боишься темноты?`);
+        else if (darkSeasons > lightSeasons * 2) memes.push(`Ты <strong>${darkSeasons} сезонов за Тьму</strong> и только ${lightSeasons} за Свет. <span class="meme">Тёмная сторона</span> явно сильнее притягивает.`);
+        else memes.push(`Свет: ${lightSeasons}, Тьма: ${darkSeasons}. Ты <span class="meme">перебежчик</span> или просто ищешь, где лучше кормят?`);
+    } else if (lightSeasons > 0) {
+        memes.push(`Все ${lightSeasons} сезонов — за <strong>Орден Света</strong>. <span class="meme">Фанатик света</span>. Не пробовал тёмную сторону? Там печеньки.`);
+    } else if (darkSeasons > 0) {
+        memes.push(`Все ${darkSeasons} сезонов — за <strong>Культ Тьмы</strong>. <span class="meme">Служитель тьмы</span>. Свет — не твой путь, и это честно.`);
+    }
+
+    // ---------- СРАВНЕНИЕ С СОБОЙ ----------
+    if (history.length >= 3) {
+        const firstWR = history[0].wr;
+        const lastWR = history[history.length - 1].wr;
+        if (lastWR > firstWR + 0.1) memes.push(`Ты <strong>вырос на ${((lastWR - firstWR) * 100).toFixed(0)}%</strong> с первого сезона. <span class="meme">Прогресс налицо</span>.`);
+        else if (lastWR < firstWR - 0.1) memes.push(`Ты <strong>упал на ${((firstWR - lastWR) * 100).toFixed(0)}%</strong> с первого сезона. <span class="meme">Куда катишься?</span>`);
+        else memes.push(`Твой WR почти не изменился с первого сезона. <span class="meme">Стабильность</span>. Или застой.`);
+    }
+
+    // ---------- РАЗНОЕ ----------
+    if (history.length >= 10) memes.push(`<strong>${history.length} сезонов</strong> на арене. Ты <span class="meme">старожил</span>. Тебе уже можно экскурсии водить.`);
+    if (history.some(h => h.champion)) {
+        const champCount = history.filter(h => h.champion).length;
+        if (champCount >= 3) memes.push(`<strong>${champCount} раз чемпион</strong>. <span class="meme">Династия</span>. Оставь корону кому-нибудь ещё.`);
+        else memes.push(`Ты был <strong>чемпионом</strong>. <span class="meme">Корона жмёт?</span> Или уже продал?`);
+    }
+    if (heroAnalysis.count >= 5 && heroAnalysis.trueWR > 0.55) memes.push(`${heroAnalysis.count} героев, но истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Ты <span class="meme">мастер на все руки</span>. Или просто везунчик.`);
+    if (heroAnalysis.trueWR > 0.6) memes.push(`Истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. <span class="meme">Это не винрейт, это диагноз</span> — талант.`);
+    else if (heroAnalysis.trueWR < 0.4) memes.push(`Истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. <span class="meme">Боль</span>. Но мы всё равно тебя любим.`);
+    if (history.length >= 2) {
+        const firstSeason = history[0], lastSeason = history[history.length - 1];
+        if (firstSeason.season === 0 && lastSeason.season >= 10) memes.push(`Ты с <strong>S0 по S${lastSeason.season}</strong>. Это <span class="meme">ветеран</span>. Тебе уже можно памятник ставить.`);
+    }
+    if (totalTournaments > 0 && totalTournaments < 3) memes.push(`Турнирных побед — <strong>${totalTournaments}</strong>. <span class="meme">Попробовал, но не втянулся</span>. Как спортзал в январе.`);
+    if (history.length >= 3 && history.every(h => h.wr > 0.5)) memes.push(`Все сезоны с WR <strong>>50%</strong>. <span class="meme">Стабильность — признак мастерства</span>. Или везения.`);
+    if (history.length >= 3 && history.every(h => h.wr < 0.5)) memes.push(`Все сезоны с WR <strong><50%</strong>. <span class="meme">Упорство — тоже талант</span>. Но, может, что-то поменять?`);
+    if (currentRace) memes.push(`Ты играешь <strong>${currentRace}</strong>. <span class="meme">${currentRace === 'Человек' ? 'Классика. Скучно, но надёжно.' : currentRace === 'Эльф' ? 'Типичный эльф. Наверное, ещё и лук в руках.' : currentRace === 'Орк' ? 'ОРК! БЬЁМ! СИЛЬНО! ЛЮБИМ!' : currentRace === 'Гном' ? 'Гном. Маленький, но гордый.' : 'Интересный выбор.'}</span>`);
+    if (history.length >= 5 && trend.trend === 'stable' && Math.abs(trend.delta) < 0.02) memes.push(`Ты <span class="meme">застыл во времени</span>. Ни роста, ни падения. Как <span class="meme">статуя в парке</span>.`);
+    if (history.length >= 3 && trend.trend === 'growth' && trend.delta > 0.1) memes.push(`Рост <strong>+${(trend.delta * 100).toFixed(0)}%</strong> за карьеру. Ты <span class="meme">ракета</span>. Или просто поздно начал.`);
+    if (history.length >= 3 && trend.trend === 'fall' && trend.delta < -0.1) memes.push(`Падение <strong>${(trend.delta * 100).toFixed(0)}%</strong>. <span class="meme">Сгорел на работе</span>? Или просто арена надоела.`);
 
     return memes;
 }
@@ -713,23 +868,55 @@ function generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace) {
     const lines = [];
     if (history.length === 0) return ['Я не вижу твоей нити.'];
     const last = history[history.length - 1];
-    if (history.length === 1) lines.push(`<strong>Твоя повесть только начинается.</strong> Сезон ${last.season}. ${last.wins} побед, ${last.losses} поражений.`);
-    else {
+    if (history.length === 1) {
+        lines.push(`<strong>Твоя повесть только начинается.</strong> Сезон ${last.season}. ${last.wins} побед, ${last.losses} поражений. Первая глава всегда самая волнительная.`);
+    } else {
         const s = trend.seasonsCount;
-        if (trend.trend === 'growth') lines.push(`<strong>Твоя нить набирает силу.</strong> ${s} сезонов. С ${(trend.firstWR * 100).toFixed(0)}% до ${(trend.lastWR * 100).toFixed(0)}% — <strong>+${(trend.delta * 100).toFixed(0)}%</strong>.`);
-        else if (trend.trend === 'fall') lines.push(`<strong>Твоя нить истончилась.</strong> ${s} сезонов. С ${(trend.firstWR * 100).toFixed(0)}% до ${(trend.lastWR * 100).toFixed(0)}% — <strong>${(trend.delta * 100).toFixed(0)}%</strong>.`);
-        else lines.push(`<strong>Твоя нить ровна.</strong> ${s} сезонов. Винрейт около ${(trend.avg * 100).toFixed(0)}%.`);
+        if (trend.trend === 'growth') {
+            const speed = trend.delta > 0.15 ? 'стремительно' : trend.delta > 0.05 ? 'уверенно' : 'медленно, но верно';
+            lines.push(`<strong>Твоя нить набирает силу.</strong> ${s} сезонов. С ${(trend.firstWR * 100).toFixed(0)}% до ${(trend.lastWR * 100).toFixed(0)}% — <strong>+${(trend.delta * 100).toFixed(0)}%</strong>. Ты растёшь ${speed}.`);
+        } else if (trend.trend === 'fall') {
+            const speed = trend.delta < -0.15 ? 'обвалом' : trend.delta < -0.05 ? 'заметным спадом' : 'лёгким снижением';
+            lines.push(`<strong>Твоя нить истончилась.</strong> ${s} сезонов. С ${(trend.firstWR * 100).toFixed(0)}% до ${(trend.lastWR * 100).toFixed(0)}% — <strong>${(trend.delta * 100).toFixed(0)}%</strong>. Это не приговор, но ${speed} — тревожный знак.`);
+        } else {
+            lines.push(`<strong>Твоя нить ровна.</strong> ${s} сезонов. Винрейт около ${(trend.avg * 100).toFixed(0)}%. Ты — скала. Или застой. Решать тебе.`);
+        }
     }
-    if (trend.peakSeason !== undefined && trend.form < 0.98 && trend.seasonsCount > 1) lines.push(`Пик — <strong>сезон ${trend.peakSeason}</strong> (${(trend.peak * 100).toFixed(0)}%). Сейчас — ${(trend.form * 100).toFixed(0)}% от той формы.`);
-    else if (trend.form >= 0.98 && trend.seasonsCount > 1) lines.push(`<strong>Ты на пике!</strong> Сезон ${trend.peakSeason} — лучшая глава.`);
+    if (trend.peakSeason !== undefined && trend.form < 0.98 && trend.seasonsCount > 1) {
+        const formDesc = trend.form < 0.6 ? 'глубоко в тени' : trend.form < 0.8 ? 'заметно ниже' : 'чуть ниже';
+        lines.push(`Пик — <strong>сезон ${trend.peakSeason}</strong> (${(trend.peak * 100).toFixed(0)}%). Сейчас — ${(trend.form * 100).toFixed(0)}% от той формы. Ты ${formDesc} былого величия.`);
+    } else if (trend.form >= 0.98 && trend.seasonsCount > 1) {
+        lines.push(`<strong>Ты на пике!</strong> Сезон ${trend.peakSeason} — лучшая глава. Ты не просто вспоминаешь — ты <strong>творишь</strong>.`);
+    }
     if (heroAnalysis.count > 1) {
-        lines.push(`За твоей спиной — ${heroAnalysis.count} героев. Истинный WR — <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>.`);
-        if (heroAnalysis.best && heroAnalysis.best.wr > trend.lastWR + 0.05) lines.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(0)}%). Текущий слабее.`);
+        lines.push(`За твоей спиной — ${heroAnalysis.count} героев. Истинный WR — <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Каждый из них — часть твоей истории.`);
+        if (heroAnalysis.best && heroAnalysis.best.wr > trend.lastWR + 0.05) {
+            lines.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(0)}%). Текущий слабее. Возможно, пора <strong>вернуться к истокам</strong>?`);
+        } else if (heroAnalysis.best && heroAnalysis.best.wr < trend.lastWR - 0.05) {
+            lines.push(`Твой текущий герой <strong>сильнее</strong> лучшего в архиве. Ты <strong>превзошёл себя</strong>. Это ли не рост?`);
+        }
+    } else if (heroAnalysis.count === 1) {
+        lines.push(`Один герой. <strong>${heroAnalysis.heroes[0]?.emoji} ${heroAnalysis.heroes[0]?.name}</strong>. Ты верен ему. Или боишься перемен.`);
     }
     if (leaguePlace) {
         const f = leaguePlace.faction === 'Орден Света' ? '🌝' : '🌚';
-        if (leaguePlace.inTop8) lines.push(`${f} В Лиге ты <strong>${leaguePlace.place}-й</strong> из ${leaguePlace.total}. Держи позицию.`);
-        else lines.push(`${f} В Лиге <strong>${leaguePlace.place}-й</strong>. До топ-8 — <strong>${leaguePlace.gapToTop8} SKILL</strong>.`);
+        if (leaguePlace.inTop8) {
+            const pos = leaguePlace.place <= 3 ? 'на пьедестале' : 'в топ-8';
+            lines.push(`${f} В Лиге ты <strong>${leaguePlace.place}-й</strong> из ${leaguePlace.total}. Ты ${pos}. Держи позицию — или иди выше.`);
+        } else {
+            const gapDesc = leaguePlace.gapToTop8 > 200 ? 'пропасть' : leaguePlace.gapToTop8 > 100 ? 'серьёзный разрыв' : 'досадный разрыв';
+            lines.push(`${f} В Лиге <strong>${leaguePlace.place}-й</strong>. До топ-8 — <strong>${leaguePlace.gapToTop8} SKILL</strong>. Это ${gapDesc}. Но каждый шаг начинается с первого удара.`);
+        }
+    }
+    if (dungeon && dungeon.totalWaves > 0) {
+        if (dungeon.maxRecord >= 50) lines.push(`🏔 В Бездне твой рекорд — <strong>${dungeon.maxRecord} волн</strong>. Там, внизу, ты чувствуешь себя как дома.`);
+        else if (dungeon.maxRecord >= 25) lines.push(`🏔 В Бездне ты дошёл до <strong>${dungeon.maxRecord} волн</strong>. Глубина манит, но пока не покоряется.`);
+        else lines.push(`🏔 Бездна помнит тебя: <strong>${dungeon.totalWaves} волн</strong>, ${dungeon.totalBosses} боссов. Ты только начинаешь спуск.`);
+    }
+    if (trend.seasonsCount >= 3) {
+        const records = findPersonalRecords(history);
+        if (records.bestStreak.best >= 10) lines.push(`Твоя лучшая серия — <strong>${records.bestStreak.best} побед подряд</strong> (S${records.bestStreak.season}). Это не просто цифра — это <strong>момент абсолютной силы</strong>.`);
+        if (records.worstStreak.worst >= 8) lines.push(`Но помни и о <strong>${records.worstStreak.worst} поражениях</strong> (S${records.worstStreak.season}). Ты выбрался. Это делает тебя сильнее.`);
     }
     return lines;
 }
@@ -749,6 +936,21 @@ function generateForecastText(forecast, trend) {
 function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history) {
     const currentSeason = history[history.length - 1]?.season;
     const currentClass = history[history.length - 1]?.name?.split('-')[1];
+
+    // === ДОПОЛНИТЕЛЬНЫЕ СОВЕТЫ ===
+    const records = findPersonalRecords(history);
+    if (records && records.worstStreak.worst >= 7 && history[history.length - 1].season === records.worstStreak.season) {
+        return `Проигрышная серия <strong>${records.worstStreak.worst}</strong> — это не конец. Это <strong>глава, которую нужно переписать</strong>. Смени героя, смени тактику, смени настроение.`;
+    }
+    const lastLevel = history[history.length - 1]?.level || 0;
+    if (lastLevel < 30 && history.length > 3) return `Уровень <strong>${lastLevel}</strong>. Ты только в начале пути. <strong>Не гонись за WR — гонись за опытом</strong>.`;
+    const lastShards = history[history.length - 1]?.shards || 0;
+    if (lastShards < 200 && history.length > 3) return `Осколков мало. <strong>Играй на результат, а не на количество</strong>. Иногда лучше меньше боёв, но с умом.`;
+    const lightSeasons = history.filter(h => h.faction === 'Орден Света').length;
+    const darkSeasons = history.filter(h => h.faction === 'Культ Тьмы').length;
+    if (lightSeasons > 0 && darkSeasons > 0 && Math.abs(lightSeasons - darkSeasons) <= 1) return `Ты мечешься между Светом и Тьмой. <strong>Определись</strong>. Или хотя бы выбери ту, где WR выше.`;
+    const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
+    if (totalTournaments === 0 && history.length > 5) return `${history.length} сезонов, а турниров — <strong>ноль</strong>. Может, <strong>попробовать</strong>? Хотя бы ради интереса.`;
 
     if (!heroAnalysis.best || !metaBySeason.length) {
         if (trend.trend === 'growth' && (!leaguePlace || leaguePlace.inTop8)) return `Твоя нить натянута, как тетива. <strong>Не отпускай.</strong>`;
@@ -771,12 +973,10 @@ function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history)
         if (isInMetaNow) return `Ты играешь в мете (<strong>${currentClass}</strong>) и показываешь <strong>${(best.wr * 100).toFixed(0)}%</strong>. Не сбавляй.`;
         return `Ты играешь <strong>${currentClass}</strong> — вне меты. Но WR <strong>${(best.wr * 100).toFixed(0)}%</strong> — сильно. Продолжай.`;
     }
-
     if (wasInMeta && isInMetaNow) return `Твой лучший герой — <strong>${best.emoji} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда мета: <strong>${bestMetaTop}</strong> — и он в ней. Сейчас мета: <strong>${currentMetaTop}</strong> — и он снова в ней. Возвращение <strong>оправдано</strong>.`;
     if (wasInMeta && !isInMetaNow) return `Твой лучший герой — <strong>${best.emoji} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда он был в мете: <strong>${bestMetaTop}</strong>. Сейчас мета другая: <strong>${currentMetaTop}</strong> — <strong>${bestClass} вне меты</strong>. Возвращение <strong>рискованно</strong>.`;
     if (!wasInMeta && isInMetaNow) return `Твой лучший герой — <strong>${best.emoji} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда он был <strong>вне меты</strong> (<strong>${bestMetaTop}</strong>), но ты выигрывал. Сейчас <strong>${bestClass} в мете</strong> (<strong>${currentMetaTop}</strong>). Момент — <strong>вернуться</strong>.`;
     if (!wasInMeta && !isInMetaNow) return `Твой лучший герой — <strong>${best.emoji} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда он был <strong>вне меты</strong> (<strong>${bestMetaTop}</strong>) — и сейчас тоже. Но ты играл сильно <strong>вопреки мете</strong>. Возвращение — <strong>риск</strong>, но ты сам знаешь.`;
-
     return `Ты идёшь ровно. <strong>Пора сделать рывок.</strong>`;
 }
 
@@ -939,13 +1139,13 @@ function renderSwings(swings) {
 
 function renderPace(pace) {
     if (!pace) return '';
-    return `<div class="oracle-block"><div class="oracle-block-title">⚡ Темп карьеры</div><div class="trend-grid">
-        <div class="trend-item"><div class="trend-icon">⚔️</div><div class="trend-value">${pace.avgFights}</div><div class="trend-label">Боёв/сезон</div></div>
-        <div class="trend-item"><div class="trend-icon">🏆</div><div class="trend-value">${pace.avgWins}</div><div class="trend-label">Побед/сезон</div></div>
-        <div class="trend-item"><div class="trend-icon">📈</div><div class="trend-value">${pace.avgLevel}</div><div class="trend-label">Уровень/сезон</div></div>
-        <div class="trend-item"><div class="trend-icon">💎</div><div class="trend-value">${pace.avgShards}</div><div class="trend-label">Осколков/сезон</div></div>
-        <div class="trend-item"><div class="trend-icon">👑</div><div class="trend-value">${pace.avgTournaments}</div><div class="trend-label">Турниров/сезон</div></div>
-        <div class="trend-item"><div class="trend-icon">📅</div><div class="trend-value">${pace.seasonsCount}</div><div class="trend-label">Сезонов</div></div>
+    return `<div class="oracle-block"><div class="oracle-block-title">⚡ Темп карьеры</div><div class="pace-grid">
+        <div class="pace-item"><div class="pace-icon">⚔️</div><div class="pace-value">${pace.avgFights}</div><div class="pace-label">Боёв/сезон</div></div>
+        <div class="pace-item"><div class="pace-icon">🏆</div><div class="pace-value">${pace.avgWins}</div><div class="pace-label">Побед/сезон</div></div>
+        <div class="pace-item"><div class="pace-icon">📈</div><div class="pace-value">${pace.avgLevel}</div><div class="pace-label">Уровень/сезон</div></div>
+        <div class="pace-item"><div class="pace-icon">💎</div><div class="pace-value">${pace.avgShards}</div><div class="pace-label">Осколков/сезон</div></div>
+        <div class="pace-item"><div class="pace-icon">👑</div><div class="pace-value">${pace.avgTournaments}</div><div class="pace-label">Турниров/сезон</div></div>
+        <div class="pace-item"><div class="pace-icon">📅</div><div class="pace-value">${pace.seasonsCount}</div><div class="pace-label">Сезонов</div></div>
     </div></div>`;
 }
 
@@ -1125,6 +1325,77 @@ function renderAdvice(advice) {
     return `<div class="advice-block"><div class="advice-icon">🖋️</div><div class="advice-text">${advice}</div></div>`;
 }
 
+// ============ НОВЫЕ БЛОКИ ============
+function renderProphecies(history, trend, heroAnalysis, leaguePlace, dungeon) {
+    const prophecies = [];
+    const last = history[history.length - 1];
+    if (trend.trend === 'growth') prophecies.push(`📜 <strong>Следующий сезон</strong> станет для тебя <strong>испытанием огнём</strong>. Ты близок к пику. Один неверный шаг — и падение. Один верный — и <strong>новая высота</strong>.`);
+    else if (trend.trend === 'fall') prophecies.push(`📜 <strong>Следующий сезон</strong> — это <strong>развилка</strong>. Или ты найдёшь в себе силы переломить падение, или нить окончательно истончится.`);
+    else prophecies.push(`📜 <strong>Следующий сезон</strong> — это <strong>возможность</strong>. Ты застрял в равновесии. Пора сделать рывок. Или смириться.`);
+    if (heroAnalysis.best && heroAnalysis.best.wr > 0.6) prophecies.push(`📜 Герой <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> ещё не сказал своего последнего слова. <strong>Вернись к нему</strong> — и он отблагодарит.`);
+    if (leaguePlace && !leaguePlace.inTop8 && leaguePlace.gapToTop8 < 100) prophecies.push(`📜 До топ-8 — <strong>${leaguePlace.gapToTop8} SKILL</strong>. Это <strong>рядом</strong>. Один хороший вечер — и ты там.`);
+    if (dungeon && dungeon.maxRecord < 20 && dungeon.totalWaves > 0) prophecies.push(`📜 Бездна ждёт. Твой рекорд — <strong>${dungeon.maxRecord} волн</strong>. Там, глубже, есть <strong>то, что ты ищешь</strong>.`);
+    const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
+    if (totalTournaments === 0) prophecies.push(`📜 Ты ещё не брал <strong>турнирную корону</strong>. Но когда возьмёшь — это изменит всё.`);
+    else if (totalTournaments >= 10) prophecies.push(`📜 <strong>${totalTournaments} турниров</strong> — это не предел. Следующая корона будет <strong>сладкой</strong>.`);
+    if (prophecies.length === 0) return '';
+    let html = '<div class="oracle-block"><div class="oracle-block-title">🔮 Пророчества</div>';
+    prophecies.forEach(p => html += `<div class="oracle-voice" style="border-left-color: var(--gold);">${p}</div>`);
+    html += '</div>';
+    return html;
+}
+
+function renderForgottenHeroes(heroAnalysis, currentName) {
+    const forgotten = heroAnalysis.heroes.filter(h => h.name !== currentName && (h.wins + h.losses) >= 20 && h.wr > 0.5).sort((a, b) => b.wr - a.wr).slice(0, 5);
+    if (forgotten.length === 0) return '';
+    let html = '<div class="oracle-block"><div class="oracle-block-title">🕯️ Забытые герои</div>';
+    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Герои, которых ты оставил, но они были хороши</div>';
+    forgotten.forEach(h => {
+        const wrColor = h.wr >= 0.6 ? 'var(--gold)' : h.wr >= 0.5 ? 'var(--green)' : 'var(--sub)';
+        html += `<div class="archive-hero"><div class="hero-info"><span>${h.emoji}</span> <span>${h.name}</span></div><div><span style="color:${wrColor};font-weight:700;">${(h.wr * 100).toFixed(0)}%</span> <span style="color:var(--muted);font-size:0.7rem;">(${h.wins}-${h.losses}) · S${h.season}</span></div></div>`;
+    });
+    html += `<div style="margin-top:12px;text-align:center;font-size:0.8rem;color:var(--sub);font-style:italic;">Может, стоит <strong style="color:var(--purple);">вернуть одного из них</strong>?</div>`;
+    html += '</div>';
+    return html;
+}
+
+function renderRivalries(rivals) {
+    if (!rivals || rivals.length === 0) return '';
+    let html = '<div class="oracle-block"><div class="oracle-block-title">🤝 Хроника противостояний</div>';
+    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Те, с кем ты делил арену чаще всего</div>';
+    rivals.forEach(r => {
+        const wr = r.wins + r.losses > 0 ? r.wins / (r.wins + r.losses) : 0;
+        const wrColor = wr >= 0.55 ? 'var(--gold)' : wr >= 0.45 ? 'var(--green)' : 'var(--red)';
+        html += `<div class="archive-hero"><div class="hero-info"><span>${r.emoji}</span> <span>${r.display}</span></div><div><span style="color:${wrColor};font-weight:700;">${(wr * 100).toFixed(0)}%</span> <span style="color:var(--muted);font-size:0.7rem;">${r.seasons} сез. вместе</span></div></div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+function renderSeasonEcho(history) {
+    if (history.length < 3) return '';
+    const echoes = [];
+    const last = history[history.length - 1];
+    const prev = history[history.length - 2];
+    const wrDiff = last.wr - prev.wr;
+    if (Math.abs(wrDiff) > 0.1) {
+        if (wrDiff > 0) echoes.push(`📖 <strong>Сезон ${prev.season} → ${last.season}</strong>: рывок на <strong>+${(wrDiff * 100).toFixed(0)}%</strong>. Ты <strong>переписал свою историю</strong>.`);
+        else echoes.push(`📖 <strong>Сезон ${prev.season} → ${last.season}</strong>: падение на <strong>${(wrDiff * 100).toFixed(0)}%</strong>. Это <strong>рана</strong>, но не смерть.`);
+    }
+    const best = history.reduce((m, h) => h.wr > m.wr ? h : m);
+    if (best.season !== last.season && best.wr > last.wr + 0.1) echoes.push(`📖 <strong>Эхо S${best.season}</strong>: тогда ты показывал <strong>${(best.wr * 100).toFixed(0)}%</strong>. Сейчас — ${(last.wr * 100).toFixed(0)}%. <strong>Верни эту форму</strong>.`);
+    if (history.length >= 5) {
+        const first = history[0];
+        if (last.wr > first.wr + 0.1) echoes.push(`📖 <strong>С S${first.season} по S${last.season}</strong>: ты вырос с ${(first.wr * 100).toFixed(0)}% до ${(last.wr * 100).toFixed(0)}%. <strong>Это путь воина</strong>.`);
+        else if (last.wr < first.wr - 0.1) echoes.push(`📖 <strong>С S${first.season} по S${last.season}</strong>: ты упал с ${(first.wr * 100).toFixed(0)}% до ${(last.wr * 100).toFixed(0)}%. <strong>Вернись к истокам</strong>.`);
+    }
+    if (echoes.length === 0) return '';
+    let html = '<div class="oracle-block"><div class="oracle-block-title">📖 Эхо прошлых сезонов</div>';
+    echoes.forEach(e => html += `<div class="oracle-voice" style="border-left-color: var(--ice);">${e}</div>`);
+    html += '</div>';
+    return html;
+}
+
 // ============ ГЛАВНАЯ ============
 async function analyzePlayer() {
     const nickname = document.getElementById('oracleSearch').value.trim();
@@ -1157,6 +1428,7 @@ async function analyzePlayer() {
         const forecastText = generateForecastText(forecast, trend);
         const advice = generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history);
         const memes = generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace);
+        const rivals = analyzeRivalries(nickname, seasons);
 
         let html = '';
         html += renderPlayerInfo(last);
@@ -1176,9 +1448,13 @@ async function analyzePlayer() {
         html += renderForecast(forecast);
         html += renderPredictions(predictions);
         html += renderHeroArchive(heroAnalysis);
+        html += renderForgottenHeroes(heroAnalysis, last.name);
+        html += renderRivalries(rivals);
         html += renderStyle(heroAnalysis, metaBySeason, history);
         html += renderFactions(factions, history);
         html += renderDungeon(dungeon);
+        html += renderSeasonEcho(history);
+        html += renderProphecies(history, trend, heroAnalysis, leaguePlace, dungeon);
         html += `<div class="oracle-block gold"><div class="oracle-block-title">🖋️ Слово Повествовательницы</div>${forecastText.map(l => `<div class="oracle-voice">${l}</div>`).join('')}</div>`;
         html += renderAdvice(advice);
         result.innerHTML = html;
@@ -1189,7 +1465,6 @@ async function analyzePlayer() {
 }
 
 (async function preload() {
-    // 1. Мгновенно — из localStorage
     try {
         const cached = JSON.parse(localStorage.getItem('eternis-oracle-players') || 'null');
         if (cached && cached.length > 0) {
@@ -1197,8 +1472,6 @@ async function analyzePlayer() {
             console.log('Повествовательница: игроки из кеша —', cached.length);
         }
     } catch (e) {}
-
-    // 2. Текущий сезон — быстро
     try {
         let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
         if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
@@ -1214,18 +1487,12 @@ async function analyzePlayer() {
         allPlayersCache = [...map.values()].sort((a, b) => a.display.localeCompare(b.display));
         console.log('Повествовательница: после текущего —', allPlayersCache.length);
     } catch (e) { console.error('Текущий:', e); }
-
-    // 3. Фоновая догрузка
     loadAllSeasons().then(seasons => {
         allSeasonsCache = seasons;
         allPlayersCache = getAllPlayers(seasons);
-        try {
-            localStorage.setItem('eternis-oracle-players', JSON.stringify(allPlayersCache));
-        } catch (e) {}
+        try { localStorage.setItem('eternis-oracle-players', JSON.stringify(allPlayersCache)); } catch (e) {}
         console.log('Повествовательница: полная загрузка —', allPlayersCache.length);
     }).catch(e => console.error('Фон:', e));
-
-    // 4. Автозапуск
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name');
     if (name) {
