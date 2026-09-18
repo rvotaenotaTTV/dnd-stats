@@ -196,6 +196,11 @@ body {
 }
 
 @media (max-width: 768px) {
+    .tabs-bar {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 5px 6px;
+    }
     .tab-pill {
         padding: 7px 10px;
         font-size: 0.68rem;
@@ -1708,6 +1713,8 @@ function renderOverviewTab(history, last, ranks, narrative) {
 
     let html = `<div id="tab-overview" class="tab-content active">`;
 
+    html += `<div class="oracle-block gold"><div class="oracle-block-title">📜 Текущий сезон</div>`;
+
     html += `<div class="stats-grid">
         ${stats.map(s => `
             <div class="stat-card">
@@ -1725,6 +1732,8 @@ function renderOverviewTab(history, last, ranks, narrative) {
             </div>
         `).join('')}
     </div>`;
+
+    html += `</div>`;
 
     html += renderHistory(history, 5);
     html += renderVoice(narrative);
@@ -1772,17 +1781,36 @@ function renderHistory(history, limit = null) {
     return html;
 }
 
+// --- 7.4b Текущий сезон ---
+function renderCurrentSeason(history) {
+    const current = history.find(h => h.isCurrent);
+    if (!current) return '';
+    const wrC = wrColor(current.wr);
+    const tourColor = current.tournamentWins > 0 ? 'var(--gold)' : 'var(--muted)';
+    const tourIcon = current.tournamentWins >= 5 ? '🔥' : (current.tournamentWins > 0 ? '🏆' : '');
+    const eraIcon = current.era === 'classic' ? ' 📜' : '';
+
+    return `<div class="oracle-block gold"><div class="oracle-block-title">📜 Текущий сезон</div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th></tr></thead><tbody>
+        <tr class="current">
+            <td class="season-num" data-label="Сезон">S${current.season} ⚡${eraIcon}</td>
+            <td class="num" data-label="W/L">${current.wins}-${current.losses}</td>
+            <td class="num wr-cell" data-label="WR" style="color:${wrC};">${(current.wr * 100).toFixed(1)}%</td>
+            <td class="num" data-label="Ур.">${current.level}</td>
+            <td class="num" data-label="🏆" style="color:${tourColor};font-weight:${current.tournamentWins > 0 ? '700' : '400'};">${current.tournamentWins ? current.tournamentWins + ' ' + tourIcon : '—'}</td>
+        </tr>
+    </tbody></table></div></div>`;
+}
+
 // --- 7.5 Голос (нарратив) ---
 function renderVoice(lines) {
     if (!lines.length) return '';
-    return `<div class="oracle-block"><div class="oracle-block-title">📜 Что я вижу</div>${lines.map(l => `<div class="oracle-voice">${l}</div>`).join('')}</div>`;
+    return `<div class="oracle-block"><div class="oracle-block-title">🖋️ Слово Повествовательницы</div>${lines.map(l => `<div class="oracle-voice">${l}</div>`).join('')}</div>`;
 }
 
 // --- 7.6 Анализ ---
 function renderAnalysisTab(history, trend, swings, pace, legendSeason, peakForm, top10Compare, memes, allHistory) {
     let html = `<div id="tab-analysis" class="tab-content">`;
     html += renderMemeAnalysis(memes);
-    html += renderChart(history);
     html += `<div class="oracle-block">
         <div class="oracle-block-title">📈 Динамика винрейта</div>
         <div class="chart-placeholder" id="githubChartContainer">
@@ -1790,6 +1818,7 @@ function renderAnalysisTab(history, trend, swings, pace, legendSeason, peakForm,
             <div style="color:var(--muted);font-size:.7rem;margin-top:6px">Загружает коммиты stats_data.json</div>
         </div>
     </div>`;
+    html += renderChart(history);
     html += renderTrends(trend);
     html += renderSwings(swings);
     html += renderPace(pace);
