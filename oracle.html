@@ -1181,9 +1181,9 @@ function renderCompareTop10(cmp) {
 function renderMeta(metaBySeason, history) {
     if (!metaBySeason.length) return '';
 
-    // Хелпер: строчка класса
-    const rowHtml = (c, rank, isMine) => {
-        const rankClass = rank <= 3 ? `r${rank}` : (rank <= 5 ? `r${rank}` : 'r-out');
+    // Хелпер: строчка класса в топ-5
+    const rowTopHtml = (c, rank, isMine) => {
+        const rankClass = rank <= 5 ? `r${rank}` : 'r-out';
         const mineStyle = isMine ? 'background:rgba(240,185,11,0.12);margin:0 -6px;padding:4px 6px;border-radius:4px;border-left:3px solid var(--gold);' : '';
         const nameColor = isMine ? 'color:var(--gold);font-weight:800;' : 'color:var(--text);';
         return `<div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:4px 0;${mineStyle}">
@@ -1192,58 +1192,83 @@ function renderMeta(metaBySeason, history) {
         </div>`;
     };
 
+    // Хелпер: компактная строчка для архива
+    const rowCompactHtml = (m, historyItem) => {
+        if (!historyItem || !historyItem.name?.includes('-')) return '';
+        const myClass = historyItem.name.split('-')[1];
+        const myRank = m.allClasses.findIndex(c => c.name === myClass) + 1;
+        const myObj = m.allClasses.find(c => c.name === myClass);
+        if (!myObj) return '';
+        const isInMeta = myRank <= META_TOP && myRank > 0;
+        const statusIcon = isInMeta ? '🎯' : '⚔️';
+        const rankColor = isInMeta ? 'var(--gold)' : 'var(--muted)';
+        const wrColor = myObj.wr >= 0.55 ? 'var(--gold)' : myObj.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
+        return `<div style="display:grid;grid-template-columns:50px 1fr auto auto;gap:10px;align-items:center;padding:6px 10px;font-size:0.78rem;border-bottom:1px solid rgba(163,113,247,0.08);">
+            <span style="color:var(--purple);font-weight:800;">S${m.season}</span>
+            <span>${statusIcon} <strong style="color:${isInMeta ? 'var(--gold)' : 'var(--text)'};">${myClass}</strong></span>
+            <span style="color:${rankColor};font-size:0.7rem;white-space:nowrap;">${myRank} из ${m.allClasses.length}</span>
+            <span style="color:${wrColor};font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;">${(myObj.wr * 100).toFixed(1)}%</span>
+        </div>`;
+    };
+
+    const currentMeta = metaBySeason.find(m => m.isCurrent);
+    const archivedMeta = metaBySeason.filter(m => !m.isCurrent);
+
     let html = '<div class="oracle-block ice"><div class="oracle-block-title">📊 Мета по сезонам</div>';
-    html += `<div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;">Топ-${META_TOP} класса каждого сезона (по WR, ${META_MIN_FIGHTS}+ боёв)</div>`;
 
-    metaBySeason.forEach(m => {
-        if (m.topClasses.length === 0) return;
-        const myClassInThisSeason = history.find(h => h.season === m.season)?.name?.split('-')[1] || null;
-        const myClassWasInMeta = myClassInThisSeason ? isInMeta(myClassInThisSeason, metaBySeason, m.season) : false;
+    // --- ТЕКУЩИЙ СЕЗОН ---
+    if (currentMeta && currentMeta.topClasses.length > 0) {
+        const m = currentMeta;
+        const historyItem = history.find(h => h.season === m.season);
+        const myClass = historyItem?.name?.split('-')[1] || null;
+        const myRank = myClass ? m.allClasses.findIndex(c => c.name === myClass) + 1 : 0;
+        const myObj = myClass ? m.allClasses.find(c => c.name === myClass) : null;
+        const myInMeta = myClass ? isInMeta(myClass, metaBySeason, m.season) : false;
 
-        // Индекс моего класса в полном рейтинге
-        const myRank = myClassInThisSeason
-            ? m.allClasses.findIndex(c => c.name === myClassInThisSeason) + 1
-            : 0;
-        const myClassObj = myClassInThisSeason
-            ? m.allClasses.find(c => c.name === myClassInThisSeason)
-            : null;
-
-        // Заголовок сезона
         const posText = myRank > 0 ? ` · 📍 ${myRank} из ${m.allClasses.length}` : '';
-        const statusText = myClassInThisSeason
-            ? (myClassWasInMeta ? ' 🎯 в мете' : ' ⚔️ вне меты')
-            : '';
-        html += `<div style="margin-bottom:12px;padding:12px 14px;background:linear-gradient(90deg,rgba(163,113,247,0.06),transparent);border-radius:var(--radius-sm);${myClassWasInMeta ? 'border-left:3px solid var(--gold);' : ''}">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:4px;">
-                <div style="font-size:0.78rem;color:var(--purple);font-weight:800;">S${m.season}${m.isCurrent ? ' ⚡' : ''}</div>
-                ${myClassInThisSeason ? `<div style="font-size:0.68rem;color:var(--muted);">твой класс: <strong style="color:${myClassWasInMeta ? 'var(--gold)' : 'var(--text)'};">${myClassInThisSeason}${posText}${statusText}</strong></div>` : ''}
+        const statusText = myClass ? (myInMeta ? ' 🎯 в мете' : ' ⚔️ вне меты') : '';
+
+        html += `<div style="margin-bottom:14px;padding:12px 14px;background:linear-gradient(90deg,rgba(163,113,247,0.1),rgba(163,113,247,0.02));border-radius:var(--radius-sm);border-left:3px solid ${myInMeta ? 'var(--gold)' : 'var(--purple)'};">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px;">
+                <div style="font-size:0.82rem;color:var(--purple);font-weight:800;">S${m.season} ⚡ <span style="color:var(--muted);font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;">текущий</span></div>
+                ${myClass ? `<div style="font-size:0.7rem;color:var(--muted);">твой класс: <strong style="color:${myInMeta ? 'var(--gold)' : 'var(--text)'};">${myClass}${posText}${statusText}</strong></div>` : ''}
             </div>`;
 
-        // Топ-5
         m.topClasses.forEach((c, i) => {
-            html += rowHtml(c, i + 1, c.name === myClassInThisSeason);
+            html += rowTopHtml(c, i + 1, c.name === myClass);
         });
 
-        // Если мой класс вне топ-5 — добавляем соседей
-        if (myClassObj && !myClassWasInMeta && myRank > META_TOP) {
+        if (myObj && !myInMeta && myRank > META_TOP) {
             html += `<div style="text-align:center;color:var(--muted);font-size:0.75rem;padding:4px 0;letter-spacing:2px;">···</div>`;
-
-            // Сосед выше
             if (myRank - 2 >= META_TOP) {
                 const above = m.allClasses[myRank - 2];
-                html += rowHtml(above, myRank - 1, false);
+                html += rowTopHtml(above, myRank - 1, false);
             }
-            // Мой класс
-            html += rowHtml(myClassObj, myRank, true);
-            // Сосед ниже
+            html += rowTopHtml(myObj, myRank, true);
             if (myRank < m.allClasses.length) {
                 const below = m.allClasses[myRank];
-                html += rowHtml(below, myRank + 1, false);
+                html += rowTopHtml(below, myRank + 1, false);
             }
         }
 
         html += '</div>';
-    });
+    }
+
+    // --- АРХИВНЫЕ СЕЗОНЫ ---
+    const archivedWithHistory = archivedMeta
+        .map(m => ({ m, h: history.find(h => h.season === m.season) }))
+        .filter(x => x.h && x.h.name?.includes('-'))
+        .sort((a, b) => b.m.season - a.m.season);
+
+    if (archivedWithHistory.length > 0) {
+        html += `<div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px;">📜 Твой класс по прошлым сезонам</div>`;
+        html += `<div style="background:rgba(163,113,247,0.03);border-radius:var(--radius-sm);padding:4px 0;">`;
+        archivedWithHistory.forEach(({ m, h }) => {
+            html += rowCompactHtml(m, h);
+        });
+        html += `</div>`;
+    }
+
     html += '</div>';
     return html;
 }
