@@ -10,149 +10,723 @@
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
-    body { background-image: radial-gradient(ellipse at 20% 0%, rgba(163,113,247,0.10) 0%, transparent 45%), radial-gradient(ellipse at 80% 100%, rgba(163,113,247,0.08) 0%, transparent 45%); }
-    .header-title { background: linear-gradient(135deg, var(--purple) 0%, #c4a5ff 30%, var(--gold) 70%, var(--purple) 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 4s linear infinite; }
-    @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+/* ============================================================================
+   ПОВЕСТВОВАТЕЛЬНИЦА — стили страницы oracle.html
+   Базируется на theme.css. Использует его переменные.
+   ========================================================================= */
 
-    .search-row { max-width: 620px; margin: 0 auto 28px; position: relative; }
-    .search-input-wrap { display: flex; gap: 10px; }
-    .search-input { flex: 1; padding: 15px 22px; background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.03)); border: 1px solid rgba(163,113,247,0.3); border-radius: 26px; color: var(--text); font-size: 0.95rem; font-family: inherit; transition: 0.25s; width: 100%; }
-    .search-input:focus { outline: none; border-color: var(--purple); background: linear-gradient(135deg, rgba(163,113,247,0.12), rgba(163,113,247,0.05)); box-shadow: 0 0 0 4px rgba(163,113,247,0.15), 0 0 24px rgba(163,113,247,0.2); }
-    .search-input::placeholder { color: var(--muted); }
-    .search-btn { padding: 15px 26px; background: linear-gradient(135deg, var(--purple), #8b5cf6, #a371f7); background-size: 200% auto; border: none; border-radius: 26px; color: #fff; font-weight: 700; font-size: 0.9rem; font-family: inherit; cursor: pointer; transition: 0.25s; white-space: nowrap; box-shadow: 0 4px 16px rgba(163,113,247,0.3); }
-    .search-btn:hover { transform: translateY(-2px); background-position: right center; box-shadow: 0 8px 28px rgba(163,113,247,0.5); }
-    .autocomplete-list { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: linear-gradient(180deg, var(--card), rgba(163,113,247,0.04)); border: 1px solid rgba(163,113,247,0.3); border-radius: 14px; max-height: 340px; overflow-y: auto; z-index: 50; box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(163,113,247,0.15); display: none; }
-    .autocomplete-list.show { display: block; animation: fadeSlideIn 0.2s ease; }
-    .autocomplete-item { padding: 12px 18px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 12px; transition: 0.15s; border-bottom: 1px solid rgba(163,113,247,0.08); }
-    .autocomplete-item:last-child { border-bottom: none; }
-    .autocomplete-item:hover, .autocomplete-item.active { background: linear-gradient(90deg, rgba(163,113,247,0.18), rgba(163,113,247,0.05)); border-left: 3px solid var(--purple); padding-left: 15px; }
-    .autocomplete-item .ac-emoji { font-size: 1.3rem; }
-    .autocomplete-item .ac-name { color: var(--text); flex: 1; font-weight: 500; }
-    .autocomplete-item .ac-name strong { color: var(--purple); font-weight: 800; }
-    .autocomplete-item .ac-class { color: var(--muted); font-size: 0.72rem; }
-    .autocomplete-empty { padding: 18px; color: var(--muted); font-size: 0.85rem; text-align: center; }
+/* ----------------------------------------------------------------------------
+   1. ФОН И ШАПКА (дополнение к базовой теме)
+   ---------------------------------------------------------------------------- */
+body {
+    background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(163,113,247,0.10) 0%, transparent 45%),
+        radial-gradient(ellipse at 80% 100%, rgba(163,113,247,0.08) 0%, transparent 45%);
+}
 
-    .player-header { background: linear-gradient(135deg, rgba(163,113,247,0.16), rgba(163,113,247,0.06)); border: 1px solid rgba(163,113,247,0.35); border-radius: var(--radius); padding: 26px 20px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
-    .player-header::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--purple), #c4a5ff, var(--purple), transparent); animation: shimmer 3s linear infinite; background-size: 200% auto; }
-    .player-emoji { font-size: 3rem; margin-bottom: 4px; }
-    .player-name { font-size: 1.6rem; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
-    .player-class { color: var(--sub); font-size: 0.9rem; }
-    .player-faction { display: inline-block; margin-top: 10px; padding: 5px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; background: var(--elevated); border: 1px solid var(--border); }
-    .player-faction.light { color: var(--gold); border-color: rgba(240,185,11,0.4); }
-    .player-faction.dark { color: var(--purple); border-color: rgba(163,113,247,0.4); }
+/* ----------------------------------------------------------------------------
+   2. ПОИСК
+   ---------------------------------------------------------------------------- */
+.search-row {
+    max-width: 620px;
+    margin: 0 auto 28px;
+    position: relative;
+}
+.search-input-wrap { display: flex; gap: 10px; }
 
-    .oracle-block { background: linear-gradient(180deg, var(--card), rgba(163,113,247,0.03)); border: 1px solid rgba(163,113,247,0.2); border-radius: var(--radius); padding: 20px 18px; margin-bottom: 16px; position: relative; overflow: hidden; animation: fadeSlideIn 0.4s ease; }
-    .oracle-block::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--purple), transparent); opacity: 0.6; }
-    .oracle-block.gold::after { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-    .oracle-block.gold { background: linear-gradient(180deg, var(--card), rgba(240,185,11,0.03)); border-color: rgba(240,185,11,0.2); }
-    .oracle-block.ice::after { background: linear-gradient(90deg, transparent, var(--ice), transparent); }
-    .oracle-block.ice { border-color: rgba(91,192,235,0.2); }
-    .oracle-block.green::after { background: linear-gradient(90deg, transparent, var(--green), transparent); }
-    .oracle-block.green { border-color: rgba(16,185,129,0.2); }
-    .oracle-block.pink::after { background: linear-gradient(90deg, transparent, #ec4899, transparent); }
-    .oracle-block.pink { border-color: rgba(236,72,153,0.2); }
-    .oracle-block-title { font-size: 0.95rem; font-weight: 800; color: var(--purple); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
-    .oracle-block.gold .oracle-block-title { color: var(--gold); }
-    .oracle-block.ice .oracle-block-title { color: var(--ice); }
-    .oracle-block.green .oracle-block-title { color: var(--green); }
-    .oracle-block.pink .oracle-block-title { color: #ec4899; }
+.search-input.oracle-input {
+    flex: 1;
+    padding: 15px 22px;
+    background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.03));
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: 0.25s;
+    width: 100%;
+    box-sizing: border-box;
+}
+.search-input.oracle-input:focus {
+    outline: none;
+    border-color: var(--purple);
+    background: linear-gradient(135deg, rgba(163,113,247,0.12), rgba(163,113,247,0.05));
+    box-shadow: 0 0 0 4px rgba(163,113,247,0.15);
+}
+.search-input.oracle-input::placeholder { color: var(--muted); }
 
-    .oracle-voice { background: linear-gradient(90deg, rgba(163,113,247,0.10), rgba(163,113,247,0.03)); border-left: 3px solid var(--purple); border-radius: 0 12px 12px 0; padding: 14px 18px; margin-bottom: 12px; font-size: 0.9rem; line-height: 1.7; color: var(--text); font-style: italic; }
-    .oracle-voice:last-child { margin-bottom: 0; }
-    .oracle-voice strong { color: var(--gold); font-style: normal; font-weight: 700; }
-    .oracle-voice .accent { color: #c4a5ff; font-weight: 700; font-style: normal; }
+.search-btn {
+    padding: 15px 26px;
+    background: linear-gradient(135deg, var(--purple), #8b5cf6, var(--purple));
+    background-size: 200% auto;
+    border: none;
+    border-radius: 26px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.25s;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(163,113,247,0.3);
+}
+.search-btn:hover {
+    transform: translateY(-2px);
+    background-position: right center;
+    box-shadow: 0 8px 28px rgba(163,113,247,0.5);
+}
 
-    .history-table { width: 100%; font-size: 0.78rem; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
-    .history-table th { background: linear-gradient(180deg, var(--elevated), rgba(163,113,247,0.05)); color: var(--purple); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; padding: 10px 6px; text-align: left; font-weight: 700; border-bottom: 2px solid rgba(163,113,247,0.3); }
-    .history-table th.num { text-align: right; }
-    .history-table td { padding: 10px 6px; border-bottom: 1px solid rgba(163,113,247,0.08); }
-    .history-table tr.current td { background: rgba(163,113,247,0.08); font-weight: 600; }
-    .history-table tr.current td.season-num { color: var(--gold); }
-    .history-table .season-num { color: var(--purple); font-weight: 800; }
-    .history-table .wr-cell { font-weight: 700; }
-    .history-table .num { text-align: right; font-variant-numeric: tabular-nums; }
-    .history-table th:nth-child(1), .history-table td:nth-child(1) { width: 18%; }
-    .history-table th:nth-child(2), .history-table td:nth-child(2) { width: 22%; }
-    .history-table th:nth-child(3), .history-table td:nth-child(3) { width: 16%; }
-    .history-table th:nth-child(4), .history-table td:nth-child(4) { width: 12%; }
-    .history-table th:nth-child(5), .history-table td:nth-child(5) { width: 16%; }
-    .history-table th:nth-child(6), .history-table td:nth-child(6) { width: 16%; }
+/* Автокомплит */
+.autocomplete-list {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0; right: 0;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-height: 340px;
+    overflow-y: auto;
+    z-index: 50;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    display: none;
+}
+.autocomplete-list.show { display: block; animation: fadeSlideIn 0.2s ease; }
+.autocomplete-item {
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: 0.15s;
+    border-bottom: 1px solid rgba(163,113,247,0.08);
+}
+.autocomplete-item:last-child { border-bottom: none; }
+.autocomplete-item:hover,
+.autocomplete-item.active {
+    background: linear-gradient(90deg, rgba(163,113,247,0.18), rgba(163,113,247,0.05));
+    border-left: 3px solid var(--purple);
+    padding-left: 15px;
+}
+.autocomplete-item .ac-emoji { font-size: 1.3rem; }
+.autocomplete-item .ac-name { color: var(--text); flex: 1; font-weight: 500; }
+.autocomplete-item .ac-name strong { color: var(--purple); font-weight: 800; }
+.autocomplete-item .ac-class { color: var(--muted); font-size: 0.72rem; }
+.autocomplete-empty {
+    padding: 18px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
 
-    .trend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-    .trend-item { background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.02)); border-radius: var(--radius-sm); padding: 14px 12px; text-align: center; border: 1px solid rgba(163,113,247,0.2); }
-    .trend-icon { font-size: 1.5rem; margin-bottom: 4px; }
-    .trend-value { font-size: 1.2rem; font-weight: 800; color: var(--gold); }
-    .trend-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+@media (max-width: 768px) {
+    .search-input-wrap { flex-direction: column; }
+    .search-btn { width: 100%; }
+}
 
-    .season-highlight { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-    .season-card { background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.02)); border-radius: var(--radius-sm); padding: 14px 10px; text-align: center; border: 1px solid rgba(163,113,247,0.2); }
-    .season-card .season-icon { font-size: 1.6rem; margin-bottom: 4px; }
-    .season-card .season-title { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-    .season-card .season-value { font-size: 1.1rem; font-weight: 800; color: var(--gold); margin: 4px 0; }
-    .season-card .season-detail { font-size: 0.7rem; color: var(--sub); }
+/* ----------------------------------------------------------------------------
+   3. КАРТОЧКА ИГРОКА
+   ---------------------------------------------------------------------------- */
+.player-header {
+    background: linear-gradient(135deg, rgba(163,113,247,0.16), rgba(163,113,247,0.06));
+    border: 1px solid rgba(163,113,247,0.35);
+    border-radius: var(--radius);
+    padding: 26px 20px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+.player-header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--purple), #c4a5ff, var(--purple), transparent);
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+}
+.player-emoji { font-size: 3rem; margin-bottom: 4px; }
+.player-name {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-bottom: 4px;
+}
+.player-class { color: var(--sub); font-size: 0.9rem; }
+.player-faction {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+}
+.player-faction.light { color: var(--gold); border-color: rgba(240,185,11,0.4); }
+.player-faction.dark { color: var(--purple); border-color: rgba(163,113,247,0.4); }
 
-    .meta-rank { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; font-size: 0.65rem; font-weight: 800; margin-right: 6px; }
-    .meta-rank.r1 { background: var(--gold); color: #000; }
-    .meta-rank.r2 { background: var(--silver); color: #000; }
-    .meta-rank.r3 { background: var(--bronze); color: #fff; }
-    .meta-rank.r4, .meta-rank.r5, .meta-rank.r-out { background: var(--elevated); color: var(--muted); border: 1px solid var(--border); }
+@media (max-width: 768px) {
+    .player-name { font-size: 1.3rem; }
+    .player-emoji { font-size: 2.4rem; }
+}
 
-    .meme-block { background: linear-gradient(135deg, rgba(236,72,153,0.12), rgba(163,113,247,0.06)); border: 1px solid rgba(236,72,153,0.3); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; }
-    .meme-block-title { color: #ec4899; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
-    .meme-line { font-size: 0.9rem; line-height: 1.7; margin-bottom: 8px; color: var(--text); }
-    .meme-line:last-child { margin-bottom: 0; }
-    .meme-line strong { color: #ec4899; }
-    .meme-line .meme { color: #ec4899; font-weight: 700; }
+/* ----------------------------------------------------------------------------
+   4. ТАБЫ ORACLE
+   ---------------------------------------------------------------------------- */
+.oracle-tabs {
+    display: flex;
+    gap: 6px;
+    margin: 0 auto 20px;
+    padding: 6px;
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    justify-content: center;
+    max-width: fit-content;
+}
+.oracle-tabs::-webkit-scrollbar { display: none; }
+.oracle-tab {
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    color: var(--sub);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: inherit;
+    transition: 0.2s;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+.oracle-tab:hover { background: var(--elevated); color: var(--text); }
+.oracle-tab.active {
+    background: linear-gradient(135deg, var(--purple), #8b5cf6);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(163,113,247,0.3);
+}
+.oracle-tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
+.oracle-tab-content.active { display: block; }
 
-    .archive-hero { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: linear-gradient(90deg, rgba(163,113,247,0.05), transparent); border-radius: var(--radius-sm); margin-bottom: 6px; font-size: 0.85rem; border-left: 3px solid rgba(163,113,247,0.3); }
-    .archive-hero.current { border-left-color: var(--gold); background: linear-gradient(90deg, rgba(240,185,11,0.1), transparent); }
-    .archive-hero.best { border-left-color: var(--green); }
-    .archive-hero .hero-info { display: flex; align-items: center; gap: 8px; }
-    .archive-hero .hero-wr { font-weight: 700; }
+@media (max-width: 768px) {
+    .oracle-tab { padding: 8px 12px; font-size: 0.72rem; }
+}
 
-    .style-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: linear-gradient(90deg, rgba(163,113,247,0.05), transparent); border-radius: var(--radius-sm); margin-bottom: 6px; font-size: 0.85rem; }
-    .style-row.best { border-left: 3px solid var(--green); }
-    .style-row .style-name { display: flex; align-items: center; gap: 8px; }
-    .style-row .style-val { color: var(--gold); font-weight: 700; }
+/* ----------------------------------------------------------------------------
+   5. БЛОКИ ORACLE
+   ---------------------------------------------------------------------------- */
+.oracle-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeSlideIn 0.4s ease;
+}
+.oracle-block::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--purple), transparent);
+    opacity: 0.6;
+}
+.oracle-block.gold::after { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.oracle-block.gold {
+    background: linear-gradient(180deg, var(--card), rgba(240,185,11,0.03));
+    border-color: rgba(240,185,11,0.2);
+}
+.oracle-block.ice::after { background: linear-gradient(90deg, transparent, var(--ice), transparent); }
+.oracle-block.ice { border-color: rgba(91,192,235,0.2); }
+.oracle-block.green::after { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+.oracle-block.green { border-color: rgba(16,185,129,0.2); }
+.oracle-block.pink::after { background: linear-gradient(90deg, transparent, #ec4899, transparent); }
+.oracle-block.pink { border-color: rgba(236,72,153,0.2); }
 
-    .compare-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
-    .compare-label { min-width: 100px; color: var(--muted); font-size: 0.8rem; }
-    .compare-bar-wrap { flex: 1; height: 22px; background: rgba(163,113,247,0.08); border-radius: 11px; overflow: hidden; position: relative; }
-    .compare-bar { height: 100%; border-radius: 11px; transition: width 0.6s; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 0.7rem; font-weight: 700; }
-    .compare-bar.you { background: linear-gradient(90deg, #8b5cf6, #a371f7, #c4a5ff); color: #fff; }
-    .compare-bar.avg { background: linear-gradient(90deg, var(--muted), var(--sub)); color: #fff; }
+.oracle-block-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--purple);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.oracle-block.gold .oracle-block-title { color: var(--gold); }
+.oracle-block.ice .oracle-block-title { color: var(--ice); }
+.oracle-block.green .oracle-block-title { color: var(--green); }
+.oracle-block.pink .oracle-block-title { color: #ec4899; }
 
-    .advice-block { background: linear-gradient(135deg, rgba(163,113,247,0.15), rgba(163,113,247,0.05)); border: 1px solid rgba(163,113,247,0.35); border-radius: var(--radius); padding: 22px; text-align: center; margin-top: 20px; }
-    .advice-block .advice-icon { font-size: 2rem; margin-bottom: 8px; }
-    .advice-block .advice-text { font-size: 0.95rem; line-height: 1.7; color: var(--text); font-style: italic; }
-    .advice-block .advice-text strong { color: var(--gold); font-style: normal; }
+@media (max-width: 768px) {
+    .oracle-block { padding: 16px 12px; }
+    .oracle-block-title { font-size: 0.85rem; }
+}
 
-    .loading-block { text-align: center; padding: 60px 20px; color: var(--sub); }
-    .loading-block .spinner { margin: 0 auto 16px; }
-    .not-found { text-align: center; padding: 40px 20px; color: var(--muted); }
-    .not-found .nf-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+/* ----------------------------------------------------------------------------
+   6. ТАБЛИЦЫ ИСТОРИИ (уточнение к базовой table из theme.css)
+   ---------------------------------------------------------------------------- */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    table-layout: auto;
+}
+.history-table th {
+    background: var(--elevated);
+    color: var(--gold);
+    padding: 10px 8px;
+    text-align: left;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    border-bottom: 2px solid var(--border);
+}
+.history-table th.num { text-align: right; }
+.history-table td {
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.78rem;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.history-table tr.current td {
+    background: rgba(163,113,247,0.08);
+    font-weight: 600;
+}
+.history-table tr.current td.season-num { color: var(--gold); }
+.history-table .season-num { color: var(--purple); font-weight: 800; }
+.history-table .wr-cell { font-weight: 700; }
+.history-table .num { text-align: right; font-variant-numeric: tabular-nums; }
 
-	.oracle-tabs { display: flex; gap: 6px; margin: 0 auto 20px; padding: 6px; background: linear-gradient(180deg, var(--card), rgba(163,113,247,0.03)); border-radius: var(--radius); border: 1px solid rgba(163,113,247,0.3); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; justify-content: center; max-width: fit-content; }
-	.oracle-tabs::-webkit-scrollbar { display: none; }
-	.oracle-tab { padding: 10px 16px; border: none; background: transparent; color: var(--sub); border-radius: 12px; cursor: pointer; font-size: 0.78rem; font-weight: 700; font-family: inherit; transition: 0.2s; white-space: nowrap; flex: 0 0 auto; text-align: center; }
-	.oracle-tab:hover { background: var(--elevated); color: var(--text); }
-	.oracle-tab.active { background: linear-gradient(135deg, var(--purple), #8b5cf6); color: #fff; box-shadow: 0 4px 12px rgba(163,113,247,0.3); }
-	.oracle-tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
-	.oracle-tab-content.active { display: block; }
-	@media (max-width: 768px) { .oracle-tab { padding: 8px 12px; font-size: 0.72rem; } }
-	@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-	@media (max-width: 768px) { .search-input-wrap { flex-direction: column; } .search-btn { width: 100%; } .player-name { font-size: 1.3rem; } .oracle-block { padding: 16px 12px; } .history-table { font-size: 0.68rem; } .history-table th, .history-table td { padding: 6px 3px; } .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; } .trend-grid { grid-template-columns: repeat(2, 1fr); } .season-highlight { grid-template-columns: repeat(2, 1fr); } }
-	.pace-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-	.pace-item { background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.02)); border-radius: var(--radius-sm); padding: 12px 6px; text-align: center; border: 1px solid rgba(163,113,247,0.2); }
-	.pace-icon { font-size: 1.3rem; margin-bottom: 4px; }
-	.pace-value { font-size: 1.1rem; font-weight: 800; color: var(--gold); }
-	.pace-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-	@media (max-width: 768px) { .pace-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; } .pace-item { padding: 10px 4px; } .pace-icon { font-size: 1.1rem; } .pace-value { font-size: 0.95rem; } .pace-label { font-size: 0.55rem; } }
+/* Итоговая строка «ВСЕГО» */
+.history-table tr.total-row td {
+    background: rgba(163,113,247,0.10);
+    font-weight: 800;
+    border-bottom: none;
+}
+.history-table tr.total-row td.season-num { color: var(--gold); }
 
-    .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--purple), #c4a5ff, var(--gold), var(--purple)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
-    .scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--purple); border-radius: 50%; color: var(--purple); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; }
-    .scroll-top.visible { opacity: 1; pointer-events: all; }
-    .scroll-top:hover { background: var(--purple); color: #000; transform: translateY(-3px); }
+/* Полная летопись */
+.history-table.full { font-size: 0.72rem; }
+.history-table.full th {
+    padding: 8px 6px;
+    font-size: 0.6rem;
+    line-height: 1.3;
+    text-align: center;
+}
+.history-table.full th .th-sub {
+    display: block;
+    font-size: 0.5rem;
+    color: var(--muted);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-top: 2px;
+}
+.history-table.full td {
+    padding: 8px 6px;
+    font-size: 0.72rem;
+}
+.history-table.full td:nth-child(2) {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.history-table.full th:nth-child(4),
+.history-table.full td:nth-child(4),
+.history-table.full th:nth-child(6),
+.history-table.full td:nth-child(6),
+.history-table.full th:nth-child(8),
+.history-table.full td:nth-child(8) {
+    border-right: 1px solid var(--border);
+}
+
+/* Мобильные карточки для полной летописи */
+@media (max-width: 768px) {
+    .history-table.full,
+    .history-table.full thead,
+    .history-table.full tbody,
+    .history-table.full th,
+    .history-table.full td,
+    .history-table.full tr {
+        display: block;
+    }
+    .history-table.full thead { display: none; }
+    .history-table.full tr {
+        background: var(--elevated);
+        border-radius: var(--radius-sm);
+        margin-bottom: 8px;
+        padding: 10px 12px;
+        border-left: 3px solid var(--purple);
+        border-bottom: none;
+    }
+    .history-table.full tr.current {
+        border-left-color: var(--gold);
+        background: linear-gradient(135deg, rgba(240,185,11,0.1), rgba(240,185,11,0.02));
+    }
+    .history-table.full td {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 0;
+        border: none;
+        font-size: 0.75rem;
+        white-space: normal;
+        text-align: right;
+    }
+    .history-table.full td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-right: 8px;
+        text-align: left;
+    }
+    .history-table.full td:nth-child(2) {
+        max-width: none;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+    }
+}
+
+/* ----------------------------------------------------------------------------
+   7. ГОЛОС / НАРРАТИВ
+   ---------------------------------------------------------------------------- */
+.oracle-voice {
+    background: linear-gradient(90deg, rgba(163,113,247,0.10), rgba(163,113,247,0.03));
+    border-left: 3px solid var(--purple);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text);
+    font-style: italic;
+}
+.oracle-voice:last-child { margin-bottom: 0; }
+.oracle-voice strong { color: var(--gold); font-style: normal; font-weight: 700; }
+.oracle-voice .accent { color: #c4a5ff; font-weight: 700; font-style: normal; }
+
+/* ----------------------------------------------------------------------------
+   8. ТРЕНДЫ / РЕКОРДЫ / СЕЗОНЫ
+   ---------------------------------------------------------------------------- */
+.trend-grid,
+.season-highlight {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+}
+.season-highlight { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+
+.trend-item,
+.season-card {
+    background: var(--elevated);
+    border-radius: var(--radius-sm);
+    padding: 14px 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+.season-card { padding: 14px 10px; }
+
+.trend-icon { font-size: 1.5rem; margin-bottom: 4px; }
+.trend-value { font-size: 1.2rem; font-weight: 800; color: var(--gold); }
+.trend-label,
+.season-title {
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+.season-icon { font-size: 1.6rem; margin-bottom: 4px; }
+.season-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--gold);
+    margin: 4px 0;
+}
+.season-detail { font-size: 0.7rem; color: var(--sub); }
+
+@media (max-width: 768px) {
+    .trend-grid,
+    .season-highlight { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ----------------------------------------------------------------------------
+   9. МЕТА
+   ---------------------------------------------------------------------------- */
+.meta-rank {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 800;
+    margin-right: 6px;
+}
+.meta-rank.r1 { background: var(--gold); color: #000; }
+.meta-rank.r2 { background: var(--silver); color: #000; }
+.meta-rank.r3 { background: var(--bronze); color: #fff; }
+.meta-rank.r4,
+.meta-rank.r5,
+.meta-rank.r-out {
+    background: var(--elevated);
+    color: var(--muted);
+    border: 1px solid var(--border);
+}
+
+/* ----------------------------------------------------------------------------
+   10. МЕМЫ
+   ---------------------------------------------------------------------------- */
+.meme-block {
+    background: linear-gradient(135deg, rgba(236,72,153,0.12), rgba(163,113,247,0.06));
+    border: 1px solid rgba(236,72,153,0.3);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 12px;
+}
+.meme-block-title {
+    color: #ec4899;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+.meme-line {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+.meme-line:last-child { margin-bottom: 0; }
+.meme-line strong { color: #ec4899; }
+.meme-line .meme { color: #ec4899; font-weight: 700; }
+
+/* ----------------------------------------------------------------------------
+   11. АРХИВ ГЕРОЕВ И СТИЛЬ
+   ---------------------------------------------------------------------------- */
+.archive-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, rgba(163,113,247,0.05), transparent);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    border-left: 3px solid rgba(163,113,247,0.3);
+    gap: 8px;
+}
+.archive-hero.current {
+    border-left-color: var(--gold);
+    background: linear-gradient(90deg, rgba(240,185,11,0.1), transparent);
+}
+.archive-hero.best { border-left-color: var(--green); }
+.archive-hero .hero-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+.archive-hero .hero-info span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.archive-hero .hero-wr { font-weight: 700; }
+
+.style-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, rgba(163,113,247,0.05), transparent);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    gap: 8px;
+}
+.style-row.best { border-left: 3px solid var(--green); }
+.style-row .style-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+.style-row .style-name span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.style-row .style-val {
+    color: var(--gold);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------------------
+   12. СРАВНЕНИЕ
+   ---------------------------------------------------------------------------- */
+.compare-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+.compare-label {
+    min-width: 100px;
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+.compare-bar-wrap {
+    flex: 1;
+    height: 22px;
+    background: rgba(163,113,247,0.08);
+    border-radius: 11px;
+    overflow: hidden;
+    position: relative;
+}
+.compare-bar {
+    height: 100%;
+    border-radius: 11px;
+    transition: width 0.6s;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    box-sizing: border-box;
+}
+.compare-bar.you { background: linear-gradient(90deg, #8b5cf6, var(--purple), #c4a5ff); color: #fff; }
+.compare-bar.avg { background: linear-gradient(90deg, var(--muted), var(--sub)); color: #fff; }
+
+/* ----------------------------------------------------------------------------
+   13. ТЕМП КАРЬЕРЫ
+   ---------------------------------------------------------------------------- */
+.pace-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+}
+.pace-item {
+    background: var(--elevated);
+    border-radius: var(--radius-sm);
+    padding: 12px 6px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+.pace-icon { font-size: 1.3rem; margin-bottom: 4px; }
+.pace-value { font-size: 1.1rem; font-weight: 800; color: var(--gold); }
+.pace-label {
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+@media (max-width: 768px) {
+    .pace-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .pace-item { padding: 10px 4px; }
+    .pace-icon { font-size: 1.1rem; }
+    .pace-value { font-size: 0.95rem; }
+    .pace-label { font-size: 0.55rem; }
+}
+
+/* ----------------------------------------------------------------------------
+   14. СОВЕТ
+   ---------------------------------------------------------------------------- */
+.advice-block {
+    background: linear-gradient(135deg, rgba(163,113,247,0.15), rgba(163,113,247,0.05));
+    border: 1px solid rgba(163,113,247,0.35);
+    border-radius: var(--radius);
+    padding: 22px;
+    text-align: center;
+    margin-top: 20px;
+}
+.advice-block .advice-icon { font-size: 2rem; margin-bottom: 8px; }
+.advice-block .advice-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text);
+    font-style: italic;
+}
+.advice-block .advice-text strong { color: var(--gold); font-style: normal; }
+
+/* ----------------------------------------------------------------------------
+   15. СОСТОЯНИЯ ЗАГРУЗКИ
+   ---------------------------------------------------------------------------- */
+.loading-block {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--sub);
+}
+.loading-block .spinner { margin: 0 auto 16px; }
+
+.not-found {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+}
+.not-found .nf-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+
+/* ----------------------------------------------------------------------------
+   16. ПРОГРЕСС И SCROLL-TOP
+   ---------------------------------------------------------------------------- */
+.reading-progress {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), #c4a5ff, var(--gold), var(--purple));
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    z-index: 1000;
+}
+.scroll-top {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: var(--card);
+    border: 1px solid var(--purple);
+    border-radius: 50%;
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 98;
+    font-size: 1.1rem;
+}
+.scroll-top.visible { opacity: 1; pointer-events: all; }
+.scroll-top:hover {
+    background: var(--purple);
+    color: #000;
+    transform: translateY(-3px);
+}
 </style>
 </head>
 <body>
@@ -192,7 +766,7 @@
 
         <div class="search-row">
             <div class="search-input-wrap">
-                <input type="text" class="search-input" id="oracleSearch" placeholder="📜 Назови имя героя..." autocomplete="off">
+                <input type="text" class="search-input oracle-input" id="oracleSearch" placeholder="📜 Назови имя героя..." autocomplete="off">
                 <button class="search-btn" onclick="analyzePlayer()">📜 Рассказать</button>
             </div>
             <div class="autocomplete-list" id="autocompleteList"></div>
@@ -221,7 +795,6 @@ const WR_GOOD = 0.55;
 const WR_BAD = 0.45;
 const MIN_FIGHTS_FOR_BEST = 10;
 const MIN_FIGHTS_FOR_RECORD = 15;
-const MIN_FIGHTS_FOR_FORGOTTEN = 20;
 
 const CACHE_TTL = 10 * 60 * 1000;
 const CACHE_KEY_PREFIX = 'eternis-oracle-season-';
@@ -243,11 +816,20 @@ function wrColor(wr) {
 
 function getAllPlayers(seasons) {
     const players = new Map();
-    seasons.forEach(s => {
+    const sortedSeasons = [...seasons].sort((a, b) => {
+        if (a.isCurrent) return -1;
+        if (b.isCurrent) return 1;
+        return b.num - a.num;
+    });
+    sortedSeasons.forEach(s => {
         (s.data.players || []).forEach(p => {
             if (!p.display) return;
             const key = p.display.toLowerCase();
-            if (!players.has(key)) players.set(key, { display: p.display, emoji: p.emoji || '⚔️', name: p.name || '' });
+            if (!players.has(key)) players.set(key, {
+                display: p.display,
+                emoji: p.emoji || '⚔️',
+                name: p.name || ''
+            });
         });
     });
     return [...players.values()].sort((a, b) => a.display.localeCompare(b.display));
@@ -300,26 +882,78 @@ async function loadAllSeasons() {
    ========================================================================= */
 
 // --- 4.1 История игрока ---
+// --- 4.1 История игрока (с учётом удалённых) ---
 function getPlayerHistory(nickname, seasons) {
     const history = [];
+    const playerKey = nickname.toLowerCase();
+
     seasons.forEach(s => {
-        const p = (s.data.players || []).find(pl => pl.display && pl.display.toLowerCase() === nickname.toLowerCase());
-        if (!p) return;
-        const total = (p.wins || 0) + (p.losses || 0);
-        if (total === 0) return;
-        history.push({
-            season: s.num, isCurrent: s.isCurrent,
-            display: p.display, emoji: p.emoji || '⚔️', name: p.name || '',
-            wins: p.wins || 0, losses: p.losses || 0, total,
-            wr: total > 0 ? p.wins / total : 0,
-            level: p.level || 0, skill: p.skill || 0, shards: p.shards || 0,
-            faction: normalizeFaction(p.faction), factionWins: p.factionWins || 0,
-            best: p.best || 0, worst: p.worst || 0,
-            tournamentWins: p.tournamentWins || 0,
-            champion: p.champion === true,
-            dungeon: s.data.dungeon?.players?.[p.display] || null
-        });
+        // Основной герой сезона
+        const p = (s.data.players || []).find(pl =>
+            pl.display && pl.display.toLowerCase() === playerKey
+        );
+        if (p) {
+            const total = (p.wins || 0) + (p.losses || 0);
+            if (total > 0) {
+                history.push({
+                    season: s.num,
+                    isCurrent: s.isCurrent,
+                    era: s.num === 0 ? 'classic' : 'races',
+                    display: p.display,
+                    emoji: p.emoji || '⚔️',
+                    name: p.name || '',
+                    wins: p.wins || 0,
+                    losses: p.losses || 0,
+                    total,
+                    wr: total > 0 ? p.wins / total : 0,
+                    level: p.level || 0,
+                    skill: p.skill || 0,
+                    shards: p.shards || 0,
+                    faction: normalizeFaction(p.faction),
+                    factionWins: p.factionWins || 0,
+                    best: p.best || 0,
+                    worst: p.worst || 0,
+                    tournamentWins: p.tournamentWins || 0,
+                    champion: p.champion === true,
+                    isDeleted: false,
+                    dungeon: s.data.dungeon?.players?.[p.display] || null
+                });
+            }
+        }
+
+		// Удалённые герои этого сезона
+		const archive = s.data.heroArchive?.[playerKey] || [];
+		archive.forEach(h => {
+			const wins = h.wins || 0;
+			const losses = h.losses || 0;
+			const total = wins + losses;
+			if (total === 0) return;
+			history.push({
+				season: s.num,
+				isCurrent: s.isCurrent,
+				era: s.num === 0 ? 'classic' : 'races',
+				display: nickname,
+				emoji: h.emoji || '⚔️',
+				name: h.name || '',
+				wins,
+				losses,
+				total,
+				wr: wins / total,
+				level: h.level || 0,
+				skill: 0,
+				shards: 0,
+				faction: normalizeFaction(h.faction),
+				factionWins: h.factionWins || 0,
+				best: h.best || 0,
+				worst: h.worst || 0,
+				tournamentWins: h.tournamentWins || 0,
+				champion: false,
+				isDeleted: true,
+				dungeon: null
+			});
+		});
     });
+
     return history;
 }
 
@@ -344,64 +978,163 @@ function analyzeTrend(history) {
     return { trend: slope > 0.005 ? 'growth' : slope < -0.005 ? 'fall' : 'stable', slope, delta, avg, peak, peakSeason, firstWR, lastWR, form, stdDev, seasonsCount: n };
 }
 
-// --- 4.3 Герои ---
+// --- 4.3 Герои (с учётом удалённых) ---
 function analyzeHeroArchive(nickname, seasons) {
-    const heroes = [];
+    const allHeroes = [];
     const seen = new Set();
-    const lastSeason = seasons[seasons.length - 1];
-    if (lastSeason) {
-        const p = (lastSeason.data.players || []).find(pl => pl.display && pl.display.toLowerCase() === nickname.toLowerCase());
-        if (p) {
-            const total = (p.wins || 0) + (p.losses || 0);
-            if (total > 0) {
-                seen.add((p.name || '') + '|' + (p.emoji || ''));
-                heroes.push({ name: p.name || '', emoji: p.emoji || '⚔️', wins: p.wins || 0, losses: p.losses || 0, wr: p.wins / total, season: lastSeason.num, isCurrent: true });
-            }
-        }
+    const playerKey = nickname.toLowerCase();
+    const currentSeason = seasons[seasons.length - 1];
+
+    // 1. Текущий
+    const currentPlayer = currentSeason?.data?.players?.find(p =>
+        p.display && p.display.toLowerCase() === playerKey
+    );
+    if (currentPlayer?.name && (currentPlayer.wins + currentPlayer.losses) > 0) {
+        allHeroes.push({
+            name: currentPlayer.name,
+            emoji: currentPlayer.emoji || '⚔️',
+            wins: currentPlayer.wins || 0,
+            losses: currentPlayer.losses || 0,
+            best: currentPlayer.best || 0,
+            worst: currentPlayer.worst || 0,
+            isCurrent: true
+        });
     }
+
+    // 2. heroArchive текущего (удалённые в текущем)
+    const currentArchive = currentSeason?.data?.heroArchive?.[playerKey] || [];
+    currentArchive.forEach(h => {
+        allHeroes.push({
+            name: h.name || '',
+            emoji: h.emoji || '⚔️',
+            wins: h.wins || 0,
+            losses: h.losses || 0,
+            best: h.best || 0,
+            worst: h.worst || 0,
+            isCurrent: false
+        });
+    });
+
+    // 3. Прошлые сезоны (players + heroArchive)
     seasons.forEach(s => {
         if (s.isCurrent) return;
-        const p = (s.data.players || []).find(pl => pl.display && pl.display.toLowerCase() === nickname.toLowerCase());
-        if (!p) return;
-        const total = (p.wins || 0) + (p.losses || 0);
-        if (total === 0) return;
-        const key = (p.name || '') + '|' + (p.emoji || '');
-        if (seen.has(key)) return;
-        seen.add(key);
-        heroes.push({ name: p.name || '', emoji: p.emoji || '⚔️', wins: p.wins || 0, losses: p.losses || 0, wr: p.wins / total, season: s.num, isCurrent: false });
-    });
-    seasons.forEach(s => {
-        const archive = s.data.heroArchive || {};
-        Object.entries(archive).forEach(([key, list]) => {
-            if (key.toLowerCase() !== nickname.toLowerCase()) return;
-            list.forEach(h => {
-                const total = (h.wins || 0) + (h.losses || 0);
-                if (total === 0) return;
-                const hKey = (h.name || '') + '|' + (h.emoji || '');
-                if (seen.has(hKey)) return;
-                seen.add(hKey);
-                heroes.push({ name: h.name || '', emoji: h.emoji || '⚔️', wins: h.wins || 0, losses: h.losses || 0, wr: (h.wins || 0) / total, season: s.num, isCurrent: false });
+        const p = s.data.players?.find(pl =>
+            pl.display && pl.display.toLowerCase() === playerKey
+        );
+        if (p?.name && p.name !== 'Unknown' && ((p.wins || 0) + (p.losses || 0)) > 0) {
+            allHeroes.push({
+                name: p.name,
+                emoji: p.emoji || '⚔️',
+                wins: p.wins || 0,
+                losses: p.losses || 0,
+                best: p.best || 0,
+                worst: p.worst || 0,
+                isCurrent: false
+            });
+        }
+        const archive = s.data.heroArchive?.[playerKey] || [];
+        archive.forEach(h => {
+            allHeroes.push({
+                name: h.name || '',
+                emoji: h.emoji || '⚔️',
+                wins: h.wins || 0,
+                losses: h.losses || 0,
+                best: h.best || 0,
+                worst: h.worst || 0,
+                isCurrent: false
             });
         });
     });
-    const totalWins = heroes.reduce((s, h) => s + h.wins, 0);
-    const totalLosses = heroes.reduce((s, h) => s + h.losses, 0);
-    const eligible = heroes.filter(h => (h.wins + h.losses) >= MIN_FIGHTS_FOR_BEST);
-    const best = eligible.length > 0 ? eligible.reduce((m, h) => h.wr > m.wr ? h : m) : null;
-    const classStats = {}, raceStats = {}, comboStats = {};
-    heroes.forEach(h => {
+
+    // Агрегация по классу, расе, комбо
+    const classStats = {};
+    const raceStats = {};
+    const comboStats = {};
+
+    allHeroes.forEach(h => {
         if (!h.name) return;
         const parts = h.name.split('-');
-        if (parts.length < 2) { const cls = parts[0]; if (!classStats[cls]) classStats[cls] = { wins: 0, losses: 0 }; classStats[cls].wins += h.wins; classStats[cls].losses += h.losses; return; }
-        const race = parts[0], cls = parts[1];
-        if (!classStats[cls]) classStats[cls] = { wins: 0, losses: 0 };
-        if (!raceStats[race]) raceStats[race] = { wins: 0, losses: 0 };
+        let race = null, cls = null;
+        if (parts.length < 2) {
+            cls = parts[0]; // S0 — только класс
+        } else {
+            race = parts[0];
+            cls = parts[1];
+        }
+
+        if (cls) {
+            if (!classStats[cls]) classStats[cls] = { wins: 0, losses: 0 };
+            classStats[cls].wins += h.wins;
+            classStats[cls].losses += h.losses;
+        }
+        if (race) {
+            if (!raceStats[race]) raceStats[race] = { wins: 0, losses: 0 };
+            raceStats[race].wins += h.wins;
+            raceStats[race].losses += h.losses;
+        }
         if (!comboStats[h.name]) comboStats[h.name] = { wins: 0, losses: 0, emoji: h.emoji };
-        classStats[cls].wins += h.wins; classStats[cls].losses += h.losses;
-        raceStats[race].wins += h.wins; raceStats[race].losses += h.losses;
-        comboStats[h.name].wins += h.wins; comboStats[h.name].losses += h.losses;
+        comboStats[h.name].wins += h.wins;
+        comboStats[h.name].losses += h.losses;
     });
-    return { heroes, count: heroes.length, totalWins, totalLosses, trueWR: (totalWins + totalLosses) > 0 ? totalWins / (totalWins + totalLosses) : 0, best, classStats, raceStats, comboStats };
+
+    const totalWins = allHeroes.reduce((s, h) => s + h.wins, 0);
+    const totalLosses = allHeroes.reduce((s, h) => s + h.losses, 0);
+    const trueWR = (totalWins + totalLosses) > 0 ? totalWins / (totalWins + totalLosses) : 0;
+
+    // Лучшее комбо (мин. 10 боёв)
+    const comboArr = Object.entries(comboStats)
+        .map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses), emoji: s.emoji }))
+        .filter(c => c.total >= 10)
+        .sort((a, b) => b.wr - a.wr);
+    const bestCombo = comboArr.length > 0 ? comboArr[0] : null;
+
+    // Лучший герой (мин. 10 боёв)
+    const heroArr = allHeroes
+        .map(h => ({ ...h, total: h.wins + h.losses, wr: (h.wins + h.losses) > 0 ? h.wins / (h.wins + h.losses) : 0 }))
+        .filter(h => h.total >= MIN_FIGHTS_FOR_BEST)
+        .sort((a, b) => b.wr - a.wr);
+    const best = heroArr.length > 0 ? heroArr[0] : null;
+
+    return {
+        heroes: allHeroes,
+        classStats,
+        raceStats,
+        comboStats,
+        bestCombo,
+        best,
+        totalWins,
+        totalLosses,
+        trueWR
+    };
+}
+
+// --- 4.3.1 Удалённые герои по сезонам ---
+function getDeletedHeroesBySeason(nickname, seasons) {
+    const playerKey = nickname.toLowerCase();
+    const result = [];
+    seasons.forEach(s => {
+        const archive = s.data.heroArchive?.[playerKey] || [];
+        archive.forEach(h => {
+            const total = (h.wins || 0) + (h.losses || 0);
+            if (total === 0) return;
+            result.push({
+                season: s.num,
+                isCurrent: s.isCurrent,
+                emoji: h.emoji || '⚔️',
+                name: h.name || '',
+                wins: h.wins || 0,
+                losses: h.losses || 0,
+                total,
+                wr: total > 0 ? (h.wins || 0) / total : 0,
+                best: h.best || 0,
+                worst: h.worst || 0,
+                tournamentWins: h.tournamentWins || 0,
+                faction: normalizeFaction(h.faction),
+                factionWins: h.factionWins || 0
+            });
+        });
+    });
+    return result;
 }
 
 // --- 4.4 Данж ---
@@ -916,37 +1649,40 @@ function renderPlayerInfo(player) {
 }
 
 // --- 6.2 История (краткая и полная) ---
-function renderHistory(history, limit = null) {
+function renderHistory(history, limit = null, fullHistory = null) {
     if (history.length === 0) return '';
     const list = limit ? history.slice(-limit) : history;
-    let html = '<div class="oracle-block"><div class="oracle-block-title">📜 Твоя летопись' + (limit ? ' (последние ' + limit + ')' : '') + '</div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th><th class="num">⚔️</th></tr></thead><tbody>';
+    const totalSource = fullHistory || history;
+
+    let html = '<div class="oracle-block"><div class="oracle-block-title">📜 Твоя летопись' + (limit ? ' (последние ' + limit + ')' : '') + '</div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th></tr></thead><tbody>';
+
     list.forEach(h => {
         const wrC = wrColor(h.wr);
         const tourColor = h.tournamentWins > 0 ? 'var(--gold)' : 'var(--muted)';
         const tourIcon = h.tournamentWins >= 5 ? '🔥' : (h.tournamentWins > 0 ? '🏆' : '');
+        const eraIcon = h.era === 'classic' ? ' 📜' : '';
         html += `<tr class="${h.isCurrent ? 'current' : ''}">
-            <td class="season-num">S${h.season}${h.isCurrent ? ' ⚡' : ''}</td>
-            <td class="num">${h.wins}-${h.losses}</td>
-            <td class="num wr-cell" style="color:${wrC};">${(h.wr * 100).toFixed(1)}%</td>
-            <td class="num">${h.level}</td>
-            <td class="num" style="color:${tourColor};font-weight:${h.tournamentWins > 0 ? '700' : '400'};">${h.tournamentWins ? h.tournamentWins + ' ' + tourIcon : '—'}</td>
-            <td class="num">${h.factionWins || '—'}</td>
+            <td class="season-num" data-label="Сезон">S${h.season}${h.isCurrent ? ' ⚡' : ''}${eraIcon}</td>
+            <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
+            <td class="num wr-cell" data-label="WR" style="color:${wrC};">${(h.wr * 100).toFixed(1)}%</td>
+            <td class="num" data-label="Ур.">${h.level}</td>
+            <td class="num" data-label="🏆" style="color:${tourColor};font-weight:${h.tournamentWins > 0 ? '700' : '400'};">${h.tournamentWins ? h.tournamentWins + ' ' + tourIcon : '—'}</td>
         </tr>`;
     });
-    const totalWins = history.reduce((s, h) => s + h.wins, 0);
-    const totalLosses = history.reduce((s, h) => s + h.losses, 0);
+
+    const totalWins = totalSource.reduce((s, h) => s + h.wins, 0);
+    const totalLosses = totalSource.reduce((s, h) => s + h.losses, 0);
     const totalFights = totalWins + totalLosses;
     const totalWR = totalFights > 0 ? totalWins / totalFights : 0;
-    const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
-    const maxLevel = Math.max(...history.map(h => h.level || 0));
-    const totalFactionWins = history.reduce((s, h) => s + (h.factionWins || 0), 0);
+    const totalTournaments = totalSource.reduce((s, h) => s + (h.tournamentWins || 0), 0);
+    const maxLevel = Math.max(...totalSource.map(h => h.level || 0));
+
     html += `<tr style="background:linear-gradient(90deg,rgba(163,113,247,0.12),rgba(163,113,247,0.04));font-weight:800;">
         <td class="season-num" style="color:var(--gold);">ВСЕГО</td>
         <td class="num" style="color:var(--text);">${totalWins}-${totalLosses}</td>
         <td class="num" style="color:${wrColor(totalWR)};">${(totalWR * 100).toFixed(1)}%</td>
         <td class="num" style="color:var(--gold);">${maxLevel}</td>
         <td class="num" style="color:var(--gold);">${totalTournaments} ${totalTournaments >= 10 ? '🔥' : '🏆'}</td>
-        <td class="num" style="color:var(--ice);">${totalFactionWins}</td>
     </tr>`;
     html += '</tbody></table></div></div>';
     return html;
@@ -955,18 +1691,78 @@ function renderHistory(history, limit = null) {
 function renderFullHistory(history) {
     if (history.length < 2) return '';
     let html = '<div class="oracle-block"><div class="oracle-block-title">📜 Полная летопись</div>';
-    html += '<div class="table-container"><table class="history-table" style="font-size:0.72rem;">';
-    html += '<thead><tr><th>Сезон</th><th>Герой</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">💎</th></tr></thead><tbody>';
+    html += '<div class="table-container"><table class="history-table full">';
+    html += '<thead><tr>' +
+        '<th>Сезон</th>' +
+        '<th>Герой</th>' +
+        '<th class="num">W/L</th>' +
+        '<th class="num">WR</th>' +
+        '<th class="num">🔥<span class="th-sub">стрик</span></th>' +
+        '<th class="num">💀<span class="th-sub">лузстрик</span></th>' +
+        '<th class="num">🎯<span class="th-sub">скилл</span></th>' +
+        '<th class="num">⚔️<span class="th-sub">фракция</span></th>' +
+        '<th class="num">Ур.</th>' +
+        '<th class="num">💎</th>' +
+    '</tr></thead><tbody>';
+
     history.forEach(h => {
-        html += `<tr class="${h.isCurrent ? 'current' : ''}">
-            <td class="season-num">S${h.season}${h.isCurrent ? ' ⚡' : ''}</td>
-            <td style="font-size:0.7rem;color:var(--sub);">${h.emoji} ${h.name || '—'}</td>
-            <td class="num">${h.wins}-${h.losses}</td>
-            <td class="num" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
-            <td class="num">${h.level}</td>
-            <td class="num">${h.shards}</td>
+        const eraIcon = h.era === 'classic' ? ' 📜' : '';
+        const deletedIcon = h.isDeleted ? ' 🗑️' : '';
+        const rowStyle = h.isDeleted ? 'opacity:0.7;' : '';
+        const seasonExtra = h.isDeleted ? '🗑️' : (h.isCurrent ? ' ⚡' : '');
+
+        html += `<tr class="${h.isCurrent && !h.isDeleted ? 'current' : ''}" style="${rowStyle}">
+            <td class="season-num" data-label="Сезон">S${h.season}${seasonExtra}${eraIcon}</td>
+            <td data-label="Герой" style="color:var(--sub);">${h.emoji} ${h.name || '—'}${deletedIcon}</td>
+            <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
+            <td class="num" data-label="WR" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
+            <td class="num" data-label="Стрик" style="color:var(--green);font-weight:600;">${h.best || '—'}</td>
+            <td class="num" data-label="Лузстрик" style="color:var(--red);font-weight:600;">${h.worst || '—'}</td>
+            <td class="num" data-label="Скилл" style="color:var(--purple);font-weight:600;">${h.skill || '—'}</td>
+            <td class="num" data-label="Фракция" style="color:var(--ice);font-weight:600;">${h.factionWins || '—'}</td>
+            <td class="num" data-label="Ур.">${h.level}</td>
+            <td class="num" data-label="Осколки">${h.shards}</td>
         </tr>`;
     });
+
+    html += '</tbody></table></div></div>';
+    return html;
+}
+
+// --- 6.2.1 Удалённые герои (блок для Архива) ---
+function renderDeletedHeroes(deletedHeroes) {
+    if (!deletedHeroes || !deletedHeroes.length) return '';
+
+    let html = '<div class="oracle-block" style="border-color:rgba(232,93,58,0.25);">';
+    html += '<div class="oracle-block-title" style="color:var(--red);">🗑️ Удалённые герои</div>';
+    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Герои, которых ты убрал из ростера</div>';
+    html += '<div class="table-container"><table class="history-table full" style="font-size:0.75rem;">';
+    html += '<thead><tr>' +
+        '<th>Сезон</th>' +
+        '<th>Герой</th>' +
+        '<th class="num">W/L</th>' +
+        '<th class="num">WR</th>' +
+        '<th class="num">🔥</th>' +
+        '<th class="num">💀</th>' +
+        '<th class="num">👑</th>' +
+        '<th class="num">⚔️</th>' +
+    '</tr></thead><tbody>';
+
+    deletedHeroes
+        .sort((a, b) => b.season - a.season || b.wr - a.wr)
+        .forEach(h => {
+            html += `<tr style="opacity:0.75;">
+                <td class="season-num" data-label="Сезон">S${h.season}${h.isCurrent ? ' ⚡' : ''}</td>
+                <td data-label="Герой" style="color:var(--sub);">${h.emoji} ${h.name || '—'}</td>
+                <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
+                <td class="num" data-label="WR" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
+                <td class="num" data-label="Стрик" style="color:var(--green);">${h.best || '—'}</td>
+                <td class="num" data-label="Лузстрик" style="color:var(--red);">${h.worst || '—'}</td>
+                <td class="num" data-label="Турниры" style="color:var(--gold);">${h.tournamentWins || '—'}</td>
+                <td class="num" data-label="Фракция" style="color:var(--ice);">${h.factionWins || '—'}</td>
+            </tr>`;
+        });
+
     html += '</tbody></table></div></div>';
     return html;
 }
@@ -1206,15 +2002,26 @@ function renderMemeAnalysis(memes) {
 
 // --- 6.13 Стиль ---
 function renderStyle(heroAnalysis, metaBySeason, history) {
-    if (!heroAnalysis || heroAnalysis.count === 0) return '';
-    const classArr = Object.entries(heroAnalysis.classStats).map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses) })).filter(c => c.total >= 5).sort((a, b) => b.total - a.total);
-    const raceArr = Object.entries(heroAnalysis.raceStats).map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses) })).filter(c => c.total >= 5).sort((a, b) => b.total - a.total);
-    const comboArr = Object.entries(heroAnalysis.comboStats).map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses), emoji: s.emoji })).filter(c => c.total >= 10).sort((a, b) => b.wr - a.wr);
+    if (!heroAnalysis) return '';
+
+    // Классы — сортируем по частоте (total)
+    const classArr = Object.entries(heroAnalysis.classStats)
+        .map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses) }))
+        .filter(c => c.total >= 5)
+        .sort((a, b) => b.total - a.total);
+
+    // Расы
+    const raceArr = Object.entries(heroAnalysis.raceStats)
+        .map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses) }))
+        .filter(c => c.total >= 5)
+        .sort((a, b) => b.total - a.total);
+
     const bestClassByWR = classArr.length > 0 ? [...classArr].sort((a, b) => b.wr - a.wr)[0] : null;
     const mostClassByFreq = classArr.length > 0 ? classArr[0] : null;
     const bestRaceByWR = raceArr.length > 0 ? [...raceArr].sort((a, b) => b.wr - a.wr)[0] : null;
     const mostRaceByFreq = raceArr.length > 0 ? raceArr[0] : null;
-    const bestCombo = comboArr.length > 0 ? comboArr[0] : null;
+    const bestCombo = heroAnalysis.bestCombo;
+
     const getTag = (item, bestWR, mostFreq) => {
         const isBest = bestWR && item.name === bestWR.name;
         const isFreq = mostFreq && item.name === mostFreq.name;
@@ -1223,6 +2030,7 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
         if (isFreq) return { tag: '🔥', cls: '' };
         return { tag: '', cls: '' };
     };
+
     const currentSeason = history[history.length - 1]?.season;
     const getMetaTag = (className, kind = 'class') => {
         if (!metaBySeason || !metaBySeason.length) return '';
@@ -1231,22 +2039,39 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
         if (inMeta === false) return ' ⚔️';
         return '';
     };
-    let html = '<div class="oracle-block ice"><div class="oracle-block-title">🎭 Твой стиль</div>';
+
+    let html = '<div class="oracle-block ice"><div class="oracle-block-title">🎨 Твой стиль</div>';
+    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:14px;">По всей карьере: текущие, удалённые и архивные герои</div>';
+
     if (classArr.length > 0) {
-        html += '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;">Классы <span style="opacity:0.7;">(🎯 в мете · ⚔️ вне меты · 🏆 лучший WR · 🔥 самый частый)</span></div>';
-        classArr.slice(0, 3).forEach(c => {
+        html += '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">⚔️ Классы <span style="opacity:0.7;text-transform:none;letter-spacing:0;">(🎯 в мете · ⚔️ вне меты · 🏆 лучший WR · 🔥 самый частый)</span></div>';
+        classArr.slice(0, 5).forEach(c => {
             const { tag, cls } = getTag(c, bestClassByWR, mostClassByFreq);
-            html += `<div class="style-row ${cls}"><div class="style-name"><span>${tag || '⚔️'}</span> ${c.name}${getMetaTag(c.name)}</div><div class="style-val">${c.wins}-${c.losses} (${(c.wr * 100).toFixed(1)}%)</div></div>`;
+            html += `<div class="style-row ${cls}">
+                <div class="style-name"><span>${tag || '⚔️'}</span> ${c.name}${getMetaTag(c.name)}</div>
+                <div class="style-val">${c.wins}-${c.losses} (${(c.wr * 100).toFixed(1)}%)</div>
+            </div>`;
         });
     }
+
     if (raceArr.length > 0) {
-        html += '<div style="font-size:0.7rem;color:var(--muted);margin:14px 0 8px;">Расы</div>';
-        raceArr.slice(0, 3).forEach(r => {
+        html += '<div style="font-size:0.7rem;color:var(--muted);margin:18px 0 8px;text-transform:uppercase;letter-spacing:1px;">🌍 Расы</div>';
+        raceArr.slice(0, 5).forEach(r => {
             const { tag, cls } = getTag(r, bestRaceByWR, mostRaceByFreq);
-            html += `<div class="style-row ${cls}"><div class="style-name"><span>${tag || '🌍'}</span> ${r.name}${getMetaTag(r.name, 'race')}</div><div class="style-val">${r.wins}-${r.losses} (${(r.wr * 100).toFixed(1)}%)</div></div>`;
+            html += `<div class="style-row ${cls}">
+                <div class="style-name"><span>${tag || '🌍'}</span> ${r.name}${getMetaTag(r.name, 'race')}</div>
+                <div class="style-val">${r.wins}-${r.losses} (${(r.wr * 100).toFixed(1)}%)</div>
+            </div>`;
         });
     }
-    if (bestCombo) html += `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:center;font-size:0.85rem;">🏆 Лучшее комбо: <strong style="color:var(--green);">${bestCombo.emoji} ${bestCombo.name}</strong> — ${(bestCombo.wr * 100).toFixed(1)}%</div>`;
+
+    if (bestCombo) {
+        html += `<div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);text-align:center;font-size:0.85rem;">
+            🏆 Лучшее комбо: <strong style="color:var(--green);">${bestCombo.emoji} ${bestCombo.name}</strong> — ${(bestCombo.wr * 100).toFixed(1)}%
+            <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;">${bestCombo.wins}-${bestCombo.losses} боёв</div>
+        </div>`;
+    }
+
     html += '</div>';
     return html;
 }
@@ -1266,37 +2091,66 @@ function renderFactions(factions, history) {
     return html;
 }
 
-// --- 6.15 Герои ---
+// --- 6.15 Герои (с группировкой по статусам) ---
 function renderHeroArchive(heroAnalysis) {
-    if (heroAnalysis.count === 0) return '';
-    let html = '<div class="oracle-block ice"><div class="oracle-block-title">🎭 Твои герои</div>';
-    const sorted = [...heroAnalysis.heroes].sort((a, b) => { if (a.isCurrent) return -1; if (b.isCurrent) return 1; return b.wr - a.wr; });
-    sorted.forEach(h => {
-        const isBest = heroAnalysis.best && h.name === heroAnalysis.best.name && h.season === heroAnalysis.best.season;
-        const cls = h.isCurrent ? 'current' : isBest ? 'best' : '';
-        const tag = h.isCurrent ? '⚡ Текущий' : isBest ? '🏆 Лучший' : `S${h.season}`;
-        html += `<div class="archive-hero ${cls}"><div class="hero-info"><span>${h.emoji} ${h.name}</span></div><div><span class="hero-wr" style="color:${wrColor(h.wr)};">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span> <span style="color:var(--muted);font-size:0.75rem;margin-left:8px;">${tag}</span></div></div>`;
+    if (!heroAnalysis || !heroAnalysis.heroes || heroAnalysis.heroes.length === 0) return '';
+
+    // Группируем по имени
+    const byName = new Map();
+    heroAnalysis.heroes.forEach(h => {
+        if (!h.name) return;
+        if (!byName.has(h.name)) {
+            byName.set(h.name, {
+                name: h.name,
+                emoji: h.emoji,
+                wins: 0,
+                losses: 0,
+                isCurrent: false
+            });
+        }
+        const u = byName.get(h.name);
+        u.wins += h.wins || 0;
+        u.losses += h.losses || 0;
+        if (h.isCurrent) u.isCurrent = true;
     });
+
+    const allUnique = [...byName.values()].map(h => ({
+        ...h,
+        wr: (h.wins + h.losses) > 0 ? h.wins / (h.wins + h.losses) : 0,
+        total: h.wins + h.losses
+    }));
+
+    const currentHeroes = allUnique.filter(h => h.isCurrent);
+    const deletedHeroes = allUnique.filter(h => !h.isCurrent && h.name !== currentHeroes[0]?.name);
+
+    let html = '<div class="oracle-block ice"><div class="oracle-block-title">🎭 Твои герои</div>';
+
+    if (currentHeroes.length) {
+        html += '<div style="font-size:0.7rem;color:var(--gold);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">⚡ Текущий</div>';
+        currentHeroes.forEach(h => {
+            html += `<div class="archive-hero current">
+                <div class="hero-info"><span>${h.emoji} ${h.name}</span></div>
+                <div><span class="hero-wr" style="color:${wrColor(h.wr)};">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span></div>
+            </div>`;
+        });
+    }
+
+    if (deletedHeroes.length) {
+        html += '<div style="font-size:0.7rem;color:var(--red);margin:14px 0 6px;text-transform:uppercase;letter-spacing:1px;">🗑️ Удалённые</div>';
+        deletedHeroes.forEach(h => {
+            html += `<div class="archive-hero" style="border-left-color:var(--red);opacity:0.85;">
+                <div class="hero-info"><span>${h.emoji} ${h.name}</span></div>
+                <div><span class="hero-wr" style="color:${wrColor(h.wr)};">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span></div>
+            </div>`;
+        });
+    }
+
     html += `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:center;color:var(--sub);font-size:0.85rem;">
-        <div>Всего героев: <strong style="color:var(--purple);">${heroAnalysis.count}</strong></div>
+        <div>Всего героев: <strong style="color:var(--purple);">${allUnique.length}</strong></div>
         <div style="margin-top:4px;">Суммарно: <strong style="color:var(--text);">${heroAnalysis.totalWins}-${heroAnalysis.totalLosses}</strong></div>
         <div style="margin-top:4px;">Истинный WR: <strong style="color:${wrColor(heroAnalysis.trueWR)};">${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong></div>
         ${heroAnalysis.best ? `<div style="margin-top:4px;">Лучший: <strong style="color:var(--green);">${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(1)}%)</div>` : ''}
     </div></div>`;
-    return html;
-}
-
-// --- 6.16 Забытые герои ---
-function renderForgottenHeroes(heroAnalysis, currentName) {
-    const forgotten = heroAnalysis.heroes.filter(h => h.name !== currentName && (h.wins + h.losses) >= MIN_FIGHTS_FOR_FORGOTTEN && h.wr > 0.5).sort((a, b) => b.wr - a.wr).slice(0, 5);
-    if (forgotten.length === 0) return '';
-    let html = '<div class="oracle-block"><div class="oracle-block-title">🕯️ Забытые герои</div>';
-    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Герои, которых ты оставил, но они были хороши</div>';
-    forgotten.forEach(h => {
-        html += `<div class="archive-hero"><div class="hero-info"><span>${h.emoji}</span> <span>${h.name}</span></div><div><span style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(0)}%</span> <span style="color:var(--muted);font-size:0.7rem;">(${h.wins}-${h.losses}) · S${h.season}</span></div></div>`;
-    });
-    html += `<div style="margin-top:12px;text-align:center;font-size:0.8rem;color:var(--sub);font-style:italic;">Может, стоит <strong style="color:var(--purple);">вернуть одного из них</strong>?</div>`;
-    html += '</div>';
     return html;
 }
 
@@ -1456,13 +2310,31 @@ function renderFactionHistory(history) {
 // --- 6.24 Лучшие сезоны ---
 function renderArchiveBest(history) {
     if (history.length < 3) return '';
-    const top = [...history].filter(h => h.total >= MIN_FIGHTS_FOR_RECORD).sort((a, b) => b.wr - a.wr).slice(0, 5);
+
+    // Группируем по сезону
+    const bySeason = new Map();
+    history.forEach(h => {
+        if (!bySeason.has(h.season)) bySeason.set(h.season, []);
+        bySeason.get(h.season).push(h);
+    });
+
+    // Для каждого сезона — лучший герой по WR (мин. боёв)
+    const seasonBest = [...bySeason.entries()].map(([season, rows]) => {
+        const eligible = rows.filter(r => r.total >= MIN_FIGHTS_FOR_RECORD);
+        if (eligible.length === 0) return null;
+        const best = eligible.sort((a, b) => b.wr - a.wr)[0];
+        return { ...best, season };
+    }).filter(Boolean);
+
+    const top = seasonBest.sort((a, b) => b.wr - a.wr).slice(0, 5);
     if (top.length === 0) return '';
+
     const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
     let html = '<div class="oracle-block green"><div class="oracle-block-title">🏆 Лучшие сезоны по WR</div>';
     top.forEach((h, i) => {
+        const deletedIcon = h.isDeleted ? ' 🗑️' : '';
         html += `<div class="archive-hero" style="border-left-color:${i === 0 ? 'var(--gold)' : i === 1 ? 'var(--silver)' : i === 2 ? 'var(--bronze)' : 'var(--border)'};">
-            <div class="hero-info"><span>${medals[i]}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${h.emoji} ${h.name || ''}</span></div>
+            <div class="hero-info"><span>${medals[i]}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${h.emoji} ${h.name || ''}${deletedIcon}</span></div>
             <div><span style="color:${wrColor(h.wr)};font-weight:800;">${(h.wr * 100).toFixed(1)}%</span> <span style="color:var(--muted);font-size:0.72rem;">(${h.wins}-${h.losses})</span></div>
         </div>`;
     });
@@ -1482,40 +2354,44 @@ async function analyzePlayer() {
     try {
         if (!allSeasonsCache) { allSeasonsCache = await loadAllSeasons(); allPlayersCache = getAllPlayers(allSeasonsCache); }
         const seasons = allSeasonsCache;
-        const history = getPlayerHistory(nickname, seasons);
+        const history = getPlayerHistory(nickname, seasons);          // все
         if (history.length === 0) { result.innerHTML = `<div class="not-found"><div class="nf-icon">👻</div><div>Я не вижу <strong>${nickname}</strong>.</div></div>`; return; }
-        const last = history[history.length - 1];
-        const trend = analyzeTrend(history);
+
+        const mainHistory = history.filter(h => !h.isDeleted);        // только основные
+        const last = mainHistory[mainHistory.length - 1] || history[history.length - 1];
+
+        // Аналитика — по основным
+        const trend = analyzeTrend(mainHistory);
         const heroAnalysis = analyzeHeroArchive(nickname, seasons);
         const dungeon = analyzeDungeon(nickname, seasons);
         const leaguePlace = getLeaguePlace(nickname, seasons);
-        const factions = analyzeFactions(history);
+        const factions = analyzeFactions(mainHistory);
         const metaBySeason = analyzeMeta(seasons);
-        const legendSeason = findLegendSeason(history);
-        const peakForm = findPeakForm(history);
-        const swings = findSwings(history);
-        const pace = findPace(history);
+        const legendSeason = findLegendSeason(mainHistory);
+        const peakForm = findPeakForm(mainHistory);
+        const swings = findSwings(mainHistory);
+        const pace = findPace(mainHistory);
         const top10Compare = compareWithTop10(nickname, seasons);
         const forecast = buildForecast(trend, leaguePlace);
-        const narrative = generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace);
+        const narrative = generateNarrative(mainHistory, trend, heroAnalysis, dungeon, leaguePlace);
         const forecastText = generateForecastText(forecast, trend);
-        const advice = generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history);
-        const memes = generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace);
+        const advice = generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, mainHistory);
+        const memes = generateMemeAnalysis(mainHistory, trend, heroAnalysis, metaBySeason, leaguePlace);
 
         let html = '';
         html += renderPlayerInfo(last);
         html += renderTabs();
 
-        // 👤 ОБЗОР — краткая история + нарратив
+        // 👤 ОБЗОР
         html += '<div id="oracle-tab-overview" class="oracle-tab-content active">';
-        html += renderHistory(history, 5);
+        html += renderHistory(mainHistory, 5, history);
         html += renderVoice(narrative);
         html += '</div>';
 
-        // 📊 АНАЛИЗ — мемы, график, тренды, свинги, темп, рекорды, легенда, пик, топ-10
+        // 📊 АНАЛИЗ
         html += '<div id="oracle-tab-analysis" class="oracle-tab-content">';
         html += renderMemeAnalysis(memes);
-        html += renderChart(history);
+        html += renderChart(mainHistory);
         html += renderTrends(trend);
         html += renderSwings(swings);
         html += renderPace(pace);
@@ -1525,16 +2401,15 @@ async function analyzePlayer() {
         html += renderCompareTop10(top10Compare);
         html += '</div>';
 
-        // 📊 МЕТА — только мета
+        // 📊 МЕТА
         html += '<div id="oracle-tab-meta" class="oracle-tab-content">';
-        html += renderMeta(metaBySeason, history);
+        html += renderMeta(metaBySeason, mainHistory);
         html += '</div>';
 
-        // ⚔️ СТИЛЬ — герои, стиль, фракции
+        // ⚔️ СТИЛЬ
         html += '<div id="oracle-tab-style" class="oracle-tab-content">';
-        html += renderHeroArchive(heroAnalysis);
-        html += renderStyle(heroAnalysis, metaBySeason, history);
-        html += renderFactions(factions, history);
+        html += renderStyle(heroAnalysis, metaBySeason, mainHistory);
+        html += renderFactions(factions, mainHistory);
         html += '</div>';
 
         // 🏔 ДАНЖ
@@ -1542,18 +2417,17 @@ async function analyzePlayer() {
         html += renderDungeon(dungeon);
         html += '</div>';
 
-        // 📜 АРХИВ — лучшие сезоны, полная история, фракции, эхо, забытые герои
+        // 📜 АРХИВ — полная летопись СО ВСЕМИ
         html += '<div id="oracle-tab-archive" class="oracle-tab-content">';
         html += renderArchiveBest(history);
         html += renderFullHistory(history);
-        html += renderFactionHistory(history);
-        html += renderSeasonEcho(history);
-        html += renderForgottenHeroes(heroAnalysis, last.name);
+        html += renderFactionHistory(mainHistory);
+        html += renderSeasonEcho(mainHistory);
         html += '</div>';
 
         // 🔮 ПРОРОЧЕСТВА
         html += '<div id="oracle-tab-oracle" class="oracle-tab-content">';
-        html += renderProphecies(history, trend, heroAnalysis, leaguePlace, dungeon);
+        html += renderProphecies(mainHistory, trend, heroAnalysis, leaguePlace, dungeon);
         html += `<div class="oracle-block gold"><div class="oracle-block-title">🖋️ Слово Повествовательницы</div>${forecastText.map(l => `<div class="oracle-voice">${l}</div>`).join('')}</div>`;
         html += renderAdvice(advice);
         html += '</div>';
