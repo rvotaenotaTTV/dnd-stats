@@ -386,30 +386,85 @@
             || null;
     }
 
-    window.filterPlayerList = () => {
-        const input = $('#playerSearch');
-        const dropdown = $('#playerDropdown');
-        const value = input.value.toLowerCase().trim();
+	let archivePlayersCache = null;
 
-        if (!value || !allPlayers.length) {
-            dropdown.style.display = 'none';
-            return;
-        }
+	async function getArchivePlayers() {
+		if (archivePlayersCache) return archivePlayersCache;
+		const map = new Map();
+		for (let n = 0; n < 20; n++) {
+			let data;
+			try { data = await getSeasonData(n); }
+			catch (e) { break; }
+			(data.players || []).forEach(p => {
+				if (!p.display || p.name === 'Unknown') return;
+				const key = p.display.toLowerCase();
+				if (!map.has(key)) {
+					map.set(key, {
+						display: p.display,
+						emoji: p.emoji || '⚔️',
+						name: p.name || '',
+						lastSeason: n,
+						isActive: false
+					});
+				}
+			});
+		}
+		archivePlayersCache = [...map.values()];
+		return archivePlayersCache;
+	}
 
-        const filtered = allPlayers
-            .filter(p => p.display?.toLowerCase().includes(value))
-            .slice(0, 8);
+	window.filterPlayerList = async () => {
+		const input = $('#playerSearch');
+		const dropdown = $('#playerDropdown');
+		const value = input.value.toLowerCase().trim();
 
-        if (!filtered.length) {
-            dropdown.style.display = 'none';
-            return;
-        }
+		if (!value) {
+			dropdown.style.display = 'none';
+			return;
+		}
 
-        dropdown.innerHTML = filtered.map(p =>
-            `<div class="dropdown-item" onclick="selectPlayer('${escapeHtml(p.display)}')">${p.emoji || '⚔️'} ${p.display}</div>`
-        ).join('');
-        dropdown.style.display = 'block';
-    };
+		const current = allPlayers.filter(p => p.display?.toLowerCase().includes(value));
+
+		let archive = [];
+		try {
+			const allArch = await getArchivePlayers();
+			const currentKeys = new Set(allPlayers.map(p => p.display.toLowerCase()));
+			archive = allArch.filter(p =>
+				!currentKeys.has(p.display.toLowerCase()) &&
+				p.display.toLowerCase().includes(value)
+			);
+		} catch (e) {}
+
+		const filtered = [...current, ...archive]
+			.sort((a, b) => {
+				const aStarts = a.display.toLowerCase().startsWith(value) ? 0 : 1;
+				const bStarts = b.display.toLowerCase().startsWith(value) ? 0 : 1;
+				if (aStarts !== bStarts) return aStarts - bStarts;
+				return a.display.localeCompare(b.display);
+			})
+			.slice(0, 10);
+
+		if (!filtered.length) {
+			dropdown.style.display = 'none';
+			return;
+		}
+
+		dropdown.innerHTML = filtered.map(p => {
+			const idx = p.display.toLowerCase().indexOf(value);
+			const before = p.display.slice(0, idx);
+			const match = p.display.slice(idx, idx + value.length);
+			const after = p.display.slice(idx + value.length);
+			const tag = p.isActive === false
+				? `<span style="color:var(--muted);font-size:0.7rem;">S${p.lastSeason}</span>`
+				: '';
+			return `<div class="dropdown-item" onclick="selectPlayer('${escapeHtml(p.display)}')" style="${p.isActive === false ? 'opacity:0.75;' : ''}">
+				<span>${p.emoji || '⚔️'}</span>
+				<span style="flex:1;">${before}<strong style="color:var(--gold);">${match}</strong>${after}</span>
+				${tag}
+			</div>`;
+		}).join('');
+		dropdown.style.display = 'block';
+	};
 
     window.selectPlayer = (name) => {
         $('#playerSearch').value = name;
