@@ -132,6 +132,49 @@
     .not-found { text-align: center; padding: 40px 20px; color: var(--muted); }
     .not-found .nf-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
 
+    .oracle-tabs {
+        display: flex;
+        gap: 6px;
+        margin: 0 auto 20px;
+        padding: 6px;
+        background: linear-gradient(180deg, var(--card), rgba(163,113,247,0.03));
+        border-radius: var(--radius);
+        border: 1px solid rgba(163,113,247,0.3);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        justify-content: center;
+        max-width: fit-content;
+    }
+    .oracle-tabs::-webkit-scrollbar { display: none; }
+    .oracle-tab {
+        padding: 10px 16px;
+        border: none;
+        background: transparent;
+        color: var(--sub);
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: inherit;
+        transition: 0.2s;
+        white-space: nowrap;
+        flex: 0 0 auto;
+        text-align: center;
+    }
+    .oracle-tab:hover { background: var(--elevated); color: var(--text); }
+    .oracle-tab.active {
+        background: linear-gradient(135deg, var(--purple), #8b5cf6);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(163,113,247,0.3);
+    }
+    .oracle-tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
+    .oracle-tab-content.active { display: block; }
+
+    @media (max-width: 768px) {
+        .oracle-tab { padding: 8px 12px; font-size: 0.72rem; }
+    }
+
     @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     @media (max-width: 768px) {
@@ -216,61 +259,69 @@
     <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <script>
-// ============ КОНСТАНТЫ ============
+/* ============================================================================
+   СЕКЦИЯ 1. КОНСТАНТЫ
+   ========================================================================= */
 const STATS_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 const SEASON_BASE = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_';
 const STATS_URL_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 const SEASON_BASE_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
+
 const MAX_SEASONS = 15;
 const META_TOP = 5;
 const META_MIN_FIGHTS = 30;
 
-// ============ ТЕМА И НАВИГАЦИЯ ============
-function toggleTheme() {
-    const h = document.documentElement;
-    const n = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    h.setAttribute('data-theme', n);
-    localStorage.setItem('eternis-theme', n);
-}
-(function() { const s = localStorage.getItem('eternis-theme'); if (s) document.documentElement.setAttribute('data-theme', s); })();
-function toggleNav() {
-    const nav = document.getElementById('pageNav');
-    const btn = document.querySelector('.nav-toggle');
-    nav.classList.toggle('show');
-    btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-}
-document.querySelectorAll('.nav-link').forEach(l => { l.addEventListener('click', () => { document.getElementById('pageNav').classList.remove('show'); document.querySelector('.nav-toggle').textContent = '☰ Меню'; }); });
-document.querySelectorAll('.nav-label').forEach(label => {
-    label.addEventListener('click', function(e) {
-        if (window.innerWidth > 768) return;
-        e.preventDefault();
-        const dd = this.nextElementSibling;
-        if (dd && dd.classList.contains('nav-dropdown')) {
-            const isOpen = dd.style.display === 'block';
-            document.querySelectorAll('.nav-dropdown').forEach(d => d.style.display = 'none');
-            dd.style.display = isOpen ? 'none' : 'block';
-        }
-    });
-});
+const WR_GOOD = 0.55;
+const WR_BAD = 0.45;
+const MIN_FIGHTS_FOR_BEST = 10;
+const MIN_FIGHTS_FOR_RECORD = 15;
+const MIN_FIGHTS_FOR_FORGOTTEN = 20;
 
-// ============ КЕШ ============
+const CACHE_TTL = 10 * 60 * 1000;
+const CACHE_KEY_PREFIX = 'eternis-oracle-season-';
+const PLAYERS_CACHE_KEY = 'eternis-oracle-players';
+
+/* ============================================================================
+   СЕКЦИЯ 2. УТИЛИТЫ
+   ========================================================================= */
+function normalizeFaction(f) {
+    if (!f) return '';
+    if (f === 'Свет' || f === 'Орден Света') return 'Орден Света';
+    if (f === 'Тьма' || f === 'Культ Тьмы') return 'Культ Тьмы';
+    return f;
+}
+
+function wrColor(wr) {
+    return wr >= WR_GOOD ? 'var(--gold)' : wr >= WR_BAD ? 'var(--green)' : 'var(--red)';
+}
+
+function getAllPlayers(seasons) {
+    const players = new Map();
+    seasons.forEach(s => {
+        (s.data.players || []).forEach(p => {
+            if (!p.display) return;
+            const key = p.display.toLowerCase();
+            if (!players.has(key)) players.set(key, { display: p.display, emoji: p.emoji || '⚔️', name: p.name || '' });
+        });
+    });
+    return [...players.values()].sort((a, b) => a.display.localeCompare(b.display));
+}
+
+/* ============================================================================
+   СЕКЦИЯ 3. API — загрузка данных
+   ========================================================================= */
 async function getSeasonData(n) {
-    const KEY = 'eternis-oracle-season-' + n;
-    const TTL = 10 * 60 * 1000;
-    try { const c = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (c && (Date.now() - c.ts < TTL)) return c.data; } catch (e) {}
+    const KEY = CACHE_KEY_PREFIX + n;
+    try {
+        const c = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+        if (c && (Date.now() - c.ts < CACHE_TTL)) return c.data;
+    } catch (e) {}
     let r = await fetch(`${SEASON_BASE}${n}.json`);
     if (!r.ok) r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
     if (!r.ok) throw new Error('404');
     const data = await r.json();
     try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
     return data;
-}
-
-function normalizeFaction(f) {
-    if (!f) return '';
-    if (f === 'Свет' || f === 'Орден Света') return 'Орден Света';
-    if (f === 'Тьма' || f === 'Культ Тьмы') return 'Культ Тьмы';
-    return f;
 }
 
 async function loadAllSeasons() {
@@ -298,61 +349,11 @@ async function loadAllSeasons() {
     return current ? [...archived, current] : archived;
 }
 
-// ============ ПОИСК ============
-let allSeasonsCache = null;
-let allPlayersCache = null;
-let autocompleteIndex = -1;
-let autocompleteTimer = null;
+/* ============================================================================
+   СЕКЦИЯ 4. АНАЛИЗАТОРЫ
+   ========================================================================= */
 
-function getAllPlayers(seasons) {
-    const players = new Map();
-    seasons.forEach(s => {
-        (s.data.players || []).forEach(p => {
-            if (!p.display) return;
-            const key = p.display.toLowerCase();
-            if (!players.has(key)) players.set(key, { display: p.display, emoji: p.emoji || '⚔️', name: p.name || '' });
-        });
-    });
-    return [...players.values()].sort((a, b) => a.display.localeCompare(b.display));
-}
-
-const searchInput = document.getElementById('oracleSearch');
-const autocompleteList = document.getElementById('autocompleteList');
-
-searchInput.addEventListener('input', function() {
-    clearTimeout(autocompleteTimer);
-    const query = this.value.trim().toLowerCase();
-    if (query.length < 1) { autocompleteList.classList.remove('show'); return; }
-    autocompleteTimer = setTimeout(() => {
-        if (!allPlayersCache || allPlayersCache.length === 0) { autocompleteList.innerHTML = '<div class="autocomplete-empty">⏳ Загрузка базы игроков...</div>'; autocompleteList.classList.add('show'); return; }
-        const matches = allPlayersCache.filter(p => p.display.toLowerCase().includes(query)).slice(0, 10);
-        if (matches.length === 0) { autocompleteList.innerHTML = '<div class="autocomplete-empty">Никого не найдено</div>'; autocompleteList.classList.add('show'); return; }
-        autocompleteList.innerHTML = matches.map(p => {
-            const idx = p.display.toLowerCase().indexOf(query);
-            const before = p.display.slice(0, idx);
-            const match = p.display.slice(idx, idx + query.length);
-            const after = p.display.slice(idx + query.length);
-            return `<div class="autocomplete-item" data-name="${p.display}"><span class="ac-emoji">${p.emoji}</span><span class="ac-name">${before}<strong>${match}</strong>${after}</span><span class="ac-class">${p.name}</span></div>`;
-        }).join('');
-        autocompleteList.classList.add('show');
-        autocompleteIndex = -1;
-        document.querySelectorAll('.autocomplete-item').forEach(item => {
-            item.addEventListener('click', () => { searchInput.value = item.dataset.name; autocompleteList.classList.remove('show'); analyzePlayer(); });
-        });
-    }, 50);
-});
-
-searchInput.addEventListener('keydown', function(e) {
-    const items = autocompleteList.querySelectorAll('.autocomplete-item');
-    if (e.key === 'ArrowDown') { e.preventDefault(); autocompleteIndex = Math.min(autocompleteIndex + 1, items.length - 1); items.forEach((it, i) => it.classList.toggle('active', i === autocompleteIndex)); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); autocompleteIndex = Math.max(autocompleteIndex - 1, -1); items.forEach((it, i) => it.classList.toggle('active', i === autocompleteIndex)); }
-    else if (e.key === 'Enter') { if (autocompleteIndex >= 0 && items[autocompleteIndex]) { e.preventDefault(); searchInput.value = items[autocompleteIndex].dataset.name; autocompleteList.classList.remove('show'); analyzePlayer(); } else { autocompleteList.classList.remove('show'); analyzePlayer(); } }
-    else if (e.key === 'Escape') autocompleteList.classList.remove('show');
-});
-
-document.addEventListener('click', function(e) { if (!e.target.closest('.search-row')) autocompleteList.classList.remove('show'); });
-
-// ============ ИСТОРИЯ ============
+// --- 4.1 История игрока ---
 function getPlayerHistory(nickname, seasons) {
     const history = [];
     seasons.forEach(s => {
@@ -376,7 +377,7 @@ function getPlayerHistory(nickname, seasons) {
     return history;
 }
 
-// ============ ТРЕНДЫ ============
+// --- 4.2 Тренды ---
 function analyzeTrend(history) {
     if (history.length === 0) return { trend: 'none' };
     if (history.length === 1) return { trend: 'first', firstWR: history[0].wr, lastWR: history[0].wr, delta: 0, avg: history[0].wr, peak: history[0].wr, peakSeason: history[0].season, form: 1, seasonsCount: 1, stdDev: 0 };
@@ -397,7 +398,7 @@ function analyzeTrend(history) {
     return { trend: slope > 0.005 ? 'growth' : slope < -0.005 ? 'fall' : 'stable', slope, delta, avg, peak, peakSeason, firstWR, lastWR, form, stdDev, seasonsCount: n };
 }
 
-// ============ ГЕРОИ ============
+// --- 4.3 Герои ---
 function analyzeHeroArchive(nickname, seasons) {
     const heroes = [];
     const seen = new Set();
@@ -439,7 +440,7 @@ function analyzeHeroArchive(nickname, seasons) {
     });
     const totalWins = heroes.reduce((s, h) => s + h.wins, 0);
     const totalLosses = heroes.reduce((s, h) => s + h.losses, 0);
-    const eligible = heroes.filter(h => (h.wins + h.losses) >= 10);
+    const eligible = heroes.filter(h => (h.wins + h.losses) >= MIN_FIGHTS_FOR_BEST);
     const best = eligible.length > 0 ? eligible.reduce((m, h) => h.wr > m.wr ? h : m) : null;
     const classStats = {}, raceStats = {}, comboStats = {};
     heroes.forEach(h => {
@@ -457,22 +458,36 @@ function analyzeHeroArchive(nickname, seasons) {
     return { heroes, count: heroes.length, totalWins, totalLosses, trueWR: (totalWins + totalLosses) > 0 ? totalWins / (totalWins + totalLosses) : 0, best, classStats, raceStats, comboStats };
 }
 
-// ============ ДАНЖ ============
+// --- 4.4 Данж ---
 function analyzeDungeon(nickname, seasons) {
-    let totalWaves = 0, maxRecord = 0, totalBosses = 0, totalTrophies = 0, seasonsWithDungeon = 0;
+    let totalWaves = 0, maxRecord = 0, totalBosses = 0, totalTrophies = 0, totalDamage = 0;
+    let seasonsWithDungeon = 0;
+    const bySeason = [];
     seasons.forEach(s => {
-        const dp = s.data.dungeon?.players?.[nickname] || Object.values(s.data.dungeon?.players || {}).find(p => p.display && p.display.toLowerCase() === nickname.toLowerCase());
+        const dp = s.data.dungeon?.players?.[nickname] ||
+                   Object.values(s.data.dungeon?.players || {}).find(p => p.display && p.display.toLowerCase() === nickname.toLowerCase());
         if (!dp) return;
         seasonsWithDungeon++;
-        totalWaves += dp.totalWaves || 0;
-        totalBosses += dp.bosses || 0;
-        totalTrophies += dp.trophies || 0;
-        if ((dp.record || 0) > maxRecord) maxRecord = dp.record;
+        const rec = dp.record || 0;
+        const waves = dp.totalWaves || 0;
+        const bosses = dp.bosses || 0;
+        const trophies = dp.trophies || 0;
+        const damage = dp.damage || 0;
+        totalWaves += waves; totalBosses += bosses; totalTrophies += trophies; totalDamage += damage;
+        if (rec > maxRecord) maxRecord = rec;
+        bySeason.push({ season: s.num, isCurrent: s.isCurrent, record: rec, waves, bosses, trophies, damage, crits: dp.crits || 0, misses: dp.misses || 0, blocks: dp.blocks || 0, swings: dp.swings || 0, hits: dp.hits || 0, passive: dp.passive || '' });
     });
-    return { totalWaves, maxRecord, totalBosses, totalTrophies, seasonsWithDungeon };
+    const records = {
+        bestRecord: bySeason.reduce((m, h) => h.record > (m.record || 0) ? h : m, { record: 0, season: null }),
+        bestWaves: bySeason.reduce((m, h) => h.waves > (m.waves || 0) ? h : m, { waves: 0, season: null }),
+        bestBosses: bySeason.reduce((m, h) => h.bosses > (m.bosses || 0) ? h : m, { bosses: 0, season: null }),
+        bestTrophies: bySeason.reduce((m, h) => h.trophies > (m.trophies || 0) ? h : m, { trophies: 0, season: null }),
+        bestDamage: bySeason.reduce((m, h) => h.damage > (m.damage || 0) ? h : m, { damage: 0, season: null })
+    };
+    return { totalWaves, maxRecord, totalBosses, totalTrophies, totalDamage, seasonsWithDungeon, bySeason, records };
 }
 
-// ============ ЛИГА ============
+// --- 4.5 Лига ---
 function getLeaguePlace(nickname, seasons) {
     const last = seasons[seasons.length - 1];
     if (!last) return null;
@@ -487,7 +502,7 @@ function getLeaguePlace(nickname, seasons) {
     return { place, total: list.length, skill: me.skill || 0, faction: me.faction, inTop8: place <= 8, gapToTop8: Math.max(0, top8Skill - (me.skill || 0)) };
 }
 
-// ============ МЕТА ============
+// --- 4.6 Мета ---
 function analyzeMeta(seasons) {
     const metaBySeason = [];
     seasons.forEach(s => {
@@ -518,7 +533,7 @@ function isInMeta(className, metaBySeason, seasonNum, kind = 'class') {
     return list.some(c => c.name === className);
 }
 
-// ============ СЕЗОНЫ ============
+// --- 4.7 Сезоны ---
 function analyzeSeasons(history) {
     if (history.length === 0) return null;
     return {
@@ -531,7 +546,6 @@ function analyzeSeasons(history) {
     };
 }
 
-// ============ СЕЗОН-ЛЕГЕНДА ============
 function findLegendSeason(history) {
     if (history.length === 0) return null;
     let best = null, bestScore = -1;
@@ -546,13 +560,11 @@ function findLegendSeason(history) {
     return best;
 }
 
-// ============ ПИК ФОРМЫ ============
 function findPeakForm(history) {
     if (history.length === 0) return [];
-    return [...history].filter(h => h.total >= 20).sort((a, b) => b.wr - a.wr).slice(0, 3);
+    return [...history].filter(h => h.total >= MIN_FIGHTS_FOR_RECORD).sort((a, b) => b.wr - a.wr).slice(0, 3);
 }
 
-// ============ ВЗЛЁТЫ И ПАДЕНИЯ ============
 function findSwings(history) {
     if (history.length < 2) return { ups: [], downs: [] };
     const changes = [];
@@ -565,7 +577,6 @@ function findSwings(history) {
     return { ups, downs };
 }
 
-// ============ ТЕМП КАРЬЕРЫ ============
 function findPace(history) {
     if (history.length === 0) return null;
     const n = history.length;
@@ -579,7 +590,6 @@ function findPace(history) {
     };
 }
 
-// ============ ЛИЧНЫЕ РЕКОРДЫ ============
 function findPersonalRecords(history) {
     if (history.length === 0) return null;
     return {
@@ -594,7 +604,7 @@ function findPersonalRecords(history) {
     };
 }
 
-// ============ СРАВНЕНИЕ С ТОП-10 ============
+// --- 4.8 Сравнение с топ-10 ---
 function compareWithTop10(nickname, seasons) {
     const last = seasons[seasons.length - 1];
     if (!last) return null;
@@ -612,7 +622,7 @@ function compareWithTop10(nickname, seasons) {
     };
 }
 
-// ============ ФРАКЦИИ ============
+// --- 4.9 Фракции ---
 function analyzeFactions(history) {
     const calc = (arr) => {
         if (arr.length === 0) return { count: 0, wins: 0, losses: 0, wr: 0, factionWins: 0 };
@@ -624,33 +634,7 @@ function analyzeFactions(history) {
     return { light: calc(history.filter(h => h.faction === 'Орден Света')), dark: calc(history.filter(h => h.faction === 'Культ Тьмы')) };
 }
 
-// ============ ПРОГНОЗ ============
-function predictMilestones(history) {
-    if (history.length < 3) return null;
-    const last = history[history.length - 1];
-    const avgWinsPerSeason = history.reduce((s, h) => s + h.wins, 0) / history.length;
-    const levelDelta = [];
-    for (let i = 1; i < history.length; i++) { const d = history[i].level - history[i-1].level; if (d > 0) levelDelta.push(d); }
-    const avgLevelPerSeason = levelDelta.length > 0 ? levelDelta.reduce((s, d) => s + d, 0) / levelDelta.length : 0;
-    const shardDelta = [];
-    for (let i = 1; i < history.length; i++) { const d = history[i].shards - history[i-1].shards; if (d > 0) shardDelta.push(d); }
-    const avgShardsPerSeason = shardDelta.length > 0 ? shardDelta.reduce((s, d) => s + d, 0) / shardDelta.length : 0;
-    const preds = [];
-    if (last.wins < 200 && avgWinsPerSeason > 0) {
-        const toGo = 200 - last.wins, s = toGo / avgWinsPerSeason;
-        if (s < 50) preds.push({ icon: '⚔️', label: '200 побед', value: s < 1 ? '< 1 сез.' : `~${Math.ceil(s)} сез.`, detail: `${toGo} побед · ~${avgWinsPerSeason.toFixed(0)}/сезон` });
-    }
-    if (last.level < 50 && avgLevelPerSeason > 0) {
-        const toGo = 50 - last.level, s = toGo / avgLevelPerSeason;
-        if (s < 50) preds.push({ icon: '👑', label: '50 уровень', value: s < 1 ? '< 1 сез.' : `~${Math.ceil(s)} сез.`, detail: `${toGo} ур. · ~+${avgLevelPerSeason.toFixed(0)}/сезон` });
-    }
-    if (last.shards < 1000 && avgShardsPerSeason > 0) {
-        const toGo = 1000 - last.shards, s = toGo / avgShardsPerSeason;
-        if (s < 50) preds.push({ icon: '💎', label: '1000 осколков', value: s < 1 ? '< 1 сез.' : `~${Math.ceil(s)} сез.`, detail: `${toGo} 💎 · ~+${avgShardsPerSeason.toFixed(0)}/сезон` });
-    }
-    return preds;
-}
-
+// --- 4.10 Прогноз ---
 function buildForecast(trend, leaguePlace) {
     let wrF = trend.lastWR;
     if (trend.trend === 'growth') wrF = Math.min(0.85, trend.lastWR + Math.abs(trend.slope) * 2);
@@ -666,29 +650,11 @@ function buildForecast(trend, leaguePlace) {
     return { wrForecast: wrF, wrMin, wrMax, placeForecast };
 }
 
-// ============ НОВОЕ: ПРОТИВОСТОЯНИЯ ============
-function analyzeRivalries(nickname, seasons) {
-    const rivals = new Map();
-    seasons.forEach(s => {
-        const me = (s.data.players || []).find(p => p.display?.toLowerCase() === nickname.toLowerCase());
-        if (!me || !me.faction) return;
-        (s.data.players || []).forEach(p => {
-            if (p.display?.toLowerCase() === nickname.toLowerCase()) return;
-            if (!p.display) return;
-            if (normalizeFaction(p.faction) !== normalizeFaction(me.faction)) return;
-            if (!rivals.has(p.display)) {
-                rivals.set(p.display, { display: p.display, emoji: p.emoji || '⚔️', seasons: 0, wins: 0, losses: 0 });
-            }
-            const r = rivals.get(p.display);
-            r.seasons++;
-            r.wins += p.wins || 0;
-            r.losses += p.losses || 0;
-        });
-    });
-    return [...rivals.values()].filter(r => r.seasons >= 3).sort((a, b) => b.seasons - a.seasons).slice(0, 5);
-}
+/* ============================================================================
+   СЕКЦИЯ 5. ТЕКСТЫ
+   ========================================================================= */
 
-// ============ МЕМЫ ============
+// --- 5.1 Мемы (переписано под новую структуру) ---
 function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace) {
     const memes = [];
     const last = history[history.length - 1];
@@ -705,7 +671,7 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     else if (totalTournaments >= 5) memes.push(`<strong>${totalTournaments} турниров.</strong> Уже не случайность — <span class="meme">система</span>. Но до легенды ещё пилить и пилить.`);
     else memes.push(`<strong>${totalTournaments} турниров.</strong> Это как выиграть в лотерею один раз — приятно, но статистикой не считается.`);
 
-    // ---------- МЕТА ----------
+    // ---------- МЕТА (таб «Мета») ----------
     if (currentClass && metaBySeason.length) {
         const isInMetaNow = isInMeta(currentClass, metaBySeason, currentSeason);
         const currentMeta = metaBySeason.find(m => m.season === currentSeason);
@@ -723,20 +689,20 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
         else memes.push(`Ты <span class="meme">ровно на грани</span>: половину сезонов в мете, половину — вне. Как <span class="meme">двуликий Янус</span>, только с мечом.`);
     }
 
-    // ---------- СТАБИЛЬНОСТЬ ----------
+    // ---------- СТАБИЛЬНОСТЬ (таб «Анализ» → Тренды) ----------
     if (trend.stdDev > 0.12) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Это не стабильность, это <span class="meme">американские горки</span>.`);
     else if (trend.stdDev > 0.08) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Ты как <span class="meme">криптовалюта</span> — то луна, то дно.`);
     else if (trend.stdDev < 0.03 && trend.seasonsCount > 2) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Ты стабилен, как <span class="meme">бабушкин телевизор</span>. Надёжно, но без искры.`);
     else if (trend.stdDev >= 0.05) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Тебя <span class="meme">кидает из стороны в сторону</span>, как в том самом меме с автобусом.`);
 
-    // ---------- ФОРМА ----------
+    // ---------- ФОРМА (таб «Анализ» → Тренды) ----------
     if (trend.form > 1.1) memes.push(`Форма <strong>${(trend.form * 100).toFixed(0)}%</strong> — ты <span class="meme">превзошёл свой пик</span>. Это новый уровень. Запомни это чувство.`);
     else if (trend.form < 0.75) memes.push(`Ты на <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. Это уже не «передышка» — это <span class="meme">отпуск в Турции</span>. Пора возвращаться.`);
     else if (trend.form < 0.9) memes.push(`Ты на <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. <span class="meme">Почти как раньше</span>, но ностальгия уже щекочет.`);
     else if (trend.form >= 1) memes.push(`Ты на <strong>100%+ от пика</strong> — то есть <span class="meme">прямо сейчас творишь историю</span>. Не сбавляй.`);
     else memes.push(`Форма — <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. <span class="meme">Держишь марку</span>, но до рекорда чуть-чуть.`);
 
-    // ---------- ГЕРОИ ----------
+    // ---------- ГЕРОИ (таб «Стиль») ----------
     if (heroAnalysis.count === 1) memes.push(`Один герой за всю карьеру. Ты — <span class="meme">моногамный</span>. Уважение.`);
     else if (heroAnalysis.count === 2) memes.push(`Два героя. Это как <span class="meme">две жены</span> — и обе ревнуют.`);
     else if (heroAnalysis.count >= 8) memes.push(`<strong>${heroAnalysis.count} героев</strong>. Это уже <span class="meme">зоопарк</span>. Ты вообще помнишь их всех?`);
@@ -744,7 +710,7 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     else if (heroAnalysis.count >= 4) memes.push(`<strong>${heroAnalysis.count} героев</strong>. <span class="meme">Полигамия в мире мечей</span>. Главное — чтобы все были довольны.`);
     else memes.push(`<strong>${heroAnalysis.count} героя</strong>. Нормальный <span class="meme">гарем</span>, без излишеств.`);
 
-    // ---------- ЛУЧШИЙ ГЕРОЙ ----------
+    // ---------- ЛУЧШИЙ ГЕРОЙ (таб «Стиль») ----------
     if (heroAnalysis.best) {
         const bestWR = heroAnalysis.best.wr;
         if (bestWR > 0.7) memes.push(`WR <strong>${(bestWR * 100).toFixed(0)}%</strong> на лучшем герое. <span class="meme">Ты машина</span>. Либо соперники просто не умеют готовиться.`);
@@ -762,12 +728,12 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     if (leaguePlace && leaguePlace.place <= 3) memes.push(`Ты <strong>топ-${leaguePlace.place}</strong> в своей фракции. <span class="meme">Не смотри свысока</span> — на арене все равны.`);
     if (leaguePlace && leaguePlace.place > 30) memes.push(`Ты <strong>${leaguePlace.place}-й</strong> в Лиге. <span class="meme">Там внизу воздух чище</span>, да?`);
 
-    // ---------- СЕЗОН-ЛЕГЕНДА ----------
+    // ---------- СЕЗОН-ЛЕГЕНДА (таб «Анализ») ----------
     const legend = findLegendSeason(history);
     if (legend && parseFloat(legend.score) > 50) memes.push(`Твой <span class="meme">сезон-легенда</span> — <strong>S${legend.season}</strong> (оценка ${legend.score}/100). Там ты был на коне. Может, стоит <span class="meme">вернуться в эту форму</span>?`);
     else if (legend && parseFloat(legend.score) < 30) memes.push(`Твой лучший сезон — <strong>S${legend.season}</strong> с оценкой <strong>${legend.score}/100</strong>. <span class="meme">Это не легенда, это черновик</span>.`);
 
-    // ---------- ТЕМП ----------
+    // ---------- ТЕМП (таб «Анализ») ----------
     const paceLocal = findPace(history);
     if (paceLocal) {
         if (paceLocal.avgFights > 200) memes.push(`Ты играешь <strong>${paceLocal.avgFights} боёв за сезон</strong>. Это как <span class="meme">работа без зарплаты</span>. Хотя, если платят осколками...`);
@@ -776,7 +742,7 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
         else memes.push(`<strong>${paceLocal.avgFights} боёв за сезон</strong>. <span class="meme">Здоровый темп</span>. Не выгораешь, но и не прохлаждаешься.`);
     }
 
-    // ---------- СТРИКИ ----------
+    // ---------- СТРИКИ (таб «Анализ» → Рекорды) ----------
     const records = findPersonalRecords(history);
     if (records) {
         if (records.bestStreak.best >= 15) memes.push(`Лучший стрик — <strong>${records.bestStreak.best} побед</strong> (S${records.bestStreak.season}). Это не стрик, это <span class="meme">конвейер</span>.`);
@@ -860,10 +826,18 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     if (history.length >= 3 && trend.trend === 'growth' && trend.delta > 0.1) memes.push(`Рост <strong>+${(trend.delta * 100).toFixed(0)}%</strong> за карьеру. Ты <span class="meme">ракета</span>. Или просто поздно начал.`);
     if (history.length >= 3 && trend.trend === 'fall' && trend.delta < -0.1) memes.push(`Падение <strong>${(trend.delta * 100).toFixed(0)}%</strong>. <span class="meme">Сгорел на работе</span>? Или просто арена надоела.`);
 
+    // ---------- ПРОРОЧЕСТВА (таб «Пророчества») ----------
+    if (trend.trend === 'growth' && leaguePlace && !leaguePlace.inTop8 && leaguePlace.gapToTop8 < 100) {
+        memes.push(`До топ-8 осталось <strong>${leaguePlace.gapToTop8} SKILL</strong>. Это уже не мечта — это <span class="meme">план на следующий сезон</span>.`);
+    }
+    if (heroAnalysis.best && heroAnalysis.best.wr > 0.6 && heroAnalysis.best.name !== last.name) {
+        memes.push(`Твой лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> — не в текущем сезоне. <span class="meme">Пророчество гласит</span>: верни его, и будет тебе счастье.`);
+    }
+
     return memes;
 }
 
-// ============ НАРРАТИВ ============
+// --- 5.2 Нарратив ---
 function generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace) {
     const lines = [];
     if (history.length === 0) return ['Я не вижу твоей нити.'];
@@ -932,12 +906,11 @@ function generateForecastText(forecast, trend) {
     return lines;
 }
 
-// ============ СОВЕТ С МЕТОЙ ============
+// --- 5.3 Совет ---
 function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history) {
     const currentSeason = history[history.length - 1]?.season;
     const currentClass = history[history.length - 1]?.name?.split('-')[1];
 
-    // === ДОПОЛНИТЕЛЬНЫЕ СОВЕТЫ ===
     const records = findPersonalRecords(history);
     if (records && records.worstStreak.worst >= 7 && history[history.length - 1].season === records.worstStreak.season) {
         return `Проигрышная серия <strong>${records.worstStreak.worst}</strong> — это не конец. Это <strong>глава, которую нужно переписать</strong>. Смени героя, смени тактику, смени настроение.`;
@@ -980,7 +953,11 @@ function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history)
     return `Ты идёшь ровно. <strong>Пора сделать рывок.</strong>`;
 }
 
-// ============ РЕНДЕР ============
+/* ============================================================================
+   СЕКЦИЯ 6. РЕНДЕР
+   ========================================================================= */
+
+// --- 6.1 Игрок ---
 function renderPlayerInfo(player) {
     const fc = player.faction === 'Орден Света' ? 'light' : player.faction === 'Культ Тьмы' ? 'dark' : '';
     const fe = player.faction === 'Орден Света' ? '🌝' : player.faction === 'Культ Тьмы' ? '🌚' : '';
@@ -992,17 +969,19 @@ function renderPlayerInfo(player) {
     </div>`;
 }
 
-function renderHistory(history) {
+// --- 6.2 История (краткая и полная) ---
+function renderHistory(history, limit = null) {
     if (history.length === 0) return '';
-    let html = '<div class="oracle-block"><div class="oracle-block-title">📜 Твоя летопись</div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th><th class="num">⚔️</th></tr></thead><tbody>';
-    history.forEach(h => {
-        const wrColor = h.wr >= 0.55 ? 'var(--gold)' : h.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
+    const list = limit ? history.slice(-limit) : history;
+    let html = '<div class="oracle-block"><div class="oracle-block-title">📜 Твоя летопись' + (limit ? ' (последние ' + limit + ')' : '') + '</div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th><th class="num">⚔️</th></tr></thead><tbody>';
+    list.forEach(h => {
+        const wrC = wrColor(h.wr);
         const tourColor = h.tournamentWins > 0 ? 'var(--gold)' : 'var(--muted)';
         const tourIcon = h.tournamentWins >= 5 ? '🔥' : (h.tournamentWins > 0 ? '🏆' : '');
         html += `<tr class="${h.isCurrent ? 'current' : ''}">
             <td class="season-num">S${h.season}${h.isCurrent ? ' ⚡' : ''}</td>
             <td class="num">${h.wins}-${h.losses}</td>
-            <td class="num wr-cell" style="color:${wrColor};">${(h.wr * 100).toFixed(1)}%</td>
+            <td class="num wr-cell" style="color:${wrC};">${(h.wr * 100).toFixed(1)}%</td>
             <td class="num">${h.level}</td>
             <td class="num" style="color:${tourColor};font-weight:${h.tournamentWins > 0 ? '700' : '400'};">${h.tournamentWins ? h.tournamentWins + ' ' + tourIcon : '—'}</td>
             <td class="num">${h.factionWins || '—'}</td>
@@ -1015,11 +994,10 @@ function renderHistory(history) {
     const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
     const maxLevel = Math.max(...history.map(h => h.level || 0));
     const totalFactionWins = history.reduce((s, h) => s + (h.factionWins || 0), 0);
-    const wrColor = totalWR >= 0.55 ? 'var(--gold)' : totalWR >= 0.45 ? 'var(--green)' : 'var(--red)';
     html += `<tr style="background:linear-gradient(90deg,rgba(163,113,247,0.12),rgba(163,113,247,0.04));font-weight:800;">
         <td class="season-num" style="color:var(--gold);">ВСЕГО</td>
         <td class="num" style="color:var(--text);">${totalWins}-${totalLosses}</td>
-        <td class="num" style="color:${wrColor};">${(totalWR * 100).toFixed(1)}%</td>
+        <td class="num" style="color:${wrColor(totalWR)};">${(totalWR * 100).toFixed(1)}%</td>
         <td class="num" style="color:var(--gold);">${maxLevel}</td>
         <td class="num" style="color:var(--gold);">${totalTournaments} ${totalTournaments >= 10 ? '🔥' : '🏆'}</td>
         <td class="num" style="color:var(--ice);">${totalFactionWins}</td>
@@ -1028,6 +1006,26 @@ function renderHistory(history) {
     return html;
 }
 
+function renderFullHistory(history) {
+    if (history.length < 2) return '';
+    let html = '<div class="oracle-block"><div class="oracle-block-title">📜 Полная летопись</div>';
+    html += '<div class="table-container"><table class="history-table" style="font-size:0.72rem;">';
+    html += '<thead><tr><th>Сезон</th><th>Герой</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">💎</th></tr></thead><tbody>';
+    history.forEach(h => {
+        html += `<tr class="${h.isCurrent ? 'current' : ''}">
+            <td class="season-num">S${h.season}${h.isCurrent ? ' ⚡' : ''}</td>
+            <td style="font-size:0.7rem;color:var(--sub);">${h.emoji} ${h.name || '—'}</td>
+            <td class="num">${h.wins}-${h.losses}</td>
+            <td class="num" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
+            <td class="num">${h.level}</td>
+            <td class="num">${h.shards}</td>
+        </tr>`;
+    });
+    html += '</tbody></table></div></div>';
+    return html;
+}
+
+// --- 6.3 График ---
 function renderChart(history) {
     if (history.length < 2) return '';
     const points = history.map(h => h.wr * 100);
@@ -1059,6 +1057,7 @@ function renderChart(history) {
     </div>`;
 }
 
+// --- 6.4 Тренды (без плитки «Пик» — она в renderPeakForm) ---
 function renderTrends(trend) {
     if (trend.trend === 'none' || trend.trend === 'first') return '';
     let ti, tt;
@@ -1070,22 +1069,31 @@ function renderTrends(trend) {
     return `<div class="oracle-block gold"><div class="oracle-block-title">📈 Тренды</div><div class="trend-grid">
         <div class="trend-item"><div class="trend-icon">${ti}</div><div class="trend-value">${tt}</div><div class="trend-label">Нить</div></div>
         <div class="trend-item"><div class="trend-icon">${fi}</div><div class="trend-value">${formPct}%</div><div class="trend-label">Форма</div></div>
-        <div class="trend-item"><div class="trend-icon">🏔</div><div class="trend-value">S${trend.peakSeason}</div><div class="trend-label">Пик</div></div>
         <div class="trend-item"><div class="trend-icon">📊</div><div class="trend-value">${(trend.stdDev * 100).toFixed(1)}%</div><div class="trend-label">Разброс</div></div>
     </div></div>`;
 }
 
-function renderSeasonHighlights(sa) {
-    if (!sa || sa.seasonsCount < 2) return '';
-    return `<div class="oracle-block green"><div class="oracle-block-title">🏆 Лучшие и худшие главы</div><div class="season-highlight">
-        <div class="season-card"><div class="season-icon">🏆</div><div class="season-title">Лучший WR</div><div class="season-value">${(sa.bestWR.wr * 100).toFixed(1)}%</div><div class="season-detail">S${sa.bestWR.season}</div></div>
-        <div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший WR</div><div class="season-value">${(sa.worstWR.wr * 100).toFixed(1)}%</div><div class="season-detail">S${sa.worstWR.season}</div></div>
-        <div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Больше побед</div><div class="season-value">${sa.mostWins.wins}</div><div class="season-detail">S${sa.mostWins.season}</div></div>
-        <div class="season-card"><div class="season-icon">🔥</div><div class="season-title">Больше боёв</div><div class="season-value">${sa.mostFights.total}</div><div class="season-detail">S${sa.mostFights.season}</div></div>
-        <div class="season-card"><div class="season-icon">👑</div><div class="season-title">Больше турниров</div><div class="season-value">${sa.mostTournaments.tournamentWins || 0}</div><div class="season-detail">S${sa.mostTournaments.season}</div></div>
-    </div></div>`;
+// --- 6.5 Рекорды (слитый блок: SeasonHighlights + PersonalRecords) ---
+function renderRecords(history) {
+    if (history.length === 0) return '';
+    const sa = analyzeSeasons(history);
+    const rec = findPersonalRecords(history);
+    if (!sa || !rec) return '';
+    let html = '<div class="oracle-block green"><div class="oracle-block-title">🏅 Рекорды</div><div class="season-highlight">';
+    html += `<div class="season-card"><div class="season-icon">🏆</div><div class="season-title">Лучший WR</div><div class="season-value">${(sa.bestWR.wr * 100).toFixed(1)}%</div><div class="season-detail">S${sa.bestWR.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший WR</div><div class="season-value">${(sa.worstWR.wr * 100).toFixed(1)}%</div><div class="season-detail">S${sa.worstWR.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Больше побед</div><div class="season-value">${sa.mostWins.wins}</div><div class="season-detail">S${sa.mostWins.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">🔥</div><div class="season-title">Больше боёв</div><div class="season-value">${sa.mostFights.total}</div><div class="season-detail">S${sa.mostFights.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">👑</div><div class="season-title">Больше турниров</div><div class="season-value">${sa.mostTournaments.tournamentWins || 0}</div><div class="season-detail">S${sa.mostTournaments.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">📈</div><div class="season-title">Лучший стрик</div><div class="season-value">${rec.bestStreak.best}</div><div class="season-detail">S${rec.bestStreak.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший стрик</div><div class="season-value">${rec.worstStreak.worst}</div><div class="season-detail">S${rec.worstStreak.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">👑</div><div class="season-title">Макс. уровень</div><div class="season-value">${rec.maxLevel.level}</div><div class="season-detail">S${rec.maxLevel.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">💎</div><div class="season-title">Макс. осколков</div><div class="season-value">${rec.maxShards.shards}</div><div class="season-detail">S${rec.maxShards.season}</div></div>`;
+    html += '</div></div>';
+    return html;
 }
 
+// --- 6.6 Сезон-легенда (без WR — он в рекордах) ---
 function renderLegendSeason(legend) {
     if (!legend) return '';
     return `<div class="oracle-block gold"><div class="oracle-block-title">🏆 Сезон-легенда</div>
@@ -1095,7 +1103,6 @@ function renderLegendSeason(legend) {
             <div class="season-value">S${legend.season}</div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;">
-            <div class="season-card"><div class="season-title">WR</div><div class="season-value" style="font-size:0.95rem;">${(legend.wr * 100).toFixed(1)}%</div></div>
             <div class="season-card"><div class="season-title">🏆 Турниры</div><div class="season-value" style="font-size:0.95rem;">${legend.tournamentWins || 0}</div></div>
             <div class="season-card"><div class="season-title">⚔️ Фракция</div><div class="season-value" style="font-size:0.95rem;">${legend.factionWins || 0}</div></div>
             <div class="season-card"><div class="season-title">📈 Уровень</div><div class="season-value" style="font-size:0.95rem;">${legend.level}</div></div>
@@ -1104,6 +1111,7 @@ function renderLegendSeason(legend) {
     </div>`;
 }
 
+// --- 6.7 Пик формы ---
 function renderPeakForm(peaks) {
     if (!peaks.length) return '';
     const medals = ['🥇', '🥈', '🥉'];
@@ -1118,6 +1126,7 @@ function renderPeakForm(peaks) {
     return html;
 }
 
+// --- 6.8 Взлёты и падения ---
 function renderSwings(swings) {
     if (!swings.ups.length && !swings.downs.length) return '';
     let html = '<div class="oracle-block"><div class="oracle-block-title">📉 Взлёты и падения</div>';
@@ -1137,6 +1146,7 @@ function renderSwings(swings) {
     return html;
 }
 
+// --- 6.9 Темп ---
 function renderPace(pace) {
     if (!pace) return '';
     return `<div class="oracle-block"><div class="oracle-block-title">⚡ Темп карьеры</div><div class="pace-grid">
@@ -1149,19 +1159,7 @@ function renderPace(pace) {
     </div></div>`;
 }
 
-function renderPersonalRecords(rec) {
-    if (!rec) return '';
-    return `<div class="oracle-block"><div class="oracle-block-title">🏅 Личные рекорды</div>
-        <div class="archive-hero"><div class="hero-info"><span>🔥</span> Лучший стрик</div><div><strong style="color:var(--gold);">${rec.bestStreak.best}</strong> <span style="color:var(--muted);font-size:0.75rem;">S${rec.bestStreak.season}</span></div></div>
-        <div class="archive-hero"><div class="hero-info"><span>💀</span> Худший стрик</div><div><strong style="color:var(--red);">${rec.worstStreak.worst}</strong> <span style="color:var(--muted);font-size:0.75rem;">S${rec.worstStreak.season}</span></div></div>
-        <div class="archive-hero"><div class="hero-info"><span>⚔️</span> Больше побед</div><div><strong style="color:var(--gold);">${rec.mostWins.wins}</strong> <span style="color:var(--muted);font-size:0.75rem;">S${rec.mostWins.season}</span></div></div>
-        <div class="archive-hero"><div class="hero-info"><span>📊</span> Лучший WR</div><div><strong style="color:var(--gold);">${(rec.bestWR.wr * 100).toFixed(1)}%</strong> <span style="color:var(--muted);font-size:0.75rem;">S${rec.bestWR.season}</span></div></div>
-        <div class="archive-hero"><div class="hero-info"><span>👑</span> Больше турниров</div><div><strong style="color:var(--gold);">${rec.mostTournaments.tournamentWins || 0}</strong> <span style="color:var(--muted);font-size:0.75rem;">S${rec.mostTournaments.season}</span></div></div>
-        <div class="archive-hero"><div class="hero-info"><span>📈</span> Макс. уровень</div><div><strong style="color:var(--gold);">${rec.maxLevel.level}</strong> <span style="color:var(--muted);font-size:0.75rem;">S${rec.maxLevel.season}</span></div></div>
-        <div class="archive-hero"><div class="hero-info"><span>💎</span> Макс. осколков</div><div><strong style="color:var(--gold);">${rec.maxShards.shards}</strong> <span style="color:var(--muted);font-size:0.75rem;">S${rec.maxShards.season}</span></div></div>
-    </div>`;
-}
-
+// --- 6.10 Сравнение с топ-10 ---
 function renderCompareTop10(cmp) {
     if (!cmp) return '';
     const skillDiffColor = cmp.skillDiff >= 0 ? 'var(--green)' : 'var(--red)';
@@ -1178,10 +1176,10 @@ function renderCompareTop10(cmp) {
     </div>`;
 }
 
+// --- 6.11 Мета ---
 function renderMeta(metaBySeason, history) {
     if (!metaBySeason.length) return '';
 
-    // Хелпер: строчка класса в топ-5
     const rowTopHtml = (c, rank, isMine) => {
         const rankClass = rank <= 5 ? `r${rank}` : 'r-out';
         const mineStyle = isMine ? 'background:rgba(240,185,11,0.12);margin:0 -6px;padding:4px 6px;border-radius:4px;border-left:3px solid var(--gold);' : '';
@@ -1192,22 +1190,20 @@ function renderMeta(metaBySeason, history) {
         </div>`;
     };
 
-    // Хелпер: компактная строчка для архива
     const rowCompactHtml = (m, historyItem) => {
         if (!historyItem || !historyItem.name?.includes('-')) return '';
         const myClass = historyItem.name.split('-')[1];
         const myRank = m.allClasses.findIndex(c => c.name === myClass) + 1;
         const myObj = m.allClasses.find(c => c.name === myClass);
         if (!myObj) return '';
-        const isInMeta = myRank <= META_TOP && myRank > 0;
-        const statusIcon = isInMeta ? '🎯' : '⚔️';
-        const rankColor = isInMeta ? 'var(--gold)' : 'var(--muted)';
-        const wrColor = myObj.wr >= 0.55 ? 'var(--gold)' : myObj.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
+        const isInMetaNow = myRank <= META_TOP && myRank > 0;
+        const statusIcon = isInMetaNow ? '🎯' : '⚔️';
+        const rankColor = isInMetaNow ? 'var(--gold)' : 'var(--muted)';
         return `<div style="display:grid;grid-template-columns:50px 1fr auto auto;gap:10px;align-items:center;padding:6px 10px;font-size:0.78rem;border-bottom:1px solid rgba(163,113,247,0.08);">
             <span style="color:var(--purple);font-weight:800;">S${m.season}</span>
-            <span>${statusIcon} <strong style="color:${isInMeta ? 'var(--gold)' : 'var(--text)'};">${myClass}</strong></span>
+            <span>${statusIcon} <strong style="color:${isInMetaNow ? 'var(--gold)' : 'var(--text)'};">${myClass}</strong></span>
             <span style="color:${rankColor};font-size:0.7rem;white-space:nowrap;">${myRank} из ${m.allClasses.length}</span>
-            <span style="color:${wrColor};font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;">${(myObj.wr * 100).toFixed(1)}%</span>
+            <span style="color:${wrColor(myObj.wr)};font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;">${(myObj.wr * 100).toFixed(1)}%</span>
         </div>`;
     };
 
@@ -1216,7 +1212,6 @@ function renderMeta(metaBySeason, history) {
 
     let html = '<div class="oracle-block ice"><div class="oracle-block-title">📊 Мета по сезонам</div>';
 
-    // --- ТЕКУЩИЙ СЕЗОН ---
     if (currentMeta && currentMeta.topClasses.length > 0) {
         const m = currentMeta;
         const historyItem = history.find(h => h.season === m.season);
@@ -1224,7 +1219,6 @@ function renderMeta(metaBySeason, history) {
         const myRank = myClass ? m.allClasses.findIndex(c => c.name === myClass) + 1 : 0;
         const myObj = myClass ? m.allClasses.find(c => c.name === myClass) : null;
         const myInMeta = myClass ? isInMeta(myClass, metaBySeason, m.season) : false;
-
         const posText = myRank > 0 ? ` · 📍 ${myRank} из ${m.allClasses.length}` : '';
         const statusText = myClass ? (myInMeta ? ' 🎯 в мете' : ' ⚔️ вне меты') : '';
 
@@ -1233,28 +1227,16 @@ function renderMeta(metaBySeason, history) {
                 <div style="font-size:0.82rem;color:var(--purple);font-weight:800;">S${m.season} ⚡ <span style="color:var(--muted);font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;">текущий</span></div>
                 ${myClass ? `<div style="font-size:0.7rem;color:var(--muted);">твой класс: <strong style="color:${myInMeta ? 'var(--gold)' : 'var(--text)'};">${myClass}${posText}${statusText}</strong></div>` : ''}
             </div>`;
-
-        m.topClasses.forEach((c, i) => {
-            html += rowTopHtml(c, i + 1, c.name === myClass);
-        });
-
+        m.topClasses.forEach((c, i) => { html += rowTopHtml(c, i + 1, c.name === myClass); });
         if (myObj && !myInMeta && myRank > META_TOP) {
             html += `<div style="text-align:center;color:var(--muted);font-size:0.75rem;padding:4px 0;letter-spacing:2px;">···</div>`;
-            if (myRank - 2 >= META_TOP) {
-                const above = m.allClasses[myRank - 2];
-                html += rowTopHtml(above, myRank - 1, false);
-            }
+            if (myRank - 2 >= META_TOP) html += rowTopHtml(m.allClasses[myRank - 2], myRank - 1, false);
             html += rowTopHtml(myObj, myRank, true);
-            if (myRank < m.allClasses.length) {
-                const below = m.allClasses[myRank];
-                html += rowTopHtml(below, myRank + 1, false);
-            }
+            if (myRank < m.allClasses.length) html += rowTopHtml(m.allClasses[myRank], myRank + 1, false);
         }
-
         html += '</div>';
     }
 
-    // --- АРХИВНЫЕ СЕЗОНЫ ---
     const archivedWithHistory = archivedMeta
         .map(m => ({ m, h: history.find(h => h.season === m.season) }))
         .filter(x => x.h && x.h.name?.includes('-'))
@@ -1263,21 +1245,20 @@ function renderMeta(metaBySeason, history) {
     if (archivedWithHistory.length > 0) {
         html += `<div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px;">📜 Твой класс по прошлым сезонам</div>`;
         html += `<div style="background:rgba(163,113,247,0.03);border-radius:var(--radius-sm);padding:4px 0;">`;
-        archivedWithHistory.forEach(({ m, h }) => {
-            html += rowCompactHtml(m, h);
-        });
+        archivedWithHistory.forEach(({ m, h }) => { html += rowCompactHtml(m, h); });
         html += `</div>`;
     }
-
     html += '</div>';
     return html;
 }
 
+// --- 6.12 Мемы ---
 function renderMemeAnalysis(memes) {
     if (!memes.length) return '';
     return `<div class="oracle-block pink"><div class="oracle-block-title">😏 Мемный анализ</div><div class="meme-block"><div class="meme-block-title">🔥 Без фильтров</div>${memes.map(m => `<div class="meme-line">${m}</div>`).join('')}</div></div>`;
 }
 
+// --- 6.13 Стиль ---
 function renderStyle(heroAnalysis, metaBySeason, history) {
     if (!heroAnalysis || heroAnalysis.count === 0) return '';
     const classArr = Object.entries(heroAnalysis.classStats).map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses) })).filter(c => c.total >= 5).sort((a, b) => b.total - a.total);
@@ -1324,30 +1305,22 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
     return html;
 }
 
+// --- 6.14 Фракции ---
 function renderFactions(factions, history) {
     if (!factions || (factions.light.count === 0 && factions.dark.count === 0)) return '';
     const totalFactionWins = history.reduce((s, h) => s + (h.factionWins || 0), 0);
     let html = `<div class="oracle-block"><div class="oracle-block-title">⚔️ Фракции · всего ${totalFactionWins} побед</div>`;
     if (factions.light.count > 0) {
-        const wrC = factions.light.wr >= 0.55 ? 'var(--gold)' : factions.light.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
-        html += `<div class="style-row"><div class="style-name"><span>🌝</span> Орден Света</div><div class="style-val">${factions.light.count} сез. · ⚔️ ${factions.light.factionWins} · <span style="color:${wrC};">${(factions.light.wr * 100).toFixed(1)}%</span></div></div>`;
+        html += `<div class="style-row"><div class="style-name"><span>🌝</span> Орден Света</div><div class="style-val">${factions.light.count} сез. · ⚔️ ${factions.light.factionWins} · <span style="color:${wrColor(factions.light.wr)};">${(factions.light.wr * 100).toFixed(1)}%</span></div></div>`;
     }
     if (factions.dark.count > 0) {
-        const wrC = factions.dark.wr >= 0.55 ? 'var(--gold)' : factions.dark.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
-        html += `<div class="style-row"><div class="style-name"><span>🌚</span> Культ Тьмы</div><div class="style-val">${factions.dark.count} сез. · ⚔️ ${factions.dark.factionWins} · <span style="color:${wrC};">${(factions.dark.wr * 100).toFixed(1)}%</span></div></div>`;
+        html += `<div class="style-row"><div class="style-name"><span>🌚</span> Культ Тьмы</div><div class="style-val">${factions.dark.count} сез. · ⚔️ ${factions.dark.factionWins} · <span style="color:${wrColor(factions.dark.wr)};">${(factions.dark.wr * 100).toFixed(1)}%</span></div></div>`;
     }
     html += '</div>';
     return html;
 }
 
-function renderPredictions(preds) {
-    if (!preds || preds.length === 0) return '';
-    let html = '<div class="oracle-block gold"><div class="oracle-block-title">🔮 Когда достигнешь X</div><div class="season-highlight">';
-    preds.forEach(p => html += `<div class="season-card"><div class="season-icon">${p.icon}</div><div class="season-title">${p.label}</div><div class="season-value">${p.value}</div><div class="season-detail">${p.detail}</div></div>`);
-    html += '</div></div>';
-    return html;
-}
-
+// --- 6.15 Герои ---
 function renderHeroArchive(heroAnalysis) {
     if (heroAnalysis.count === 0) return '';
     let html = '<div class="oracle-block ice"><div class="oracle-block-title">🎭 Твои герои</div>';
@@ -1355,52 +1328,124 @@ function renderHeroArchive(heroAnalysis) {
     sorted.forEach(h => {
         const isBest = heroAnalysis.best && h.name === heroAnalysis.best.name && h.season === heroAnalysis.best.season;
         const cls = h.isCurrent ? 'current' : isBest ? 'best' : '';
-        const wrColor = h.wr >= 0.55 ? 'var(--gold)' : h.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
         const tag = h.isCurrent ? '⚡ Текущий' : isBest ? '🏆 Лучший' : `S${h.season}`;
-        html += `<div class="archive-hero ${cls}"><div class="hero-info"><span>${h.emoji} ${h.name}</span></div><div><span class="hero-wr" style="color:${wrColor};">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span> <span style="color:var(--muted);font-size:0.75rem;margin-left:8px;">${tag}</span></div></div>`;
+        html += `<div class="archive-hero ${cls}"><div class="hero-info"><span>${h.emoji} ${h.name}</span></div><div><span class="hero-wr" style="color:${wrColor(h.wr)};">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span> <span style="color:var(--muted);font-size:0.75rem;margin-left:8px;">${tag}</span></div></div>`;
     });
-    const wrColor = heroAnalysis.trueWR >= 0.55 ? 'var(--gold)' : heroAnalysis.trueWR >= 0.45 ? 'var(--green)' : 'var(--red)';
     html += `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:center;color:var(--sub);font-size:0.85rem;">
         <div>Всего героев: <strong style="color:var(--purple);">${heroAnalysis.count}</strong></div>
         <div style="margin-top:4px;">Суммарно: <strong style="color:var(--text);">${heroAnalysis.totalWins}-${heroAnalysis.totalLosses}</strong></div>
-        <div style="margin-top:4px;">Истинный WR: <strong style="color:${wrColor};">${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong></div>
+        <div style="margin-top:4px;">Истинный WR: <strong style="color:${wrColor(heroAnalysis.trueWR)};">${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong></div>
         ${heroAnalysis.best ? `<div style="margin-top:4px;">Лучший: <strong style="color:var(--green);">${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(1)}%)</div>` : ''}
     </div></div>`;
     return html;
 }
 
-function renderDungeon(dungeon) {
-    if (!dungeon || dungeon.totalWaves === 0) return '';
-    return `<div class="oracle-block ice"><div class="oracle-block-title">🏔 Бездна</div><div class="trend-grid">
-        <div class="trend-item"><div class="trend-icon">🌊</div><div class="trend-value">${dungeon.totalWaves}</div><div class="trend-label">Волн</div></div>
-        <div class="trend-item"><div class="trend-icon">🏆</div><div class="trend-value">${dungeon.maxRecord}</div><div class="trend-label">Рекорд</div></div>
-        <div class="trend-item"><div class="trend-icon">🐉</div><div class="trend-value">${dungeon.totalBosses}</div><div class="trend-label">Боссов</div></div>
-        <div class="trend-item"><div class="trend-icon">👑</div><div class="trend-value">${dungeon.totalTrophies}</div><div class="trend-label">Трофеев</div></div>
-    </div></div>`;
+// --- 6.16 Забытые герои ---
+function renderForgottenHeroes(heroAnalysis, currentName) {
+    const forgotten = heroAnalysis.heroes.filter(h => h.name !== currentName && (h.wins + h.losses) >= MIN_FIGHTS_FOR_FORGOTTEN && h.wr > 0.5).sort((a, b) => b.wr - a.wr).slice(0, 5);
+    if (forgotten.length === 0) return '';
+    let html = '<div class="oracle-block"><div class="oracle-block-title">🕯️ Забытые герои</div>';
+    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Герои, которых ты оставил, но они были хороши</div>';
+    forgotten.forEach(h => {
+        html += `<div class="archive-hero"><div class="hero-info"><span>${h.emoji}</span> <span>${h.name}</span></div><div><span style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(0)}%</span> <span style="color:var(--muted);font-size:0.7rem;">(${h.wins}-${h.losses}) · S${h.season}</span></div></div>`;
+    });
+    html += `<div style="margin-top:12px;text-align:center;font-size:0.8rem;color:var(--sub);font-style:italic;">Может, стоит <strong style="color:var(--purple);">вернуть одного из них</strong>?</div>`;
+    html += '</div>';
+    return html;
 }
 
+// --- 6.17 Данж ---
+function renderDungeon(dungeon) {
+    if (!dungeon || dungeon.totalWaves === 0) return '';
+    let html = '<div class="oracle-block ice"><div class="oracle-block-title">🏔 Бездна — итог за всё время</div>';
+    html += `<div class="pace-grid" style="margin-bottom:16px;">
+        <div class="pace-item"><div class="pace-icon">🌊</div><div class="pace-value">${dungeon.totalWaves}</div><div class="pace-label">Волн</div></div>
+        <div class="pace-item"><div class="pace-icon">🏆</div><div class="pace-value">${dungeon.maxRecord}</div><div class="pace-label">Рекорд</div></div>
+        <div class="pace-item"><div class="pace-icon">🐉</div><div class="pace-value">${dungeon.totalBosses}</div><div class="pace-label">Боссов</div></div>
+        <div class="pace-item"><div class="pace-icon">👑</div><div class="pace-value">${dungeon.totalTrophies}</div><div class="pace-label">Трофеев</div></div>
+        <div class="pace-item"><div class="pace-icon">⚔️</div><div class="pace-value">${dungeon.totalDamage.toLocaleString('ru-RU')}</div><div class="pace-label">Урона</div></div>
+        <div class="pace-item"><div class="pace-icon">📅</div><div class="pace-value">${dungeon.seasonsWithDungeon}</div><div class="pace-label">Сезонов</div></div>
+    </div>`;
+    if (dungeon.bySeason.length > 1) {
+        html += `<div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px;">📜 По сезонам</div>`;
+        html += `<div class="table-container"><table class="history-table" style="font-size:0.72rem;">
+            <thead><tr><th>Сезон</th><th class="num">🏆</th><th class="num">🌊</th><th class="num">🐉</th><th class="num">👑</th><th class="num">⚔️</th></tr></thead>
+            <tbody>`;
+        dungeon.bySeason.forEach(h => {
+            const isMaxRecord = h.record === dungeon.records.bestRecord.record && h.record > 0;
+            html += `<tr class="${h.isCurrent ? 'current' : ''}">
+                <td class="season-num">S${h.season}${h.isCurrent ? ' ⚡' : ''}</td>
+                <td class="num" style="color:${isMaxRecord ? 'var(--gold)' : 'var(--text)'};font-weight:${isMaxRecord ? '800' : '600'};">${h.record || '—'}${isMaxRecord ? ' 🔥' : ''}</td>
+                <td class="num">${h.waves || '—'}</td>
+                <td class="num">${h.bosses || '—'}</td>
+                <td class="num">${h.trophies || '—'}</td>
+                <td class="num">${h.damage ? h.damage.toLocaleString('ru-RU') : '—'}</td>
+            </tr>`;
+        });
+        html += `<tr style="background:linear-gradient(90deg,rgba(163,113,247,0.12),rgba(163,113,247,0.04));font-weight:800;">
+            <td class="season-num" style="color:var(--gold);">ВСЕГО</td>
+            <td class="num" style="color:var(--gold);">${dungeon.maxRecord} 🔥</td>
+            <td class="num" style="color:var(--text);">${dungeon.totalWaves}</td>
+            <td class="num" style="color:var(--text);">${dungeon.totalBosses}</td>
+            <td class="num" style="color:var(--text);">${dungeon.totalTrophies}</td>
+            <td class="num" style="color:var(--ice);">${dungeon.totalDamage.toLocaleString('ru-RU')}</td>
+        </tr></tbody></table></div>`;
+    }
+    const r = dungeon.records;
+    if (r.bestRecord.season !== null) {
+        html += `<div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">🏅 Личные рекорды</div>`;
+        const recordsList = [
+            { icon: '🏆', label: 'Лучший рекорд', value: r.bestRecord.record + ' волн', season: r.bestRecord.season, color: 'var(--gold)' },
+            { icon: '🌊', label: 'Больше всего волн', value: r.bestWaves.waves, season: r.bestWaves.season, color: 'var(--ice)' },
+            { icon: '🐉', label: 'Больше всего боссов', value: r.bestBosses.bosses, season: r.bestBosses.season, color: 'var(--red)' },
+            { icon: '👑', label: 'Больше всего трофеев', value: r.bestTrophies.trophies, season: r.bestTrophies.season, color: 'var(--gold)' },
+            { icon: '⚔️', label: 'Больше всего урона', value: r.bestDamage.damage.toLocaleString('ru-RU'), season: r.bestDamage.season, color: 'var(--purple)' }
+        ];
+        recordsList.forEach(rec => {
+            html += `<div class="archive-hero"><div class="hero-info"><span>${rec.icon}</span> ${rec.label}</div><div><strong style="color:${rec.color};">${rec.value}</strong> <span style="color:var(--muted);font-size:0.72rem;">S${rec.season}</span></div></div>`;
+        });
+    }
+    html += '</div>';
+    return html;
+}
+
+// --- 6.18 Голос ---
 function renderVoice(lines) {
     if (!lines.length) return '';
     return `<div class="oracle-block"><div class="oracle-block-title">📜 Что я вижу</div>${lines.map(l => `<div class="oracle-voice">${l}</div>`).join('')}</div>`;
 }
 
-function renderForecast(forecast) {
-    if (!forecast) return '';
-    return `<div class="oracle-block"><div class="oracle-block-title">🎯 Грядущая глава</div><div class="season-highlight">
-        <div class="season-card"><div class="season-icon">📈</div><div class="season-title">Винрейт</div><div class="season-value">${(forecast.wrForecast * 100).toFixed(0)}%</div><div class="season-detail">${(forecast.wrMin * 100).toFixed(0)}–${(forecast.wrMax * 100).toFixed(0)}%</div></div>
-        ${forecast.placeForecast ? `<div class="season-card"><div class="season-icon">🏆</div><div class="season-title">Место в Лиге</div><div class="season-value">${forecast.placeForecast.min}–${forecast.placeForecast.max}</div></div>` : ''}
-    </div></div>`;
-}
-
+// --- 6.19 Совет ---
 function renderAdvice(advice) {
     if (!advice) return '';
     return `<div class="advice-block"><div class="advice-icon">🖋️</div><div class="advice-text">${advice}</div></div>`;
 }
 
-// ============ НОВЫЕ БЛОКИ ============
+// --- 6.20 Табы ---
+function renderTabs() {
+    return `<div class="oracle-tabs">
+        <button class="oracle-tab active" data-tab="overview" onclick="switchOracleTab('overview')">👤 Обзор</button>
+        <button class="oracle-tab" data-tab="analysis" onclick="switchOracleTab('analysis')">📊 Анализ</button>
+        <button class="oracle-tab" data-tab="meta" onclick="switchOracleTab('meta')">📊 Мета</button>
+        <button class="oracle-tab" data-tab="style" onclick="switchOracleTab('style')">⚔️ Стиль</button>
+        <button class="oracle-tab" data-tab="dungeon" onclick="switchOracleTab('dungeon')">🏔 Данж</button>
+        <button class="oracle-tab" data-tab="archive" onclick="switchOracleTab('archive')">📜 Архив</button>
+        <button class="oracle-tab" data-tab="oracle" onclick="switchOracleTab('oracle')">🔮 Пророчества</button>
+    </div>`;
+}
+
+window.switchOracleTab = function(tab) {
+    document.querySelectorAll('.oracle-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.oracle-tab-content').forEach(t => t.classList.remove('active'));
+    const btn = document.querySelector(`.oracle-tab[data-tab="${tab}"]`);
+    const content = document.getElementById('oracle-tab-' + tab);
+    if (btn) btn.classList.add('active');
+    if (content) content.classList.add('active');
+};
+
+// --- 6.21 Пророчества ---
 function renderProphecies(history, trend, heroAnalysis, leaguePlace, dungeon) {
     const prophecies = [];
-    const last = history[history.length - 1];
     if (trend.trend === 'growth') prophecies.push(`📜 <strong>Следующий сезон</strong> станет для тебя <strong>испытанием огнём</strong>. Ты близок к пику. Один неверный шаг — и падение. Один верный — и <strong>новая высота</strong>.`);
     else if (trend.trend === 'fall') prophecies.push(`📜 <strong>Следующий сезон</strong> — это <strong>развилка</strong>. Или ты найдёшь в себе силы переломить падение, или нить окончательно истончится.`);
     else prophecies.push(`📜 <strong>Следующий сезон</strong> — это <strong>возможность</strong>. Ты застрял в равновесии. Пора сделать рывок. Или смириться.`);
@@ -1417,33 +1462,7 @@ function renderProphecies(history, trend, heroAnalysis, leaguePlace, dungeon) {
     return html;
 }
 
-function renderForgottenHeroes(heroAnalysis, currentName) {
-    const forgotten = heroAnalysis.heroes.filter(h => h.name !== currentName && (h.wins + h.losses) >= 20 && h.wr > 0.5).sort((a, b) => b.wr - a.wr).slice(0, 5);
-    if (forgotten.length === 0) return '';
-    let html = '<div class="oracle-block"><div class="oracle-block-title">🕯️ Забытые герои</div>';
-    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Герои, которых ты оставил, но они были хороши</div>';
-    forgotten.forEach(h => {
-        const wrColor = h.wr >= 0.6 ? 'var(--gold)' : h.wr >= 0.5 ? 'var(--green)' : 'var(--sub)';
-        html += `<div class="archive-hero"><div class="hero-info"><span>${h.emoji}</span> <span>${h.name}</span></div><div><span style="color:${wrColor};font-weight:700;">${(h.wr * 100).toFixed(0)}%</span> <span style="color:var(--muted);font-size:0.7rem;">(${h.wins}-${h.losses}) · S${h.season}</span></div></div>`;
-    });
-    html += `<div style="margin-top:12px;text-align:center;font-size:0.8rem;color:var(--sub);font-style:italic;">Может, стоит <strong style="color:var(--purple);">вернуть одного из них</strong>?</div>`;
-    html += '</div>';
-    return html;
-}
-
-function renderRivalries(rivals) {
-    if (!rivals || rivals.length === 0) return '';
-    let html = '<div class="oracle-block"><div class="oracle-block-title">🤝 Хроника противостояний</div>';
-    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Те, с кем ты делил арену чаще всего</div>';
-    rivals.forEach(r => {
-        const wr = r.wins + r.losses > 0 ? r.wins / (r.wins + r.losses) : 0;
-        const wrColor = wr >= 0.55 ? 'var(--gold)' : wr >= 0.45 ? 'var(--green)' : 'var(--red)';
-        html += `<div class="archive-hero"><div class="hero-info"><span>${r.emoji}</span> <span>${r.display}</span></div><div><span style="color:${wrColor};font-weight:700;">${(wr * 100).toFixed(0)}%</span> <span style="color:var(--muted);font-size:0.7rem;">${r.seasons} сез. вместе</span></div></div>`;
-    });
-    html += '</div>';
-    return html;
-}
-
+// --- 6.22 Эхо сезонов ---
 function renderSeasonEcho(history) {
     if (history.length < 3) return '';
     const echoes = [];
@@ -1468,7 +1487,46 @@ function renderSeasonEcho(history) {
     return html;
 }
 
-// ============ ГЛАВНАЯ ============
+// --- 6.23 История фракций ---
+function renderFactionHistory(history) {
+    if (history.length < 2) return '';
+    const hasBoth = history.some(h => h.faction === 'Орден Света') && history.some(h => h.faction === 'Культ Тьмы');
+    if (!hasBoth) return '';
+    let html = '<div class="oracle-block"><div class="oracle-block-title">⚔️ История фракций</div>';
+    history.forEach(h => {
+        if (!h.faction) return;
+        const isLight = h.faction === 'Орден Света';
+        const icon = isLight ? '🌝' : '🌚';
+        const color = isLight ? 'var(--gold)' : 'var(--purple)';
+        html += `<div class="archive-hero" style="border-left-color:${color};">
+            <div class="hero-info"><span>${icon}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${h.faction}</span></div>
+            <div><span style="color:${color};font-weight:700;">${h.factionWins || 0} ⚔️</span> <span style="color:var(--muted);font-size:0.72rem;">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span></div>
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+// --- 6.24 Лучшие сезоны ---
+function renderArchiveBest(history) {
+    if (history.length < 3) return '';
+    const top = [...history].filter(h => h.total >= MIN_FIGHTS_FOR_RECORD).sort((a, b) => b.wr - a.wr).slice(0, 5);
+    if (top.length === 0) return '';
+    const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+    let html = '<div class="oracle-block green"><div class="oracle-block-title">🏆 Лучшие сезоны по WR</div>';
+    top.forEach((h, i) => {
+        html += `<div class="archive-hero" style="border-left-color:${i === 0 ? 'var(--gold)' : i === 1 ? 'var(--silver)' : i === 2 ? 'var(--bronze)' : 'var(--border)'};">
+            <div class="hero-info"><span>${medals[i]}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${h.emoji} ${h.name || ''}</span></div>
+            <div><span style="color:${wrColor(h.wr)};font-weight:800;">${(h.wr * 100).toFixed(1)}%</span> <span style="color:var(--muted);font-size:0.72rem;">(${h.wins}-${h.losses})</span></div>
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+/* ============================================================================
+   СЕКЦИЯ 7. ГЛАВНАЯ — оркестратор
+   ========================================================================= */
 async function analyzePlayer() {
     const nickname = document.getElementById('oracleSearch').value.trim();
     const result = document.getElementById('oracleResult');
@@ -1485,49 +1543,75 @@ async function analyzePlayer() {
         const heroAnalysis = analyzeHeroArchive(nickname, seasons);
         const dungeon = analyzeDungeon(nickname, seasons);
         const leaguePlace = getLeaguePlace(nickname, seasons);
-        const seasonAnalysis = analyzeSeasons(history);
         const factions = analyzeFactions(history);
         const metaBySeason = analyzeMeta(seasons);
         const legendSeason = findLegendSeason(history);
         const peakForm = findPeakForm(history);
         const swings = findSwings(history);
         const pace = findPace(history);
-        const records = findPersonalRecords(history);
         const top10Compare = compareWithTop10(nickname, seasons);
-        const predictions = predictMilestones(history);
         const forecast = buildForecast(trend, leaguePlace);
         const narrative = generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace);
         const forecastText = generateForecastText(forecast, trend);
         const advice = generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history);
         const memes = generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace);
-        const rivals = analyzeRivalries(nickname, seasons);
 
         let html = '';
         html += renderPlayerInfo(last);
-        html += renderHistory(history);
+        html += renderTabs();
+
+        // 👤 ОБЗОР — краткая история + нарратив
+        html += '<div id="oracle-tab-overview" class="oracle-tab-content active">';
+        html += renderHistory(history, 5);
         html += renderVoice(narrative);
+        html += '</div>';
+
+        // 📊 АНАЛИЗ — мемы, график, тренды, свинги, темп, рекорды, легенда, пик, топ-10
+        html += '<div id="oracle-tab-analysis" class="oracle-tab-content">';
         html += renderMemeAnalysis(memes);
         html += renderChart(history);
         html += renderTrends(trend);
-        html += renderSeasonHighlights(seasonAnalysis);
-        html += renderLegendSeason(legendSeason);
-        html += renderPeakForm(peakForm);
         html += renderSwings(swings);
         html += renderPace(pace);
-        html += renderPersonalRecords(records);
+        html += renderRecords(history);
+        html += renderLegendSeason(legendSeason);
+        html += renderPeakForm(peakForm);
         html += renderCompareTop10(top10Compare);
+        html += '</div>';
+
+        // 📊 МЕТА — только мета
+        html += '<div id="oracle-tab-meta" class="oracle-tab-content">';
         html += renderMeta(metaBySeason, history);
-        html += renderForecast(forecast);
-        html += renderPredictions(predictions);
+        html += '</div>';
+
+        // ⚔️ СТИЛЬ — герои, стиль, фракции
+        html += '<div id="oracle-tab-style" class="oracle-tab-content">';
         html += renderHeroArchive(heroAnalysis);
-        html += renderForgottenHeroes(heroAnalysis, last.name);
         html += renderStyle(heroAnalysis, metaBySeason, history);
         html += renderFactions(factions, history);
+        html += '</div>';
+
+        // 🏔 ДАНЖ
+        html += '<div id="oracle-tab-dungeon" class="oracle-tab-content">';
         html += renderDungeon(dungeon);
+        html += '</div>';
+
+        // 📜 АРХИВ — лучшие сезоны, полная история, фракции, эхо, забытые герои
+        html += '<div id="oracle-tab-archive" class="oracle-tab-content">';
+        html += renderArchiveBest(history);
+        html += renderFullHistory(history);
+        html += renderFactionHistory(history);
         html += renderSeasonEcho(history);
+        html += renderForgottenHeroes(heroAnalysis, last.name);
+        html += '</div>';
+
+        // 🔮 ПРОРОЧЕСТВА
+        html += '<div id="oracle-tab-oracle" class="oracle-tab-content">';
         html += renderProphecies(history, trend, heroAnalysis, leaguePlace, dungeon);
         html += `<div class="oracle-block gold"><div class="oracle-block-title">🖋️ Слово Повествовательницы</div>${forecastText.map(l => `<div class="oracle-voice">${l}</div>`).join('')}</div>`;
         html += renderAdvice(advice);
+        html += '</div>';
+
         result.innerHTML = html;
     } catch (e) {
         console.error(e);
@@ -1535,9 +1619,96 @@ async function analyzePlayer() {
     }
 }
 
+/* ============================================================================
+   СЕКЦИЯ 8. UI — тема, навигация, поиск, прогресс
+   ========================================================================= */
+function toggleTheme() {
+    const h = document.documentElement;
+    const n = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    h.setAttribute('data-theme', n);
+    localStorage.setItem('eternis-theme', n);
+}
+(function() { const s = localStorage.getItem('eternis-theme'); if (s) document.documentElement.setAttribute('data-theme', s); })();
+
+function toggleNav() {
+    const nav = document.getElementById('pageNav');
+    const btn = document.querySelector('.nav-toggle');
+    nav.classList.toggle('show');
+    btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+}
+document.querySelectorAll('.nav-link').forEach(l => { l.addEventListener('click', () => { document.getElementById('pageNav').classList.remove('show'); document.querySelector('.nav-toggle').textContent = '☰ Меню'; }); });
+document.querySelectorAll('.nav-label').forEach(label => {
+    label.addEventListener('click', function(e) {
+        if (window.innerWidth > 768) return;
+        e.preventDefault();
+        const dd = this.nextElementSibling;
+        if (dd && dd.classList.contains('nav-dropdown')) {
+            const isOpen = dd.style.display === 'block';
+            document.querySelectorAll('.nav-dropdown').forEach(d => d.style.display = 'none');
+            dd.style.display = isOpen ? 'none' : 'block';
+        }
+    });
+});
+
+// --- Поиск ---
+let allSeasonsCache = null;
+let allPlayersCache = null;
+let autocompleteIndex = -1;
+let autocompleteTimer = null;
+
+const searchInput = document.getElementById('oracleSearch');
+const autocompleteList = document.getElementById('autocompleteList');
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(autocompleteTimer);
+    const query = this.value.trim().toLowerCase();
+    if (query.length < 1) { autocompleteList.classList.remove('show'); return; }
+    autocompleteTimer = setTimeout(() => {
+        if (!allPlayersCache || allPlayersCache.length === 0) { autocompleteList.innerHTML = '<div class="autocomplete-empty">⏳ Загрузка базы игроков...</div>'; autocompleteList.classList.add('show'); return; }
+        const matches = allPlayersCache.filter(p => p.display.toLowerCase().includes(query)).slice(0, 10);
+        if (matches.length === 0) { autocompleteList.innerHTML = '<div class="autocomplete-empty">Никого не найдено</div>'; autocompleteList.classList.add('show'); return; }
+        autocompleteList.innerHTML = matches.map(p => {
+            const idx = p.display.toLowerCase().indexOf(query);
+            const before = p.display.slice(0, idx);
+            const match = p.display.slice(idx, idx + query.length);
+            const after = p.display.slice(idx + query.length);
+            return `<div class="autocomplete-item" data-name="${p.display}"><span class="ac-emoji">${p.emoji}</span><span class="ac-name">${before}<strong>${match}</strong>${after}</span><span class="ac-class">${p.name}</span></div>`;
+        }).join('');
+        autocompleteList.classList.add('show');
+        autocompleteIndex = -1;
+        document.querySelectorAll('.autocomplete-item').forEach(item => {
+            item.addEventListener('click', () => { searchInput.value = item.dataset.name; autocompleteList.classList.remove('show'); analyzePlayer(); });
+        });
+    }, 50);
+});
+
+searchInput.addEventListener('keydown', function(e) {
+    const items = autocompleteList.querySelectorAll('.autocomplete-item');
+    if (e.key === 'ArrowDown') { e.preventDefault(); autocompleteIndex = Math.min(autocompleteIndex + 1, items.length - 1); items.forEach((it, i) => it.classList.toggle('active', i === autocompleteIndex)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); autocompleteIndex = Math.max(autocompleteIndex - 1, -1); items.forEach((it, i) => it.classList.toggle('active', i === autocompleteIndex)); }
+    else if (e.key === 'Enter') { if (autocompleteIndex >= 0 && items[autocompleteIndex]) { e.preventDefault(); searchInput.value = items[autocompleteIndex].dataset.name; autocompleteList.classList.remove('show'); analyzePlayer(); } else { autocompleteList.classList.remove('show'); analyzePlayer(); } }
+    else if (e.key === 'Escape') autocompleteList.classList.remove('show');
+});
+
+document.addEventListener('click', function(e) { if (!e.target.closest('.search-row')) autocompleteList.classList.remove('show'); });
+
+// --- Прогресс и scroll-top ---
+(function() {
+    const pb = document.getElementById('readingProgress'), st = document.getElementById('scrollTop');
+    if (!pb || !st) return;
+    window.addEventListener('scroll', () => {
+        const s = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight;
+        pb.style.transform = `scaleX(${dh > 0 ? s / dh : 0})`;
+        if (s > 300) st.classList.add('visible'); else st.classList.remove('visible');
+    });
+})();
+
+/* ============================================================================
+   СЕКЦИЯ 9. ПРЕДЗАГРУЗКА
+   ========================================================================= */
 (async function preload() {
     try {
-        const cached = JSON.parse(localStorage.getItem('eternis-oracle-players') || 'null');
+        const cached = JSON.parse(localStorage.getItem(PLAYERS_CACHE_KEY) || 'null');
         if (cached && cached.length > 0) {
             allPlayersCache = cached;
             console.log('Повествовательница: игроки из кеша —', cached.length);
@@ -1561,7 +1732,7 @@ async function analyzePlayer() {
     loadAllSeasons().then(seasons => {
         allSeasonsCache = seasons;
         allPlayersCache = getAllPlayers(seasons);
-        try { localStorage.setItem('eternis-oracle-players', JSON.stringify(allPlayersCache)); } catch (e) {}
+        try { localStorage.setItem(PLAYERS_CACHE_KEY, JSON.stringify(allPlayersCache)); } catch (e) {}
         console.log('Повествовательница: полная загрузка —', allPlayersCache.length);
     }).catch(e => console.error('Фон:', e));
     const params = new URLSearchParams(window.location.search);
@@ -1570,16 +1741,6 @@ async function analyzePlayer() {
         document.getElementById('oracleSearch').value = name;
         setTimeout(() => analyzePlayer(), 500);
     }
-})();
-
-(function() {
-    const pb = document.getElementById('readingProgress'), st = document.getElementById('scrollTop');
-    if (!pb || !st) return;
-    window.addEventListener('scroll', () => {
-        const s = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight;
-        pb.style.transform = `scaleX(${dh > 0 ? s / dh : 0})`;
-        if (s > 300) st.classList.add('visible'); else st.classList.remove('visible');
-    });
 })();
 </script>
 </body>
