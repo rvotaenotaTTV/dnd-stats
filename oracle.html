@@ -186,8 +186,9 @@ body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    justify-content: center;
-    max-width: fit-content;
+    justify-content: flex-start;
+    max-width: 100%;
+    width: fit-content;
 }
 .oracle-tabs::-webkit-scrollbar { display: none; }
 .oracle-tab {
@@ -1822,7 +1823,7 @@ function renderTrends(trend) {
     </div></div>`;
 }
 
-// --- 6.5 Рекорды (слитый блок: SeasonHighlights + PersonalRecords) ---
+// --- 6.5 Рекорды (10 карточек) ---
 function renderRecords(history) {
     if (history.length === 0) return '';
     const sa = analyzeSeasons(history);
@@ -1838,26 +1839,59 @@ function renderRecords(history) {
     html += `<div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший стрик</div><div class="season-value">${rec.worstStreak.worst}</div><div class="season-detail">S${rec.worstStreak.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">👑</div><div class="season-title">Макс. уровень</div><div class="season-value">${rec.maxLevel.level}</div><div class="season-detail">S${rec.maxLevel.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">💎</div><div class="season-title">Макс. осколков</div><div class="season-value">${rec.maxShards.shards}</div><div class="season-detail">S${rec.maxShards.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Макс. фракц. побед</div><div class="season-value">${rec.maxFactionWins.factionWins || 0}</div><div class="season-detail">S${rec.maxFactionWins.season || '—'}</div></div>`;
     html += '</div></div>';
     return html;
 }
 
-// --- 6.6 Сезон-легенда (без WR — он в рекордах) ---
+// --- 6.6 Сезон-легенда (с разбивкой по компонентам) ---
 function renderLegendSeason(legend) {
     if (!legend) return '';
-    return `<div class="oracle-block gold"><div class="oracle-block-title">🏆 Сезон-легенда</div>
-        <div class="season-card" style="margin-bottom:12px;border-color:rgba(240,185,11,0.5);box-shadow:0 0 24px rgba(240,185,11,0.15);">
-            <div class="season-icon">👑</div>
-            <div class="season-title">Лучший интегральный сезон</div>
-            <div class="season-value">S${legend.season}</div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;">
-            <div class="season-card"><div class="season-title">🏆 Турниры</div><div class="season-value" style="font-size:0.95rem;">${legend.tournamentWins || 0}</div></div>
-            <div class="season-card"><div class="season-title">⚔️ Фракция</div><div class="season-value" style="font-size:0.95rem;">${legend.factionWins || 0}</div></div>
-            <div class="season-card"><div class="season-title">📈 Уровень</div><div class="season-value" style="font-size:0.95rem;">${legend.level}</div></div>
-        </div>
-        <div style="margin-top:12px;text-align:center;font-size:0.8rem;color:var(--sub);">Оценка: <strong style="color:var(--gold);">${legend.score}</strong> / 100</div>
+
+    const wrScore = legend.wr * 40;
+    const tourScore = Math.min(30, (legend.tournamentWins || 0) * 5);
+    const levelScore = Math.min(20, (legend.level || 0) / 10);
+    const factionScore = Math.min(10, (legend.factionWins || 0) / 20);
+
+    const components = [
+        { icon: '📊', name: 'Винрейт',   value: wrScore,      max: 40, detail: `${(legend.wr * 100).toFixed(1)}%`,  color: 'var(--gold)' },
+        { icon: '🏆', name: 'Турниры',   value: tourScore,    max: 30, detail: `${legend.tournamentWins || 0} побед`, color: 'var(--purple)' },
+        { icon: '📈', name: 'Уровень',   value: levelScore,   max: 20, detail: `${legend.level} ур.`,                color: 'var(--green)' },
+        { icon: '⚔️', name: 'Фракция',   value: factionScore, max: 10, detail: `${legend.factionWins || 0} побед`,   color: 'var(--ice)' }
+    ];
+
+    let html = '<div class="oracle-block gold"><div class="oracle-block-title">🏆 Сезон-легенда</div>';
+
+    // Заголовок
+    html += `<div class="season-card" style="margin-bottom:14px;border-color:rgba(240,185,11,0.5);box-shadow:0 0 24px rgba(240,185,11,0.15);">
+        <div class="season-icon">👑</div>
+        <div class="season-title">Лучший интегральный сезон</div>
+        <div class="season-value">S${legend.season}</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">Оценка: <strong style="color:var(--gold);">${legend.score}</strong> / 100</div>
     </div>`;
+
+    // Разбивка по компонентам
+    html += '<div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">📊 Разбивка оценки</div>';
+
+    components.forEach(c => {
+        const percent = c.max > 0 ? (c.value / c.max) * 100 : 0;
+        html += `<div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:6px;border-left:3px solid ${c.color};">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:0.82rem;color:var(--text);font-weight:600;">${c.icon} ${c.name}</span>
+                <span style="font-size:0.78rem;color:${c.color};font-weight:700;">${c.value.toFixed(1)} / ${c.max}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-bottom:6px;">
+                <span>${c.detail}</span>
+                <span>${percent.toFixed(0)}%</span>
+            </div>
+            <div style="background:var(--bg);height:4px;border-radius:2px;overflow:hidden;">
+                <div style="width:${percent}%;height:4px;background:${c.color};border-radius:2px;"></div>
+            </div>
+        </div>`;
+    });
+
+    html += '</div>';
+    return html;
 }
 
 // --- 6.7 Пик формы ---
@@ -2086,8 +2120,7 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
 // --- 6.14 Фракции ---
 function renderFactions(factions, history) {
     if (!factions || (factions.light.count === 0 && factions.dark.count === 0)) return '';
-    const totalFactionWins = history.reduce((s, h) => s + (h.factionWins || 0), 0);
-    let html = `<div class="oracle-block"><div class="oracle-block-title">⚔️ Фракции · всего ${totalFactionWins} побед</div>`;
+    let html = `<div class="oracle-block"><div class="oracle-block-title">⚔️ Фракции</div>`;
     if (factions.light.count > 0) {
         html += `<div class="style-row"><div class="style-name"><span>🌝</span> Орден Света</div><div class="style-val">${factions.light.count} сез. · ⚔️ ${factions.light.factionWins} · <span style="color:${wrColor(factions.light.wr)};">${(factions.light.wr * 100).toFixed(1)}%</span></div></div>`;
     }
@@ -2287,7 +2320,13 @@ function renderSeasonEcho(history) {
         if (last.wr > first.wr + 0.1) echoes.push(`📖 <strong>С S${first.season} по S${last.season}</strong>: ты вырос с ${(first.wr * 100).toFixed(0)}% до ${(last.wr * 100).toFixed(0)}%. <strong>Это путь воина</strong>.`);
         else if (last.wr < first.wr - 0.1) echoes.push(`📖 <strong>С S${first.season} по S${last.season}</strong>: ты упал с ${(first.wr * 100).toFixed(0)}% до ${(last.wr * 100).toFixed(0)}%. <strong>Вернись к истокам</strong>.`);
     }
-    if (echoes.length === 0) return '';
+    if (echoes.length === 0) {
+        if (history.length >= 3) {
+            echoes.push(`📖 Ты идёшь <strong>ровно</strong>. Ни взлётов, ни падений — редкий случай. Или скучный. Решать тебе.`);
+        } else {
+            return '';
+        }
+    }
     let html = '<div class="oracle-block"><div class="oracle-block-title">📖 Эхо прошлых сезонов</div>';
     echoes.forEach(e => html += `<div class="oracle-voice" style="border-left-color: var(--ice);">${e}</div>`);
     html += '</div>';
@@ -2297,8 +2336,10 @@ function renderSeasonEcho(history) {
 // --- 6.23 История фракций ---
 function renderFactionHistory(history) {
     if (history.length < 2) return '';
-    const hasBoth = history.some(h => h.faction === 'Орден Света') && history.some(h => h.faction === 'Культ Тьмы');
-    if (!hasBoth) return '';
+    const hasLight = history.some(h => h.faction === 'Орден Света');
+    const hasDark = history.some(h => h.faction === 'Культ Тьмы');
+    if (!hasLight && !hasDark) return '';
+
     let html = '<div class="oracle-block"><div class="oracle-block-title">⚔️ История фракций</div>';
     history.forEach(h => {
         if (!h.faction) return;
@@ -2310,6 +2351,14 @@ function renderFactionHistory(history) {
             <div><span style="color:${color};font-weight:700;">${h.factionWins || 0} ⚔️</span> <span style="color:var(--muted);font-size:0.72rem;">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span></div>
         </div>`;
     });
+
+    // Если только одна фракция — подпись
+    if (!hasLight || !hasDark) {
+        html += `<div style="text-align:center;font-size:0.75rem;color:var(--muted);margin-top:8px;font-style:italic;">
+            Все сезоны — за <strong>${hasLight ? 'Орден Света' : 'Культ Тьмы'}</strong>
+        </div>`;
+    }
+
     html += '</div>';
     return html;
 }
