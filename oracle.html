@@ -95,7 +95,7 @@
     .meta-rank.r1 { background: var(--gold); color: #000; }
     .meta-rank.r2 { background: var(--silver); color: #000; }
     .meta-rank.r3 { background: var(--bronze); color: #fff; }
-    .meta-rank.r4, .meta-rank.r5 { background: var(--elevated); color: var(--muted); border: 1px solid var(--border); }
+    .meta-rank.r4, .meta-rank.r5, .meta-rank.r-out { background: var(--elevated); color: var(--muted); border: 1px solid var(--border); }
 
     .meme-block { background: linear-gradient(135deg, rgba(236,72,153,0.12), rgba(163,113,247,0.06)); border: 1px solid rgba(236,72,153,0.3); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; }
     .meme-block-title { color: #ec4899; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
@@ -1180,22 +1180,69 @@ function renderCompareTop10(cmp) {
 
 function renderMeta(metaBySeason, history) {
     if (!metaBySeason.length) return '';
+
+    // Хелпер: строчка класса
+    const rowHtml = (c, rank, isMine) => {
+        const rankClass = rank <= 3 ? `r${rank}` : (rank <= 5 ? `r${rank}` : 'r-out');
+        const mineStyle = isMine ? 'background:rgba(240,185,11,0.12);margin:0 -6px;padding:4px 6px;border-radius:4px;border-left:3px solid var(--gold);' : '';
+        const nameColor = isMine ? 'color:var(--gold);font-weight:800;' : 'color:var(--text);';
+        return `<div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:4px 0;${mineStyle}">
+            <span><span class="meta-rank ${rankClass}">${rank}</span><span style="${nameColor}">${c.name}</span>${isMine ? ' <span style="color:var(--gold);font-size:0.7rem;">← твой</span>' : ''}</span>
+            <span style="color:var(--gold);font-weight:700;">${(c.wr * 100).toFixed(1)}% · ${c.total}</span>
+        </div>`;
+    };
+
     let html = '<div class="oracle-block ice"><div class="oracle-block-title">📊 Мета по сезонам</div>';
     html += `<div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;">Топ-${META_TOP} класса каждого сезона (по WR, ${META_MIN_FIGHTS}+ боёв)</div>`;
+
     metaBySeason.forEach(m => {
         if (m.topClasses.length === 0) return;
         const myClassInThisSeason = history.find(h => h.season === m.season)?.name?.split('-')[1] || null;
         const myClassWasInMeta = myClassInThisSeason ? isInMeta(myClassInThisSeason, metaBySeason, m.season) : false;
+
+        // Индекс моего класса в полном рейтинге
+        const myRank = myClassInThisSeason
+            ? m.allClasses.findIndex(c => c.name === myClassInThisSeason) + 1
+            : 0;
+        const myClassObj = myClassInThisSeason
+            ? m.allClasses.find(c => c.name === myClassInThisSeason)
+            : null;
+
+        // Заголовок сезона
+        const posText = myRank > 0 ? ` · 📍 ${myRank} из ${m.allClasses.length}` : '';
+        const statusText = myClassInThisSeason
+            ? (myClassWasInMeta ? ' 🎯 в мете' : ' ⚔️ вне меты')
+            : '';
         html += `<div style="margin-bottom:12px;padding:12px 14px;background:linear-gradient(90deg,rgba(163,113,247,0.06),transparent);border-radius:var(--radius-sm);${myClassWasInMeta ? 'border-left:3px solid var(--gold);' : ''}">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:4px;">
                 <div style="font-size:0.78rem;color:var(--purple);font-weight:800;">S${m.season}${m.isCurrent ? ' ⚡' : ''}</div>
-                ${myClassInThisSeason ? `<div style="font-size:0.68rem;color:var(--muted);">твой класс: <strong style="color:${myClassWasInMeta ? 'var(--gold)' : 'var(--text)'};">${myClassInThisSeason}${myClassWasInMeta ? ' 🎯 в мете' : ' ⚔️ вне меты'}</strong></div>` : ''}
-            </div>
-            ${m.topClasses.map((c, i) => `<div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:4px 0;${c.name === myClassInThisSeason ? 'background:rgba(240,185,11,0.08);margin:0 -6px;padding:4px 6px;border-radius:4px;' : ''}">
-                <span><span class="meta-rank r${i+1}">${i+1}</span>${c.name}</span>
-                <span style="color:var(--gold);font-weight:700;">${(c.wr * 100).toFixed(1)}% · ${c.total}</span>
-            </div>`).join('')}
-        </div>`;
+                ${myClassInThisSeason ? `<div style="font-size:0.68rem;color:var(--muted);">твой класс: <strong style="color:${myClassWasInMeta ? 'var(--gold)' : 'var(--text)'};">${myClassInThisSeason}${posText}${statusText}</strong></div>` : ''}
+            </div>`;
+
+        // Топ-5
+        m.topClasses.forEach((c, i) => {
+            html += rowHtml(c, i + 1, c.name === myClassInThisSeason);
+        });
+
+        // Если мой класс вне топ-5 — добавляем соседей
+        if (myClassObj && !myClassWasInMeta && myRank > META_TOP) {
+            html += `<div style="text-align:center;color:var(--muted);font-size:0.75rem;padding:4px 0;letter-spacing:2px;">···</div>`;
+
+            // Сосед выше
+            if (myRank - 2 >= META_TOP) {
+                const above = m.allClasses[myRank - 2];
+                html += rowHtml(above, myRank - 1, false);
+            }
+            // Мой класс
+            html += rowHtml(myClassObj, myRank, true);
+            // Сосед ниже
+            if (myRank < m.allClasses.length) {
+                const below = m.allClasses[myRank];
+                html += rowHtml(below, myRank + 1, false);
+            }
+        }
+
+        html += '</div>';
     });
     html += '</div>';
     return html;
