@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Арена Этерниса — Повествовательница</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<style>
+    body {
+        background-image:
+            radial-gradient(ellipse at 20% 0%, rgba(163,113,247,0.10) 0%, transparent 45%),
+            radial-gradient(ellipse at 80% 100%, rgba(163,113,247,0.08) 0%, transparent 45%);
+    }
+    .container { position: relative; }
+    .header-title {
+        background: linear-gradient(135deg, var(--purple) 0%, #c4a5ff 30%, var(--gold) 70%, var(--purple) 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
+    .search-row { max-width: 620px; margin: 0 auto 28px; position: relative; }
+    .search-input-wrap { display: flex; gap: 10px; }
+    .search-input { flex: 1; padding: 15px 22px; background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.03)); border: 1px solid rgba(163,113,247,0.3); border-radius: 26px; color: var(--text); font-size: 0.95rem; font-family: inherit; transition: 0.25s; width: 100%; }
+    .search-input:focus { outline: none; border-color: var(--purple); background: linear-gradient(135deg, rgba(163,113,247,0.12), rgba(163,113,247,0.05)); box-shadow: 0 0 0 4px rgba(163,113,247,0.15), 0 0 24px rgba(163,113,247,0.2); }
+    .search-input::placeholder { color: var(--muted); }
+    .search-btn { padding: 15px 26px; background: linear-gradient(135deg, var(--purple), #8b5cf6, #a371f7); background-size: 200% auto; border: none; border-radius: 26px; color: #fff; font-weight: 700; font-size: 0.9rem; font-family: inherit; cursor: pointer; transition: 0.25s; white-space: nowrap; box-shadow: 0 4px 16px rgba(163,113,247,0.3); }
+    .search-btn:hover { transform: translateY(-2px); background-position: right center; box-shadow: 0 8px 28px rgba(163,113,247,0.5); }
+    .autocomplete-list { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: linear-gradient(180deg, var(--card), rgba(163,113,247,0.04)); border: 1px solid rgba(163,113,247,0.3); border-radius: 14px; max-height: 340px; overflow-y: auto; z-index: 50; box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(163,113,247,0.15); display: none; }
+    .autocomplete-list.show { display: block; animation: fadeSlideIn 0.2s ease; }
+    .autocomplete-item { padding: 12px 18px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 12px; transition: 0.15s; border-bottom: 1px solid rgba(163,113,247,0.08); }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover, .autocomplete-item.active { background: linear-gradient(90deg, rgba(163,113,247,0.18), rgba(163,113,247,0.05)); border-left: 3px solid var(--purple); padding-left: 15px; }
+    .autocomplete-item .ac-emoji { font-size: 1.3rem; }
+    .autocomplete-item .ac-name { color: var(--text); flex: 1; font-weight: 500; }
+    .autocomplete-item .ac-name strong { color: var(--purple); font-weight: 800; }
+    .autocomplete-item .ac-class { color: var(--muted); font-size: 0.72rem; }
+    .autocomplete-empty { padding: 18px; color: var(--muted); font-size: 0.85rem; text-align: center; }
+
+    .player-header { background: linear-gradient(135deg, rgba(163,113,247,0.16), rgba(163,113,247,0.06)); border: 1px solid rgba(163,113,247,0.35); border-radius: var(--radius); padding: 26px 20px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 0 40px rgba(163,113,247,0.1); }
+    .player-header::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--purple), #c4a5ff, var(--purple), transparent); animation: shimmer 3s linear infinite; background-size: 200% auto; }
+    .player-emoji { font-size: 3rem; margin-bottom: 4px; filter: drop-shadow(0 0 16px rgba(163,113,247,0.5)); }
+    .player-name { font-size: 1.6rem; font-weight: 900; color: var(--gold); margin-bottom: 4px; text-shadow: 0 0 20px rgba(240,185,11,0.3); }
+    .player-class { color: var(--sub); font-size: 0.9rem; }
+    .player-faction { display: inline-block; margin-top: 10px; padding: 5px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; background: var(--elevated); border: 1px solid var(--border); }
+    .player-faction.light { color: var(--gold); border-color: rgba(240,185,11,0.4); }
+    .player-faction.dark { color: var(--purple); border-color: rgba(163,113,247,0.4); }
+
+    .oracle-block { background: linear-gradient(180deg, var(--card), rgba(163,113,247,0.03)); border: 1px solid rgba(163,113,247,0.2); border-radius: var(--radius); padding: 20px 18px; margin-bottom: 16px; position: relative; overflow: hidden; animation: fadeSlideIn 0.4s ease; }
+    .oracle-block::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--purple), transparent); opacity: 0.6; }
+    .oracle-block.gold::after { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+    .oracle-block.gold { background: linear-gradient(180deg, var(--card), rgba(240,185,11,0.03)); border-color: rgba(240,185,11,0.2); }
+    .oracle-block.ice::after { background: linear-gradient(90deg, transparent, var(--ice), transparent); }
+    .oracle-block.ice { border-color: rgba(91,192,235,0.2); }
+    .oracle-block.green::after { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+    .oracle-block.green { border-color: rgba(16,185,129,0.2); }
+    .oracle-block.pink::after { background: linear-gradient(90deg, transparent, #ec4899, transparent); }
+    .oracle-block.pink { border-color: rgba(236,72,153,0.2); }
+    .oracle-block-title { font-size: 0.95rem; font-weight: 800; color: var(--purple); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .oracle-block.gold .oracle-block-title { color: var(--gold); }
+    .oracle-block.ice .oracle-block-title { color: var(--ice); }
+    .oracle-block.green .oracle-block-title { color: var(--green); }
+    .oracle-block.pink .oracle-block-title { color: #ec4899; }
+
+    .oracle-voice { background: linear-gradient(90deg, rgba(163,113,247,0.10), rgba(163,113,247,0.03)); border-left: 3px solid var(--purple); border-radius: 0 12px 12px 0; padding: 14px 18px; margin-bottom: 12px; font-size: 0.9rem; line-height: 1.7; color: var(--text); font-style: italic; }
+    .oracle-voice:last-child { margin-bottom: 0; }
+    .oracle-voice strong { color: var(--gold); font-style: normal; font-weight: 700; }
+    .oracle-voice .accent { color: #c4a5ff; font-weight: 700; font-style: normal; }
+    .oracle-voice .meme { color: #ec4899; font-weight: 700; }
+
+    .history-table { width: 100%; font-size: 0.78rem; border-collapse: collapse; }
+    .history-table th { background: linear-gradient(180deg, var(--elevated), rgba(163,113,247,0.05)); color: var(--purple); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; padding: 8px 6px; text-align: left; font-weight: 700; }
+    .history-table td { padding: 8px 6px; border-bottom: 1px solid rgba(163,113,247,0.08); }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr.current td { background: rgba(163,113,247,0.08); font-weight: 600; }
+    .history-table tr.champion-row td { background: rgba(240,185,11,0.06); }
+    .history-table .season-num { color: var(--purple); font-weight: 800; }
+    .history-table .wr-cell { font-weight: 700; }
+    .history-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .trend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+    .trend-item { background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.02)); border-radius: var(--radius-sm); padding: 14px 12px; text-align: center; border: 1px solid rgba(163,113,247,0.2); }
+    .trend-icon { font-size: 1.5rem; margin-bottom: 4px; }
+    .trend-value { font-size: 1.2rem; font-weight: 800; color: var(--gold); }
+    .trend-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+    .season-highlight { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+    .season-card { background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.02)); border-radius: var(--radius-sm); padding: 14px 10px; text-align: center; border: 1px solid rgba(163,113,247,0.2); }
+    .season-card .season-icon { font-size: 1.6rem; margin-bottom: 4px; }
+    .season-card .season-title { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .season-card .season-value { font-size: 1.1rem; font-weight: 800; color: var(--gold); margin: 4px 0; }
+    .season-card .season-detail { font-size: 0.7rem; color: var(--sub); }
+
+    .meta-table { width: 100%; font-size: 0.78rem; border-collapse: collapse; }
+    .meta-table th { background: linear-gradient(180deg, var(--elevated), rgba(163,113,247,0.05)); color: var(--purple); font-size: 0.6rem; text-transform: uppercase; padding: 6px 8px; text-align: left; }
+    .meta-table td { padding: 8px; border-bottom: 1px solid rgba(163,113,247,0.08); }
+    .meta-rank { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; font-size: 0.65rem; font-weight: 800; margin-right: 6px; }
+    .meta-rank.r1 { background: var(--gold); color: #000; }
+    .meta-rank.r2 { background: var(--silver); color: #000; }
+    .meta-rank.r3 { background: var(--bronze); color: #fff; }
+
+    .meme-block { background: linear-gradient(135deg, rgba(236,72,153,0.12), rgba(163,113,247,0.06)); border: 1px solid rgba(236,72,153,0.3); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; }
+    .meme-block-title { color: #ec4899; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+    .meme-line { font-size: 0.9rem; line-height: 1.7; margin-bottom: 8px; color: var(--text); }
+    .meme-line:last-child { margin-bottom: 0; }
+    .meme-line strong { color: #ec4899; }
+    .meme-line .hl { color: var(--gold); font-weight: 700; }
+
+    .archive-hero { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: linear-gradient(90deg, rgba(163,113,247,0.05), transparent); border-radius: var(--radius-sm); margin-bottom: 6px; font-size: 0.85rem; border-left: 3px solid rgba(163,113,247,0.3); }
+    .archive-hero.current { border-left-color: var(--gold); background: linear-gradient(90deg, rgba(240,185,11,0.1), transparent); }
+    .archive-hero.best { border-left-color: var(--green); }
+    .archive-hero .hero-info { display: flex; align-items: center; gap: 8px; }
+    .archive-hero .hero-wr { font-weight: 700; }
+
+    .style-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: linear-gradient(90deg, rgba(163,113,247,0.05), transparent); border-radius: var(--radius-sm); margin-bottom: 6px; font-size: 0.85rem; }
+    .style-row.best { border-left: 3px solid var(--green); }
+    .style-row .style-name { display: flex; align-items: center; gap: 8px; }
+    .style-row .style-val { color: var(--gold); font-weight: 700; }
+
+    .compare-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
+    .compare-label { min-width: 100px; color: var(--muted); font-size: 0.8rem; }
+    .compare-bar-wrap { flex: 1; height: 22px; background: rgba(163,113,247,0.08); border-radius: 11px; overflow: hidden; position: relative; }
+    .compare-bar { height: 100%; border-radius: 11px; transition: width 0.6s; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 0.7rem; font-weight: 700; }
+    .compare-bar.you { background: linear-gradient(90deg, #8b5cf6, #a371f7, #c4a5ff); color: #fff; }
+    .compare-bar.avg { background: linear-gradient(90deg, var(--muted), var(--sub)); color: #fff; }
+
+    .advice-block { background: linear-gradient(135deg, rgba(163,113,247,0.15), rgba(163,113,247,0.05)); border: 1px solid rgba(163,113,247,0.35); border-radius: var(--radius); padding: 22px; text-align: center; margin-top: 20px; box-shadow: 0 0 32px rgba(163,113,247,0.15); }
+    .advice-block .advice-icon { font-size: 2rem; margin-bottom: 8px; }
+    .advice-block .advice-text { font-size: 0.95rem; line-height: 1.7; color: var(--text); font-style: italic; }
+    .advice-block .advice-text strong { color: var(--gold); font-style: normal; }
+
+    .loading-block { text-align: center; padding: 60px 20px; color: var(--sub); }
+    .loading-block .spinner { margin: 0 auto 16px; }
+    .not-found { text-align: center; padding: 40px 20px; color: var(--muted); }
+    .not-found .nf-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) {
+        .search-input-wrap { flex-direction: column; }
+        .search-btn { width: 100%; }
+        .player-name { font-size: 1.3rem; }
+        .oracle-block { padding: 16px 12px; }
+        .history-table { font-size: 0.7rem; }
+        .history-table th, .history-table td { padding: 6px 4px; }
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .trend-grid { grid-template-columns: repeat(2, 1fr); }
+        .season-highlight { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--purple), #c4a5ff, var(--gold), var(--purple)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
+    .scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--purple); border-radius: 50%; color: var(--purple); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; }
+    .scroll-top.visible { opacity: 1; pointer-events: all; }
+    .scroll-top:hover { background: var(--purple); color: #000; transform: translateY(-3px); }
+</style>
+</head>
+<body>
+    <div class="reading-progress" id="readingProgress"></div>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title">ПОВЕСТВОВАТЕЛЬНИЦА</h1>
+            <p class="header-subtitle">Этернис помнит всё</p>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </header>
+
+        <div class="nav-wrapper">
+            <button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+            <nav class="nav-bar" id="pageNav">
+                <div class="nav-group">
+                    <span class="nav-label">⚔️ Арена ▾</span>
+                    <div class="nav-dropdown">
+                        <a href="index.html" class="nav-link">📊 Статистика</a>
+                        <a href="league.html" class="nav-link">🏟 Лига</a>
+                        <a href="dungeon.html" class="nav-link">🏔 Данж</a>
+                        <a href="logs.html" class="nav-link">📜 Логи</a>
+                        <a href="player.html" class="nav-link">👤 Профиль</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <span class="nav-label">📖 Инфо ▾</span>
+                    <div class="nav-dropdown">
+                        <a href="balance.html" class="nav-link">⚖️ Баланс</a>
+                        <a href="guide.html" class="nav-link">⚔️ Гайд</a>
+                        <a href="lore.html" class="nav-link">📜 Лор</a>
+                        <a href="seasons.html" class="nav-link">📅 Сезоны</a>
+                        <a href="tavern.html" class="nav-link">🍺 Таверна</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="search-row">
+            <div class="search-input-wrap">
+                <input type="text" class="search-input" id="oracleSearch" placeholder="📜 Назови имя героя..." autocomplete="off">
+                <button class="search-btn" onclick="analyzePlayer()">📜 Рассказать</button>
+            </div>
+            <div class="autocomplete-list" id="autocompleteList"></div>
+        </div>
+
+        <div id="oracleResult"></div>
+    </div>
+
+    <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
+    <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+// ============ КОНСТАНТЫ ============
+const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const SEASON_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
+const MAX_SEASONS = 15;
+
+// ============ ТЕМА И НАВИГАЦИЯ ============
+function toggleTheme() {
+    const h = document.documentElement;
+    const n = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    h.setAttribute('data-theme', n);
+    localStorage.setItem('eternis-theme', n);
+}
+(function() {
+    const s = localStorage.getItem('eternis-theme');
+    if (s) document.documentElement.setAttribute('data-theme', s);
+})();
+function toggleNav() {
+    const nav = document.getElementById('pageNav');
+    const btn = document.querySelector('.nav-toggle');
+    nav.classList.toggle('show');
+    btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+}
+document.querySelectorAll('.nav-link').forEach(l => {
+    l.addEventListener('click', () => {
+        document.getElementById('pageNav').classList.remove('show');
+        document.querySelector('.nav-toggle').textContent = '☰ Меню';
+    });
+});
+document.querySelectorAll('.nav-label').forEach(label => {
+    label.addEventListener('click', function(e) {
+        if (window.innerWidth > 768) return;
+        e.preventDefault();
+        const dd = this.nextElementSibling;
+        if (dd && dd.classList.contains('nav-dropdown')) {
+            const isOpen = dd.style.display === 'block';
+            document.querySelectorAll('.nav-dropdown').forEach(d => d.style.display = 'none');
+            dd.style.display = isOpen ? 'none' : 'block';
+        }
+    });
+});
+
+// ============ КЕШ ============
+async function getSeasonData(n) {
+    const KEY = 'eternis-oracle-season-' + n;
+    const TTL = 10 * 60 * 1000;
+    try {
+        const cached = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+        if (cached && (Date.now() - cached.ts < TTL)) return cached.data;
+    } catch (e) {}
+    const r = await fetch(`${SEASON_BASE}${n}.json`);
+    if (!r.ok) throw new Error('404');
+    const data = await r.json();
+    try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+    return data;
+}
+
+function normalizeFaction(f) {
+    if (!f) return '';
+    if (f === 'Свет' || f === 'Орден Света') return 'Орден Света';
+    if (f === 'Тьма' || f === 'Культ Тьмы') return 'Культ Тьмы';
+    return f;
+}
+
+async function loadAllSeasons() {
+    const seasons = [];
+    for (let n = 0; n <= MAX_SEASONS; n++) {
+        try {
+            const d = await getSeasonData(n);
+            seasons.push({ num: n, data: d, isCurrent: false });
+        } catch (e) { break; }
+    }
+    try {
+        const r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        const d = await r.json();
+        seasons.push({ num: seasons.length, data: d, isCurrent: true });
+    } catch (e) { console.error(e); }
+    return seasons;
+}
+
+// ============ ПОИСК ============
+let allSeasonsCache = null;
+let allPlayersCache = null;
+let autocompleteIndex = -1;
+let autocompleteTimer = null;
+
+function getAllPlayers(seasons) {
+    const players = new Map();
+    seasons.forEach(s => {
+        (s.data.players || []).forEach(p => {
+            if (!p.display) return;
+            const key = p.display.toLowerCase();
+            if (!players.has(key)) {
+                players.set(key, { display: p.display, emoji: p.emoji || '⚔️', name: p.name || '' });
+            }
+        });
+    });
+    return [...players.values()].sort((a, b) => a.display.localeCompare(b.display));
+}
+
+const searchInput = document.getElementById('oracleSearch');
+const autocompleteList = document.getElementById('autocompleteList');
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(autocompleteTimer);
+    const query = this.value.trim().toLowerCase();
+    if (query.length < 1) { autocompleteList.classList.remove('show'); return; }
+    autocompleteTimer = setTimeout(() => {
+        if (!allPlayersCache) { autocompleteList.innerHTML = '<div class="autocomplete-empty">Загрузка...</div>'; autocompleteList.classList.add('show'); return; }
+        const matches = allPlayersCache.filter(p => p.display.toLowerCase().includes(query)).slice(0, 10);
+        if (matches.length === 0) { autocompleteList.innerHTML = '<div class="autocomplete-empty">Никого не найдено</div>'; autocompleteList.classList.add('show'); return; }
+        autocompleteList.innerHTML = matches.map(p => {
+            const idx = p.display.toLowerCase().indexOf(query);
+            const before = p.display.slice(0, idx);
+            const match = p.display.slice(idx, idx + query.length);
+            const after = p.display.slice(idx + query.length);
+            return `<div class="autocomplete-item" data-name="${p.display}"><span class="ac-emoji">${p.emoji}</span><span class="ac-name">${before}<strong>${match}</strong>${after}</span><span class="ac-class">${p.name}</span></div>`;
+        }).join('');
+        autocompleteList.classList.add('show');
+        autocompleteIndex = -1;
+        document.querySelectorAll('.autocomplete-item').forEach(item => {
+            item.addEventListener('click', () => { searchInput.value = item.dataset.name; autocompleteList.classList.remove('show'); analyzePlayer(); });
+        });
+    }, 150);
+});
+
+searchInput.addEventListener('keydown', function(e) {
+    const items = autocompleteList.querySelectorAll('.autocomplete-item');
+    if (e.key === 'ArrowDown') { e.preventDefault(); autocompleteIndex = Math.min(autocompleteIndex + 1, items.length - 1); items.forEach((it, i) => it.classList.toggle('active', i === autocompleteIndex)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); autocompleteIndex = Math.max(autocompleteIndex - 1, -1); items.forEach((it, i) => it.classList.toggle('active', i === autocompleteIndex)); }
+    else if (e.key === 'Enter') { if (autocompleteIndex >= 0 && items[autocompleteIndex]) { e.preventDefault(); searchInput.value = items[autocompleteIndex].dataset.name; autocompleteList.classList.remove('show'); analyzePlayer(); } else { autocompleteList.classList.remove('show'); analyzePlayer(); } }
+    else if (e.key === 'Escape') autocompleteList.classList.remove('show');
+});
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.search-row')) autocompleteList.classList.remove('show');
+});
+
+// ============ ИСТОРИЯ ============
+function getPlayerHistory(nickname, seasons) {
+    const history = [];
+    seasons.forEach(s => {
+        const players = s.data.players || [];
+        const p = players.find(pl => pl.display && pl.display.toLowerCase() === nickname.toLowerCase());
+        if (!p) return;
+        const total = (p.wins || 0) + (p.losses || 0);
+        if (total === 0) return;
+        history.push({
+            season: s.num, isCurrent: s.isCurrent,
+            display: p.display, emoji: p.emoji || '⚔️', name: p.name || '',
+            wins: p.wins || 0, losses: p.losses || 0, total,
+            wr: total > 0 ? p.wins / total : 0,
+            level: p.level || 0, skill: p.skill || 0, shards: p.shards || 0,
+            faction: normalizeFaction(p.faction), factionWins: p.factionWins || 0,
+            best: p.best || 0, worst: p.worst || 0,
+            tournamentWins: p.tournamentWins || 0,
+            champion: p.champion === true,
+            dungeon: s.data.dungeon?.players?.[p.display] || null
+        });
+    });
+    return history;
+}
+
+// ============ ТРЕНДЫ ============
+function analyzeTrend(history) {
+    if (history.length === 0) return { trend: 'none' };
+    if (history.length === 1) return { trend: 'first', firstWR: history[0].wr, lastWR: history[0].wr, delta: 0, avg: history[0].wr, peak: history[0].wr, peakSeason: history[0].season, form: 1, seasonsCount: 1, stdDev: 0 };
+    const wrs = history.map(h => h.wr);
+    const n = wrs.length;
+    const avg = wrs.reduce((s, w) => s + w, 0) / n;
+    const peak = Math.max(...wrs);
+    const peakSeason = history[wrs.indexOf(peak)].season;
+    const firstWR = wrs[0], lastWR = wrs[n - 1];
+    const delta = lastWR - firstWR;
+    let sumXY = 0, sumX = 0, sumY = 0, sumXX = 0;
+    for (let i = 0; i < n; i++) { sumX += i; sumY += wrs[i]; sumXY += i * wrs[i]; sumXX += i * i; }
+    const denom = n * sumXX - sumX * sumX;
+    const slope = denom !== 0 ? (n * sumXY - sumX * sumY) / denom : 0;
+    const variance = wrs.reduce((s, w) => s + Math.pow(w - avg, 2), 0) / n;
+    const stdDev = Math.sqrt(variance);
+    const form = peak > 0 ? lastWR / peak : 1;
+    return { trend: slope > 0.005 ? 'growth' : slope < -0.005 ? 'fall' : 'stable', slope, delta, avg, peak, peakSeason, firstWR, lastWR, form, stdDev, seasonsCount: n };
+}
+
+// ============ ГЕРОИ ============
+function analyzeHeroArchive(nickname, seasons) {
+    const heroes = [];
+    const seen = new Set();
+    const lastSeason = seasons[seasons.length - 1];
+    if (lastSeason) {
+        const p = (lastSeason.data.players || []).find(pl => pl.display && pl.display.toLowerCase() === nickname.toLowerCase());
+        if (p) {
+            const total = (p.wins || 0) + (p.losses || 0);
+            if (total > 0) {
+                seen.add((p.name || '') + '|' + (p.emoji || ''));
+                heroes.push({ name: p.name || '', emoji: p.emoji || '⚔️', wins: p.wins || 0, losses: p.losses || 0, wr: p.wins / total, season: lastSeason.num, isCurrent: true });
+            }
+        }
+    }
+    seasons.forEach(s => {
+        if (s.isCurrent) return;
+        const p = (s.data.players || []).find(pl => pl.display && pl.display.toLowerCase() === nickname.toLowerCase());
+        if (!p) return;
+        const total = (p.wins || 0) + (p.losses || 0);
+        if (total === 0) return;
+        const key = (p.name || '') + '|' + (p.emoji || '');
+        if (seen.has(key)) return;
+        seen.add(key);
+        heroes.push({ name: p.name || '', emoji: p.emoji || '⚔️', wins: p.wins || 0, losses: p.losses || 0, wr: p.wins / total, season: s.num, isCurrent: false });
+    });
+    seasons.forEach(s => {
+        const archive = s.data.heroArchive || {};
+        Object.entries(archive).forEach(([key, list]) => {
+            if (key.toLowerCase() !== nickname.toLowerCase()) return;
+            list.forEach(h => {
+                const total = (h.wins || 0) + (h.losses || 0);
+                if (total === 0) return;
+                const hKey = (h.name || '') + '|' + (h.emoji || '');
+                if (seen.has(hKey)) return;
+                seen.add(hKey);
+                heroes.push({ name: h.name || '', emoji: h.emoji || '⚔️', wins: h.wins || 0, losses: h.losses || 0, wr: (h.wins || 0) / total, season: s.num, isCurrent: false });
+            });
+        });
+    });
+    const totalWins = heroes.reduce((s, h) => s + h.wins, 0);
+    const totalLosses = heroes.reduce((s, h) => s + h.losses, 0);
+    const eligible = heroes.filter(h => (h.wins + h.losses) >= 10);
+    const best = eligible.length > 0 ? eligible.reduce((m, h) => h.wr > m.wr ? h : m) : null;
+
+    const classStats = {}, raceStats = {}, comboStats = {};
+    heroes.forEach(h => {
+        if (!h.name) return;
+        const parts = h.name.split('-');
+        if (parts.length < 2) { const cls = parts[0]; if (!classStats[cls]) classStats[cls] = { wins: 0, losses: 0 }; classStats[cls].wins += h.wins; classStats[cls].losses += h.losses; return; }
+        const race = parts[0], cls = parts[1];
+        if (!classStats[cls]) classStats[cls] = { wins: 0, losses: 0 };
+        if (!raceStats[race]) raceStats[race] = { wins: 0, losses: 0 };
+        if (!comboStats[h.name]) comboStats[h.name] = { wins: 0, losses: 0, emoji: h.emoji };
+        classStats[cls].wins += h.wins; classStats[cls].losses += h.losses;
+        raceStats[race].wins += h.wins; raceStats[race].losses += h.losses;
+        comboStats[h.name].wins += h.wins; comboStats[h.name].losses += h.losses;
+    });
+    return { heroes, count: heroes.length, totalWins, totalLosses, trueWR: (totalWins + totalLosses) > 0 ? totalWins / (totalWins + totalLosses) : 0, best, classStats, raceStats, comboStats };
+}
+
+// ============ ДАНЖ ============
+function analyzeDungeon(nickname, seasons) {
+    let totalWaves = 0, maxRecord = 0, totalBosses = 0, totalTrophies = 0, seasonsWithDungeon = 0;
+    seasons.forEach(s => {
+        const dp = s.data.dungeon?.players?.[nickname] || Object.values(s.data.dungeon?.players || {}).find(p => p.display && p.display.toLowerCase() === nickname.toLowerCase());
+        if (!dp) return;
+        seasonsWithDungeon++;
+        totalWaves += dp.totalWaves || 0;
+        totalBosses += dp.bosses || 0;
+        totalTrophies += dp.trophies || 0;
+        if ((dp.record || 0) > maxRecord) maxRecord = dp.record;
+    });
+    return { totalWaves, maxRecord, totalBosses, totalTrophies, seasonsWithDungeon };
+}
+
+// ============ ЛИГА ============
+function getLeaguePlace(nickname, seasons) {
+    const last = seasons[seasons.length - 1];
+    if (!last) return null;
+    const players = (last.data.players || []).map(p => ({ ...p, faction: normalizeFaction(p.faction) })).filter(p => (p.skill || 0) > 0 && p.faction);
+    const light = players.filter(p => p.faction === 'Орден Света').sort((a, b) => (b.skill || 0) - (a.skill || 0));
+    const dark = players.filter(p => p.faction === 'Культ Тьмы').sort((a, b) => (b.skill || 0) - (a.skill || 0));
+    const me = players.find(p => p.display && p.display.toLowerCase() === nickname.toLowerCase());
+    if (!me) return null;
+    const list = me.faction === 'Орден Света' ? light : dark;
+    const place = list.findIndex(p => p.display === me.display) + 1;
+    const top8Skill = list.length >= 8 ? (list[7].skill || 0) : 0;
+    return { place, total: list.length, skill: me.skill || 0, faction: me.faction, inTop8: place <= 8, gapToTop8: Math.max(0, top8Skill - (me.skill || 0)) };
+}
+
+// ============ МЕТА ПО СЕЗОНАМ ============
+function analyzeMeta(seasons) {
+    const metaBySeason = [];
+    seasons.forEach(s => {
+        const classStats = {}, raceStats = {};
+        (s.data.players || []).forEach(p => {
+            if (!p.name || p.name === 'Unknown' || !p.name.includes('-')) return;
+            const [race, cls] = p.name.split('-');
+            const w = p.wins || 0, l = p.losses || 0, t = w + l;
+            if (t < 5) return;
+            if (!classStats[cls]) classStats[cls] = { w: 0, l: 0 };
+            if (!raceStats[race]) raceStats[race] = { w: 0, l: 0 };
+            classStats[cls].w += w; classStats[cls].l += l;
+            raceStats[race].w += w; raceStats[race].l += l;
+        });
+        const topClasses = Object.entries(classStats).map(([n, s]) => ({ name: n, w: s.w, l: s.l, total: s.w + s.l, wr: s.w / (s.w + s.l) })).filter(c => c.total >= 30).sort((a, b) => b.wr - a.wr).slice(0, 3);
+        const topRaces = Object.entries(raceStats).map(([n, s]) => ({ name: n, w: s.w, l: s.l, total: s.w + s.l, wr: s.w / (s.w + s.l) })).filter(c => c.total >= 30).sort((a, b) => b.wr - a.wr).slice(0, 3);
+        metaBySeason.push({ season: s.num, isCurrent: s.isCurrent, topClasses, topRaces });
+    });
+    return metaBySeason;
+}
+
+// ============ СЕЗОНЫ ============
+function analyzeSeasons(history) {
+    if (history.length === 0) return null;
+    return {
+        bestWR: history.reduce((m, h) => h.wr > m.wr ? h : m),
+        worstWR: history.reduce((m, h) => h.wr < m.wr ? h : m),
+        mostWins: history.reduce((m, h) => h.wins > m.wins ? h : m),
+        mostFights: history.reduce((m, h) => h.total > m.total ? h : m),
+        mostTournaments: history.reduce((m, h) => (h.tournamentWins || 0) > (m.tournamentWins || 0) ? h : m),
+        seasonsCount: history.length
+    };
+}
+
+// ============ ФРАКЦИИ ============
+function analyzeFactions(history) {
+    const calc = (arr) => {
+        if (arr.length === 0) return { count: 0, wins: 0, losses: 0, wr: 0, factionWins: 0 };
+        const w = arr.reduce((s, h) => s + h.wins, 0);
+        const l = arr.reduce((s, h) => s + h.losses, 0);
+        const fw = arr.reduce((s, h) => s + (h.factionWins || 0), 0);
+        return { count: arr.length, wins: w, losses: l, wr: (w + l) > 0 ? w / (w + l) : 0, factionWins: fw };
+    };
+    return { light: calc(history.filter(h => h.faction === 'Орден Света')), dark: calc(history.filter(h => h.faction === 'Культ Тьмы')) };
+}
+
+// ============ ПРОГНОЗ ============
+function predictMilestones(history) {
+    if (history.length < 3) return null;
+    const last = history[history.length - 1];
+    const avgWinsPerSeason = history.reduce((s, h) => s + h.wins, 0) / history.length;
+    const levelDelta = [];
+    for (let i = 1; i < history.length; i++) { const d = history[i].level - history[i-1].level; if (d > 0) levelDelta.push(d); }
+    const avgLevelPerSeason = levelDelta.length > 0 ? levelDelta.reduce((s, d) => s + d, 0) / levelDelta.length : 0;
+    const shardDelta = [];
+    for (let i = 1; i < history.length; i++) { const d = history[i].shards - history[i-1].shards; if (d > 0) shardDelta.push(d); }
+    const avgShardsPerSeason = shardDelta.length > 0 ? shardDelta.reduce((s, d) => s + d, 0) / shardDelta.length : 0;
+    const preds = [];
+    if (last.wins < 200 && avgWinsPerSeason > 0) {
+        const toGo = 200 - last.wins, s = toGo / avgWinsPerSeason;
+        if (s < 50) preds.push({ icon: '⚔️', label: '200 побед', value: s < 1 ? '< 1 сез.' : `~${Math.ceil(s)} сез.`, detail: `${toGo} побед · ~${avgWinsPerSeason.toFixed(0)}/сезон` });
+    }
+    if (last.level < 50 && avgLevelPerSeason > 0) {
+        const toGo = 50 - last.level, s = toGo / avgLevelPerSeason;
+        if (s < 50) preds.push({ icon: '👑', label: '50 уровень', value: s < 1 ? '< 1 сез.' : `~${Math.ceil(s)} сез.`, detail: `${toGo} ур. · ~+${avgLevelPerSeason.toFixed(0)}/сезон` });
+    }
+    if (last.shards < 1000 && avgShardsPerSeason > 0) {
+        const toGo = 1000 - last.shards, s = toGo / avgShardsPerSeason;
+        if (s < 50) preds.push({ icon: '💎', label: '1000 осколков', value: s < 1 ? '< 1 сез.' : `~${Math.ceil(s)} сез.`, detail: `${toGo} 💎 · ~+${avgShardsPerSeason.toFixed(0)}/сезон` });
+    }
+    return preds;
+}
+
+function buildForecast(trend, leaguePlace) {
+    let wrF = trend.lastWR;
+    if (trend.trend === 'growth') wrF = Math.min(0.85, trend.lastWR + Math.abs(trend.slope) * 2);
+    else if (trend.trend === 'fall') wrF = Math.max(0.20, trend.lastWR - Math.abs(trend.slope) * 2);
+    const wrMin = Math.max(0.20, wrF - 0.04), wrMax = Math.min(0.85, wrF + 0.04);
+    let placeForecast = null;
+    if (leaguePlace) {
+        if (trend.trend === 'growth' && leaguePlace.place > 8) placeForecast = { min: Math.max(1, leaguePlace.place - 3), max: leaguePlace.place };
+        else if (trend.trend === 'growth') placeForecast = { min: Math.max(1, leaguePlace.place - 2), max: leaguePlace.place };
+        else if (trend.trend === 'fall') placeForecast = { min: leaguePlace.place, max: leaguePlace.place + 3 };
+        else placeForecast = { min: Math.max(1, leaguePlace.place - 1), max: leaguePlace.place + 1 };
+    }
+    return { wrForecast: wrF, wrMin, wrMax, placeForecast };
+}
+
+// ============ МЕМНЫЙ АНАЛИЗ ============
+function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace) {
+    const memes = [];
+    const last = history[history.length - 1];
+
+    // 1. Турниры
+    const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
+    if (totalTournaments === 0) {
+        memes.push(`<strong>${totalTournaments} турниров.</strong> Ты как тот самый чувак из мема «я не проиграл — я просто не участвовал». Может, пора?`);
+    } else if (totalTournaments >= 10) {
+        memes.push(`<strong>${totalTournaments} турниров.</strong> Это уже не хобби — это <span class="meme">турнирная зависимость</span>. Продай одну корону, купи куртку.`);
+    } else if (totalTournaments >= 5) {
+        memes.push(`<strong>${totalTournaments} турниров.</strong> Ты не просто игрок — ты <span class="meme">турнирный волк</span>. Но до Легенды Арены ещё далеко.`);
+    } else {
+        memes.push(`<strong>${totalTournaments} турниров.</strong> Это как выиграть в лотерею один раз — приятно, но статистикой не считается.`);
+    }
+
+    // 2. Чемпионства
+    const championSeasons = history.filter(h => h.champion).map(h => h.season);
+    if (championSeasons.length === 0) {
+        memes.push(`Ни разу не был <strong>Хранителем Раскола</strong>. Это не позор — это <span class="meme">задел на будущее</span>. Или ты просто коллекционер вторых мест?`);
+    } else if (championSeasons.length === 1) {
+        memes.push(`Был чемпионом в <strong>S${championSeasons[0]}</strong>. Один раз — не пидорас, но и не легенда. <span class="meme">Докажи, что это не случайность</span>.`);
+    } else {
+        memes.push(`Чемпион в <strong>${championSeasons.length} сезонах</strong> (S${championSeasons.join(', S')}). Это не везение — это <span class="meme">система</span>.`);
+    }
+
+    // 3. Мета
+    const lastMeta = metaBySeason[metaBySeason.length - 1];
+    if (lastMeta && lastMeta.topClasses.length > 0 && last.name) {
+        const myClass = last.name.split('-')[1] || last.name;
+        const isInMeta = lastMeta.topClasses.some(c => c.name === myClass);
+        if (isInMeta) {
+            memes.push(`Ты играешь <strong>${myClass}</strong> — а это <span class="meme">мета S${lastMeta.season}</span>. Поздравляю, ты мета-дрочер.`);
+        } else {
+            memes.push(`Ты играешь <strong>${myClass}</strong>, а мета S${lastMeta.season} — это ${lastMeta.topClasses.map(c => c.name).join(', ')}. <span class="meme">Ты играешь не в мете</span>. Уважение. Или глупость.`);
+        }
+    }
+
+    // 4. Стабильность
+    if (trend.stdDev > 0.08) {
+        memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Ты как <span class="meme">криптовалюта</span> — то луна, то дно.`);
+    } else if (trend.stdDev < 0.03 && trend.seasonsCount > 2) {
+        memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Ты стабилен, как <span class="meme">бабушкин телевизор</span>. Надёжно, но без искры.`);
+    }
+
+    // 5. Пик
+    if (trend.form < 0.75) {
+        memes.push(`Ты на <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. Это уже не «передышка» — это <span class="meme">отпуск в Турции</span>. Пора возвращаться.`);
+    } else if (trend.form >= 1) {
+        memes.push(`Ты на <strong>100%+ от пика</strong> — то есть <span class="meme">прямо сейчас творишь историю</span>. Не сбавляй.`);
+    }
+
+    // 6. Герои
+    if (heroAnalysis.count === 1) {
+        memes.push(`Один герой за всю карьеру. Ты — <span class="meme">моногамный</span>. Уважение.`);
+    } else if (heroAnalysis.count >= 6) {
+        memes.push(`<strong>${heroAnalysis.count} героев</strong>. Ты меняешь героев чаще, чем носки. <span class="meme">Найди себя уже</span>.`);
+    }
+
+    // 7. Лига
+    if (leaguePlace && !leaguePlace.inTop8) {
+        const gamesToGo = Math.ceil(leaguePlace.gapToTop8 / 15);
+        memes.push(`До топ-8 Лиги — <strong>${leaguePlace.gapToTop8} SKILL</strong>. Это <span class="meme">${gamesToGo} хороших вечеров</span>. Не так уж и много.`);
+    } else if (leaguePlace && leaguePlace.inTop8) {
+        memes.push(`Ты в <strong>топ-8 Лиги</strong>. Это как <span class="meme">VIP-ложа</span>. Не позорь.`);
+    }
+
+    return memes;
+}
+
+// ============ НАРРАТИВ ============
+function generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace) {
+    const lines = [];
+    if (history.length === 0) return ['Я не вижу твоей нити.'];
+    const last = history[history.length - 1];
+    if (history.length === 1) {
+        lines.push(`<strong>Твоя повесть только начинается.</strong> Сезон ${last.season}. ${last.wins} побед, ${last.losses} поражений.`);
+    } else {
+        const s = trend.seasonsCount;
+        if (trend.trend === 'growth') lines.push(`<strong>Твоя нить набирает силу.</strong> ${s} сезонов. С ${(trend.firstWR * 100).toFixed(0)}% до ${(trend.lastWR * 100).toFixed(0)}% — <strong>+${(trend.delta * 100).toFixed(0)}%</strong>.`);
+        else if (trend.trend === 'fall') lines.push(`<strong>Твоя нить истончилась.</strong> ${s} сезонов. С ${(trend.firstWR * 100).toFixed(0)}% до ${(trend.lastWR * 100).toFixed(0)}% — <strong>${(trend.delta * 100).toFixed(0)}%</strong>.`);
+        else lines.push(`<strong>Твоя нить ровна.</strong> ${s} сезонов. Винрейт около ${(trend.avg * 100).toFixed(0)}%.`);
+    }
+    if (trend.peakSeason !== undefined && trend.form < 0.98 && trend.seasonsCount > 1) {
+        lines.push(`Пик — <strong>сезон ${trend.peakSeason}</strong> (${(trend.peak * 100).toFixed(0)}%). Сейчас — ${(trend.form * 100).toFixed(0)}% от той формы.`);
+    } else if (trend.form >= 0.98 && trend.seasonsCount > 1) {
+        lines.push(`<strong>Ты на пике!</strong> Сезон ${trend.peakSeason} — лучшая глава.`);
+    }
+    if (heroAnalysis.count > 1) {
+        lines.push(`За твоей спиной — ${heroAnalysis.count} героев. Истинный WR — <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>.`);
+        if (heroAnalysis.best && heroAnalysis.best.wr > trend.lastWR + 0.05) {
+            lines.push(`Твой лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(0)}%). Текущий слабее.`);
+        }
+    }
+    if (leaguePlace) {
+        const f = leaguePlace.faction === 'Орден Света' ? '🌝' : '🌚';
+        if (leaguePlace.inTop8) lines.push(`${f} В Лиге ты <strong>${leaguePlace.place}-й</strong> из ${leaguePlace.total}. Держи позицию.`);
+        else lines.push(`${f} В Лиге <strong>${leaguePlace.place}-й</strong>. До топ-8 — <strong>${leaguePlace.gapToTop8} SKILL</strong>.`);
+    }
+    return lines;
+}
+
+function generateForecastText(forecast, trend, leaguePlace) {
+    const lines = [];
+    lines.push(`Я вижу <strong>следующую главу</strong> твоей повести:`);
+    lines.push(`Винрейт — <strong>${(forecast.wrForecast * 100).toFixed(0)}%</strong> (от ${(forecast.wrMin * 100).toFixed(0)}% до ${(forecast.wrMax * 100).toFixed(0)}%)`);
+    if (forecast.placeForecast) lines.push(`Место в Лиге — <strong>${forecast.placeForecast.min}–${forecast.placeForecast.max}</strong>`);
+    if (trend.trend === 'growth') lines.push(`Условие: не сбавлять шаг.`);
+    else if (trend.trend === 'fall') lines.push(`Условие: переломить падение.`);
+    else lines.push(`Условие: сделать рывок.`);
+    return lines;
+}
+
+function generateAdvice(trend, heroAnalysis, leaguePlace) {
+    if (trend.trend === 'growth' && (!leaguePlace || leaguePlace.inTop8)) return `Твоя нить натянута, как тетива. <strong>Не отпускай.</strong>`;
+    if (trend.trend === 'growth') return `Ты растёшь. До топ-8 — <strong>${leaguePlace?.gapToTop8 || '?'} SKILL</strong>. Ещё немного.`;
+    if (trend.trend === 'fall') return `Огонь угасает. <strong>Смени путь.</strong> ${heroAnalysis.best && heroAnalysis.best.wr > trend.lastWR + 0.05 ? `Вернись к ${heroAnalysis.best.emoji} ${heroAnalysis.best.name}.` : 'Попробуй нового героя.'}`;
+    if (heroAnalysis.best && heroAnalysis.best.wr > trend.lastWR + 0.08) return `Ты ровен. Но <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name} сильнее</strong>.`;
+    return `Ты идёшь ровно. <strong>Пора сделать рывок.</strong>`;
+}
+
+// ============ РЕНДЕР ============
+function renderPlayerInfo(player) {
+    const fc = player.faction === 'Орден Света' ? 'light' : player.faction === 'Культ Тьмы' ? 'dark' : '';
+    const fe = player.faction === 'Орден Света' ? '🌝' : player.faction === 'Культ Тьмы' ? '🌚' : '';
+    return `<div class="player-header">
+        <div class="player-emoji">${player.emoji || '⚔️'}</div>
+        <div class="player-name">${player.display}${player.champion ? ' 👑' : ''}</div>
+        <div class="player-class">${player.name || '—'}</div>
+        ${player.faction ? `<div class="player-faction ${fc}">${fe} ${player.faction}</div>` : ''}
+    </div>`;
+}
+
+function renderHistory(history) {
+    if (history.length === 0) return '';
+    let html = '<div class="oracle-block"><div class="oracle-block-title">📜 Твоя летопись</div><div class="table-container"><table class="history-table"><thead><tr><th>С</th><th>W/L</th><th>WR</th><th>Ур.</th><th>🏆</th><th>⚔️</th><th>👑</th></tr></thead><tbody>';
+    history.forEach(h => {
+        const wrColor = h.wr >= 0.55 ? 'var(--gold)' : h.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
+        html += `<tr class="${h.isCurrent ? 'current' : ''} ${h.champion ? 'champion-row' : ''}">
+            <td class="season-num">S${h.season}${h.isCurrent ? ' ⚡' : ''}</td>
+            <td>${h.wins}-${h.losses}</td>
+            <td class="wr-cell" style="color:${wrColor};">${(h.wr * 100).toFixed(1)}%</td>
+            <td>${h.level}</td>
+            <td class="num" style="color:${h.tournamentWins > 0 ? 'var(--gold)' : 'var(--muted)'};">${h.tournamentWins || '—'}</td>
+            <td class="num">${h.factionWins || '—'}</td>
+            <td>${h.champion ? '👑' : ''}</td>
+        </tr>`;
+    });
+    html += '</tbody></table></div>';
+    const totalWins = history.reduce((s, h) => s + h.wins, 0);
+    const totalLosses = history.reduce((s, h) => s + h.losses, 0);
+    const totalFights = totalWins + totalLosses;
+    const totalWR = totalFights > 0 ? totalWins / totalFights : 0;
+    const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
+    const maxLevel = Math.max(...history.map(h => h.level || 0));
+    const totalFactionWins = history.reduce((s, h) => s + (h.factionWins || 0), 0);
+    const wrColor = totalWR >= 0.55 ? 'var(--gold)' : totalWR >= 0.45 ? 'var(--green)' : 'var(--red)';
+    html += `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:center;color:var(--sub);font-size:0.85rem;">
+        <div>Всего: <strong style="color:var(--text);">${totalWins}-${totalLosses}</strong> · <strong style="color:${wrColor};">${(totalWR * 100).toFixed(1)}%</strong></div>
+        <div style="margin-top:4px;">🏆 ${totalTournaments} турниров · ⚔️ ${totalFactionWins} фракц. · Макс. ур. ${maxLevel}</div>
+    </div></div>`;
+    return html;
+}
+
+function renderChart(history) {
+    if (history.length < 2) return '';
+    const points = history.map(h => h.wr * 100);
+    const labels = history.map(h => `S${h.season}`);
+    const W = 600, H = 200, P = 50;
+    const minW = Math.min(...points) - 2, maxW = Math.max(...points) + 2;
+    const range = maxW - minW || 1;
+    const gX = (i) => P + (W - P * 2) * i / (points.length - 1);
+    const gY = (v) => H - P - ((v - minW) / range) * (H - P * 2);
+    const svgPoints = points.map((p, i) => `${gX(i)},${gY(p)}`).join(' ');
+    const circles = points.map((p, i) => {
+        const color = i === points.length - 1 ? (p >= points[0] ? '#10b981' : '#ef4444') : '#a371f7';
+        return `<circle cx="${gX(i)}" cy="${gY(p)}" r="6" fill="var(--card)" stroke="${color}" stroke-width="2.5"/>`;
+    }).join('');
+    const texts = points.map((p, i) => `<text x="${gX(i)}" y="${gY(p) - 14}" text-anchor="middle" fill="#c4a5ff" font-size="11" font-weight="700">${p.toFixed(1)}%</text>`).join('');
+    const bottomLabels = labels.map((l, i) => `<text x="${gX(i)}" y="${H - 8}" text-anchor="middle" fill="#8a94a8" font-size="10">${l}</text>`).join('');
+    const diff = points[points.length - 1] - points[0];
+    const diffText = diff >= 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`;
+    const diffColor = diff >= 0 ? 'var(--green)' : 'var(--red)';
+    return `<div class="oracle-block gold">
+        <div class="oracle-block-title" style="margin-bottom:8px;">📈 Динамика винрейта</div>
+        <div style="text-align:center;margin-bottom:4px;font-size:.85rem;color:var(--sub)">${points[0].toFixed(1)}% → <span style="color:${diffColor};font-weight:700">${points[points.length - 1].toFixed(1)}% (${diffText})</span></div>
+        <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="display:block;max-width:100%">
+            <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a371f7" stop-opacity="0.25"/><stop offset="100%" stop-color="#a371f7" stop-opacity="0"/></linearGradient><linearGradient id="cl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="50%" stop-color="#c4a5ff"/><stop offset="100%" stop-color="#f0b90b"/></linearGradient></defs>
+            <polygon points="${gX(0)},${H - P} ${svgPoints} ${gX(points.length - 1)},${H - P}" fill="url(#cg)"/>
+            <polyline points="${svgPoints}" fill="none" stroke="url(#cl)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            ${circles}${texts}${bottomLabels}
+        </svg>
+    </div>`;
+}
+
+function renderTrends(trend) {
+    if (trend.trend === 'none' || trend.trend === 'first') return '';
+    let ti, tt;
+    if (trend.trend === 'growth') { ti = '↗'; tt = 'Рост'; }
+    else if (trend.trend === 'fall') { ti = '↘'; tt = 'Угасание'; }
+    else { ti = '→'; tt = 'Ровно'; }
+    const formPct = (trend.form * 100).toFixed(0);
+    const fi = trend.form >= 0.98 ? '🔥' : trend.form >= 0.9 ? '💪' : trend.form >= 0.75 ? '⚠️' : '🔻';
+    return `<div class="oracle-block gold"><div class="oracle-block-title">📈 Тренды</div><div class="trend-grid">
+        <div class="trend-item"><div class="trend-icon">${ti}</div><div class="trend-value">${tt}</div><div class="trend-label">Нить</div></div>
+        <div class="trend-item"><div class="trend-icon">${fi}</div><div class="trend-value">${formPct}%</div><div class="trend-label">Форма</div></div>
+        <div class="trend-item"><div class="trend-icon">🏔</div><div class="trend-value">S${trend.peakSeason}</div><div class="trend-label">Пик</div></div>
+        <div class="trend-item"><div class="trend-icon">📊</div><div class="trend-value">${(trend.stdDev * 100).toFixed(1)}%</div><div class="trend-label">Разброс</div></div>
+    </div></div>`;
+}
+
+function renderSeasonHighlights(sa) {
+    if (!sa || sa.seasonsCount < 2) return '';
+    return `<div class="oracle-block green"><div class="oracle-block-title">🏆 Лучшие и худшие главы</div><div class="season-highlight">
+        <div class="season-card"><div class="season-icon">🏆</div><div class="season-title">Лучший WR</div><div class="season-value">${(sa.bestWR.wr * 100).toFixed(1)}%</div><div class="season-detail">S${sa.bestWR.season}</div></div>
+        <div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший WR</div><div class="season-value">${(sa.worstWR.wr * 100).toFixed(1)}%</div><div class="season-detail">S${sa.worstWR.season}</div></div>
+        <div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Больше побед</div><div class="season-value">${sa.mostWins.wins}</div><div class="season-detail">S${sa.mostWins.season}</div></div>
+        <div class="season-card"><div class="season-icon">🔥</div><div class="season-title">Больше боёв</div><div class="season-value">${sa.mostFights.total}</div><div class="season-detail">S${sa.mostFights.season}</div></div>
+        <div class="season-card"><div class="season-icon">👑</div><div class="season-title">Больше турниров</div><div class="season-value">${sa.mostTournaments.tournamentWins || 0}</div><div class="season-detail">S${sa.mostTournaments.season}</div></div>
+    </div></div>`;
+}
+
+function renderMemeAnalysis(memes) {
+    if (!memes.length) return '';
+    return `<div class="oracle-block pink"><div class="oracle-block-title">😏 Мемный анализ</div><div class="meme-block"><div class="meme-block-title">🔥 Без фильтров</div>${memes.map(m => `<div class="meme-line">${m}</div>`).join('')}</div></div>`;
+}
+
+function renderMeta(metaBySeason, history) {
+    if (!metaBySeason.length) return '';
+    const myClass = history[history.length - 1]?.name?.split('-')[1] || '';
+    let html = '<div class="oracle-block ice"><div class="oracle-block-title">📊 Мета по сезонам</div>';
+    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Топ-3 класса каждого сезона (по WR, 30+ боёв)</div>';
+    metaBySeason.forEach(m => {
+        if (m.topClasses.length === 0) return;
+        const isMyMeta = m.topClasses.some(c => c.name === myClass);
+        html += `<div style="margin-bottom:12px;padding:10px 14px;background:linear-gradient(90deg,rgba(163,113,247,0.05),transparent);border-radius:var(--radius-sm);${isMyMeta ? 'border-left:3px solid var(--gold);' : ''}">
+            <div style="font-size:0.75rem;color:var(--purple);font-weight:800;margin-bottom:6px;">S${m.season}${m.isCurrent ? ' ⚡' : ''} ${isMyMeta ? '<span style="color:var(--gold);">← твой класс в мете</span>' : ''}</div>
+            ${m.topClasses.map((c, i) => `<div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:3px 0;">
+                <span><span class="meta-rank r${i+1}">${i+1}</span>${c.name}</span>
+                <span style="color:var(--gold);font-weight:700;">${(c.wr * 100).toFixed(1)}% · ${c.total}</span>
+            </div>`).join('')}
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+function renderStyle(heroAnalysis) {
+    if (!heroAnalysis || heroAnalysis.count === 0) return '';
+    const classArr = Object.entries(heroAnalysis.classStats).map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses) })).filter(c => c.total >= 5).sort((a, b) => b.total - a.total);
+    const raceArr = Object.entries(heroAnalysis.raceStats).map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses) })).filter(c => c.total >= 5).sort((a, b) => b.total - a.total);
+    const comboArr = Object.entries(heroAnalysis.comboStats).map(([n, s]) => ({ name: n, wins: s.wins, losses: s.losses, total: s.wins + s.losses, wr: s.wins / (s.wins + s.losses), emoji: s.emoji })).filter(c => c.total >= 10).sort((a, b) => b.wr - a.wr);
+    const bestClassByWR = classArr.length > 0 ? [...classArr].sort((a, b) => b.wr - a.wr)[0] : null;
+    const mostClassByFreq = classArr.length > 0 ? classArr[0] : null;
+    const bestRaceByWR = raceArr.length > 0 ? [...raceArr].sort((a, b) => b.wr - a.wr)[0] : null;
+    const mostRaceByFreq = raceArr.length > 0 ? raceArr[0] : null;
+    const bestCombo = comboArr.length > 0 ? comboArr[0] : null;
+    const getTag = (item, bestWR, mostFreq) => {
+        const isBest = bestWR && item.name === bestWR.name;
+        const isFreq = mostFreq && item.name === mostFreq.name;
+        if (isBest && isFreq) return { tag: '🏆🔥', cls: 'best' };
+        if (isBest) return { tag: '🏆', cls: 'best' };
+        if (isFreq) return { tag: '🔥', cls: '' };
+        return { tag: '', cls: '' };
+    };
+    let html = '<div class="oracle-block ice"><div class="oracle-block-title">🎭 Твой стиль</div>';
+    if (classArr.length > 0) {
+        html += '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;">Классы</div>';
+        classArr.slice(0, 3).forEach(c => {
+            const { tag, cls } = getTag(c, bestClassByWR, mostClassByFreq);
+            html += `<div class="style-row ${cls}"><div class="style-name"><span>${tag || '⚔️'}</span> ${c.name}</div><div class="style-val">${c.wins}-${c.losses} (${(c.wr * 100).toFixed(1)}%)</div></div>`;
+        });
+    }
+    if (raceArr.length > 0) {
+        html += '<div style="font-size:0.7rem;color:var(--muted);margin:14px 0 8px;">Расы</div>';
+        raceArr.slice(0, 3).forEach(r => {
+            const { tag, cls } = getTag(r, bestRaceByWR, mostRaceByFreq);
+            html += `<div class="style-row ${cls}"><div class="style-name"><span>${tag || '🌍'}</span> ${r.name}</div><div class="style-val">${r.wins}-${r.losses} (${(r.wr * 100).toFixed(1)}%)</div></div>`;
+        });
+    }
+    if (bestCombo) html += `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:center;font-size:0.85rem;">🏆 Лучшее комбо: <strong style="color:var(--green);">${bestCombo.emoji} ${bestCombo.name}</strong> — ${(bestCombo.wr * 100).toFixed(1)}%</div>`;
+    html += '</div>';
+    return html;
+}
+
+function renderFactions(factions, history) {
+    if (!factions || (factions.light.count === 0 && factions.dark.count === 0)) return '';
+    const totalFactionWins = history.reduce((s, h) => s + (h.factionWins || 0), 0);
+    let html = `<div class="oracle-block"><div class="oracle-block-title">⚔️ Фракции · всего ${totalFactionWins} побед</div>`;
+    if (factions.light.count > 0) {
+        const wrC = factions.light.wr >= 0.55 ? 'var(--gold)' : factions.light.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
+        html += `<div class="style-row"><div class="style-name"><span>🌝</span> Орден Света</div><div class="style-val">${factions.light.count} сез. · ⚔️ ${factions.light.factionWins} · <span style="color:${wrC};">${(factions.light.wr * 100).toFixed(1)}%</span></div></div>`;
+    }
+    if (factions.dark.count > 0) {
+        const wrC = factions.dark.wr >= 0.55 ? 'var(--gold)' : factions.dark.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
+        html += `<div class="style-row"><div class="style-name"><span>🌚</span> Культ Тьмы</div><div class="style-val">${factions.dark.count} сез. · ⚔️ ${factions.dark.factionWins} · <span style="color:${wrC};">${(factions.dark.wr * 100).toFixed(1)}%</span></div></div>`;
+    }
+    html += '</div>';
+    return html;
+}
+
+function renderPredictions(preds) {
+    if (!preds || preds.length === 0) return '';
+    let html = '<div class="oracle-block gold"><div class="oracle-block-title">🔮 Когда достигнешь X</div><div class="season-highlight">';
+    preds.forEach(p => html += `<div class="season-card"><div class="season-icon">${p.icon}</div><div class="season-title">${p.label}</div><div class="season-value">${p.value}</div><div class="season-detail">${p.detail}</div></div>`);
+    html += '</div></div>';
+    return html;
+}
+
+function renderHeroArchive(heroAnalysis) {
+    if (heroAnalysis.count === 0) return '';
+    let html = '<div class="oracle-block ice"><div class="oracle-block-title">🎭 Твои герои</div>';
+    const sorted = [...heroAnalysis.heroes].sort((a, b) => { if (a.isCurrent) return -1; if (b.isCurrent) return 1; return b.wr - a.wr; });
+    sorted.forEach(h => {
+        const isBest = heroAnalysis.best && h.name === heroAnalysis.best.name && h.season === heroAnalysis.best.season;
+        const cls = h.isCurrent ? 'current' : isBest ? 'best' : '';
+        const wrColor = h.wr >= 0.55 ? 'var(--gold)' : h.wr >= 0.45 ? 'var(--green)' : 'var(--red)';
+        const tag = h.isCurrent ? '⚡ Текущий' : isBest ? '🏆 Лучший' : `S${h.season}`;
+        html += `<div class="archive-hero ${cls}"><div class="hero-info"><span>${h.emoji} ${h.name}</span></div><div><span class="hero-wr" style="color:${wrColor};">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span> <span style="color:var(--muted);font-size:0.75rem;margin-left:8px;">${tag}</span></div></div>`;
+    });
+    const wrColor = heroAnalysis.trueWR >= 0.55 ? 'var(--gold)' : heroAnalysis.trueWR >= 0.45 ? 'var(--green)' : 'var(--red)';
+    html += `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:center;color:var(--sub);font-size:0.85rem;">
+        <div>Всего героев: <strong style="color:var(--purple);">${heroAnalysis.count}</strong></div>
+        <div style="margin-top:4px;">Суммарно: <strong style="color:var(--text);">${heroAnalysis.totalWins}-${heroAnalysis.totalLosses}</strong></div>
+        <div style="margin-top:4px;">Истинный WR: <strong style="color:${wrColor};">${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong></div>
+        ${heroAnalysis.best ? `<div style="margin-top:4px;">Лучший: <strong style="color:var(--green);">${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(1)}%)</div>` : ''}
+    </div></div>`;
+    return html;
+}
+
+function renderDungeon(dungeon) {
+    if (!dungeon || dungeon.totalWaves === 0) return '';
+    return `<div class="oracle-block ice"><div class="oracle-block-title">🏔 Бездна</div><div class="trend-grid">
+        <div class="trend-item"><div class="trend-icon">🌊</div><div class="trend-value">${dungeon.totalWaves}</div><div class="trend-label">Волн</div></div>
+        <div class="trend-item"><div class="trend-icon">🏆</div><div class="trend-value">${dungeon.maxRecord}</div><div class="trend-label">Рекорд</div></div>
+        <div class="trend-item"><div class="trend-icon">🐉</div><div class="trend-value">${dungeon.totalBosses}</div><div class="trend-label">Боссов</div></div>
+        <div class="trend-item"><div class="trend-icon">👑</div><div class="trend-value">${dungeon.totalTrophies}</div><div class="trend-label">Трофеев</div></div>
+    </div></div>`;
+}
+
+function renderVoice(lines) {
+    if (!lines.length) return '';
+    return `<div class="oracle-block"><div class="oracle-block-title">📜 Что я вижу</div>${lines.map(l => `<div class="oracle-voice">${l}</div>`).join('')}</div>`;
+}
+
+function renderForecast(forecast) {
+    if (!forecast) return '';
+    return `<div class="oracle-block"><div class="oracle-block-title">🎯 Грядущая глава</div><div class="season-highlight">
+        <div class="season-card"><div class="season-icon">📈</div><div class="season-title">Винрейт</div><div class="season-value">${(forecast.wrForecast * 100).toFixed(0)}%</div><div class="season-detail">${(forecast.wrMin * 100).toFixed(0)}–${(forecast.wrMax * 100).toFixed(0)}%</div></div>
+        ${forecast.placeForecast ? `<div class="season-card"><div class="season-icon">🏆</div><div class="season-title">Место в Лиге</div><div class="season-value">${forecast.placeForecast.min}–${forecast.placeForecast.max}</div></div>` : ''}
+    </div></div>`;
+}
+
+function renderAdvice(advice) {
+    if (!advice) return '';
+    return `<div class="advice-block"><div class="advice-icon">🖋️</div><div class="advice-text">${advice}</div></div>`;
+}
+
+// ============ ГЛАВНАЯ ============
+async function analyzePlayer() {
+    const nickname = document.getElementById('oracleSearch').value.trim();
+    const result = document.getElementById('oracleResult');
+    autocompleteList.classList.remove('show');
+    if (!nickname) { result.innerHTML = '<div class="not-found"><div class="nf-icon">📜</div><div>Назови имя героя</div></div>'; return; }
+    result.innerHTML = '<div class="loading-block"><div class="spinner"></div><p>Повествовательница листает страницы...</p></div>';
+    try {
+        if (!allSeasonsCache) {
+            allSeasonsCache = await loadAllSeasons();
+            allPlayersCache = getAllPlayers(allSeasonsCache);
+        }
+        const seasons = allSeasonsCache;
+        const history = getPlayerHistory(nickname, seasons);
+        if (history.length === 0) {
+            result.innerHTML = `<div class="not-found"><div class="nf-icon">👻</div><div>Я не вижу <strong>${nickname}</strong>.</div></div>`;
+            return;
+        }
+        const last = history[history.length - 1];
+        const trend = analyzeTrend(history);
+        const heroAnalysis = analyzeHeroArchive(nickname, seasons);
+        const dungeon = analyzeDungeon(nickname, seasons);
+        const leaguePlace = getLeaguePlace(nickname, seasons);
+        const seasonAnalysis = analyzeSeasons(history);
+        const factions = analyzeFactions(history);
+        const metaBySeason = analyzeMeta(seasons);
+        const predictions = predictMilestones(history);
+        const forecast = buildForecast(trend, leaguePlace);
+        const narrative = generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace);
+        const forecastText = generateForecastText(forecast, trend, leaguePlace);
+        const advice = generateAdvice(trend, heroAnalysis, leaguePlace);
+        const memes = generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace);
+
+        let html = '';
+        html += renderPlayerInfo(last);
+        html += renderHistory(history);
+        html += renderVoice(narrative);
+        html += renderMemeAnalysis(memes);
+        html += renderChart(history);
+        html += renderTrends(trend);
+        html += renderSeasonHighlights(seasonAnalysis);
+        html += renderMeta(metaBySeason, history);
+        html += renderForecast(forecast);
+        html += renderPredictions(predictions);
+        html += renderHeroArchive(heroAnalysis);
+        html += renderStyle(heroAnalysis);
+        html += renderFactions(factions, history);
+        html += renderDungeon(dungeon);
+        html += `<div class="oracle-block gold"><div class="oracle-block-title">🖋️ Слово Повествовательницы</div>${forecastText.map(l => `<div class="oracle-voice">${l}</div>`).join('')}</div>`;
+        html += renderAdvice(advice);
+        result.innerHTML = html;
+    } catch (e) {
+        console.error(e);
+        result.innerHTML = `<div class="not-found"><div class="nf-icon">💀</div><div>Ошибка: ${e.message}</div></div>`;
+    }
+}
+
+(async function preload() {
+    try {
+        allSeasonsCache = await loadAllSeasons();
+        allPlayersCache = getAllPlayers(allSeasonsCache);
+    } catch (e) { console.error(e); }
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name');
+    if (name) { document.getElementById('oracleSearch').value = name; setTimeout(() => analyzePlayer(), 300); }
+})();
+
+(function() {
+    const pb = document.getElementById('readingProgress'), st = document.getElementById('scrollTop');
+    if (!pb || !st) return;
+    window.addEventListener('scroll', () => {
+        const s = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight;
+        pb.style.transform = `scaleX(${dh > 0 ? s / dh : 0})`;
+        if (s > 300) st.classList.add('visible'); else st.classList.remove('visible');
+    });
+})();
+</script>
+</body>
+</html>
