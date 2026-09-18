@@ -1829,17 +1829,32 @@ function renderRecords(history) {
     const sa = analyzeSeasons(history);
     const rec = findPersonalRecords(history);
     if (!sa || !rec) return '';
+
+    // Турниры
+    const tourValue = sa.mostTournaments.tournamentWins || 0;
+    const tourSeason = tourValue > 0 && sa.mostTournaments.season !== undefined
+        ? `S${sa.mostTournaments.season}`
+        : '—';
+
+    // Фракционные победы
+    const factionValue = rec.maxFactionWins.factionWins || 0;
+    const factionSeason = factionValue > 0 && rec.maxFactionWins.season !== undefined
+        ? `S${rec.maxFactionWins.season}`
+        : '—';
+
     let html = '<div class="oracle-block green"><div class="oracle-block-title">🏅 Рекорды</div><div class="season-highlight">';
+
     html += `<div class="season-card"><div class="season-icon">🏆</div><div class="season-title">Лучший WR</div><div class="season-value">${(sa.bestWR.wr * 100).toFixed(1)}%</div><div class="season-detail">S${sa.bestWR.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший WR</div><div class="season-value">${(sa.worstWR.wr * 100).toFixed(1)}%</div><div class="season-detail">S${sa.worstWR.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Больше побед</div><div class="season-value">${sa.mostWins.wins}</div><div class="season-detail">S${sa.mostWins.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">🔥</div><div class="season-title">Больше боёв</div><div class="season-value">${sa.mostFights.total}</div><div class="season-detail">S${sa.mostFights.season}</div></div>`;
-    html += `<div class="season-card"><div class="season-icon">👑</div><div class="season-title">Больше турниров</div><div class="season-value">${sa.mostTournaments.tournamentWins || 0}</div><div class="season-detail">S${sa.mostTournaments.season}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">👑</div><div class="season-title">Больше турниров</div><div class="season-value">${tourValue}</div><div class="season-detail">${tourSeason}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">📈</div><div class="season-title">Лучший стрик</div><div class="season-value">${rec.bestStreak.best}</div><div class="season-detail">S${rec.bestStreak.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">💀</div><div class="season-title">Худший стрик</div><div class="season-value">${rec.worstStreak.worst}</div><div class="season-detail">S${rec.worstStreak.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">👑</div><div class="season-title">Макс. уровень</div><div class="season-value">${rec.maxLevel.level}</div><div class="season-detail">S${rec.maxLevel.season}</div></div>`;
     html += `<div class="season-card"><div class="season-icon">💎</div><div class="season-title">Макс. осколков</div><div class="season-value">${rec.maxShards.shards}</div><div class="season-detail">S${rec.maxShards.season}</div></div>`;
-    html += `<div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Макс. фракц. побед</div><div class="season-value">${rec.maxFactionWins.factionWins || 0}</div><div class="season-detail">S${rec.maxFactionWins.season || '—'}</div></div>`;
+    html += `<div class="season-card"><div class="season-icon">⚔️</div><div class="season-title">Макс. фракц. побед</div><div class="season-value">${factionValue}</div><div class="season-detail">${factionSeason}</div></div>`;
+
     html += '</div></div>';
     return html;
 }
