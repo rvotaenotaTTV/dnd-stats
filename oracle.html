@@ -132,76 +132,22 @@
     .not-found { text-align: center; padding: 40px 20px; color: var(--muted); }
     .not-found .nf-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
 
-    .oracle-tabs {
-        display: flex;
-        gap: 6px;
-        margin: 0 auto 20px;
-        padding: 6px;
-        background: linear-gradient(180deg, var(--card), rgba(163,113,247,0.03));
-        border-radius: var(--radius);
-        border: 1px solid rgba(163,113,247,0.3);
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        justify-content: center;
-        max-width: fit-content;
-    }
-    .oracle-tabs::-webkit-scrollbar { display: none; }
-    .oracle-tab {
-        padding: 10px 16px;
-        border: none;
-        background: transparent;
-        color: var(--sub);
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 0.78rem;
-        font-weight: 700;
-        font-family: inherit;
-        transition: 0.2s;
-        white-space: nowrap;
-        flex: 0 0 auto;
-        text-align: center;
-    }
-    .oracle-tab:hover { background: var(--elevated); color: var(--text); }
-    .oracle-tab.active {
-        background: linear-gradient(135deg, var(--purple), #8b5cf6);
-        color: #fff;
-        box-shadow: 0 4px 12px rgba(163,113,247,0.3);
-    }
-    .oracle-tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
-    .oracle-tab-content.active { display: block; }
-
-    @media (max-width: 768px) {
-        .oracle-tab { padding: 8px 12px; font-size: 0.72rem; }
-    }
-
-    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 768px) {
-        .search-input-wrap { flex-direction: column; }
-        .search-btn { width: 100%; }
-        .player-name { font-size: 1.3rem; }
-        .oracle-block { padding: 16px 12px; }
-        .history-table { font-size: 0.68rem; }
-        .history-table th, .history-table td { padding: 6px 3px; }
-        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .trend-grid { grid-template-columns: repeat(2, 1fr); }
-        .season-highlight { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .pace-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-    .pace-item { background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.02)); border-radius: var(--radius-sm); padding: 12px 6px; text-align: center; border: 1px solid rgba(163,113,247,0.2); }
-    .pace-icon { font-size: 1.3rem; margin-bottom: 4px; }
-    .pace-value { font-size: 1.1rem; font-weight: 800; color: var(--gold); }
-    .pace-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-
-    @media (max-width: 768px) {
-        .pace-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-        .pace-item { padding: 10px 4px; }
-        .pace-icon { font-size: 1.1rem; }
-        .pace-value { font-size: 0.95rem; }
-        .pace-label { font-size: 0.55rem; }
-    }
+	.oracle-tabs { display: flex; gap: 6px; margin: 0 auto 20px; padding: 6px; background: linear-gradient(180deg, var(--card), rgba(163,113,247,0.03)); border-radius: var(--radius); border: 1px solid rgba(163,113,247,0.3); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; justify-content: center; max-width: fit-content; }
+	.oracle-tabs::-webkit-scrollbar { display: none; }
+	.oracle-tab { padding: 10px 16px; border: none; background: transparent; color: var(--sub); border-radius: 12px; cursor: pointer; font-size: 0.78rem; font-weight: 700; font-family: inherit; transition: 0.2s; white-space: nowrap; flex: 0 0 auto; text-align: center; }
+	.oracle-tab:hover { background: var(--elevated); color: var(--text); }
+	.oracle-tab.active { background: linear-gradient(135deg, var(--purple), #8b5cf6); color: #fff; box-shadow: 0 4px 12px rgba(163,113,247,0.3); }
+	.oracle-tab-content { display: none; animation: fadeSlideIn 0.3s ease; }
+	.oracle-tab-content.active { display: block; }
+	@media (max-width: 768px) { .oracle-tab { padding: 8px 12px; font-size: 0.72rem; } }
+	@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+	@media (max-width: 768px) { .search-input-wrap { flex-direction: column; } .search-btn { width: 100%; } .player-name { font-size: 1.3rem; } .oracle-block { padding: 16px 12px; } .history-table { font-size: 0.68rem; } .history-table th, .history-table td { padding: 6px 3px; } .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; } .trend-grid { grid-template-columns: repeat(2, 1fr); } .season-highlight { grid-template-columns: repeat(2, 1fr); } }
+	.pace-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+	.pace-item { background: linear-gradient(135deg, rgba(163,113,247,0.08), rgba(163,113,247,0.02)); border-radius: var(--radius-sm); padding: 12px 6px; text-align: center; border: 1px solid rgba(163,113,247,0.2); }
+	.pace-icon { font-size: 1.3rem; margin-bottom: 4px; }
+	.pace-value { font-size: 1.1rem; font-weight: 800; color: var(--gold); }
+	.pace-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+	@media (max-width: 768px) { .pace-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; } .pace-item { padding: 10px 4px; } .pace-icon { font-size: 1.1rem; } .pace-value { font-size: 0.95rem; } .pace-label { font-size: 0.55rem; } }
 
     .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--purple), #c4a5ff, var(--gold), var(--purple)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
     .scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--purple); border-radius: 50%; color: var(--purple); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; }
@@ -214,7 +160,7 @@
     <div class="container">
         <header class="header">
             <h1 class="header-title">ПОВЕСТВОВАТЕЛЬНИЦА</h1>
-            <p class="header-subtitle">Этернис помнит всё</p>
+            <p class="header-subtitle">ЭТЕРНИС ПОМНИТ ВСЁ</p>
             <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         </header>
 
