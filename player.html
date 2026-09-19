@@ -632,6 +632,8 @@ body {
    ========================================================================= */
 const STATS_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 const STATS_URL_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const DATA_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
+const DATA_URL_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
 const SEASON_BASE = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_';
 const SEASON_BASE_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
 const TWOx2_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/2x2.json';
@@ -793,6 +795,17 @@ async function load2x2() {
         try { localStorage.setItem(TWOx2_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
     } catch (e) { return {}; }
+}
+
+async function loadEmojis() {
+    try {
+        let r = await fetch(DATA_URL_FALLBACK);
+        if (!r.ok) r = await fetch(DATA_URL);
+        if (!r.ok) return;
+        const data = await r.json();
+        classEmojis = Object.fromEntries((data.classes || []).map(c => [c.Name, c.Emoji]));
+        raceEmojis = Object.fromEntries((data.races || []).map(r => [r.Name, r.Emoji]));
+    } catch (e) {}
 }
 
 /* ============================================================================
@@ -2317,30 +2330,31 @@ function renderMeta(metaBySeason, history) {
         const rankClass = rank <= 5 ? `r${rank}` : 'r-out';
         const mineStyle = isMine ? 'background:rgba(240,185,11,0.12);margin:0 -6px;padding:4px 6px;border-radius:4px;border-left:3px solid var(--gold);' : '';
         const nameColor = isMine ? 'color:var(--gold);font-weight:800;' : 'color:var(--text);';
+        const emoji = classEmojis[c.name] || '';
         return `<div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:4px 0;${mineStyle}">
-            <span><span class="meta-rank ${rankClass}">${rank}</span><span style="${nameColor}">${c.name}</span>${isMine ? ' <span style="color:var(--gold);font-size:0.7rem;">← твой</span>' : ''}</span>
+            <span><span class="meta-rank ${rankClass}">${rank}</span><span style="${nameColor}">${emoji} ${c.name}</span>${isMine ? ' <span style="color:var(--gold);font-size:0.7rem;">← твой</span>' : ''}</span>
             <span style="color:var(--gold);font-weight:700;">${(c.wr * 100).toFixed(1)}% · ${c.total}</span>
         </div>`;
     };
 
-    const rowCompactHtml = (m, historyItem) => {
-        if (!historyItem || !historyItem.name) return '';
-        const nameParts = historyItem.name.split('-');
-        const myClass = nameParts.length >= 2 ? nameParts[1] : nameParts[0];
-        if (!myClass) return '';
-        const myRank = m.allClasses.findIndex(c => c.name === myClass) + 1;
-        const myObj = m.allClasses.find(c => c.name === myClass);
-        if (!myObj) return '';
-        const isInMetaNow = myRank <= META_TOP && myRank > 0;
-        const statusIcon = isInMetaNow ? '🎯' : '⚔️';
-        const rankColor = isInMetaNow ? 'var(--gold)' : 'var(--muted)';
-        return `<div style="display:grid;grid-template-columns:50px 1fr auto auto;gap:10px;align-items:center;padding:6px 10px;font-size:0.78rem;border-bottom:1px solid rgba(163,113,247,0.08);">
-            <span style="color:var(--purple);font-weight:800;">S${m.season}</span>
-            <span>${statusIcon} <strong style="color:${isInMetaNow ? 'var(--gold)' : 'var(--text)'};">${myClass}</strong></span>
-            <span style="color:${rankColor};font-size:0.7rem;white-space:nowrap;">${myRank} из ${m.allClasses.length}</span>
-            <span style="color:${wrColor(myObj.wr)};font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;">${(myObj.wr * 100).toFixed(1)}%</span>
-        </div>`;
-    };
+	const rowCompactHtml = (m, historyItem) => {
+		if (!historyItem || !historyItem.name) return '';
+		const nameParts = historyItem.name.split('-');
+		const myClass = nameParts.length >= 2 ? nameParts[1] : nameParts[0];
+		if (!myClass) return '';
+		const myRank = m.allClasses.findIndex(c => c.name === myClass) + 1;
+		const myObj = m.allClasses.find(c => c.name === myClass);
+		if (!myObj) return '';
+		const isInMetaNow = myRank <= META_TOP && myRank > 0;
+		const rankColor = isInMetaNow ? 'var(--gold)' : 'var(--muted)';
+		const emoji = classEmojis[myClass] || '';
+		return `<div style="display:grid;grid-template-columns:50px 1fr auto auto;gap:10px;align-items:center;padding:6px 10px;font-size:0.78rem;border-bottom:1px solid rgba(163,113,247,0.08);">
+			<span style="color:var(--purple);font-weight:800;">S${m.season}</span>
+			<span><strong style="color:${isInMetaNow ? 'var(--gold)' : 'var(--text)'};">${emoji} ${myClass}</strong></span>
+			<span style="color:${rankColor};font-size:0.7rem;white-space:nowrap;">${myRank} из ${m.allClasses.length}</span>
+			<span style="color:${wrColor(myObj.wr)};font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;">${(myObj.wr * 100).toFixed(1)}%</span>
+		</div>`;
+	};
 
     const currentMeta = metaBySeason.find(m => m.isCurrent);
     const archivedMeta = metaBySeason.filter(m => !m.isCurrent);
@@ -2357,11 +2371,12 @@ function renderMeta(metaBySeason, history) {
         const myInMeta = myClass ? isInMeta(myClass, metaBySeason, m.season) : false;
         const posText = myRank > 0 ? ` · 📍 ${myRank} из ${m.allClasses.length}` : '';
         const statusText = myClass ? (myInMeta ? ' 🎯 в мете' : ' ⚔️ вне меты') : '';
+        const emoji = myClass ? (classEmojis[myClass] || '') : '';
 
         html += `<div style="margin-bottom:14px;padding:12px 14px;background:linear-gradient(90deg,rgba(163,113,247,0.1),rgba(163,113,247,0.02));border-radius:var(--radius-sm);border-left:3px solid ${myInMeta ? 'var(--gold)' : 'var(--purple)'};">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px;">
                 <div style="font-size:0.82rem;color:var(--purple);font-weight:800;">S${m.season} ⚡ <span style="color:var(--muted);font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;">текущий</span></div>
-                ${myClass ? `<div style="font-size:0.7rem;color:var(--muted);">твой класс: <strong style="color:${myInMeta ? 'var(--gold)' : 'var(--text)'};">${myClass}${posText}${statusText}</strong></div>` : ''}
+                ${myClass ? `<div style="font-size:0.7rem;color:var(--muted);">твой класс: <strong style="color:${myInMeta ? 'var(--gold)' : 'var(--text)'};">${emoji} ${myClass}${posText}${statusText}</strong></div>` : ''}
             </div>`;
         m.topClasses.forEach((c, i) => { html += rowTopHtml(c, i + 1, c.name === myClass); });
         if (myObj && !myInMeta && myRank > META_TOP) {
@@ -2406,49 +2421,28 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
         .filter(c => c.total >= 5)
         .sort((a, b) => b.total - a.total);
 
-    const bestClassByWR = classArr.length > 0 ? [...classArr].sort((a, b) => b.wr - a.wr)[0] : null;
-    const mostClassByFreq = classArr.length > 0 ? classArr[0] : null;
-    const bestRaceByWR = raceArr.length > 0 ? [...raceArr].sort((a, b) => b.wr - a.wr)[0] : null;
-    const mostRaceByFreq = raceArr.length > 0 ? raceArr[0] : null;
     const bestCombo = heroAnalysis.bestCombo;
 
-    const getTag = (item, bestWR, mostFreq) => {
-        const isBest = bestWR && item.name === bestWR.name;
-        const isFreq = mostFreq && item.name === mostFreq.name;
-        if (isBest && isFreq) return { tag: '🏆🔥', cls: 'best' };
-        if (isBest) return { tag: '🏆', cls: 'best' };
-        if (isFreq) return { tag: '🔥', cls: '' };
-        return { tag: '', cls: '' };
-    };
-
-    const currentSeason = history[history.length - 1]?.season;
-    const getMetaTag = (className, kind = 'class') => {
-        if (!metaBySeason || !metaBySeason.length) return '';
-        const inMeta = isInMeta(className, metaBySeason, currentSeason, kind);
-        if (inMeta === true) return ' 🎯';
-        if (inMeta === false) return ' ⚔️';
-        return '';
-    };
+    const ce = (typeof classEmojis !== 'undefined' && classEmojis) ? classEmojis : {};
+    const re = (typeof raceEmojis !== 'undefined' && raceEmojis) ? raceEmojis : {};
 
     let html = '<div class="oracle-block ice"><div class="oracle-block-title">🎨 Твой стиль</div>';
-    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:14px;">По всей карьере: текущие, удалённые и архивные герои</div>';
+    html += '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:14px;">Топ-3 по частоте</div>';
 
     if (classArr.length > 0) {
-        html += '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">⚔️ Классы <span style="opacity:0.7;text-transform:none;letter-spacing:0;">(🎯 в мете · ⚔️ вне · 🏆 лучший WR · 🔥 частый)</span></div>';
-        classArr.slice(0, 5).forEach(c => {
-            const { tag, cls } = getTag(c, bestClassByWR, mostClassByFreq);
-            html += `<div class="style-row ${cls}">
-                <div class="style-name"><span>${tag || '⚔️'}</span> ${c.name}${getMetaTag(c.name)}</div>
+        html += '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">⚔️ Классы</div>';
+        classArr.slice(0, 3).forEach(c => {
+            html += `<div class="style-row">
+                <div class="style-name">${ce[c.name] || '⚔️'} ${c.name}</div>
                 <div class="style-val">${c.wins}-${c.losses} (${(c.wr * 100).toFixed(1)}%)</div>
             </div>`;
         });
     }
     if (raceArr.length > 0) {
         html += '<div style="font-size:0.7rem;color:var(--muted);margin:18px 0 8px;text-transform:uppercase;letter-spacing:1px;">🌍 Расы</div>';
-        raceArr.slice(0, 5).forEach(r => {
-            const { tag, cls } = getTag(r, bestRaceByWR, mostRaceByFreq);
-            html += `<div class="style-row ${cls}">
-                <div class="style-name"><span>${tag || '🌍'}</span> ${r.name}${getMetaTag(r.name, 'race')}</div>
+        raceArr.slice(0, 3).forEach(r => {
+            html += `<div class="style-row">
+                <div class="style-name">${re[r.name] || '🌍'} ${r.name}</div>
                 <div class="style-val">${r.wins}-${r.losses} (${(r.wr * 100).toFixed(1)}%)</div>
             </div>`;
         });
@@ -3162,6 +3156,8 @@ let allSeasonsCache = null;
 let allPlayersCache = null;
 let currentPlayerName = '';
 let data2x2 = {};
+let classEmojis = {};
+let raceEmojis = {};
 let autocompleteIndex = -1;
 let autocompleteTimer = null;
 
@@ -3287,6 +3283,7 @@ document.querySelectorAll('.nav-label').forEach(label => {
 (async function preload() {
     // 2x2
     load2x2().then(d => { data2x2 = d; });
+	await loadEmojis();
 
     // Параметры
     const params = new URLSearchParams(window.location.search);
