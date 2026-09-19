@@ -651,7 +651,6 @@ function initTotalSortable() {
     const defaultHeader = table.querySelector('[data-sort="wins"]');
     if (defaultHeader) defaultHeader.classList.add('desc');
 }
-// Открыть вкладку из URL
 const validSeasonTabs = ['seasons', 'alltime'];
 const initialHash = window.location.hash.substring(1);
 if (initialHash && validSeasonTabs.includes(initialHash)) {
