@@ -256,11 +256,11 @@ async function getSeasonData(n) {
     const TTL = 30 * 60 * 1000;
     try {
         const cached = JSON.parse(localStorage.getItem(KEY) || 'null');
-        if (cached) return cached.data; // без TTL — архив иммутабельный
+        if (cached) return cached.data;
     } catch (e) {}
 
     const r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_${n}.json`);
-    if (!r.ok) return null; // ← null, не throw
+    if (!r.ok) return null;
     const data = await r.json();
     try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
     return data;
@@ -563,7 +563,7 @@ window.switchSeason = switchSeason;
 async function loadCurrentSeason(sn, tabId) {
     const container = document.getElementById(tabId);
     try {
-        const d = await getStatsData();   // ← через кеш
+        const d = await getStatsData();
         container.innerHTML = renderSeason(d, sn, true);
     } catch {
         container.innerHTML = `<div class="season-frame live"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Не удалось загрузить данные</div></div>`;
@@ -573,7 +573,7 @@ async function loadArchiveSeason(sn, tabId) {
     const container = document.getElementById(tabId);
     try {
         const d = await getSeasonData(sn);
-        if (!d) throw new Error('no data');   // ← добавили проверку
+        if (!d) throw new Error('no data');
         container.innerHTML = renderSeason(d, sn, false);
     } catch {
         container.innerHTML = `<div class="season-frame ended"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Архив недоступен</div></div>`;
@@ -596,7 +596,7 @@ async function loadTotalStats() {
         if (dp) { a.dungeonRecord = Math.max(a.dungeonRecord, dp.record || 0); a.dungeonWaves += dp.totalWaves || 0; a.dungeonBosses += dp.bosses || 0; }
     }
     try {
-        const d = await getStatsData();   // ← через кеш
+        const d = await getStatsData();
         (d.players || []).forEach(p => { const dp = d.dungeon?.players?.[p.display]; addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp); });
         if (d.heroArchive) { Object.entries(d.heroArchive).forEach(([playerName, heroes]) => { heroes.forEach(h => { addPlayer(playerName, h.wins, h.losses, h.best, 0, h.tournamentWins, null); }); }); }
     } catch (e) {}
@@ -604,7 +604,7 @@ async function loadTotalStats() {
     for (let n = 0; n < currentSeasonNum; n++) {
         try {
             const d = await getSeasonData(n);
-            if (!d) break;   // ← null = стоп (нет такого сезона)
+            if (!d) break;
             (d.players || []).forEach(p => { const dp = d.dungeon?.players?.[p.display]; addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp); });
             if (d.heroArchive) { Object.entries(d.heroArchive).forEach(([playerName, heroes]) => { heroes.forEach(h => { addPlayer(playerName, h.wins, h.losses, h.best, 0, h.tournamentWins, null); }); }); }
         } catch (e) { break; }

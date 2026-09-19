@@ -678,7 +678,7 @@ const SEASON_BASE_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dn
 const TWOx2_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/2x2.json';
 const TWOx2_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/2x2.json';
 
-const SEASON_SCAN_LIMIT = 20; // максимум, до куда ищем season_N.json
+const SEASON_SCAN_LIMIT = 20;
 const META_TOP = 5;
 const META_MIN_FIGHTS = 30;
 
@@ -687,13 +687,13 @@ const WR_BAD = 0.45;
 const MIN_FIGHTS_FOR_BEST = 10;
 const MIN_FIGHTS_FOR_RECORD = 15;
 
-const CACHE_TTL = 30 * 60 * 1000; // 1 час
+const CACHE_TTL = 30 * 60 * 1000;
 const CACHE_KEY_PREFIX = 'eternis-season-v2-';
 const PLAYERS_CACHE_KEY = 'eternis-players-cache';
 const TWOx2_CACHE_KEY = 'eternis-2x2-cache';
 const LAST_PLAYER_KEY = 'eternis-last-player';
-const SEASON_LIMIT_KEY = 'eternis-season-limit'; // ← НОВОЕ
-const SEASON_LIMIT_TTL = 24 * 60 * 60 * 1000;    // ← НОВОЕ, 24 часа
+const SEASON_LIMIT_KEY = 'eternis-season-limit';
+const SEASON_LIMIT_TTL = 24 * 60 * 60 * 1000;
 
 const SEASON_ICONS = ['🏁', '🔥', '💫', '🩸', '🕯️', '⚡', '💀'];
 
@@ -751,7 +751,6 @@ function formatNumber(n) {
 
 function renderProgress(loaded, total, container) {
     const rawPct = total > 0 ? Math.round((loaded / total) * 100) : 0;
-    // Показываем 99% пока идёт загрузка, 100% — только когда всё готово
     const pct = loaded >= total ? 100 : Math.min(99, rawPct);
     const el = container || document.getElementById('progressBox');
     if (!el) return;
@@ -785,7 +784,6 @@ function getAllPlayers(seasons) {
             } else if (s.isCurrent) {
                 const existing = players.get(key);
                 existing.isActive = true;
-                // Обновляем актуальными данными из текущего сезона
                 existing.skill = p.skill || 0;
                 existing.wins = p.wins || 0;
                 existing.losses = p.losses || 0;
@@ -809,28 +807,19 @@ async function getSeasonData(n) {
 
     let r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
     if (!r.ok) r = await fetch(`${SEASON_BASE}${n}.json`);
-    if (!r.ok) return null; // ← просто null вместо throw
+    if (!r.ok) return null;
     const data = await r.json();
     try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
     return data;
 }
 
-/* ============================================================================
-   Автоопределение последнего архивного сезона
-   - Проверяет GET-запросы к season_0.json, season_1.json, ...
-   - Ищет НЕПРЕРЫВНУЮ цепочку (0,1,2,3,...) до первой дырки
-   - Кеширует результат в localStorage на 24 часа
-   ============================================================================ */
 async function getSeasonLimit() {
-    // 1) Проверяем кеш
     try {
         const cached = JSON.parse(localStorage.getItem(SEASON_LIMIT_KEY) || 'null');
         if (cached && (Date.now() - cached.ts < SEASON_LIMIT_TTL)) {
             return cached.last;
         }
     } catch (e) {}
-
-    // 2) Параллельно проверяем 0..20 (GET, не HEAD!)
     const checks = await Promise.all(
         Array.from({ length: 21 }, (_, n) =>
             fetch(`${SEASON_BASE}${n}.json`)
@@ -838,35 +827,23 @@ async function getSeasonLimit() {
                 .catch(() => -1)
         )
     );
-
-    // 3) Ищем непрерывную цепочку 0,1,2,... до первой дырки
     const found = new Set(checks.filter(n => n >= 0));
     let last = -1;
     for (let n = 0; n <= 20; n++) {
         if (found.has(n)) last = n;
-        else break; // первая дырка — стоп
+        else break;
     }
-
-    // 4) Если вообще ничего не нашли — считаем, что архивов нет
-    if (last < 0) last = 0; // хотя бы S0 должен быть
-
-    // 5) Сохраняем в кеш
+    if (last < 0) last = 0;
     try {
         localStorage.setItem(SEASON_LIMIT_KEY, JSON.stringify({ ts: Date.now(), last }));
     } catch (e) {}
-
     return last;
 }
 
 async function loadAllSeasons(onProgress) {
     const seasons = [];
-
-    // Фаза 1: узнаём, сколько сезонов есть (с кешем на 24ч)
     if (onProgress) onProgress(1, 3);
-
     const lastArchive = await getSeasonLimit();
-
-    // Грузим все архивные сезоны параллельно
     const archivePromises = [];
     for (let n = 0; n <= lastArchive; n++) {
         archivePromises.push(getSeasonData(n));
@@ -875,21 +852,13 @@ async function loadAllSeasons(onProgress) {
     archiveResults.forEach((data, n) => {
         if (data) seasons.push({ num: n, data, isCurrent: false });
     });
-
-    // ✅ Номер текущего сезона = следующий после последнего архивного
     const currentNum = lastArchive + 1;
-
-    // Фаза 2: текущий сезон
-    if (onProgress) onProgress(2, 3); // 66% — "загружаю текущий"
-
+    if (onProgress) onProgress(2, 3);
     let currentData = null;
     try {
         currentData = await getStatsData();
     } catch (e) {}
-
-    // Фаза 3: готово
-    if (onProgress) onProgress(3, 3); // 100%
-
+    if (onProgress) onProgress(3, 3);
     return currentData
         ? [...seasons, { num: currentNum, data: currentData, isCurrent: true }]
         : seasons;
@@ -930,7 +899,6 @@ function getPlayerHistory(nickname, seasons) {
     const playerKey = nickname.toLowerCase();
 
     seasons.forEach(s => {
-        // Основной герой сезона
         const p = (s.data.players || []).find(pl =>
             pl.display && pl.display.toLowerCase() === playerKey
         );
@@ -963,7 +931,6 @@ function getPlayerHistory(nickname, seasons) {
             }
         }
 
-        // Удалённые герои этого сезона
         const archive = s.data.heroArchive?.[playerKey] || [];
         archive.forEach(h => {
             const wins = h.wins || 0;
@@ -1047,7 +1014,6 @@ function analyzeHeroArchive(nickname, seasons) {
     const playerKey = nickname.toLowerCase();
     const currentSeason = seasons[seasons.length - 1];
 
-    // 1. Текущий герой
     const currentPlayer = currentSeason?.data?.players?.find(p =>
         p.display && p.display.toLowerCase() === playerKey
     );
@@ -1065,7 +1031,6 @@ function analyzeHeroArchive(nickname, seasons) {
         });
     }
 
-    // 2. heroArchive текущего сезона
     const currentArchive = currentSeason?.data?.heroArchive?.[playerKey] || [];
     currentArchive.forEach(h => {
         allHeroes.push({
@@ -1081,7 +1046,6 @@ function analyzeHeroArchive(nickname, seasons) {
         });
     });
 
-    // 3. Прошлые сезоны
     seasons.forEach(s => {
         if (s.isCurrent) return;
         const p = s.data.players?.find(pl =>
@@ -1116,7 +1080,6 @@ function analyzeHeroArchive(nickname, seasons) {
         });
     });
 
-    // Агрегация
     const classStats = {};
     const raceStats = {};
     const comboStats = {};
@@ -1953,7 +1916,7 @@ function renderAnalysisTab(history, trend, swings, pace, legendSeason, peakForm,
     html += renderTrends(trend);
     html += renderSwings(swings);
     html += renderPace(pace);
-    html += renderRecords(allHistory || history);  // ← ВСЕ герои
+    html += renderRecords(allHistory || history);
     html += renderLegendSeason(legendSeason);
     html += renderPeakForm(peakForm);
     html += renderCompareTop10(top10Compare);
@@ -3077,7 +3040,6 @@ window.switchTab = function(tabId) {
     if (btn) btn.classList.add('active');
     if (content) content.classList.add('active');
 
-    // Обновляем URL
     const url = new URL(window.location);
     url.searchParams.set('tab', tabId);
     window.history.replaceState({}, '', url);
@@ -3117,7 +3079,6 @@ window.copyProfileLink = async function() {
     } catch (e) { console.warn(e); }
 };
 
-// Ранги (только текущий сезон — stats_data.json)
 function getCurrentSeasonPlayers() {
     const last = allSeasonsCache[allSeasonsCache.length - 1];
     return last?.data?.players || [];
@@ -3179,7 +3140,6 @@ async function loadProfile() {
         return;
     }
 
-    // Кеш уже есть — не показываем прогресс
     if (!allSeasonsCache) {
         content.innerHTML = '<div id="progressBox"></div>';
         renderProgress(0, 3); 
@@ -3248,13 +3208,11 @@ async function loadProfile() {
 
         content.innerHTML = html;
 
-        // Открываем нужный таб из URL
         const urlTab = new URLSearchParams(window.location.search).get('tab');
         if (urlTab) {
             setTimeout(() => switchTab(urlTab), 100);
         }
 
-        // Обновляем URL
         const url = new URL(window.location);
         url.searchParams.set('name', currentPlayerName);
         window.history.replaceState({}, '', url);
@@ -3397,11 +3355,9 @@ document.querySelectorAll('.nav-label').forEach(label => {
    СЕКЦИЯ 12. ПРЕДЗАГРУЗКА
    ========================================================================= */
 (async function preload() {
-    // 2x2
     load2x2().then(d => { data2x2 = d; });
 	await loadEmojis();
 
-    // Параметры
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name');
     const lastPlayer = localStorage.getItem(LAST_PLAYER_KEY);
@@ -3417,14 +3373,12 @@ document.querySelectorAll('.nav-label').forEach(label => {
         renderProgress(0, 3); 
     }
 
-    // Загружаем один раз
     allSeasonsCache = await loadAllSeasons((loaded, total) => {
         renderProgress(loaded, total);
     });
     allPlayersCache = getAllPlayers(allSeasonsCache);
     try { localStorage.setItem(PLAYERS_CACHE_KEY, JSON.stringify(allPlayersCache)); } catch (e) {}
 
-    // Загружаем профиль ОДИН раз
     if (targetName && allSeasonsCache) {
         await loadProfile();
     } else {
