@@ -136,6 +136,12 @@ body {
 
 .badge { padding: 3px 10px; border-radius: 15px; font-size: 0.65rem; font-weight: 700; }
 .badge-gold { background: var(--gold); color: #000; }
+.badge-league {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #000;
+    font-weight: 800;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+}
 .badge-light { background: rgba(240, 185, 11, 0.15); color: var(--gold); }
 .badge-dark { background: rgba(163, 113, 247, 0.2); color: var(--purple); }
 
@@ -725,6 +731,16 @@ function getStatsData() {
         throw e;
     });
     return statsPromise;
+}
+
+const LEAGUE_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/league.json';
+let leagueChampions = {};
+
+async function loadLeagueChampions() {
+    try {
+        const r = await fetch(LEAGUE_URL);
+        if (r.ok) leagueChampions = await r.json();
+    } catch (e) {}
 }
 
 /* ============================================================================
@@ -1755,6 +1771,16 @@ function renderPlayerInfo(player, ranks) {
     const badges = [];
     if (player.champion) badges.push('<span class="badge badge-gold">👑 Хранитель</span>');
     if (player.faction) badges.push(`<span class="badge ${fc === 'light' ? 'badge-light' : 'badge-dark'}">${fe} ${player.faction}</span>`);
+
+    // ⭐ Чемпион Лиги
+    const leagueSeasons = Object.entries(leagueChampions)
+        .filter(([s, nick]) => nick && nick.toLowerCase() === player.display.toLowerCase())
+        .map(([s]) => `S${s}`)
+        .sort((a, b) => parseInt(b.slice(1)) - parseInt(a.slice(1)));
+    if (leagueSeasons.length > 0) {
+        badges.push(`<span class="badge badge-league">⭐ Чемпион Лиги ${leagueSeasons.join(', ')}</span>`);
+    }
+
     if (ranks && ranks.season > 0 && ranks.season <= 10) badges.push(`<span class="badge badge-light">🏆 Топ-${ranks.season} сезона</span>`);
 
     return `<section class="oracle-block gold" style="padding:0;overflow:hidden;">
@@ -3167,6 +3193,7 @@ async function loadProfile() {
     }
 
     try {
+		if (Object.keys(leagueChampions).length === 0) await loadLeagueChampions();
         const history = getPlayerHistory(nickname, allSeasonsCache);
         if (history.length === 0) {
             content.innerHTML = `<div class="not-found"><div class="nf-icon">👻</div><div>Я не вижу <strong>${nickname}</strong>.</div></div>`;
@@ -3371,6 +3398,7 @@ document.querySelectorAll('.nav-label').forEach(label => {
    ========================================================================= */
 (async function preload() {
     load2x2().then(d => { data2x2 = d; });
+	loadLeagueChampions();
 	await loadEmojis();
 
     const params = new URLSearchParams(window.location.search);
