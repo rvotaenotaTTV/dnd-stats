@@ -22,18 +22,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 
 <style>
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    1. ФОН
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 body {
     background-image:
         radial-gradient(ellipse at 20% 0%, rgba(163,113,247,0.10) 0%, transparent 45%),
         radial-gradient(ellipse at 80% 100%, rgba(240,185,11,0.06) 0%, transparent 45%);
 }
 
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    2. ПОИСК С АВТОКОМПЛИТОМ
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .search-row {
     max-width: 620px;
     margin: 0 auto 28px;
@@ -125,14 +125,9 @@ body {
     text-align: center;
 }
 
-@media (max-width: 768px) {
-    .search-input-wrap { flex-direction: column; }
-    .search-btn { width: 100%; }
-}
-
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    3. КАРТОЧКА ИГРОКА
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .profile-hero { text-align: center; padding: 22px 28px; margin-bottom: 16px; animation: fadeSlideIn 0.4s ease; position: relative; }
 .profile-emoji { font-size: 3rem; margin-bottom: 4px; }
 .profile-name { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
@@ -144,16 +139,9 @@ body {
 .badge-light { background: rgba(240, 185, 11, 0.15); color: var(--gold); }
 .badge-dark { background: rgba(163, 113, 247, 0.2); color: var(--purple); }
 
-@media (max-width: 768px) {
-    .profile-hero { padding: 18px 14px; }
-    .profile-emoji { font-size: 2.4rem; }
-    .profile-name { font-size: 1.2rem; }
-    .profile-class { font-size: 0.78rem; }
-}
-
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    4. ЕДИНЫЕ ТАБЫ
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .tabs-bar {
     display: flex;
     gap: 4px;
@@ -195,28 +183,9 @@ body {
     box-shadow: 0 4px 12px rgba(163,113,247,0.3);
 }
 
-@media (max-width: 768px) {
-    .tabs-bar {
-        width: 100%;
-        justify-content: flex-start;
-        padding: 5px 6px;
-    }
-    .tab-pill {
-        padding: 7px 10px;
-        font-size: 0.68rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .tab-pill {
-        padding: 6px 8px;
-        font-size: 0.65rem;
-    }
-}
-
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    5. БЛОКИ ПРОФИЛЯ (stats, ranks, achievements)
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
 .stat-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid var(--border); animation: fadeSlideIn 0.3s ease; }
 .stat-num { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
@@ -238,35 +207,9 @@ body {
 
 .skill-value { font-size: 3rem; font-weight: 900; color: var(--gold); }
 
-.summary-stat { flex: 1; min-width: 60px; background: var(--elevated); border-radius: var(--radius-sm); padding: 8px; text-align: center; border: 1px solid var(--border); }
-.summary-value { font-size: 1rem; font-weight: 800; color: var(--gold); }
-.summary-label { font-size: 0.55rem; color: var(--muted); }
-
-.former-heroes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 12px; }
-
-.season-tabs { display: flex; gap: 4px; margin: 16px 0; flex-wrap: wrap; justify-content: center; background: var(--elevated); padding: 3px; border-radius: 20px; border: 1px solid var(--border); }
-.season-tab { padding: 6px 14px; border-radius: 18px; font-size: 0.72rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--sub); font-family: inherit; transition: 0.2s; white-space: nowrap; }
-.season-tab:hover { color: var(--text); }
-.season-tab.active { background: var(--gold); color: #000; font-weight: 700; box-shadow: 0 2px 6px rgba(240, 185, 11, 0.25); }
-
-@media (max-width: 768px) {
-    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .stat-num { font-size: 1.1rem; }
-    .ranks-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .rank-pos { font-size: 1.15rem; }
-    .ach-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .ach-emoji { font-size: 1.5rem; }
-    .ach-name { font-size: 0.72rem; }
-    .former-heroes-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-    .skill-value { font-size: 2.2rem; }
-    .season-tabs { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; scrollbar-width: none; }
-    .season-tabs::-webkit-scrollbar { display: none; }
-    .season-tab { flex-shrink: 0; font-size: 0.68rem; padding: 6px 12px; }
-}
-
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    6. БЛОКИ ORACLE
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .oracle-block {
     background: var(--card);
     border: 1px solid var(--border);
@@ -349,14 +292,9 @@ body {
 .meme-line strong { color: #ec4899; }
 .meme-line .meme { color: #ec4899; font-weight: 700; }
 
-@media (max-width: 768px) {
-    .oracle-block { padding: 16px 12px; }
-    .oracle-block-title { font-size: 0.85rem; }
-}
-
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    7. ТАБЛИЦЫ ИСТОРИИ
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .history-table {
     width: 100%;
     border-collapse: collapse;
@@ -392,55 +330,23 @@ body {
 .history-table tr.total-row td { background: rgba(163,113,247,0.10); font-weight: 800; border-bottom: none; }
 .history-table tr.total-row td.season-num { color: var(--gold); }
 
-.history-table.full { font-size: 0.72rem; }
+/* --- Полная летопись: 11 колонок + разделение по сезонам --- */
+.history-table.full { font-size: 0.72rem; min-width: 700px; }
 .history-table.full th { padding: 8px 6px; font-size: 0.6rem; line-height: 1.3; text-align: center; }
-.history-table.full th .th-sub { display: block; font-size: 0.5rem; color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; margin-top: 2px; }
 .history-table.full td { padding: 8px 6px; font-size: 0.72rem; }
 .history-table.full td:nth-child(2) { max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
 
-/* Таблица летописи — 11 колонок */
-.history-table.full { min-width: 700px; }
-@media (max-width: 768px) {
-    .history-table.full { min-width: 0; }
-}
+.history-table.full tbody tr.season-even { background: rgba(163,113,247,0.03); }
+.history-table.full tbody tr.season-odd  { background: transparent; }
+.history-table.full tbody tr.season-first td { border-top: 2px solid rgba(163,113,247,0.35); }
+.history-table.full tbody tr.season-first td:first-child { color: var(--gold); }
+.history-table.full tbody tr.season-total { background: rgba(163,113,247,0.08); font-weight: 700; border-bottom: 1px solid rgba(163,113,247,0.2); }
+.history-table.full tbody tr.season-total td { color: var(--sub); font-style: italic; }
+.history-table.full tbody tr.grand-total { background: linear-gradient(90deg, rgba(240,185,11,0.15), rgba(240,185,11,0.04)); border-top: 2px solid var(--gold); font-weight: 800; }
 
-@media (max-width: 768px) {
-    .history-table.full, .history-table.full thead, .history-table.full tbody,
-    .history-table.full th, .history-table.full td, .history-table.full tr { display: block; }
-    .history-table.full thead { display: none; }
-    .history-table.full tr {
-        background: var(--elevated);
-        border-radius: var(--radius-sm);
-        margin-bottom: 8px;
-        padding: 10px 12px;
-        border-left: 3px solid var(--purple);
-        border-bottom: none;
-    }
-    .history-table.full tr.current { border-left-color: var(--gold); background: linear-gradient(135deg, rgba(240,185,11,0.1), rgba(240,185,11,0.02)); }
-    .history-table.full td {
-        display: flex;
-        justify-content: space-between;
-        padding: 4px 0;
-        border: none;
-        font-size: 0.75rem;
-        white-space: normal;
-        text-align: right;
-    }
-    .history-table.full td::before {
-        content: attr(data-label);
-        color: var(--muted);
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-right: 8px;
-        text-align: left;
-    }
-    .history-table.full td:nth-child(2) { max-width: none; overflow: visible; text-overflow: clip; white-space: normal; }
-}
-
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    8. ГРАФИКИ, ТРЕНДЫ, РЕКОРДЫ
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .trend-grid, .season-highlight { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
 .season-highlight { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
 
@@ -460,25 +366,18 @@ body {
 .pace-value { font-size: 1.1rem; font-weight: 800; color: var(--gold); }
 .pace-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 
-@media (max-width: 768px) {
-    .trend-grid, .season-highlight { grid-template-columns: repeat(2, 1fr); }
-    .pace-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .pace-item { padding: 10px 4px; }
-    .pace-value { font-size: 0.95rem; }
-}
-
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    9. МЕТА
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .meta-rank { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; font-size: 0.65rem; font-weight: 800; margin-right: 6px; }
 .meta-rank.r1 { background: var(--gold); color: #000; }
 .meta-rank.r2 { background: var(--silver); color: #000; }
 .meta-rank.r3 { background: var(--bronze); color: #fff; }
 .meta-rank.r4, .meta-rank.r5, .meta-rank.r-out { background: var(--elevated); color: var(--muted); border: 1px solid var(--border); }
 
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    10. АРХИВ / СПИСКИ
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .archive-hero {
     display: flex;
     justify-content: space-between;
@@ -513,9 +412,9 @@ body {
 .style-row .style-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .style-row .style-val { color: var(--gold); font-weight: 700; white-space: nowrap; }
 
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    11. СРАВНЕНИЕ
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .compare-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
 .compare-label { min-width: 100px; color: var(--muted); font-size: 0.8rem; }
 .compare-bar-wrap { flex: 1; height: 22px; background: rgba(163,113,247,0.08); border-radius: 11px; overflow: hidden; position: relative; }
@@ -528,17 +427,17 @@ body {
 .td-better { color: var(--green) !important; font-weight: 700; }
 .td-worse { color: var(--red) !important; }
 
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    12. СОСТОЯНИЯ
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .loading-block { text-align: center; padding: 60px 20px; color: var(--sub); }
 .loading-block .spinner { margin: 0 auto 16px; }
 .not-found { text-align: center; padding: 40px 20px; color: var(--muted); }
 .not-found .nf-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
 
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    13. ПРОГРЕСС + SCROLL-TOP
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .reading-progress {
     position: fixed; top: 0; left: 0; width: 100%; height: 3px;
     background: linear-gradient(90deg, var(--purple), #c4a5ff, var(--gold), var(--purple));
@@ -555,9 +454,9 @@ body {
 .scroll-top.visible { opacity: 1; pointer-events: all; }
 .scroll-top:hover { background: var(--purple); color: #000; transform: translateY(-3px); }
 
-/* ----------------------------------------------------------------------------
+/* ============================================================================
    14. ЧАРТ-ПЛЕЙСХОЛДЕР
-   ---------------------------------------------------------------------------- */
+   ============================================================================ */
 .chart-placeholder {
     text-align: center;
     padding: 20px;
@@ -565,6 +464,115 @@ body {
     border-radius: var(--radius-sm);
     border: 1px dashed var(--border);
     margin-top: 12px;
+}
+
+/* ============================================================================
+   15. МОБИЛЬНАЯ АДАПТАЦИЯ (все @media в конце)
+   ============================================================================ */
+
+/* --- 15.1 Планшеты и телефоны (max-width: 768px) --- */
+@media (max-width: 768px) {
+
+    /* Поиск */
+    .search-input-wrap { flex-direction: column; }
+    .search-btn { width: 100%; }
+
+    /* Карточка игрока */
+    .profile-hero { padding: 18px 14px; }
+    .profile-emoji { font-size: 2.4rem; }
+    .profile-name { font-size: 1.2rem; }
+    .profile-class { font-size: 0.78rem; }
+
+    /* Табы */
+    .tabs-bar {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 5px 6px;
+    }
+    .tab-pill {
+        padding: 7px 10px;
+        font-size: 0.68rem;
+    }
+
+    /* Блоки профиля */
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat-num { font-size: 1.1rem; }
+    .ranks-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .rank-pos { font-size: 1.15rem; }
+    .ach-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .ach-emoji { font-size: 1.5rem; }
+    .ach-name { font-size: 0.72rem; }
+    .skill-value { font-size: 2.2rem; }
+
+    /* Oracle-блоки */
+    .oracle-block { padding: 16px 12px; }
+    .oracle-block-title { font-size: 0.85rem; }
+
+    /* Летопись: карточки вместо таблицы */
+    .history-table.full { min-width: 0; }
+    .history-table.full,
+    .history-table.full thead,
+    .history-table.full tbody,
+    .history-table.full th,
+    .history-table.full td,
+    .history-table.full tr { display: block; }
+
+    .history-table.full thead { display: none; }
+
+    .history-table.full tr {
+        background: var(--elevated);
+        border-radius: var(--radius-sm);
+        margin-bottom: 8px;
+        padding: 10px 12px;
+        border-left: 3px solid var(--purple);
+        border-bottom: none;
+    }
+    .history-table.full tr.current { border-left-color: var(--gold); background: linear-gradient(135deg, rgba(240,185,11,0.1), rgba(240,185,11,0.02)); }
+    .history-table.full tr.season-even,
+    .history-table.full tr.season-odd { background: var(--elevated); }
+    .history-table.full tr.season-first td { border-top: none; padding-top: 4px; }
+    .history-table.full tr.season-first td:first-child { color: var(--purple); }
+    .history-table.full tr.season-total { background: linear-gradient(135deg, rgba(163,113,247,0.12), rgba(163,113,247,0.03)); border-left-color: var(--gold); }
+    .history-table.full tr.grand-total { background: linear-gradient(135deg, rgba(240,185,11,0.18), rgba(240,185,11,0.05)); border-left-color: var(--gold); border-top: none; }
+
+    .history-table.full td {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 0;
+        border: none;
+        font-size: 0.75rem;
+        white-space: normal;
+        text-align: right;
+    }
+    .history-table.full td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-right: 8px;
+        text-align: left;
+    }
+    .history-table.full td:nth-child(2) { max-width: none; overflow: visible; text-overflow: ellipsis; white-space: normal; }
+
+    /* Прочие таблицы — горизонтальный скролл */
+    .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { font-size: 0.72rem; }
+    th, td { padding: 6px 8px; white-space: nowrap; }
+
+    /* Тренды, темп */
+    .trend-grid, .season-highlight { grid-template-columns: repeat(2, 1fr); }
+    .pace-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .pace-item { padding: 10px 4px; }
+    .pace-value { font-size: 0.95rem; }
+}
+
+/* --- 15.2 Узкие телефоны (max-width: 480px) --- */
+@media (max-width: 480px) {
+    .tab-pill {
+        padding: 6px 8px;
+        font-size: 0.65rem;
+    }
 }
 </style>
 </head>
@@ -2562,14 +2570,17 @@ function renderFullHistory(history) {
     });
     const sortedSeasons = [...bySeason.keys()].sort((a, b) => a - b);
 
-    sortedSeasons.forEach(seasonNum => {
+    sortedSeasons.forEach((seasonNum, seasonIdx) => {
         const rows = bySeason.get(seasonNum);
-        rows.forEach(h => {
+        const seasonClass = seasonIdx % 2 === 0 ? 'season-even' : 'season-odd';
+
+        rows.forEach((h, rowIdx) => {
             const eraIcon = h.era === 'classic' ? ' 📜' : '';
             const deletedIcon = h.isDeleted ? ' 🗑️' : '';
             const rowStyle = h.isDeleted ? 'opacity:0.7;' : '';
             const seasonExtra = h.isDeleted ? '🗑️' : (h.isCurrent ? ' ⚡' : '');
-            html += `<tr class="${h.isCurrent && !h.isDeleted ? 'current' : ''}" style="${rowStyle}">
+            const isFirst = rowIdx === 0 ? ' season-first' : '';
+            html += `<tr class="${seasonClass}${isFirst} ${h.isCurrent && !h.isDeleted ? 'current' : ''}" style="${rowStyle}">
                 <td class="season-num" data-label="Сезон">S${h.season}${seasonExtra}${eraIcon}</td>
                 <td data-label="Герой" style="color:var(--sub);">${h.emoji} ${h.name || '—'}${deletedIcon}</td>
                 <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
@@ -2596,10 +2607,10 @@ function renderFullHistory(history) {
             const sumShards = rows.reduce((s, h) => s + (h.shards || 0), 0);
             const sumTournaments = rows.reduce((s, h) => s + (h.tournamentWins || 0), 0);
 
-            html += `<tr style="background:rgba(163,113,247,0.06);font-weight:700;">
+            html += `<tr class="season-total ${seasonClass}">
                 <td class="season-num" data-label="Сезон" style="color:var(--gold);">S${seasonNum} ИТОГО</td>
-                <td data-label="Герой" style="color:var(--muted);font-style:italic;">сумма за сезон</td>
-                <td class="num" data-label="W/L" style="color:var(--text);">${sumWins}-${sumLosses}</td>
+                <td data-label="Герой">сумма за сезон</td>
+                <td class="num" data-label="W/L">${sumWins}-${sumLosses}</td>
                 <td class="num" data-label="WR" style="color:${wrColor(sumWR)};">${(sumWR * 100).toFixed(1)}%</td>
                 <td class="num" data-label="Стрик" style="color:var(--green);">${maxBest}</td>
                 <td class="num" data-label="Лузстрик" style="color:var(--red);">${maxWorst}</td>
@@ -2612,7 +2623,6 @@ function renderFullHistory(history) {
         }
     });
 
-    // ГРАНД-ИТОГО по всем сезонам
     const gWins = history.reduce((s, h) => s + (h.wins || 0), 0);
     const gLosses = history.reduce((s, h) => s + (h.losses || 0), 0);
     const gTotal = gWins + gLosses;
@@ -2624,7 +2634,7 @@ function renderFullHistory(history) {
     const gShards = history.reduce((s, h) => s + (h.shards || 0), 0);
     const gTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
 
-    html += `<tr style="background:linear-gradient(90deg,rgba(240,185,11,0.15),rgba(240,185,11,0.05));font-weight:800;border-top:2px solid var(--gold);">
+    html += `<tr class="grand-total">
         <td class="season-num" data-label="ВСЕГО" style="color:var(--gold);">ВСЕГО</td>
         <td data-label="Герой" style="color:var(--muted);font-style:italic;">${history.length} записей</td>
         <td class="num" data-label="W/L" style="color:var(--text);">${gWins}-${gLosses}</td>
