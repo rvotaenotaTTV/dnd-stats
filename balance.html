@@ -723,15 +723,17 @@ if (initialHash && validPageTabs.includes(initialHash)) {
 }
 
 /* ============================================================
-   ВКЛАДКА 1: БАЛАНС
+   ЕДИНЫЙ СЛОЙ ДАННЫХ (общий для всех вкладок)
    ============================================================ */
-const BAL_URL_STATS = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-const BAL_URL_CLASSES = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
 const STATS_CACHE_KEY = 'eternis-stats';
+const DATA_CACHE_KEY = 'eternis-data';
 const STATS_CACHE_TTL = 2 * 60 * 1000;
 const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+const DATA_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
 let statsPromise = null;
+let dataPromise = null;
 
 function getStatsData() {
     if (statsPromise) return statsPromise;
@@ -740,14 +742,34 @@ function getStatsData() {
             const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
             if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) return cached.data;
         } catch (e) {}
-        let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
-        if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+        let r = await fetch(STATS_URL);
+        if (!r.ok) r = await fetch(STATS_URL_FALLBACK);
         const data = await r.json();
         try { localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
     })().catch(e => { statsPromise = null; throw e; });
     return statsPromise;
 }
+
+function getDataJson() {
+    if (dataPromise) return dataPromise;
+    dataPromise = (async () => {
+        try {
+            const cached = JSON.parse(localStorage.getItem(DATA_CACHE_KEY) || 'null');
+            if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) return cached.data;
+        } catch (e) {}
+        let r = await fetch(DATA_URL);
+        if (!r.ok) r = await fetch(DATA_URL_FALLBACK);
+        const data = await r.json();
+        try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        return data;
+    })().catch(e => { dataPromise = null; throw e; });
+    return dataPromise;
+}
+
+/* ============================================================
+   ВКЛАДКА 1: БАЛАНС
+   ============================================================ */
 let BAL_CLASSES = [], BAL_RACES = [], bal_selRace = '';
 let bal_pickA = null, bal_pickB = null, bal_pickRaceA = null, bal_pickRaceB = null;
 let bal_classWR = {};
@@ -755,9 +777,7 @@ let BAL_CONFIG = {};
 
 async function bal_loadData() {
     try {
-        const [statsRes, classesRes] = await Promise.all([fetch(BAL_URL_STATS), fetch(BAL_URL_CLASSES)]);
-        const statsData = await statsRes.json();
-        const classesData = await classesRes.json();
+        const [statsData, classesData] = await Promise.all([getStatsData(), getDataJson()]);
         BAL_CLASSES = classesData.classes;
         BAL_RACES = classesData.races;
         BAL_CONFIG = classesData.config || {};
@@ -979,12 +999,10 @@ let calc_CONFIG = {}, calc_classesData = [], calc_racesData = [], calc_classEmoj
 function calc_fetchWithTimeout(url, timeout = 3000) { return Promise.race([fetch(url).then(r => { if (!r.ok) throw new Error(); return r; }), new Promise((_, rej) => setTimeout(() => rej(new Error()), timeout))]); }
 
 function calc_loadData() {
-    calc_fetchWithTimeout(CALC_DATA_URL).catch(() => fetch(CALC_CDN_DATA)).then(r => r.json()).then(data => {
+    Promise.all([getDataJson(), getStatsData()]).then(([data, stats]) => {
         calc_CONFIG = data.config; calc_classesData = data.classes; calc_racesData = data.races;
         calc_classEmojis = Object.fromEntries(calc_classesData.map(c => [c.Name, c.Emoji]));
         calc_raceEmojis = Object.fromEntries(calc_racesData.map(r => [r.Name, r.Emoji]));
-        return calc_fetchWithTimeout(CALC_STATS_URL).catch(() => fetch(CALC_CDN_STATS));
-    }).then(r => r.json()).then(stats => {
         calc_players = (stats.players || []).filter(p => p.name && p.name !== 'Unknown');
         calc_populateSelects(); calc_updateCalc();
     }).catch(() => { document.getElementById('calc-result').innerHTML = '<div style="text-align:center;padding:40px;color:var(--red);">❌ Ошибка загрузки</div>'; });
@@ -1095,8 +1113,7 @@ let grad_CONFIG = {}, grad_classesData = [], grad_racesData = [], grad_originalS
 let grad_isRunning = false, GRAD_REAL_WINRATES = {};
 
 async function grad_loadData() {
-    const [dr, sr] = await Promise.all([fetch(GRAD_DATA_URL), fetch(GRAD_STATS_URL)]);
-    const data = await dr.json(), stats = await sr.json();
+    const [data, stats] = await Promise.all([getDataJson(), getStatsData()]);
     grad_CONFIG = data.config || { defReduction: 0.05, baseAC: 10, maxRounds: 20 };
     grad_classesData = data.classes;
     grad_racesData = data.races;
@@ -1275,7 +1292,7 @@ const SIM_STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats
 let sim_CONFIG = {}, sim_classesData = [], sim_racesData = [], sim_playersData = [], sim_currentMode = 'players';
 
 function sim_loadData() {
-    Promise.all([fetch(SIM_DATA_URL).then(r => r.json()), fetch(SIM_STATS_URL).then(r => r.json())]).then(([data, stats]) => {
+    Promise.all([getDataJson(), getStatsData()]).then(([data, stats]) => {
         sim_CONFIG = data.config || {};
         sim_classesData = data.classes;
         sim_racesData = data.races;

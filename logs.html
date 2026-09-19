@@ -176,10 +176,41 @@
         }
 
         const LOGS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        const LOGS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+        const STATS_CACHE_KEY = 'eternis-stats';
+        const STATS_CACHE_TTL = 2 * 60 * 1000; // 2 минуты
+        let statsPromise = null;
+
+        function getStatsData() {
+            if (statsPromise) return statsPromise;
+            statsPromise = (async () => {
+                try {
+                    const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
+                    if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) {
+                        return cached.data;
+                    }
+                } catch (e) {}
+
+                let r = await fetch(LOGS_URL);
+                if (!r.ok) r = await fetch(LOGS_URL_FALLBACK);
+                const data = await r.json();
+
+                try {
+                    localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+                } catch (e) {}
+
+                return data;
+            })().catch(e => {
+                statsPromise = null;
+                throw e;
+            });
+            return statsPromise;
+        }
+
         function loadLogs() {
             const content = document.getElementById('logs-content');
             content.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--sub);"><div class="spinner"></div><p>Загрузка...</p></div>';
-            fetch(LOGS_URL + '?v=' + Date.now()).then(r => r.json()).then(data => {
+            getStatsData().then(data => {
                 const fights = data.fights || [];
                 if (!fights.length) { content.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--sub);">📜 Логов пока нет</div>'; return; }
                 allFights = fights;

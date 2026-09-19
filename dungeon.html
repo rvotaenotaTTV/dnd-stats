@@ -165,9 +165,39 @@
         document.querySelectorAll('.nav-label').forEach(label=>{label.addEventListener('click',function(e){if(window.innerWidth>768)return;e.preventDefault();const dd=this.nextElementSibling;if(dd&&dd.classList.contains('nav-dropdown')){const isOpen=dd.style.display==='block';document.querySelectorAll('.nav-dropdown').forEach(d=>d.style.display='none');dd.style.display=isOpen?'none':'block';}});});
 
         const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+        const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+        const STATS_CACHE_KEY = 'eternis-stats';
+        const STATS_CACHE_TTL = 2 * 60 * 1000; // 2 минуты
+        let statsPromise = null;
+
+        function getStatsData() {
+            if (statsPromise) return statsPromise;
+            statsPromise = (async () => {
+                try {
+                    const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
+                    if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) {
+                        return cached.data;
+                    }
+                } catch (e) {}
+
+                let r = await fetch(STATS_URL);
+                if (!r.ok) r = await fetch(STATS_URL_FALLBACK);
+                const data = await r.json();
+
+                try {
+                    localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+                } catch (e) {}
+
+                return data;
+            })().catch(e => {
+                statsPromise = null;
+                throw e;
+            });
+            return statsPromise;
+        }
+
         const container = document.getElementById('stats-container');
-        fetch(STATS_URL + '?v=' + Date.now())
-            .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        getStatsData()
             .then(d => {
                 const dungeon = d.dungeon || {};
                 const players = Object.values(dungeon.players || {});
@@ -176,7 +206,7 @@
                 renderAll(players, territory);
             })
             .catch(e => { container.innerHTML = `<div class="section ice" style="text-align:center;padding:40px 20px;"><div class="section-title" style="justify-content:center;">🩸 Разлом Бездны</div><p style="color:var(--red);">❌ Ошибка загрузки</p></div>`; });
-
+			
         function renderAll(players, territory) {
             const sorted = [...players].sort((a, b) => b.record - a.record || b.damage - a.damage);
             const totalTrophies = territory.light + territory.dark;
