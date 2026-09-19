@@ -717,8 +717,8 @@ function getStatsData() {
             }
         } catch (e) {}
 
-        let r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
-        if (!r.ok) r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        let r = await fetch(STATS_URL_FALLBACK);
+        if (!r.ok) r = await fetch(STATS_URL);
         const data = await r.json();
 
         try {
@@ -1782,7 +1782,7 @@ function renderPlayerInfo(player, ranks) {
     const fc = player.faction === 'Орден Света' ? 'light' : player.faction === 'Культ Тьмы' ? 'dark' : '';
     const fe = player.faction === 'Орден Света' ? '🌝' : player.faction === 'Культ Тьмы' ? '🌚' : '';
     const badges = [];
-    if (player.champion) badges.push('<span class="badge badge-gold">👑 Хранитель</span>');
+    if (player.isCurrent && player.champion) badges.push('<span class="badge badge-gold">👑 Хранитель</span>');
     if (player.faction) badges.push(`<span class="badge ${fc === 'light' ? 'badge-light' : 'badge-dark'}">${fe} ${player.faction}</span>`);
 
     // ⭐ Чемпион Лиги
@@ -1799,8 +1799,8 @@ function renderPlayerInfo(player, ranks) {
     return `<section class="oracle-block gold" style="padding:0;overflow:hidden;">
         <div class="profile-hero">
             <div class="profile-emoji">${player.emoji || '⚔️'}</div>
-            <div class="profile-name">${player.display}${player.champion ? ' 👑' : ''}</div>
-            <div class="profile-class">${player.name || ''} · SKILL ${player.skill || 0} · Ур. ${player.level || 0}</div>
+			<div class="profile-name">${player.display}${player.isCurrent && player.champion ? ' 👑' : ''}</div>
+			<div class="profile-class">${player.name || ''}${player.isCurrent ? ` · SKILL ${player.skill || 0} · Ур. ${player.level || 0}` : ''}</div>
             <div class="profile-badges">${badges.join('')}</div>
             <button class="btn btn-secondary" onclick="copyProfileLink()">🔗 Копировать ссылку</button>
         </div>
@@ -1861,7 +1861,8 @@ function renderOverviewTab(history, last, ranks, narrative) {
 
     let html = `<div id="tab-overview" class="tab-content active">`;
 
-    html += `<div class="oracle-block gold"><div class="oracle-block-title">📜 Текущий сезон</div>`;
+	const seasonTitle = last.isCurrent ? '📜 Текущий сезон' : `📜 Последний сезон (S${last.season})`;
+	html += `<div class="oracle-block gold"><div class="oracle-block-title">${seasonTitle}</div>`;
 
     html += `<div class="stats-grid">
         ${stats.map(s => `
@@ -1875,7 +1876,7 @@ function renderOverviewTab(history, last, ranks, narrative) {
     html += `<div class="ranks-grid">
         ${rankList.map(r => `
             <div class="rank-card">
-                <div class="rank-pos" style="color:${colorForRank(r.rank)}">#${r.rank || '-'}</div>
+                <div class="rank-pos" style="color:${colorForRank(r.rank)}">${r.rank ? '#' + r.rank : '—'}</div>
                 <div class="rank-label">${r.label}</div>
             </div>
         `).join('')}
