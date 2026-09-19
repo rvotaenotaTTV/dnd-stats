@@ -880,10 +880,10 @@ async function loadAllSeasons(onProgress) {
 }
 
 async function load2x2() {
-    try {
-        const cached = JSON.parse(localStorage.getItem(TWOx2_CACHE_KEY) || 'null');
-        if (cached && (Date.now() - cached.ts < CACHE_TTL)) return cached.data;
-    } catch (e) {}
+	try {
+		const cached = JSON.parse(localStorage.getItem(TWOx2_CACHE_KEY) || 'null');
+		if (cached) return cached.data;
+	} catch (e) {}
 
     try {
         let r = await fetch(TWOx2_URL_FALLBACK + '?v=' + Date.now());
