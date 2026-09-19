@@ -668,17 +668,18 @@
 /* ============================================================
    КЕШ АРХИВА (sessionStorage, 10 минут)
    ============================================================ */
+const SEASON_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
+
 async function getSeasonData(n) {
-    const KEY = 'eternis-season-' + n;
-    const TTL = 10 * 60 * 1000;
+    const KEY = 'eternis-season-v2-' + n;
     try {
-        const cached = JSON.parse(sessionStorage.getItem(KEY) || 'null');
-        if (cached && (Date.now() - cached.ts < TTL)) return cached.data;
+        const cached = JSON.parse(localStorage.getItem(KEY) || 'null');
+        if (cached) return cached.data;
     } catch (e) {}
-    const r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_${n}.json`);
-    if (!r.ok) throw new Error('404');
+    const r = await fetch(`${SEASON_BASE}${n}.json`);
+    if (!r.ok) return null;
     const data = await r.json();
-    try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
     return data;
 }
 
@@ -715,7 +716,6 @@ document.querySelectorAll('.page-tab').forEach(tab => {
     tab.addEventListener('click', () => switchPageTab(tab.dataset.tab));
 });
 
-// Открыть вкладку из URL
 const validPageTabs = ['balance','calc','gradient','sim','form','matrix'];
 const initialHash = window.location.hash.substring(1);
 if (initialHash && validPageTabs.includes(initialHash)) {
@@ -727,6 +727,27 @@ if (initialHash && validPageTabs.includes(initialHash)) {
    ============================================================ */
 const BAL_URL_STATS = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 const BAL_URL_CLASSES = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
+const STATS_CACHE_KEY = 'eternis-stats';
+const STATS_CACHE_TTL = 2 * 60 * 1000;
+const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+let statsPromise = null;
+
+function getStatsData() {
+    if (statsPromise) return statsPromise;
+    statsPromise = (async () => {
+        try {
+            const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
+            if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) return cached.data;
+        } catch (e) {}
+        let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+        const data = await r.json();
+        try { localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        return data;
+    })().catch(e => { statsPromise = null; throw e; });
+    return statsPromise;
+}
 let BAL_CLASSES = [], BAL_RACES = [], bal_selRace = '';
 let bal_pickA = null, bal_pickB = null, bal_pickRaceA = null, bal_pickRaceB = null;
 let bal_classWR = {};
@@ -1546,16 +1567,17 @@ async function matrix_loadData() {
     const container = document.getElementById('matrix-content');
     try {
         const allSeasons = [];
-        for (let n = 1; n < 30; n++) {
-            try {
-                const d = await getSeasonData(n);
-                allSeasons.push({ num: n, data: d, name: `С${n}`, fullName: `Сезон ${n}` });
-            } catch (e) { break; }
-        }
-        try {
-            const current = await fetch(`${MATRIX_STATS_URL}?v=${Date.now()}`).then(r => r.json());
-            allSeasons.push({ num: 'live', data: current, name: 'LIVE', fullName: 'Текущий' });
-        } catch (e) {}
+		for (let n = 1; n < 30; n++) {
+			try {
+				const d = await getSeasonData(n);
+				if (!d) break;
+				allSeasons.push({ num: n, data: d, name: `С${n}`, fullName: `Сезон ${n}` });
+			} catch (e) { break; }
+		}
+		try {
+			const current = await getStatsData();
+			allSeasons.push({ num: 'live', data: current, name: 'LIVE', fullName: 'Текущий' });
+		} catch (e) {}
         if (allSeasons.length === 0) {
             container.innerHTML = '<div class="status-message">Нет данных</div>';
             return;
