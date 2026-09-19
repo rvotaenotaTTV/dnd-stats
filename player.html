@@ -692,8 +692,40 @@ const CACHE_KEY_PREFIX = 'eternis-season-v2-';
 const PLAYERS_CACHE_KEY = 'eternis-players-cache';
 const TWOx2_CACHE_KEY = 'eternis-2x2-cache';
 const LAST_PLAYER_KEY = 'eternis-last-player';
+const SEASON_LIMIT_KEY = 'eternis-season-limit'; // ← НОВОЕ
+const SEASON_LIMIT_TTL = 24 * 60 * 60 * 1000;    // ← НОВОЕ, 24 часа
 
 const SEASON_ICONS = ['🏁', '🔥', '💫', '🩸', '🕯️', '⚡', '💀'];
+
+const STATS_CACHE_KEY = 'eternis-stats';
+const STATS_CACHE_TTL = 2 * 60 * 1000;
+let statsPromise = null;
+
+function getStatsData() {
+    if (statsPromise) return statsPromise;
+    statsPromise = (async () => {
+        try {
+            const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
+            if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) {
+                return cached.data;
+            }
+        } catch (e) {}
+
+        let r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+        if (!r.ok) r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        const data = await r.json();
+
+        try {
+            localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+        } catch (e) {}
+
+        return data;
+    })().catch(e => {
+        statsPromise = null;
+        throw e;
+    });
+    return statsPromise;
+}
 
 /* ============================================================================
    СЕКЦИЯ 2. УТИЛИТЫ
@@ -772,7 +804,7 @@ async function getSeasonData(n) {
     const KEY = CACHE_KEY_PREFIX + n;
     try {
         const c = JSON.parse(localStorage.getItem(KEY) || 'null');
-        if (c && (Date.now() - c.ts < CACHE_TTL)) return c.data;
+        if (c) return c.data;
     } catch (e) {}
 
     let r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
@@ -783,28 +815,76 @@ async function getSeasonData(n) {
     return data;
 }
 
+/* ============================================================================
+   Автоопределение последнего архивного сезона
+   - Проверяет GET-запросы к season_0.json, season_1.json, ...
+   - Ищет НЕПРЕРЫВНУЮ цепочку (0,1,2,3,...) до первой дырки
+   - Кеширует результат в localStorage на 24 часа
+   ============================================================================ */
+async function getSeasonLimit() {
+    // 1) Проверяем кеш
+    try {
+        const cached = JSON.parse(localStorage.getItem(SEASON_LIMIT_KEY) || 'null');
+        if (cached && (Date.now() - cached.ts < SEASON_LIMIT_TTL)) {
+            return cached.last;
+        }
+    } catch (e) {}
+
+    // 2) Параллельно проверяем 0..20 (GET, не HEAD!)
+    const checks = await Promise.all(
+        Array.from({ length: 21 }, (_, n) =>
+            fetch(`${SEASON_BASE}${n}.json`)
+                .then(r => r.ok ? n : -1)
+                .catch(() => -1)
+        )
+    );
+
+    // 3) Ищем непрерывную цепочку 0,1,2,... до первой дырки
+    const found = new Set(checks.filter(n => n >= 0));
+    let last = -1;
+    for (let n = 0; n <= 20; n++) {
+        if (found.has(n)) last = n;
+        else break; // первая дырка — стоп
+    }
+
+    // 4) Если вообще ничего не нашли — считаем, что архивов нет
+    if (last < 0) last = 0; // хотя бы S0 должен быть
+
+    // 5) Сохраняем в кеш
+    try {
+        localStorage.setItem(SEASON_LIMIT_KEY, JSON.stringify({ ts: Date.now(), last }));
+    } catch (e) {}
+
+    return last;
+}
+
 async function loadAllSeasons(onProgress) {
     const seasons = [];
 
-    // Фаза 1: архивы (без точного прогресса — просто "идёт загрузка")
-    if (onProgress) onProgress(1, 3); // 33% — "сканирую архивы"
+    // Фаза 1: узнаём, сколько сезонов есть (с кешем на 24ч)
+    if (onProgress) onProgress(1, 3);
 
-    for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
-        const data = await getSeasonData(n);
-        if (!data) break;
-        seasons.push({ num: n, data, isCurrent: false });
+    const lastArchive = await getSeasonLimit();
+
+    // Грузим все архивные сезоны параллельно
+    const archivePromises = [];
+    for (let n = 0; n <= lastArchive; n++) {
+        archivePromises.push(getSeasonData(n));
     }
+    const archiveResults = await Promise.all(archivePromises);
+    archiveResults.forEach((data, n) => {
+        if (data) seasons.push({ num: n, data, isCurrent: false });
+    });
 
-    const currentNum = seasons.length;
+    // ✅ Номер текущего сезона = следующий после последнего архивного
+    const currentNum = lastArchive + 1;
 
     // Фаза 2: текущий сезон
     if (onProgress) onProgress(2, 3); // 66% — "загружаю текущий"
 
     let currentData = null;
     try {
-        let r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
-        if (!r.ok) r = await fetch(`${STATS_URL}?v=${Date.now()}`);
-        currentData = await r.json();
+        currentData = await getStatsData();
     } catch (e) {}
 
     // Фаза 3: готово
