@@ -684,7 +684,7 @@ const SEASON_BASE_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dn
 const TWOx2_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/2x2.json';
 const TWOx2_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/2x2.json';
 
-const SEASON_SCAN_LIMIT = 20;
+const SEASON_SCAN_LIMIT = 5;
 const META_TOP = 5;
 const META_MIN_FIGHTS = 30;
 
@@ -734,12 +734,28 @@ function getStatsData() {
 }
 
 const LEAGUE_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/league.json';
+const LEAGUE_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/league.json';
+const LEAGUE_CACHE_KEY = 'eternis-league';
+const LEAGUE_CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
 let leagueChampions = {};
 
 async function loadLeagueChampions() {
     try {
-        const r = await fetch(LEAGUE_URL);
-        if (r.ok) leagueChampions = await r.json();
+        const cached = JSON.parse(localStorage.getItem(LEAGUE_CACHE_KEY) || 'null');
+        if (cached && (Date.now() - cached.ts < LEAGUE_CACHE_TTL)) {
+            leagueChampions = cached.data;
+            return;
+        }
+    } catch (e) {}
+    try {
+        let r = await fetch(LEAGUE_URL);
+        if (!r.ok) r = await fetch(LEAGUE_URL_FALLBACK);
+        if (r.ok) {
+            leagueChampions = await r.json();
+            try {
+                localStorage.setItem(LEAGUE_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: leagueChampions }));
+            } catch (e) {}
+        }
     } catch (e) {}
 }
 
@@ -851,18 +867,13 @@ async function getSeasonLimit() {
         return cached.last;
     }
 
-    const checks = await Promise.all(
-        Array.from({ length: 21 }, (_, n) =>
-            fetch(`${SEASON_BASE}${n}.json`)
-                .then(r => r.ok ? n : -1)
-                .catch(() => -1)
-        )
-    );
-    const found = new Set(checks.filter(n => n >= 0));
     let last = -1;
-    for (let n = 0; n <= 20; n++) {
-        if (found.has(n)) last = n;
-        else break;
+    for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
+        try {
+            const r = await fetch(`${SEASON_BASE}${n}.json`);
+            if (r.ok) last = n;
+            else break;
+        } catch (e) { break; }
     }
     if (last < 0) last = 0;
     try {
@@ -896,14 +907,16 @@ async function loadAllSeasons(onProgress) {
 }
 
 async function load2x2() {
-	try {
-		const cached = JSON.parse(localStorage.getItem(TWOx2_CACHE_KEY) || 'null');
-		if (cached) return cached.data;
-	} catch (e) {}
+    try {
+        const cached = JSON.parse(localStorage.getItem(TWOx2_CACHE_KEY) || 'null');
+        if (cached && (Date.now() - cached.ts < 7 * 24 * 60 * 60 * 1000)) {
+            return cached.data;
+        }
+    } catch (e) {}
 
     try {
-        let r = await fetch(TWOx2_URL_FALLBACK + '?v=' + Date.now());
-        if (!r.ok) r = await fetch(TWOx2_URL + '?v=' + Date.now());
+        let r = await fetch(TWOx2_URL_FALLBACK);
+        if (!r.ok) r = await fetch(TWOx2_URL);
         if (!r.ok) return {};
         const data = await r.json();
         try { localStorage.setItem(TWOx2_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
