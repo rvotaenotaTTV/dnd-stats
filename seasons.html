@@ -102,6 +102,7 @@
     #total-table thead th{position:sticky;top:0;background:var(--elevated);z-index:2;padding:10px 12px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px}
     .player-link{color:var(--gold);text-decoration:none;font-weight:600;transition:color .2s}
     .player-link:hover{color:var(--text);text-decoration:underline}
+	@keyframes spin { to { transform: rotate(360deg); } }
     @media(max-width:768px){
         .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
         .stat-value{font-size:1.3rem}
@@ -197,10 +198,15 @@
             <button class="tab-btn" data-tab="alltime" onclick="switchSeasonsTab('alltime', event)">👑 Легенды</button>
         </div>
 
-        <div id="seasons-tab-seasons" class="tab-content active">
-            <div class="timeline-nav" id="season-tabs"></div>
-            <div id="tab-content-container"></div>
-        </div>
+		<div id="seasons-tab-seasons" class="tab-content active">
+			<div class="timeline-nav" id="season-tabs"></div>
+			<div id="tab-content-container">
+				<div id="initial-loader" style="text-align:center;padding:60px 20px;color:var(--muted)">
+					<div style="display:inline-block;width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite"></div>
+					<div style="margin-top:12px;font-size:0.85rem">Загрузка сезонов...</div>
+				</div>
+			</div>
+		</div>
 
         <div id="seasons-tab-alltime" class="tab-content">
             <div class="section gold" id="total-stats-section">
@@ -246,16 +252,18 @@
 <script>
 // ============ КЕШ АРХИВА ============
 async function getSeasonData(n) {
-    const KEY = 'eternis-season-' + n;
-    const TTL = 10 * 60 * 1000;
+    const KEY = 'eternis-season-v2-' + n;
+    const TTL = 30 * 60 * 1000;
     try {
-        const cached = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+        const cached = JSON.parse(localStorage.getItem(KEY) || 'null');
         if (cached && (Date.now() - cached.ts < TTL)) return cached.data;
     } catch (e) {}
-    const r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_${n}.json`);
+
+    let r = await fetch(`${ARCHIVE_BASE}${n}.json`);
+    if (!r.ok) r = await fetch(`${ARCHIVE_BASE_FALLBACK}${n}.json`);
     if (!r.ok) throw new Error('404');
     const data = await r.json();
-    try { sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
     return data;
 }
 
@@ -298,9 +306,12 @@ document.querySelectorAll('.nav-label').forEach(label => {
 
 // ============ КОНСТАНТЫ ============
 const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 const ARCHIVE_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
+const ARCHIVE_BASE_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_';
 const SEASON_ICONS = ['🏁','🔥','💫','🩸','🕯️','⚡','💀'];
 const SEASON_SUBTITLES = ['Первые дуэли. Рождение Арены.','Эра Раскола.','Время перемен.','Кровь Бездны.','Экспедиция.','Раскол Ордена.','Возвращение.'];
+const SEASON_SCAN_LIMIT = 15;
 
 let currentSeasonNum = -1;
 let seasonTabs = [];
@@ -467,17 +478,27 @@ function renderSeason(data, seasonNum, isCurrent) {
 // ============ ЗАГРУЗКА СЕЗОНОВ ============
 async function detectSeasons() {
     const foundSeasons = [];
-    for (let n = 1; n < 30; n++) {
+    for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
         try {
             const r = await fetch(`${ARCHIVE_BASE}${n}.json`);
-            if (!r.ok) break;
+            if (!r.ok) {
+                // попробуем fallback
+                const r2 = await fetch(`${ARCHIVE_BASE_FALLBACK}${n}.json`);
+                if (!r2.ok) break;
+            }
             foundSeasons.push(n);
         } catch (e) { break; }
     }
-    currentSeasonNum = foundSeasons.length > 0 ? foundSeasons[foundSeasons.length - 1] + 1 : 1;
+
+    currentSeasonNum = foundSeasons.length > 0
+        ? foundSeasons[foundSeasons.length - 1] + 1
+        : 0;
+
     seasonTabs = [...foundSeasons, currentSeasonNum];
+
     const contentContainer = document.getElementById('tab-content-container');
     contentContainer.innerHTML = '';
+
     seasonTabs.forEach((sn, idx) => {
         const isCurrent = sn === currentSeasonNum;
         const isLast = idx === seasonTabs.length - 1;
@@ -490,8 +511,10 @@ async function detectSeasons() {
         if (isCurrent) loadCurrentSeason(sn, tabId);
         else loadArchiveSeason(sn, tabId);
     });
+
     activeSeason = currentSeasonNum;
     renderTimeline();
+    loadTotalStats();
 }
 function renderTimeline() {
     const container = document.getElementById('season-tabs');
@@ -512,7 +535,9 @@ window.switchSeason = switchSeason;
 async function loadCurrentSeason(sn, tabId) {
     const container = document.getElementById(tabId);
     try {
-        const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json());
+        let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+        const d = await r.json();
         container.innerHTML = renderSeason(d, sn, true);
     } catch {
         container.innerHTML = `<div class="season-frame live"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Не удалось загрузить данные</div></div>`;
@@ -544,11 +569,14 @@ async function loadTotalStats() {
         if (dp) { a.dungeonRecord = Math.max(a.dungeonRecord, dp.record || 0); a.dungeonWaves += dp.totalWaves || 0; a.dungeonBosses += dp.bosses || 0; }
     }
     try {
-        const d = await fetch(`${STATS_URL}?v=${Date.now()}`).then(r => r.json());
+        let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+        const d = await r.json();
         (d.players || []).forEach(p => { const dp = d.dungeon?.players?.[p.display]; addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp); });
         if (d.heroArchive) { Object.entries(d.heroArchive).forEach(([playerName, heroes]) => { heroes.forEach(h => { addPlayer(playerName, h.wins, h.losses, h.best, 0, h.tournamentWins, null); }); }); }
     } catch (e) {}
-    for (let n = 1; n < 30; n++) {
+
+    for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
         try {
             const d = await getSeasonData(n);
             (d.players || []).forEach(p => { const dp = d.dungeon?.players?.[p.display]; addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp); });
@@ -630,7 +658,6 @@ if (initialHash && validSeasonTabs.includes(initialHash)) {
     switchSeasonsTab(initialHash);
 }
 detectSeasons();
-loadTotalStats();
 
 /* === SCROLL PROGRESS + SCROLL TOP === */
 (function() {

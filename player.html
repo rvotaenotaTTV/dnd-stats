@@ -435,6 +435,37 @@ body {
 .not-found { text-align: center; padding: 40px 20px; color: var(--muted); }
 .not-found .nf-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
 
+/* ----------------------------------------------------------------------------
+   12b. ПРОГРЕСС ЗАГРУЗКИ
+   ---------------------------------------------------------------------------- */
+.load-percent {
+    width: 72px;
+    height: 72px;
+    margin: 40px auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--elevated);
+    border: 2px solid var(--purple);
+    color: var(--gold);
+    font-size: 1.2rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    position: relative;
+}
+.load-percent::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--gold);
+    border-right-color: var(--purple);
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ============================================================================
    13. ПРОГРЕСС + SCROLL-TOP
    ============================================================================ */
@@ -647,7 +678,7 @@ const SEASON_BASE_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dn
 const TWOx2_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/2x2.json';
 const TWOx2_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/2x2.json';
 
-const MAX_SEASONS = 7;
+const SEASON_SCAN_LIMIT = 20; // максимум, до куда ищем season_N.json
 const META_TOP = 5;
 const META_MIN_FIGHTS = 30;
 
@@ -657,7 +688,7 @@ const MIN_FIGHTS_FOR_BEST = 10;
 const MIN_FIGHTS_FOR_RECORD = 15;
 
 const CACHE_TTL = 30 * 60 * 1000; // 1 час
-const CACHE_KEY_PREFIX = 'eternis-season-';
+const CACHE_KEY_PREFIX = 'eternis-season-v2-';
 const PLAYERS_CACHE_KEY = 'eternis-players-cache';
 const TWOx2_CACHE_KEY = 'eternis-2x2-cache';
 const LAST_PLAYER_KEY = 'eternis-last-player';
@@ -684,6 +715,15 @@ function escapeHtml(str) {
 
 function formatNumber(n) {
     return (n || 0).toLocaleString('ru-RU');
+}
+
+function renderProgress(loaded, total, container) {
+    const rawPct = total > 0 ? Math.round((loaded / total) * 100) : 0;
+    // Показываем 99% пока идёт загрузка, 100% — только когда всё готово
+    const pct = loaded >= total ? 100 : Math.min(99, rawPct);
+    const el = container || document.getElementById('progressBox');
+    if (!el) return;
+    el.innerHTML = `<div class="load-percent">${pct}%</div>`;
 }
 
 function getAllPlayers(seasons) {
@@ -737,56 +777,42 @@ async function getSeasonData(n) {
 
     let r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
     if (!r.ok) r = await fetch(`${SEASON_BASE}${n}.json`);
-    if (!r.ok) throw new Error('404');
+    if (!r.ok) return null; // ← просто null вместо throw
     const data = await r.json();
     try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
     return data;
 }
 
 async function loadAllSeasons(onProgress) {
-    const promises = [];
-    let loaded = 0;
-    const total = MAX_SEASONS + 1;
+    const seasons = [];
 
-    for (let n = 0; n <= MAX_SEASONS; n++) {
-        promises.push(
-            getSeasonData(n)
-                .then(d => {
-                    loaded++;
-                    if (onProgress) onProgress(loaded, total);
-                    return { num: n, data: d, isCurrent: false };
-                })
-                .catch(() => {
-                    loaded++;
-                    if (onProgress) onProgress(loaded, total);
-                    return null;
-                })
-        );
+    // Фаза 1: архивы (без точного прогресса — просто "идёт загрузка")
+    if (onProgress) onProgress(1, 3); // 33% — "сканирую архивы"
+
+    for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
+        const data = await getSeasonData(n);
+        if (!data) break;
+        seasons.push({ num: n, data, isCurrent: false });
     }
 
-	const [archivedResults, currentData] = await Promise.all([
-		Promise.all(promises),
-        (async () => {
-            try {
-                let r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
-                if (!r.ok) r = await fetch(`${STATS_URL}?v=${Date.now()}`);
-                return await r.json();
-            } catch (e) { return null; }
-        })()
-	]);
+    const currentNum = seasons.length;
 
-    const archived = archivedResults.filter(Boolean);
-    archived.sort((a, b) => a.num - b.num);
+    // Фаза 2: текущий сезон
+    if (onProgress) onProgress(2, 3); // 66% — "загружаю текущий"
 
-    const current = currentData
-        ? { num: archived.length, data: currentData, isCurrent: true }
-        : null;
+    let currentData = null;
+    try {
+        let r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+        if (!r.ok) r = await fetch(`${STATS_URL}?v=${Date.now()}`);
+        currentData = await r.json();
+    } catch (e) {}
 
-    const filteredArchived = current
-        ? archived.filter(s => s.num < current.num)
-        : archived;
+    // Фаза 3: готово
+    if (onProgress) onProgress(3, 3); // 100%
 
-    return current ? [...filteredArchived, current] : filteredArchived;
+    return currentData
+        ? [...seasons, { num: currentNum, data: currentData, isCurrent: true }]
+        : seasons;
 }
 
 async function load2x2() {
@@ -3073,12 +3099,12 @@ async function loadProfile() {
         return;
     }
 
-    // Кеш уже есть — не показываем «Загружаем...»
+    // Кеш уже есть — не показываем прогресс
     if (!allSeasonsCache) {
-        content.innerHTML = '<div class="loading-block"><div class="spinner"></div><p id="loadProgress">Загружаем данные...</p></div>';
+        content.innerHTML = '<div id="progressBox"></div>';
+        renderProgress(0, 3); 
         allSeasonsCache = await loadAllSeasons((loaded, total) => {
-            const el = document.getElementById('loadProgress');
-            if (el) el.textContent = `Загрузка сезонов: ${loaded}/${total}`;
+            renderProgress(loaded, total);
         });
         allPlayersCache = getAllPlayers(allSeasonsCache);
     } else if (!allPlayersCache) {
@@ -3305,15 +3331,15 @@ document.querySelectorAll('.nav-label').forEach(label => {
         document.getElementById('playerSearch').value = targetName;
     }
 
-    const statusEl = document.querySelector('.status-message');
-    if (statusEl) {
-        statusEl.innerHTML = `<div class="spinner"></div><br>Загрузка...`;
+    const contentEl = document.getElementById('profileContent');
+    if (contentEl) {
+        contentEl.innerHTML = '<div id="progressBox"></div>';
+        renderProgress(0, 3); 
     }
 
     // Загружаем один раз
     allSeasonsCache = await loadAllSeasons((loaded, total) => {
-        const el = document.querySelector('.status-message');
-        if (el) el.innerHTML = `<div class="spinner"></div><br>Загрузка: ${loaded}/${total}`;
+        renderProgress(loaded, total);
     });
     allPlayersCache = getAllPlayers(allSeasonsCache);
     try { localStorage.setItem(PLAYERS_CACHE_KEY, JSON.stringify(allPlayersCache)); } catch (e) {}
