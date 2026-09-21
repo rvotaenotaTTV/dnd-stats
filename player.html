@@ -1175,12 +1175,14 @@ function analyzeHeroArchive(nickname, seasons) {
         .sort((a, b) => b.wr - a.wr);
     const best = heroArr.length > 0 ? heroArr[0] : null;
 
+    const uniqueHeroes = new Set(allHeroes.map(h => h.name).filter(Boolean));
     return {
         heroes: allHeroes,
         classStats, raceStats, comboStats,
         bestCombo, best,
         totalWins, totalLosses, trueWR,
-        count: allHeroes.length
+        count: allHeroes.length,
+        uniqueCount: uniqueHeroes.size
     };
 }
 
@@ -1355,13 +1357,23 @@ function findSwings(history) {
 
 function findPace(history) {
     if (history.length === 0) return null;
-    const n = history.length;
+    const bySeason = {};
+    history.forEach(h => {
+        if (!bySeason[h.season]) bySeason[h.season] = { total: 0, wins: 0, level: 0, shards: 0, tournaments: 0 };
+        bySeason[h.season].total += h.total;
+        bySeason[h.season].wins += h.wins;
+        bySeason[h.season].level = Math.max(bySeason[h.season].level, h.level || 0);
+        bySeason[h.season].shards += h.shards || 0;
+        bySeason[h.season].tournaments += h.tournamentWins || 0;
+    });
+    const seasons = Object.values(bySeason);
+    const n = seasons.length;
     return {
-        avgFights: Math.round(history.reduce((s, h) => s + h.total, 0) / n),
-        avgWins: Math.round(history.reduce((s, h) => s + h.wins, 0) / n),
-        avgLevel: Math.round(history.reduce((s, h) => s + h.level, 0) / n),
-        avgShards: Math.round(history.reduce((s, h) => s + h.shards, 0) / n),
-        avgTournaments: (history.reduce((s, h) => s + (h.tournamentWins || 0), 0) / n).toFixed(1),
+        avgFights: Math.round(seasons.reduce((s, x) => s + x.total, 0) / n),
+        avgWins: Math.round(seasons.reduce((s, x) => s + x.wins, 0) / n),
+        avgLevel: Math.round(seasons.reduce((s, x) => s + x.level, 0) / n),
+        avgShards: Math.round(seasons.reduce((s, x) => s + x.shards, 0) / n),
+        avgTournaments: (seasons.reduce((s, x) => s + x.tournaments, 0) / n).toFixed(1),
         seasonsCount: n
     };
 }
@@ -1475,14 +1487,14 @@ function generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace) {
         lines.push(`<strong>Ты на пике!</strong> Сезон ${trend.peakSeason} — лучшая глава. Ты не просто вспоминаешь — ты <strong>творишь</strong>.`);
     }
 
-    if (heroAnalysis.count > 1) {
-        lines.push(`За твоей спиной — ${heroAnalysis.count} героев. Истинный WR — <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Каждый из них — часть твоей истории.`);
+    if (heroAnalysis.uniqueCount > 1) {
+        lines.push(`За твоей спиной — ${heroAnalysis.uniqueCount} героев. Истинный WR — <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Каждый из них — часть твоей истории.`);
         if (heroAnalysis.best && heroAnalysis.best.wr > trend.lastWR + 0.05) {
             lines.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(0)}%). Текущий слабее. Возможно, пора <strong>вернуться к истокам</strong>?`);
         } else if (heroAnalysis.best && heroAnalysis.best.wr < trend.lastWR - 0.05) {
             lines.push(`Твой текущий герой <strong>сильнее</strong> лучшего в архиве. Ты <strong>превзошёл себя</strong>. Это ли не рост?`);
         }
-    } else if (heroAnalysis.count === 1) {
+    } else if (heroAnalysis.uniqueCount === 1) {
         lines.push(`Один герой. <strong>${heroAnalysis.heroes[0]?.emoji} ${heroAnalysis.heroes[0]?.name}</strong>. Ты верен ему. Или боишься перемен.`);
     }
 
@@ -1587,6 +1599,8 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     const currentClass = last.name?.split('-')[1];
     const currentRace = last.name?.split('-')[0];
 
+    const uniqueSeasonsCount = new Set(history.map(h => h.season)).size;
+
     // ---------- ТУРНИРЫ ----------
     const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
     const mostTournaments = history.reduce((m, h) => (h.tournamentWins || 0) > (m.tournamentWins || 0) ? h : m, { tournamentWins: 0 });
@@ -1606,14 +1620,22 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     }
 
     // ---------- МЕТА (по сезонам) ----------
-    const seasonsWithMeta = history.filter(h => h.name?.includes('-') && metaBySeason.find(m => m.season === h.season));
-    const inMetaCount = seasonsWithMeta.filter(h => { const cls = h.name.split('-')[1]; return isInMeta(cls, metaBySeason, h.season); }).length;
-    const outsideMetaCount = seasonsWithMeta.length - inMetaCount;
-    if (seasonsWithMeta.length >= 3) {
-        if (inMetaCount > outsideMetaCount) memes.push(`<strong>${inMetaCount} из ${seasonsWithMeta.length} сезонов</strong> ты играл в мете. Ты <span class="meme">следуешь за трендом</span>. Не стыдно, но предсказуемо.`);
-        else if (outsideMetaCount > inMetaCount) memes.push(`<strong>${outsideMetaCount} из ${seasonsWithMeta.length} сезонов</strong> ты играл <span class="meme">вне меты</span>. Ты или гений, или упрямец.`);
-        else memes.push(`Ты <span class="meme">ровно на грани</span>: половину сезонов в мете, половину — вне. Как <span class="meme">двуликий Янус</span>, только с мечом.`);
-    }
+	const uniqueSeasons = {};
+	history.forEach(h => {
+		if (!h.name?.includes('-')) return;
+		if (!metaBySeason.find(m => m.season === h.season)) return;
+		if (uniqueSeasons[h.season]) return;
+		const cls = h.name.split('-')[1];
+		uniqueSeasons[h.season] = isInMeta(cls, metaBySeason, h.season) ? 'in' : 'out';
+	});
+	const inMetaCount = Object.values(uniqueSeasons).filter(v => v === 'in').length;
+	const outsideMetaCount = Object.values(uniqueSeasons).filter(v => v === 'out').length;
+	const totalSeasonsWithMeta = Object.keys(uniqueSeasons).length;
+	if (totalSeasonsWithMeta >= 3) {
+		if (inMetaCount > outsideMetaCount) memes.push(`<strong>${inMetaCount} из ${totalSeasonsWithMeta} сезонов</strong> ты играл в мете. Ты <span class="meme">следуешь за трендом</span>. Не стыдно, но предсказуемо.`);
+		else if (outsideMetaCount > inMetaCount) memes.push(`<strong>${outsideMetaCount} из ${totalSeasonsWithMeta} сезонов</strong> ты играл <span class="meme">вне меты</span>. Ты или гений, или упрямец.`);
+		else memes.push(`Ты <span class="meme">ровно на грани</span>: половину сезонов в мете, половину — вне. Как <span class="meme">двуликий Янус</span>, только с мечом.`);
+	}
 
     // ---------- СТАБИЛЬНОСТЬ ----------
     if (trend.stdDev > 0.12) memes.push(`Разброс WR <strong>${(trend.stdDev * 100).toFixed(1)}%</strong>. Это не стабильность, это <span class="meme">американские горки</span>.`);
@@ -1629,12 +1651,13 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     else memes.push(`Форма — <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. <span class="meme">Держишь марку</span>, но до рекорда чуть-чуть.`);
 
     // ---------- ГЕРОИ ----------
-    if (heroAnalysis.count === 1) memes.push(`Один герой за всю карьеру. Ты — <span class="meme">моногамный</span>. Уважение.`);
-    else if (heroAnalysis.count === 2) memes.push(`Два героя. Это как <span class="meme">две жены</span> — и обе ревнуют.`);
-    else if (heroAnalysis.count >= 8) memes.push(`<strong>${heroAnalysis.count} героев</strong>. Это уже <span class="meme">зоопарк</span>. Ты вообще помнишь их всех?`);
-    else if (heroAnalysis.count >= 6) memes.push(`<strong>${heroAnalysis.count} героев</strong>. Ты меняешь героев чаще, чем носки. <span class="meme">Найди себя уже</span>.`);
-    else if (heroAnalysis.count >= 4) memes.push(`<strong>${heroAnalysis.count} героев</strong>. <span class="meme">Полигамия в мире мечей</span>. Главное — чтобы все были довольны.`);
-    else memes.push(`<strong>${heroAnalysis.count} героя</strong>. Нормальный <span class="meme">гарем</span>, без излишеств.`);
+    const hc = heroAnalysis.uniqueCount;
+    if (hc === 1) memes.push(`Один герой за всю карьеру. Ты — <span class="meme">моногамный</span>. Уважение.`);
+    else if (hc === 2) memes.push(`Два героя. Это как <span class="meme">две жены</span> — и обе ревнуют.`);
+    else if (hc >= 8) memes.push(`<strong>${hc} героев</strong>. Это уже <span class="meme">зоопарк</span>. Ты вообще помнишь их всех?`);
+    else if (hc >= 6) memes.push(`<strong>${hc} героев</strong>. Ты меняешь героев чаще, чем носки. <span class="meme">Найди себя уже</span>.`);
+    else if (hc >= 4) memes.push(`<strong>${hc} героев</strong>. <span class="meme">Полигамия в мире мечей</span>. Главное — чтобы все были довольны.`);
+    else memes.push(`<strong>${hc} героя</strong>. Нормальный <span class="meme">гарем</span>, без излишеств.`);
 
     // ---------- ЛУЧШИЙ ГЕРОЙ ----------
     if (heroAnalysis.best) {
@@ -1693,13 +1716,21 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     else memes.push(`<strong>${lastShards} осколков</strong>. <span class="meme">Нищий</span>. Но это временно. Надеюсь.`);
 
     // ---------- СЕЗОННЫЕ ----------
-    const above50 = history.filter(h => h.wr > 0.5).length;
-    const below50 = history.filter(h => h.wr < 0.5).length;
-    if (history.length >= 5) {
-        if (above50 === history.length) memes.push(`<strong>Все ${history.length} сезонов с WR >50%</strong>. Ты <span class="meme">машина</span>. Или просто играешь с ботами.`);
-        else if (below50 === history.length) memes.push(`<strong>Все ${history.length} сезонов с WR <50%</strong>. Это <span class="meme">не баг, это фича</span>. Ты упорный. Или мазохист.`);
-        else if (above50 > below50 * 2) memes.push(`<strong>${above50} из ${history.length} сезонов</strong> с положительным WR. <span class="meme">Стабильно хорошо</span>. Скучно, но эффективно.`);
-        else if (below50 > above50 * 2) memes.push(`<strong>${below50} из ${history.length} сезонов</strong> с отрицательным WR. <span class="meme">Полоса невезения</span>. Или руки.`);
+    const seasonAgg = {};
+    history.forEach(h => {
+        if (!seasonAgg[h.season]) seasonAgg[h.season] = { wins: 0, losses: 0 };
+        seasonAgg[h.season].wins += h.wins;
+        seasonAgg[h.season].losses += h.losses;
+    });
+    const seasonList = Object.values(seasonAgg);
+    const above50 = seasonList.filter(s => (s.wins / (s.wins + s.losses)) > 0.5).length;
+    const below50 = seasonList.filter(s => (s.wins / (s.wins + s.losses)) < 0.5).length;
+    const totalSeasons = seasonList.length;
+    if (totalSeasons >= 5) {
+        if (above50 === totalSeasons) memes.push(`<strong>Все ${totalSeasons} сезонов с WR >50%</strong>. Ты <span class="meme">машина</span>. Или просто играешь с ботами.`);
+        else if (below50 === totalSeasons) memes.push(`<strong>Все ${totalSeasons} сезонов с WR <50%</strong>. Это <span class="meme">не баг, это фича</span>. Ты упорный. Или мазохист.`);
+        else if (above50 > below50 * 2) memes.push(`<strong>${above50} из ${totalSeasons} сезонов</strong> с положительным WR. <span class="meme">Стабильно хорошо</span>. Скучно, но эффективно.`);
+        else if (below50 > above50 * 2) memes.push(`<strong>${below50} из ${totalSeasons} сезонов</strong> с отрицательным WR. <span class="meme">Полоса невезения</span>. Или руки.`);
     }
 
     // ---------- ТУРНИРНЫЕ СЕЗОНЫ ----------
@@ -1709,8 +1740,8 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     else if (bestTournamentSeason.tournamentWins > 0) memes.push(`Лучший турнирный сезон — S${bestTournamentSeason.season} с ${bestTournamentSeason.tournamentWins} победами. <span class="meme">Скромно, но со вкусом</span>.`);
 
     // ---------- ФРАКЦИИ ----------
-    const lightSeasons = history.filter(h => h.faction === 'Орден Света').length;
-    const darkSeasons = history.filter(h => h.faction === 'Культ Тьмы').length;
+    const lightSeasons = new Set(history.filter(h => h.faction === 'Орден Света').map(h => h.season)).size;
+    const darkSeasons = new Set(history.filter(h => h.faction === 'Культ Тьмы').map(h => h.season)).size;
     if (lightSeasons > 0 && darkSeasons > 0) {
         if (lightSeasons > darkSeasons * 2) memes.push(`Ты <strong>${lightSeasons} сезонов за Свет</strong> и только ${darkSeasons} за Тьму. <span class="meme">Светлый до мозга костей</span>. Или просто боишься темноты?`);
         else if (darkSeasons > lightSeasons * 2) memes.push(`Ты <strong>${darkSeasons} сезонов за Тьму</strong> и только ${lightSeasons} за Свет. <span class="meme">Тёмная сторона</span> явно сильнее притягивает.`);
@@ -1722,7 +1753,7 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     }
 
     // ---------- СРАВНЕНИЕ С СОБОЙ ----------
-    if (history.length >= 3) {
+    if (uniqueSeasonsCount >= 3) {
         const firstWR = history[0].wr;
         const lastWR = history[history.length - 1].wr;
         if (lastWR > firstWR + 0.1) memes.push(`Ты <strong>вырос на ${((lastWR - firstWR) * 100).toFixed(0)}%</strong> с первого сезона. <span class="meme">Прогресс налицо</span>.`);
@@ -1731,13 +1762,13 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     }
 
     // ---------- РАЗНОЕ ----------
-    if (history.length >= 10) memes.push(`<strong>${history.length} сезонов</strong> на арене. Ты <span class="meme">старожил</span>. Тебе уже можно экскурсии водить.`);
+    if (uniqueSeasonsCount >= 10) memes.push(`<strong>${uniqueSeasonsCount} сезонов</strong> на арене. Ты <span class="meme">старожил</span>. Тебе уже можно экскурсии водить.`);
     if (history.some(h => h.champion)) {
         const champCount = history.filter(h => h.champion).length;
         if (champCount >= 3) memes.push(`<strong>${champCount} раз чемпион</strong>. <span class="meme">Династия</span>. Оставь корону кому-нибудь ещё.`);
         else memes.push(`Ты был <strong>чемпионом</strong>. <span class="meme">Корона жмёт?</span> Или уже продал?`);
     }
-    if (heroAnalysis.count >= 5 && heroAnalysis.trueWR > 0.55) memes.push(`${heroAnalysis.count} героев, но истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Ты <span class="meme">мастер на все руки</span>. Или просто везунчик.`);
+        if (heroAnalysis.uniqueCount >= 5 && heroAnalysis.trueWR > 0.55) memes.push(`${heroAnalysis.uniqueCount} героев, но истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Ты <span class="meme">мастер на все руки</span>. Или просто везунчик.`);
     if (heroAnalysis.trueWR > 0.6) memes.push(`Истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. <span class="meme">Это не винрейт, это диагноз</span> — талант.`);
     else if (heroAnalysis.trueWR < 0.4) memes.push(`Истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. <span class="meme">Боль</span>. Но мы всё равно тебя любим.`);
     if (history.length >= 2) {
@@ -1745,8 +1776,8 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
         if (firstSeason.season === 0 && lastSeason.season >= 10) memes.push(`Ты с <strong>S0 по S${lastSeason.season}</strong>. Это <span class="meme">ветеран</span>. Тебе уже можно памятник ставить.`);
     }
     if (totalTournaments > 0 && totalTournaments < 3) memes.push(`Турнирных побед — <strong>${totalTournaments}</strong>. <span class="meme">Попробовал, но не втянулся</span>. Как спортзал в январе.`);
-    if (history.length >= 3 && history.every(h => h.wr > 0.5)) memes.push(`Все сезоны с WR <strong>>50%</strong>. <span class="meme">Стабильность — признак мастерства</span>. Или везения.`);
-    if (history.length >= 3 && history.every(h => h.wr < 0.5)) memes.push(`Все сезоны с WR <strong><50%</strong>. <span class="meme">Упорство — тоже талант</span>. Но, может, что-то поменять?`);
+    if (totalSeasons >= 3 && seasonList.every(s => (s.wins / (s.wins + s.losses)) > 0.5)) memes.push(`Все сезоны с WR <strong>>50%</strong>. <span class="meme">Стабильность — признак мастерства</span>. Или везения.`);
+    if (totalSeasons >= 3 && seasonList.every(s => (s.wins / (s.wins + s.losses)) < 0.5)) memes.push(`Все сезоны с WR <strong><50%</strong>. <span class="meme">Упорство — тоже талант</span>. Но, может, что-то поменять?`);
     if (currentRace) {
         const raceComment = currentRace === 'Человек' ? 'Классика. Скучно, но надёжно.'
             : currentRace === 'Эльф' ? 'Типичный эльф. Наверное, ещё и лук в руках.'
