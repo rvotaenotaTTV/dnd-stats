@@ -1506,7 +1506,7 @@ function generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace) {
     if (trend.seasonsCount >= 3) {
         const records = findPersonalRecords(history);
         if (records.bestStreak.best >= 10) lines.push(`Твоя лучшая серия — <strong>${records.bestStreak.best} побед подряд</strong> (S${records.bestStreak.season}). Это не просто цифра — это <strong>момент абсолютной силы</strong>.`);
-        if (records.worstStreak.worst >= 8) lines.push(`Но помни и о <strong>${records.worstStreak.worst} поражениях</strong> (S${records.worstStreak.season}). Ты выбрался. Это делает тебя сильнее.`);
+        if (records.worstStreak.worst >= 8) lines.push(`Но помни и о <strong>${records.worstStreak.worst} поражениях подряд</strong> (S${records.worstStreak.season}). Ты выбрался. Это делает тебя сильнее.`);
     }
 
     return lines;
@@ -3234,7 +3234,7 @@ async function loadProfile() {
         const pace = findPace(mainHistory);
         const top10Compare = compareWithTop10(currentPlayerName, allSeasonsCache);
         const forecast = buildForecast(trend, leaguePlace);
-        const narrative = generateNarrative(mainHistory, trend, heroAnalysis, dungeon, leaguePlace);
+        const narrative = generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace);
         const forecastText = generateForecastText(forecast, trend);
         const advice = generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, mainHistory);
         const memes = generateMemeAnalysis(mainHistory, trend, heroAnalysis, metaBySeason, leaguePlace);
