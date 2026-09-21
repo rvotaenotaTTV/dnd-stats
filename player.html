@@ -3237,7 +3237,7 @@ async function loadProfile() {
         const narrative = generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace);
         const forecastText = generateForecastText(forecast, trend);
         const advice = generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, mainHistory);
-        const memes = generateMemeAnalysis(mainHistory, trend, heroAnalysis, metaBySeason, leaguePlace);
+        const memes = generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace);
 
         // Ранги
         const ranks = {
