@@ -1488,13 +1488,13 @@ function generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace) {
     }
 
     if (heroAnalysis.uniqueCount > 1) {
-        lines.push(`За твоей спиной — ${heroAnalysis.uniqueCount} героев. Истинный WR — <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Каждый из них — часть твоей истории.`);
+        lines.push(`За твоей спиной — ${heroAnalysis.count} героев. Истинный WR — <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Каждый из них — часть твоей истории.`);
         if (heroAnalysis.best && heroAnalysis.best.wr > trend.lastWR + 0.05) {
             lines.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(0)}%). Текущий слабее. Возможно, пора <strong>вернуться к истокам</strong>?`);
         } else if (heroAnalysis.best && heroAnalysis.best.wr < trend.lastWR - 0.05) {
             lines.push(`Твой текущий герой <strong>сильнее</strong> лучшего в архиве. Ты <strong>превзошёл себя</strong>. Это ли не рост?`);
         }
-    } else if (heroAnalysis.uniqueCount === 1) {
+    } else if (heroAnalysis.count === 1) {
         lines.push(`Один герой. <strong>${heroAnalysis.heroes[0]?.emoji} ${heroAnalysis.heroes[0]?.name}</strong>. Ты верен ему. Или боишься перемен.`);
     }
 
@@ -1651,7 +1651,7 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     else memes.push(`Форма — <strong>${(trend.form * 100).toFixed(0)}%</strong> от пика. <span class="meme">Держишь марку</span>, но до рекорда чуть-чуть.`);
 
     // ---------- ГЕРОИ ----------
-    const hc = heroAnalysis.uniqueCount;
+    const hc = heroAnalysis.count;
     if (hc === 1) memes.push(`Один герой за всю карьеру. Ты — <span class="meme">моногамный</span>. Уважение.`);
     else if (hc === 2) memes.push(`Два героя. Это как <span class="meme">две жены</span> — и обе ревнуют.`);
     else if (hc >= 8) memes.push(`<strong>${hc} героев</strong>. Это уже <span class="meme">зоопарк</span>. Ты вообще помнишь их всех?`);
@@ -1768,7 +1768,7 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
         if (champCount >= 3) memes.push(`<strong>${champCount} раз чемпион</strong>. <span class="meme">Династия</span>. Оставь корону кому-нибудь ещё.`);
         else memes.push(`Ты был <strong>чемпионом</strong>. <span class="meme">Корона жмёт?</span> Или уже продал?`);
     }
-        if (heroAnalysis.uniqueCount >= 5 && heroAnalysis.trueWR > 0.55) memes.push(`${heroAnalysis.uniqueCount} героев, но истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Ты <span class="meme">мастер на все руки</span>. Или просто везунчик.`);
+        if (heroAnalysis.count >= 5 && heroAnalysis.trueWR > 0.55) memes.push(`${heroAnalysis.count} героев, но истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Ты <span class="meme">мастер на все руки</span>. Или просто везунчик.`);
     if (heroAnalysis.trueWR > 0.6) memes.push(`Истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. <span class="meme">Это не винрейт, это диагноз</span> — талант.`);
     else if (heroAnalysis.trueWR < 0.4) memes.push(`Истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. <span class="meme">Боль</span>. Но мы всё равно тебя любим.`);
     if (history.length >= 2) {
