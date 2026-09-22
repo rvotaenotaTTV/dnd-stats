@@ -1825,7 +1825,10 @@ function renderPlayerInfo(player, ranks) {
         badges.push(`<span class="badge badge-league">⭐ Чемпион Лиги ${leagueSeasons.join(', ')}</span>`);
     }
 
-    if (ranks && ranks.season > 0 && ranks.season <= 10) badges.push(`<span class="badge badge-light">🏆 Топ-${ranks.season} сезона</span>`);
+    if (ranks && ranks.season > 0 && ranks.season <= 8) {
+    const factionEmoji = player.faction === 'Орден Света' ? '🌝' : player.faction === 'Культ Тьмы' ? '🌚' : '';
+    badges.push(`<span class="badge badge-light">🏆 Топ-${ranks.season} ${factionEmoji}</span>`);
+	}
 
     return `<section class="oracle-block gold" style="padding:0;overflow:hidden;">
         <div class="profile-hero">
@@ -3170,8 +3173,11 @@ function getCurrentSeasonPlayers() {
     return last?.data?.players || [];
 }
 function getSeasonRank(p) {
+    const faction = normalizeFaction(p.faction);
+    if (!faction) return 0;
     const sorted = getCurrentSeasonPlayers()
         .filter(x => (x.skill || 0) > 0)
+        .filter(x => normalizeFaction(x.faction) === faction)
         .sort((a, b) => (b.skill || 0) - (a.skill || 0));
     return sorted.findIndex(x => x.display === p.display) + 1;
 }
