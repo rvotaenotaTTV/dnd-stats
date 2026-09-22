@@ -1825,9 +1825,8 @@ function renderPlayerInfo(player, ranks) {
         badges.push(`<span class="badge badge-league">⭐ Чемпион Лиги ${leagueSeasons.join(', ')}</span>`);
     }
 
-    if (ranks && ranks.season > 0 && ranks.season <= 8) {
-    const factionEmoji = player.faction === 'Орден Света' ? '🌝' : player.faction === 'Культ Тьмы' ? '🌚' : '';
-    badges.push(`<span class="badge badge-light">🏆 Топ-${ranks.season} ${factionEmoji}</span>`);
+	if (ranks && ranks.season > 0 && ranks.season <= 8) {
+		badges.push(`<span class="badge badge-light">🏆 Топ-${ranks.season}</span>`);
 	}
 
     return `<section class="oracle-block gold" style="padding:0;overflow:hidden;">
