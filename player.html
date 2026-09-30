@@ -336,19 +336,86 @@ body {
 .history-table tr.total-row td { background: rgba(163,113,247,0.10); font-weight: 800; border-bottom: none; }
 .history-table tr.total-row td.season-num { color: var(--gold); }
 
-/* --- Полная летопись: 11 колонок + разделение по сезонам --- */
+/* --- Полная летопись: группировка по сезонам --- */
 .history-table.full { font-size: 0.72rem; min-width: 700px; }
 .history-table.full th { padding: 8px 6px; font-size: 0.6rem; line-height: 1.3; text-align: center; }
 .history-table.full td { padding: 8px 6px; font-size: 0.72rem; }
-.history-table.full td:nth-child(2) { max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+.history-table.full td:nth-child(2) { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
 
-.history-table.full tbody tr.season-even { background: rgba(163,113,247,0.03); }
-.history-table.full tbody tr.season-odd  { background: transparent; }
-.history-table.full tbody tr.season-first td { border-top: 2px solid rgba(163,113,247,0.35); }
-.history-table.full tbody tr.season-first td:first-child { color: var(--gold); }
-.history-table.full tbody tr.season-total { background: rgba(163,113,247,0.08); font-weight: 700; border-bottom: 1px solid rgba(163,113,247,0.2); }
-.history-table.full tbody tr.season-total td { color: var(--sub); font-style: italic; }
-.history-table.full tbody tr.grand-total { background: linear-gradient(90deg, rgba(240,185,11,0.15), rgba(240,185,11,0.04)); border-top: 2px solid var(--gold); font-weight: 800; }
+/* Блок сезона */
+.history-table.full tbody tr.season-row {
+    border-left: 3px solid transparent;
+    transition: background 0.15s;
+}
+.history-table.full tbody tr.season-even {
+    background: rgba(163,113,247,0.03);
+    border-left-color: rgba(163,113,247,0.2);
+}
+.history-table.full tbody tr.season-odd {
+    background: transparent;
+    border-left-color: rgba(163,113,247,0.1);
+}
+
+/* Первая строка сезона — верхняя граница */
+.history-table.full tbody tr.season-first td {
+    border-top: 2px solid rgba(163,113,247,0.4);
+    padding-top: 12px;
+}
+
+/* Последняя строка сезона — нижняя граница */
+.history-table.full tbody tr.season-last td {
+    border-bottom: 2px solid rgba(163,113,247,0.4);
+    padding-bottom: 12px;
+}
+
+/* Ячейка с номером сезона — только в первой строке */
+.history-table.full td.season-cell {
+    font-weight: 800;
+    color: var(--purple);
+    font-size: 0.78rem;
+    vertical-align: top;
+    padding-top: 12px;
+}
+.history-table.full td.season-cell.current {
+    color: var(--gold);
+}
+.history-table.full td.season-cell.empty {
+    color: transparent;
+}
+
+/* Удалённый герой */
+.history-table.full tr.hero-deleted td {
+    opacity: 0.55;
+}
+.history-table.full tr.hero-deleted td:nth-child(2) {
+    color: var(--muted);
+    font-style: italic;
+}
+
+/* Строка ИТОГО внутри блока */
+.history-table.full tbody tr.season-total {
+    background: rgba(163,113,247,0.10);
+    border-left: 3px solid rgba(163,113,247,0.4);
+    font-weight: 700;
+}
+.history-table.full tbody tr.season-total td {
+    color: var(--sub);
+    font-style: italic;
+    padding: 8px 6px;
+}
+.history-table.full tbody tr.season-total td:first-child {
+    color: var(--gold);
+    font-style: normal;
+    font-weight: 800;
+}
+
+/* Гранд-тотал */
+.history-table.full tbody tr.grand-total {
+    background: linear-gradient(90deg, rgba(240,185,11,0.15), rgba(240,185,11,0.04));
+    border-top: 2px solid var(--gold);
+    border-left: 3px solid var(--gold);
+    font-weight: 800;
+}
 
 /* ============================================================================
    8. ГРАФИКИ, ТРЕНДЫ, РЕКОРДЫ
@@ -2734,14 +2801,36 @@ function renderFullHistory(history) {
         const rows = bySeason.get(seasonNum);
         const seasonClass = seasonIdx % 2 === 0 ? 'season-even' : 'season-odd';
 
-        rows.forEach((h, rowIdx) => {
-            const eraIcon = h.era === 'classic' ? ' 📜' : '';
-            const deletedIcon = h.isDeleted ? ' 🗑️' : '';
-            const rowStyle = h.isDeleted ? 'opacity:0.7;' : '';
-            const seasonExtra = h.isDeleted ? '🗑️' : (h.isCurrent ? ' ⚡' : '');
-            const isFirst = rowIdx === 0 ? ' season-first' : '';
-            html += `<tr class="${seasonClass}${isFirst} ${h.isCurrent && !h.isDeleted ? 'current' : ''}" style="${rowStyle}">
-                <td class="season-num" data-label="Сезон">S${h.season}${seasonExtra}${eraIcon}</td>
+        // Сортируем: сначала активные, потом удалённые
+        const sortedRows = [
+            ...rows.filter(h => !h.isDeleted),
+            ...rows.filter(h => h.isDeleted)
+        ];
+
+        // Определяем, есть ли активный герой в этом сезоне
+        const hasCurrent = sortedRows.some(h => h.isCurrent && !h.isDeleted);
+
+        sortedRows.forEach((h, rowIdx) => {
+            const isFirst = rowIdx === 0;
+            const isLast = rowIdx === sortedRows.length - 1 && rows.length === 1;
+
+            // Ячейка с сезоном — только в первой строке
+            let seasonCell = '';
+            if (isFirst) {
+                const eraIcon = h.era === 'classic' ? ' 📜' : '';
+                const currentIcon = hasCurrent ? ' ⚡' : '';
+                const seasonClass2 = hasCurrent ? ' current' : '';
+                seasonCell = `<td class="season-cell${seasonClass2}" data-label="Сезон">S${seasonNum}${currentIcon}${eraIcon}</td>`;
+            } else {
+                seasonCell = `<td class="season-cell empty" data-label="Сезон"></td>`;
+            }
+
+            // Иконка удаления — только у героя
+            const deletedIcon = h.isDeleted ? ' <span style="font-size:0.65rem;">🗑️</span>' : '';
+            const rowClass = h.isDeleted ? 'hero-deleted' : '';
+
+            html += `<tr class="${seasonClass} ${rowClass}${isFirst ? ' season-first' : ''}${isLast ? ' season-last' : ''}">
+                ${seasonCell}
                 <td data-label="Герой" style="color:var(--sub);">${h.emoji} ${h.name || '—'}${deletedIcon}</td>
                 <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
                 <td class="num" data-label="WR" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
@@ -2755,6 +2844,7 @@ function renderFullHistory(history) {
             </tr>`;
         });
 
+        // ИТОГО — если героев > 1
         if (rows.length > 1) {
             const sumWins = rows.reduce((s, h) => s + h.wins, 0);
             const sumLosses = rows.reduce((s, h) => s + h.losses, 0);
@@ -2767,9 +2857,9 @@ function renderFullHistory(history) {
             const sumShards = rows.reduce((s, h) => s + (h.shards || 0), 0);
             const sumTournaments = rows.reduce((s, h) => s + (h.tournamentWins || 0), 0);
 
-            html += `<tr class="season-total ${seasonClass}">
-                <td class="season-num" data-label="Сезон" style="color:var(--gold);">S${seasonNum} ИТОГО</td>
-                <td data-label="Герой">сумма за сезон</td>
+            html += `<tr class="season-total ${seasonClass} season-last">
+                <td class="season-cell" data-label="Сезон"></td>
+                <td data-label="Герой">ИТОГО за сезон</td>
                 <td class="num" data-label="W/L">${sumWins}-${sumLosses}</td>
                 <td class="num" data-label="WR" style="color:${wrColor(sumWR)};">${(sumWR * 100).toFixed(1)}%</td>
                 <td class="num" data-label="Стрик" style="color:var(--green);">${maxBest}</td>
@@ -2795,8 +2885,8 @@ function renderFullHistory(history) {
     const gTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
 
     html += `<tr class="grand-total">
-        <td class="season-num" data-label="ВСЕГО" style="color:var(--gold);">ВСЕГО</td>
-        <td data-label="Герой" style="color:var(--muted);font-style:italic;">${history.length} записей</td>
+        <td class="season-cell" data-label="ВСЕГО"></td>
+        <td data-label="Герой" style="color:var(--gold);font-weight:800;">🏆 ВСЕГО ЗА КАРЬЕРУ</td>
         <td class="num" data-label="W/L" style="color:var(--text);">${gWins}-${gLosses}</td>
         <td class="num" data-label="WR" style="color:${wrColor(gWR)};">${(gWR * 100).toFixed(1)}%</td>
         <td class="num" data-label="Стрик" style="color:var(--green);">${gMaxBest}</td>
