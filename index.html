@@ -358,10 +358,10 @@
 			Object.values(heroArchive).forEach(heroes=>{
 				heroes.forEach(h=>{
 					if(!comboStats[h.name]) comboStats[h.name]={wins:0,losses:0,players:0,streak:0,factionWins:0};
-					comboStats[h.name].wins+=h.wins;
-					comboStats[h.name].losses+=h.losses;
+					comboStats[h.name].wins+=(h.wins||0);
+					comboStats[h.name].losses+=(h.losses||0);
 					if((h.best||0)>comboStats[h.name].streak) comboStats[h.name].streak=h.best||0;
-					comboStats[h.name].factionWins+=h.factionWins||0;
+					comboStats[h.name].factionWins+=(h.factionWins||0);
 				});
 			});
 			const comboArray=Object.entries(comboStats)

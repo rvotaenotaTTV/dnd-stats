@@ -3035,6 +3035,15 @@ window.compareWith = (name) => {
 
 // --- 7.21 Skill ---
 function renderSkillTab(last) {
+    if (last.isDeleted) {
+        return `<div id="tab-skill" class="tab-content">
+            <div class="oracle-block gold" style="padding:40px 20px;text-align:center;">
+                <div style="font-size:2rem;margin-bottom:12px;">📈</div>
+                <div style="color:var(--muted);font-size:0.9rem;">SKILL доступен только для активных героев</div>
+                <div style="color:var(--sub);font-size:0.75rem;margin-top:8px;">Текущий герой: ${last.emoji} ${last.name} (архив)</div>
+            </div>
+        </div>`;
+    }
     const total = last.total;
     const wr = total > 0 ? (last.wins / total) : 0;
     const skill = last.skill || 0;
