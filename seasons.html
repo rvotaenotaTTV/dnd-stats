@@ -381,7 +381,7 @@ function renderSeason(data, seasonNum, isCurrent) {
     const factionScore = data.factionScore || {};
     const territory = data.territory || (data.dungeon && data.dungeon.territory) || { light: 0, dark: 0 };
     const totalPlayers = players.length;
-    let totalFights = Math.floor(players.reduce((s, p) => s + (p.wins || 0) + (p.losses || 0), 0) / 2);
+    let rawFights = players.reduce((s, p) => s + (p.wins || 0) + (p.losses || 0), 0);
     let maxStreak = players.reduce((m, p) => (p.best || 0) > m ? (p.best || 0) : m, 0);
     let maxShards = players.reduce((m, p) => (p.shards || 0) > m ? (p.shards || 0) : m, 0);
     let maxLevel = players.reduce((m, p) => (p.level || 0) > m ? (p.level || 0) : m, 0);
@@ -391,7 +391,7 @@ function renderSeason(data, seasonNum, isCurrent) {
 	const archivedPlayers = [];
 	Object.entries(heroArchive).forEach(([playerKey, heroes]) => {
 		heroes.forEach(h => {
-			totalFights += Math.floor(((h.wins || 0) + (h.losses || 0)) / 2);
+			rawFights += (h.wins || 0) + (h.losses || 0);
 			if ((h.best || 0) > maxStreak) maxStreak = h.best || 0;
 			if ((h.worst || 0) > worstStreak) worstStreak = h.worst || 0;
 			const archived = {
@@ -411,6 +411,7 @@ function renderSeason(data, seasonNum, isCurrent) {
 			allForWR.push({ wins: archived.wins, losses: archived.losses, display: archived.display, name: archived.name });
 		});
 	});
+	const totalFights = Math.floor(rawFights / 2);
 	const allPlayers = [...players, ...archivedPlayers];
     const topWR = allForWR.filter(p => (p.wins || 0) + (p.losses || 0) >= 30).sort((a, b) => {
         const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0) || 1);

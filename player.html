@@ -1929,7 +1929,10 @@ function renderHistory(history, limit = null) {
     if (filtered.length === 0) return '';
     const list = limit ? filtered.slice(-limit) : filtered;
 
-    let html = '<div class="oracle-block"><div class="oracle-block-title">📜 ' + (limit ? 'Последние ' + limit + ' сезонов' : 'Летопись') + '</div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th></tr></thead><tbody>';
+    const titleText = limit 
+    ? '📜 Последние ' + limit + ' активных сезонов' 
+    : '📜 Активные сезоны';
+	let html = '<div class="oracle-block"><div class="oracle-block-title">' + titleText + ' <a href="#" onclick="switchTab(\'archive\');return false;" style="color:var(--gold);font-size:0.7rem;margin-left:auto;text-decoration:none;">вся летопись →</a></div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th></tr></thead><tbody>';
 
     list.forEach(h => {
         const wrC = wrColor(h.wr);
@@ -3255,8 +3258,15 @@ async function loadProfile() {
         window._currentSeasonFilter = 'all';
 
         // Все анализаторы
-        const mainHistory = history.filter(h => !h.isDeleted);
-        const last = mainHistory[mainHistory.length - 1] || history[history.length - 1];
+		const mainHistory = history.filter(h => !h.isDeleted);
+		const activeHero = history.find(h => h.isCurrent && !h.isDeleted);
+		let last;
+		if (activeHero) {
+			last = activeHero;
+		} else {
+			const sortedBySeason = [...history].sort((a, b) => b.season - a.season);
+			last = sortedBySeason[0];
+		}
 
         const trend = analyzeTrend(mainHistory);
         const heroAnalysis = analyzeHeroArchive(currentPlayerName, allSeasonsCache);
