@@ -387,15 +387,31 @@ function renderSeason(data, seasonNum, isCurrent) {
     let maxLevel = players.reduce((m, p) => (p.level || 0) > m ? (p.level || 0) : m, 0);
     let maxFactionWins = players.reduce((m, p) => (p.factionWins || 0) > m ? (p.factionWins || 0) : m, 0);
     let worstStreak = players.reduce((m, p) => (p.worst || 0) > m ? (p.worst || 0) : m, 0);
-    let allForWR = [...players];
-    Object.values(heroArchive).forEach(heroes => {
-        heroes.forEach(h => {
-            totalFights += Math.floor(((h.wins || 0) + (h.losses || 0)) / 2);
-            if ((h.best || 0) > maxStreak) maxStreak = h.best || 0;
-            if ((h.worst || 0) > worstStreak) worstStreak = h.worst || 0;
-            allForWR.push({ wins: h.wins || 0, losses: h.losses || 0, display: h.name || '', name: h.name || '' });
-        });
-    });
+	let allForWR = [...players];
+	const archivedPlayers = [];
+	Object.entries(heroArchive).forEach(([playerKey, heroes]) => {
+		heroes.forEach(h => {
+			totalFights += Math.floor(((h.wins || 0) + (h.losses || 0)) / 2);
+			if ((h.best || 0) > maxStreak) maxStreak = h.best || 0;
+			if ((h.worst || 0) > worstStreak) worstStreak = h.worst || 0;
+			const archived = {
+				display: playerKey,
+				name: h.name || '',
+				emoji: h.emoji || '⚔️',
+				wins: h.wins || 0,
+				losses: h.losses || 0,
+				best: h.best || 0,
+				worst: h.worst || 0,
+				tournamentWins: h.tournamentWins || 0,
+				shards: 0,
+				level: 0,
+				factionWins: 0
+			};
+			archivedPlayers.push(archived);
+			allForWR.push({ wins: archived.wins, losses: archived.losses, display: archived.display, name: archived.name });
+		});
+	});
+	const allPlayers = [...players, ...archivedPlayers];
     const topWR = allForWR.filter(p => (p.wins || 0) + (p.losses || 0) >= 30).sort((a, b) => {
         const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0) || 1);
         const wb = (b.wins || 0) / ((b.wins || 0) + (b.losses || 0) || 1);
@@ -480,15 +496,15 @@ function renderSeason(data, seasonNum, isCurrent) {
         seasonTop.slice(0, 5).forEach((p, i) => { html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td>${p.emoji || ''}</td><td class="number">${p.skill}</td><td class="number">${p.wins}</td></tr>`; });
         html += '</tbody></table></div></div>';
     }
-    const mostActive = [...players].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0))).slice(0, 5);
+    const mostActive = [...allPlayers].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0))).slice(0, 5);
     html += '<div class="table-card"><h3><span class="table-icon">🔥</span> Самые активные</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Боёв</th></tr></thead><tbody>';
     mostActive.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${(p.wins || 0) + (p.losses || 0)}</td></tr>`);
     html += '</tbody></table></div></div>';
-    const topShards = [...players].sort((a, b) => (b.shards || 0) - (a.shards || 0)).slice(0, 5);
+    const topShards = [...allPlayers].sort((a, b) => (b.shards || 0) - (a.shards || 0)).slice(0, 5);
     html += '<div class="table-card"><h3><span class="table-icon">💎</span> Коллекционеры осколков</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Осколков</th></tr></thead><tbody>';
     topShards.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.shards || 0}</td></tr>`);
     html += '</tbody></table></div></div>';
-    const topStreaks = [...players].sort((a, b) => (b.best || 0) - (a.best || 0)).slice(0, 5);
+    const topStreaks = [...allPlayers].sort((a, b) => (b.best || 0) - (a.best || 0)).slice(0, 5);
     html += '<div class="table-card"><h3><span class="table-icon">🔥</span> Лучшие серии побед</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Побед</th></tr></thead><tbody>';
     topStreaks.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.best || 0}</td></tr>`);
     html += '</tbody></table></div></div>';
