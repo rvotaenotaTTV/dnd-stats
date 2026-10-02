@@ -9,12 +9,12 @@
       "best": 2,
       "worst": 2,
       "champion": false,
-      "shards": 39,
-      "level": 3,
+      "shards": 41,
+      "level": 4,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
       "factionWins": 3,
-      "skill": 43
+      "skill": 45
     },
     {
       "display": "velitar_flame",
@@ -164,17 +164,17 @@
       "display": "Verdoga",
       "emoji": "👹⚙️",
       "name": "Орк-Изобретатель",
-      "wins": 6,
+      "wins": 7,
       "losses": 14,
       "best": 2,
       "worst": 5,
       "champion": false,
-      "shards": 55,
+      "shards": 58,
       "level": 5,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 4,
-      "skill": 44
+      "factionWins": 5,
+      "skill": 49
     },
     {
       "display": "strannik_25",
@@ -217,7 +217,7 @@
       "best": 2,
       "worst": 4,
       "champion": false,
-      "shards": 22,
+      "shards": 23,
       "level": 2,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -345,7 +345,7 @@
       "best": 1,
       "worst": 2,
       "champion": false,
-      "shards": 6,
+      "shards": 8,
       "level": 0,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -1412,17 +1412,17 @@
       "display": "lena_segorek2",
       "emoji": "🐱📿",
       "name": "Табакси-Монах",
-      "wins": 2,
+      "wins": 3,
       "losses": 2,
-      "best": 2,
+      "best": 3,
       "worst": 2,
       "champion": false,
-      "shards": 8,
-      "level": 0,
+      "shards": 14,
+      "level": 1,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
-      "factionWins": 1,
-      "skill": 0
+      "factionWins": 2,
+      "skill": 47
     },
     {
       "display": "ded_evgeniusai",
@@ -1705,7 +1705,7 @@
       "best": 1,
       "worst": 3,
       "champion": false,
-      "shards": 66,
+      "shards": 67,
       "level": 6,
       "faction": "Культ Тьмы",
       "tournamentWins": 0,
@@ -1733,16 +1733,16 @@
       "emoji": "😈🌿",
       "name": "Тифлинг-Друид",
       "wins": 4,
-      "losses": 6,
+      "losses": 7,
       "best": 3,
       "worst": 5,
       "champion": false,
-      "shards": 55,
+      "shards": 57,
       "level": 5,
       "faction": "Орден Света",
       "tournamentWins": 0,
       "factionWins": 3,
-      "skill": 53
+      "skill": 52
     },
     {
       "display": "juckbluck",
@@ -1829,11 +1829,11 @@
       "emoji": "🧝👁️",
       "name": "Эльф-Колдун",
       "wins": 1,
-      "losses": 0,
+      "losses": 1,
       "best": 1,
-      "worst": 0,
+      "worst": 1,
       "champion": false,
-      "shards": 3,
+      "shards": 4,
       "level": 0,
       "faction": "Орден Света",
       "tournamentWins": 0,
@@ -2130,15 +2130,15 @@
     }
   ],
   "factionScore": {
-    "duelLight": 64,
-    "duelDark": 59,
+    "duelLight": 65,
+    "duelDark": 60,
     "battleLight": 1,
     "battleDark": 1
   },
   "tournaments": 4,
   "territory": {
     "light": 377,
-    "dark": 465
+    "dark": 473
   },
   "territoryControl": {
     "🌑 Эпицентр Раскола": "light",
@@ -2258,9 +2258,9 @@
         "crits": 12,
         "misses": 6,
         "blocks": 37,
-        "trophies": 33,
-        "bosses": 13,
-        "totalWaves": 95,
+        "trophies": 34,
+        "bosses": 14,
+        "totalWaves": 102,
         "swings": 159,
         "hits": 116,
         "passive": "🎯 Метка Охотника"
@@ -2292,9 +2292,9 @@
         "crits": 12,
         "misses": 12,
         "blocks": 3,
-        "trophies": 68,
-        "bosses": 34,
-        "totalWaves": 205,
+        "trophies": 70,
+        "bosses": 35,
+        "totalWaves": 214,
         "swings": 339,
         "hits": 324,
         "passive": "💚 Стойкость"
@@ -2411,9 +2411,9 @@
         "crits": 9,
         "misses": 13,
         "blocks": 0,
-        "trophies": 62,
-        "bosses": 37,
-        "totalWaves": 254,
+        "trophies": 68,
+        "bosses": 39,
+        "totalWaves": 266,
         "swings": 238,
         "hits": 225,
         "passive": "⚔️ Святая ярость"
@@ -2666,9 +2666,9 @@
         "crits": 11,
         "misses": 10,
         "blocks": 13,
-        "trophies": 10,
-        "bosses": 4,
-        "totalWaves": 27,
+        "trophies": 12,
+        "bosses": 5,
+        "totalWaves": 36,
         "swings": 174,
         "hits": 151,
         "passive": "🩸 Вампиризм"
@@ -2678,30 +2678,21 @@
         "emoji": "🐱⚔️",
         "name": "Табакси-Воин",
         "faction": "Культ Тьмы",
-        "record": 12,
-        "damage": 1193,
-        "crits": 4,
-        "misses": 12,
-        "blocks": 18,
-        "trophies": 4,
-        "bosses": 2,
-        "totalWaves": 12,
-        "swings": 148,
-        "hits": 118,
+        "record": 13,
+        "damage": 1296,
+        "crits": 12,
+        "misses": 4,
+        "blocks": 12,
+        "trophies": 9,
+        "bosses": 4,
+        "totalWaves": 25,
+        "swings": 152,
+        "hits": 136,
         "passive": "🩸 Вампиризм"
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "⚡🏆😈🌿 artem_jz 30:20 🧑👁️ razendx | 7:9 | 11:11 | 6:❌ | 6:-"
-    },
-    {
-      "FullLog": "⚡🏆🐱✨ kotshiroyama 34:11 🧑🦴 takt03 | 7:💨 | 9:4 | 10:7 | 8:-"
-    },
-    {
-      "FullLog": "🏆🧑🛡️ snorlax47 31:17 ⚡🧔✝️ fentyr41 | 🛡:🛡 | 6:💥12 | 🛡:🛡 | 6:6 | 5:6 | 🛡:7"
-    },
     {
       "FullLog": "⚡🏆🧔⚙️ velitar_flame 27:20 🐱📿 myvineshan | ❌:❌ | ❌:8 | 5:6 | 7:❌ | 9:6 | 💨:💨 | 6:-"
     },
@@ -2722,6 +2713,15 @@
     },
     {
       "FullLog": "⚡🏆👹⚙️ Verdoga 40:10 🧝👁️ avnr_sb | 4:💨 | 6:❌ | 12:10 | 💥18:-"
+    },
+    {
+      "FullLog": "⚡😈🌿 artem_jz 21:31 🏆🐱📿 lena_segorek2 | 💨:5 | 6:6 | 7:9 | 8:5 | 💨:6"
+    },
+    {
+      "FullLog": "⚡🏆🐱🗡️ fialo4ka 30:20 👹🌿 rei_goth | 💨:10 | 10:6 | 10:4 | 10:-"
+    },
+    {
+      "FullLog": "🧝⚙️ milyvolk 11:32 ⚡🏆😈🧪 crazy_diamondss | 3:11 | 7:💨 | 💥22:-"
     }
   ],
   "heroArchive": {
