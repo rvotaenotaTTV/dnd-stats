@@ -519,9 +519,6 @@ if (name === 'matrix') matrix_loadData();
 history.replaceState(null, null, '#' + name);
 }
 document.querySelectorAll('.page-tab').forEach(tab => { tab.addEventListener('click', () => switchPageTab(tab.dataset.tab)); });
-const validPageTabs = ['balance','calc','gradient','sim','dungeon','form','matrix'];
-const initialHash = window.location.hash.substring(1);
-if (initialHash && validPageTabs.includes(initialHash)) switchPageTab(initialHash);
 
 const STATS_CACHE_KEY = 'eternis-stats', DATA_CACHE_KEY = 'eternis-data', STATS_CACHE_TTL = 2 * 60 * 1000;
 const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
@@ -2156,6 +2153,10 @@ async function dungeon_startComparison() {
         dungeon_setOutput('❌ ' + e.message + '\n' + e.stack);
     }
 }
+
+const validPageTabs = ['balance','calc','gradient','sim','dungeon','form','matrix'];
+const initialHash = window.location.hash.substring(1);
+if (initialHash && validPageTabs.includes(initialHash)) switchPageTab(initialHash);
 </script>
 </body>
 </html>
