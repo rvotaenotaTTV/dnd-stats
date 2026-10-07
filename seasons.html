@@ -389,7 +389,7 @@ function renderSeason(data, seasonNum, isCurrent) {
         ? data.seasonTop
         : [...players].filter(p => (p.skill || 0) > 0).sort((a, b) => (b.skill || 0) - (a.skill || 0));
     const factionScore = data.factionScore || {};
-    const territory = data.territory || (data.dungeon && data.dungeon.territory) || { light: 0, dark: 0 };
+    const territory = data.dungeonTrophies || data.territory || (data.dungeon && (data.dungeon.dungeonTrophies || data.dungeon.territory)) || { light: 0, dark: 0 };
     const totalPlayers = players.length;
     let rawFights = players.reduce((s, p) => s + (p.wins || 0) + (p.losses || 0), 0);
     let maxStreak = players.reduce((m, p) => (p.best || 0) > m ? (p.best || 0) : m, 0);

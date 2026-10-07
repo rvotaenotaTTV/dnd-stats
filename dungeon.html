@@ -201,7 +201,7 @@
             .then(d => {
                 const dungeon = d.dungeon || {};
                 const players = Object.values(dungeon.players || {});
-                const territory = d.territory || { light: 0, dark: 0 };
+                const territory = d.dungeonTrophies || d.territory || { light: 0, dark: 0 };
                 if (!players.length) { container.innerHTML = `<div class="section ice" style="text-align:center;padding:40px 20px;"><div class="section-title" style="justify-content:center;">Нет данных.</div></div>`; return; }
                 renderAll(players, territory);
             })
