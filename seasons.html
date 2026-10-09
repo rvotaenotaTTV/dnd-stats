@@ -103,6 +103,60 @@
     .player-link{color:var(--gold);text-decoration:none;font-weight:600;transition:color .2s}
     .player-link:hover{color:var(--text);text-decoration:underline}
 	@keyframes spin { to { transform: rotate(360deg); } }
+	.load-percent {
+		width: 72px;
+		height: 72px;
+		margin: 40px auto 0;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--elevated);
+		border: 2px solid var(--purple);
+		color: var(--gold);
+		font-size: 1.2rem;
+		font-weight: 800;
+		font-variant-numeric: tabular-nums;
+		position: relative;
+	}
+	.load-percent::before {
+		content: '';
+		position: absolute;
+		inset: -6px;
+		border-radius: 50%;
+		border: 2px solid transparent;
+		border-top-color: var(--gold);
+		border-right-color: var(--purple);
+		animation: spin 1s linear infinite;
+	}
+	.load-bar {
+		width: 220px;
+		height: 6px;
+		background: var(--bg);
+		border-radius: 3px;
+		margin: 14px auto 0;
+		overflow: hidden;
+		border: 1px solid var(--border);
+	}
+	.load-bar-fill {
+		height: 100%;
+		background: linear-gradient(90deg, var(--purple), var(--gold));
+		border-radius: 3px;
+		transition: width 0.3s ease;
+	}
+	.load-info {
+		text-align: center;
+		color: var(--muted);
+		font-size: 0.75rem;
+		margin-top: 8px;
+		font-variant-numeric: tabular-nums;
+	}
+	.load-title {
+		text-align: center;
+		color: var(--sub);
+		font-size: 0.85rem;
+		margin-top: 4px;
+	}
     @media(max-width:768px){
         .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
         .stat-value{font-size:1.3rem}
@@ -201,10 +255,9 @@
 		<div id="seasons-tab-seasons" class="tab-content active">
 			<div class="timeline-nav" id="season-tabs"></div>
 			<div id="tab-content-container">
-				<div id="initial-loader" style="text-align:center;padding:60px 20px;color:var(--muted)">
-					<div style="display:inline-block;width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite"></div>
-					<div style="margin-top:12px;font-size:0.85rem">Загрузка сезонов...</div>
-				</div>
+			<div id="initial-loader" style="text-align:center;padding:60px 20px;color:var(--muted)">
+				<div id="progressBox"></div>
+			</div>
 			</div>
 		</div>
 
@@ -320,7 +373,7 @@ const SEASON_SUBTITLES = [
     'Восход.',
     'Война.'
 ];
-const SEASON_SCAN_LIMIT = 15;
+const SEASON_SCAN_LIMIT = 10;
 
 // ============ КЕШ STATS_DATA ============
 const STATS_CACHE_KEY = 'eternis-stats';
@@ -359,6 +412,20 @@ let currentSeasonNum = -1;
 let seasonTabs = [];
 let activeSeason = -1;
 let totalPlayersData = [];
+
+function renderProgress(loaded, total, title) {
+    const rawPct = total > 0 ? Math.round((loaded / total) * 100) : 0;
+    const pct = loaded >= total ? 100 : Math.min(99, rawPct);
+    const el = document.getElementById('progressBox');
+    if (!el) return;
+    const titleHtml = title ? `<div class="load-title">${title}</div>` : '';
+    el.innerHTML = `
+        <div class="load-percent">${pct}%</div>
+        <div class="load-bar"><div class="load-bar-fill" style="width:${pct}%"></div></div>
+        <div class="load-info">Загружено ${loaded} из ${total}</div>
+        ${titleHtml}
+    `;
+}
 
 function getRankClass(index) {
     if (index === 0) return 'row-gold';
@@ -537,11 +604,15 @@ function renderSeason(data, seasonNum, isCurrent) {
 // ============ ЗАГРУЗКА СЕЗОНОВ ============
 async function detectSeasons() {
     const foundSeasons = [];
+
+    renderProgress(0, SEASON_SCAN_LIMIT + 2, 'Определяю сезоны...');
+
     for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
         try {
             const r = await fetch(`${ARCHIVE_BASE}${n}.json`);
             if (!r.ok) break;
             foundSeasons.push(n);
+            renderProgress(n + 1, SEASON_SCAN_LIMIT + 2, `Загружаю сезон ${n}...`);
         } catch (e) { break; }
     }
 
@@ -551,8 +622,24 @@ async function detectSeasons() {
 
     seasonTabs = [...foundSeasons, currentSeasonNum];
 
+    renderProgress(SEASON_SCAN_LIMIT + 1, SEASON_SCAN_LIMIT + 2, 'Готовлю отображение...');
+
     const contentContainer = document.getElementById('tab-content-container');
     contentContainer.innerHTML = '';
+
+    const totalLoads = seasonTabs.length;
+    let loadedCount = 0;
+
+    function onSeasonLoaded() {
+        loadedCount++;
+        renderProgress(loadedCount, totalLoads, `Загружено ${loadedCount} из ${totalLoads} сезонов`);
+        if (loadedCount >= totalLoads) {
+            setTimeout(() => {
+                const loader = document.getElementById('initial-loader');
+                if (loader) loader.style.display = 'none';
+            }, 500);
+        }
+    }
 
     seasonTabs.forEach((sn, idx) => {
         const isCurrent = sn === currentSeasonNum;
@@ -563,8 +650,10 @@ async function detectSeasons() {
         div.className = `tab-content${isLast ? ' active' : ''}`;
         div.innerHTML = '<div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div>';
         contentContainer.appendChild(div);
-        if (isCurrent) loadCurrentSeason(sn, tabId);
-        else loadArchiveSeason(sn, tabId);
+
+        const loader = isCurrent ? loadCurrentSeason(sn, tabId) : loadArchiveSeason(sn, tabId);
+        if (loader && loader.then) loader.then(onSeasonLoaded);
+        else onSeasonLoaded();
     });
 
     activeSeason = currentSeasonNum;
@@ -592,8 +681,10 @@ async function loadCurrentSeason(sn, tabId) {
     try {
         const d = await getStatsData();
         container.innerHTML = renderSeason(d, sn, true);
+        return true;
     } catch {
         container.innerHTML = `<div class="season-frame live"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Не удалось загрузить данные</div></div>`;
+        return false;
     }
 }
 async function loadArchiveSeason(sn, tabId) {
@@ -602,8 +693,10 @@ async function loadArchiveSeason(sn, tabId) {
         const d = await getSeasonData(sn);
         if (!d) throw new Error('no data');
         container.innerHTML = renderSeason(d, sn, false);
+        return true;
     } catch {
         container.innerHTML = `<div class="season-frame ended"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Архив недоступен</div></div>`;
+        return false;
     }
 }
 
