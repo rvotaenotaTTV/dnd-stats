@@ -121,17 +121,18 @@
 #tab-gradient .btn-reset { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 0.78rem; font-family: inherit; }
 #tab-gradient .btn-reset:hover { border-color: var(--gold); color: var(--gold); }
 #tab-gradient .progress { color: var(--gold); font-size: 0.8rem; margin-left: 8px; }
-#tab-gradient .stats-grid { grid-template-columns: repeat(6,1fr); margin: 16px 0; }
-#tab-gradient .stat-card { padding: 14px 10px; text-align: center; }
+#tab-gradient .progress-bar-wrap { margin-top: 12px; }
+#tab-gradient .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin: 16px 0; }
+#tab-gradient .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 10px; text-align: center; }
 #tab-gradient .stat-emoji { font-size: 1.1rem; margin-bottom: 4px; }
 #tab-gradient .stat-name { color: var(--muted); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; text-align: center; }
-#tab-gradient .stat-value { font-size: 1.3rem; margin-bottom: 8px; text-align: center; }
+#tab-gradient .stat-value { font-size: 1.3rem; margin-bottom: 8px; text-align: center; color: var(--text); font-weight: 700; }
 #tab-gradient .stat-input { width: 70px; background: var(--bg); border: 1px solid var(--border); color: var(--gold); font-size: 0.9rem; font-weight: 700; text-align: center; padding: 8px 4px; border-radius: 10px; font-family: inherit; }
 #tab-gradient .stat-input:focus { outline: none; border-color: var(--gold); }
 #tab-gradient .stat-input::-webkit-outer-spin-button,
 #tab-gradient .stat-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 #tab-gradient .stat-input { -moz-appearance: textfield; appearance: textfield; }
-#tab-gradient .result-panel { background: var(--elevated); border-radius: var(--radius-sm); padding: 24px; border: 1px solid var(--border); text-align: center; margin-top: 20px; display: none; }
+#tab-gradient .result-panel { background: var(--elevated); border-radius: var(--radius-sm); padding: 24px; border: 1px solid var(--border); text-align: center; margin-top: 20px; }
 #tab-gradient .winrate-display { display: flex; gap: 24px; justify-content: center; align-items: center; flex-wrap: wrap; }
 #tab-gradient .winrate-box { text-align: center; padding: 18px 24px; background: var(--card); border-radius: var(--radius-sm); border: 1px solid var(--border); }
 #tab-gradient .winrate-label { color: var(--muted); font-size: 0.75rem; margin-bottom: 8px; text-transform: uppercase; }
@@ -143,6 +144,7 @@
 #tab-gradient .diff-neutral { background: var(--elevated); color: var(--muted); }
 #tab-gradient .sim-details { margin-top: 14px; color: var(--muted); font-size: 0.78rem; }
 #tab-gradient .info-block { background: var(--elevated); border-radius: var(--radius-sm); padding: 16px; border-left: 3px solid var(--gold); line-height: 1.7; color: var(--sub); font-size: 0.85rem; }
+@media (max-width: 768px) { #tab-gradient .stats-grid { grid-template-columns: repeat(3, 1fr); } }
 
 #tab-sim .mode-switch { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
 #tab-sim .mode-btn { padding: 10px 16px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 0.75rem; font-family: inherit; }
@@ -437,20 +439,59 @@
 </div>
 
 <div class="tab-panel" id="tab-gradient">
-<div class="section gold">
-<div class="section-title">🔮 Прогноз винрейта</div>
-<div class="selector-row"><select id="grad-classSelect"></select><select id="grad-raceSelect"></select><button class="btn" id="grad-simulateBtn" onclick="grad_runGradient()">🔮 Прогноз</button><button class="btn-reset" onclick="grad_resetToOriginal()">🔄 Сброс</button><span class="progress" id="grad-progress"></span></div>
-<div class="stats-grid">
-<div class="stat-card"><div class="stat-emoji">❤️</div><div class="stat-name">HP</div><div class="stat-value" id="grad-hpDisplay">24</div><input type="number" id="grad-hpInput" class="stat-input" min="10" max="50" value="24"></div>
-<div class="stat-card"><div class="stat-emoji">⚔️</div><div class="stat-name">ATK</div><div class="stat-value" id="grad-atkDisplay">6</div><input type="number" id="grad-atkInput" class="stat-input" min="0" max="15" value="6"></div>
-<div class="stat-card"><div class="stat-emoji">🛡️</div><div class="stat-name">DEF</div><div class="stat-value" id="grad-defDisplay">0</div><input type="number" id="grad-defInput" class="stat-input" min="0" max="5" value="0"></div>
-<div class="stat-card"><div class="stat-emoji">🏃</div><div class="stat-name">DEX</div><div class="stat-value" id="grad-dexDisplay">4</div><input type="number" id="grad-dexInput" class="stat-input" min="0" max="15" value="4"></div>
-<div class="stat-card"><div class="stat-emoji">⬇️</div><div class="stat-name">MIN</div><div class="stat-value" id="grad-minDisplay">5</div><input type="number" id="grad-minInput" class="stat-input" min="1" max="15" value="5"></div>
-<div class="stat-card"><div class="stat-emoji">⬆️</div><div class="stat-name">MAX</div><div class="stat-value" id="grad-maxDisplay">10</div><input type="number" id="grad-maxInput" class="stat-input" min="2" max="20" value="10"></div>
-</div>
-</div>
-<div class="result-panel" id="grad-resultCard"><div class="winrate-display"><div class="winrate-box"><div class="winrate-label">Реальный (база)</div><div class="winrate-value" id="grad-currentWinrate">50%</div></div><div class="winrate-arrow">→</div><div class="winrate-box" style="border-color:var(--gold);"><div class="winrate-label">Прогноз</div><div class="winrate-value" id="grad-predictedWinrate">—</div><div id="grad-winrateDiff" class="diff-badge diff-neutral">—</div></div></div><div class="sim-details" id="grad-simulationDetails"></div></div>
-<div class="section gold" style="margin-top:20px;"><div class="section-title">📐 Как работает</div><div class="info-block"><p><strong>1. Данные:</strong> статы классов из data.json, реальные винрейты из stats_data.json (<span id="grad-liveStatsInfo">загрузка...</span>)</p><p><strong>2. Симуляция:</strong> точная копия C# боя, 500 боёв против каждого класса</p><p><strong>3. Коэффициент:</strong> Реальный / Симулированный = поправка на реальность</p><p><strong>4. Прогноз:</strong> Симуляция новых статов × Коэффициент</p></div></div>
+    <div class="section gold">
+        <div class="section-title">🔮 Прогноз винрейта</div>
+        <div class="selector-row">
+            <select id="grad-classSelect"></select>
+            <select id="grad-raceSelect"></select>
+            <button class="btn" id="grad-simulateBtn" onclick="grad_runGradient()">🔮 Прогноз</button>
+            <button class="btn" id="grad-sensBtn" onclick="grad_runSensitivity()">📊 Чувствительность</button>
+            <button class="btn" id="grad-balanceBtn" onclick="grad_runBalance()">⚖️ Сбалансировать</button>
+            <button class="btn-reset" onclick="grad_resetToOriginal()">🔄 Сброс</button>
+            <span class="progress" id="grad-progress"></span>
+        </div>
+        <div id="grad-progressWrap" style="display:none;margin-top:12px;">
+            <div style="height:20px;background:var(--bg);border-radius:10px;overflow:hidden;border:1px solid var(--border);position:relative;">
+                <div id="grad-progressFill" style="height:100%;background:linear-gradient(90deg,#c49600,#ffd700);border-radius:10px;transition:width 0.15s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-weight:700;color:#000;font-size:0.72rem;box-sizing:border-box;width:0%;">0%</div>
+            </div>
+            <div id="grad-progressLabel" style="color:var(--sub);font-size:0.78rem;margin-top:6px;text-align:center;font-variant-numeric:tabular-nums;">Подготовка...</div>
+        </div>
+        <div class="stats-grid" style="grid-template-columns:repeat(6,1fr);margin:16px 0;">
+            <div class="stat-card"><div class="stat-emoji">❤️</div><div class="stat-name">HP</div><div class="stat-value" id="grad-hpDisplay">0</div><input type="number" id="grad-hpInput" class="stat-input" min="0" max="99" value="0"></div>
+            <div class="stat-card"><div class="stat-emoji">⚔️</div><div class="stat-name">ATK</div><div class="stat-value" id="grad-atkDisplay">0</div><input type="number" id="grad-atkInput" class="stat-input" min="0" max="99" value="0"></div>
+            <div class="stat-card"><div class="stat-emoji">🛡️</div><div class="stat-name">DEF</div><div class="stat-value" id="grad-defDisplay">0</div><input type="number" id="grad-defInput" class="stat-input" min="0" max="99" value="0"></div>
+            <div class="stat-card"><div class="stat-emoji">🏃</div><div class="stat-name">DEX</div><div class="stat-value" id="grad-dexDisplay">0</div><input type="number" id="grad-dexInput" class="stat-input" min="0" max="99" value="0"></div>
+            <div class="stat-card"><div class="stat-emoji">⬇️</div><div class="stat-name">MIN</div><div class="stat-value" id="grad-minDisplay">0</div><input type="number" id="grad-minInput" class="stat-input" min="0" max="99" value="0"></div>
+            <div class="stat-card"><div class="stat-emoji">⬆️</div><div class="stat-name">MAX</div><div class="stat-value" id="grad-maxDisplay">0</div><input type="number" id="grad-maxInput" class="stat-input" min="0" max="99" value="0"></div>
+        </div>
+    </div>
+    <div class="result-panel" id="grad-resultCard" style="display:none;">
+        <div class="winrate-display">
+            <div class="winrate-box"><div class="winrate-label">Реальный (база)</div><div class="winrate-value" id="grad-currentWinrate">—</div></div>
+            <div class="winrate-arrow">→</div>
+            <div class="winrate-box" style="border-color:var(--gold);"><div class="winrate-label">Прогноз</div><div class="winrate-value" id="grad-predictedWinrate">—</div><div id="grad-winrateDiff" class="diff-badge diff-neutral">—</div></div>
+        </div>
+        <div class="sim-details" id="grad-simulationDetails"></div>
+    </div>
+    <div class="result-panel" id="grad-sensCard" style="display:none;">
+        <div class="section-title">📊 Чувствительность статов</div>
+        <div id="grad-sensContent"></div>
+    </div>
+    <div class="result-panel" id="grad-balanceCard" style="display:none;">
+        <div class="section-title">⚖️ Оптимальная правка</div>
+        <div id="grad-balanceContent"></div>
+    </div>
+    <div class="section gold" style="margin-top:20px;">
+        <div class="section-title">📐 Как работает</div>
+        <div class="info-block">
+            <p><strong>1. Данные:</strong> статы классов из data.json, реальные винрейты из stats_data.json (<span id="grad-liveStatsInfo">загрузка...</span>)</p>
+            <p><strong>2. Симуляция:</strong> точная копия боя, все 105 сборок (класс+раса), 10 сидов × 3000 боёв на сборку</p>
+            <p><strong>3. Сдвиг:</strong> Реальный − Симулированный = поправка на мету и скилл</p>
+            <p><strong>4. Прогноз:</strong> Симуляция новых статов + Сдвиг</p>
+            <p><strong>5. Чувствительность:</strong> ±1 к каждому стату — сколько WR даёт</p>
+            <p><strong>6. Сбалансировать:</strong> перебор ±1 по всем статам — поиск оптимальной правки до 50%</p>
+        </div>
+    </div>
 </div>
 
 <div class="tab-panel" id="tab-sim">
@@ -855,32 +896,135 @@ function calc_updateCalc() {
     if (el) el.addEventListener('change', calc_updateCalc);
 });
 
-/* === ГРАДИЕНТ === */
-let grad_CONFIG = {}, grad_classesData = [], grad_racesData = [], grad_originalStats = {}, grad_currentClass = 'Некромант', grad_currentRace = '';
+/* === ГРАДИЕНТ (полный) === */
+let grad_CONFIG = {}, grad_classesData = [], grad_racesData = [], grad_originalStats = {}, grad_currentClass = 'Некромант', grad_currentRace = '__all__';
 let grad_isRunning = false, GRAD_REAL_WINRATES = {};
+let GRAD_CLASS_RACE_STATS = {};
+let GRAD_ALL_BUILDS = [];
+
+function grad_mulberry32(a) {
+    return function() {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}
+let grad_rng = Math.random;
+function grad_randInt(min, max) { return Math.floor(grad_rng() * (max - min + 1)) + min; }
+
+const GRAD_SEEDS = [42, 123, 999, 7, 2024, 13, 77, 314, 555, 888];
+const GRAD_N_PER_OPP = 3000;
+
+function grad_showProgress(show) {
+    const w = document.getElementById('grad-progressWrap');
+    if (w) w.style.display = show ? 'block' : 'none';
+}
+function grad_setProgress(pct, label) {
+    const f = document.getElementById('grad-progressFill');
+    const l = document.getElementById('grad-progressLabel');
+    if (f) { f.style.width = Math.min(100, Math.max(0, pct)) + '%'; f.textContent = Math.floor(pct) + '%'; }
+    if (l && label) l.textContent = label;
+}
+function grad_hideProgress() {
+    const w = document.getElementById('grad-progressWrap');
+    if (w) w.style.display = 'none';
+}
+function grad_nextFrame() {
+    return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+}
+
+function grad_mean(arr) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
+function grad_stdev(arr) {
+    if (arr.length < 2) return 0;
+    const m = grad_mean(arr);
+    return Math.sqrt(arr.reduce((a, b) => a + (b - m) ** 2, 0) / (arr.length - 1));
+}
+function grad_ci95(std, n) { return n < 2 ? 0 : 1.96 * std / Math.sqrt(n); }
+
+function grad_buildAllBuilds() {
+    GRAD_ALL_BUILDS = [];
+    grad_racesData.forEach(r => {
+        grad_classesData.forEach(c => {
+            GRAD_ALL_BUILDS.push({
+                cls: c.Name, race: r.Name,
+                hp: c.Hp + r.BonusHp, atk: c.Atk + r.BonusAtk,
+                def: c.Def + r.BonusDef, dex: (c.Dex || 0) + (r.BonusDex || 0),
+                min: c.Min + r.BonusMin, max: c.Max + r.BonusMax,
+                name: `${r.Name}-${c.Name}`
+            });
+        });
+    });
+}
+
+function grad_getStats(clsName, raceName) {
+    const cls = grad_classesData.find(c => c.Name === clsName);
+    if (!cls) return null;
+    const race = grad_racesData.find(r => r.Name === raceName);
+    const b = race || { BonusHp: 0, BonusAtk: 0, BonusDef: 0, BonusDex: 0, BonusMin: 0, BonusMax: 0 };
+    return {
+        hp: cls.Hp + b.BonusHp,
+        atk: cls.Atk + b.BonusAtk,
+        def: cls.Def + b.BonusDef,
+        dex: (cls.Dex || 0) + (b.BonusDex || 0),
+        min: cls.Min + b.BonusMin,
+        max: cls.Max + b.BonusMax
+    };
+}
+
+function grad_buildClassRaceStats(statsData) {
+    GRAD_CLASS_RACE_STATS = {};
+    const add = (name, wins, losses) => {
+        if (!name || name === 'Unknown') return;
+        const parts = name.split('-');
+        if (parts.length < 2) return;
+        const race = parts[0].trim();
+        const cls = parts[1].trim();
+        if (!cls || !race) return;
+        if (!GRAD_CLASS_RACE_STATS[cls]) GRAD_CLASS_RACE_STATS[cls] = {};
+        if (!GRAD_CLASS_RACE_STATS[cls][race]) GRAD_CLASS_RACE_STATS[cls][race] = { wins: 0, losses: 0 };
+        GRAD_CLASS_RACE_STATS[cls][race].wins += wins || 0;
+        GRAD_CLASS_RACE_STATS[cls][race].losses += losses || 0;
+    };
+    (statsData.players || []).filter(p => p.name && p.name !== 'Unknown').forEach(p => add(p.name, p.wins, p.losses));
+    Object.values(statsData.heroArchive || {}).forEach(heroes => {
+        heroes.forEach(h => add(h.name, h.wins, h.losses));
+    });
+}
+
+function grad_getRaceDistribution(clsName) {
+    const dist = GRAD_CLASS_RACE_STATS[clsName] || {};
+    let totalGames = 0;
+    for (const [_, s] of Object.entries(dist)) totalGames += s.wins + s.losses;
+    return { dist, totalGames };
+}
 
 async function grad_loadData() {
     const [data, stats] = await Promise.all([getDataJson(), getStatsData()]);
     grad_CONFIG = data.config || { defReduction: 0.05, baseAC: 10, maxRounds: 20 };
     grad_classesData = data.classes;
     grad_racesData = data.races;
-    const players = stats.players || [];
-    const heroArchive = stats.heroArchive || {};
+    grad_buildAllBuilds();
+    grad_buildClassRaceStats(stats);
+
     const classStats = {};
-    players.filter(p => p.name && p.name !== 'Unknown').forEach(p => {
-        const parts = p.name.split('-');
-        let cn = parts.length > 1 ? parts[1] : p.name;
-        cn = cn.charAt(0).toUpperCase() + cn.slice(1).toLowerCase();
+    const normalize = (n) => {
+        if (!n) return null;
+        const parts = n.split('-');
+        let cn = parts.length > 1 ? parts[1] : parts[0];
+        return cn.charAt(0).toUpperCase() + cn.slice(1).toLowerCase();
+    };
+    (stats.players || []).filter(p => p.name && p.name !== 'Unknown').forEach(p => {
+        const cn = normalize(p.name);
+        if (!cn) return;
         if (!classStats[cn]) classStats[cn] = { wins: 0, losses: 0 };
         classStats[cn].wins += (p.wins || 0);
         classStats[cn].losses += (p.losses || 0);
     });
-    Object.values(heroArchive).forEach(heroes => {
+    Object.values(stats.heroArchive || {}).forEach(heroes => {
         heroes.forEach(h => {
-            if (!h.name) return;
-            const parts = h.name.split('-');
-            let cn = parts.length > 1 ? parts[1] : h.name;
-            cn = cn.charAt(0).toUpperCase() + cn.slice(1).toLowerCase();
+            const cn = normalize(h.name);
+            if (!cn) return;
             if (!classStats[cn]) classStats[cn] = { wins: 0, losses: 0 };
             classStats[cn].wins += (h.wins || 0);
             classStats[cn].losses += (h.losses || 0);
@@ -892,99 +1036,167 @@ async function grad_loadData() {
         GRAD_REAL_WINRATES[cls.Name] = s ? (s.wins + s.losses > 0 ? (s.wins / (s.wins + s.losses)) * 100 : 50) : 50;
         if (s) totalBattles += s.wins + s.losses;
     });
-    document.getElementById('grad-liveStatsInfo').textContent = `на основе ${totalBattles} реальных боёв (активные + архив)`;
+    const infoEl = document.getElementById('grad-liveStatsInfo');
+    if (infoEl) infoEl.textContent = `на основе ${totalBattles.toLocaleString('ru-RU')} реальных боёв (активные + архив)`;
+
     const cs = document.getElementById('grad-classSelect');
     cs.innerHTML = '';
     grad_classesData.sort((a, b) => a.Name.localeCompare(b.Name)).forEach(cls => {
         const o = document.createElement('option');
-        o.value = cls.Name; o.textContent = `${cls.Emoji} ${cls.Name}`;
+        o.value = cls.Name;
+        o.textContent = `${cls.Emoji} ${cls.Name}`;
         cs.appendChild(o);
     });
+
     const rs = document.getElementById('grad-raceSelect');
-    rs.innerHTML = '<option value="">🚫 Без расы</option>';
+    rs.innerHTML = '<option value="__all__">🌍 Все расы (взвешенно)</option>';
+    rs.innerHTML += '<option value="">🚫 Без расы</option>';
     grad_racesData.forEach(r => {
         const o = document.createElement('option');
-        o.value = r.Name; o.textContent = `${r.Emoji} ${r.Name}`;
+        o.value = r.Name;
+        o.textContent = `${r.Emoji} ${r.Name}`;
         rs.appendChild(o);
     });
+
     cs.value = grad_currentClass;
-    cs.addEventListener('change', () => { grad_currentClass = cs.value; grad_setOptimalRace(); grad_loadClassStats(); });
-    rs.addEventListener('change', () => { grad_currentRace = rs.value; grad_loadClassStats(); });
-    grad_setOptimalRace(); grad_loadClassStats();
+    cs.addEventListener('change', () => {
+        grad_currentClass = cs.value;
+        grad_currentRace = '__all__';
+        rs.value = '__all__';
+        grad_loadClassStats();
+        grad_hideResults();
+    });
+    rs.addEventListener('change', () => {
+        grad_currentRace = rs.value;
+        grad_loadClassStats();
+        grad_hideResults();
+    });
+
+    grad_currentRace = '__all__';
+    rs.value = '__all__';
+    grad_loadClassStats();
 }
-function grad_setOptimalRace() {
-    const opt = { 'Воин': 'Эльф', 'Паладин': 'Нежить', 'Плут': 'Дворф', 'Монах': 'Табакси', 'Следопыт': 'Человек', 'Чародей': 'Человек', 'Бард': 'Табакси', 'Друид': 'Дворф', 'Изобретатель': 'Дворф', 'Варвар': 'Орк', 'Волшебница': 'Человек', 'Некромант': 'Нежить', 'Жрец': 'Орк', 'Колдун': 'Тифлинг'};
-    grad_currentRace = opt[grad_currentClass] || '';
-    document.getElementById('grad-raceSelect').value = grad_currentRace;
-}
+
 function grad_loadClassStats() {
-    const cls = grad_classesData.find(c => c.Name === grad_currentClass);
-    if (!cls) return;
-    const race = grad_currentRace ? grad_racesData.find(r => r.Name === grad_currentRace) : null;
-    grad_originalStats = {
-        hp: cls.Hp + (race?.BonusHp || 0),
-        atk: cls.Atk + (race?.BonusAtk || 0),
-        dex: (cls.Dex || 0) + (race?.BonusDex || 0),
-        def: cls.Def + (race?.BonusDef || 0),
-        min: cls.Min + (race?.BonusMin || 0),
-        max: cls.Max + (race?.BonusMax || 0)
-    };
+    const raceName = grad_currentRace === '__all__' ? '' : grad_currentRace;
+    const stats = grad_getStats(grad_currentClass, raceName);
+    if (!stats) return;
+    grad_originalStats = stats;
     ['hp', 'atk', 'def', 'dex', 'min', 'max'].forEach(s => {
-        document.getElementById(`grad-${s}Display`).textContent = grad_originalStats[s];
-        document.getElementById(`grad-${s}Input`).value = grad_originalStats[s];
+        const d = document.getElementById(`grad-${s}Display`);
+        const i = document.getElementById(`grad-${s}Input`);
+        if (d) d.textContent = stats[s];
+        if (i) i.value = stats[s];
     });
 }
-window.grad_resetToOriginal = grad_loadClassStats;
+
+function grad_hideResults() {
+    ['grad-resultCard', 'grad-sensCard', 'grad-balanceCard'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+    grad_hideProgress();
+}
+
+window.grad_resetToOriginal = () => {
+    grad_loadClassStats();
+    grad_hideResults();
+    document.getElementById('grad-progress').textContent = '';
+};
+
 function grad_simulateFight(s1, s2) {
-    const rnd = () => Math.floor(Math.random() * 20) + 1;
+    const rnd = () => grad_randInt(1, 20);
     const i1 = rnd() + (s1.dex || 0), i2 = rnd() + (s2.dex || 0);
-    const first = i1 !== i2 ? i1 > i2 : Math.random() < 0.5;
+    const first = i1 !== i2 ? i1 > i2 : grad_rng() < 0.5;
     let hp1 = s1.hp, hp2 = s2.hp, rounds = 0;
     while (hp1 > 0 && hp2 > 0 && rounds < grad_CONFIG.maxRounds) {
         rounds++;
-        if (first) {
-            const r1 = rnd();
-            if (r1 !== 1 && r1 + s1.atk >= 10 + s2.def) {
-                let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                d = Math.max(1, Math.round(d * (1 - s2.def * grad_CONFIG.defReduction)));
-                hp2 = Math.max(0, hp2 - d);
-            }
-            if (hp2 <= 0) break;
-            const r2 = rnd();
-            if (r2 !== 1 && r2 + s2.atk >= 10 + s1.def) {
-                let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                d = Math.max(1, Math.round(d * (1 - s1.def * grad_CONFIG.defReduction)));
-                hp1 = Math.max(0, hp1 - d);
-            }
-        } else {
-            const r2 = rnd();
-            if (r2 !== 1 && r2 + s2.atk >= 10 + s1.def) {
-                let d = Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                if (r2 === 20) d += Math.floor(Math.random() * (s2.max - s2.min + 1)) + s2.min;
-                d = Math.max(1, Math.round(d * (1 - s1.def * grad_CONFIG.defReduction)));
-                hp1 = Math.max(0, hp1 - d);
-            }
-            if (hp1 <= 0) break;
-            const r1 = rnd();
-            if (r1 !== 1 && r1 + s1.atk >= 10 + s2.def) {
-                let d = Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                if (r1 === 20) d += Math.floor(Math.random() * (s1.max - s1.min + 1)) + s1.min;
-                d = Math.max(1, Math.round(d * (1 - s2.def * grad_CONFIG.defReduction)));
-                hp2 = Math.max(0, hp2 - d);
-            }
+        const order = first ? [[1, s1, s2], [2, s2, s1]] : [[2, s2, s1], [1, s1, s2]];
+        for (const [id, att, def] of order) {
+            const r = rnd();
+            if (r === 1) continue;
+            if (r + att.atk < grad_CONFIG.baseAC + def.def) continue;
+            let d = grad_randInt(att.min, att.max);
+            if (r === 20) d += grad_randInt(att.min, att.max);
+            d = Math.max(1, Math.round(d * (1 - def.def * grad_CONFIG.defReduction)));
+            if (id === 1) hp2 = Math.max(0, hp2 - d);
+            else hp1 = Math.max(0, hp1 - d);
+            if (hp1 <= 0 || hp2 <= 0) break;
         }
     }
     return hp1 > hp2 ? 1 : 0;
 }
+
+async function grad_runSimulation(heroStats, N = GRAD_N_PER_OPP, seeds = GRAD_SEEDS, onProgress = null) {
+    const results = [];
+    const totalSteps = seeds.length * GRAD_ALL_BUILDS.length;
+    let done = 0;
+    for (const seed of seeds) {
+        grad_rng = grad_mulberry32(seed);
+        let wins = 0, total = 0;
+        for (const opp of GRAD_ALL_BUILDS) {
+            for (let i = 0; i < N; i++) {
+                if (grad_simulateFight(heroStats, opp)) wins++;
+                total++;
+            }
+            done++;
+            if (onProgress && done % 10 === 0) {
+                onProgress(done / totalSteps * 100);
+                await grad_nextFrame();
+            }
+        }
+        results.push(wins / total * 100);
+    }
+    return results;
+}
+
+async function grad_simAllRaces(clsName, heroStatsByRace, N = GRAD_N_PER_OPP, seeds = GRAD_SEEDS, onProgress = null) {
+    const results = {};
+    const raceNames = grad_racesData.map(r => r.Name).filter(n => heroStatsByRace[n]);
+    for (let i = 0; i < raceNames.length; i++) {
+        const raceName = raceNames[i];
+        const hero = heroStatsByRace[raceName];
+        if (!hero) continue;
+        const simResults = await grad_runSimulation(hero, N, seeds, (p) => {
+            if (onProgress) onProgress((i + p / 100) / raceNames.length * 100);
+        });
+        results[raceName] = {
+            wr: grad_mean(simResults),
+            ci: grad_ci95(grad_stdev(simResults), simResults.length)
+        };
+    }
+    return results;
+}
+
+function grad_weightedSim(simByRace, dist) {
+    let totalWeight = 0, weightedSum = 0, weightedSumSq = 0;
+    for (const [race, stats] of Object.entries(dist)) {
+        const games = stats.wins + stats.losses;
+        if (games === 0) continue;
+        const sim = simByRace[race];
+        if (!sim) continue;
+        weightedSum += sim.wr * games;
+        weightedSumSq += (sim.ci ** 2) * games * games;
+        totalWeight += games;
+    }
+    if (totalWeight === 0) return { wr: 0, ci: 0, totalWeight: 0 };
+    return { wr: weightedSum / totalWeight, ci: Math.sqrt(weightedSumSq) / totalWeight, totalWeight };
+}
+
 async function grad_runGradient() {
     if (grad_isRunning) return;
     grad_isRunning = true;
-    const btn = document.getElementById('grad-simulateBtn'), progress = document.getElementById('grad-progress');
-    btn.disabled = true;
-    if (grad_classesData.length === 0) { progress.textContent = 'Загрузка...'; await grad_loadData(); }
-    const fps = 500, classes = grad_classesData.map(c => c.Name), n = classes.length;
+    const btn = document.getElementById('grad-simulateBtn');
+    const sensBtn = document.getElementById('grad-sensBtn');
+    const balBtn = document.getElementById('grad-balanceBtn');
+    const progress = document.getElementById('grad-progress');
+    btn.disabled = true; sensBtn.disabled = true; balBtn.disabled = true;
+
+    if (grad_classesData.length === 0) {
+        progress.textContent = 'Загрузка...';
+        await grad_loadData();
+    }
+
     const cur = { ...grad_originalStats };
     const nxt = {
         hp: +document.getElementById('grad-hpInput').value || grad_originalStats.hp,
@@ -994,30 +1206,117 @@ async function grad_runGradient() {
         min: +document.getElementById('grad-minInput').value || grad_originalStats.min,
         max: +document.getElementById('grad-maxInput').value || grad_originalStats.max
     };
-    let cw = 0, nw = 0;
-    progress.textContent = 'Симуляция текущих...';
-    for (const o of classes) {
-        if (o === grad_currentClass) continue;
-        const oc = grad_classesData.find(c => c.Name === o);
-        if (!oc) continue;
-        const s = { hp: oc.Hp, atk: oc.Atk, def: oc.Def, dex: (oc.Dex || 0), min: oc.Min, max: oc.Max };
-        for (let i = 0; i < fps; i++) cw += grad_simulateFight(cur, s);
-        await new Promise(r => setTimeout(r, 5));
-    }
-    progress.textContent = 'Симуляция новых...';
-    for (const o of classes) {
-        if (o === grad_currentClass) continue;
-        const oc = grad_classesData.find(c => c.Name === o);
-        if (!oc) continue;
-        const s = { hp: oc.Hp, atk: oc.Atk, def: oc.Def, dex: (oc.Dex || 0), min: oc.Min, max: oc.Max };
-        for (let i = 0; i < fps; i++) nw += grad_simulateFight(nxt, s);
-        await new Promise(r => setTimeout(r, 5));
-    }
-    const total = (n - 1) * fps;
-    const simCur = (cw / total) * 100, simNew = (nw / total) * 100;
+
     const real = GRAD_REAL_WINRATES[grad_currentClass] || 50;
-    const coef = simCur > 0 ? real / simCur : 1;
-    const pred = simNew * coef, diff = pred - real;
+    const useAllRaces = document.getElementById('grad-raceSelect').value === '__all__';
+
+    grad_showProgress(true);
+    grad_setProgress(0, 'Подготовка...');
+    await grad_nextFrame();
+
+    if (useAllRaces) {
+        const { dist, totalGames } = grad_getRaceDistribution(grad_currentClass);
+        if (totalGames === 0) {
+            progress.textContent = '❌ Нет реальных игр для этого класса';
+            grad_hideProgress();
+            btn.disabled = false; sensBtn.disabled = false; balBtn.disabled = false; grad_isRunning = false; return;
+        }
+        const curByRace = {}, nxtByRace = {};
+        const dHp = nxt.hp - cur.hp, dAtk = nxt.atk - cur.atk, dDef = nxt.def - cur.def;
+        const dDex = nxt.dex - cur.dex, dMin = nxt.min - cur.min, dMax = nxt.max - cur.max;
+        for (const race of grad_racesData) {
+            const base = grad_getStats(grad_currentClass, race.Name);
+            if (!base) continue;
+            curByRace[race.Name] = base;
+            nxtByRace[race.Name] = {
+                hp: base.hp + dHp, atk: base.atk + dAtk, def: base.def + dDef,
+                dex: base.dex + dDex, min: base.min + dMin, max: base.max + dMax
+            };
+        }
+
+        grad_setProgress(0, 'Симуляция текущих статов...');
+        await grad_nextFrame();
+        const simCurByRace = await grad_simAllRaces(grad_currentClass, curByRace, GRAD_N_PER_OPP, GRAD_SEEDS, p => {
+            grad_setProgress(p * 0.5, `Симуляция текущих: ${Math.floor(p)}%`);
+        });
+
+        grad_setProgress(50, 'Симуляция новых статов...');
+        await grad_nextFrame();
+        const simNewByRace = await grad_simAllRaces(grad_currentClass, nxtByRace, GRAD_N_PER_OPP, GRAD_SEEDS, p => {
+            grad_setProgress(50 + p * 0.5, `Симуляция новых: ${Math.floor(p)}%`);
+        });
+
+        grad_setProgress(100, 'Готово!');
+        await grad_nextFrame();
+        setTimeout(() => grad_hideProgress(), 800);
+
+        const wCur = grad_weightedSim(simCurByRace, dist);
+        const wNew = grad_weightedSim(simNewByRace, dist);
+        const shift = real - wCur.wr;
+        const pred = wNew.wr + shift;
+        const diff = pred - real;
+        const predCI = Math.sqrt(wCur.ci ** 2 + wNew.ci ** 2);
+
+        const rc = document.getElementById('grad-resultCard');
+        rc.style.display = 'block';
+        document.getElementById('grad-currentWinrate').textContent = real.toFixed(1) + '%';
+        document.getElementById('grad-predictedWinrate').textContent = pred.toFixed(1) + '%';
+        const de = document.getElementById('grad-winrateDiff');
+        de.textContent = `${diff >= 0 ? '+' : ''}${diff.toFixed(1)}%`;
+        de.className = 'diff-badge ' + (diff > 0.5 ? 'diff-positive' : diff < -0.5 ? 'diff-negative' : 'diff-neutral');
+
+        let raceTable = '<table style="width:100%;border-collapse:collapse;font-size:0.72rem;margin-top:8px;">';
+        raceTable += '<tr style="color:var(--gold);"><th style="text-align:left;padding:4px;">Раса</th><th style="text-align:right;padding:4px;">Игр</th><th style="text-align:right;padding:4px;">Сим тек.</th><th style="text-align:right;padding:4px;">Сим нов.</th><th style="text-align:right;padding:4px;">Δ</th></tr>';
+        for (const [race, stats] of Object.entries(dist)) {
+            const games = stats.wins + stats.losses;
+            const simC = simCurByRace[race], simN = simNewByRace[race];
+            if (!simC || !simN) continue;
+            const d = simN.wr - simC.wr;
+            raceTable += `<tr style="border-top:1px solid var(--border);"><td style="padding:4px;">${race}</td><td style="text-align:right;padding:4px;">${games}</td><td style="text-align:right;padding:4px;">${simC.wr.toFixed(1)}%</td><td style="text-align:right;padding:4px;">${simN.wr.toFixed(1)}%</td><td style="text-align:right;padding:4px;color:${d >= 0 ? 'var(--green)' : 'var(--red)'}">${d >= 0 ? '+' : ''}${d.toFixed(1)}%</td></tr>`;
+        }
+        raceTable += '</table>';
+
+        document.getElementById('grad-simulationDetails').innerHTML = `
+            <div style="margin-top:8px;font-size:0.75rem;line-height:1.8;">
+                <div>📊 <strong>Взвешенный сим (текущий):</strong> ${wCur.wr.toFixed(2)}% ±${wCur.ci.toFixed(2)}</div>
+                <div>📊 <strong>Взвешенный сим (новый):</strong> ${wNew.wr.toFixed(2)}% ±${wNew.ci.toFixed(2)}</div>
+                <div>🎯 <strong>Реальный WR:</strong> ${real.toFixed(2)}%</div>
+                <div>📐 <strong>Сдвиг:</strong> ${shift >= 0 ? '+' : ''}${shift.toFixed(2)}%</div>
+                <div>🔮 <strong>Прогноз:</strong> ${pred.toFixed(2)}% ±${predCI.toFixed(2)}</div>
+                <div style="color:var(--muted);margin-top:6px;">Игр: ${wCur.totalWeight.toLocaleString('ru-RU')} · Сборок: ${GRAD_ALL_BUILDS.length} · Сидов: ${GRAD_SEEDS.length}</div>
+                <div style="margin-top:10px;"><strong>По расам:</strong></div>
+                ${raceTable}
+            </div>
+        `;
+        btn.disabled = false; sensBtn.disabled = false; balBtn.disabled = false; grad_isRunning = false; progress.textContent = '✅ Готово!';
+        return;
+    }
+
+    grad_setProgress(0, 'Симуляция текущих статов...');
+    await grad_nextFrame();
+    const simCurResults = await grad_runSimulation(cur, GRAD_N_PER_OPP, GRAD_SEEDS, p => {
+        grad_setProgress(p * 0.5, `Симуляция текущих: ${Math.floor(p)}%`);
+    });
+    const simCur = grad_mean(simCurResults);
+    const simCurCI = grad_ci95(grad_stdev(simCurResults), simCurResults.length);
+
+    grad_setProgress(50, 'Симуляция новых статов...');
+    await grad_nextFrame();
+    const simNewResults = await grad_runSimulation(nxt, GRAD_N_PER_OPP, GRAD_SEEDS, p => {
+        grad_setProgress(50 + p * 0.5, `Симуляция новых: ${Math.floor(p)}%`);
+    });
+    const simNew = grad_mean(simNewResults);
+    const simNewCI = grad_ci95(grad_stdev(simNewResults), simNewResults.length);
+
+    grad_setProgress(100, 'Готово!');
+    await grad_nextFrame();
+    setTimeout(() => grad_hideProgress(), 800);
+
+    const shift = real - simCur;
+    const pred = simNew + shift;
+    const diff = pred - real;
+    const predCI = Math.sqrt(simCurCI ** 2 + simNewCI ** 2);
+
     const rc = document.getElementById('grad-resultCard');
     rc.style.display = 'block';
     document.getElementById('grad-currentWinrate').textContent = real.toFixed(1) + '%';
@@ -1025,11 +1324,274 @@ async function grad_runGradient() {
     const de = document.getElementById('grad-winrateDiff');
     de.textContent = `${diff >= 0 ? '+' : ''}${diff.toFixed(1)}%`;
     de.className = 'diff-badge ' + (diff > 0.5 ? 'diff-positive' : diff < -0.5 ? 'diff-negative' : 'diff-neutral');
-    document.getElementById('grad-simulationDetails').textContent = `Симулировано: ${simCur.toFixed(1)}% → ${simNew.toFixed(1)}% | Коэф: ${coef.toFixed(3)} | Боёв: ${total}`;
-    btn.disabled = false; grad_isRunning = false;
-    progress.textContent = '✅ Готово!';
+
+    document.getElementById('grad-simulationDetails').innerHTML = `
+        <div style="margin-top:8px;font-size:0.75rem;line-height:1.8;">
+            <div>📊 <strong>Симуляция текущих:</strong> ${simCur.toFixed(2)}% ±${simCurCI.toFixed(2)}</div>
+            <div>📊 <strong>Симуляция новых:</strong> ${simNew.toFixed(2)}% ±${simNewCI.toFixed(2)}</div>
+            <div>🎯 <strong>Реальный WR:</strong> ${real.toFixed(2)}%</div>
+            <div>📐 <strong>Сдвиг:</strong> ${shift >= 0 ? '+' : ''}${shift.toFixed(2)}%</div>
+            <div>🔮 <strong>Прогноз:</strong> ${pred.toFixed(2)}% ±${predCI.toFixed(2)}</div>
+            <div style="color:var(--muted);margin-top:6px;">Сборок: ${GRAD_ALL_BUILDS.length} · Сидов: ${GRAD_SEEDS.length}</div>
+        </div>
+    `;
+    btn.disabled = false; sensBtn.disabled = false; balBtn.disabled = false; grad_isRunning = false; progress.textContent = '✅ Готово!';
 }
 window.grad_runGradient = grad_runGradient;
+
+async function grad_runSensitivity() {
+    if (grad_isRunning) return;
+    grad_isRunning = true;
+    const btn = document.getElementById('grad-simulateBtn');
+    const sensBtn = document.getElementById('grad-sensBtn');
+    const balBtn = document.getElementById('grad-balanceBtn');
+    const progress = document.getElementById('grad-progress');
+    btn.disabled = true; sensBtn.disabled = true; balBtn.disabled = true;
+
+    if (grad_classesData.length === 0) { progress.textContent = 'Загрузка...'; await grad_loadData(); }
+
+    const SENS_SEEDS = [42, 123, 999, 7, 2024];
+    const SENS_N = 1000;
+    const raceName = grad_currentRace === '__all__' ? '' : grad_currentRace;
+    const useAllRaces = grad_currentRace === '__all__';
+    const baseStats = grad_getStats(grad_currentClass, raceName);
+    if (!baseStats) {
+        progress.textContent = '❌ Ошибка: нет статов';
+        btn.disabled = false; sensBtn.disabled = false; balBtn.disabled = false; grad_isRunning = false; return;
+    }
+
+    const { dist } = useAllRaces ? grad_getRaceDistribution(grad_currentClass) : { dist: {} };
+
+    async function simSens(hero, onP) {
+        return grad_mean(await grad_runSimulation(hero, SENS_N, SENS_SEEDS, onP));
+    }
+    async function simSensAllRaces(modifier, onP) {
+        const simByRace = {};
+        const raceNames = grad_racesData.map(r => r.Name).filter(n => {
+            const base = grad_getStats(grad_currentClass, n);
+            return base;
+        });
+        for (let i = 0; i < raceNames.length; i++) {
+            const raceName = raceNames[i];
+            const base = grad_getStats(grad_currentClass, raceName);
+            if (!base) continue;
+            const wr = await simSens(modifier(base), (p) => {
+                if (onP) onP((i + p / 100) / raceNames.length * 100);
+            });
+            simByRace[raceName] = { wr, ci: 0 };
+        }
+        return grad_weightedSim(simByRace, dist).wr;
+    }
+
+    grad_showProgress(true);
+    grad_setProgress(0, 'Базовая симуляция...');
+    await grad_nextFrame();
+    const baseWR = useAllRaces ? await simSensAllRaces(b => b, p => grad_setProgress(p * 0.1, 'Базовая симуляция...')) : await simSens(baseStats, p => grad_setProgress(p * 0.1, 'Базовая симуляция...'));
+    grad_setProgress(10, 'База готова. Считаю чувствительность...');
+    await grad_nextFrame();
+
+    const stats = ['hp', 'atk', 'def', 'dex', 'min', 'max'];
+    const statNames = { hp: '❤️ HP', atk: '⚔️ ATK', def: '🛡️ DEF', dex: '🏃 DEX', min: '⬇️ MIN', max: '⬆️ MAX' };
+    const result = {};
+
+    for (let statIdx = 0; statIdx < stats.length; statIdx++) {
+        const stat = stats[statIdx];
+        const basePct = 10 + statIdx / stats.length * 90;
+        grad_setProgress(basePct, `Считаю ${statNames[stat]}...`);
+        await grad_nextFrame();
+        const plusWR = useAllRaces
+            ? await simSensAllRaces(b => ({ ...b, [stat]: b[stat] + 1 }), p => grad_setProgress(basePct + p / 100 * 45 / stats.length * 2, `Считаю ${statNames[stat]} +1...`))
+            : await simSens({ ...baseStats, [stat]: baseStats[stat] + 1 }, p => grad_setProgress(basePct + p / 100 * 45 / stats.length * 2, `Считаю ${statNames[stat]} +1...`));
+        const minusWR = baseStats[stat] > 0
+            ? (useAllRaces
+                ? await simSensAllRaces(b => ({ ...b, [stat]: Math.max(0, b[stat] - 1) }), p => grad_setProgress(basePct + 45 / stats.length + p / 100 * 45 / stats.length * 2, `Считаю ${statNames[stat]} −1...`))
+                : await simSens({ ...baseStats, [stat]: Math.max(0, baseStats[stat] - 1) }, p => grad_setProgress(basePct + 45 / stats.length + p / 100 * 45 / stats.length * 2, `Считаю ${statNames[stat]} −1...`)))
+            : baseWR;
+        result[stat] = {
+            base: baseWR, plus: plusWR, minus: minusWR,
+            plusDelta: plusWR - baseWR, minusDelta: minusWR - baseWR,
+            sensitivity: (plusWR - minusWR) / 2
+        };
+    }
+    grad_setProgress(100, 'Готово!');
+    await grad_nextFrame();
+    setTimeout(() => grad_hideProgress(), 800);
+
+    const card = document.getElementById('grad-sensCard');
+    card.style.display = 'block';
+    let html = `<div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;">
+        Класс: <strong style="color:var(--gold);">${grad_currentClass}</strong> · 
+        Раса: <strong style="color:var(--gold);">${useAllRaces ? 'Все расы (взвешенно)' : (grad_currentRace || 'Без расы')}</strong> · 
+        База: <strong style="color:var(--gold);">${baseWR.toFixed(2)}%</strong>
+    </div>`;
+    html += '<table style="width:100%;border-collapse:collapse;font-size:0.78rem;">';
+    html += '<tr style="color:var(--gold);border-bottom:1px solid var(--border);">';
+    html += '<th style="text-align:left;padding:8px;">Стат</th><th style="text-align:right;padding:8px;">−1</th><th style="text-align:right;padding:8px;">База</th><th style="text-align:right;padding:8px;">+1</th><th style="text-align:right;padding:8px;">Δ−1</th><th style="text-align:right;padding:8px;">Δ+1</th><th style="text-align:right;padding:8px;">Средняя</th>';
+    html += '</tr>';
+    const sorted = stats.map(s => ({ s, r: result[s] })).sort((a, b) => b.r.sensitivity - a.r.sensitivity);
+    for (const { s, r } of sorted) {
+        const pColor = r.plusDelta >= 0 ? 'var(--green)' : 'var(--red)';
+        const mColor = r.minusDelta >= 0 ? 'var(--green)' : 'var(--red)';
+        html += '<tr style="border-top:1px solid var(--border);">';
+        html += `<td style="padding:8px;">${statNames[s]}</td>`;
+        html += `<td style="text-align:right;padding:8px;">${r.minus.toFixed(2)}%</td>`;
+        html += `<td style="text-align:right;padding:8px;color:var(--gold);font-weight:700;">${r.base.toFixed(2)}%</td>`;
+        html += `<td style="text-align:right;padding:8px;">${r.plus.toFixed(2)}%</td>`;
+        html += `<td style="text-align:right;padding:8px;color:${mColor};">${r.minusDelta >= 0 ? '+' : ''}${r.minusDelta.toFixed(2)}%</td>`;
+        html += `<td style="text-align:right;padding:8px;color:${pColor};">${r.plusDelta >= 0 ? '+' : ''}${r.plusDelta.toFixed(2)}%</td>`;
+        html += `<td style="text-align:right;padding:8px;font-weight:700;color:var(--gold);">${r.sensitivity >= 0 ? '+' : ''}${r.sensitivity.toFixed(2)}%</td>`;
+        html += '</tr>';
+    }
+    html += '</table>';
+    html += `<div style="font-size:0.72rem;color:var(--muted);margin-top:12px;line-height:1.6;">
+        <strong>Как читать:</strong><br>
+        • <strong>Δ+1</strong> — сколько WR даёт +1 к стату<br>
+        • <strong>Δ−1</strong> — сколько WR даёт −1 к стату<br>
+        • <strong>Средняя</strong> — средний эффект (±1). Чем больше — тем сильнее стат влияет.
+    </div>`;
+    document.getElementById('grad-sensContent').innerHTML = html;
+
+    btn.disabled = false; sensBtn.disabled = false; balBtn.disabled = false; grad_isRunning = false;
+    progress.textContent = '✅ Готово!';
+}
+window.grad_runSensitivity = grad_runSensitivity;
+
+async function grad_runBalance() {
+    if (grad_isRunning) return;
+    grad_isRunning = true;
+    const btn = document.getElementById('grad-simulateBtn');
+    const sensBtn = document.getElementById('grad-sensBtn');
+    const balBtn = document.getElementById('grad-balanceBtn');
+    const progress = document.getElementById('grad-progress');
+    btn.disabled = true; sensBtn.disabled = true; balBtn.disabled = true;
+
+    if (grad_classesData.length === 0) { progress.textContent = 'Загрузка...'; await grad_loadData(); }
+
+    const real = GRAD_REAL_WINRATES[grad_currentClass] || 50;
+    const useAllRaces = document.getElementById('grad-raceSelect').value === '__all__';
+    const raceName = useAllRaces ? '' : grad_currentRace;
+    const baseStats = grad_getStats(grad_currentClass, raceName);
+    if (!baseStats) {
+        progress.textContent = '❌ Ошибка: нет статов';
+        btn.disabled = false; sensBtn.disabled = false; balBtn.disabled = false; grad_isRunning = false; return;
+    }
+
+    const BAL_SEEDS = [42, 123, 999];
+    const BAL_N = 1000;
+    const { dist } = useAllRaces ? grad_getRaceDistribution(grad_currentClass) : { dist: {} };
+
+    async function simBal(hero, onP) { return grad_mean(await grad_runSimulation(hero, BAL_N, BAL_SEEDS, onP)); }
+    async function simBalAllRaces(modifier, onP) {
+        const simByRace = {};
+        const raceNames = grad_racesData.map(r => r.Name).filter(n => {
+            const base = grad_getStats(grad_currentClass, n);
+            return base;
+        });
+        for (let i = 0; i < raceNames.length; i++) {
+            const raceName = raceNames[i];
+            const base = grad_getStats(grad_currentClass, raceName);
+            if (!base) continue;
+            const wr = await simBal(modifier(base), (p) => {
+                if (onP) onP((i + p / 100) / raceNames.length * 100);
+            });
+            simByRace[raceName] = { wr, ci: 0 };
+        }
+        return grad_weightedSim(simByRace, dist).wr;
+    }
+
+    grad_showProgress(true);
+    grad_setProgress(0, 'Считаю текущий прогноз...');
+    await grad_nextFrame();
+    const currentSim = useAllRaces ? await simBalAllRaces(b => b, p => grad_setProgress(p * 0.2, 'Считаю текущий прогноз...')) : await simBal(baseStats, p => grad_setProgress(p * 0.2, 'Считаю текущий прогноз...'));
+    const shift = real - currentSim;
+    const currentPred = currentSim + shift;
+
+    if (Math.abs(currentPred - 50) < 0.5) {
+        grad_setProgress(100, 'Готово!');
+        await grad_nextFrame();
+        setTimeout(() => grad_hideProgress(), 800);
+        document.getElementById('grad-balanceCard').style.display = 'block';
+        document.getElementById('grad-balanceContent').innerHTML = `
+            <div style="text-align:center;padding:20px;">
+                <div style="font-size:1.5rem;color:var(--green);">✅ Класс сбалансирован</div>
+                <div style="color:var(--muted);margin-top:8px;">Прогноз: ${currentPred.toFixed(2)}% (цель 50%)</div>
+            </div>`;
+        btn.disabled = false; sensBtn.disabled = false; balBtn.disabled = false; grad_isRunning = false; progress.textContent = '✅ Готово!';
+        return;
+    }
+
+    const stats = ['hp', 'atk', 'def', 'dex', 'min', 'max'];
+    const statNames = { hp: '❤️ HP', atk: '⚔️ ATK', def: '🛡️ DEF', dex: '🏃 DEX', min: '⬇️ MIN', max: '⬆️ MAX' };
+    const need = 50 - currentPred;
+
+    const candidates = [];
+    let candidateIdx = 0;
+    const totalCandidates = stats.length * 2;
+
+    for (const stat of stats) {
+        candidateIdx++;
+        const pctBase = 20 + (candidateIdx - 1) / totalCandidates * 80;
+        grad_setProgress(pctBase, `Проверяю ${statNames[stat]} +1...`);
+        await grad_nextFrame();
+        const plusWR = useAllRaces
+            ? await simBalAllRaces(b => ({ ...b, [stat]: b[stat] + 1 }), p => grad_setProgress(pctBase + p / 100 * 80 / totalCandidates, `Проверяю ${statNames[stat]} +1...`))
+            : await simBal({ ...baseStats, [stat]: baseStats[stat] + 1 }, p => grad_setProgress(pctBase + p / 100 * 80 / totalCandidates, `Проверяю ${statNames[stat]} +1...`));
+        candidates.push({ stat, delta: +1, pred: plusWR + shift, diff: Math.abs(plusWR + shift - 50), value: baseStats[stat] + 1 });
+
+        if (baseStats[stat] > 0) {
+            candidateIdx++;
+            const pctMinus = 20 + (candidateIdx - 1) / totalCandidates * 80;
+            grad_setProgress(pctMinus, `Проверяю ${statNames[stat]} −1...`);
+            await grad_nextFrame();
+            const minusWR = useAllRaces
+                ? await simBalAllRaces(b => ({ ...b, [stat]: Math.max(0, b[stat] - 1) }), p => grad_setProgress(pctMinus + p / 100 * 80 / totalCandidates, `Проверяю ${statNames[stat]} −1...`))
+                : await simBal({ ...baseStats, [stat]: Math.max(0, baseStats[stat] - 1) }, p => grad_setProgress(pctMinus + p / 100 * 80 / totalCandidates, `Проверяю ${statNames[stat]} −1...`));
+            candidates.push({ stat, delta: -1, pred: minusWR + shift, diff: Math.abs(minusWR + shift - 50), value: baseStats[stat] - 1 });
+        }
+    }
+    grad_setProgress(100, 'Готово!');
+    await grad_nextFrame();
+    setTimeout(() => grad_hideProgress(), 800);
+
+    candidates.sort((a, b) => a.diff - b.diff);
+
+    let html = `<div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;">
+        Класс: <strong style="color:var(--gold);">${grad_currentClass}</strong> · 
+        Раса: <strong style="color:var(--gold);">${useAllRaces ? 'Все расы (взвешенно)' : (grad_currentRace || 'Без расы')}</strong><br>
+        Текущий прогноз: <strong style="color:var(--gold);">${currentPred.toFixed(2)}%</strong> · 
+        Цель: <strong>50%</strong> · 
+        Нужно: <strong style="color:${need >= 0 ? 'var(--green)' : 'var(--red)'};">${need >= 0 ? '+' : ''}${need.toFixed(2)}%</strong>
+    </div>`;
+    html += '<table style="width:100%;border-collapse:collapse;font-size:0.78rem;">';
+    html += '<tr style="color:var(--gold);border-bottom:1px solid var(--border);">';
+    html += '<th style="text-align:left;padding:8px;">Правка</th><th style="text-align:right;padding:8px;">Прогноз</th><th style="text-align:right;padding:8px;">Отклонение</th><th style="text-align:center;padding:8px;">Рекомендация</th>';
+    html += '</tr>';
+    for (let i = 0; i < Math.min(5, candidates.length); i++) {
+        const c = candidates[i];
+        const isBest = i === 0;
+        const rowColor = isBest ? 'rgba(240,185,11,0.08)' : 'transparent';
+        html += `<tr style="border-top:1px solid var(--border);background:${rowColor};">`;
+        html += `<td style="padding:8px;${isBest ? 'font-weight:700;color:var(--gold);' : ''}">${statNames[c.stat]} ${c.delta > 0 ? '+1' : '−1'} → ${c.value}</td>`;
+        html += `<td style="text-align:right;padding:8px;${isBest ? 'font-weight:700;color:var(--gold);' : ''}">${c.pred.toFixed(2)}%</td>`;
+        html += `<td style="text-align:right;padding:8px;color:${c.diff < 1 ? 'var(--green)' : c.diff < 3 ? 'var(--gold)' : 'var(--red)'};">${c.diff.toFixed(2)}%</td>`;
+        html += `<td style="text-align:center;padding:8px;">${isBest ? '⭐ Лучшая' : ''}</td>`;
+        html += '</tr>';
+    }
+    html += '</table>';
+    html += `<div style="font-size:0.72rem;color:var(--muted);margin-top:12px;line-height:1.6;">
+        <strong>Как читать:</strong><br>
+        • Перебираются все варианты: ±1 к каждому стату.<br>
+        • <strong>Прогноз</strong> — прогнозируемый реальный WR после правки.<br>
+        • <strong>Отклонение</strong> — насколько прогноз отличается от 50%.<br>
+        • ⭐ <strong>Лучшая</strong> — правка с минимальным отклонением.
+    </div>`;
+    document.getElementById('grad-balanceContent').innerHTML = html;
+    document.getElementById('grad-balanceCard').style.display = 'block';
+
+    btn.disabled = false; sensBtn.disabled = false; balBtn.disabled = false; grad_isRunning = false;
+    progress.textContent = '✅ Готово!';
+}
+window.grad_runBalance = grad_runBalance;
 
 /* === СИМУЛЯТОР ДУЭЛЕЙ === */
 let sim_CONFIG = {}, sim_classesData = [], sim_racesData = [], sim_playersData = [], sim_currentMode = 'players';
