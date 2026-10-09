@@ -19,95 +19,84 @@
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
-    .section.ice::after { background: linear-gradient(90deg,transparent,var(--ice),transparent); }
-    .section.white::after { background: linear-gradient(90deg,transparent,var(--text),transparent); opacity: 0.3; }
-    .section.ice .section-title { color: var(--ice); }
-    .section.white .section-title { color: var(--text); }
-
-    .crown-section { text-align: center; padding: 10px 0; }
-    .crown-icon { font-size: 3rem; display: block; animation: float 3s ease-in-out infinite; }
-    .crown-title { font-size: 1.1rem; font-weight: 800; color: var(--gold); margin: 4px 0; }
-    .crown-owner { font-size: 0.8rem; color: var(--sub); margin-bottom: 12px; }
-    .score-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
-    .score-light { color: var(--gold); } .score-dark { color: var(--purple); }
-    .progress-bar { height: 36px; border-radius: 18px; overflow: hidden; display: flex; background: var(--bg); border: 2px solid var(--border); }
-    .progress-fill { display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; transition: width 0.6s; min-width: 40px; }
-    .progress-light { background: linear-gradient(135deg, #c49600, #ffd700); color: #000; }
-    .progress-dark { background: linear-gradient(135deg, #3d1060, #a371f7); color: #fff; }
-    .total-trophies { font-size: 0.75rem; color: var(--muted); margin-top: 8px; text-align: center; }
-
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-    .stat-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 16px 12px; text-align: center; border: 1px solid var(--border); }
-    .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
-    .stat-label { color: var(--muted); font-size: 0.65rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
-
-    .podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-    .podium-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 20px 14px; text-align: center; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 6px; }
-    .podium-card.gold { border-color: rgba(240,185,11,0.5); box-shadow: 0 0 20px rgba(240,185,11,0.12); }
-    .podium-card.silver { border-color: rgba(192,192,192,0.5); box-shadow: 0 0 16px rgba(192,192,192,0.1); }
-    .podium-card.bronze { border-color: rgba(205,127,50,0.5); box-shadow: 0 0 16px rgba(205,127,50,0.1); }
-    .podium-medal { font-size: 2.4rem; }
-    .podium-name { font-size: 1rem; font-weight: 700; color: var(--text); }
-    .podium-record { font-size: 1.8rem; font-weight: 800; color: var(--gold); }
-    .podium-detail { font-size: 0.8rem; color: var(--muted); }
-
-    .records-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
-    .record-item { background: var(--elevated); border-radius: var(--radius-sm); padding: 16px 12px; text-align: center; border: 1px solid var(--border); }
-    .record-icon { font-size: 1.6rem; margin-bottom: 4px; }
-    .record-value { font-size: 1.5rem; font-weight: 800; color: var(--ice); }
-    .record-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 2px; }
-    .record-player { font-size: 0.78rem; color: var(--sub); margin-top: 6px; font-weight: 500; }
-
-    .highlight { color: var(--gold); font-weight: 700; }
-
-    #all-table th:nth-child(1), #all-table td:nth-child(1) { min-width: 110px; }
-    #all-table th:nth-child(2), #all-table td:nth-child(2) { min-width: 120px; }
-    #leaderboard-table th:nth-child(2), #leaderboard-table td:nth-child(2),
-    #leaderboard-table th:nth-child(3), #leaderboard-table td:nth-child(3),
-    #all-table th:nth-child(1), #all-table td:nth-child(1),
-    #all-table th:nth-child(2), #all-table td:nth-child(2) { text-align: left; padding-left: 14px; }
-
-	@media (max-width: 768px) {
-		.stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-		.stat-value { font-size: 1.3rem; }
-		.stat-label { font-size: 0.6rem; }
-		.podium { grid-template-columns: 1fr; gap: 8px; }
-		.podium-card { padding: 14px 12px; }
-		.podium-medal { font-size: 1.8rem; }
-		.podium-name { font-size: 0.9rem; }
-		.podium-record { font-size: 1.5rem; }
-		.podium-detail { font-size: 0.7rem; line-height: 1.5; }
-		.records-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-		.record-item { padding: 12px 8px; }
-		.record-icon { font-size: 1.3rem; }
-		.record-value { font-size: 1.15rem; }
-		.record-label { font-size: 0.6rem; }
-		.record-player { font-size: 0.68rem; }
-		.crown-icon { font-size: 2.4rem; }
-		.crown-title { font-size: 1rem; }
-		.crown-owner { font-size: 0.75rem; }
-		.score-row { font-size: 0.8rem; }
-		.progress-bar { height: 28px; }
-		.progress-fill { font-size: 0.65rem; }
-		.total-trophies { font-size: 0.7rem; }
-		.section-title { font-size: 1rem; }
-		#leaderboard-table { min-width: 700px; font-size: 0.72rem; }
-		#all-table { min-width: 640px; font-size: 0.72rem; }
-		.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-		th, td { padding: 6px 8px; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
-		#leaderboard-table td:nth-child(2), #all-table td:nth-child(1) { min-width: 100px; }
-		#leaderboard-table td:nth-child(3), #all-table td:nth-child(2) { min-width: 100px; }
-	}
-
-/* === SCROLL PROGRESS + SCROLL TOP === */
-.reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
-.scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.scroll-top.visible { opacity: 1; pointer-events: all; }
-.scroll-top:hover { background: var(--gold); color: #000; transform: translateY(-3px); }
+.section.ice::after{background:linear-gradient(90deg,transparent,var(--ice),transparent)}
+.section.white::after{background:linear-gradient(90deg,transparent,var(--text),transparent);opacity:0.3}
+.section.ice .section-title{color:var(--ice)}
+.section.white .section-title{color:var(--text)}
+.crown-section{text-align:center;padding:10px 0}
+.crown-icon{font-size:3rem;display:block;animation:float 3s ease-in-out infinite}
+.crown-title{font-size:1.1rem;font-weight:800;color:var(--gold);margin:4px 0}
+.crown-owner{font-size:0.8rem;color:var(--sub);margin-bottom:12px}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600;font-size:0.9rem}
+.score-light{color:var(--gold)}
+.score-dark{color:var(--purple)}
+.progress-bar{height:36px;border-radius:18px;overflow:hidden;display:flex;background:var(--bg);border:2px solid var(--border)}
+.progress-fill{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;transition:width 0.6s;min-width:40px}
+.progress-light{background:linear-gradient(135deg,#c49600,#ffd700);color:#000}
+.progress-dark{background:linear-gradient(135deg,#3d1060,#a371f7);color:#fff}
+.total-trophies{font-size:0.75rem;color:var(--muted);margin-top:8px;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--elevated);border-radius:var(--radius-sm);padding:16px 12px;text-align:center;border:1px solid var(--border)}
+.stat-value{font-size:1.5rem;font-weight:800;color:var(--gold)}
+.stat-label{color:var(--muted);font-size:0.65rem;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.podium-card{background:var(--elevated);border-radius:var(--radius-sm);padding:20px 14px;text-align:center;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:6px}
+.podium-card.gold{border-color:rgba(240,185,11,0.5);box-shadow:0 0 20px rgba(240,185,11,0.12)}
+.podium-card.silver{border-color:rgba(192,192,192,0.5);box-shadow:0 0 16px rgba(192,192,192,0.1)}
+.podium-card.bronze{border-color:rgba(205,127,50,0.5);box-shadow:0 0 16px rgba(205,127,50,0.1)}
+.podium-medal{font-size:2.4rem}
+.podium-name{font-size:1rem;font-weight:700;color:var(--text)}
+.podium-record{font-size:1.8rem;font-weight:800;color:var(--gold)}
+.podium-detail{font-size:0.8rem;color:var(--muted)}
+.records-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.record-item{background:var(--elevated);border-radius:var(--radius-sm);padding:16px 12px;text-align:center;border:1px solid var(--border)}
+.record-icon{font-size:1.6rem;margin-bottom:4px}
+.record-value{font-size:1.5rem;font-weight:800;color:var(--ice)}
+.record-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-top:2px}
+.record-player{font-size:0.78rem;color:var(--sub);margin-top:6px;font-weight:500}
+.highlight{color:var(--gold);font-weight:700}
+#all-table th:nth-child(1),#all-table td:nth-child(1){min-width:110px}
+#all-table th:nth-child(2),#all-table td:nth-child(2){min-width:120px}
+#leaderboard-table th:nth-child(2),#leaderboard-table td:nth-child(2),
+#leaderboard-table th:nth-child(3),#leaderboard-table td:nth-child(3),
+#all-table th:nth-child(1),#all-table td:nth-child(1),
+#all-table th:nth-child(2),#all-table td:nth-child(2){text-align:left;padding-left:14px}
+.reading-progress{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--ice),var(--red));transform-origin:0 50%;transform:scaleX(0);z-index:1000}
+.scroll-top{position:fixed;bottom:80px;right:20px;width:44px;height:44px;background:var(--card);border:1px solid var(--gold);border-radius:50%;color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:all 0.3s ease;z-index:98;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.scroll-top.visible{opacity:1;pointer-events:all}
+.scroll-top:hover{background:var(--gold);color:#000;transform:translateY(-3px)}
 @media (max-width: 768px) {
-    .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
+.stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+.stat-value{font-size:1.3rem}
+.stat-label{font-size:0.6rem}
+.podium{grid-template-columns:1fr;gap:8px}
+.podium-card{padding:14px 12px}
+.podium-medal{font-size:1.8rem}
+.podium-name{font-size:0.9rem}
+.podium-record{font-size:1.5rem}
+.podium-detail{font-size:0.7rem;line-height:1.5}
+.records-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+.record-item{padding:12px 8px}
+.record-icon{font-size:1.3rem}
+.record-value{font-size:1.15rem}
+.record-label{font-size:0.6rem}
+.record-player{font-size:0.68rem}
+.crown-icon{font-size:2.4rem}
+.crown-title{font-size:1rem}
+.crown-owner{font-size:0.75rem}
+.score-row{font-size:0.8rem}
+.progress-bar{height:28px}
+.progress-fill{font-size:0.65rem}
+.total-trophies{font-size:0.7rem}
+.section-title{font-size:1rem}
+#leaderboard-table{min-width:700px;font-size:0.72rem}
+#all-table{min-width:640px;font-size:0.72rem}
+.table-container{overflow-x:auto;-webkit-overflow-scrolling:touch}
+th,td{padding:6px 8px;white-space:nowrap;word-break:normal;overflow-wrap:normal;hyphens:none}
+#leaderboard-table td:nth-child(2),#all-table td:nth-child(1){min-width:100px}
+#leaderboard-table td:nth-child(3),#all-table td:nth-child(2){min-width:100px}
+.scroll-top{bottom:70px;right:16px;width:40px;height:40px;font-size:1rem}
 }
-
 </style>
 </head>
 <body>
