@@ -1127,10 +1127,8 @@ function grad_simulateFight(s1, s2) {
     return hp1 > hp2 ? 1 : 0;
 }
 
-async function grad_runSimulation(heroStats, N = GRAD_N_PER_OPP, seeds = GRAD_SEEDS, onProgress = null) {
+async function grad_runSimulation(heroStats, N = GRAD_N_PER_OPP, seeds = GRAD_SEEDS) {
     const results = [];
-    const totalSteps = seeds.length * GRAD_ALL_BUILDS.length;
-    let done = 0;
     for (const seed of seeds) {
         grad_rng = grad_mulberry32(seed);
         let wins = 0, total = 0;
@@ -1139,28 +1137,19 @@ async function grad_runSimulation(heroStats, N = GRAD_N_PER_OPP, seeds = GRAD_SE
                 if (grad_simulateFight(heroStats, opp)) wins++;
                 total++;
             }
-            done++;
-            if (onProgress && done % 10 === 0) {
-                onProgress(done / totalSteps * 100);
-                await grad_nextFrame();
-            }
         }
         results.push(wins / total * 100);
     }
     return results;
 }
 
-async function grad_simAllRaces(clsName, heroStatsByRace, N = GRAD_N_PER_OPP, seeds = GRAD_SEEDS, onProgress = null) {
+async function grad_simAllRaces(clsName, heroStatsByRace, N = GRAD_N_PER_OPP, seeds = GRAD_SEEDS) {
     const results = {};
-    const raceNames = grad_racesData.map(r => r.Name).filter(n => heroStatsByRace[n]);
-    for (let i = 0; i < raceNames.length; i++) {
-        const raceName = raceNames[i];
-        const hero = heroStatsByRace[raceName];
+    for (const race of grad_racesData) {
+        const hero = heroStatsByRace[race.Name];
         if (!hero) continue;
-        const simResults = await grad_runSimulation(hero, N, seeds, (p) => {
-            if (onProgress) onProgress((i + p / 100) / raceNames.length * 100);
-        });
-        results[raceName] = {
+        const simResults = await grad_runSimulation(hero, N, seeds);
+        results[race.Name] = {
             wr: grad_mean(simResults),
             ci: grad_ci95(grad_stdev(simResults), simResults.length)
         };
@@ -1480,34 +1469,48 @@ async function grad_runBalance() {
     const BAL_N = 1000;
     const { dist } = useAllRaces ? grad_getRaceDistribution(grad_currentClass) : { dist: {} };
 
-    async function simBal(hero, onP) { return grad_mean(await grad_runSimulation(hero, BAL_N, BAL_SEEDS, onP)); }
-    async function simBalAllRaces(modifier, onP) {
+    async function simBal(hero) { return grad_mean(await grad_runSimulation(hero, BAL_N, BAL_SEEDS)); }
+    async function simBalAllRaces(modifier) {
         const simByRace = {};
-        const raceNames = grad_racesData.map(r => r.Name).filter(n => {
-            const base = grad_getStats(grad_currentClass, n);
-            return base;
-        });
-        for (let i = 0; i < raceNames.length; i++) {
-            const raceName = raceNames[i];
-            const base = grad_getStats(grad_currentClass, raceName);
+        for (const r of grad_racesData) {
+            const base = grad_getStats(grad_currentClass, r.Name);
             if (!base) continue;
-            const wr = await simBal(modifier(base), (p) => {
-                if (onP) onP((i + p / 100) / raceNames.length * 100);
-            });
-            simByRace[raceName] = { wr, ci: 0 };
+            const wr = await simBal(modifier(base));
+            simByRace[r.Name] = { wr, ci: 0 };
         }
         return grad_weightedSim(simByRace, dist).wr;
     }
 
+    const stats = ['hp', 'atk', 'def', 'dex', 'min', 'max'];
+    const statNames = { hp: '❤️ HP', atk: '⚔️ ATK', def: '🛡️ DEF', dex: '🏃 DEX', min: '⬇️ MIN', max: '⬆️ MAX' };
+    let totalSteps = 1;
+    for (const s of stats) {
+        totalSteps++;
+        if (baseStats[s] > 0) totalSteps++;
+    }
+
     grad_showProgress(true);
-    grad_setProgress(0, 'Считаю текущий прогноз...');
+
+    function setStep(step, label) {
+        const pct = Math.min(100, step / totalSteps * 100);
+        grad_setProgress(pct, label);
+    }
+
+    let step = 0;
+
+    // Шаг 1: текущий прогноз
+    setStep(step, 'Считаю текущий прогноз...');
     await grad_nextFrame();
-    const currentSim = useAllRaces ? await simBalAllRaces(b => b, p => grad_setProgress(p * 0.2, 'Считаю текущий прогноз...')) : await simBal(baseStats, p => grad_setProgress(p * 0.2, 'Считаю текущий прогноз...'));
+    const currentSim = useAllRaces ? await simBalAllRaces(b => b) : await simBal(baseStats);
+    step++;
+    setStep(step, 'Текущий прогноз готов');
+    await grad_nextFrame();
+
     const shift = real - currentSim;
     const currentPred = currentSim + shift;
 
     if (Math.abs(currentPred - 50) < 0.5) {
-        grad_setProgress(100, 'Готово!');
+        setStep(totalSteps, 'Готово!');
         await grad_nextFrame();
         setTimeout(() => grad_hideProgress(), 800);
         document.getElementById('grad-balanceCard').style.display = 'block';
@@ -1520,36 +1523,36 @@ async function grad_runBalance() {
         return;
     }
 
-    const stats = ['hp', 'atk', 'def', 'dex', 'min', 'max'];
-    const statNames = { hp: '❤️ HP', atk: '⚔️ ATK', def: '🛡️ DEF', dex: '🏃 DEX', min: '⬇️ MIN', max: '⬆️ MAX' };
     const need = 50 - currentPred;
-
     const candidates = [];
-    let candidateIdx = 0;
-    const totalCandidates = stats.length * 2;
 
     for (const stat of stats) {
-        candidateIdx++;
-        const pctBase = 20 + (candidateIdx - 1) / totalCandidates * 80;
-        grad_setProgress(pctBase, `Проверяю ${statNames[stat]} +1...`);
+        // +1
+        setStep(step, `Проверяю ${statNames[stat]} +1...`);
         await grad_nextFrame();
         const plusWR = useAllRaces
-            ? await simBalAllRaces(b => ({ ...b, [stat]: b[stat] + 1 }), p => grad_setProgress(pctBase + p / 100 * 80 / totalCandidates, `Проверяю ${statNames[stat]} +1...`))
-            : await simBal({ ...baseStats, [stat]: baseStats[stat] + 1 }, p => grad_setProgress(pctBase + p / 100 * 80 / totalCandidates, `Проверяю ${statNames[stat]} +1...`));
+            ? await simBalAllRaces(b => ({ ...b, [stat]: b[stat] + 1 }))
+            : await simBal({ ...baseStats, [stat]: baseStats[stat] + 1 });
         candidates.push({ stat, delta: +1, pred: plusWR + shift, diff: Math.abs(plusWR + shift - 50), value: baseStats[stat] + 1 });
+        step++;
+        setStep(step, `Проверил ${statNames[stat]} +1`);
+        await grad_nextFrame();
 
+        // −1
         if (baseStats[stat] > 0) {
-            candidateIdx++;
-            const pctMinus = 20 + (candidateIdx - 1) / totalCandidates * 80;
-            grad_setProgress(pctMinus, `Проверяю ${statNames[stat]} −1...`);
+            setStep(step, `Проверяю ${statNames[stat]} −1...`);
             await grad_nextFrame();
             const minusWR = useAllRaces
-                ? await simBalAllRaces(b => ({ ...b, [stat]: Math.max(0, b[stat] - 1) }), p => grad_setProgress(pctMinus + p / 100 * 80 / totalCandidates, `Проверяю ${statNames[stat]} −1...`))
-                : await simBal({ ...baseStats, [stat]: Math.max(0, baseStats[stat] - 1) }, p => grad_setProgress(pctMinus + p / 100 * 80 / totalCandidates, `Проверяю ${statNames[stat]} −1...`));
+                ? await simBalAllRaces(b => ({ ...b, [stat]: Math.max(0, b[stat] - 1) }))
+                : await simBal({ ...baseStats, [stat]: Math.max(0, baseStats[stat] - 1) });
             candidates.push({ stat, delta: -1, pred: minusWR + shift, diff: Math.abs(minusWR + shift - 50), value: baseStats[stat] - 1 });
+            step++;
+            setStep(step, `Проверил ${statNames[stat]} −1`);
+            await grad_nextFrame();
         }
     }
-    grad_setProgress(100, 'Готово!');
+
+    setStep(totalSteps, 'Готово!');
     await grad_nextFrame();
     setTimeout(() => grad_hideProgress(), 800);
 
