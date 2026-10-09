@@ -144,7 +144,6 @@
 #tab-gradient .diff-neutral { background: var(--elevated); color: var(--muted); }
 #tab-gradient .sim-details { margin-top: 14px; color: var(--muted); font-size: 0.78rem; }
 #tab-gradient .info-block { background: var(--elevated); border-radius: var(--radius-sm); padding: 16px; border-left: 3px solid var(--gold); line-height: 1.7; color: var(--sub); font-size: 0.85rem; }
-@media (max-width: 768px) { #tab-gradient .stats-grid { grid-template-columns: repeat(3, 1fr); } }
 
 #tab-sim .mode-switch { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
 #tab-sim .mode-btn { padding: 10px 16px; border: none; background: transparent; color: var(--sub); border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 0.75rem; font-family: inherit; }
@@ -361,30 +360,549 @@
 #tab-matrix .status-message { text-align: center; padding: 40px 20px; color: var(--sub); }
 
 @media (max-width: 768px) {
-.page-tabs { justify-content: flex-start; }
-.page-tab { padding: 9px 12px; font-size: 0.75rem; }
-.race-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-.race-chip { flex: none; min-width: 0; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 4px; }
-.race-chip:nth-child(4n) { border-right: none; }
-.table-wrapper { overflow-x: auto; }
-.table-wrapper table { min-width: auto; font-size: 0.7rem; }
-#classes-balance-table { min-width: 720px; }
-#tab-calc .selectors { grid-template-columns: 1fr; gap: 10px; align-items: stretch; }
-#tab-sim .selectors { grid-template-columns: 1fr; gap: 10px; }
-#tab-sim .btn-row { flex-direction: column; }
-#tab-dungeon .dungeon-inputs { flex-direction: column; align-items: stretch; }
-#tab-dungeon .dungeon-buttons { flex-direction: column; }
-#tab-dungeon .btn { width: 100%; }
-#tab-dungeon .dungeon-output { font-size: 0.72rem; padding: 14px 12px; }
-#tab-dungeon .dungeon-output .depth-grid { grid-template-columns: repeat(2, 1fr); }
-#tab-dungeon .dungeon-output .surv-table { font-size: 0.72rem; }
-#tab-dungeon .dungeon-output .surv-table th, #tab-dungeon .dungeon-output .surv-table td { padding: 5px 6px; }
-#tab-dungeon .dungeon-output .surv-table .sv-cnt { font-size: 0.65rem; }
-#tab-dungeon .dungeon-output .stat-row { grid-template-columns: 55px 1fr 55px; }
-#tab-dungeon .dungeon-output .top-run { grid-template-columns: 32px 1fr; }
-#tab-dungeon .dungeon-output .tr-dmg { grid-column: 2; text-align: left; }
-#tab-form .summary-row { grid-template-columns: repeat(2, 1fr); }
-#tab-gradient .stats-grid { grid-template-columns: repeat(3, 1fr); }
+
+    /* =====================================================
+       ОБЩЕЕ — ВСЕ ВКЛАДКИ
+       ===================================================== */
+    .page-tabs { justify-content: flex-start; }
+    .page-tab { padding: 9px 12px; font-size: 0.72rem; }
+
+    [id^="tab-"] .section,
+    [id^="tab-"] .oracle-block,
+    [id^="tab-"] .result-panel,
+    [id^="tab-"] .result-card {
+        padding: 14px 10px;
+        box-sizing: border-box;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    [id^="tab-"] .section-title,
+    [id^="tab-"] .oracle-block-title {
+        font-size: 0.95rem;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    [id^="tab-"] .selector-row,
+    [id^="tab-"] .controls-row,
+    [id^="tab-"] .btn-row,
+    [id^="tab-"] .top-bar,
+    [id^="tab-"] .meta-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    [id^="tab-"] select,
+    [id^="tab-"] .btn,
+    [id^="tab-"] .btn-primary,
+    [id^="tab-"] .btn-secondary,
+    [id^="tab-"] .btn-reset,
+    [id^="tab-"] .search-btn,
+    [id^="tab-"] .search-clear,
+    [id^="tab-"] .btn-save {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    [id^="tab-"] .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    [id^="tab-"] .stat-card { padding: 10px 6px; }
+    [id^="tab-"] .stat-value { font-size: 1.1rem; }
+    [id^="tab-"] .stat-label { font-size: 0.58rem; }
+
+    [id^="tab-"] .info-block {
+        font-size: 0.75rem;
+        padding: 12px 10px;
+        line-height: 1.6;
+    }
+
+    [id^="tab-"] table {
+        font-size: 0.7rem;
+        width: 100%;
+        table-layout: auto;
+    }
+    [id^="tab-"] th,
+    [id^="tab-"] td {
+        padding: 5px 4px;
+        font-size: 0.68rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    [id^="tab-"] .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--radius-sm);
+    }
+    [id^="tab-"] .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    [id^="tab-"] .table-wrapper table { min-width: 680px; }
+    [id^="tab-"] .table-wrapper th { padding: 5px 4px; font-size: 0.6rem; }
+    [id^="tab-"] .table-wrapper td { padding: 5px 4px; font-size: 0.66rem; }
+
+    /* =====================================================
+       БАЛАНС
+       ===================================================== */
+    #tab-balance .race-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+    }
+    #tab-balance .race-chip {
+        flex: none;
+        min-width: 0;
+        padding: 8px 4px;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+    #tab-balance .race-chip:nth-child(4n) { border-right: none; }
+    #tab-balance .race-chip .chip-emoji { font-size: 1rem; }
+    #tab-balance .race-chip .chip-name { font-size: 0.6rem; }
+    #tab-balance .race-chip .chip-bonus { font-size: 0.5rem; }
+
+    #tab-balance .compare-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    #tab-balance .compare-card { padding: 8px 4px; }
+    #tab-balance .compare-card .c-icon { font-size: 0.9rem; }
+    #tab-balance .compare-card .c-label { font-size: 0.55rem; }
+    #tab-balance .compare-card .c-bar-val { font-size: 0.72rem; }
+    #tab-balance .compare-card .c-delta { font-size: 0.6rem; }
+    #tab-balance .compare-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+    #tab-balance .compare-vs {
+        font-size: 0.85rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    #tab-balance .compare-close { width: 100%; }
+    #tab-balance .formula-grid { grid-template-columns: 1fr; }
+    #tab-balance .formula-card { padding: 10px 12px; }
+    #tab-balance .formula-card .f-title { font-size: 0.72rem; }
+    #tab-balance .formula-card .f-body { font-size: 0.68rem; }
+    #tab-balance .formula-card .f-note { font-size: 0.6rem; }
+    #tab-balance .formulas-toggle { font-size: 0.78rem; }
+
+    /* =====================================================
+       КАЛЬКУЛЯТОР
+       ===================================================== */
+    #tab-calc .mode-switch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    #tab-calc .mode-btn {
+        font-size: 0.7rem;
+        padding: 9px 6px;
+        text-align: center;
+    }
+    #tab-calc .selectors {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        align-items: stretch;
+    }
+    #tab-calc .vs-divider { display: none; }
+    #tab-calc .fighter-card { padding: 12px 10px; }
+    #tab-calc .fighter-card label { font-size: 0.68rem; }
+    #tab-calc select {
+        font-size: 0.78rem;
+        padding: 10px 30px 10px 10px;
+    }
+    #tab-calc .reasons-box { padding: 12px 10px; }
+    #tab-calc .reasons-box h4 { font-size: 0.82rem; }
+    #tab-calc .reasons-box ul { font-size: 0.72rem; padding-left: 16px; }
+
+    /* =====================================================
+       ГРАДИЕНТ
+       ===================================================== */
+    #tab-gradient .selector-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+    #tab-gradient select {
+        min-width: 0;
+        width: 100%;
+        font-size: 0.78rem;
+        padding: 9px 30px 9px 12px;
+    }
+    #tab-gradient .btn {
+        font-size: 0.75rem;
+        padding: 10px 14px;
+    }
+    #tab-gradient .btn-reset {
+        font-size: 0.7rem;
+        padding: 9px 12px;
+    }
+    #tab-gradient .progress {
+        text-align: center;
+        margin: 0;
+        font-size: 0.72rem;
+    }
+    #tab-gradient .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    #tab-gradient .stat-card { padding: 10px 6px; }
+    #tab-gradient .stat-emoji { font-size: 1rem; }
+    #tab-gradient .stat-name { font-size: 0.58rem; margin-bottom: 4px; }
+    #tab-gradient .stat-value { font-size: 1.1rem; margin-bottom: 6px; }
+    #tab-gradient .stat-input {
+        width: 100%;
+        max-width: 80px;
+        padding: 6px 4px;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+    }
+    #tab-gradient .result-panel {
+        padding: 12px 8px;
+        text-align: left;
+        overflow-x: auto;
+    }
+    #tab-gradient .winrate-display {
+        gap: 8px;
+        justify-content: center;
+    }
+    #tab-gradient .winrate-box {
+        padding: 10px 12px;
+        flex: 1;
+        min-width: 0;
+    }
+    #tab-gradient .winrate-label { font-size: 0.62rem; }
+    #tab-gradient .winrate-value { font-size: 1.25rem; }
+    #tab-gradient .winrate-arrow { font-size: 1.1rem; }
+    #tab-gradient .diff-badge { font-size: 0.72rem; padding: 3px 10px; }
+    #tab-gradient .sim-details { font-size: 0.68rem; }
+    #tab-gradient .sim-details table { font-size: 0.65rem; }
+    #tab-gradient .sim-details th,
+    #tab-gradient .sim-details td { padding: 3px 4px; }
+    #tab-gradient .result-panel table {
+        width: 100%;
+        table-layout: fixed;
+        font-size: 0.65rem;
+    }
+    #tab-gradient .result-panel table th,
+    #tab-gradient .result-panel table td {
+        padding: 5px 3px;
+        font-size: 0.65rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #tab-gradient .result-panel table th:nth-child(1),
+    #tab-gradient .result-panel table td:nth-child(1) { width: 28%; text-align: left; }
+    #tab-gradient .result-panel table th:nth-child(2),
+    #tab-gradient .result-panel table td:nth-child(2) { width: 22%; text-align: center; }
+    #tab-gradient .result-panel table th:nth-child(3),
+    #tab-gradient .result-panel table td:nth-child(3) { width: 22%; text-align: center; }
+    #tab-gradient .result-panel table th:nth-child(4),
+    #tab-gradient .result-panel table td:nth-child(4) { width: 28%; text-align: center; font-size: 0.62rem; }
+    #tab-gradient .info-block {
+        padding: 12px 10px;
+        font-size: 0.72rem;
+        line-height: 1.6;
+    }
+    #tab-gradient .progress-bar-wrap > div:first-child { height: 26px !important; }
+    #tab-gradient .progress-bar-wrap > div:first-child > div { font-size: 0.8rem; }
+
+    /* =====================================================
+       СИМУЛЯТОР ДУЭЛЕЙ
+       ===================================================== */
+    #tab-sim .mode-switch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    #tab-sim .mode-btn {
+        font-size: 0.7rem;
+        padding: 9px 6px;
+        text-align: center;
+    }
+    #tab-sim .vs-header {
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+    #tab-sim .fighter-emoji { font-size: 1.8rem; }
+    #tab-sim .fighter-name { font-size: 0.78rem; }
+    #tab-sim .vs-divider { font-size: 1.1rem; }
+    #tab-sim .selectors {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    #tab-sim .selector-group { padding: 12px 10px; }
+    #tab-sim .selector-group h3 { font-size: 0.78rem; }
+    #tab-sim select {
+        font-size: 0.78rem;
+        padding: 10px 30px 10px 10px;
+    }
+    #tab-sim .btn-row { flex-direction: column; }
+    #tab-sim .btn { padding: 12px; font-size: 0.82rem; }
+    #tab-sim .analytics-grid { grid-template-columns: 1fr; }
+    #tab-sim .analytics-card { padding: 12px 10px; }
+    #tab-sim .analytics-card h4 { font-size: 0.8rem; }
+    #tab-sim .result-log { font-size: 0.68rem; }
+
+    /* =====================================================
+       ПОДЗЕМЕЛЬЕ
+       ===================================================== */
+    #tab-dungeon .dungeon-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        align-items: stretch;
+    }
+    #tab-dungeon .dungeon-field {
+        min-width: 0;
+        flex: none;
+    }
+    #tab-dungeon .dungeon-field label { font-size: 0.62rem; }
+    #tab-dungeon .dungeon-field select {
+        width: 100%;
+        font-size: 0.72rem;
+        padding: 8px 26px 8px 10px;
+    }
+    #tab-dungeon .dungeon-buttons {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    #tab-dungeon .dungeon-buttons .btn {
+        width: 100%;
+        font-size: 0.72rem;
+        padding: 10px 6px;
+        height: 38px;
+    }
+    #tab-dungeon .dungeon-output {
+        padding: 12px 8px;
+        font-size: 0.7rem;
+        overflow-x: hidden;
+    }
+    #tab-dungeon .dungeon-output > * {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    #tab-dungeon .dungeon-output .dungeon-block {
+        padding: 12px 10px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    #tab-dungeon .dungeon-output .dungeon-block-title {
+        font-size: 0.78rem;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    #tab-dungeon .dungeon-output .depth-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    #tab-dungeon .dungeon-output .depth-item { padding: 8px; }
+    #tab-dungeon .dungeon-output .di-label { font-size: 0.55rem; }
+    #tab-dungeon .dungeon-output .di-value { font-size: 1rem; }
+    #tab-dungeon .dungeon-output table {
+        width: 100%;
+        font-size: 0.65rem;
+    }
+    #tab-dungeon .dungeon-output table th,
+    #tab-dungeon .dungeon-output table td {
+        padding: 4px 3px;
+        font-size: 0.62rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #tab-dungeon .dungeon-output .surv-table th,
+    #tab-dungeon .dungeon-output .surv-table td { padding: 4px 3px; font-size: 0.6rem; }
+    #tab-dungeon .dungeon-output .surv-table .sv-cnt { font-size: 0.55rem; }
+    #tab-dungeon .dungeon-output .surv-table .sv-bar-cell { width: 30%; padding-right: 2px; }
+    #tab-dungeon .dungeon-output .surv-table .sv-bar { height: 12px; }
+    #tab-dungeon .dungeon-output .sortable-table th { padding: 5px 4px; font-size: 0.55rem; }
+    #tab-dungeon .dungeon-output .sortable-table td { padding: 5px 4px; font-size: 0.62rem; }
+    #tab-dungeon .dungeon-output .mini-bar-wrap { width: 50px; height: 6px; }
+    #tab-dungeon .dungeon-output .top-run {
+        grid-template-columns: 28px 1fr;
+        gap: 8px;
+        padding: 8px 10px;
+    }
+    #tab-dungeon .dungeon-output .tr-rank { font-size: 0.9rem; }
+    #tab-dungeon .dungeon-output .tr-waves { font-size: 0.78rem; }
+    #tab-dungeon .dungeon-output .tr-meta { font-size: 0.65rem; white-space: normal; }
+    #tab-dungeon .dungeon-output .tr-dmg { grid-column: 2; text-align: left; font-size: 0.65rem; }
+    #tab-dungeon .dungeon-output .stat-row {
+        grid-template-columns: 45px 1fr 50px;
+        gap: 6px;
+        font-size: 0.7rem;
+    }
+    #tab-dungeon .dungeon-output .stat-tab {
+        font-size: 0.65rem;
+        padding: 5px 8px;
+    }
+
+    /* =====================================================
+       ФОРМА
+       ===================================================== */
+    #tab-form .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    #tab-form .tabs-segment {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        width: 100%;
+        gap: 4px;
+    }
+    #tab-form .tab-btn {
+        font-size: 0.66rem;
+        padding: 8px 4px;
+        justify-content: center;
+        gap: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #tab-form .meta-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    #tab-form .meta-badge {
+        font-size: 0.58rem;
+        padding: 5px 6px;
+        white-space: normal;
+        text-align: center;
+        justify-content: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #tab-form .summary-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+    }
+    #tab-form .summary-item { padding: 10px 6px; }
+    #tab-form .summary-item .value { font-size: 1.1rem; }
+    #tab-form .summary-item .label { font-size: 0.55rem; }
+    #tab-form .controls-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        width: 100%;
+    }
+    #tab-form .controls-row .search-box {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-width: 0;
+    }
+    #tab-form .controls-row .search-box input {
+        font-size: 0.72rem;
+        padding: 8px 12px 8px 32px;
+    }
+    #tab-form .controls-row .chip {
+        font-size: 0.62rem;
+        padding: 7px 3px;
+        width: 100%;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+    }
+    #tab-form .table-shell { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    #tab-form table { min-width: 600px; font-size: 0.68rem; }
+    #tab-form thead th { padding: 8px 6px; font-size: 0.58rem; }
+    #tab-form tbody td { padding: 7px 6px; font-size: 0.68rem; }
+    #tab-form td.name-cell a { font-size: 0.7rem; gap: 4px; }
+    #tab-form td.name-cell .em { font-size: 0.85rem; }
+
+    /* =====================================================
+       МАТРИЦА
+       ===================================================== */
+    #tab-matrix .matrix-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    #tab-matrix .matrix-controls .tab-btn {
+        font-size: 0.66rem;
+        padding: 7px 6px;
+        width: 100%;
+    }
+    #tab-matrix .min-games-filter {
+        padding: 6px 8px;
+        font-size: 0.66rem;
+        justify-content: center;
+        gap: 6px;
+    }
+    #tab-matrix .min-games-filter input[type="number"] { width: 48px; }
+    #tab-matrix .min-games-filter:has(.custom-select) {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 6px;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    #tab-matrix .custom-select {
+        min-width: 0;
+        width: 100%;
+    }
+    #tab-matrix .custom-select-trigger {
+        width: 100%;
+        font-size: 0.66rem;
+        height: 32px;
+        padding: 4px 8px;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #tab-matrix .custom-select-trigger span:first-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+        min-width: 0;
+    }
+    #tab-matrix .sort-direction-btn {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+    }
+    #tab-matrix .custom-select-options { max-height: 200px; }
+    #tab-matrix .custom-select-option { font-size: 0.68rem; padding: 7px 10px; }
+    #tab-matrix .heatmap-table { font-size: 0.68rem; min-width: 500px; }
+    #tab-matrix .heatmap-table th { font-size: 0.58rem; padding: 6px 4px; }
+    #tab-matrix .heatmap-table td { padding: 6px 4px; }
+    #tab-matrix .matrix-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    #tab-matrix .legend-row { gap: 6px; font-size: 0.6rem; }
+    #tab-matrix .legend-swatch { width: 12px; height: 12px; }
+    #tab-matrix .combo-detail { padding: 12px 10px; }
+    #tab-matrix .combo-detail table { font-size: 0.68rem; }
+    #tab-matrix .combo-detail th,
+    #tab-matrix .combo-detail td { padding: 6px 4px; font-size: 0.66rem; }
+
+    /* =====================================================
+       ПРОЧЕЕ
+       ===================================================== */
+    .reading-progress { height: 3px; }
+    .scroll-top {
+        width: 40px;
+        height: 40px;
+        bottom: 70px;
+        right: 14px;
+        font-size: 1rem;
+    }
+    .container { padding: 0 12px; }
 }
 
 .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
