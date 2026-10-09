@@ -599,112 +599,208 @@ body {
 }
 
 /* ============================================================================
-   15. МОБИЛЬНАЯ АДАПТАЦИЯ (все @media в конце)
+   МОБИЛЬНАЯ АДАПТАЦИЯ
    ============================================================================ */
-
-/* --- 15.1 Планшеты и телефоны (max-width: 768px) --- */
 @media (max-width: 768px) {
+    /* === ОБЩЕЕ === */
+    .container { padding: 0 10px; }
 
-    /* Поиск */
-    .search-input-wrap { flex-direction: column; }
-    .search-btn { width: 100%; }
+    /* === ПОИСК === */
+    .search-row { max-width: 100%; margin-bottom: 20px; }
+    .search-input-wrap { flex-direction: column; gap: 8px; }
+    .search-input.profile-input {
+        font-size: 0.85rem;
+        padding: 12px 16px;
+        border-radius: 20px;
+    }
+    .search-btn {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 0.85rem;
+        border-radius: 20px;
+    }
+    .autocomplete-list { max-height: 260px; }
+    .autocomplete-item { padding: 10px 14px; font-size: 0.82rem; gap: 8px; }
+    .autocomplete-item .ac-emoji { font-size: 1.1rem; }
+    .autocomplete-item .ac-class { font-size: 0.65rem; }
 
-    /* Карточка игрока */
+    /* === КАРТОЧКА ИГРОКА === */
     .profile-hero { padding: 18px 14px; }
     .profile-emoji { font-size: 2.4rem; }
     .profile-name { font-size: 1.2rem; }
     .profile-class { font-size: 0.78rem; }
+    .profile-badges { gap: 4px; margin: 6px 0; }
+    .badge { font-size: 0.58rem; padding: 3px 8px; }
+    .profile-hero .btn-secondary {
+        width: 100%;
+        margin-top: 8px;
+        font-size: 0.75rem;
+        padding: 8px 12px;
+    }
 
-    /* Табы */
+    /* === ТАБЫ === */
     .tabs-bar {
         width: 100%;
         justify-content: flex-start;
-        padding: 5px 6px;
+        padding: 4px 5px;
+        gap: 3px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
     }
+    .tabs-bar::-webkit-scrollbar { display: none; }
     .tab-pill {
         padding: 7px 10px;
-        font-size: 0.68rem;
+        font-size: 0.66rem;
+        flex: 0 0 auto;
     }
 
-    /* Блоки профиля */
-    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    /* === БЛОКИ ПРОФИЛЯ === */
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+    .stat-card { padding: 10px 6px; }
     .stat-num { font-size: 1.1rem; }
-    .ranks-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .rank-pos { font-size: 1.15rem; }
-    .ach-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .ach-emoji { font-size: 1.5rem; }
-    .ach-name { font-size: 0.72rem; }
+    .stat-label { font-size: 0.55rem; }
+
+    .ranks-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+    .rank-card { padding: 10px 6px; }
+    .rank-pos { font-size: 1.1rem; }
+    .rank-label { font-size: 0.55rem; }
+
+    .ach-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .ach-card { padding: 10px 6px; }
+    .ach-emoji { font-size: 1.4rem; }
+    .ach-name { font-size: 0.7rem; margin: 3px 0; }
+
     .skill-value { font-size: 2.2rem; }
 
-    /* Oracle-блоки */
-    .oracle-block { padding: 16px 12px; }
-    .oracle-block-title { font-size: 0.85rem; }
+    /* === ORACLE-БЛОКИ === */
+    .oracle-block { padding: 14px 12px; margin-bottom: 12px; }
+    .oracle-block-title { font-size: 0.85rem; margin-bottom: 10px; gap: 6px; }
+    .oracle-voice { padding: 10px 12px; font-size: 0.8rem; margin-bottom: 8px; }
+    .advice-block { padding: 16px 12px; }
+    .advice-block .advice-icon { font-size: 1.6rem; }
+    .advice-block .advice-text { font-size: 0.82rem; }
+    .meme-block { padding: 14px 12px; }
+    .meme-line { font-size: 0.8rem; line-height: 1.6; }
 
-    /* Летопись: карточки вместо таблицы */
-    .history-table.full { min-width: 0; }
-    .history-table.full,
-    .history-table.full thead,
-    .history-table.full tbody,
-    .history-table.full th,
-    .history-table.full td,
-    .history-table.full tr { display: block; }
-
-    .history-table.full thead { display: none; }
-
-    .history-table.full tr {
-        background: var(--elevated);
+    /* === ВСЕ ТАБЛИЦЫ — ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ === */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         border-radius: var(--radius-sm);
-        margin-bottom: 8px;
-        padding: 10px 12px;
-        border-left: 3px solid var(--purple);
-        border-bottom: none;
+        max-width: 100%;
     }
-    .history-table.full tr.current { border-left-color: var(--gold); background: linear-gradient(135deg, rgba(240,185,11,0.1), rgba(240,185,11,0.02)); }
-    .history-table.full tr.season-even,
-    .history-table.full tr.season-odd { background: var(--elevated); }
-    .history-table.full tr.season-first td { border-top: none; padding-top: 4px; }
-    .history-table.full tr.season-first td:first-child { color: var(--purple); }
-    .history-table.full tr.season-total { background: linear-gradient(135deg, rgba(163,113,247,0.12), rgba(163,113,247,0.03)); border-left-color: var(--gold); }
-    .history-table.full tr.grand-total { background: linear-gradient(135deg, rgba(240,185,11,0.18), rgba(240,185,11,0.05)); border-left-color: var(--gold); border-top: none; }
+    .table-container table {
+        min-width: 100%;
+        font-size: 0.7rem;
+    }
 
+    /* Краткая история — компактнее */
+    .history-table { font-size: 0.7rem; }
+    .history-table th { padding: 6px 4px; font-size: 0.58rem; }
+    .history-table td { padding: 6px 4px; font-size: 0.7rem; }
+
+    /* Полная летопись — обычная таблица, скролл вбок */
+    .history-table.full { min-width: 700px; font-size: 0.68rem; }
+    .history-table.full th {
+        padding: 6px 4px;
+        font-size: 0.58rem;
+        line-height: 1.2;
+        text-align: center;
+        white-space: nowrap;
+    }
     .history-table.full td {
-        display: flex;
-        justify-content: space-between;
-        padding: 4px 0;
-        border: none;
-        font-size: 0.75rem;
-        white-space: normal;
-        text-align: right;
+        padding: 6px 4px;
+        font-size: 0.68rem;
+        white-space: nowrap;
+        text-align: center;
     }
-    .history-table.full td::before {
-        content: attr(data-label);
-        color: var(--muted);
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-right: 8px;
-        text-align: left;
+    .history-table.full td:nth-child(2) {
+        max-width: 110px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    .history-table.full td:nth-child(2) { max-width: none; overflow: visible; text-overflow: ellipsis; white-space: normal; }
+    .history-table.full td.season-cell {
+        font-size: 0.72rem;
+        padding-top: 8px;
+        vertical-align: top;
+    }
+    .history-table.full tr.season-first td { padding-top: 10px; }
+    .history-table.full tr.season-last td { padding-bottom: 10px; }
 
-    /* Прочие таблицы — горизонтальный скролл */
-    .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { font-size: 0.72rem; }
-    th, td { padding: 6px 8px; white-space: nowrap; }
+    /* === ГРАФИКИ / ТРЕНДЫ / РЕКОРДЫ / ТЕМП === */
+    .trend-grid, .season-highlight { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .trend-item, .season-card { padding: 10px 8px; }
+    .trend-icon, .season-icon { font-size: 1.2rem; }
+    .trend-value, .season-value { font-size: 1rem; }
+    .trend-label, .season-title { font-size: 0.55rem; }
+    .season-detail { font-size: 0.62rem; }
 
-    /* Тренды, темп */
-    .trend-grid, .season-highlight { grid-template-columns: repeat(2, 1fr); }
     .pace-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .pace-item { padding: 10px 4px; }
+    .pace-icon { font-size: 1rem; }
     .pace-value { font-size: 0.95rem; }
+    .pace-label { font-size: 0.55rem; }
+
+    /* === МЕТА / СТИЛЬ / АРХИВ === */
+    .meta-rank { width: 18px; height: 18px; line-height: 18px; font-size: 0.6rem; margin-right: 4px; }
+    .archive-hero { padding: 8px 10px; font-size: 0.78rem; gap: 6px; flex-wrap: wrap; }
+    .archive-hero .hero-info { gap: 6px; }
+    .archive-hero .hero-info span { font-size: 0.75rem; }
+    .style-row { padding: 8px 10px; font-size: 0.78rem; gap: 6px; flex-wrap: wrap; }
+    .style-row .style-name span { font-size: 0.75rem; }
+    .style-row .style-val { font-size: 0.72rem; }
+
+    /* === СРАВНЕНИЕ === */
+    .compare-row { flex-direction: column; align-items: stretch; gap: 4px; }
+    .compare-label { min-width: 0; font-size: 0.72rem; }
+    .compare-bar-wrap { height: 20px; }
+    .compare-bar { font-size: 0.65rem; padding-right: 6px; }
+    .compare-table th, .compare-table td { font-size: 0.7rem; padding: 6px 4px; }
+
+    /* === 2x2 === */
+    .oracle-block .stats-grid[style*="repeat(3"] {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
+    }
+    .oracle-block .stats-grid[style*="repeat(3"] .stat-card { padding: 8px 4px; }
+    .oracle-block .stats-grid[style*="repeat(3"] .stat-num { font-size: 0.95rem; }
+    .oracle-block .stats-grid[style*="repeat(3"] .stat-label { font-size: 0.5rem; }
+
+    /* === SCROLL-TOP === */
+    .scroll-top {
+        width: 40px;
+        height: 40px;
+        bottom: 70px;
+        right: 14px;
+        font-size: 1rem;
+    }
+
+    /* === КНОПКИ === */
+    .oracle-block .btn,
+    .oracle-block .btn-secondary {
+        font-size: 0.75rem;
+        padding: 8px 12px;
+    }
+
+    /* === SVG ГРАФИКИ === */
+    .oracle-block svg {
+        max-height: 180px;
+    }
 }
 
-/* --- 15.2 Узкие телефоны (max-width: 480px) --- */
 @media (max-width: 480px) {
-    .tab-pill {
-        padding: 6px 8px;
-        font-size: 0.65rem;
-    }
+    .tab-pill { padding: 6px 8px; font-size: 0.62rem; }
+    .profile-name { font-size: 1.1rem; }
+    .stats-grid { gap: 6px; }
+    .stat-card { padding: 8px 4px; }
+    .stat-num { font-size: 1rem; }
+    .stat-label { font-size: 0.5rem; }
+    .pace-grid { grid-template-columns: repeat(2, 1fr); }
+    .trend-grid, .season-highlight { grid-template-columns: 1fr; }
+    .oracle-block { padding: 12px 10px; }
+    .oracle-block-title { font-size: 0.8rem; }
+    .oracle-voice { font-size: 0.75rem; padding: 8px 10px; }
 }
 </style>
 </head>
