@@ -605,6 +605,8 @@ async function load2x2() {
     } catch (e) { return {}; }
 }
 
+let achievementsData = [];
+
 async function loadEmojis() {
     try {
         let r = await fetch(DATA_URL_FALLBACK);
@@ -613,6 +615,7 @@ async function loadEmojis() {
         const data = await r.json();
         classEmojis = Object.fromEntries((data.classes || []).map(c => [c.Name, c.Emoji]));
         raceEmojis = Object.fromEntries((data.races || []).map(r => [r.Name, r.Emoji]));
+        achievementsData = data.achievements || [];
     } catch (e) {}
 }
 
@@ -630,29 +633,31 @@ function getPlayerHistory(nickname, seasons) {
         if (p) {
             const total = (p.wins || 0) + (p.losses || 0);
             if (total > 0) {
-                history.push({
-                    season: s.num,
-                    isCurrent: s.isCurrent,
-                    era: s.num === 0 ? 'classic' : 'races',
-                    display: p.display,
-                    emoji: p.emoji || '⚔️',
-                    name: p.name || '',
-                    wins: p.wins || 0,
-                    losses: p.losses || 0,
-                    total,
-                    wr: total > 0 ? p.wins / total : 0,
-                    level: p.level || 0,
-                    skill: p.skill || 0,
-                    shards: p.shards || 0,
-                    faction: normalizeFaction(p.faction),
-                    factionWins: p.factionWins || 0,
-                    best: p.best || 0,
-                    worst: p.worst || 0,
-                    tournamentWins: p.tournamentWins || 0,
-                    champion: p.champion === true,
-                    isDeleted: false,
-                    dungeon: s.data.dungeon?.players?.[p.display] || null
-                });
+				history.push({
+					season: s.num,
+					isCurrent: s.isCurrent,
+					era: s.num === 0 ? 'classic' : 'races',
+					display: p.display,
+					emoji: p.emoji || '⚔️',
+					name: p.name || '',
+					wins: p.wins || 0,
+					losses: p.losses || 0,
+					total,
+					wr: total > 0 ? p.wins / total : 0,
+					level: p.level || 0,
+					skill: p.skill || 0,
+					shards: p.shards || 0,
+					faction: normalizeFaction(p.faction),
+					factionWins: p.factionWins || 0,
+					best: p.best || 0,
+					worst: p.worst || 0,
+					tournamentWins: p.tournamentWins || 0,
+					champion: p.champion === true,
+					achievements: p.achievements || [],
+					title: p.title || '',
+					isDeleted: false,
+					dungeon: s.data.dungeon?.players?.[p.display] || null
+				});
             }
         }
 
@@ -1985,150 +1990,56 @@ function renderMemeAnalysis(memes) {
 }
 
 // --- 7.16 Достижения ---
-const ACHIEVEMENTS = [
-    { e: "🌟", n: "Легенда Этерниса", t: "level", v: 150 },
-    { e: "👑", n: "Легенда Арены", t: "tournament", v: 10 },
-    { e: "👑", n: "Властелин Раскола", t: "tournament", v: 5 },
-    { e: "💫", n: "Властелин осколков", t: "level", v: 100 },
-    { e: "👑", n: "Бессмертный", t: "level", v: 50 },
-    { e: "☠️", n: "Бог войны", t: "best", v: 20 },
-    { e: "✨", n: "Мифический", t: "level", v: 40 },
-    { e: "🤖", n: "Читер", t: "winrate", v: 90, m: 50 },
-    { e: "🤪", n: "Безумный", t: "fights", v: 1000 },
-    { e: "⚡", n: "Живая легенда", t: "level", v: 30 },
-    { e: "💎", n: "Элита", t: "winrate", v: 80, m: 30 },
-    { e: "🗡️", n: "Мастер клинка", t: "level", v: 20 },
-    { e: "🏆", n: "Триумфатор", t: "wins", v: 200 },
-    { e: "👑", n: "Легенда", t: "wins", v: 100 },
-    { e: "⚔️", n: "Ветеран", t: "fights", v: 500 },
-    { e: "🛡️", n: "Хранитель", t: "level", v: 15 },
-    { e: "⚡", n: "Непобедимый", t: "best", v: 10 },
-    { e: "🏹", n: "Мастер", t: "winrate", v: 70, m: 30 },
-    { e: "📿", n: "Собиратель", t: "level", v: 10 },
-    { e: "✨", n: "Сосед Аэлиона", t: "dungeon_record", v: 25 },
-    { e: "👁️", n: "Там внизу кто-то есть... и это я", t: "dungeon_record", v: 20 },
-    { e: "🐉", n: "Легенда Подземелья", t: "dungeon_record", v: 15 },
-    { e: "🏔", n: "Покоритель глубин", t: "dungeon_record", v: 10 },
-    { e: "💰", n: "Кладмен", t: "dungeon_trophies", v: 1000 },
-    { e: "👑", n: "Трофейный магнат", t: "dungeon_trophies", v: 100 },
-    { e: "⚔️", n: "Убийца боссов", t: "dungeon_bosses", v: 1000 },
-    { e: "💀", n: "Охотник на боссов", t: "dungeon_bosses", v: 100 },
-    { e: "🌊", n: "Волнорез", t: "dungeon_waves", v: 100 },
-    { e: "🔱", n: "Избранный светом", t: "faction", v: 150, f: "Орден Света" },
-    { e: "🌋", n: "Владыка тьмы", t: "faction", v: 150, f: "Культ Тьмы" },
-    { e: "⚜️", n: "Аэлион", t: "faction", v: 100, f: "Орден Света" },
-    { e: "🌑", n: "Повествователь", t: "faction", v: 100, f: "Культ Тьмы" },
-    { e: "🏆", n: "Хранитель Вечности", t: "tournament", v: 1 },
-    { e: "👑", n: "Чемпион", t: "champion" },
-    { e: "🛡️", n: "Рыцарь Света", t: "faction", v: 50, f: "Орден Света" },
-    { e: "🗡️", n: "Теневой клинок", t: "faction", v: 50, f: "Культ Тьмы" },
-    { e: "✨", n: "Страж порядка", t: "faction", v: 25, f: "Орден Света" },
-    { e: "🌙", n: "Глас тьмы", t: "faction", v: 25, f: "Культ Тьмы" },
-    { e: "🛡️", n: "Воитель", t: "wins", v: 50 },
-    { e: "🛡️", n: "Гладиатор", t: "losses", v: 200 },
-    { e: "🔥", n: "Неудержимый", t: "best", v: 5 },
-    { e: "🎯", n: "Профессионал", t: "winrate", v: 60, m: 30 },
-    { e: "⚔️", n: "Опытный", t: "wins", v: 10 },
-    { e: "⚙️", n: "Трудяга", t: "fights", v: 100 },
-    { e: "🔥", n: "Задира", t: "best", v: 3 },
-    { e: "🌱", n: "Новичок", t: "wins", v: 1 },
-    { e: "👀", n: "Любопытный", t: "fights", v: 50 },
-    { e: "⚖️", n: "Ровный", t: "winrate", v: 50, m: 10 },
-    { e: "🥊", n: "Боец", t: "losses", v: 10 },
-    { e: "☯️", n: "Инь-Янь", t: "balance", m: 20 },
-    { e: "⚙️", n: "Железный", t: "losses", v: 100 },
-    { e: "💀", n: "Мясо", t: "losses", v: 50 },
-    { e: "🍐", n: "Груша для битья", t: "worst", v: 10 },
-    { e: "🧻", n: "Тряпка", t: "worst", v: 5 }
-];
-
 function getAchievementCondition(a) {
-    switch (a.t) {
-        case "level": return a.v + ' уровень';
-        case "wins": return a.v + ' побед';
-        case "losses": return a.v + ' поражений';
-        case "best": return 'Стрик ' + a.v;
-        case "worst": return 'Лузстрик ' + a.v;
-        case "fights": return a.v + ' боёв';
-        case "tournament": return a.v + ' турнирных побед';
-        case "faction": return a.v + ' побед за ' + a.f;
-        case "winrate": return 'Винрейт ' + a.v + '%';
-        case "dungeon_record": return a.v + ' волн в данже';
-        case "dungeon_trophies": return a.v + ' трофеев';
-        case "dungeon_bosses": return a.v + ' боссов';
-        case "dungeon_waves": return a.v + ' волн всего';
+    switch (a.type) {
+        case "level": return a.value + ' уровень';
+        case "wins": return a.value + ' побед';
+        case "losses": return a.value + ' поражений';
+        case "best": return 'Стрик ' + a.value;
+        case "worst": return 'Лузстрик ' + a.value;
+        case "fights": return a.value + ' боёв';
+        case "tournament_wins": return a.value + ' турнирных побед';
+        case "faction_wins": return a.value + ' побед за ' + a.faction;
+        case "winrate": return 'Винрейт ' + a.value + '%';
+        case "dungeon_record": return a.value + ' волн в данже';
+        case "dungeon_trophies": return a.value + ' трофеев';
+        case "dungeon_bosses": return a.value + ' боссов';
+        case "dungeon_waves": return a.value + ' волн всего';
         case "champion": return 'Текущий чемпион';
-        case "balance": return 'Побед = Поражений (20+ боёв)';
+        case "perfect_balance": return 'Побед = Поражений (20+ боёв)';
         default: return '';
     }
 }
 
-function checkAchievement(a, p, total, dp) {
-    if (a.m && total < a.m) return false;
-    switch (a.t) {
-        case "level": return (p.level || 0) >= a.v;
-        case "wins": return (p.wins || 0) >= a.v;
-        case "losses": return (p.losses || 0) >= a.v;
-        case "best": return (p.best || 0) >= a.v;
-        case "worst": return (p.worst || 0) >= a.v;
-        case "fights": return total >= a.v;
-        case "tournament": return (p.tournamentWins || 0) >= a.v;
-        case "faction": return p.faction === a.f && (p.factionWins || 0) >= a.v;
-        case "winrate": return total > 0 && (p.wins * 100 / total) >= a.v;
-        case "balance": return p.wins === p.losses && total >= (a.m || 20);
-        case "champion": return p.champion === true;
-        case "dungeon_record": return (dp?.record || 0) >= a.v;
-        case "dungeon_trophies": return (dp?.trophies || 0) >= a.v;
-        case "dungeon_bosses": return (dp?.bosses || 0) >= a.v;
-        case "dungeon_waves": return (dp?.totalWaves || 0) >= a.v;
-        default: return false;
-    }
-}
-
-function getAchievementCurrent(a, p, total, dp) {
-    switch (a.t) {
-        case "level": return p.level || 0;
-        case "wins": return p.wins || 0;
-        case "losses": return p.losses || 0;
-        case "best": return p.best || 0;
-        case "worst": return p.worst || 0;
-        case "fights": return total;
-        case "tournament": return p.tournamentWins || 0;
-        case "faction": return p.faction === a.f ? (p.factionWins || 0) : 0;
-        case "winrate": return total > 0 ? parseFloat((p.wins * 100 / total).toFixed(1)) : 0;
-        case "dungeon_record": return dp?.record || 0;
-        case "dungeon_trophies": return dp?.trophies || 0;
-        case "dungeon_bosses": return dp?.bosses || 0;
-        case "dungeon_waves": return dp?.totalWaves || 0;
-        case "champion": return p.champion ? 1 : 0;
-        case "balance": return total >= 20 ? 1 : 0;
-        default: return 0;
-    }
-}
-
 function renderAchievementsTab(last) {
-    const total = last.total;
-    const dp = last.dungeon;
-    const earned = ACHIEVEMENTS.filter(a => checkAchievement(a, last, total, dp));
-    const locked = ACHIEVEMENTS.filter(a => !checkAchievement(a, last, total, dp));
+    const earned = last.achievements || [];
+    const allAch = achievementsData || [];
+    const earnedSet = new Set(earned);
+
+    const earnedList = allAch.filter(a => earnedSet.has(a.id));
+    const lockedList = allAch.filter(a => !earnedSet.has(a.id));
 
     let html = `<div id="tab-achievements" class="tab-content">
         <div style="text-align:center;margin-bottom:16px">
             <span style="font-size:2rem">🏅</span>
-            <div style="color:var(--gold);font-weight:700;font-size:1.1rem">${earned.length} / ${ACHIEVEMENTS.length} титулов</div>
+            <div style="color:var(--gold);font-weight:700;font-size:1.1rem">${earnedList.length} / ${allAch.length} титулов</div>
             <div style="background:var(--bg);height:8px;border-radius:4px;margin:8px 0">
-                <div style="background:var(--gold);height:8px;border-radius:4px;width:${(earned.length / ACHIEVEMENTS.length) * 100}%"></div>
+                <div style="background:var(--gold);height:8px;border-radius:4px;width:${allAch.length > 0 ? (earnedList.length / allAch.length) * 100 : 0}%"></div>
             </div>
+            ${last.title ? `<div style="margin-top:10px;padding:10px 16px;background:var(--elevated);border-radius:var(--radius-sm);border:1px solid var(--gold);display:inline-block;">
+                <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Текущий титул</div>
+                <div style="font-size:1rem;color:var(--gold);font-weight:800;margin-top:4px;">${last.title}</div>
+            </div>` : ''}
         </div>`;
 
-    if (earned.length) {
+    if (earnedList.length) {
         html += `<section class="oracle-block gold">
-            <div class="oracle-block-title">✅ Полученные (${earned.length})</div>
+            <div class="oracle-block-title">✅ Полученные (${earnedList.length})</div>
             <div class="ach-grid">
-                ${earned.map(a => `
+                ${earnedList.map(a => `
                     <div class="ach-card earned">
-                        <div class="ach-emoji">${a.e}</div>
-                        <div class="ach-name">${a.n}</div>
+                        <div class="ach-emoji">${a.emoji}</div>
+                        <div class="ach-name">${a.name}</div>
                         <div style="font-size:.6rem;color:var(--muted)">${getAchievementCondition(a)}</div>
                     </div>
                 `).join('')}
@@ -2136,24 +2047,17 @@ function renderAchievementsTab(last) {
         </section>`;
     }
 
-    if (locked.length) {
+    if (lockedList.length) {
         html += `<section class="oracle-block">
-            <div class="oracle-block-title">🔒 Не получены (${locked.length})</div>
+            <div class="oracle-block-title">🔒 Не получены (${lockedList.length})</div>
             <div class="ach-grid">
-                ${locked.map(a => {
-                    const current = getAchievementCurrent(a, last, total, dp);
-                    const max = a.t === 'balance' || a.t === 'champion' ? 1 : (a.v || 1);
-                    const percent = Math.min(100, (current / max) * 100);
-                    return `<div class="ach-card locked">
-                        <div class="ach-emoji">${a.e}</div>
-                        <div class="ach-name">${a.n}</div>
+                ${lockedList.map(a => `
+                    <div class="ach-card locked">
+                        <div class="ach-emoji">${a.emoji}</div>
+                        <div class="ach-name">${a.name}</div>
                         <div style="font-size:.65rem;color:var(--muted)">${getAchievementCondition(a)}</div>
-                        ${a.t !== 'balance' && a.t !== 'champion' ? `
-                            <div style="font-size:.65rem;color:var(--muted)">${current}/${max}</div>
-                            <div class="ach-progress"><div class="ach-fill" style="width:${percent}%"></div></div>
-                        ` : ''}
-                    </div>`;
-                }).join('')}
+                    </div>
+                `).join('')}
             </div>
         </section>`;
     }
