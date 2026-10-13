@@ -662,35 +662,35 @@ function getPlayerHistory(nickname, seasons) {
         }
 
         const archive = s.data.heroArchive?.[playerKey] || [];
-        archive.forEach(h => {
-            const wins = h.wins || 0;
-            const losses = h.losses || 0;
-            const total = wins + losses;
-            if (total === 0) return;
-            history.push({
-                season: s.num,
-                isCurrent: s.isCurrent,
-                era: s.num === 0 ? 'classic' : 'races',
-                display: nickname,
-                emoji: h.emoji || '⚔️',
-                name: h.name || '',
-                wins,
-                losses,
-                total,
-                wr: wins / total,
-                level: h.level || 0,
-                skill: 0,
-                shards: 0,
-                faction: normalizeFaction(h.faction),
-                factionWins: h.factionWins || 0,
-                best: h.best || 0,
-                worst: h.worst || 0,
-                tournamentWins: h.tournamentWins || 0,
-                champion: false,
-                isDeleted: true,
-                dungeon: null
-            });
-        });
+		archive.forEach(h => {
+			const wins = h.wins || 0;
+			const losses = h.losses || 0;
+			const total = wins + losses;
+			if (total === 0) return;
+			history.push({
+				season: s.num,
+				isCurrent: s.isCurrent,      // ← ЭТО МЕНЯЕМ
+				era: s.num === 0 ? 'classic' : 'races',
+				display: nickname,
+				emoji: h.emoji || '⚔️',
+				name: h.name || '',
+				wins,
+				losses,
+				total,
+				wr: wins / total,
+				level: h.level || 0,
+				skill: 0,
+				shards: 0,
+				faction: normalizeFaction(h.faction),
+				factionWins: h.factionWins || 0,
+				best: h.best || 0,
+				worst: h.worst || 0,
+				tournamentWins: h.tournamentWins || 0,
+				champion: false,
+				isDeleted: true,
+				dungeon: null
+			});
+		});
     });
 
     return history;
@@ -1278,7 +1278,8 @@ function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history)
 // --- 6.3 Мемы ---
 function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace) {
     const memes = [];
-    const last = history[history.length - 1];
+    const activeHero = history.find(h => h.isCurrent && !h.isDeleted);
+    const last = activeHero || [...history].sort((a, b) => b.season - a.season)[0];
     if (!last) return memes;
 
     const currentSeason = last.season;
