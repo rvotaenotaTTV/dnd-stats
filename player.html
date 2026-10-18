@@ -1312,7 +1312,6 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     const currentSeason = last.season;
     const currentClass = last.name?.split('-')[1];
     const currentRace = last.name?.split('-')[0];
-
     const uniqueSeasonsCount = new Set(history.map(h => h.season)).size;
 
     // ---------- ТУРНИРЫ ----------
@@ -1376,10 +1375,12 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     // ---------- ЛУЧШИЙ ГЕРОЙ ----------
     if (heroAnalysis.best) {
         const bestWR = heroAnalysis.best.wr;
+        const bestIcon = getHeroIcon(heroAnalysis.best.name, heroAnalysis.best.emoji, 20);
+        
         if (bestWR > 0.7) memes.push(`WR <strong>${(bestWR * 100).toFixed(0)}%</strong> на лучшем герое. <span class="meme">Ты машина</span>. Либо соперники просто не умеют готовиться.`);
-        else if (bestWR > 0.65) memes.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> с WR <strong>${(bestWR * 100).toFixed(0)}%</strong>. Это не герой — это <span class="meme">имба</span>. Нерфите.`);
-        else if (bestWR > 0.55) memes.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(bestWR * 100).toFixed(0)}%). <span class="meme">Надёжен, как швейцарские часы</span>.`);
-        else memes.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(bestWR * 100).toFixed(0)}%). <span class="meme">Лучший среди равных</span>, но звёзд с неба не хватает.`);
+        else if (bestWR > 0.65) memes.push(`Лучший герой — <strong>${bestIcon} ${heroAnalysis.best.name}</strong> с WR <strong>${(bestWR * 100).toFixed(0)}%</strong>. Это не герой — это <span class="meme">имба</span>. Нерфите.`);
+        else if (bestWR > 0.55) memes.push(`Лучший герой — <strong>${bestIcon} ${heroAnalysis.best.name}</strong> (${(bestWR * 100).toFixed(0)}%). <span class="meme">Надёжен, как швейцарские часы</span>.`);
+        else memes.push(`Лучший герой — <strong>${bestIcon} ${heroAnalysis.best.name}</strong> (${(bestWR * 100).toFixed(0)}%). <span class="meme">Лучший среди равных</span>, но звёзд с неба не хватает.`);
     }
 
     // ---------- ЛИГА ----------
@@ -1482,7 +1483,7 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
         if (champCount >= 3) memes.push(`<strong>${champCount} раз чемпион</strong>. <span class="meme">Династия</span>. Оставь корону кому-нибудь ещё.`);
         else memes.push(`Ты был <strong>чемпионом</strong>. <span class="meme">Корона жмёт?</span> Или уже продал?`);
     }
-        if (heroAnalysis.count >= 5 && heroAnalysis.trueWR > 0.55) memes.push(`${heroAnalysis.count} героев, но истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Ты <span class="meme">мастер на все руки</span>. Или просто везунчик.`);
+    if (heroAnalysis.count >= 5 && heroAnalysis.trueWR > 0.55) memes.push(`${heroAnalysis.count} героев, но истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Ты <span class="meme">мастер на все руки</span>. Или просто везунчик.`);
     if (heroAnalysis.trueWR > 0.6) memes.push(`Истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. <span class="meme">Это не винрейт, это диагноз</span> — талант.`);
     else if (heroAnalysis.trueWR < 0.4) memes.push(`Истинный WR <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. <span class="meme">Боль</span>. Но мы всё равно тебя любим.`);
     if (history.length >= 2) {
@@ -1513,7 +1514,7 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
     }
     if (heroAnalysis.best && heroAnalysis.best.wr > 0.6 && heroAnalysis.best.name !== last?.name) {
         const bestSeason = heroAnalysis.best.season ?? '?';
-        memes.push(`Твой лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (S${bestSeason}) — не в текущем сезоне. <span class="meme">Пророчество гласит</span>: верни его, и будет тебе счастье.`);
+        memes.push(`Твой лучший герой — <strong>${getHeroIcon(heroAnalysis.best.name, heroAnalysis.best.emoji, 20)} ${heroAnalysis.best.name}</strong> (S${bestSeason}) — не в текущем сезоне. <span class="meme">Пророчество гласит</span>: верни его, и будет тебе счастье.`);
     }
 
     return memes;
