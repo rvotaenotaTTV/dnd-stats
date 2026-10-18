@@ -2114,31 +2114,37 @@ function renderMeta(metaBySeason, history) {
         const rankClass = rank <= 5 ? `r${rank}` : 'r-out';
         const mineStyle = isMine ? 'background:rgba(240,185,11,0.12);margin:0 -6px;padding:4px 6px;border-radius:4px;border-left:3px solid var(--gold);' : '';
         const nameColor = isMine ? 'color:var(--gold);font-weight:800;' : 'color:var(--text);';
-        const emoji = classEmojis[c.name] || '';
+        
+        const icon = getClassIcon(c.name);
+        const img = icon ? `<img src="${icon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" onerror="this.style.display='none'">` : (classEmojis[c.name] || '');
+        
         return `<div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:4px 0;${mineStyle}">
-            <span><span class="meta-rank ${rankClass}">${rank}</span><span style="${nameColor}">${emoji} ${c.name}</span>${isMine ? ' <span style="color:var(--gold);font-size:0.7rem;">← твой</span>' : ''}</span>
+            <span><span class="meta-rank ${rankClass}">${rank}</span><span style="${nameColor}">${img} ${c.name}</span>${isMine ? ' <span style="color:var(--gold);font-size:0.7rem;">← твой</span>' : ''}</span>
             <span style="color:var(--gold);font-weight:700;">${(c.wr * 100).toFixed(1)}% · ${c.total}</span>
         </div>`;
     };
 
-	const rowCompactHtml = (m, historyItem) => {
-		if (!historyItem || !historyItem.name) return '';
-		const nameParts = historyItem.name.split('-');
-		const myClass = nameParts.length >= 2 ? nameParts[1] : nameParts[0];
-		if (!myClass) return '';
-		const myRank = m.allClasses.findIndex(c => c.name === myClass) + 1;
-		const myObj = m.allClasses.find(c => c.name === myClass);
-		if (!myObj) return '';
-		const isInMetaNow = myRank <= META_TOP && myRank > 0;
-		const rankColor = isInMetaNow ? 'var(--gold)' : 'var(--muted)';
-		const emoji = classEmojis[myClass] || '';
-		return `<div style="display:grid;grid-template-columns:50px 1fr auto auto;gap:10px;align-items:center;padding:6px 10px;font-size:0.78rem;border-bottom:1px solid rgba(163,113,247,0.08);">
-			<span style="color:var(--purple);font-weight:800;">S${m.season}</span>
-			<span><strong style="color:${isInMetaNow ? 'var(--gold)' : 'var(--text)'};">${emoji} ${myClass}</strong></span>
-			<span style="color:${rankColor};font-size:0.7rem;white-space:nowrap;">${myRank} из ${m.allClasses.length}</span>
-			<span style="color:${wrColor(myObj.wr)};font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;">${(myObj.wr * 100).toFixed(1)}%</span>
-		</div>`;
-	};
+    const rowCompactHtml = (m, historyItem) => {
+        if (!historyItem || !historyItem.name) return '';
+        const nameParts = historyItem.name.split('-');
+        const myClass = nameParts.length >= 2 ? nameParts[1] : nameParts[0];
+        if (!myClass) return '';
+        const myRank = m.allClasses.findIndex(c => c.name === myClass) + 1;
+        const myObj = m.allClasses.find(c => c.name === myClass);
+        if (!myObj) return '';
+        const isInMetaNow = myRank <= META_TOP && myRank > 0;
+        const rankColor = isInMetaNow ? 'var(--gold)' : 'var(--muted)';
+        
+        const icon = getClassIcon(myClass);
+        const img = icon ? `<img src="${icon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" onerror="this.style.display='none'">` : (classEmojis[myClass] || '');
+        
+        return `<div style="display:grid;grid-template-columns:50px 1fr auto auto;gap:10px;align-items:center;padding:6px 10px;font-size:0.78rem;border-bottom:1px solid rgba(163,113,247,0.08);">
+            <span style="color:var(--purple);font-weight:800;">S${m.season}</span>
+            <span><strong style="color:${isInMetaNow ? 'var(--gold)' : 'var(--text)'};">${img} ${myClass}</strong></span>
+            <span style="color:${rankColor};font-size:0.7rem;white-space:nowrap;">${myRank} из ${m.allClasses.length}</span>
+            <span style="color:${wrColor(myObj.wr)};font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;">${(myObj.wr * 100).toFixed(1)}%</span>
+        </div>`;
+    };
 
     const currentMeta = metaBySeason.find(m => m.isCurrent);
     const archivedMeta = metaBySeason.filter(m => !m.isCurrent);
@@ -2155,12 +2161,14 @@ function renderMeta(metaBySeason, history) {
         const myInMeta = myClass ? isInMeta(myClass, metaBySeason, m.season) : false;
         const posText = myRank > 0 ? ` · 📍 ${myRank} из ${m.allClasses.length}` : '';
         const statusText = myClass ? (myInMeta ? ' 🎯 в мете' : ' ⚔️ вне меты') : '';
-        const emoji = myClass ? (classEmojis[myClass] || '') : '';
+        
+        const myIcon = myClass ? getClassIcon(myClass) : null;
+        const myImg = myIcon ? `<img src="${myIcon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" onerror="this.style.display='none'">` : (myClass ? (classEmojis[myClass] || '') : '');
 
         html += `<div style="margin-bottom:14px;padding:12px 14px;background:linear-gradient(90deg,rgba(163,113,247,0.1),rgba(163,113,247,0.02));border-radius:var(--radius-sm);border-left:3px solid ${myInMeta ? 'var(--gold)' : 'var(--purple)'};">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px;">
                 <div style="font-size:0.82rem;color:var(--purple);font-weight:800;">S${m.season} ⚡ <span style="color:var(--muted);font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;">текущий</span></div>
-                ${myClass ? `<div style="font-size:0.7rem;color:var(--muted);">твой класс: <strong style="color:${myInMeta ? 'var(--gold)' : 'var(--text)'};">${emoji} ${myClass}${posText}${statusText}</strong></div>` : ''}
+                ${myClass ? `<div style="font-size:0.7rem;color:var(--muted);">твой класс: <strong style="color:${myInMeta ? 'var(--gold)' : 'var(--text)'};">${myImg} ${myClass}${posText}${statusText}</strong></div>` : ''}
             </div>`;
         m.topClasses.forEach((c, i) => { html += rowTopHtml(c, i + 1, c.name === myClass); });
         if (myObj && !myInMeta && myRank > META_TOP) {
@@ -2216,8 +2224,10 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
     if (classArr.length > 0) {
         html += '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">⚔️ Классы</div>';
         classArr.slice(0, 3).forEach(c => {
+            const icon = getClassIcon(c.name);
+            const img = icon ? `<img src="${icon}" style="width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">` : (ce[c.name] || '⚔️');
             html += `<div class="style-row">
-                <div class="style-name">${ce[c.name] || '⚔️'} ${c.name}</div>
+                <div class="style-name">${img} ${c.name}</div>
                 <div class="style-val">${c.wins}-${c.losses} (${(c.wr * 100).toFixed(1)}%)</div>
             </div>`;
         });
@@ -2225,15 +2235,18 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
     if (raceArr.length > 0) {
         html += '<div style="font-size:0.7rem;color:var(--muted);margin:18px 0 8px;text-transform:uppercase;letter-spacing:1px;">🌍 Расы</div>';
         raceArr.slice(0, 3).forEach(r => {
+            const icon = getRaceIcon(r.name);
+            const img = icon ? `<img src="${icon}" style="width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">` : (re[r.name] || '🌍');
             html += `<div class="style-row">
-                <div class="style-name">${re[r.name] || '🌍'} ${r.name}</div>
+                <div class="style-name">${img} ${r.name}</div>
                 <div class="style-val">${r.wins}-${r.losses} (${(r.wr * 100).toFixed(1)}%)</div>
             </div>`;
         });
     }
     if (bestCombo) {
+        const comboIcon = getHeroIcon(bestCombo.name, bestCombo.emoji, 24);
         html += `<div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);text-align:center;font-size:0.85rem;">
-            🏆 Лучшее комбо: <strong style="color:var(--green);">${getHeroIcon(bestCombo.name, bestCombo.emoji, 20)} ${bestCombo.name}</strong> — ${(bestCombo.wr * 100).toFixed(1)}%
+            🏆 Лучшее комбо: <strong style="color:var(--green);">${comboIcon} ${bestCombo.name}</strong> — ${(bestCombo.wr * 100).toFixed(1)}%
             <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;">${bestCombo.wins}-${bestCombo.losses} боёв</div>
         </div>`;
     }
@@ -2243,12 +2256,16 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
 
 function renderFactions(factions) {
     if (!factions || (factions.light.count === 0 && factions.dark.count === 0)) return '';
+    
+    const lightIcon = `<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">`;
+    const darkIcon = `<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">`;
+    
     let html = `<div class="oracle-block"><div class="oracle-block-title">⚔️ Фракции</div>`;
     if (factions.light.count > 0) {
-        html += `<div class="style-row"><div class="style-name"><span>🌝</span> Орден Света</div><div class="style-val">${factions.light.count} сез. · ⚔️ ${factions.light.factionWins} · <span style="color:${wrColor(factions.light.wr)};">${(factions.light.wr * 100).toFixed(1)}%</span></div></div>`;
+        html += `<div class="style-row"><div class="style-name"><span>${lightIcon}</span> Орден Света</div><div class="style-val">${factions.light.count} сез. · ⚔️ ${factions.light.factionWins} · <span style="color:${wrColor(factions.light.wr)};">${(factions.light.wr * 100).toFixed(1)}%</span></div></div>`;
     }
     if (factions.dark.count > 0) {
-        html += `<div class="style-row"><div class="style-name"><span>🌚</span> Культ Тьмы</div><div class="style-val">${factions.dark.count} сез. · ⚔️ ${factions.dark.factionWins} · <span style="color:${wrColor(factions.dark.wr)};">${(factions.dark.wr * 100).toFixed(1)}%</span></div></div>`;
+        html += `<div class="style-row"><div class="style-name"><span>${darkIcon}</span> Культ Тьмы</div><div class="style-val">${factions.dark.count} сез. · ⚔️ ${factions.dark.factionWins} · <span style="color:${wrColor(factions.dark.wr)};">${(factions.dark.wr * 100).toFixed(1)}%</span></div></div>`;
     }
     html += '</div>';
     return html;
