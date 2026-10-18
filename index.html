@@ -265,23 +265,19 @@
 			
 			let html = '';
 			html += '<div class="stats-grid">';
-			html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Всего игроков</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Всего боёв</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">Всего игроков</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">Всего боёв</div></div>`;
 			
 			// Большие иконки для карточек Света и Тьмы
 			const lightF = `<img src="icons/faction_light.png" style="width:48px;height:48px;object-fit:contain;vertical-align:middle;margin-left:6px;" onerror="this.style.display='none'">`;
 			const darkF = `<img src="icons/faction_dark.png" style="width:48px;height:48px;object-fit:contain;vertical-align:middle;margin-left:6px;" onerror="this.style.display='none'">`;
-			
-			// Маленькие иконки для подписи Свет vs Тьма
-			const lightF_small = `<img src="icons/faction_light.png" style="width:25px;height:25px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
-			const darkF_small = `<img src="icons/faction_dark.png" style="width:25px;height:25px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
 
 			html += `<div class="stat-card"><div class="stat-value" style="display:flex;align-items:center;justify-content:center;gap:6px;">${lightCount} ${lightF}</div><div class="stat-label">Орден Света</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value" style="display:flex;align-items:center;justify-content:center;gap:6px;">${darkCount} ${darkF}</div><div class="stat-label">Культ Тьмы</div></div>`;
 			
 			html += `<div class="stat-card">
 				<div class="stat-value">${battleLight} : ${battleDark}</div>
-				<div class="stat-label" style="display:flex; align-items:center; justify-content:center; gap:4px;">${lightF_small} Свет vs Тьма ${darkF_small}</div>
+				<div class="stat-label">Свет vs Тьма</div>
 			</div>`;
 			
 			html += `<div class="stat-card"><div class="stat-value"><span style="color:var(--gold);">${lightRemaining}</span> <span style="color:var(--muted);">·</span> <span style="color:var(--purple);">${darkRemaining}</span></div><div class="stat-label">побед до захвата</div></div>`;

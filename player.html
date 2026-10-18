@@ -1203,12 +1203,14 @@ function generateNarrative(history, trend, heroAnalysis, dungeon, leaguePlace) {
     if (heroAnalysis.uniqueCount > 1) {
         lines.push(`За твоей спиной — ${heroAnalysis.count} героев. Истинный WR — <strong>${(heroAnalysis.trueWR * 100).toFixed(1)}%</strong>. Каждый из них — часть твоей истории.`);
         if (heroAnalysis.best && heroAnalysis.best.wr > trend.lastWR + 0.05) {
-            lines.push(`Лучший герой — <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(0)}%). Текущий слабее. Возможно, пора <strong>вернуться к истокам</strong>?`);
+            const nIcon = getHeroIcon(heroAnalysis.best.name, heroAnalysis.best.emoji, 20);
+            lines.push(`Лучший герой — <strong>${nIcon} ${heroAnalysis.best.name}</strong> (${(heroAnalysis.best.wr * 100).toFixed(0)}%). Текущий слабее. Возможно, пора <strong>вернуться к истокам</strong>?`);
         } else if (heroAnalysis.best && heroAnalysis.best.wr < trend.lastWR - 0.05) {
             lines.push(`Твой текущий герой <strong>сильнее</strong> лучшего в архиве. Ты <strong>превзошёл себя</strong>. Это ли не рост?`);
         }
     } else if (heroAnalysis.count === 1) {
-        lines.push(`Один герой. <strong>${heroAnalysis.heroes[0]?.emoji} ${heroAnalysis.heroes[0]?.name}</strong>. Ты верен ему. Или боишься перемен.`);
+        const sIcon = heroAnalysis.heroes[0] ? getHeroIcon(heroAnalysis.heroes[0].name, heroAnalysis.heroes[0].emoji, 20) : '';
+        lines.push(`Один герой. <strong>${sIcon} ${heroAnalysis.heroes[0]?.name}</strong>. Ты верен ему. Или боишься перемен.`);
     }
 
     if (leaguePlace) {
@@ -1285,6 +1287,7 @@ function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history)
     const bestName = best.name || '';
     const bestClass = bestName.split('-')[1] || bestName.split('-')[0] || '';
     const bestSeason = best.season ?? '?';
+    const bestIcon = getHeroIcon(best.name, best.emoji, 20);
     const wasInMeta = isInMeta(bestClass, metaBySeason, bestSeason, 'class') ?? false;
     const isInMetaNow = isInMeta(bestClass, metaBySeason, currentSeason, 'class') ?? false;
     const bestMetaS = metaBySeason.find(m => m.season === bestSeason);
@@ -1296,9 +1299,9 @@ function generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, history)
         if (isInMetaNow) return `Ты играешь в мете (<strong>${currentClass}</strong>) и показываешь <strong>${(best.wr * 100).toFixed(0)}%</strong>. Не сбавляй.`;
         return `Ты играешь <strong>${currentClass}</strong> — вне меты. Но WR <strong>${(best.wr * 100).toFixed(0)}%</strong> — сильно. Продолжай.`;
     }
-    if (wasInMeta && isInMetaNow) return `Твой лучший герой — <strong>${best.emoji} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда мета: <strong>${bestMetaTop}</strong> — и он в ней. Сейчас мета: <strong>${currentMetaTop}</strong> — и он снова в ней. Возвращение <strong>оправдано</strong>.`;
-    if (wasInMeta && !isInMetaNow) return `Твой лучший герой — <strong>${best.emoji} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда он был в мете: <strong>${bestMetaTop}</strong>. Сейчас мета другая: <strong>${currentMetaTop}</strong> — <strong>${bestClass} вне меты</strong>. Возвращение <strong>рискованно</strong>.`;
-    if (!wasInMeta && isInMetaNow) return `Твой лучший герой — <strong>${best.emoji} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда он был <strong>вне меты</strong> (<strong>${bestMetaTop}</strong>), но ты выигрывал. Сейчас <strong>${bestClass} в мете</strong> (<strong>${currentMetaTop}</strong>). Момент — <strong>вернуться</strong>.`;
+    if (wasInMeta && isInMetaNow) return `Твой лучший герой — <strong>${bestIcon} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда мета: <strong>${bestMetaTop}</strong> — и он в ней. Сейчас мета: <strong>${currentMetaTop}</strong> — и он снова в ней. Возвращение <strong>оправдано</strong>.`;
+    if (wasInMeta && !isInMetaNow) return `Твой лучший герой — <strong>${bestIcon} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда он был в мете: <strong>${bestMetaTop}</strong>. Сейчас мета другая: <strong>${currentMetaTop}</strong> — <strong>${bestClass} вне меты</strong>. Возвращение <strong>рискованно</strong>.`;
+    if (!wasInMeta && isInMetaNow) return `Твой лучший герой — <strong>${bestIcon} ${best.name}</strong> (S${bestSeason}, ${(best.wr * 100).toFixed(0)}%). Тогда он был <strong>вне меты</strong> (<strong>${bestMetaTop}</strong>), но ты выигрывал. Сейчас <strong>${bestClass} в мете</strong> (<strong>${currentMetaTop}</strong>). Момент — <strong>вернуться</strong>.`;
     return `Ты идёшь ровно. <strong>Пора сделать рывок.</strong>`;
 }
 
@@ -2756,7 +2759,12 @@ function renderProphecyTab(history, trend, heroAnalysis, leaguePlace, dungeon, f
     if (trend.trend === 'growth') prophecies.push(`📜 <strong>Следующий сезон</strong> станет для тебя <strong>испытанием огнём</strong>. Ты близок к пику. Один неверный шаг — и падение. Один верный — и <strong>новая высота</strong>.`);
     else if (trend.trend === 'fall') prophecies.push(`📜 <strong>Следующий сезон</strong> — это <strong>развилка</strong>. Или ты найдёшь в себе силы переломить падение, или нить окончательно истончится.`);
     else prophecies.push(`📜 <strong>Следующий сезон</strong> — это <strong>возможность</strong>. Ты застрял в равновесии. Пора сделать рывок. Или смириться.`);
-    if (heroAnalysis.best && heroAnalysis.best.wr > 0.6) prophecies.push(`📜 Герой <strong>${heroAnalysis.best.emoji} ${heroAnalysis.best.name}</strong> ещё не сказал своего последнего слова. <strong>Вернись к нему</strong> — и он отблагодарит.`);
+    
+    if (heroAnalysis.best && heroAnalysis.best.wr > 0.6) {
+        const prIcon = getHeroIcon(heroAnalysis.best.name, heroAnalysis.best.emoji, 20);
+        prophecies.push(`📜 Герой <strong>${prIcon} ${heroAnalysis.best.name}</strong> ещё не сказал своего последнего слова. <strong>Вернись к нему</strong> — и он отблагодарит.`);
+    }
+    
     if (leaguePlace && !leaguePlace.inTop8 && leaguePlace.gapToTop8 < 100) prophecies.push(`📜 До топ-8 — <strong>${leaguePlace.gapToTop8} SKILL</strong>. Это <strong>рядом</strong>. Один хороший вечер — и ты там.`);
     if (dungeon && dungeon.maxRecord < 20 && dungeon.totalWaves > 0) prophecies.push(`📜 Бездна ждёт. Твой рекорд — <strong>${dungeon.maxRecord} волн</strong>. Там, глубже, есть <strong>то, что ты ищешь</strong>.`);
     const totalTournaments = history.reduce((s, h) => s + (h.tournamentWins || 0), 0);
