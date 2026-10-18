@@ -1529,12 +1529,9 @@ function generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, league
 // --- 7.1 Карточка игрока ---
 function renderPlayerInfo(player, ranks) {
     const fc = player.faction === 'Орден Света' ? 'light' : player.faction === 'Культ Тьмы' ? 'dark' : '';
-    const fe = player.faction === 'Орден Света' ? '🌝' : player.faction === 'Культ Тьмы' ? '🌚' : '';
     const badges = [];
     if (player.isCurrent && player.champion) badges.push('<span class="badge badge-gold">👑 Хранитель</span>');
-    const fIcon = getFactionIcon(player.faction);
-	const fHtml = fIcon ? `<img src="${fIcon}" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;" onerror="this.style.display='none'">` : fe;
-	if (player.faction) badges.push(`<span class="badge ${fc === 'light' ? 'badge-light' : 'badge-dark'}">${fHtml} ${player.faction}</span>`);
+	if (player.faction) badges.push(`<span class="badge ${fc === 'light' ? 'badge-light' : 'badge-dark'}">${player.faction}</span>`);
 
     // ⭐ Чемпион Лиги
     const leagueSeasons = Object.entries(leagueChampions)
@@ -2506,14 +2503,17 @@ function renderFactionHistory(history) {
     const hasDark = history.some(h => h.faction === 'Культ Тьмы');
     if (!hasLight && !hasDark) return '';
 
+    const lightIcon = `<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">`;
+    const darkIcon = `<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">`;
+
     let html = '<div class="oracle-block"><div class="oracle-block-title">⚔️ История фракций</div>';
     history.forEach(h => {
         if (!h.faction) return;
         const isLight = h.faction === 'Орден Света';
-        const icon = isLight ? '🌝' : '🌚';
+        const icon = isLight ? lightIcon : darkIcon;
         const color = isLight ? 'var(--gold)' : 'var(--purple)';
         html += `<div class="archive-hero" style="border-left-color:${color};">
-            <div class="hero-info"><span>${icon}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${h.faction}</span></div>
+            <div class="hero-info">${icon} <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${h.faction}</span></div>
             <div><span style="color:${color};font-weight:700;">${h.factionWins || 0} ⚔️</span> <span style="color:var(--muted);font-size:0.72rem;">${h.wins}-${h.losses} (${(h.wr * 100).toFixed(0)}%)</span></div>
         </div>`;
     });
