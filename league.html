@@ -22,9 +22,10 @@
 .container{max-width:1300px}
 #tab-playoffs{max-width:none !important;padding:0}
 .faction-switch{display:flex;gap:8px;margin-bottom:8px}
-.faction-btn{flex:1;padding:12px;border:1px solid var(--border);background:var(--elevated);color:var(--sub);border-radius:var(--radius-sm);cursor:pointer;font-weight:700;font-size:0.9rem;font-family:inherit;transition:0.2s}
+.faction-btn{flex:1;padding:12px;border:1px solid var(--border);background:var(--elevated);color:var(--sub);border-radius:var(--radius-sm);cursor:pointer;font-weight:700;font-size:0.9rem;font-family:inherit;transition:0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .faction-btn.light.active{border-color:var(--gold);color:var(--gold);background:rgba(240,185,11,0.08)}
 .faction-btn.dark.active{border-color:var(--purple);color:var(--purple);background:rgba(163,113,247,0.08)}
+.faction-icon{width:24px;height:24px;object-fit:contain;vertical-align:middle}
 .faction-note{text-align:center;color:var(--muted);font-size:0.7rem;margin-bottom:16px;font-style:italic}
 th{cursor:pointer}
 tr:hover td{background:rgba(240,185,11,0.06)}
@@ -54,7 +55,7 @@ tr.cutoff td{border-bottom:2px solid var(--gold)}
 .po-p{padding:10px 12px;font-size:0.78rem;display:flex;align-items:center;gap:8px;transition:0.15s;position:relative}
 .po-p + .po-p{border-top:1px solid var(--border)}
 .po-p .sd{color:var(--muted);font-size:0.6rem;font-weight:600;min-width:20px}
-.po-p .nm{flex:1;color:var(--text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.po-p .nm{flex:1;color:var(--text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:0}
 .po-p .mk{font-size:0.65rem;flex-shrink:0}
 .po-p.win{background:rgba(16,185,129,0.06)}
 .po-p.win .nm{color:var(--green);font-weight:700}
@@ -182,8 +183,8 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
 
         <div id="tab-standings" class="tab-content active">
             <div class="faction-switch">
-                <button class="faction-btn light active" onclick="showFaction('light')">🌝 Орден Света</button>
-                <button class="faction-btn dark" onclick="showFaction('dark')">🌚 Культ Тьмы</button>
+                <button class="faction-btn light active" onclick="showFaction('light')"><img src="icons/faction_light.png" class="faction-icon" onerror="this.style.display='none'"> Орден Света</button>
+                <button class="faction-btn dark" onclick="showFaction('dark')"><img src="icons/faction_dark.png" class="faction-icon" onerror="this.style.display='none'"> Культ Тьмы</button>
             </div>
             <p class="faction-note">Топ-8 выходят в плей-офф</p>
             <div id="standings-content">
@@ -209,6 +210,29 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
         function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
         document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
         document.querySelectorAll('.nav-label').forEach(label=>{label.addEventListener('click',function(e){if(window.innerWidth>768)return;e.preventDefault();const dd=this.nextElementSibling;if(dd&&dd.classList.contains('nav-dropdown')){const isOpen=dd.style.display==='block';document.querySelectorAll('.nav-dropdown').forEach(d=>d.style.display='none');dd.style.display=isOpen?'none':'block';}});});
+
+        // === ИКОНКИ ===
+        function getRaceIcon(name) {
+            const map = {'Человек':'human','Орк':'orc','Дворф':'dwarf','Эльф':'elf','Нежить':'undead','Табакси':'tabaxi','Тифлинг':'tiefling'};
+            return map[name] ? `icons/${map[name]}.png` : null;
+        }
+        function getClassIcon(name) {
+            const map = {'Воин':'warrior','Паладин':'paladin','Плут':'rogue','Монах':'monk','Следопыт':'ranger','Чародей':'sorcerer','Бард':'bard','Друид':'druid','Изобретатель':'artificer','Варвар':'barbarian','Волшебница':'wizard','Некромант':'necromancer','Жрец':'cleric','Колдун':'warlock','Алхимик':'alchemist'};
+            return map[name] ? `icons/${map[name]}.png` : null;
+        }
+        function getHeroIcon(playerName, emojiFallback, size = 32) {
+            const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
+            const emoji = (char) => `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.8}px;vertical-align:middle;">${char}</span>`;
+            const spacer = `<span style="display:inline-block;width:${Math.floor(size*0.1)}px;"></span>`;
+            if (!playerName || typeof playerName !== 'string' || !playerName.includes('-')) return emoji(emojiFallback);
+            const parts = playerName.split('-'), raceName = parts[0], className = parts[1];
+            const raceIcon = getRaceIcon(raceName), classIcon = getClassIcon(className);
+            if (raceIcon && classIcon) return `${img(raceIcon)}${spacer}${img(classIcon)}`;
+            if (raceIcon) return `${img(raceIcon)}`;
+            if (classIcon) return `${img(classIcon)}`;
+            return emoji(emojiFallback);
+        }
+
         const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
         let allPlayers=[],lightPlayers=[],darkPlayers=[],currentFaction='light',isAdmin=false;
         let PLAYOFFS=JSON.parse(localStorage.getItem('eternis-playoffs'))||{light_round1:['','','',''],light_round2:['',''],light_champion:'',dark_round1:['','','',''],dark_round2:['',''],dark_champion:'',grand_champion:''};
@@ -228,7 +252,8 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
             const total = (p.wins||0) + (p.losses||0);
             const wr = total > 0 ? ((p.wins||0)*100/total).toFixed(1) : '0.0';
             const champMark = p.champion ? ' 👑' : '';
-            tooltip.innerHTML = `<div style="font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:6px">${p.emoji||''} ${p.display}${champMark}</div>
+            const icon = getHeroIcon(p.name, p.emoji, 20);
+            tooltip.innerHTML = `<div style="font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:6px">${icon} ${p.display}${champMark}</div>
                 <div style="font-size:0.7rem;color:var(--sub);margin-bottom:8px">${p.name||'Unknown'}</div>
                 <div style="font-size:0.7rem;line-height:1.7;color:var(--text)">
                     W-L: <strong>${p.wins||0}-${p.losses||0}</strong> (${wr}%)<br>
@@ -251,7 +276,9 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
             if(!p.length){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);">Нет данных.</div>';return;}
             const rc='playoff-row '+currentFaction,storageKey='league-old-'+currentFaction,prevRank=JSON.parse(localStorage.getItem(storageKey)||'{}');
             let h='<div class="table-container"><table><thead><tr><th class="pos">#</th><th style="width:30px;"></th><th>Игрок</th><th>Класс</th><th>W</th><th>L</th><th>%</th><th>🌟</th></tr></thead><tbody>';
-            p.forEach((pl,i)=>{const t=(pl.wins||0)+(pl.losses||0),wr=t>0?((pl.wins||0)*100/t).toFixed(1):'0.0',pc=i===0?' top-1':i===1?' top-2':i===2?' top-3':'';let changeHtml='';const oldPos=prevRank[pl.display];if(oldPos){const diff=oldPos-(i+1);if(diff>0)changeHtml=`<span class="pos-change pos-up">▲${diff}</span>`;else if(diff<0)changeHtml=`<span class="pos-change pos-down">▼${Math.abs(diff)}</span>`;else changeHtml=`<span class="pos-change pos-same">●</span>`;}else{changeHtml=`<span class="pos-change pos-new">🆕</span>`;}h+=`<tr class="${i<8?rc:''} ${i===7?'cutoff':''}"><td class="pos${pc}">${i+1}</td><td class="pos-change-cell">${changeHtml}</td><td><a href="player.html?name=${encodeURIComponent(pl.display||'')}" class="player-link">${pl.emoji||'⚔️'} ${pl.display||''}</a></td><td>${pl.name||''}</td><td>${pl.wins||0}</td><td>${pl.losses||0}</td><td>${wr}%</td><td class="skill">${pl.skill||0}</td></tr>`;});
+            p.forEach((pl,i)=>{const t=(pl.wins||0)+(pl.losses||0),wr=t>0?((pl.wins||0)*100/t).toFixed(1):'0.0',pc=i===0?' top-1':i===1?' top-2':i===2?' top-3':'';let changeHtml='';const oldPos=prevRank[pl.display];if(oldPos){const diff=oldPos-(i+1);if(diff>0)changeHtml=`<span class="pos-change pos-up">▲${diff}</span>`;else if(diff<0)changeHtml=`<span class="pos-change pos-down">▼${Math.abs(diff)}</span>`;else changeHtml=`<span class="pos-change pos-same">●</span>`;}else{changeHtml=`<span class="pos-change pos-new">🆕</span>`;}
+            const heroIcon = getHeroIcon(pl.name, pl.emoji, 28);
+            h+=`<tr class="${i<8?rc:''} ${i===7?'cutoff':''}"><td class="pos${pc}">${i+1}</td><td class="pos-change-cell">${changeHtml}</td><td><a href="player.html?name=${encodeURIComponent(pl.display||'')}" class="player-link">${heroIcon} ${pl.display||''}</a></td><td>${pl.name||''}</td><td>${pl.wins||0}</td><td>${pl.losses||0}</td><td>${wr}%</td><td class="skill">${pl.skill||0}</td></tr>`;});
             h+='</tbody></table></div>';c.innerHTML=h;
         }
 
@@ -269,7 +296,8 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
                 const cl=isAdmin?' clk':'';
                 const oc=isAdmin?`onclick="clickPlayer('${mt}',${idx},'${p.display.replace(/'/g,"\\'")}',${isFinal})"`:'';
                 const hover=`onmousemove="showTooltip(event, findPlayer('${p.display.replace(/'/g,"\\'")}'))" onmouseleave="hideTooltip()"`;
-                return `<div class="po-p${cls}${cl}" ${oc} ${hover}><span class="sd">#${p.seed}</span><span class="nm">${p.emoji||''} ${shortName(p.display)}</span>${mark}</div>`;
+                const icon = getHeroIcon(p.name, p.emoji, 24);
+                return `<div class="po-p${cls}${cl}" ${oc} ${hover}><span class="sd">#${p.seed}</span><span class="nm">${icon}<span style="margin-left:6px;">${shortName(p.display)}</span></span>${mark}</div>`;
             };
 
             const m=(a,b,mt,idx)=>{
@@ -289,9 +317,11 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
             const gc=findPlayer(PLAYOFFS.grand_champion);
 
             let gf='';
-            if(gc){const il=gc.faction==='Орден Света';gf=`<div class="gfp ${il?'light':'dark'} win">👑 ${gc.emoji||''} ${gc.display} 👑</div>`;}
-            else if(lc&&dc){const lw=PLAYOFFS.grand_champion===lc.display;const dw=PLAYOFFS.grand_champion===dc.display;const cl=isAdmin?' clk':'';const clL=isAdmin?`onclick="clickPlayer('grand_champion',0,'${lc.display.replace(/'/g,"\\'")}',true)"`:'';const clD=isAdmin?`onclick="clickPlayer('grand_champion',0,'${dc.display.replace(/'/g,"\\'")}',true)"`:'';gf=`<div class="gfp light${lw?' win':''}${cl}" ${clL}>🌝 ${lc.emoji||''} ${shortName(lc.display)}${lw?' ✅':''}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark${dw?' win':''}${cl}" ${clD}>🌚 ${dc.emoji||''} ${shortName(dc.display)}${dw?' ✅':''}</div>`;}
-            else{gf=`<div class="gfp light">🌝 ${lc?lc.emoji+' '+shortName(lc.display):'Чемпион Света'}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark">🌚 ${dc?dc.emoji+' '+shortName(dc.display):'Чемпион Тьмы'}</div>`;}
+            if(gc){const il=gc.faction==='Орден Света';const gcIcon = getHeroIcon(gc.name, gc.emoji, 24);gf=`<div class="gfp ${il?'light':'dark'} win">👑 ${gcIcon} ${gc.display} 👑</div>`;}
+            else if(lc&&dc){const lw=PLAYOFFS.grand_champion===lc.display;const dw=PLAYOFFS.grand_champion===dc.display;const cl=isAdmin?' clk':'';const clL=isAdmin?`onclick="clickPlayer('grand_champion',0,'${lc.display.replace(/'/g,"\\'")}',true)"`:'';const clD=isAdmin?`onclick="clickPlayer('grand_champion',0,'${dc.display.replace(/'/g,"\\'")}',true)"`:'';
+            const lcIcon = getHeroIcon(lc.name, lc.emoji, 24);const dcIcon = getHeroIcon(dc.name, dc.emoji, 24);
+            gf=`<div class="gfp light${lw?' win':''}${cl}" ${clL}>${lcIcon} ${shortName(lc.display)}${lw?' ✅':''}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark${dw?' win':''}${cl}" ${clD}>${dcIcon} ${shortName(dc.display)}${dw?' ✅':''}</div>`;}
+            else{gf=`<div class="gfp light">🌝 ${lc?lc.display:'Чемпион Света'}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark">🌚 ${dc?dc.display:'Чемпион Тьмы'}</div>`;}
 
             c.innerHTML=`<div class="po-grid"><div class="po-col"><h3 class="light">1/8 Света</h3>${m(light[0],light[7],'light_round1',0)}${m(light[1],light[6],'light_round1',1)}${m(light[2],light[5],'light_round1',2)}${m(light[3],light[4],'light_round1',3)}</div><div class="po-col"><h3 class="light">1/4 Света</h3>${m(lr1[0],lr1[1],'light_round2',0)}${m(lr1[2],lr1[3],'light_round2',1)}</div><div class="po-col"><h3 class="light">Финал</h3>${fm(lr2[0],lr2[1],'light_champion')}</div><div class="po-col wide"><div class="gf-card"><div class="gfl">ГРАНД-ФИНАЛ</div>${gf}</div></div><div class="po-col"><h3 class="dark">Финал</h3>${fm(dr2[0],dr2[1],'dark_champion')}</div><div class="po-col"><h3 class="dark">1/4 Тьмы</h3>${m(dr1[0],dr1[1],'dark_round2',0)}${m(dr1[2],dr1[3],'dark_round2',1)}</div><div class="po-col"><h3 class="dark">1/8 Тьмы</h3>${m(dark[0],dark[7],'dark_round1',0)}${m(dark[1],dark[6],'dark_round1',1)}${m(dark[2],dark[5],'dark_round1',2)}${m(dark[3],dark[4],'dark_round1',3)}</div></div>`;
         }
