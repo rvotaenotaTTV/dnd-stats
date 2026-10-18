@@ -321,11 +321,11 @@
 			html+='</div>';
 			html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px">';
 			const topLightFaction = [...players].filter(p => p.faction === 'Орден Света').sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0)).slice(0, 15);
-			html += '<div class="card"><div class="card-title">🌝 Топ-15 Света</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Побед</th></tr>';
+			html += `<div class="card"><div class="card-title"><img src="icons/faction_light.png" style="width:20px;height:20px;vertical-align:middle;margin-right:6px;"> Топ-15 Света</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Побед</th></tr>`;
 			topLightFaction.forEach((p, i) => { html += `<tr><td>${i + 1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.factionWins || 0}</td></tr>`; });
 			html += '</table></div></div>';
 			const topDarkFaction = [...players].filter(p => p.faction === 'Культ Тьмы').sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0)).slice(0, 15);
-			html += '<div class="card"><div class="card-title">🌚 Топ-15 Тьмы</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Побед</th></tr>';
+			html += `<div class="card"><div class="card-title"><img src="icons/faction_dark.png" style="width:20px;height:20px;vertical-align:middle;margin-right:6px;"> Топ-15 Тьмы</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Побед</th></tr>`;
 			topDarkFaction.forEach((p, i) => { html += `<tr><td>${i + 1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.factionWins || 0}</td></tr>`; });
 			html += '</table></div></div>';
 			html+='</div>';
@@ -666,17 +666,16 @@
 				html+='<div class="card"><div class="card-title">🏆 Чемпионы</div><div class="table-container"><table id="champions-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="wins">🏆</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="champions-tbody">';
 				
 				topChampions.forEach((p,i)=>{
-					const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'👻');
+					const fi=p.faction==='Орден Света'?`<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`:(p.faction==='Культ Тьмы'?`<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`:'👻');
+					const fiText = p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'👻'); // для data-атрибута
 					
-					// Если архивный — оставляем эмодзи/призрака, иначе рендерим иконки
                     const heroIcon = getHeroIcon(p.name, p.emoji || '👻', 24);
 					
-					// Ссылка только для живых игроков
 					const nameLink = p.isFromArchive
 						? `${p.display||''}`
 						: `<a href="player.html?name=${encodeURIComponent(p.display||'')}" class="player-link">${p.display||''}</a>`;
 
-					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fi}" ${p.champion?'style="background:rgba(255,215,0,0.06);"':''}>
+					html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wins="${p.tournamentWins}" data-faction="${fiText}" ${p.champion?'style="background:rgba(255,215,0,0.06);"':''}>
 						<td>${i+1}</td>
 						<td>${heroIcon} ${nameLink} ${p.champion?'<span style="color:var(--gold);">👑</span>':''}</td>
 						<td>${p.name||''}</td>
@@ -786,11 +785,27 @@
             html+='</div></div>';
 
             // ОСКОЛКИ
-            html+='<div id="tab-shards" class="tab-content"><div class="card"><div class="card-title">💎 Топ коллекционеров осколков</div><div class="table-container"><table id="shards-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="shards">Осколки</th><th class="sortable-header" data-sort="level">Уровень</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="shards-tbody">';[...players].sort((a,b)=>b.shards-a.shards).forEach((p,i)=>{const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');const heroIcon = getHeroIcon(p.name, p.emoji, 24);html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fi}"><td>${i+1}</td><td>${heroIcon} ${p.display}</td><td>${p.name}</td><td class="number">${p.shards}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;});html+='</tbody></table></div></div></div>';
-
+            html+='<div id="tab-shards" class="tab-content"><div class="card"><div class="card-title">💎 Топ коллекционеров осколков</div><div class="table-container"><table id="shards-table"><thead><tr><th class="sortable-header" data-sort="rank">#</th><th class="sortable-header" data-sort="name">Игрок</th><th class="sortable-header" data-sort="class">Класс</th><th class="sortable-header" data-sort="shards">Осколки</th><th class="sortable-header" data-sort="level">Уровень</th><th class="sortable-header" data-sort="faction">Фракция</th></tr></thead><tbody id="shards-tbody">';
+            [...players].sort((a,b)=>b.shards-a.shards).forEach((p,i)=>{
+                const fi=p.faction==='Орден Света'?`<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`:(p.faction==='Культ Тьмы'?`<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`:'');
+                const fiText=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');
+                const heroIcon = getHeroIcon(p.name, p.emoji, 24);
+                html+=`<tr data-rank="${i+1}" data-name="${p.display}" data-class="${p.name}" data-shards="${p.shards}" data-level="${p.level}" data-faction="${fiText}"><td>${i+1}</td><td>${heroIcon} ${p.display}</td><td>${p.name}</td><td class="number">${p.shards}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
+            });
+            html+='</tbody></table></div></div></div>';
+			
             // ВСЕ ИГРОКИ
-            html+='<div id="tab-allplayers" class="tab-content"><div class="card"><div class="card-title">👥 Все игроки ('+totalPlayers+')</div><div class="search-box"><input type="text" id="player-search" class="search-input" placeholder="🔍 Поиск по имени"><button id="clear-search" class="search-clear">✕</button><span id="search-result" style="color:var(--muted);margin-left:auto;"></span></div><div class="table-container"><table id="players-table"><thead><tr><th class="sortable-header" data-sort="index">#</th><th class="sortable-header" data-sort="name">Name</th><th class="sortable-header" data-sort="class">Class</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Winrate</th><th class="sortable-header" data-sort="streak">Streak</th><th class="sortable-header" data-sort="worst">Worst</th><th class="sortable-header" data-sort="level">Level</th><th class="sortable-header" data-sort="faction">Faction</th></tr></thead><tbody id="players-tbody">';[...players].sort((a,b)=>(b.wins+b.losses)-(a.wins+a.losses)).forEach((p,i)=>{const total=p.wins+p.losses;const wr=total>0?(p.wins*100/total).toFixed(1):'0.0';const fi=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');const heroIcon = getHeroIcon(p.name, p.emoji, 24);html+=`<tr data-index="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wl="${total}" data-winrate="${wr}" data-streak="${p.best}" data-worst="${p.worst||0}" data-level="${p.level}" data-faction="${fi}"><td>${i+1}</td><td>${heroIcon} <a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td>${p.name}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td><td class="number">${p.best}</td><td class="number" style="color:var(--red);">${p.worst||0}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;});html+='</tbody></table></div></div></div>';
-
+            html+='<div id="tab-allplayers" class="tab-content"><div class="card"><div class="card-title">👥 Все игроки ('+totalPlayers+')</div><div class="search-box"><input type="text" id="player-search" class="search-input" placeholder="🔍 Поиск по имени"><button id="clear-search" class="search-clear">✕</button><span id="search-result" style="color:var(--muted);margin-left:auto;"></span></div><div class="table-container"><table id="players-table"><thead><tr><th class="sortable-header" data-sort="index">#</th><th class="sortable-header" data-sort="name">Name</th><th class="sortable-header" data-sort="class">Class</th><th class="sortable-header" data-sort="wl">W/L</th><th class="sortable-header" data-sort="winrate">Winrate</th><th class="sortable-header" data-sort="streak">Streak</th><th class="sortable-header" data-sort="worst">Worst</th><th class="sortable-header" data-sort="level">Level</th><th class="sortable-header" data-sort="faction">Faction</th></tr></thead><tbody id="players-tbody">';
+            [...players].sort((a,b)=>(b.wins+b.losses)-(a.wins+a.losses)).forEach((p,i)=>{
+                const total=p.wins+p.losses;
+                const wr=total>0?(p.wins*100/total).toFixed(1):'0.0';
+                const fi=p.faction==='Орден Света'?`<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`:(p.faction==='Культ Тьмы'?`<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`:'');
+                const fiText=p.faction==='Орден Света'?'🌝':(p.faction==='Культ Тьмы'?'🌚':'');
+                const heroIcon = getHeroIcon(p.name, p.emoji, 24);
+                html+=`<tr data-index="${i+1}" data-name="${p.display}" data-class="${p.name}" data-wl="${total}" data-winrate="${wr}" data-streak="${p.best}" data-worst="${p.worst||0}" data-level="${p.level}" data-faction="${fiText}"><td>${i+1}</td><td>${heroIcon} <a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td>${p.name}</td><td class="number">${p.wins}-${p.losses}</td><td class="number">${wr}%</td><td class="number">${p.best}</td><td class="number" style="color:var(--red);">${p.worst||0}</td><td class="number">${p.level}</td><td>${fi}</td></tr>`;
+            });
+            html+='</tbody></table></div></div></div>';
+			
             document.getElementById('content').innerHTML=html;
             initSortableTable('classes-table','total','desc');initSortableTable('races-table','total','desc');initSortableTable('combos-table','winrate','desc');initSortableTable('rating-table','skill','desc');initSortableTable('shards-table','shards','desc');initSortableTable('champions-table','wins','desc');initPlayersTable();
 			setTimeout(()=>{const hash=window.location.hash.substring(1);const validTabs=['tops','classes','races','combos','rating','shards','records','champions','titles','allplayers'];if(hash&&validTabs.includes(hash))switchTab(hash);},100);
