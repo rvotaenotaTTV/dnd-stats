@@ -366,6 +366,7 @@ const MIN_FIGHTS_FOR_BEST = 10;
 const MIN_FIGHTS_FOR_RECORD = 15;
 
 const CACHE_TTL = 30 * 60 * 1000;
+
 const CACHE_KEY_PREFIX = 'eternis-season-v2-';
 const PLAYERS_CACHE_KEY = 'eternis-players-cache';
 const TWOx2_CACHE_KEY = 'eternis-2x2-cache';
@@ -378,6 +379,32 @@ const SEASON_ICONS = ['🏁', '🔥', '💫', '🩸', '🕯️', '⚡', '💀'];
 const STATS_CACHE_KEY = 'eternis-stats';
 const STATS_CACHE_TTL = 2 * 60 * 1000;
 let statsPromise = null;
+
+function getRaceIcon(name) {
+    const map = {'Человек':'human','Орк':'orc','Дворф':'dwarf','Эльф':'elf','Нежить':'undead','Табакси':'tabaxi','Тифлинг':'tiefling'};
+    return map[name] ? `icons/${map[name]}.png` : null;
+}
+function getClassIcon(name) {
+    const map = {'Воин':'warrior','Паладин':'paladin','Плут':'rogue','Монах':'monk','Следопыт':'ranger','Чародей':'sorcerer','Бард':'bard','Друид':'druid','Изобретатель':'artificer','Варвар':'barbarian','Волшебница':'wizard','Некромант':'necromancer','Жрец':'cleric','Колдун':'warlock','Алхимик':'alchemist'};
+    return map[name] ? `icons/${map[name]}.png` : null;
+}
+function getFactionIcon(factionName) {
+    if (factionName === 'Орден Света') return 'icons/faction_light.png';
+    if (factionName === 'Культ Тьмы') return 'icons/faction_dark.png';
+    return null;
+}
+function getHeroIcon(playerName, emojiFallback, size = 32) {
+    const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
+    const emoji = (char) => `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.8}px;vertical-align:middle;">${char}</span>`;
+    const spacer = `<span style="display:inline-block;width:${Math.floor(size*0.2)}px;"></span>`;
+    if (!playerName || typeof playerName !== 'string' || !playerName.includes('-')) return emoji(emojiFallback);
+    const parts = playerName.split('-'), raceName = parts[0], className = parts[1];
+    const raceIcon = getRaceIcon(raceName), classIcon = getClassIcon(className);
+    if (raceIcon && classIcon) return `${img(raceIcon)}${spacer}${img(classIcon)}`;
+    if (raceIcon) return `${img(raceIcon)}${spacer}${emoji(window.classEmojis?.[className] || '')}`;
+    if (classIcon) return `${emoji(window.raceEmojis?.[raceName] || '')}${spacer}${img(classIcon)}`;
+    return `${emoji(window.raceEmojis?.[raceName] || '')}${spacer}${emoji(window.classEmojis?.[className] || '')}`;
+}
 
 function getStatsData() {
     if (statsPromise) return statsPromise;
@@ -1501,7 +1528,9 @@ function renderPlayerInfo(player, ranks) {
     const fe = player.faction === 'Орден Света' ? '🌝' : player.faction === 'Культ Тьмы' ? '🌚' : '';
     const badges = [];
     if (player.isCurrent && player.champion) badges.push('<span class="badge badge-gold">👑 Хранитель</span>');
-    if (player.faction) badges.push(`<span class="badge ${fc === 'light' ? 'badge-light' : 'badge-dark'}">${fe} ${player.faction}</span>`);
+    const fIcon = getFactionIcon(player.faction);
+	const fHtml = fIcon ? `<img src="${fIcon}" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;" onerror="this.style.display='none'">` : fe;
+	if (player.faction) badges.push(`<span class="badge ${fc === 'light' ? 'badge-light' : 'badge-dark'}">${fHtml} ${player.faction}</span>`);
 
     // ⭐ Чемпион Лиги
     const leagueSeasons = Object.entries(leagueChampions)
@@ -1518,7 +1547,7 @@ function renderPlayerInfo(player, ranks) {
 
     return `<section class="oracle-block gold" style="padding:0;overflow:hidden;">
         <div class="profile-hero">
-            <div class="profile-emoji">${player.emoji || '⚔️'}</div>
+            <div class="profile-emoji">${getHeroIcon(player.name, player.emoji || '⚔️', 64)}</div>
 			<div class="profile-name">${player.display}${player.isCurrent && player.champion ? ' 👑' : ''}</div>
 			<div class="profile-class">${player.name || ''}${player.isCurrent ? ` · SKILL ${player.skill || 0} · Ур. ${player.level || 0}` : ''}</div>
             <div class="profile-badges">${badges.join('')}</div>
@@ -1626,8 +1655,9 @@ function renderHistory(history, limit = null) {
         const tourColor = h.tournamentWins > 0 ? 'var(--gold)' : 'var(--muted)';
         const tourIcon = h.tournamentWins >= 5 ? '🔥' : (h.tournamentWins > 0 ? '🏆' : '');
         const eraIcon = h.era === 'classic' ? ' 📜' : '';
+        const rowHeroIcon = getHeroIcon(h.name, h.emoji, 20);
         html += `<tr class="${h.isCurrent ? 'current' : ''}">
-            <td class="season-num" data-label="Сезон">S${h.season}${h.isCurrent ? ' ⚡' : ''}${eraIcon}</td>
+            <td class="season-num" data-label="Сезон">${rowHeroIcon} S${h.season}${h.isCurrent ? ' ⚡' : ''}${eraIcon}</td>
             <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
             <td class="num wr-cell" data-label="WR" style="color:${wrC};">${(h.wr * 100).toFixed(1)}%</td>
             <td class="num" data-label="Ур.">${h.level}</td>
@@ -1664,7 +1694,7 @@ function renderCurrentSeason(history) {
 
     return `<div class="oracle-block gold"><div class="oracle-block-title">📜 Текущий сезон</div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th></tr></thead><tbody>
         <tr class="current">
-            <td class="season-num" data-label="Сезон">S${current.season} ⚡${eraIcon}</td>
+            <td class="season-num" data-label="Сезон">${getHeroIcon(current.name, current.emoji, 20)} S${current.season} ⚡${eraIcon}</td>
             <td class="num" data-label="W/L">${current.wins}-${current.losses}</td>
             <td class="num wr-cell" data-label="WR" style="color:${wrC};">${(current.wr * 100).toFixed(1)}%</td>
             <td class="num" data-label="Ур.">${current.level}</td>
@@ -2203,7 +2233,7 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
     }
     if (bestCombo) {
         html += `<div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);text-align:center;font-size:0.85rem;">
-            🏆 Лучшее комбо: <strong style="color:var(--green);">${bestCombo.emoji} ${bestCombo.name}</strong> — ${(bestCombo.wr * 100).toFixed(1)}%
+            🏆 Лучшее комбо: <strong style="color:var(--green);">${getHeroIcon(bestCombo.name, bestCombo.emoji, 20)} ${bestCombo.name}</strong> — ${(bestCombo.wr * 100).toFixed(1)}%
             <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;">${bestCombo.wins}-${bestCombo.losses} боёв</div>
         </div>`;
     }
@@ -2350,7 +2380,7 @@ function renderFullHistory(history) {
 
             html += `<tr class="${seasonClass} ${rowClass}${isFirst ? ' season-first' : ''}${isLast ? ' season-last' : ''}">
                 ${seasonCell}
-                <td data-label="Герой" style="color:var(--sub);">${h.emoji} ${h.name || '—'}${deletedIcon}</td>
+                <td data-label="Герой" style="color:var(--sub);">${getHeroIcon(h.name, h.emoji, 20)} ${h.name || '—'}${deletedIcon}</td>
                 <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
                 <td class="num" data-label="WR" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
                 <td class="num" data-label="Стрик" style="color:var(--green);font-weight:600;">${h.best || '—'}</td>
@@ -2441,7 +2471,7 @@ function renderArchiveBest(history) {
     top.forEach((h, i) => {
         const deletedIcon = h.isDeleted ? ' 🗑️' : '';
         html += `<div class="archive-hero" style="border-left-color:${i === 0 ? 'var(--gold)' : i === 1 ? 'var(--silver)' : i === 2 ? 'var(--bronze)' : 'var(--border)'};">
-            <div class="hero-info"><span>${medals[i]}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${h.emoji} ${h.name || ''}${deletedIcon}</span></div>
+            <div class="hero-info"><span>${medals[i]}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${getHeroIcon(h.name, h.emoji, 20)} ${h.name || ''}${deletedIcon}</span></div>
             <div><span style="color:${wrColor(h.wr)};font-weight:800;">${(h.wr * 100).toFixed(1)}%</span> <span style="color:var(--muted);font-size:0.72rem;">(${h.wins}-${h.losses})</span></div>
         </div>`;
     });
