@@ -28,7 +28,7 @@
 .race-bar { display: flex; gap: 0; margin-bottom: 14px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); }
 .race-chip { flex: 1; padding: 12px 8px; text-align: center; cursor: pointer; transition: 0.2s; color: var(--muted); background: var(--elevated); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .race-chip:last-child { border-right: none; }
-.race-chip .chip-emoji { font-size: 1.3rem; }
+.race-chip .chip-emoji { font-size: 1.3rem; display: flex; align-items: center; justify-content: center; min-height: 32px; }
 .race-chip .chip-name { font-size: 0.75rem; font-weight: 600; }
 .race-chip .chip-bonus { font-size: 0.6rem; color: var(--muted); }
 .race-chip:hover { background: var(--card); color: var(--text); }
@@ -150,7 +150,7 @@
 #tab-sim .mode-btn.active { background: linear-gradient(135deg, var(--ice), var(--gold)); color: #000; font-weight: 700; }
 #tab-sim .vs-header { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 24px; }
 #tab-sim .fighter { text-align: center; flex: 1; min-width: 0; }
-#tab-sim .fighter-emoji { font-size: 2.5rem; }
+#tab-sim .fighter-emoji { font-size: 2.5rem; display: flex; align-items: center; justify-content: center; min-height: 56px; }
 #tab-sim .fighter-name { font-size: 1rem; color: var(--gold); font-weight: 700; margin-top: 4px; word-break: break-word; }
 #tab-sim .vs-divider { font-size: 1.5rem; color: var(--gold); font-weight: 800; flex-shrink: 0; }
 #tab-sim .selectors { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
@@ -386,7 +386,7 @@
 #tab-balance .race-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
 #tab-balance .race-chip { flex: none; min-width: 0; padding: 8px 4px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 #tab-balance .race-chip:nth-child(4n) { border-right: none; }
-#tab-balance .race-chip .chip-emoji { font-size: 1rem; }
+#tab-balance .race-chip .chip-emoji { font-size: 1rem; min-height: 24px; }
 #tab-balance .race-chip .chip-name { font-size: 0.6rem; }
 #tab-balance .race-chip .chip-bonus { font-size: 0.5rem; }
 #tab-balance .compare-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
@@ -447,7 +447,7 @@
 #tab-sim .mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 #tab-sim .mode-btn { font-size: 0.7rem; padding: 9px 6px; text-align: center; }
 #tab-sim .vs-header { gap: 10px; margin-bottom: 16px; }
-#tab-sim .fighter-emoji { font-size: 1.8rem; }
+#tab-sim .fighter-emoji { font-size: 1.8rem; min-height: 44px; }
 #tab-sim .fighter-name { font-size: 0.78rem; }
 #tab-sim .vs-divider { font-size: 1.1rem; }
 #tab-sim .selectors { grid-template-columns: 1fr; gap: 10px; }
@@ -564,7 +564,7 @@
 </div>
 
 <div class="tab-panel active" id="tab-balance">
-<div class="section gold"><div class="race-bar" id="raceBar"><div class="race-chip active" onclick="selectRace('')"><span class="chip-emoji">⚔️</span><span class="chip-name">Без расы</span><span class="chip-bonus">базовые статы</span></div></div></div>
+<div class="section gold"><div class="race-bar" id="raceBar"><div class="race-chip active" onclick="selectRace('')"><span class="chip-emoji"></span><span class="chip-name">Based</span><span class="chip-bonus"></span></div></div></div>
 <div class="compare-section" id="compareSection"><div class="compare-header"><div class="compare-vs"><span class="cls-a" id="compareNameA">—</span><span>VS</span><span class="cls-b" id="compareNameB">—</span></div><button class="compare-close" onclick="closeCompare()">✕ Сбросить</button></div><div class="compare-grid" id="compareGrid"></div><div class="compare-winner" id="compareWinner"></div></div>
 <div class="section gold"><div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px">Кликни по классу, чтобы выбрать для сравнения. Первый — <span style="color:var(--ice)">ледяная</span> подсветка, второй — <span style="color:var(--purple)">фиолетовая</span>.</div><div class="table-wrapper"><table id="classes-balance-table"><thead><tr><th data-sort="name">Класс</th><th data-sort="hp">HP</th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th><th data-sort="dex">DEX</th><th data-sort="min">MIN</th><th data-sort="max">MAX</th><th data-sort="avg">AVG</th><th data-sort="acc">ACC</th><th data-sort="surv">SURV</th><th data-sort="dmg5">DMG/5</th><th data-sort="aura">Аура</th></tr></thead><tbody id="classes-balance-tbody"></tbody></table></div></div>
 <div class="section gold"><div class="table-wrapper"><table id="races-balance-table"><thead><tr><th data-sort="name">Раса</th><th data-sort="hp">HP</th><th data-sort="atk">ATK</th><th data-sort="def">DEF</th><th data-sort="dex">DEX</th><th data-sort="min">MIN</th><th data-sort="max">MAX</th></tr></thead><tbody id="races-balance-tbody"></tbody></table></div></div>
@@ -709,10 +709,73 @@ const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@
 const DATA_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
 const DATA_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
 let statsPromise = null, dataPromise = null;
+let classEmojis = {}, raceEmojis = {};
+
 function getStatsData() { if (statsPromise) return statsPromise; statsPromise = (async () => { try { const c = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null'); if (c && (Date.now() - c.ts < STATS_CACHE_TTL)) return c.data; } catch (e) {} let r = await fetch(STATS_URL); if (!r.ok) r = await fetch(STATS_URL_FALLBACK); const data = await r.json(); try { localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {} return data; })().catch(e => { statsPromise = null; throw e; }); return statsPromise; }
-function getDataJson() { if (dataPromise) return dataPromise; dataPromise = (async () => { try { const c = JSON.parse(localStorage.getItem(DATA_CACHE_KEY) || 'null'); if (c && (Date.now() - c.ts < STATS_CACHE_TTL)) return c.data; } catch (e) {} let r = await fetch(DATA_URL); if (!r.ok) r = await fetch(DATA_URL_FALLBACK); const data = await r.json(); try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {} return data; })().catch(e => { dataPromise = null; throw e; }); return dataPromise; }
+function getDataJson() {
+    if (dataPromise) return dataPromise;
+    dataPromise = (async () => {
+        try {
+            const c = JSON.parse(localStorage.getItem(DATA_CACHE_KEY) || 'null');
+            if (c && (Date.now() - c.ts < STATS_CACHE_TTL)) {
+                classEmojis = Object.fromEntries((c.data.classes || []).map(x => [x.Name, x.Emoji]));
+                raceEmojis  = Object.fromEntries((c.data.races  || []).map(x => [x.Name, x.Emoji]));
+                return c.data;
+            }
+        } catch (e) {}
+        let r = await fetch(DATA_URL);
+        if (!r.ok) r = await fetch(DATA_URL_FALLBACK);
+        const data = await r.json();
+        classEmojis = Object.fromEntries((data.classes || []).map(x => [x.Name, x.Emoji]));
+        raceEmojis  = Object.fromEntries((data.races  || []).map(x => [x.Name, x.Emoji]));
+        try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        return data;
+    })().catch(e => { dataPromise = null; throw e; });
+    return dataPromise;
+}
 (function() { const pb = document.getElementById('readingProgress'), sb = document.getElementById('scrollTop'); if (!pb || !sb) return; window.addEventListener('scroll', () => { const st = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight; pb.style.transform = `scaleX(${dh > 0 ? st / dh : 0})`; sb.classList.toggle('visible', st > 300); }); })();
 
+/* ============================================================
+   ИКОНКИ — точно как в index.html / player.html
+   ============================================================ */
+function getRaceIcon(name) {
+    const map = {'Человек':'human','Орк':'orc','Дворф':'dwarf','Эльф':'elf','Нежить':'undead','Табакси':'tabaxi','Тифлинг':'tiefling'};
+    return map[name] ? `icons/${map[name]}.png` : null;
+}
+function getClassIcon(name) {
+    const map = {'Воин':'warrior','Паладин':'paladin','Плут':'rogue','Монах':'monk','Следопыт':'ranger','Чародей':'sorcerer','Бард':'bard','Друид':'druid','Изобретатель':'artificer','Варвар':'barbarian','Волшебница':'wizard','Некромант':'necromancer','Жрец':'cleric','Колдун':'warlock','Алхимик':'alchemist'};
+    return map[name] ? `icons/${map[name]}.png` : null;
+}
+function getHeroIcon(playerName, emojiFallback, size = 32) {
+    const img = (src, alt) => `<img src="${src}" alt="${alt}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
+    const emoji = (char) => `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size * 0.8}px;vertical-align:middle;">${char}</span>`;
+    const gap = Math.floor(size * 0.2);
+    const spacer = `<span style="display:inline-block;width:${gap}px;"></span>`;
+    if (!playerName || typeof playerName !== 'string' || !playerName.includes('-')) {
+        return emoji(emojiFallback || '');
+    }
+    const parts = playerName.split('-');
+    const raceName = (parts[0] || '').trim();
+    const className = (parts[1] || '').trim();
+    const raceIcon = getRaceIcon(raceName);
+    const classIcon = getClassIcon(className);
+    if (raceIcon && classIcon) return `${img(raceIcon, raceName)}${spacer}${img(classIcon, className)}`;
+    if (raceIcon)  return `${img(raceIcon, raceName)}${spacer}${emoji(classEmojis[className] || '')}`;
+    if (classIcon) return `${emoji(raceEmojis[raceName] || '')}${spacer}${img(classIcon, className)}`;
+    return `${emoji(raceEmojis[raceName] || '')}${spacer}${emoji(classEmojis[className] || '')}`;
+}
+function iconRace(name, size = 22) {
+    const clean = (name || '').trim();
+    const src = getRaceIcon(clean);
+    if (src) return `<img src="${src}" alt="${clean}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
+    return `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.8}px;vertical-align:middle;">${raceEmojis[clean] || '🌍'}</span>`;
+}
+function iconClass(name, size = 22) {
+    const clean = (name || '').trim();
+    const src = getClassIcon(clean);
+    if (src) return `<img src="${src}" alt="${clean}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
+    return `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.8}px;vertical-align:middle;">${classEmojis[clean] || '⚔️'}</span>`;
+}
 /* === БАЛАНС === */
 let BAL_CLASSES = [], BAL_RACES = [], bal_selRace = '';
 let bal_pickA = null, bal_pickB = null, bal_pickRaceA = null, bal_pickRaceB = null;
@@ -759,7 +822,6 @@ function bal_getTier(wr, battles) {
 }
 function bal_initRaceBar() {
     const bar = document.getElementById('raceBar');
-    const icons = { 'Человек': '🧑', 'Орк': '👹', 'Дворф': '🧔', 'Нежить': '💀', 'Эльф': '🧝', 'Табакси': '🐱', 'Тифлинг': '😈' };
     BAL_RACES.forEach(r => {
         const c = document.createElement('div'); c.className = 'race-chip';
         const bonus = [];
@@ -769,7 +831,7 @@ function bal_initRaceBar() {
         if (r.BonusDex) bonus.push(`DEX+${r.BonusDex}`);
         if (r.BonusMin) bonus.push(`MIN+${r.BonusMin}`);
         if (r.BonusMax) bonus.push(`MAX+${r.BonusMax}`);
-        c.innerHTML = `<span class="chip-emoji">${icons[r.Name] || r.Emoji}</span><span class="chip-name">${r.Name}</span><span class="chip-bonus">${bonus.join('·') || '—'}</span>`;
+        c.innerHTML = `<span class="chip-emoji">${iconRace(r.Name, 48)}</span><span class="chip-name">${r.Name}</span><span class="chip-bonus">${bonus.join('·') || '—'}</span>`;
         c.onclick = () => bal_selectRace(r.Name); bar.appendChild(c);
     });
 }
@@ -807,7 +869,7 @@ function bal_renderClasses() {
         const wrData = bal_classWR[c.Name] || { wr: 50, battles: 0 };
         const tier = bal_getTier(wrData.wr, wrData.battles);
         return `<tr class="selectable" data-name="${c.Name}" data-hp="${s.hp}" data-atk="${s.atk}" data-def="${s.def}" data-dex="${s.dex}" data-min="${s.min}" data-max="${s.max}" data-avg="${s.avg}" data-acc="${s.acc}" data-surv="${s.surv}" data-dmg5="${s.dmg5}" data-aura="${wrData.wr.toFixed(1)}" onclick="bal_pickClass('${c.Name}')">
-            <td>${c.Emoji} ${c.Name}</td><td class="number">${s.hp}</td><td class="number">${s.atk}</td><td class="number">${s.def}</td><td class="number">${s.dex}</td><td class="number">${s.min}</td><td class="number">${s.max}</td><td class="number">${s.avg}</td><td class="number">${s.acc}%</td><td class="number">${s.surv}</td><td class="number">${s.dmg5}</td><td class="number"><span class="${tier.cls}">${tier.tier}</span></td>
+            <td><span style="display:inline-flex;align-items:center;gap:6px;">${iconClass(c.Name, 26)} ${c.Name}</span></td><td class="number">${s.hp}</td><td class="number">${s.atk}</td><td class="number">${s.def}</td><td class="number">${s.dex}</td><td class="number">${s.min}</td><td class="number">${s.max}</td><td class="number">${s.avg}</td><td class="number">${s.acc}%</td><td class="number">${s.surv}</td><td class="number">${s.dmg5}</td><td class="number"><span class="${tier.cls}">${tier.tier}</span></td>
         </tr>`;
     }).join('');
     bal_updateSelection();
@@ -843,10 +905,14 @@ function bal_updateCompare() {
     const clsB = BAL_CLASSES.find(c => c.Name === bal_pickB);
     if (!clsA || !clsB) return;
     const sA = bal_calc(clsA, raceA), sB = bal_calc(clsB, raceB);
-    const nameA = raceA ? `${raceA.Emoji} ${raceA.Name}-${clsA.Emoji} ${clsA.Name}` : `${clsA.Emoji} ${clsA.Name}`;
-    const nameB = raceB ? `${raceB.Emoji} ${raceB.Name}-${clsB.Emoji} ${clsB.Name}` : `${clsB.Emoji} ${clsB.Name}`;
-    document.getElementById('compareNameA').textContent = nameA;
-    document.getElementById('compareNameB').textContent = nameB;
+    const nameA = raceA
+        ? `<span style="display:inline-flex;align-items:center;gap:4px;">${iconRace(raceA.Name, 24)}${iconClass(clsA.Name, 24)} ${raceA.Name}-${clsA.Name}</span>`
+        : `<span style="display:inline-flex;align-items:center;gap:4px;">${iconClass(clsA.Name, 24)} ${clsA.Name}</span>`;
+    const nameB = raceB
+        ? `<span style="display:inline-flex;align-items:center;gap:4px;">${iconRace(raceB.Name, 24)}${iconClass(clsB.Name, 24)} ${raceB.Name}-${clsB.Name}</span>`
+        : `<span style="display:inline-flex;align-items:center;gap:4px;">${iconClass(clsB.Name, 24)} ${clsB.Name}</span>`;
+    document.getElementById('compareNameA').innerHTML = nameA;
+    document.getElementById('compareNameB').innerHTML = nameB;
     const stats = [
         { label: 'HP', icon: '❤️', a: sA.hp, b: sB.hp },
         { label: 'ATK', icon: '⚔️', a: sA.atk, b: sB.atk },
@@ -872,7 +938,7 @@ function bal_updateCompare() {
     else winner.innerHTML = `<div class="winner-text">⚖️ Полное равенство</div><div class="winner-sub">Одинаковые статы (${winsA}:${winsB})</div>`;
 }
 function bal_renderRaces() {
-    document.getElementById('races-balance-tbody').innerHTML = BAL_RACES.map(r => `<tr data-name="${r.Name}" data-hp="${r.BonusHp}" data-atk="${r.BonusAtk}" data-def="${r.BonusDef}" data-dex="${r.BonusDex}" data-min="${r.BonusMin}" data-max="${r.BonusMax}"><td>${r.Emoji} ${r.Name}</td><td class="number">${r.BonusHp > 0 ? '+' : ''}${r.BonusHp}</td><td class="number">${r.BonusAtk > 0 ? '+' : ''}${r.BonusAtk}</td><td class="number">${r.BonusDef > 0 ? '+' : ''}${r.BonusDef}</td><td class="number">${r.BonusDex > 0 ? '+' : ''}${r.BonusDex}</td><td class="number">${r.BonusMin > 0 ? '+' : ''}${r.BonusMin}</td><td class="number">${r.BonusMax > 0 ? '+' : ''}${r.BonusMax}</td></tr>`).join('');
+    document.getElementById('races-balance-tbody').innerHTML = BAL_RACES.map(r => `<tr data-name="${r.Name}" data-hp="${r.BonusHp}" data-atk="${r.BonusAtk}" data-def="${r.BonusDef}" data-dex="${r.BonusDex}" data-min="${r.BonusMin}" data-max="${r.BonusMax}"><td><span style="display:inline-flex;align-items:center;gap:6px;">${iconRace(r.Name, 26)} ${r.Name}</span></td><td class="number">${r.BonusHp > 0 ? '+' : ''}${r.BonusHp}</td><td class="number">${r.BonusAtk > 0 ? '+' : ''}${r.BonusAtk}</td><td class="number">${r.BonusDef > 0 ? '+' : ''}${r.BonusDef}</td><td class="number">${r.BonusDex > 0 ? '+' : ''}${r.BonusDex}</td><td class="number">${r.BonusMin > 0 ? '+' : ''}${r.BonusMin}</td><td class="number">${r.BonusMax > 0 ? '+' : ''}${r.BonusMax}</td></tr>`).join('');
 }
 function bal_sortTable(key, dir) {
     const tbody = document.querySelector('#classes-balance-table tbody');
@@ -931,12 +997,10 @@ function bal_renderFormulas() {
 bal_loadData();
 
 /* === КАЛЬКУЛЯТОР === */
-let calc_CONFIG = {}, calc_classesData = [], calc_racesData = [], calc_classEmojis = {}, calc_raceEmojis = {}, calc_players = [], calc_currentMode = 'players';
+let calc_CONFIG = {}, calc_classesData = [], calc_racesData = [], calc_players = [], calc_currentMode = 'players';
 function calc_loadData() {
     Promise.all([getDataJson(), getStatsData()]).then(([data, stats]) => {
         calc_CONFIG = data.config; calc_classesData = data.classes; calc_racesData = data.races;
-        calc_classEmojis = Object.fromEntries(calc_classesData.map(c => [c.Name, c.Emoji]));
-        calc_raceEmojis = Object.fromEntries(calc_racesData.map(r => [r.Name, r.Emoji]));
         calc_players = (stats.players || []).filter(p => p.name && p.name !== 'Unknown');
         calc_populateSelects(); calc_updateCalc();
     }).catch(() => { document.getElementById('calc-result').innerHTML = '<div style="text-align:center;padding:40px;color:var(--red);">❌ Ошибка загрузки</div>'; });
@@ -944,15 +1008,15 @@ function calc_loadData() {
 function calc_populateSelects() {
     const p1 = document.getElementById('calc-p1'), p2 = document.getElementById('calc-p2');
     calc_players.sort((a, b) => a.display.localeCompare(b.display)).forEach(p => {
-        const o = `<option value="${p.display}">${p.emoji} ${p.display}</option>`;
+        const o = `<option value="${p.display}">${p.display}</option>`;
         p1.innerHTML += o; p2.innerHTML += o;
     });
     if (calc_players.length > 1) p2.selectedIndex = 1;
-    document.getElementById('calc-class1').innerHTML = calc_classesData.map(c => `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join('');
-    document.getElementById('calc-class2').innerHTML = calc_classesData.map(c => `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join('');
+    document.getElementById('calc-class1').innerHTML = calc_classesData.map(c => `<option value="${c.Name}">${c.Name}</option>`).join('');
+    document.getElementById('calc-class2').innerHTML = calc_classesData.map(c => `<option value="${c.Name}">${c.Name}</option>`).join('');
     if (calc_classesData.length > 1) document.getElementById('calc-class2').selectedIndex = 1;
-    document.getElementById('calc-race1').innerHTML = calc_racesData.map(r => `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join('');
-    document.getElementById('calc-race2').innerHTML = calc_racesData.map(r => `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join('');
+    document.getElementById('calc-race1').innerHTML = calc_racesData.map(r => `<option value="${r.Name}">${r.Name}</option>`).join('');
+    document.getElementById('calc-race2').innerHTML = calc_racesData.map(r => `<option value="${r.Name}">${r.Name}</option>`).join('');
 }
 document.getElementById('calc-mode-players-btn').addEventListener('click', () => {
     calc_currentMode = 'players';
@@ -977,14 +1041,14 @@ function calc_getSelected() {
         if (!p1 || !p2) return null;
         const pp = n => n.split('-');
         const a = pp(p1.name), b = pp(p2.name);
-        return { p1: { display: p1.display, emoji: p1.emoji, class: a[1] || a[0], race: a[0] }, p2: { display: p2.display, emoji: p2.emoji, class: b[1] || b[0], race: b[0] } };
+        return { p1: { display: p1.display, emoji: p1.emoji, heroName: p1.name, class: a[1] || a[0], race: a[0] }, p2: { display: p2.display, emoji: p2.emoji, heroName: p2.name, class: b[1] || b[0], race: b[0] } };
     } else {
         const c1 = document.getElementById('calc-class1')?.value, r1 = document.getElementById('calc-race1')?.value;
         const c2 = document.getElementById('calc-class2')?.value, r2 = document.getElementById('calc-race2')?.value;
         if (!c1 || !r1 || !c2 || !r2) return null;
         return {
-            p1: { display: `${c1} (${r1})`, emoji: calc_classEmojis[c1] + calc_raceEmojis[r1], class: c1, race: r1 },
-            p2: { display: `${c2} (${r2})`, emoji: calc_classEmojis[c2] + calc_raceEmojis[r2], class: c2, race: r2 }
+            p1: { display: `${c1} (${r1})`, emoji: '', heroName: `${r1}-${c1}`, class: c1, race: r1 },
+            p2: { display: `${c2} (${r2})`, emoji: '', heroName: `${r2}-${c2}`, class: c2, race: r2 }
         };
     }
 }
@@ -1031,14 +1095,16 @@ function calc_updateCalc() {
     const sel = calc_getSelected();
     if (!sel) return;
     const r = calc_calc(sel);
-    document.getElementById('calc-result').innerHTML = `<div class="table-container"><table><thead><tr><th></th><th>${sel.p1.emoji} ${sel.p1.display}</th><th>${sel.p2.emoji} ${sel.p2.display}</th></tr></thead><tbody><tr><td>Класс</td><td>${sel.p1.class}</td><td>${sel.p2.class}</td></tr><tr><td>Раса</td><td>${sel.p1.race}</td><td>${sel.p2.race}</td></tr><tr><td>ATK</td><td class="number">${r.s1.atk}</td><td class="number">${r.s2.atk}</td></tr><tr><td>MIN</td><td class="number">${r.s1.min}</td><td class="number">${r.s2.min}</td></tr><tr><td>MAX</td><td class="number">${r.s1.max}</td><td class="number">${r.s2.max}</td></tr><tr><td>DEF</td><td class="number">${r.s1.def}</td><td class="number">${r.s2.def}</td></tr><tr><td>HP</td><td class="number">${r.s1.hp}</td><td class="number">${r.s2.hp}</td></tr><tr><td colspan="3" style="background:var(--border);"></td></tr><tr><td>Шанс попадания</td><td class="number">${(r.h1 * 100).toFixed(1)}%</td><td class="number">${(r.h2 * 100).toFixed(1)}%</td></tr><tr><td>Урон за ход</td><td class="number">${r.d1.toFixed(2)}</td><td class="number">${r.d2.toFixed(2)}</td></tr><tr><td>Ходов до победы</td><td class="number">${r.t1.toFixed(1)}</td><td class="number">${r.t2.toFixed(1)}</td></tr><tr><td>Крит-урон</td><td class="number">${r.cr1}</td><td class="number">${r.cr2}</td></tr><tr><td>Быстрая победа</td><td class="number">${r.quick1}</td><td class="number">${r.quick2}</td></tr><tr><td>Крит убивает?</td><td class="number">${r.critKill1 ? '✅' : '❌'}</td><td class="number">${r.critKill2 ? '✅' : '❌'}</td></tr><tr><td style="color:var(--gold);font-weight:700;">Вероятность победы</td><td class="number" style="color:var(--gold);font-weight:700;">${r.w1.toFixed(2)}%</td><td class="number" style="color:var(--gold);font-weight:700;">${r.w2.toFixed(2)}%</td></tr><tr><td>Опаснее</td><td colspan="2" style="text-align:center;">${r.winner ? `💥 ${r.winner.display}` : '⚖️ Равные силы'}</td></tr><tr><td>Стабильность</td><td class="number">${r.sp1}</td><td class="number">${r.sp2}</td></tr></tbody></table></div><div class="reasons-box"><h4>✅ Причина победы: ${r.winner ? `${r.winner.display} сильнее` : '⚖️ Полное равновесие'}</h4><ul>${r.reasons.map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+    const iconP1 = getHeroIcon(sel.p1.heroName, '⚔️', 26);
+    const iconP2 = getHeroIcon(sel.p2.heroName, '🛡️', 26);
+    document.getElementById('calc-result').innerHTML = `<div class="table-container"><table><thead><tr><th></th><th>${iconP1} ${sel.p1.display}</th><th>${iconP2} ${sel.p2.display}</th></tr></thead><tbody><tr><td>Класс</td><td>${sel.p1.class}</td><td>${sel.p2.class}</td></tr><tr><td>Раса</td><td>${sel.p1.race}</td><td>${sel.p2.race}</td></tr><tr><td>ATK</td><td class="number">${r.s1.atk}</td><td class="number">${r.s2.atk}</td></tr><tr><td>MIN</td><td class="number">${r.s1.min}</td><td class="number">${r.s2.min}</td></tr><tr><td>MAX</td><td class="number">${r.s1.max}</td><td class="number">${r.s2.max}</td></tr><tr><td>DEF</td><td class="number">${r.s1.def}</td><td class="number">${r.s2.def}</td></tr><tr><td>HP</td><td class="number">${r.s1.hp}</td><td class="number">${r.s2.hp}</td></tr><tr><td colspan="3" style="background:var(--border);"></td></tr><tr><td>Шанс попадания</td><td class="number">${(r.h1 * 100).toFixed(1)}%</td><td class="number">${(r.h2 * 100).toFixed(1)}%</td></tr><tr><td>Урон за ход</td><td class="number">${r.d1.toFixed(2)}</td><td class="number">${r.d2.toFixed(2)}</td></tr><tr><td>Ходов до победы</td><td class="number">${r.t1.toFixed(1)}</td><td class="number">${r.t2.toFixed(1)}</td></tr><tr><td>Крит-урон</td><td class="number">${r.cr1}</td><td class="number">${r.cr2}</td></tr><tr><td>Быстрая победа</td><td class="number">${r.quick1}</td><td class="number">${r.quick2}</td></tr><tr><td>Крит убивает?</td><td class="number">${r.critKill1 ? '✅' : '❌'}</td><td class="number">${r.critKill2 ? '✅' : '❌'}</td></tr><tr><td style="color:var(--gold);font-weight:700;">Вероятность победы</td><td class="number" style="color:var(--gold);font-weight:700;">${r.w1.toFixed(2)}%</td><td class="number" style="color:var(--gold);font-weight:700;">${r.w2.toFixed(2)}%</td></tr><tr><td>Опаснее</td><td colspan="2" style="text-align:center;">${r.winner ? `💥 ${r.winner.display}` : '⚖️ Равные силы'}</td></tr><tr><td>Стабильность</td><td class="number">${r.sp1}</td><td class="number">${r.sp2}</td></tr></tbody></table></div><div class="reasons-box"><h4>✅ Причина победы: ${r.winner ? `${r.winner.display} сильнее` : '⚖️ Полное равновесие'}</h4><ul>${r.reasons.map(x => `<li>${x}</li>`).join('')}</ul></div>`;
 }
 ['calc-p1', 'calc-p2', 'calc-class1', 'calc-race1', 'calc-class2', 'calc-race2'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', calc_updateCalc);
 });
 
-/* === ГРАДИЕНТ (полный) === */
+/* === ГРАДИЕНТ === */
 let grad_CONFIG = {}, grad_classesData = [], grad_racesData = [], grad_originalStats = {}, grad_currentClass = 'Некромант', grad_currentRace = '__all__';
 let grad_isRunning = false, GRAD_REAL_WINRATES = {};
 let GRAD_CLASS_RACE_STATS = {};
@@ -1186,7 +1252,7 @@ async function grad_loadData() {
     grad_classesData.sort((a, b) => a.Name.localeCompare(b.Name)).forEach(cls => {
         const o = document.createElement('option');
         o.value = cls.Name;
-        o.textContent = `${cls.Emoji} ${cls.Name}`;
+        o.textContent = cls.Name;
         cs.appendChild(o);
     });
 
@@ -1196,7 +1262,7 @@ async function grad_loadData() {
     grad_racesData.forEach(r => {
         const o = document.createElement('option');
         o.value = r.Name;
-        o.textContent = `${r.Emoji} ${r.Name}`;
+        o.textContent = r.Name;
         rs.appendChild(o);
     });
 
@@ -1403,7 +1469,7 @@ async function grad_runGradient() {
             const simC = simCurByRace[race], simN = simNewByRace[race];
             if (!simC || !simN) continue;
             const d = simN.wr - simC.wr;
-            raceTable += `<tr style="border-top:1px solid var(--border);"><td style="padding:4px;">${race}</td><td style="text-align:right;padding:4px;">${games}</td><td style="text-align:right;padding:4px;">${simC.wr.toFixed(1)}%</td><td style="text-align:right;padding:4px;">${simN.wr.toFixed(1)}%</td><td style="text-align:right;padding:4px;color:${d >= 0 ? 'var(--green)' : 'var(--red)'}">${d >= 0 ? '+' : ''}${d.toFixed(1)}%</td></tr>`;
+            raceTable += `<tr style="border-top:1px solid var(--border);"><td style="padding:4px;"><span style="display:inline-flex;align-items:center;gap:4px;">${iconRace(race, 20)} ${race}</span></td><td style="text-align:right;padding:4px;">${games}</td><td style="text-align:right;padding:4px;">${simC.wr.toFixed(1)}%</td><td style="text-align:right;padding:4px;">${simN.wr.toFixed(1)}%</td><td style="text-align:right;padding:4px;color:${d >= 0 ? 'var(--green)' : 'var(--red)'}">${d >= 0 ? '+' : ''}${d.toFixed(1)}%</td></tr>`;
         }
         raceTable += '</table>';
 
@@ -1503,13 +1569,13 @@ async function grad_runSensitivity() {
             return base;
         });
         for (let i = 0; i < raceNames.length; i++) {
-            const raceName = raceNames[i];
-            const base = grad_getStats(grad_currentClass, raceName);
+            const rn = raceNames[i];
+            const base = grad_getStats(grad_currentClass, rn);
             if (!base) continue;
             const wr = await simSens(modifier(base), (p) => {
                 if (onP) onP((i + p / 100) / raceNames.length * 100);
             });
-            simByRace[raceName] = { wr, ci: 0 };
+            simByRace[rn] = { wr, ci: 0 };
         }
         return grad_weightedSim(simByRace, dist).wr;
     }
@@ -1551,8 +1617,8 @@ async function grad_runSensitivity() {
     const card = document.getElementById('grad-sensCard');
     card.style.display = 'block';
     let html = `<div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;">
-        Класс: <strong style="color:var(--gold);">${grad_currentClass}</strong> · 
-        Раса: <strong style="color:var(--gold);">${useAllRaces ? 'Все расы (взвешенно)' : (grad_currentRace || 'Без расы')}</strong> · 
+        Класс: <strong style="color:var(--gold);">${grad_currentClass}</strong> ·  · 
+        Раса: <strong style="color:var(--gold);">${useAllRaces ? 'Все расы (взвешенно)' : (grad_currentRace ? `<span style="display:inline-flex;align-items:center;gap:4px;">${iconRace(grad_currentRace, 22)} ${grad_currentRace}</span>` : 'Без расы')}</strong> · 
         База: <strong style="color:var(--gold);">${baseWR.toFixed(2)}%</strong>
     </div>`;
     html += '<table style="width:100%;border-collapse:collapse;font-size:0.78rem;">';
@@ -1639,8 +1705,6 @@ async function grad_runBalance() {
     }
 
     let step = 0;
-
-    // Шаг 1: текущий прогноз
     setStep(step, 'Считаю текущий прогноз...');
     await grad_nextFrame();
     const currentSim = useAllRaces ? await simBalAllRaces(b => b) : await simBal(baseStats);
@@ -1669,7 +1733,6 @@ async function grad_runBalance() {
     const candidates = [];
 
     for (const stat of stats) {
-        // +1
         setStep(step, `Проверяю ${statNames[stat]} +1...`);
         await grad_nextFrame();
         const plusWR = useAllRaces
@@ -1680,7 +1743,6 @@ async function grad_runBalance() {
         setStep(step, `Проверил ${statNames[stat]} +1`);
         await grad_nextFrame();
 
-        // −1
         if (baseStats[stat] > 0) {
             setStep(step, `Проверяю ${statNames[stat]} −1...`);
             await grad_nextFrame();
@@ -1702,7 +1764,7 @@ async function grad_runBalance() {
 
     let html = `<div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;">
         Класс: <strong style="color:var(--gold);">${grad_currentClass}</strong> · 
-        Раса: <strong style="color:var(--gold);">${useAllRaces ? 'Все расы (взвешенно)' : (grad_currentRace || 'Без расы')}</strong><br>
+        Раса: <strong style="color:var(--gold);">${useAllRaces ? 'Все расы (взвешенно)' : (grad_currentRace ? `<span style="display:inline-flex;align-items:center;gap:4px;">${iconRace(grad_currentRace, 22)} ${grad_currentRace}</span>` : 'Без расы')}</strong><br>
         Текущий прогноз: <strong style="color:var(--gold);">${currentPred.toFixed(2)}%</strong> · 
         Цель: <strong>50%</strong> · 
         Нужно: <strong style="color:${need >= 0 ? 'var(--green)' : 'var(--red)'};">${need >= 0 ? '+' : ''}${need.toFixed(2)}%</strong>
@@ -1749,12 +1811,12 @@ function sim_loadData() {
         sim_playersData = (stats.players || []).filter(p => p.name && p.name !== 'Unknown');
         const p1 = document.getElementById('sim-player1Select'), p2 = document.getElementById('sim-player2Select');
         sim_playersData.sort((a, b) => a.display.localeCompare(b.display)).forEach(p => {
-            const o = `<option value="${p.display}">${p.emoji} ${p.display}</option>`;
+            const o = `<option value="${p.display}">${p.display}</option>`;
             p1.innerHTML += o; p2.innerHTML += o;
         });
         if (sim_playersData.length > 1) p2.selectedIndex = 1;
-        ['sim-class1Select', 'sim-class2Select'].forEach(id => document.getElementById(id).innerHTML = sim_classesData.map(c => `<option value="${c.Name}">${c.Emoji} ${c.Name}</option>`).join(''));
-        ['sim-race1Select', 'sim-race2Select'].forEach(id => document.getElementById(id).innerHTML = sim_racesData.map(r => `<option value="${r.Name}">${r.Emoji} ${r.Name}</option>`).join(''));
+        ['sim-class1Select', 'sim-class2Select'].forEach(id => document.getElementById(id).innerHTML = sim_classesData.map(c => `<option value="${c.Name}">${c.Name}</option>`).join(''));
+        ['sim-race1Select', 'sim-race2Select'].forEach(id => document.getElementById(id).innerHTML = sim_racesData.map(r => `<option value="${r.Name}">${r.Name}</option>`).join(''));
         sim_updateFighterDisplay();
     });
 }
@@ -1778,19 +1840,25 @@ function sim_getFighter(isP1) {
         const p = sim_playersData.find(x => x.display === sel.value);
         if (!p) return null;
         const parts = p.name.split('-');
-        return { name: p.display, emoji: p.emoji, stats: sim_getStats(parts[1] || parts[0], parts[0]) };
+        return { name: p.display, emoji: p.emoji, heroName: p.name, stats: sim_getStats(parts[1] || parts[0], parts[0]) };
     } else {
         const cls = document.getElementById(isP1 ? 'sim-class1Select' : 'sim-class2Select').value;
         const race = document.getElementById(isP1 ? 'sim-race1Select' : 'sim-race2Select').value;
         const c = sim_classesData.find(x => x.Name === cls) || sim_classesData[0];
         const r = sim_racesData.find(x => x.Name === race) || sim_racesData[0];
-        return { name: `${cls} (${race})`, emoji: r.Emoji + c.Emoji, stats: sim_getStats(cls, race) };
+        return { name: `${cls} (${race})`, emoji: '', heroName: `${race}-${cls}`, stats: sim_getStats(cls, race) };
     }
 }
 function sim_updateFighterDisplay() {
     const p1 = sim_getFighter(true), p2 = sim_getFighter(false);
-    if (p1) { document.getElementById('sim-p1Emoji').textContent = p1.emoji; document.getElementById('sim-p1Name').textContent = p1.name; }
-    if (p2) { document.getElementById('sim-p2Emoji').textContent = p2.emoji; document.getElementById('sim-p2Name').textContent = p2.name; }
+    if (p1) {
+        document.getElementById('sim-p1Emoji').innerHTML = getHeroIcon(p1.heroName, '⚔️', 48);
+        document.getElementById('sim-p1Name').textContent = p1.name;
+    }
+    if (p2) {
+        document.getElementById('sim-p2Emoji').innerHTML = getHeroIcon(p2.heroName, '🛡️', 48);
+        document.getElementById('sim-p2Name').textContent = p2.name;
+    }
 }
 window.sim_updateFighterDisplay = sim_updateFighterDisplay;
 function sim_fight(p1, p2) {
@@ -1827,7 +1895,7 @@ function sim_fight(p1, p2) {
     const winner = hp1 > hp2 ? p1 : p2, loser = hp1 > hp2 ? p2 : p1;
     const wz = hp1 > hp2 ? d1 : d2, lz = hp1 > hp2 ? d2 : d1, wh = hp1 > hp2 ? hp1 : hp2;
     const fm1 = first ? '⚡' : '', fm2 = !first ? '⚡' : '', c1 = winner === p1 ? '🏆' : '', c2 = winner === p2 ? '🏆' : '';
-    const header = `${fm1}${c1}${p1.emoji} ${p1.name} ${d1}:${d2} ${fm2}${c2}${p2.emoji} ${p2.name}`;
+    const header = `${fm1}${c1}${p1.name} ${d1}:${d2} ${fm2}${c2}${p2.name}`;
     const rs = [];
     for (let i = 0; i < log.length; i += 2) rs.push(`${log[i]}:${log[i + 1] || '0'}`);
     return { winner, loser, winnerHp: wh, winnerDmg: wz, loserDmg: lz, rounds, first: first ? p1 : p2, fullLog: `${header} | ${rs.join(' | ')}`, p1, p2, d1, d2, crits: log.filter(l => l.includes('💥')).length, misses: log.filter(l => l === '❌' || l === '💨' || l === '🛡').length };
@@ -1853,21 +1921,481 @@ function sim_simulateMultiple(n) {
     const domLevel = wPct >= 60 ? '💀 Доминация' : wPct >= 55 ? '⚔️ Преимущество' : wPct >= 52 ? '📈 Лёгкий перевес' : '⚖️ Равные силы';
     document.getElementById('sim-resultCard').style.display = 'block';
     document.getElementById('sim-resultTitle').textContent = `📊 Результаты ×${n}`;
-    document.getElementById('sim-resultContent').innerHTML = `<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:nowrap;align-items:stretch;"><div style="flex:1;min-width:0;background:${r1 > r2 ? 'rgba(255,215,0,0.08)' : 'var(--elevated)'};border-radius:var(--radius-sm);padding:12px 8px;text-align:center;border:1px solid ${r1 > r2 ? 'rgba(255,215,0,0.3)' : 'var(--border)'};"><div style="font-size:1.8rem;margin-bottom:4px;">${p1.emoji}</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;font-size:0.75rem;">${p1.name}</div><div style="font-size:1.4rem;font-weight:800;color:${r1 > r2 ? 'var(--gold)' : 'var(--sub)'};">${r1}%</div><div style="color:var(--muted);font-size:0.7rem;">${w1} из ${n}</div>${r1 > r2 ? `<div style="margin-top:4px;color:var(--gold);font-weight:700;font-size:0.7rem;">🏆 ПОБЕДИТЕЛЬ</div>` : ''}</div><div style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--muted);font-weight:800;flex-shrink:0;">VS</div><div style="flex:1;min-width:0;background:${r2 > r1 ? 'rgba(255,215,0,0.08)' : 'var(--elevated)'};border-radius:var(--radius-sm);padding:12px 8px;text-align:center;border:1px solid ${r2 > r1 ? 'rgba(255,215,0,0.3)' : 'var(--border)'};"><div style="font-size:1.8rem;margin-bottom:4px;">${p2.emoji}</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;font-size:0.75rem;">${p2.name}</div><div style="font-size:1.4rem;font-weight:800;color:${r2 > r1 ? 'var(--gold)' : 'var(--sub)'};">${r2}%</div><div style="color:var(--muted);font-size:0.7rem;">${w2} из ${n}</div>${r2 > r1 ? `<div style="margin-top:4px;color:var(--gold);font-weight:700;font-size:0.7rem;">🏆 ПОБЕДИТЕЛЬ</div>` : ''}</div></div><div style="text-align:center;margin-bottom:16px;padding:8px 12px;background:var(--elevated);border-radius:20px;"><span style="color:var(--muted);font-size:0.8rem;">Вердикт:</span> <span style="color:var(--gold);font-weight:700;font-size:0.85rem;margin-left:4px;">${domLevel}</span> <span style="color:var(--muted);font-size:0.75rem;margin-left:4px;">— ${winner.name} ${wPct}%</span></div><div class="analytics-grid"><div class="analytics-card"><h4>⚡ Инициатива</h4><div style="margin-bottom:6px;font-size:0.75rem;">${p1.name}: ${fc.p1} (${(fc.p1 / n * 100).toFixed(0)}%)</div><div class="progress-bar"><div class="progress-fill" style="width:${(fc.p1 / n * 100).toFixed(0)}%"></div></div><div style="margin:6px 0;font-size:0.75rem;">${p2.name}: ${fc.p2} (${(fc.p2 / n * 100).toFixed(0)}%)</div><div class="progress-bar"><div class="progress-fill" style="width:${(fc.p2 / n * 100).toFixed(0)}%"></div></div><div style="margin-top:10px;font-size:0.72rem;color:var(--muted);">⚡ Первый ход = победа в ${(fw / n * 100).toFixed(0)}% случаев</div></div><div class="analytics-card"><h4>📈 Цифры</h4><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.72rem;"><span>⏱ Средняя длительность</span><span style="color:var(--gold);font-weight:600;">${(tr / n).toFixed(1)} раунда</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.72rem;"><span>💥 Всего критов</span><span style="color:var(--red);font-weight:600;">${tc}</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.72rem;"><span>🛡️ Промахов/блоков</span><span style="color:var(--muted);font-weight:600;">${tm}</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.72rem;"><span>🎯 Критов на бой</span><span style="color:var(--red);font-weight:600;">${(tc / n).toFixed(1)}</span></div></div></div><div class="section gold" style="margin-top:14px;padding:14px;"><div class="section-title" style="font-size:0.8rem;">📋 Пример боя</div><div class="result-log" style="font-size:0.7rem;">${sim_colorize(results[0]?.fullLog || '')}</div></div>`;
+    const icon1 = getHeroIcon(p1.heroName, '⚔️', 40);
+    const icon2 = getHeroIcon(p2.heroName, '🛡️', 40);
+    document.getElementById('sim-resultContent').innerHTML = `<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:nowrap;align-items:stretch;"><div style="flex:1;min-width:0;background:${r1 > r2 ? 'rgba(255,215,0,0.08)' : 'var(--elevated)'};border-radius:var(--radius-sm);padding:12px 8px;text-align:center;border:1px solid ${r1 > r2 ? 'rgba(255,215,0,0.3)' : 'var(--border)'};"><div style="margin-bottom:4px;">${icon1}</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;font-size:0.75rem;">${p1.name}</div><div style="font-size:1.4rem;font-weight:800;color:${r1 > r2 ? 'var(--gold)' : 'var(--sub)'};">${r1}%</div><div style="color:var(--muted);font-size:0.7rem;">${w1} из ${n}</div>${r1 > r2 ? `<div style="margin-top:4px;color:var(--gold);font-weight:700;font-size:0.7rem;">🏆 ПОБЕДИТЕЛЬ</div>` : ''}</div><div style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--muted);font-weight:800;flex-shrink:0;">VS</div><div style="flex:1;min-width:0;background:${r2 > r1 ? 'rgba(255,215,0,0.08)' : 'var(--elevated)'};border-radius:var(--radius-sm);padding:12px 8px;text-align:center;border:1px solid ${r2 > r1 ? 'rgba(255,215,0,0.3)' : 'var(--border)'};"><div style="margin-bottom:4px;">${icon2}</div><div style="font-weight:700;color:var(--text);margin-bottom:2px;font-size:0.75rem;">${p2.name}</div><div style="font-size:1.4rem;font-weight:800;color:${r2 > r1 ? 'var(--gold)' : 'var(--sub)'};">${r2}%</div><div style="color:var(--muted);font-size:0.7rem;">${w2} из ${n}</div>${r2 > r1 ? `<div style="margin-top:4px;color:var(--gold);font-weight:700;font-size:0.7rem;">🏆 ПОБЕДИТЕЛЬ</div>` : ''}</div></div><div style="text-align:center;margin-bottom:16px;padding:8px 12px;background:var(--elevated);border-radius:20px;"><span style="color:var(--muted);font-size:0.8rem;">Вердикт:</span> <span style="color:var(--gold);font-weight:700;font-size:0.85rem;margin-left:4px;">${domLevel}</span> <span style="color:var(--muted);font-size:0.75rem;margin-left:4px;">— ${winner.name} ${wPct}%</span></div><div class="analytics-grid"><div class="analytics-card"><h4>⚡ Инициатива</h4><div style="margin-bottom:6px;font-size:0.75rem;">${p1.name}: ${fc.p1} (${(fc.p1 / n * 100).toFixed(0)}%)</div><div class="progress-bar"><div class="progress-fill" style="width:${(fc.p1 / n * 100).toFixed(0)}%"></div></div><div style="margin:6px 0;font-size:0.75rem;">${p2.name}: ${fc.p2} (${(fc.p2 / n * 100).toFixed(0)}%)</div><div class="progress-bar"><div class="progress-fill" style="width:${(fc.p2 / n * 100).toFixed(0)}%"></div></div><div style="margin-top:10px;font-size:0.72rem;color:var(--muted);">⚡ Первый ход = победа в ${(fw / n * 100).toFixed(0)}% случаев</div></div><div class="analytics-card"><h4>📈 Цифры</h4><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.72rem;"><span>⏱ Средняя длительность</span><span style="color:var(--gold);font-weight:600;">${(tr / n).toFixed(1)} раунда</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.72rem;"><span>💥 Всего критов</span><span style="color:var(--red);font-weight:600;">${tc}</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.72rem;"><span>🛡️ Промахов/блоков</span><span style="color:var(--muted);font-weight:600;">${tm}</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.72rem;"><span>🎯 Критов на бой</span><span style="color:var(--red);font-weight:600;">${(tc / n).toFixed(1)}</span></div></div></div><div class="section gold" style="margin-top:14px;padding:14px;"><div class="section-title" style="font-size:0.8rem;">📋 Пример боя</div><div class="result-log" style="font-size:0.7rem;">${sim_colorize(results[0]?.fullLog || '')}</div></div>`;
 }
 window.sim_simulateMultiple = sim_simulateMultiple;
+
+/* === СИМУЛЯТОР ПОДЗЕМЕЛЬЯ === */
+let dungeon_classes = {}, dungeon_races = {}, dungeon_currentRuns = 25000, dungeon_currentReport = null, dungeon_isRunning = false;
+const DUNGEON_PASSIVES = ["🩸 Вампиризм", "💫 Сияние", "🔮 Отражение", "⚔️ Святая ярость", "💢 Накопленная ярость", "👻 Призрачный щит", "🗡️ Казнь", "✨ Благословение", "💚 Стойкость", "💥 Жажда крови", "🧿 Амулет Раскола", "🎯 Метка Охотника"];
+const DUNGEON_FAMILIARS = ["🦊 Лиса", "🐻 Медведь", "🦉 Сова", "🐍 Змея", "🦅 Орёл", "🐢 Черепаха", "🐲 Дракончик", "🐺 Волк", "🦝 Енот", "🐱 Кот", "🦀 Краб", "🐗 Кабан"];
+
+async function dungeon_loadData() {
+    try {
+        const data = await getDataJson();
+        dungeon_classes = Object.fromEntries(data.classes.map(c => [c.Name, [c.Hp, c.Atk, c.Def, c.Dex, c.Min, c.Max, c.Emoji]]));
+        dungeon_races = Object.fromEntries(data.races.map(r => [r.Name, [r.BonusHp, r.BonusAtk, r.BonusDef, r.BonusDex, r.BonusMin, r.BonusMax, r.Emoji]]));
+        dungeon_populateSelects();
+        dungeon_bindUI();
+    } catch (e) {
+        document.getElementById('dungeon-output').textContent = '❌ Ошибка загрузки данных: ' + e.message;
+    }
+}
+function dungeon_populateSelects() {
+    const cs = document.getElementById('dungeon-classSelect'), rs = document.getElementById('dungeon-raceSelect');
+    if (!cs || !rs) return;
+    cs.innerHTML = Object.keys(dungeon_classes).map(n => `<option value="${n}">${n}</option>`).join('');
+    rs.innerHTML = Object.keys(dungeon_races).map(n => `<option value="${n}">${n}</option>`).join('');
+    cs.value = 'Воин'; rs.value = 'Человек';
+}
+function dungeon_bindUI() {
+    const rb = document.getElementById('dungeon-runBtn'), ab = document.getElementById('dungeon-runAllBtn'), sb = document.getElementById('dungeon-saveBtn'), rs = document.getElementById('dungeon-runsSelect');
+    if (rb && !rb._b) { rb._b = true; rb.addEventListener('click', dungeon_startReport); }
+    if (ab && !ab._b) { ab._b = true; ab.addEventListener('click', dungeon_startComparison); }
+    if (sb && !sb._b) { sb._b = true; sb.addEventListener('click', dungeon_saveReport); }
+    if (rs && !rs._b) { rs._b = true; rs.addEventListener('change', () => { dungeon_currentRuns = parseInt(rs.value, 10) || 25000; }); }
+}
+function dungeon_saveReport() {
+    if (!dungeon_currentReport) return;
+    const blob = new Blob([dungeon_currentReport.text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `sim_${dungeon_currentReport.race}_${dungeon_currentReport.cls}.txt`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+function dungeon_setRunning(r) { dungeon_isRunning = r; ['dungeon-runBtn', 'dungeon-runAllBtn'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = r; }); const sb = document.getElementById('dungeon-saveBtn'); if (sb) sb.disabled = r || !dungeon_currentReport; }
+function dungeon_setProgress(pct, label) {
+    const w = document.getElementById('dungeon-progressWrap'), f = document.getElementById('dungeon-progressFill'), l = document.getElementById('dungeon-progressLabel');
+    if (!w || !f || !l) return;
+    if (pct <= 0 && !label) { w.classList.remove('active'); return; }
+    w.classList.add('active');
+    const p = Math.max(0, Math.min(100, pct));
+    f.style.width = p + '%'; f.textContent = Math.floor(p) + '%';
+    if (label) l.textContent = label;
+}
+function dungeon_setOutput(html) { const o = document.getElementById('dungeon-output'); if (!o) return; if (typeof html === 'string' && !html.startsWith('<')) o.textContent = html; else o.innerHTML = html; }
+function dungeon_setNote(t) { const n = document.getElementById('dungeon-fileNote'); if (n) n.textContent = t; }
+
+function dungeon_runOne(race, cls) {
+    const c = dungeon_classes[cls], r = dungeon_races[race];
+    const hero = [c[0] + r[0], c[1] + r[1], c[2] + r[2], c[3] + r[3], c[4] + r[4], c[5] + r[5]];
+    let chp = hero[0];
+    const pIdx = Math.floor(Math.random() * 12);
+    const famIdx = Math.floor(Math.random() * 12);
+    const f = pIdx;
+    const fam = DUNGEON_FAMILIARS[famIdx];
+    if (fam === "🦊 Лиса" || fam === "🦅 Орёл") hero[3] += 1;
+    else if (fam === "🐻 Медведь" || fam === "🐗 Кабан") chp += 2;
+    else if (fam === "🦉 Сова" || fam === "🐲 Дракончик") hero[5] += 1;
+    else if (fam === "🐍 Змея" || fam === "🦝 Енот") hero[4] += 1;
+    else if (fam === "🐢 Черепаха" || fam === "🦀 Краб") hero[2] += 1;
+    else if (fam === "🐺 Волк" || fam === "🐱 Кот") hero[1] += 1;
+    if (f === 8) hero[2] += 2;
+    const cap = [...hero];
+    let wave = 0, art = 0, dmg = 0;
+    const hpLog = {}, artLog = {}, dmgLog = {}, wDmg = {}, wMobDmg = {};
+    while (chp > 0) {
+        wave++;
+        const isBoss = wave % 5 === 0;
+        let base = 15 + wave * 8 + (wave > 5 ? (wave - 5) * 5 : 0);
+        let atk = 1 + Math.floor(wave / 3), dfn = Math.floor(wave / 5), mn = 1 + Math.floor(wave / 3), mx = 4 + Math.floor(wave / 2);
+        let hp;
+        if (isBoss) { const bh = Math.floor(base * 1.5); hp = bh + Math.floor(Math.random() * (bh * 0.2 + 1)) - Math.floor(bh * 0.1); atk += 2; dfn += 1; }
+        else hp = base + Math.floor(Math.random() * (base * 0.4 + 1)) - Math.floor(base * 0.2);
+        if (f === 1) hp = Math.floor(hp * 0.85);
+        let mhp = Math.max(1, hp);
+        let hhp = chp, hitCnt = 0, rounds = 0;
+        const hpStart = chp;
+        let wd = 0, wmd = 0;
+        hpLog[wave] = chp; dmgLog[wave] = dmg; artLog[wave] = art;
+        while (hhp > 0 && mhp > 0 && rounds < 30) {
+            rounds++;
+            const hit = Math.floor(Math.random() * 20) + 1;
+            if (hit !== 1 && hit + hero[1] >= 10 + dfn) {
+                hitCnt++;
+                let d = Math.floor(Math.random() * (hero[5] - hero[4] + 1)) + hero[4];
+                if (f === 3) d += 4;
+                if (f === 9 && hhp < Math.floor(hpStart * 0.5)) d += 8;
+                if (hit === 20) d += Math.floor(Math.random() * (hero[5] - hero[4] + 1)) + hero[4];
+                if (f === 4) d += Math.floor((hpStart - hhp) / 10);
+                if (f === 6 && mhp < Math.floor(hp * 0.3)) d = Math.max(d, mhp);
+                if (f === 10 && hitCnt % 3 === 0) d *= 2;
+                if (f === 11 && hitCnt <= 3) d *= 2;
+                d = Math.max(1, d);
+                mhp = Math.max(0, mhp - d); dmg += d; wd += d;
+            }
+            if (mhp <= 0) break;
+            const r2 = Math.floor(Math.random() * 20) + 1;
+            if (r2 !== 1 && r2 + atk >= 10 + hero[2]) {
+                let d = Math.floor(Math.random() * (mx - mn + 1)) + mn;
+                if (r2 === 20) d += Math.floor(Math.random() * (mx - mn + 1)) + mn;
+                if (f === 5 && Math.random() * 100 < 25) d = 0;
+                if (f === 2 && Math.random() * 100 < 30) mhp = Math.max(0, mhp - d);
+                d = Math.max(0, d);
+                hhp = Math.max(0, hhp - d); wmd += d;
+            }
+        }
+        wDmg[wave] = wd; wMobDmg[wave] = wmd;
+        if (hhp <= 0) { chp = 0; break; }
+        if (isBoss) hhp = chp;
+        else { const hl = 20 + wave * 2; hhp = Math.min(hhp + hl, chp + 30); if (f === 0) hhp = Math.min(hhp + 10, chp + 30); }
+        chp = hhp;
+        if (Math.random() * 100 <= (isBoss ? 70 : 35) + (f === 7 ? 15 : 0)) {
+            art++;
+            const k = Math.floor(Math.random() * 6);
+            const cs = (v, a, b) => Math.min(v + a, b + 16);
+            if (k === 0) { hero[1] = cs(hero[1], 2, cap[1]); hero[3] = cs(hero[3], 2, cap[3]); }
+            else if (k === 1) { hero[2] = cs(hero[2], 2, cap[2]); hero[5] = cs(hero[5], 2, cap[5]); }
+            else if (k === 2) { hero[1] = cs(hero[1], 2, cap[1]); hero[2] = cs(hero[2], 2, cap[2]); }
+            else if (k === 3) { hero[4] = cs(hero[4], 2, cap[4]); hero[5] = cs(hero[5], 2, cap[5]); }
+            else if (k === 4) chp += 20;
+            else { const cc = Math.floor(Math.random() * 4); if (cc === 0) hero[1] = Math.max(0, hero[1] - 1); else if (cc === 1) hero[2] = Math.max(0, hero[2] - 1); else if (cc === 2) hero[4] = Math.max(1, hero[4] - 1); else hero[5] = Math.max(1, hero[5] - 1); }
+        }
+    }
+    return { waves: wave - 1, pIdx, famIdx, art, dmg, hpLog, artLog, dmgLog, wDmg, wMobDmg };
+}
+function dungeon_stats(vals) {
+    if (!vals.length) return { avg: 0, median: 0, top10: 0, top1: 0, max: 0, min: 0 };
+    const s = [...vals].sort((a, b) => a - b), n = s.length, sum = s.reduce((a, b) => a + b, 0);
+    return { avg: sum / n, median: n % 2 === 0 ? (s[n / 2 - 1] + s[n / 2]) / 2 : s[Math.floor(n / 2)], top10: s[Math.max(0, Math.floor(n * 0.9) - 1)], top1: s[Math.max(0, Math.floor(n * 0.99) - 1)], max: s[n - 1], min: s[0] };
+}
+async function dungeon_buildReport(race, cls, RUNS, onProgress) {
+    const iconHtml = iconRace(race, 32) + iconClass(cls, 32);
+    const runs = [];
+    const pStats = {}, fStats = {};
+    DUNGEON_PASSIVES.forEach(p => pStats[p] = []);
+    DUNGEON_FAMILIARS.forEach(f => fStats[f] = []);
+    const chunk = 500;
+    for (let i = 0; i < RUNS; i += chunk) {
+        for (let j = 0; j < chunk && i + j < RUNS; j++) {
+            const r = dungeon_runOne(race, cls);
+            runs.push(r);
+            pStats[DUNGEON_PASSIVES[r.pIdx]].push(r.waves);
+            fStats[DUNGEON_FAMILIARS[r.famIdx]].push(r.waves);
+        }
+        if (onProgress) onProgress((i + chunk) / RUNS * 100);
+        await new Promise(r => setTimeout(r, 0));
+    }
+    const waves = runs.map(r => r.waves);
+    const wS = dungeon_stats(waves);
+    const avgDepth = wS.avg;
+    const hpW = {}, artW = {}, wDW = {}, wMW = {};
+    for (const r of runs) {
+        for (const [w, h] of Object.entries(r.hpLog)) (hpW[w] = hpW[w] || []).push(h);
+        for (const [w, a] of Object.entries(r.artLog)) (artW[w] = artW[w] || []).push(a);
+        for (const [w, d] of Object.entries(r.wDmg)) (wDW[w] = wDW[w] || []).push(d);
+        for (const [w, d] of Object.entries(r.wMobDmg)) (wMW[w] = wMW[w] || []).push(d);
+    }
+    const surv = {};
+    for (let w = 1; w <= 50; w++) surv[w] = runs.filter(r => r.waves >= w).length / RUNS * 100;
+    const avgOf = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    const txtLines = [];
+    const hr = () => "=".repeat(70);
+    txtLines.push(hr());
+    txtLines.push(` ${race}-${cls} — АНАЛИЗ ПОДЗЕМЕЛЬЯ`);
+    txtLines.push(hr());
+    txtLines.push(` Забегов:  ${RUNS}`);
+    txtLines.push(` Средняя глубина: ${avgDepth.toFixed(2)}`);
+    txtLines.push("");
+    txtLines.push("ГЛУБИНА"); txtLines.push(hr());
+    txtLines.push(`  Средняя:     ${wS.avg.toFixed(1)}`);
+    txtLines.push(`  Медиана:     ${wS.median.toFixed(1)}`);
+    txtLines.push(`  Топ 10%:     ${wS.top10}`);
+    txtLines.push(`  Топ 1%:      ${wS.top1}`);
+    txtLines.push(`  Максимум:    ${wS.max}`);
+    txtLines.push(`  Минимум:     ${wS.min}`);
+    txtLines.push(""); txtLines.push("ПАССИВКИ"); txtLines.push(hr());
+    txtLines.push(`  ${"Пассивка".padEnd(25)} ${"Сред".padStart(6)} ${"Δ".padStart(7)} ${"Макс".padStart(5)} ${"Игр".padStart(7)}`);
+    Object.entries(pStats).filter(([_, v]) => v.length).sort((a, b) => avgOf(b[1]) - avgOf(a[1])).forEach(([n, v]) => {
+        const a = avgOf(v), d = a - avgDepth;
+        txtLines.push(`  ${n.padEnd(25)} ${a.toFixed(1).padStart(6)} ${((d >= 0 ? "+" : "") + d.toFixed(1)).padStart(7)} ${String(Math.max(...v)).padStart(5)} ${String(v.length).padStart(7)}`);
+    });
+    txtLines.push(""); txtLines.push("ФАМИЛЬЯРЫ"); txtLines.push(hr());
+    txtLines.push(`  ${"Фамильяр".padEnd(20)} ${"Сред".padStart(6)} ${"Δ".padStart(7)} ${"Макс".padStart(5)} ${"Игр".padStart(7)}`);
+    Object.entries(fStats).filter(([_, v]) => v.length).sort((a, b) => avgOf(b[1]) - avgOf(a[1])).forEach(([n, v]) => {
+        const a = avgOf(v), d = a - avgDepth;
+        txtLines.push(`  ${n.padEnd(20)} ${a.toFixed(1).padStart(6)} ${((d >= 0 ? "+" : "") + d.toFixed(1)).padStart(7)} ${String(Math.max(...v)).padStart(5)} ${String(v.length).padStart(7)}`);
+    });
+
+    txtLines.push(""); txtLines.push("ШАНС ДОЖИТЬ ДО ВОЛНЫ"); txtLines.push(hr());
+    txtLines.push(`  ${"Волна".padEnd(12)} ${"Прошли".padStart(14)} ${"%".padStart(8)}`);
+    const maxWT = wS.max || 50;
+    for (let s = 1; s <= Math.max(50, maxWT); s += 5) {
+        const e = Math.min(s + 4, Math.max(50, maxWT));
+        if (s > maxWT) break;
+        const isLast = e >= maxWT;
+        let maxCnt = 0;
+        for (let w = s; w <= e; w++) {
+            const c = Math.round((surv[w] || 0) * RUNS / 100);
+            if (c > maxCnt) maxCnt = c;
+        }
+        const cnt = maxCnt;
+        const pct = cnt / RUNS * 100;
+        const lbl = s === e ? `Волна ${s}` : (isLast ? `Волна ${s}-${e} max` : `Волна ${s}-${e}`);
+        const pctDisp = cnt === 0 ? '0%' : (pct < 0.01 ? '<0.01%' : pct < 1 ? pct.toFixed(2) + '%' : pct.toFixed(1) + '%');
+        txtLines.push(`  ${lbl.padEnd(12)} ${(cnt.toLocaleString('ru-RU') + ' / ' + RUNS.toLocaleString('ru-RU')).padStart(14)} ${pctDisp.padStart(8)}`);
+    }
+    [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50].forEach(w => {
+        if (!hpW[w] || !hpW[w].length) return;
+        const a = avgOf(hpW[w]);
+        txtLines.push(`  Волна ${String(w).padStart(2)}: HP ${a.toFixed(1)}`);
+    });
+    txtLines.push(""); txtLines.push("ТОП-5 ЗАБЕГОВ"); txtLines.push(hr());
+    [...runs].sort((a, b) => b.waves - a.waves).slice(0, 5).forEach((r, i) => {
+        txtLines.push(`  #${i + 1}: ${r.waves} волн | ${DUNGEON_PASSIVES[r.pIdx]} · ${DUNGEON_FAMILIARS[r.famIdx]} | Арт: ${r.art} | Урон: ${r.dmg.toLocaleString('ru-RU')}`);
+    });
+
+    const maxDepth = wS.max || 1;
+    const maxHP = Math.max(...Object.values(hpW).map(a => avgOf(a)), 1);
+    const maxWD = Math.max(...Object.values(wDW).map(a => avgOf(a)), 1);
+    const maxWM = Math.max(...Object.values(wMW).map(a => avgOf(a)), 1);
+    const maxART = Math.max(...Object.values(artW).map(a => avgOf(a)), 1);
+    const wavesToShow = (() => {
+        const set = new Set();
+        for (let w = 1; w <= Math.min(10, wS.max); w++) set.add(w);
+        for (let w = 15; w <= 50; w += 5) if (w <= wS.max || w === 50) set.add(w);
+        if (wS.max > 0) set.add(wS.max);
+        return [...set].sort((a, b) => a - b).filter(w => hpW[w] || wDW[w] || wMW[w] || artW[w]);
+    })();
+
+    let h = '';
+    h += '<div class="dungeon-header"><div class="dh-icon">' + iconHtml + '</div><div class="dh-title">' + esc(race) + '-' + esc(cls) + '</div><div class="dh-sub"><strong>' + RUNS.toLocaleString('ru-RU') + '</strong> забегов · средняя глубина <strong>' + avgDepth.toFixed(2) + '</strong></div></div>';
+    h += '<div class="dungeon-block"><div class="dungeon-block-title">📊 Глубина подземелья</div><div class="depth-grid">';
+    const depthItems = [
+        { l: 'Средняя', v: wS.avg.toFixed(1), bar: wS.avg / maxDepth * 100 },
+        { l: 'Медиана', v: wS.median.toFixed(1), bar: wS.median / maxDepth * 100 },
+        { l: 'Топ 10%', v: wS.top10, bar: wS.top10 / maxDepth * 100 },
+        { l: 'Топ 1%', v: wS.top1, bar: wS.top1 / maxDepth * 100 },
+        { l: 'Максимум', v: wS.max, bar: 100 },
+        { l: 'Минимум', v: wS.min, bar: wS.min / maxDepth * 100 }
+    ];
+    depthItems.forEach(d => {
+        h += '<div class="depth-item"><div class="di-label">' + d.l + '</div><div class="di-value">' + d.v + '</div><div class="di-bar"><div class="di-bar-fill" style="width:' + Math.max(2, Math.min(100, d.bar)) + '%"></div></div></div>';
+    });
+    h += '</div></div>';
+
+    h += '<div class="dungeon-block"><div class="dungeon-block-title">📈 Шанс дожить до волны</div>';
+    h += '<table class="surv-table"><thead><tr><th>Волна</th><th class="num">Прошли</th><th class="num">%</th><th class="sv-bar-cell"></th></tr></thead><tbody>';
+    const groups = [];
+    const maxW = wS.max || 50;
+    for (let start = 1; start <= Math.max(50, maxW); start += 5) {
+        const end = Math.min(start + 4, Math.max(50, maxW));
+        if (start > maxW) break;
+        const label = start === end ? 'Волна ' + start : 'Волна ' + start + '–' + end;
+        let maxCnt = 0;
+        for (let w = start; w <= end; w++) {
+            const c = Math.round((surv[w] || 0) * RUNS / 100);
+            if (c > maxCnt) maxCnt = c;
+        }
+        groups.push({ label, pct: maxCnt / RUNS * 100, cnt: maxCnt, end, maxW });
+    }
+    groups.forEach(g => {
+        const cls2 = g.pct >= 60 ? '' : g.pct >= 30 ? 'warn' : 'bad';
+        const pctDisp = g.cnt === 0 ? '0%' : (g.pct < 0.01 ? '<0.01%' : g.pct < 1 ? g.pct.toFixed(2) + '%' : g.pct.toFixed(1) + '%');
+        h += '<tr><td class="sv-wave">' + g.label + '</td><td class="sv-cnt">' + g.cnt.toLocaleString('ru-RU') + ' / ' + RUNS.toLocaleString('ru-RU') + '</td><td class="sv-pct">' + pctDisp + '</td><td class="sv-bar-cell"><div class="sv-bar"><div class="sv-bar-fill ' + cls2 + '" style="width:' + g.pct + '%"></div></div></td></tr>';
+    });
+    h += '</tbody></table></div>';
+
+    if (wavesToShow.length) {
+        h += '<div class="dungeon-block"><div class="dungeon-block-title">🔎 Статистика по волнам</div>';
+        h += '<div class="stat-tabs"><button class="stat-tab active" data-pane="hp">❤️ HP</button><button class="stat-tab" data-pane="dmg">⚔️ Урон</button><button class="stat-tab" data-pane="mob">💀 Урон моба</button><button class="stat-tab" data-pane="art">⚙️ Артефакты</button></div>';
+        h += '<div class="stat-pane active" data-pane="hp">';
+        wavesToShow.forEach(w => { if (!hpW[w]) return; const a = avgOf(hpW[w]); h += '<div class="stat-row"><span class="stat-wave">В.' + w + '</span><div class="stat-bar"><div class="stat-bar-fill hp" style="width:' + a / maxHP * 100 + '%"></div></div><span class="stat-num">' + a.toFixed(1) + '</span></div>'; });
+        h += '</div>';
+        h += '<div class="stat-pane" data-pane="dmg">';
+        wavesToShow.forEach(w => { if (!wDW[w]) return; const a = avgOf(wDW[w]); h += '<div class="stat-row"><span class="stat-wave">В.' + w + '</span><div class="stat-bar"><div class="stat-bar-fill" style="width:' + a / maxWD * 100 + '%"></div></div><span class="stat-num">' + a.toFixed(1) + '</span></div>'; });
+        h += '</div>';
+        h += '<div class="stat-pane" data-pane="mob">';
+        wavesToShow.forEach(w => { if (!wMW[w]) return; const a = avgOf(wMW[w]); h += '<div class="stat-row"><span class="stat-wave">В.' + w + '</span><div class="stat-bar"><div class="stat-bar-fill mob" style="width:' + a / maxWM * 100 + '%"></div></div><span class="stat-num">' + a.toFixed(1) + '</span></div>'; });
+        h += '</div>';
+        h += '<div class="stat-pane" data-pane="art">';
+        wavesToShow.forEach(w => { if (!artW[w]) return; const a = avgOf(artW[w]); h += '<div class="stat-row"><span class="stat-wave">В.' + w + '</span><div class="stat-bar"><div class="stat-bar-fill art" style="width:' + a / maxART * 100 + '%"></div></div><span class="stat-num">' + a.toFixed(1) + '</span></div>'; });
+        h += '</div></div>';
+    }
+
+    h += dungeon_renderStatsTable('⚔️ Пассивки', pStats, avgDepth, 'passives');
+    h += dungeon_renderStatsTable('🐾 Фамильяры', fStats, avgDepth, 'familiars');
+
+    const top5 = [...runs].sort((a, b) => b.waves - a.waves).slice(0, 5);
+    h += '<div class="dungeon-block"><div class="dungeon-block-title">🏆 Топ-5 забегов</div>';
+    top5.forEach((r, i) => {
+        const rc = i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
+        h += '<div class="top-run"><div class="tr-rank ' + rc + '">#' + (i + 1) + '</div><div class="tr-main"><div class="tr-waves">' + r.waves + ' волн</div><div class="tr-meta">' + DUNGEON_PASSIVES[r.pIdx] + ' · ' + DUNGEON_FAMILIARS[r.famIdx] + ' · ⚙️ ' + r.art + ' арт.</div></div><div class="tr-dmg">' + r.dmg.toLocaleString('ru-RU') + ' урона</div></div>';
+    });
+    h += '</div>';
+
+    return { text: txtLines.join("\n"), html: h, race, cls, icon: iconHtml };
+}
+function dungeon_renderStatsTable(title, stats, avgDepth, key) {
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const rows = Object.entries(stats).filter(([_, v]) => v.length).map(([name, vals]) => {
+        const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+        return { name, avg, delta: avg - avgDepth, max: Math.max(...vals), count: vals.length };
+    });
+    rows.sort((a, b) => b.delta - a.delta);
+    const maxAvg = Math.max(...rows.map(r => r.avg), 1);
+    let h = '<div class="dungeon-block" data-table="' + key + '"><div class="dungeon-block-title">' + title + '<span class="cnt">' + rows.length + '</span></div>';
+    h += '<table class="sortable-table" data-table-key="' + key + '"><thead><tr>';
+    h += '<th data-col="name" class="sortable">Название</th><th data-col="avg" class="sortable num">Сред. глубина</th><th data-col="delta" class="sortable num sort-desc">Δ</th><th data-col="max" class="sortable num">Макс</th><th data-col="count" class="sortable num">Забегов</th><th>Полоса</th>';
+    h += '</tr></thead><tbody>';
+    rows.forEach(r => {
+        const dCls = r.delta > 0.05 ? 'pos' : r.delta < -0.05 ? 'neg' : 'zero';
+        const dTxt = (r.delta >= 0 ? '+' : '') + r.delta.toFixed(1);
+        h += '<tr data-name="' + esc(r.name) + '" data-avg="' + r.avg + '" data-delta="' + r.delta + '" data-max="' + r.max + '" data-count="' + r.count + '">';
+        h += '<td class="name">' + esc(r.name) + '</td><td class="num">' + r.avg.toFixed(1) + '</td><td class="num ' + dCls + '">' + dTxt + '</td><td class="num">' + r.max + '</td><td class="num">' + r.count.toLocaleString('ru-RU') + '</td>';
+        h += '<td><span class="mini-bar-wrap"><span class="mini-bar-fill" style="width:' + r.avg / maxAvg * 100 + '%"></span></span></td></tr>';
+    });
+    h += '</tbody></table></div>';
+    return h;
+}
+function dungeon_bindTableSort(container) {
+    container.querySelectorAll('.sortable-table th.sortable').forEach(th => {
+        th.addEventListener('click', () => {
+            const table = th.closest('table');
+            const key = th.dataset.col;
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const isAsc = th.classList.contains('sort-asc');
+            table.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+            th.classList.add(isAsc ? 'sort-desc' : 'sort-asc');
+            const dir = isAsc ? -1 : 1;
+            rows.sort((a, b) => {
+                let va = a.dataset[key], vb = b.dataset[key];
+                if (key === 'name') return dir * va.localeCompare(vb);
+                return dir * (parseFloat(va) - parseFloat(vb));
+            });
+            rows.forEach(r => tbody.appendChild(r));
+        });
+    });
+}
+function dungeon_bindStatTabs(container) {
+    const tabs = container.querySelectorAll('.stat-tab');
+    const panes = container.querySelectorAll('.stat-pane');
+    tabs.forEach(t => t.addEventListener('click', () => {
+        const target = t.dataset.pane;
+        tabs.forEach(x => x.classList.toggle('active', x === t));
+        panes.forEach(p => p.classList.toggle('active', p.dataset.pane === target));
+    }));
+}
+async function dungeon_buildComparison(race, RUNS, onProgress) {
+    const lines = [];
+    const hr = () => "=".repeat(70);
+    lines.push(hr());
+    lines.push(` СРАВНЕНИЕ КЛАССОВ (${race})`);
+    lines.push(hr());
+    lines.push(` Забегов на класс: ${RUNS}`);
+    const results = [];
+    const classNames = Object.keys(dungeon_classes);
+    for (let ci = 0; ci < classNames.length; ci++) {
+        const cls = classNames[ci];
+        const waves = [];
+        const chunk = 500;
+        for (let i = 0; i < RUNS; i += chunk) {
+            for (let j = 0; j < chunk && i + j < RUNS; j++) waves.push(dungeon_runOne(race, cls).waves);
+            await new Promise(r => setTimeout(r, 0));
+        }
+        results.push({ cls, ...dungeon_stats(waves) });
+        if (onProgress) onProgress((ci + 1) / classNames.length * 100, cls, ci + 1, classNames.length);
+    }
+    results.sort((a, b) => b.avg - a.avg);
+    lines.push("");
+    lines.push("СРЕДНЯЯ ГЛУБИНА");
+    lines.push(hr());
+    lines.push(`  ${"Класс".padEnd(18)} ${"Сред".padStart(6)} ${"Медиана".padStart(8)} ${"Макс".padStart(5)}`);
+    results.forEach(r => lines.push(`  ${(r.cls).padEnd(18)} ${r.avg.toFixed(2).padStart(6)} ${r.median.toFixed(1).padStart(8)} ${String(r.max).padStart(5)}`));
+
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const maxAvgH = Math.max(...results.map(r => r.avg), 1);
+    const iconRaceHtml = iconRace(race, 32);
+    let h = '';
+    h += '<div class="dungeon-header"><div class="dh-icon">' + iconRaceHtml + '</div><div class="dh-title">Сравнение классов</div><div class="dh-sub">Раса: <strong>' + esc(race) + '</strong> · Забегов на класс: <strong>' + RUNS.toLocaleString('ru-RU') + '</strong></div></div>';
+    h += '<div class="dungeon-block"><div class="dungeon-block-title">🏆 Рейтинг по средней глубине</div>';
+    h += '<table class="sortable-table"><thead><tr><th data-col="rank" class="sortable num" style="width:40px">#</th><th data-col="name" class="sortable">Класс</th><th data-col="avg" class="sortable num sort-desc">Сред. глубина</th><th data-col="median" class="sortable num">Медиана</th><th data-col="max" class="sortable num">Макс</th><th>Полоса</th></tr></thead><tbody>';
+    results.forEach((r, i) => {
+        const ic = iconClass(r.cls, 24);
+        const rank = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+        const barPct = r.avg / maxAvgH * 100;
+        const barColor = i === 0 ? 'linear-gradient(90deg,#ffd700,#ffed4e)' : i < 3 ? 'linear-gradient(90deg,#c49600,#ffd700)' : 'linear-gradient(90deg,#8a94a8,#c0c8d8)';
+        h += '<tr data-rank="' + (i + 1) + '" data-name="' + esc(r.cls) + '" data-avg="' + r.avg + '" data-median="' + r.median + '" data-max="' + r.max + '">';
+        h += '<td class="num" style="color:var(--gold);font-weight:900">' + rank + '</td>';
+        h += '<td class="name"><span style="display:inline-flex;align-items:center;gap:6px;">' + ic + ' ' + esc(r.cls) + '</span></td>';
+        h += '<td class="num" style="color:var(--gold);font-weight:700">' + r.avg.toFixed(2) + '</td>';
+        h += '<td class="num">' + r.median.toFixed(1) + '</td>';
+        h += '<td class="num">' + r.max + '</td>';
+        h += '<td><span class="mini-bar-wrap" style="width:140px"><span class="mini-bar-fill" style="width:' + barPct + '%;background:' + barColor + '"></span></span></td>';
+        h += '</tr>';
+    });
+    h += '</tbody></table></div>';
+    return { text: lines.join("\n"), html: h, race, cls: "ALL", icon: iconRaceHtml };
+}
+async function dungeon_startReport() {
+    if (dungeon_isRunning) return;
+    const cls = document.getElementById('dungeon-classSelect').value, race = document.getElementById('dungeon-raceSelect').value;
+    if (!cls || !race) return;
+    dungeon_currentReport = null;
+    dungeon_setRunning(true);
+    dungeon_setProgress(0, `Симуляция ${race}-${cls}...`);
+    dungeon_setOutput(`<div style="text-align:center;padding:40px;color:var(--sub);">⏳ Симуляция ${race}-${cls}...</div>`);
+    dungeon_setNote('');
+    const t0 = performance.now();
+    try {
+        const result = await dungeon_buildReport(race, cls, dungeon_currentRuns, pct => dungeon_setProgress(pct, `Симуляция ${race}-${cls}... ${Math.floor(pct)}%`));
+        const el = ((performance.now() - t0) / 1000).toFixed(2);
+        dungeon_setOutput(result.html);
+        dungeon_currentReport = result;
+        const out = document.getElementById('dungeon-output');
+        dungeon_bindTableSort(out);
+        dungeon_bindStatTabs(out);
+        dungeon_setRunning(false);
+        dungeon_setProgress(100, `✅ Готово за ${el} с`);
+        dungeon_setNote(`Готово за ${el} с · ${dungeon_currentRuns.toLocaleString('ru-RU')} забегов`);
+        setTimeout(() => dungeon_setProgress(0), 2500);
+    } catch (e) {
+        dungeon_setRunning(false);
+        dungeon_setProgress(0);
+        dungeon_setOutput('❌ ' + e.message + '\n' + e.stack);
+    }
+}
+async function dungeon_startComparison() {
+    if (dungeon_isRunning) return;
+    const race = document.getElementById('dungeon-raceSelect').value;
+    if (!race) return;
+    const classCount = Object.keys(dungeon_classes).length;
+    const runsPerClass = Math.max(1000, Math.floor(dungeon_currentRuns / classCount));
+    dungeon_currentReport = null;
+    dungeon_setRunning(true);
+    dungeon_setProgress(0, `Сравнение (${race}), по ${runsPerClass.toLocaleString('ru-RU')} на класс...`);
+    dungeon_setOutput(`<div style="text-align:center;padding:40px;color:var(--sub);">⏳ Сравнение классов (${race})...</div>`);
+    dungeon_setNote('');
+    const t0 = performance.now();
+    try {
+        const result = await dungeon_buildComparison(race, runsPerClass, (pct, cls, cur, tot) => dungeon_setProgress(pct, `Считаю ${cls}... (${cur}/${tot})`));
+        const el = ((performance.now() - t0) / 1000).toFixed(2);
+        dungeon_setOutput(result.html);
+        dungeon_currentReport = result;
+        const out = document.getElementById('dungeon-output');
+        dungeon_bindTableSort(out);
+        dungeon_setRunning(false);
+        dungeon_setProgress(100, `✅ Готово за ${el} с`);
+        dungeon_setNote(`Готово за ${el} с · ${classCount} классов × ${runsPerClass.toLocaleString('ru-RU')}`);
+        setTimeout(() => dungeon_setProgress(0), 2500);
+    } catch (e) {
+        dungeon_setRunning(false);
+        dungeon_setProgress(0);
+        dungeon_setOutput('❌ ' + e.message + '\n' + e.stack);
+    }
+}
 
 /* === ФОРМА === */
 const FORM_REPO = 'rvotaenotaTTV/dnd-stats', FORM_FILE = 'stats_data.json', FORM_CACHE_KEY = 'eternis-form-commits';
 let form_allChanges = [], form_currentTab = 'players', form_currentSort = { key: 'diff', dir: 'desc' }, form_searchQuery = '', form_filterMode = 'all';
-let form_classEmojis = {}, form_raceEmojis = {};
 
 async function form_loadForm() {
     const c = document.getElementById('form-content');
-    try {
-        const dr = await fetch('https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json');
-        if (dr.ok) { const dd = await dr.json(); (dd.classes || []).forEach(x => form_classEmojis[x.Name] = x.Emoji); (dd.races || []).forEach(x => form_raceEmojis[x.Name] = x.Emoji); }
-    } catch (e) { }
     try {
         let commits;
         const cached = JSON.parse(localStorage.getItem(FORM_CACHE_KEY) || '{}');
@@ -1915,8 +2443,7 @@ function form_getData() {
         Object.values(window._form_newArchive || {}).forEach(hh => hh.forEach(h => add(h.name, 0, 0, h.wins || 0, h.losses || 0)));
         data = Object.values(map).map(c => {
             const ot = c.oldW + c.oldL, nt = c.wins + c.losses;
-            const em = form_currentTab === 'classes' ? (form_classEmojis[c.display] || '') : (form_raceEmojis[c.display] || '');
-            return { ...c, emoji: em, oldWr: ot > 0 ? c.oldW / ot * 100 : 0, newWr: nt > 0 ? c.wins / nt * 100 : 0, diff: (nt > 0 ? c.wins / nt * 100 : 0) - (ot > 0 ? c.oldW / ot * 100 : 0), gamesAdded: nt - ot };
+            return { ...c, oldWr: ot > 0 ? c.oldW / ot * 100 : 0, newWr: nt > 0 ? c.wins / nt * 100 : 0, diff: (nt > 0 ? c.wins / nt * 100 : 0) - (ot > 0 ? c.oldW / ot * 100 : 0), gamesAdded: nt - ot };
         });
     }
     if (form_searchQuery) data = data.filter(d => (d.display || '').toLowerCase().includes(form_searchQuery));
@@ -1982,7 +2509,10 @@ function form_renderTable() {
     tbody.innerHTML = data.map((c, i) => {
         const cls = c.diff > 0.5 ? 'up' : c.diff < -0.5 ? 'down' : '';
         const arr = c.diff > 0.5 ? '▲' : c.diff < -0.5 ? '▼' : '●';
-        const em = c.emoji || '';
+        let em = '';
+        if (form_currentTab === 'classes' && c.display) em = iconClass(c.display, 22);
+        else if (form_currentTab === 'races' && c.display) em = iconRace(c.display, 22);
+        else if (form_currentTab === 'players' && c.name) em = getHeroIcon(c.name, '⚔️', 22);
         const name = c.display || c.name;
         const nameHTML = form_currentTab === 'players' && c.display
             ? `<a href="player.html?name=${encodeURIComponent(c.display)}"><span class="em">${em}</span>${name}</a>`
@@ -2000,28 +2530,29 @@ let matrix_sortColumn = 'total';
 let matrix_sortDirection = 'desc';
 let matrix_lastDetailKey = null;
 
-const MATRIX_RACE_ICONS = { 'Человек': '🧑', 'Орк': '👹', 'Дворф': '🧔', 'Эльф': '🧝', 'Нежить': '💀', 'Табакси': '🐱', 'Тифлинг': '😈' };
-const MATRIX_CLASS_ICONS = { 'Воин': '⚔️', 'Паладин': '🛡️', 'Плут': '🗡️', 'Монах': '📿', 'Следопыт': '🏹', 'Чародей': '🔮', 'Бард': '🎸', 'Друид': '🌿', 'Изобретатель': '⚙️', 'Варвар': '🪓', 'Волшебница': '✨', 'Некромант': '🦴', 'Жрец': '✝️', 'Колдун': '👁️', 'Алхимик': '🧪' };
-
-function matrix_getRaceIcon(name) { return MATRIX_RACE_ICONS[name] || '🧬'; }
-function matrix_getClassIcon(name) { return MATRIX_CLASS_ICONS[name] || '⚔️'; }
-function matrix_getEntityIcon(name, mode) {
-    if (mode === 'races') return matrix_getRaceIcon(name);
-    if (mode === 'classes') return matrix_getClassIcon(name);
-    const parsed = matrix_parseHeroName(name);
-    if (parsed) return `${matrix_getRaceIcon(parsed.race)}${matrix_getClassIcon(parsed.cls)}`;
-    return '🎭';
-}
 function matrix_parseHeroName(fullName) {
     if (!fullName) return null;
     const cleanName = fullName.trim();
     let sep = cleanName.indexOf(' - ');
-    if (sep === -1) sep = cleanName.indexOf('-');
-    if (sep === -1) return null;
-    const race = cleanName.substring(0, sep).trim();
-    const cls = cleanName.substring(sep + (cleanName[sep] === '-' && cleanName[sep + 1] === ' ' ? 3 : 1)).trim();
+    let race, cls;
+    if (sep !== -1) {
+        race = cleanName.substring(0, sep).trim();
+        cls = cleanName.substring(sep + 3).trim();
+    } else {
+        sep = cleanName.indexOf('-');
+        if (sep === -1) return null;
+        race = cleanName.substring(0, sep).trim();
+        cls = cleanName.substring(sep + 1).trim();
+    }
     if (!race || !cls) return null;
     return { race, cls, combo: `${race} - ${cls}` };
+}
+function matrix_getEntityIcon(name, mode) {
+    if (mode === 'races') return iconRace(name, 24);
+    if (mode === 'classes') return iconClass(name, 24);
+    const parsed = matrix_parseHeroName(name);
+    if (parsed) return `${iconRace(parsed.race, 24)}${iconClass(parsed.cls, 24)}`;
+    return '🎭';
 }
 
 async function matrix_loadData() {
@@ -2164,7 +2695,7 @@ function matrix_renderView() {
         const totalWr = row.total > 0 ? (row.totalWins * 100 / row.total).toFixed(1) + '%' : '—';
         const totalClass = matrix_getWrClass(row.totalWins, row.totalLosses);
         const icon = matrix_getEntityIcon(row.name, mode);
-        html += `<tr><td class="row-header">${icon} ${row.name}</td>`;
+        html += `<tr><td class="row-header"><span style="display:inline-flex;align-items:center;gap:6px;">${icon} ${row.name}</span></td>`;
         matrix_racesData.seasons.forEach((s, si) => {
             const stats = row.seasons[si];
             if (stats && (stats.wins + stats.losses) > 0) {
@@ -2300,7 +2831,7 @@ function matrix_showComboDetail(comboName, seasonIndex, silent) {
     });
     matchedPlayers.sort((a, b) => { const wa = a.wins / ((a.wins + a.losses) || 1); const wb = b.wins / ((b.wins + b.losses) || 1); return wb - wa; });
     const icon = matrix_getEntityIcon(comboName, mode);
-    let html = `<div class="combo-detail"><div class="combo-detail-title">${icon} ${comboName} · ${season.fullName}<span style="color:var(--muted);font-weight:400;font-size:0.75rem;margin-left:auto">${matchedPlayers.length} игроков</span></div>`;
+    let html = `<div class="combo-detail"><div class="combo-detail-title"><span style="display:inline-flex;align-items:center;gap:6px;">${icon} ${comboName}</span> · ${season.fullName}<span style="color:var(--muted);font-weight:400;font-size:0.75rem;margin-left:auto">${matchedPlayers.length} игроков</span></div>`;
     if (matchedPlayers.length === 0) {
         html += '<div style="color:var(--muted);padding:10px">Нет игроков</div>';
     } else {
@@ -2310,7 +2841,8 @@ function matrix_showComboDetail(comboName, seasonIndex, silent) {
             const wr = total > 0 ? (p.wins * 100 / total).toFixed(1) : '0.0';
             const wrNum = parseFloat(wr);
             const wrColor = wrNum >= 55 ? 'var(--green)' : wrNum >= 45 ? 'var(--gold)' : 'var(--red)';
-            html += `<tr><td style="color:var(--muted)">${i + 1}</td><td class="left"><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.emoji || ''} ${p.display}</a></td><td class="left" style="color:var(--sub);font-size:0.72rem">${p.heroName}</td><td style="color:var(--green)">${p.wins}</td><td style="color:var(--red)">${p.losses}</td><td style="color:${wrColor};font-weight:700">${wr}%</td><td style="color:var(--muted)">${total}</td></tr>`;
+            const hIcon = getHeroIcon(p.heroName, p.emoji || '⚔️', 24);
+            html += `<tr><td style="color:var(--muted)">${i + 1}</td><td class="left"><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${hIcon} ${p.display}</a></td><td class="left" style="color:var(--sub);font-size:0.72rem">${p.heroName}</td><td style="color:var(--green)">${p.wins}</td><td style="color:var(--red)">${p.losses}</td><td style="color:${wrColor};font-weight:700">${wr}%</td><td style="color:var(--muted)">${total}</td></tr>`;
         });
         html += `</tbody></table></div>`;
     }
@@ -2319,550 +2851,6 @@ function matrix_showComboDetail(comboName, seasonIndex, silent) {
     if (!silent) container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 window.matrix_showComboDetail = matrix_showComboDetail;
-
-/* === СИМУЛЯТОР ПОДЗЕМЕЛЬЯ === */
-let dungeon_classes = {}, dungeon_races = {}, dungeon_currentRuns = 25000, dungeon_currentReport = null, dungeon_isRunning = false;
-const DUNGEON_PASSIVES = ["🩸 Вампиризм", "💫 Сияние", "🔮 Отражение", "⚔️ Святая ярость", "💢 Накопленная ярость", "👻 Призрачный щит", "🗡️ Казнь", "✨ Благословение", "💚 Стойкость", "💥 Жажда крови", "🧿 Амулет Раскола", "🎯 Метка Охотника"];
-const DUNGEON_FAMILIARS = ["🦊 Лиса", "🐻 Медведь", "🦉 Сова", "🐍 Змея", "🦅 Орёл", "🐢 Черепаха", "🐲 Дракончик", "🐺 Волк", "🦝 Енот", "🐱 Кот", "🦀 Краб", "🐗 Кабан"];
-
-async function dungeon_loadData() {
-    try {
-        const data = await getDataJson();
-        dungeon_classes = Object.fromEntries(data.classes.map(c => [c.Name, [c.Hp, c.Atk, c.Def, c.Dex, c.Min, c.Max, c.Emoji]]));
-        dungeon_races = Object.fromEntries(data.races.map(r => [r.Name, [r.BonusHp, r.BonusAtk, r.BonusDef, r.BonusDex, r.BonusMin, r.BonusMax, r.Emoji]]));
-        dungeon_populateSelects();
-        dungeon_bindUI();
-    } catch (e) {
-        document.getElementById('dungeon-output').textContent = '❌ Ошибка загрузки данных: ' + e.message;
-    }
-}
-function dungeon_populateSelects() {
-    const cs = document.getElementById('dungeon-classSelect'), rs = document.getElementById('dungeon-raceSelect');
-    if (!cs || !rs) return;
-    cs.innerHTML = Object.entries(dungeon_classes).map(([n, v]) => `<option value="${n}">${v[6]} ${n}</option>`).join('');
-    rs.innerHTML = Object.entries(dungeon_races).map(([n, v]) => `<option value="${n}">${v[6]} ${n}</option>`).join('');
-    cs.value = 'Воин'; rs.value = 'Человек';
-}
-function dungeon_bindUI() {
-    const rb = document.getElementById('dungeon-runBtn'), ab = document.getElementById('dungeon-runAllBtn'), sb = document.getElementById('dungeon-saveBtn'), rs = document.getElementById('dungeon-runsSelect');
-    if (rb && !rb._b) { rb._b = true; rb.addEventListener('click', dungeon_startReport); }
-    if (ab && !ab._b) { ab._b = true; ab.addEventListener('click', dungeon_startComparison); }
-    if (sb && !sb._b) { sb._b = true; sb.addEventListener('click', dungeon_saveReport); }
-    if (rs && !rs._b) { rs._b = true; rs.addEventListener('change', () => { dungeon_currentRuns = parseInt(rs.value, 10) || 25000; }); }
-}
-function dungeon_saveReport() {
-    if (!dungeon_currentReport) return;
-    const blob = new Blob([dungeon_currentReport.text], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `sim_${dungeon_currentReport.race}_${dungeon_currentReport.cls}.txt`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-}
-function dungeon_setRunning(r) { dungeon_isRunning = r; ['dungeon-runBtn', 'dungeon-runAllBtn'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = r; }); const sb = document.getElementById('dungeon-saveBtn'); if (sb) sb.disabled = r || !dungeon_currentReport; }
-function dungeon_setProgress(pct, label) {
-    const w = document.getElementById('dungeon-progressWrap'), f = document.getElementById('dungeon-progressFill'), l = document.getElementById('dungeon-progressLabel');
-    if (!w || !f || !l) return;
-    if (pct <= 0 && !label) { w.classList.remove('active'); return; }
-    w.classList.add('active');
-    const p = Math.max(0, Math.min(100, pct));
-    f.style.width = p + '%'; f.textContent = Math.floor(p) + '%';
-    if (label) l.textContent = label;
-}
-function dungeon_setOutput(html) { const o = document.getElementById('dungeon-output'); if (!o) return; if (typeof html === 'string' && !html.startsWith('<')) o.textContent = html; else o.innerHTML = html; }
-function dungeon_setNote(t) { const n = document.getElementById('dungeon-fileNote'); if (n) n.textContent = t; }
-
-function dungeon_runOne(race, cls) {
-    const c = dungeon_classes[cls], r = dungeon_races[race];
-    const hero = [c[0] + r[0], c[1] + r[1], c[2] + r[2], c[3] + r[3], c[4] + r[4], c[5] + r[5]];
-    let chp = hero[0];
-    const pIdx = Math.floor(Math.random() * 12);
-    const famIdx = Math.floor(Math.random() * 12);
-    const f = pIdx;
-    const fam = DUNGEON_FAMILIARS[famIdx];
-    if (fam === "🦊 Лиса" || fam === "🦅 Орёл") hero[3] += 1;
-    else if (fam === "🐻 Медведь" || fam === "🐗 Кабан") chp += 2;
-    else if (fam === "🦉 Сова" || fam === "🐲 Дракончик") hero[5] += 1;
-    else if (fam === "🐍 Змея" || fam === "🦝 Енот") hero[4] += 1;
-    else if (fam === "🐢 Черепаха" || fam === "🦀 Краб") hero[2] += 1;
-    else if (fam === "🐺 Волк" || fam === "🐱 Кот") hero[1] += 1;
-    if (f === 8) hero[2] += 2;
-    const cap = [...hero];
-    let wave = 0, art = 0, dmg = 0, deathWave = 0, deathBoss = false;
-    const hpLog = {}, artLog = {}, dmgLog = {}, wDmg = {}, wMobDmg = {};
-    while (chp > 0) {
-        wave++;
-        const isBoss = wave % 5 === 0;
-        let base = 15 + wave * 8 + (wave > 5 ? (wave - 5) * 5 : 0);
-        let atk = 1 + Math.floor(wave / 3), dfn = Math.floor(wave / 5), mn = 1 + Math.floor(wave / 3), mx = 4 + Math.floor(wave / 2);
-        let hp;
-        if (isBoss) { const bh = Math.floor(base * 1.5); hp = bh + Math.floor(Math.random() * (bh * 0.2 + 1)) - Math.floor(bh * 0.1); atk += 2; dfn += 1; }
-        else hp = base + Math.floor(Math.random() * (base * 0.4 + 1)) - Math.floor(base * 0.2);
-        if (f === 1) hp = Math.floor(hp * 0.85);
-        let mhp = Math.max(1, hp);
-        let hhp = chp, hitCnt = 0, rounds = 0;
-        const hpStart = chp;
-        let wd = 0, wmd = 0;
-        hpLog[wave] = chp; dmgLog[wave] = dmg; artLog[wave] = art;
-        while (hhp > 0 && mhp > 0 && rounds < 30) {
-            rounds++;
-            const hit = Math.floor(Math.random() * 20) + 1;
-            if (hit !== 1 && hit + hero[1] >= 10 + dfn) {
-                hitCnt++;
-                let d = Math.floor(Math.random() * (hero[5] - hero[4] + 1)) + hero[4];
-                if (f === 3) d += 4;
-                if (f === 9 && hhp < Math.floor(hpStart * 0.5)) d += 8;
-                if (hit === 20) d += Math.floor(Math.random() * (hero[5] - hero[4] + 1)) + hero[4];
-                if (f === 4) d += Math.floor((hpStart - hhp) / 10);
-                if (f === 6 && mhp < Math.floor(hp * 0.3)) d = Math.max(d, mhp);
-                if (f === 10 && hitCnt % 3 === 0) d *= 2;
-                if (f === 11 && hitCnt <= 3) d *= 2;
-                d = Math.max(1, d);
-                mhp = Math.max(0, mhp - d); dmg += d; wd += d;
-            }
-            if (mhp <= 0) break;
-            const r2 = Math.floor(Math.random() * 20) + 1;
-            if (r2 !== 1 && r2 + atk >= 10 + hero[2]) {
-                let d = Math.floor(Math.random() * (mx - mn + 1)) + mn;
-                if (r2 === 20) d += Math.floor(Math.random() * (mx - mn + 1)) + mn;
-                if (f === 5 && Math.random() * 100 < 25) d = 0;
-                if (f === 2 && Math.random() * 100 < 30) mhp = Math.max(0, mhp - d);
-                d = Math.max(0, d);
-                hhp = Math.max(0, hhp - d); wmd += d;
-            }
-        }
-        wDmg[wave] = wd; wMobDmg[wave] = wmd;
-        if (hhp <= 0) { deathWave = wave; deathBoss = isBoss; chp = 0; break; }
-        if (isBoss) hhp = chp;
-        else { const hl = 20 + wave * 2; hhp = Math.min(hhp + hl, chp + 30); if (f === 0) hhp = Math.min(hhp + 10, chp + 30); }
-        chp = hhp;
-        if (Math.random() * 100 <= (isBoss ? 70 : 35) + (f === 7 ? 15 : 0)) {
-            art++;
-            const k = Math.floor(Math.random() * 6);
-            const cs = (v, a, b) => Math.min(v + a, b + 16);
-            if (k === 0) { hero[1] = cs(hero[1], 2, cap[1]); hero[3] = cs(hero[3], 2, cap[3]); }
-            else if (k === 1) { hero[2] = cs(hero[2], 2, cap[2]); hero[5] = cs(hero[5], 2, cap[5]); }
-            else if (k === 2) { hero[1] = cs(hero[1], 2, cap[1]); hero[2] = cs(hero[2], 2, cap[2]); }
-            else if (k === 3) { hero[4] = cs(hero[4], 2, cap[4]); hero[5] = cs(hero[5], 2, cap[5]); }
-            else if (k === 4) chp += 20;
-            else { const cc = Math.floor(Math.random() * 4); if (cc === 0) hero[1] = Math.max(0, hero[1] - 1); else if (cc === 1) hero[2] = Math.max(0, hero[2] - 1); else if (cc === 2) hero[4] = Math.max(1, hero[4] - 1); else hero[5] = Math.max(1, hero[5] - 1); }
-        }
-    }
-    return { waves: wave - 1, deathWave, pIdx, famIdx, art, dmg, deathBoss, hpLog, artLog, dmgLog, wDmg, wMobDmg };
-}
-function dungeon_stats(vals) {
-    if (!vals.length) return { avg: 0, median: 0, top10: 0, top1: 0, max: 0, min: 0 };
-    const s = [...vals].sort((a, b) => a - b), n = s.length, sum = s.reduce((a, b) => a + b, 0);
-    return { avg: sum / n, median: n % 2 === 0 ? (s[n / 2 - 1] + s[n / 2]) / 2 : s[Math.floor(n / 2)], top10: s[Math.max(0, Math.floor(n * 0.9) - 1)], top1: s[Math.max(0, Math.floor(n * 0.99) - 1)], max: s[n - 1], min: s[0] };
-}
-async function dungeon_buildReport(race, cls, RUNS, onProgress) {
-    const icon = dungeon_races[race][6] + dungeon_classes[cls][6];
-    const runs = [];
-    const pStats = {}, fStats = {};
-    DUNGEON_PASSIVES.forEach(p => pStats[p] = []);
-    DUNGEON_FAMILIARS.forEach(f => fStats[f] = []);
-    const chunk = 500;
-    for (let i = 0; i < RUNS; i += chunk) {
-        for (let j = 0; j < chunk && i + j < RUNS; j++) {
-            const r = dungeon_runOne(race, cls);
-            runs.push(r);
-            pStats[DUNGEON_PASSIVES[r.pIdx]].push(r.waves);
-            fStats[DUNGEON_FAMILIARS[r.famIdx]].push(r.waves);
-        }
-        if (onProgress) onProgress((i + chunk) / RUNS * 100);
-        await new Promise(r => setTimeout(r, 0));
-    }
-    const waves = runs.map(r => r.waves);
-    const wS = dungeon_stats(waves);
-    const avgDepth = wS.avg;
-    const hpW = {}, artW = {}, wDW = {}, wMW = {};
-    for (const r of runs) {
-        for (const [w, h] of Object.entries(r.hpLog)) (hpW[w] = hpW[w] || []).push(h);
-        for (const [w, a] of Object.entries(r.artLog)) (artW[w] = artW[w] || []).push(a);
-        for (const [w, d] of Object.entries(r.wDmg)) (wDW[w] = wDW[w] || []).push(d);
-        for (const [w, d] of Object.entries(r.wMobDmg)) (wMW[w] = wMW[w] || []).push(d);
-    }
-    const surv = {};
-    for (let w = 1; w <= 50; w++) surv[w] = runs.filter(r => r.waves >= w).length / RUNS * 100;
-    const avgOf = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
-    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-    // ASCII для .txt
-    const txtLines = [];
-    const hr = () => "=".repeat(70);
-    txtLines.push(hr());
-    txtLines.push(` ${icon} ${race}-${cls} — АНАЛИЗ ПОДЗЕМЕЛЬЯ`);
-    txtLines.push(hr());
-    txtLines.push(` Забегов:  ${RUNS}`);
-    txtLines.push(` Средняя глубина: ${avgDepth.toFixed(2)}`);
-    txtLines.push("");
-    txtLines.push("ГЛУБИНА"); txtLines.push(hr());
-    txtLines.push(`  Средняя:     ${wS.avg.toFixed(1)}`);
-    txtLines.push(`  Медиана:     ${wS.median.toFixed(1)}`);
-    txtLines.push(`  Топ 10%:     ${wS.top10}`);
-    txtLines.push(`  Топ 1%:      ${wS.top1}`);
-    txtLines.push(`  Максимум:    ${wS.max}`);
-    txtLines.push(`  Минимум:     ${wS.min}`);
-    txtLines.push(""); txtLines.push("ПАССИВКИ"); txtLines.push(hr());
-    txtLines.push(`  ${"Пассивка".padEnd(25)} ${"Сред".padStart(6)} ${"Δ".padStart(7)} ${"Макс".padStart(5)} ${"Игр".padStart(7)}`);
-    Object.entries(pStats).filter(([_, v]) => v.length).sort((a, b) => avgOf(b[1]) - avgOf(a[1])).forEach(([n, v]) => {
-        const a = avgOf(v), d = a - avgDepth;
-        txtLines.push(`  ${n.padEnd(25)} ${a.toFixed(1).padStart(6)} ${((d >= 0 ? "+" : "") + d.toFixed(1)).padStart(7)} ${String(Math.max(...v)).padStart(5)} ${String(v.length).padStart(7)}`);
-    });
-    txtLines.push(""); txtLines.push("ФАМИЛЬЯРЫ"); txtLines.push(hr());
-    txtLines.push(`  ${"Фамильяр".padEnd(20)} ${"Сред".padStart(6)} ${"Δ".padStart(7)} ${"Макс".padStart(5)} ${"Игр".padStart(7)}`);
-    Object.entries(fStats).filter(([_, v]) => v.length).sort((a, b) => avgOf(b[1]) - avgOf(a[1])).forEach(([n, v]) => {
-        const a = avgOf(v), d = a - avgDepth;
-        txtLines.push(`  ${n.padEnd(20)} ${a.toFixed(1).padStart(6)} ${((d >= 0 ? "+" : "") + d.toFixed(1)).padStart(7)} ${String(Math.max(...v)).padStart(5)} ${String(v.length).padStart(7)}`);
-    });
-
-    // ВЫЖИВАЕМОСТЬ по группам 5
-    txtLines.push(""); txtLines.push("ШАНС ДОЖИТЬ ДО ВОЛНЫ"); txtLines.push(hr());
-    txtLines.push(`  ${"Волна".padEnd(12)} ${"Прошли".padStart(14)} ${"%".padStart(8)}`);
-	const maxWT = wS.max || 50;
-	for (let s = 1; s <= Math.max(50, maxWT); s += 5) {
-		const e = Math.min(s + 4, Math.max(50, maxWT));
-		if (s > maxWT) break;
-		const isLast = e >= maxWT;
-		let maxCnt = 0;
-		for (let w = s; w <= e; w++) {
-			const c = Math.round((surv[w] || 0) * RUNS / 100);
-			if (c > maxCnt) maxCnt = c;
-		}
-		const cnt = maxCnt;
-		const pct = cnt / RUNS * 100;
-		const lbl = s === e ? `Волна ${s}` : (isLast ? `Волна ${s}-${e} max` : `Волна ${s}-${e}`);
-		const pctDisp = cnt === 0 ? '0%' : (pct < 0.01 ? '<0.01%' : pct < 1 ? pct.toFixed(2) + '%' : pct.toFixed(1) + '%');
-		txtLines.push(`  ${lbl.padEnd(12)} ${(cnt.toLocaleString('ru-RU') + ' / ' + RUNS.toLocaleString('ru-RU')).padStart(14)} ${pctDisp.padStart(8)}`);
-	}
-
-    // HP по волнам
-    txtLines.push(""); txtLines.push("HP НА НАЧАЛО ВОЛНЫ"); txtLines.push(hr());
-    [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50].forEach(w => {
-        if (!hpW[w] || !hpW[w].length) return;
-        const a = avgOf(hpW[w]);
-        txtLines.push(`  Волна ${String(w).padStart(2)}: ${a.toFixed(1).padStart(6)} (забегов: ${hpW[w].length})`);
-    });
-
-    // Урон нанесённый
-    txtLines.push(""); txtLines.push("УРОН ЗА ВОЛНУ (нанесено)"); txtLines.push(hr());
-    [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50].forEach(w => {
-        if (!wDW[w] || !wDW[w].length) return;
-        const a = avgOf(wDW[w]);
-        txtLines.push(`  Волна ${String(w).padStart(2)}: ${a.toFixed(1).padStart(6)} урона`);
-    });
-
-    // Урон от моба
-    txtLines.push(""); txtLines.push("УРОН ОТ МОБА ЗА ВОЛНУ"); txtLines.push(hr());
-    [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50].forEach(w => {
-        if (!wMW[w] || !wMW[w].length) return;
-        const a = avgOf(wMW[w]);
-        txtLines.push(`  Волна ${String(w).padStart(2)}: ${a.toFixed(1).padStart(6)} урона`);
-    });
-
-    // Артефакты по волнам
-    txtLines.push(""); txtLines.push("АРТЕФАКТОВ К КОНЦУ ВОЛНЫ"); txtLines.push(hr());
-    [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50].forEach(w => {
-        if (!artW[w] || !artW[w].length) return;
-        const a = avgOf(artW[w]);
-        txtLines.push(`  Волна ${String(w).padStart(2)}: ${a.toFixed(1).padStart(5)} арт.`);
-    });
-
-    // Топ-5
-    txtLines.push(""); txtLines.push("ТОП-5 ЗАБЕГОВ"); txtLines.push(hr());
-    [...runs].sort((a, b) => b.waves - a.waves).slice(0, 5).forEach((r, i) => {
-        txtLines.push(`  #${i + 1}: ${r.waves} волн | ${DUNGEON_PASSIVES[r.pIdx]} · ${DUNGEON_FAMILIARS[r.famIdx]}`);
-        txtLines.push(`      Артефактов: ${r.art} | Урон: ${r.dmg.toLocaleString('ru-RU')}`);
-    });
-
-    // HTML
-    const maxDepth = wS.max || 1;
-    const maxHP = Math.max(...Object.values(hpW).map(a => avgOf(a)), 1);
-    const maxWD = Math.max(...Object.values(wDW).map(a => avgOf(a)), 1);
-    const maxWM = Math.max(...Object.values(wMW).map(a => avgOf(a)), 1);
-    const maxART = Math.max(...Object.values(artW).map(a => avgOf(a)), 1);
-    const wavesToShow = (() => {
-        const set = new Set();
-        for (let w = 1; w <= Math.min(10, wS.max); w++) set.add(w);
-        for (let w = 15; w <= 50; w += 5) if (w <= wS.max || w === 50) set.add(w);
-        if (wS.max > 0) set.add(wS.max);
-        return [...set].sort((a, b) => a - b).filter(w => hpW[w] || wDW[w] || wMW[w] || artW[w]);
-    })();
-
-    let h = '';
-    h += '<div class="dungeon-header"><div class="dh-icon">' + icon + '</div><div class="dh-title">' + esc(race) + '-' + esc(cls) + '</div><div class="dh-sub"><strong>' + RUNS.toLocaleString('ru-RU') + '</strong> забегов · средняя глубина <strong>' + avgDepth.toFixed(2) + '</strong></div></div>';
-
-    h += '<div class="dungeon-block"><div class="dungeon-block-title">📊 Глубина подземелья</div><div class="depth-grid">';
-    const depthItems = [
-        { l: 'Средняя', v: wS.avg.toFixed(1), bar: wS.avg / maxDepth * 100 },
-        { l: 'Медиана', v: wS.median.toFixed(1), bar: wS.median / maxDepth * 100 },
-        { l: 'Топ 10%', v: wS.top10, bar: wS.top10 / maxDepth * 100 },
-        { l: 'Топ 1%', v: wS.top1, bar: wS.top1 / maxDepth * 100 },
-        { l: 'Максимум', v: wS.max, bar: 100 },
-        { l: 'Минимум', v: wS.min, bar: wS.min / maxDepth * 100 }
-    ];
-    depthItems.forEach(d => {
-        h += '<div class="depth-item"><div class="di-label">' + d.l + '</div><div class="di-value">' + d.v + '</div><div class="di-bar"><div class="di-bar-fill" style="width:' + Math.max(2, Math.min(100, d.bar)) + '%"></div></div></div>';
-    });
-    h += '</div></div>';
-
-    h += '<div class="dungeon-block"><div class="dungeon-block-title">📈 Шанс дожить до волны</div>';
-    h += '<table class="surv-table"><thead><tr>';
-    h += '<th>Волна</th>';
-    h += '<th class="num">Прошли</th>';
-    h += '<th class="num">%</th>';
-    h += '<th class="sv-bar-cell"></th>';
-    h += '</tr></thead><tbody>';
-	const groups = [];
-	const maxW = wS.max || 50;
-	for (let start = 1; start <= Math.max(50, maxW); start += 5) {
-		const end = Math.min(start + 4, Math.max(50, maxW));
-		if (start > maxW) break;
-		const label = start === end ? 'Волна ' + start : 'Волна ' + start + '–' + end;
-		const isLastGroup = end >= maxW;
-		let maxCnt = 0;
-		for (let w = start; w <= end; w++) {
-			const c = Math.round((surv[w] || 0) * RUNS / 100);
-			if (c > maxCnt) maxCnt = c;
-		}
-		const cnt = maxCnt;
-		const pct = cnt / RUNS * 100;
-		const isMaxGroup = isLastGroup && start !== end;
-		groups.push({ start, end, label, pct, cnt, isMax: isMaxGroup, maxInGroup: end });
-	}
-    groups.forEach(g => {
-        const pct = g.pct;
-        const cnt = g.cnt;
-        const cls2 = pct >= 60 ? '' : pct >= 30 ? 'warn' : 'bad';
-        const barW = Math.max(pct, cnt > 0 ? 0.4 : 0);
-        const isMax = g.isMax && g.end >= maxW;
-        const pctDisp = cnt === 0 ? '0%' : (pct < 0.01 ? '<0.01%' : pct < 1 ? pct.toFixed(2) + '%' : pct.toFixed(1) + '%');
-        h += '<tr' + (isMax ? ' style="background:rgba(240,185,11,0.06)"' : '') + '>';
-        h += '<td class="sv-wave">' + g.label + (isMax ? ' <span style="color:var(--gold);font-size:0.7rem;">🏁 max</span>' : '') + '</td>';
-        h += '<td class="sv-cnt">' + cnt.toLocaleString('ru-RU') + ' / ' + RUNS.toLocaleString('ru-RU') + '</td>';
-        h += '<td class="sv-pct">' + pctDisp + '</td>';
-        h += '<td class="sv-bar-cell"><div class="sv-bar"><div class="sv-bar-fill ' + cls2 + '" style="width:' + barW + '%"></div></div></td>';
-        h += '</tr>';
-    });
-    h += '</tbody></table>';
-    h += '</div>';
-
-    if (wavesToShow.length) {
-        h += '<div class="dungeon-block"><div class="dungeon-block-title">🔎 Статистика по волнам</div>';
-        h += '<div class="stat-tabs">';
-        h += '<button class="stat-tab active" data-pane="hp">❤️ HP</button>';
-        h += '<button class="stat-tab" data-pane="dmg">⚔️ Урон</button>';
-        h += '<button class="stat-tab" data-pane="mob">💀 Урон моба</button>';
-        h += '<button class="stat-tab" data-pane="art">⚙️ Артефакты</button>';
-        h += '</div>';
-        h += '<div class="stat-pane active" data-pane="hp">';
-        wavesToShow.forEach(w => { if (!hpW[w]) return; const a = avgOf(hpW[w]); h += '<div class="stat-row"><span class="stat-wave">В.' + w + '</span><div class="stat-bar"><div class="stat-bar-fill hp" style="width:' + a / maxHP * 100 + '%"></div></div><span class="stat-num">' + a.toFixed(1) + '</span></div>'; });
-        h += '</div>';
-        h += '<div class="stat-pane" data-pane="dmg">';
-        wavesToShow.forEach(w => { if (!wDW[w]) return; const a = avgOf(wDW[w]); h += '<div class="stat-row"><span class="stat-wave">В.' + w + '</span><div class="stat-bar"><div class="stat-bar-fill" style="width:' + a / maxWD * 100 + '%"></div></div><span class="stat-num">' + a.toFixed(1) + '</span></div>'; });
-        h += '</div>';
-        h += '<div class="stat-pane" data-pane="mob">';
-        wavesToShow.forEach(w => { if (!wMW[w]) return; const a = avgOf(wMW[w]); h += '<div class="stat-row"><span class="stat-wave">В.' + w + '</span><div class="stat-bar"><div class="stat-bar-fill mob" style="width:' + a / maxWM * 100 + '%"></div></div><span class="stat-num">' + a.toFixed(1) + '</span></div>'; });
-        h += '</div>';
-        h += '<div class="stat-pane" data-pane="art">';
-        wavesToShow.forEach(w => { if (!artW[w]) return; const a = avgOf(artW[w]); h += '<div class="stat-row"><span class="stat-wave">В.' + w + '</span><div class="stat-bar"><div class="stat-bar-fill art" style="width:' + a / maxART * 100 + '%"></div></div><span class="stat-num">' + a.toFixed(1) + '</span></div>'; });
-        h += '</div>';
-        h += '</div>';
-    }
-
-    h += dungeon_renderStatsTable('⚔️ Пассивки', pStats, avgDepth, 'passives');
-    h += dungeon_renderStatsTable('🐾 Фамильяры', fStats, avgDepth, 'familiars');
-
-    const top5 = [...runs].sort((a, b) => b.waves - a.waves).slice(0, 5);
-    h += '<div class="dungeon-block"><div class="dungeon-block-title">🏆 Топ-5 забегов</div>';
-    top5.forEach((r, i) => {
-        const rc = i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
-        h += '<div class="top-run"><div class="tr-rank ' + rc + '">#' + (i + 1) + '</div><div class="tr-main"><div class="tr-waves">' + r.waves + ' волн</div><div class="tr-meta">' + DUNGEON_PASSIVES[r.pIdx] + ' · ' + DUNGEON_FAMILIARS[r.famIdx] + ' · ⚙️ ' + r.art + ' арт.</div></div><div class="tr-dmg">' + r.dmg.toLocaleString('ru-RU') + ' урона</div></div>';
-    });
-    h += '</div>';
-
-    return { text: txtLines.join("\n"), html: h, race, cls, icon };
-}
-function dungeon_renderStatsTable(title, stats, avgDepth, key) {
-    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    const rows = Object.entries(stats).filter(([_, v]) => v.length).map(([name, vals]) => {
-        const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
-        return { name, avg, delta: avg - avgDepth, max: Math.max(...vals), count: vals.length };
-    });
-    rows.sort((a, b) => b.delta - a.delta);
-    const maxAvg = Math.max(...rows.map(r => r.avg), 1);
-    let h = '<div class="dungeon-block" data-table="' + key + '"><div class="dungeon-block-title">' + title + '<span class="cnt">' + rows.length + '</span></div>';
-    h += '<table class="sortable-table" data-table-key="' + key + '"><thead><tr>';
-    h += '<th data-col="name" class="sortable">Название</th>';
-    h += '<th data-col="avg" class="sortable num">Сред. глубина</th>';
-    h += '<th data-col="delta" class="sortable num sort-desc">Δ</th>';
-    h += '<th data-col="max" class="sortable num">Макс</th>';
-    h += '<th data-col="count" class="sortable num">Забегов</th>';
-    h += '<th>Полоса</th>';
-    h += '</tr></thead><tbody>';
-    rows.forEach(r => {
-        const dCls = r.delta > 0.05 ? 'pos' : r.delta < -0.05 ? 'neg' : 'zero';
-        const dTxt = (r.delta >= 0 ? '+' : '') + r.delta.toFixed(1);
-        h += '<tr data-name="' + esc(r.name) + '" data-avg="' + r.avg + '" data-delta="' + r.delta + '" data-max="' + r.max + '" data-count="' + r.count + '">';
-        h += '<td class="name">' + esc(r.name) + '</td>';
-        h += '<td class="num">' + r.avg.toFixed(1) + '</td>';
-        h += '<td class="num ' + dCls + '">' + dTxt + '</td>';
-        h += '<td class="num">' + r.max + '</td>';
-        h += '<td class="num">' + r.count.toLocaleString('ru-RU') + '</td>';
-        h += '<td><span class="mini-bar-wrap"><span class="mini-bar-fill" style="width:' + r.avg / maxAvg * 100 + '%"></span></span></td>';
-        h += '</tr>';
-    });
-    h += '</tbody></table></div>';
-    return h;
-}
-function dungeon_bindTableSort(container) {
-    container.querySelectorAll('.sortable-table th.sortable').forEach(th => {
-        th.addEventListener('click', () => {
-            const table = th.closest('table');
-            const key = th.dataset.col;
-            const tbody = table.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            const isAsc = th.classList.contains('sort-asc');
-            table.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
-            th.classList.add(isAsc ? 'sort-desc' : 'sort-asc');
-            const dir = isAsc ? -1 : 1;
-            rows.sort((a, b) => {
-                let va = a.dataset[key], vb = b.dataset[key];
-                if (key === 'name') return dir * va.localeCompare(vb);
-                return dir * (parseFloat(va) - parseFloat(vb));
-            });
-            rows.forEach(r => tbody.appendChild(r));
-        });
-    });
-}
-function dungeon_bindStatTabs(container) {
-    const tabs = container.querySelectorAll('.stat-tab');
-    const panes = container.querySelectorAll('.stat-pane');
-    tabs.forEach(t => t.addEventListener('click', () => {
-        const target = t.dataset.pane;
-        tabs.forEach(x => x.classList.toggle('active', x === t));
-        panes.forEach(p => p.classList.toggle('active', p.dataset.pane === target));
-    }));
-}
-async function dungeon_buildComparison(race, RUNS, onProgress) {
-    const lines = [];
-    const hr = () => "=".repeat(70);
-    lines.push(hr());
-    lines.push(` СРАВНЕНИЕ КЛАССОВ (${race})`);
-    lines.push(hr());
-    lines.push(` Забегов на класс: ${RUNS}`);
-    const results = [];
-    const classNames = Object.keys(dungeon_classes);
-    for (let ci = 0; ci < classNames.length; ci++) {
-        const cls = classNames[ci];
-        const waves = [];
-        const chunk = 500;
-        for (let i = 0; i < RUNS; i += chunk) {
-            for (let j = 0; j < chunk && i + j < RUNS; j++) waves.push(dungeon_runOne(race, cls).waves);
-            await new Promise(r => setTimeout(r, 0));
-        }
-        results.push({ cls, ...dungeon_stats(waves) });
-        if (onProgress) onProgress((ci + 1) / classNames.length * 100, cls, ci + 1, classNames.length);
-    }
-    results.sort((a, b) => b.avg - a.avg);
-    lines.push("");
-    lines.push("СРЕДНЯЯ ГЛУБИНА");
-    lines.push(hr());
-    lines.push(`  ${"Класс".padEnd(18)} ${"Сред".padStart(6)} ${"Медиана".padStart(8)} ${"Макс".padStart(5)}`);
-    results.forEach(r => lines.push(`  ${(dungeon_classes[r.cls][6] + " " + r.cls).padEnd(18)} ${r.avg.toFixed(2).padStart(6)} ${r.median.toFixed(1).padStart(8)} ${String(r.max).padStart(5)}`));
-    lines.push("");
-    lines.push("ВИЗУАЛЬНО");
-    lines.push(hr());
-    const maxAvg = Math.max(...results.map(r => r.avg));
-    results.forEach(r => lines.push(`  ${(dungeon_classes[r.cls][6] + " " + r.cls).padEnd(18)} ${r.avg.toFixed(2).padStart(5)} ${"█".repeat(Math.floor(r.avg / maxAvg * 40))}`));
-
-    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    const maxAvgH = Math.max(...results.map(r => r.avg), 1);
-    const iconRace = dungeon_races[race][6];
-    let h = '';
-    h += '<div class="dungeon-header"><div class="dh-icon">' + iconRace + '📊</div><div class="dh-title">Сравнение классов</div><div class="dh-sub">Раса: <strong>' + esc(race) + '</strong> · Забегов на класс: <strong>' + RUNS.toLocaleString('ru-RU') + '</strong></div></div>';
-    h += '<div class="dungeon-block"><div class="dungeon-block-title">🏆 Рейтинг по средней глубине</div>';
-    h += '<table class="sortable-table"><thead><tr>';
-    h += '<th data-col="rank" class="sortable num" style="width:40px">#</th>';
-    h += '<th data-col="name" class="sortable">Класс</th>';
-    h += '<th data-col="avg" class="sortable num sort-desc">Сред. глубина</th>';
-    h += '<th data-col="median" class="sortable num">Медиана</th>';
-    h += '<th data-col="max" class="sortable num">Макс</th>';
-    h += '<th>Полоса</th>';
-    h += '</tr></thead><tbody>';
-    results.forEach((r, i) => {
-        const icon = dungeon_classes[r.cls][6];
-        const rank = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-        const barPct = r.avg / maxAvgH * 100;
-        const barColor = i === 0 ? 'linear-gradient(90deg,#ffd700,#ffed4e)' : i < 3 ? 'linear-gradient(90deg,#c49600,#ffd700)' : 'linear-gradient(90deg,#8a94a8,#c0c8d8)';
-        h += '<tr data-rank="' + (i + 1) + '" data-name="' + esc(r.cls) + '" data-avg="' + r.avg + '" data-median="' + r.median + '" data-max="' + r.max + '">';
-        h += '<td class="num" style="color:var(--gold);font-weight:900">' + rank + '</td>';
-        h += '<td class="name">' + icon + ' ' + esc(r.cls) + '</td>';
-        h += '<td class="num" style="color:var(--gold);font-weight:700">' + r.avg.toFixed(2) + '</td>';
-        h += '<td class="num">' + r.median.toFixed(1) + '</td>';
-        h += '<td class="num">' + r.max + '</td>';
-        h += '<td><span class="mini-bar-wrap" style="width:140px"><span class="mini-bar-fill" style="width:' + barPct + '%;background:' + barColor + '"></span></span></td>';
-        h += '</tr>';
-    });
-    h += '</tbody></table></div>';
-    return { text: lines.join("\n"), html: h, race, cls: "ALL", icon: iconRace + "📊" };
-}
-async function dungeon_startReport() {
-    if (dungeon_isRunning) return;
-    const cls = document.getElementById('dungeon-classSelect').value, race = document.getElementById('dungeon-raceSelect').value;
-    if (!cls || !race) return;
-    dungeon_currentReport = null;
-    dungeon_setRunning(true);
-    dungeon_setProgress(0, `Симуляция ${race}-${cls}...`);
-    dungeon_setOutput(`<div style="text-align:center;padding:40px;color:var(--sub);">⏳ Симуляция ${race}-${cls}...</div>`);
-    dungeon_setNote('');
-    const t0 = performance.now();
-    try {
-        const result = await dungeon_buildReport(race, cls, dungeon_currentRuns, pct => dungeon_setProgress(pct, `Симуляция ${race}-${cls}... ${Math.floor(pct)}%`));
-        const el = ((performance.now() - t0) / 1000).toFixed(2);
-        dungeon_setOutput(result.html);
-        dungeon_currentReport = result;
-        const out = document.getElementById('dungeon-output');
-        dungeon_bindTableSort(out);
-        dungeon_bindStatTabs(out);
-        dungeon_setRunning(false);
-        dungeon_setProgress(100, `✅ Готово за ${el} с`);
-        dungeon_setNote(`Готово за ${el} с · ${dungeon_currentRuns.toLocaleString('ru-RU')} забегов`);
-        setTimeout(() => dungeon_setProgress(0), 2500);
-    } catch (e) {
-        dungeon_setRunning(false);
-        dungeon_setProgress(0);
-        dungeon_setOutput('❌ ' + e.message + '\n' + e.stack);
-    }
-}
-async function dungeon_startComparison() {
-    if (dungeon_isRunning) return;
-    const race = document.getElementById('dungeon-raceSelect').value;
-    if (!race) return;
-    const classCount = Object.keys(dungeon_classes).length;
-    const runsPerClass = Math.max(1000, Math.floor(dungeon_currentRuns / classCount));
-    dungeon_currentReport = null;
-    dungeon_setRunning(true);
-    dungeon_setProgress(0, `Сравнение (${race}), по ${runsPerClass.toLocaleString('ru-RU')} на класс...`);
-    dungeon_setOutput(`<div style="text-align:center;padding:40px;color:var(--sub);">⏳ Сравнение классов (${race})...</div>`);
-    dungeon_setNote('');
-    const t0 = performance.now();
-    try {
-        const result = await dungeon_buildComparison(race, runsPerClass, (pct, cls, cur, tot) => dungeon_setProgress(pct, `Считаю ${cls}... (${cur}/${tot})`));
-        const el = ((performance.now() - t0) / 1000).toFixed(2);
-        dungeon_setOutput(result.html);
-        dungeon_currentReport = result;
-        const out = document.getElementById('dungeon-output');
-        dungeon_bindTableSort(out);
-        dungeon_setRunning(false);
-        dungeon_setProgress(100, `✅ Готово за ${el} с`);
-        dungeon_setNote(`Готово за ${el} с · ${classCount} классов × ${runsPerClass.toLocaleString('ru-RU')}`);
-        setTimeout(() => dungeon_setProgress(0), 2500);
-    } catch (e) {
-        dungeon_setRunning(false);
-        dungeon_setProgress(0);
-        dungeon_setOutput('❌ ' + e.message + '\n' + e.stack);
-    }
-}
 
 const validPageTabs = ['balance','calc','gradient','sim','dungeon','form','matrix'];
 const initialHash = window.location.hash.substring(1);
