@@ -117,7 +117,7 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
 #standings-content .pos{width:28px;font-size:0.75rem}
 #standings-content .pos-change-cell{width:24px}
 #standings-content .pos-change{font-size:0.6rem}
-#light-table img,#dark-table img,#top-table img,table img{width:20px!important;height:20px!important;vertical-align:middle}#light-table td,#dark-table td,#top-table td,table td{padding:4px 8px}
+#standings-content td { padding: 6px 8px; }
 .po-grid{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:visible;gap:12px;padding:24px 16px;justify-content:flex-start;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .po-col{min-width:200px;max-width:220px;flex-shrink:0;scroll-snap-align:start}
 .po-col.wide{min-width:240px;max-width:260px}
@@ -278,7 +278,7 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
             const rc='playoff-row '+currentFaction,storageKey='league-old-'+currentFaction,prevRank=JSON.parse(localStorage.getItem(storageKey)||'{}');
             let h='<div class="table-container"><table><thead><tr><th class="pos">#</th><th style="width:30px;"></th><th>Игрок</th><th>Класс</th><th>W</th><th>L</th><th>%</th><th>🌟</th></tr></thead><tbody>';
             p.forEach((pl,i)=>{const t=(pl.wins||0)+(pl.losses||0),wr=t>0?((pl.wins||0)*100/t).toFixed(1):'0.0',pc=i===0?' top-1':i===1?' top-2':i===2?' top-3':'';let changeHtml='';const oldPos=prevRank[pl.display];if(oldPos){const diff=oldPos-(i+1);if(diff>0)changeHtml=`<span class="pos-change pos-up">▲${diff}</span>`;else if(diff<0)changeHtml=`<span class="pos-change pos-down">▼${Math.abs(diff)}</span>`;else changeHtml=`<span class="pos-change pos-same">●</span>`;}else{changeHtml=`<span class="pos-change pos-new">🆕</span>`;}
-            const heroIcon = getHeroIcon(pl.name, pl.emoji, 28);
+            const heroIcon = getHeroIcon(pl.name, pl.emoji, 26);
             h+=`<tr class="${i<8?rc:''} ${i===7?'cutoff':''}"><td class="pos${pc}">${i+1}</td><td class="pos-change-cell">${changeHtml}</td><td><a href="player.html?name=${encodeURIComponent(pl.display||'')}" class="player-link">${heroIcon} ${pl.display||''}</a></td><td>${pl.name||''}</td><td>${pl.wins||0}</td><td>${pl.losses||0}</td><td>${wr}%</td><td class="skill">${pl.skill||0}</td></tr>`;});
             h+='</tbody></table></div>';c.innerHTML=h;
         }

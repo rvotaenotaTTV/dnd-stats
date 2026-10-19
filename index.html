@@ -82,11 +82,6 @@
     tbody tr:nth-child(7) { animation-delay: 0.14s; } tbody tr:nth-child(8) { animation-delay: 0.16s; } tbody tr:nth-child(9) { animation-delay: 0.18s; }
     tbody tr:nth-child(10) { animation-delay: 0.20s; }
 	
-	#classes-table td, #races-table td { padding: 4px 8px; }
-	#classes-table img, #races-table img { width: 20px !important; height: 20px !important; }
-	#combos-table td { padding: 4px 8px; }
-	#combos-table img { width: 20px !important; height: 20px !important; }
-
     @media (max-width: 768px) {
         .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
         .stat-card { padding: 14px 10px; }
@@ -365,7 +360,7 @@
 				const barW=Math.min(100,parseFloat(wr));
 				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
 				const cell = icon 
-					? `<img src="${icon}" alt="${c.name}" style="width:32px;height:32px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'"> ${c.name}`
+					? `<img src="${icon}" alt="${c.name}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'"> ${c.name}`
 					: `${emoji} ${c.name}`;
 				html+=`<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-shards="${avgShards}" data-streak="${c.best}" data-skill="${c.avgSkill}" data-champs="${c.champs}">
 					<td>${cell}</td>
@@ -423,7 +418,7 @@
 				const barW=Math.min(100,parseFloat(wr));
 				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
 				const cell = icon 
-					? `<img src="${icon}" alt="${r.name}" style="width:32px;height:32px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'"> ${r.name}`
+					? `<img src="${icon}" alt="${r.name}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'"> ${r.name}`
 					: `${emoji} ${r.name}`;
 				html+=`<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}" data-shards="${avgShards}" data-champs="${r.champs}">
 					<td>${cell}</td>
@@ -503,7 +498,7 @@
 				const wr=(c.wins*100/c.total).toFixed(1);
 				const barW=Math.min(100,wr);
 				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
-				const heroIcon = getHeroIcon(c.name, (raceEmojis[parts[0]]||'')+(classEmojis[parts[1]]||''), 32);
+				const heroIcon = getHeroIcon(c.name, (raceEmojis[parts[0]]||'')+(classEmojis[parts[1]]||''), 20);
 				html+=`<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-streak="${c.streak||0}" data-faction="${c.factionWins||0}">
 					<td>${heroIcon} ${c.name}</td>
 					<td class="number">${c.players}</td>
