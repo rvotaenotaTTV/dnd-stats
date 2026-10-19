@@ -117,6 +117,7 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
 #standings-content .pos{width:28px;font-size:0.75rem}
 #standings-content .pos-change-cell{width:24px}
 #standings-content .pos-change{font-size:0.6rem}
+#light-table img,#dark-table img,#top-table img,table img{width:20px!important;height:20px!important;vertical-align:middle}#light-table td,#dark-table td,#top-table td,table td{padding:4px 8px}
 .po-grid{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:visible;gap:12px;padding:24px 16px;justify-content:flex-start;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .po-col{min-width:200px;max-width:220px;flex-shrink:0;scroll-snap-align:start}
 .po-col.wide{min-width:240px;max-width:260px}
@@ -321,7 +322,7 @@ table td,table th{word-break:normal;overflow-wrap:normal;hyphens:none}
             else if(lc&&dc){const lw=PLAYOFFS.grand_champion===lc.display;const dw=PLAYOFFS.grand_champion===dc.display;const cl=isAdmin?' clk':'';const clL=isAdmin?`onclick="clickPlayer('grand_champion',0,'${lc.display.replace(/'/g,"\\'")}',true)"`:'';const clD=isAdmin?`onclick="clickPlayer('grand_champion',0,'${dc.display.replace(/'/g,"\\'")}',true)"`:'';
             const lcIcon = getHeroIcon(lc.name, lc.emoji, 24);const dcIcon = getHeroIcon(dc.name, dc.emoji, 24);
             gf=`<div class="gfp light${lw?' win':''}${cl}" ${clL}>${lcIcon} ${shortName(lc.display)}${lw?' ✅':''}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark${dw?' win':''}${cl}" ${clD}>${dcIcon} ${shortName(dc.display)}${dw?' ✅':''}</div>`;}
-            else{gf=`<div class="gfp light">🌝 ${lc?lc.display:'Чемпион Света'}</div><div class="gfvs">⚔️ VS ⚔️</div><div class="gfp dark">🌚 ${dc?dc.display:'Чемпион Тьмы'}</div>`;}
+            else{gf=`<div class="gfp light">${lc?lc.display:'Чемпион Света'}</div><div class="gfvs"> VS </div><div class="gfp dark">${dc?dc.display:'Чемпион Тьмы'}</div>`;}
 
             c.innerHTML=`<div class="po-grid"><div class="po-col"><h3 class="light">1/8 Света</h3>${m(light[0],light[7],'light_round1',0)}${m(light[1],light[6],'light_round1',1)}${m(light[2],light[5],'light_round1',2)}${m(light[3],light[4],'light_round1',3)}</div><div class="po-col"><h3 class="light">1/4 Света</h3>${m(lr1[0],lr1[1],'light_round2',0)}${m(lr1[2],lr1[3],'light_round2',1)}</div><div class="po-col"><h3 class="light">Финал</h3>${fm(lr2[0],lr2[1],'light_champion')}</div><div class="po-col wide"><div class="gf-card"><div class="gfl">ГРАНД-ФИНАЛ</div>${gf}</div></div><div class="po-col"><h3 class="dark">Финал</h3>${fm(dr2[0],dr2[1],'dark_champion')}</div><div class="po-col"><h3 class="dark">1/4 Тьмы</h3>${m(dr1[0],dr1[1],'dark_round2',0)}${m(dr1[2],dr1[3],'dark_round2',1)}</div><div class="po-col"><h3 class="dark">1/8 Тьмы</h3>${m(dark[0],dark[7],'dark_round1',0)}${m(dark[1],dark[6],'dark_round1',1)}${m(dark[2],dark[5],'dark_round1',2)}${m(dark[3],dark[4],'dark_round1',3)}</div></div>`;
         }
