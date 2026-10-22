@@ -76,26 +76,60 @@
     .race-card p{font-size:.8rem;color:var(--sub);line-height:1.65;margin:0}
 
     .territory-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .territory-card{background:var(--elevated);border:2px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:all .3s ease;position:relative;overflow:hidden}
-    .territory-card.light{border-color:rgba(240,185,11,0.35);box-shadow:0 0 20px rgba(240,185,11,0.06)}
-    .territory-card.dark{border-color:rgba(163,113,247,0.35);box-shadow:0 0 20px rgba(163,113,247,0.06)}
-    .territory-card.neutral{border-color:rgba(91,192,235,0.2);box-shadow:0 0 16px rgba(91,192,235,0.04)}
-    .territory-card:hover{transform:translateY(-2px)}
-    .territory-card.light:hover{box-shadow:0 6px 24px rgba(240,185,11,0.1)}
-    .territory-card.dark:hover{box-shadow:0 6px 24px rgba(163,113,247,0.1)}
-    .territory-card.neutral:hover{box-shadow:0 6px 20px rgba(91,192,235,0.06)}
+
+    .territory-card{
+        --territory-color: var(--border);
+        --territory-glow: rgba(255,255,255,0.04);
+        --territory-glow-lg: rgba(255,255,255,0.08);
+        --territory-corner: rgba(255,255,255,0.04);
+        background: var(--elevated);
+        border: 2px solid var(--territory-color);
+        border-radius: var(--radius-sm);
+        padding: 16px;
+        padding-right: 42px; /* место под уголок */
+        transition: all .3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px var(--territory-glow);
+    }
+
+    .territory-card:hover{
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px var(--territory-glow-lg);
+    }
+
+    /* уголок */
+    .territory-card::after{
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50px;
+        height: 50px;
+        border-radius: 0 0 0 50px;
+        background: var(--territory-corner);
+        transition: opacity .3s;
+        pointer-events: none;
+    }
+
     .territory-card .territory-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
     .territory-card .territory-name{font-size:.85rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
     .territory-card .territory-icon{font-size:1.3rem}
-    .territory-card .territory-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:.65rem;font-weight:700}
-    .territory-badge.light{background:rgba(240,185,11,0.15);color:var(--gold)}
-    .territory-badge.dark{background:rgba(163,113,247,0.15);color:var(--purple)}
-    .territory-badge.neutral{background:rgba(91,192,235,0.12);color:var(--ice)}
     .territory-card .territory-lore{font-size:.75rem;color:var(--muted);line-height:1.6;font-style:italic}
-    .territory-card::after{content:'';position:absolute;top:0;right:0;width:50px;height:50px;border-radius:0 0 0 50px;opacity:0.04;transition:opacity .3s}
-    .territory-card.light::after{background:var(--gold)}
-    .territory-card.dark::after{background:var(--purple)}
-    .territory-card.neutral::after{background:var(--ice)}
+
+    /* 9-я территория — на всю ширину */
+    .territory-card.wide {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: calc(50% - 5px); /* 50% ширины минус половина отступа gap: 10px */
+        max-width: 100%;
+    }
+    @media (max-width: 768px) {
+        .territory-card.wide {
+            grid-column: auto;
+            width: 100%;
+        }
+    }
 
     .shard-box{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:28px 24px;min-height:180px;text-align:center;cursor:pointer;transition:.2s;user-select:none;max-width:520px;margin:0 auto}
     .shard-box:hover{border-color:var(--gold)}
@@ -137,7 +171,7 @@
     .chronicle-quote span{display:block;margin-top:5px;font-size:.75rem;color:var(--gold);font-weight:600;font-style:normal}
     .chronicle-aftermath{background:var(--card);padding:12px 15px;border-radius:var(--radius-sm);font-size:.8rem;color:var(--muted);border:1px dashed var(--border)}
     .chronicle-aftermath strong{color:var(--text)}
-
+	
     @media (max-width: 768px) {
         .container { padding: 12px 14px 80px; }
         .header { padding: 20px 0 8px; }
@@ -261,7 +295,7 @@
                 <a href="#territory-section" class="path-card">
                     <span class="path-icon">🗺️</span>
                     <div class="path-title">Увидеть земли</div>
-                    <div class="path-desc">Узнай, кто контролирует земли Этерниса</div>
+                    <div class="path-desc">Исследуй древние уголки расколотого мира</div>
                 </a>
             </div>
         </div>
@@ -370,38 +404,35 @@
             <div class="race-grid" id="race-grid"></div>
         </div>
 
-        <!-- Земли под контролем -->
-        <div class="section gold" id="territory-section">
-            <div class="section-title">🗺️ Земли под контролем</div>
+		<!-- Земли Этерниса -->
+		<div class="section gold" id="territory-section">
+			<div class="section-title">🗺️ Земли Этерниса</div>
 
             <!-- Вечные цитадели -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-                <div style="background:linear-gradient(160deg,var(--elevated),rgba(240,185,11,.04));border:1px solid rgba(240,185,11,.25);border-radius:var(--radius-sm);padding:16px;text-align:center">
-                    <div style="font-size:1.5rem;margin-bottom:4px">✨</div>
-                    <div style="font-weight:700;color:var(--gold);font-size:.85rem">Сияющий Шпиль</div>
-                    <div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Вечно за Светом</div>
-                    <div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё тёплый.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+                <div class="territory-card" style="--territory-color: var(--gold); --territory-glow: rgba(240,185,11,0.08); --territory-glow-lg: rgba(240,185,11,0.16); --territory-corner: rgba(240,185,11,0.08); background: linear-gradient(160deg, var(--elevated), rgba(240,185,11,0.04)); padding-right: 16px;">
+                    <div style="text-align:center">
+                        <div style="font-size:1.5rem;margin-bottom:4px">✨</div>
+                        <div style="font-weight:700;color:var(--gold);font-size:.85rem">Сияющий Шпиль</div>
+                        <div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Там, где свет не гаснет</div>
+                        <div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Цитадель Ордена Света, возведённая на месте падения Клинка. Каждый камень здесь пропитан светом. Говорят, в главном зале до сих пор хранится осколок Аэлиона, и он всё ещё тёплый.</div>
+                    </div>
                 </div>
-                <div style="background:linear-gradient(160deg,var(--elevated),rgba(163,113,247,.04));border:1px solid rgba(163,113,247,.25);border-radius:var(--radius-sm);padding:16px;text-align:center">
-                    <div style="font-size:1.5rem;margin-bottom:4px">🌫️</div>
-                    <div style="font-weight:700;color:var(--purple);font-size:.85rem">Зал Повествователя</div>
-                    <div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Вечно за Тьмой</div>
-                    <div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</div>
+                <div class="territory-card" style="--territory-color: var(--purple); --territory-glow: rgba(163,113,247,0.08); --territory-glow-lg: rgba(163,113,247,0.16); --territory-corner: rgba(163,113,247,0.08); background: linear-gradient(160deg, var(--elevated), rgba(163,113,247,0.04)); padding-right: 16px;">
+                    <div style="text-align:center">
+                        <div style="font-size:1.5rem;margin-bottom:4px">🌫️</div>
+                        <div style="font-weight:700;color:var(--purple);font-size:.85rem">Зал Повествователя</div>
+                        <div style="font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic">Там, где тени говорят</div>
+                        <div style="font-size:.7rem;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic">Тайное убежище основателя Культа Тьмы. Реальность здесь подвластна воле, а тени шепчут забытые истины. Лишь избранные находят сюда дорогу.</div>
+                    </div>
                 </div>
             </div>
 
-            <p style="color:var(--sub);font-size:.78rem;margin-bottom:14px;text-align:center">
-                Остальные земли переходят из рук в руки — дуэли решают всё.
-            </p>
-
-            <!-- Спорные территории -->
-            <div class="territory-grid" id="territoryGrid">
-                <div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px">Загрузка данных...</div>
-            </div>
-            <p style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:center">
-                <span style="color:var(--gold)">Свет</span> &nbsp;|&nbsp; <span style="color:var(--purple)">Тьма</span> &nbsp;|&nbsp; <span style="color:var(--ice)">Вольная</span>
-            </p>
-        </div>
+			<p style="color:var(--sub);font-size:.78rem;margin-bottom:14px;text-align:center">
+				Земли Этерниса. Прислушайся. Они говорят.
+			</p>
+			<div class="territory-grid" id="territoryGrid"></div>
+		</div>
 
         <!-- Герои и осколки (Генерируется в JS) -->
         <div class="section gold">
@@ -834,45 +865,42 @@
             document.getElementById(`faction-${faction}`).classList.add('active');
         }
 
-        // === ТЕРРИТОРИИ ===
+        // === ЗЕМЛИ ЭТЕРНИСА ===
         const territoryData = [
-            { jsonKey: '🎭 Арена Тысячи Эхо',  icon: '🎭', name: 'Арена Тысячи Эхо',    lore: 'Легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.', defaultControl: 'neutral' },
-            { jsonKey: '🌑 Эпицентр Раскола',  icon: '🌑', name: 'Эпицентр Раскола',    lore: 'Место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул вниз — и открыл путь в Бездну.', defaultControl: 'neutral' },
-            { jsonKey: '🗡️ Поле Павшего Клинка', icon: '🗡️', name: 'Поле Павшего Клинка', lore: 'Земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.', defaultControl: 'neutral' },
-            { jsonKey: '🔥 Кузня Расколотых',   icon: '🔥', name: 'Кузня Расколотых',     lore: 'Здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.', defaultControl: 'neutral' },
-            { jsonKey: '⚓ Порт Дрейфующих',    icon: '⚓', name: 'Порт Дрейфующих',      lore: 'Единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Портовые менялы принимают любую валюту: золото, осколки, историю. Кто владеет Портом — владеет всеми морскими путями Этерниса. Арена решит, кому они достанутся.', defaultControl: 'neutral' },
-            { jsonKey: '🌌 Бездна', icon: '🌌', name: 'Бездна', lore: 'Сюда не светит солнце. Сюда не долетают молитвы. Разлом, открывшийся при падении Клинка, ведёт в мир, где время застыло, а тишина говорит громче слов. Тысячу лет Аэлион сидел здесь на троне — и стал тем, чего не понять живым. Экспедиция вернулась не полностью: что-то осталось внизу. Что-то ждёт. Те, кто спускается слишком глубоко, слышат своё имя — произнесённое голосом, которого не может быть. Вход открыт. Подземелье дышит. Арена решит, кто осмелится контролировать то, что не предназначено для контроля.', defaultControl: 'neutral' }
+            { icon: '🎭', name: 'Арена Тысячи Эхо',    lore: 'Легендарная арена, где каждый бой отражается в вечности. Зрители здесь не просто наблюдают — они слышат отголоски прошлых сражений. Говорят, великие чемпионы прошлого иногда подсказывают бойцам, куда нанести удар.', color: '#ff8a36' },
+            { icon: '🌑', name: 'Эпицентр Раскола',    lore: 'Место, где Солнечный Клинок ударил в землю. Воздух здесь дрожит, а осколки в крови бойцов пульсируют в такт ударам сердца. Говорят, именно здесь Аэлион шагнул вниз — и открыл путь в Бездну.', color: '#d84aff' },
+            { icon: '🗡️', name: 'Поле Павшего Клинка', lore: 'Земля, пропитанная древней сталью. Тысячи воинов сложили здесь головы в первые дни после Раскола. Их дух до сих пор защищает тех, кто сражается на этой земле.', color: '#e6d5a8' },
+            { icon: '🔥', name: 'Кузня Расколотых',    lore: 'Здесь ковали оружие из осколков Клинка. Жар горна не угасает до сих пор, а молоты всё ещё бьют по наковальням — сами по себе. Мастера ушли, но их творения остались.', color: '#ff4141' },
+            { icon: '⚓', name: 'Порт Дрейфующих',     lore: 'Единственный порт Этерниса, куда корабли приходят без капитанов. Паруса сами находят ветер, а трюмы полны товаров, которых никто не заказывал. Говорят, именно здесь Табакси впервые ступили на землю Раскола — никто не помнит как и откуда. Портовые менялы принимают любую валюту: золото, осколки, историю.', color: '#24aaff' },
+            { icon: '🌌', name: 'Бездна',              lore: 'Сюда не светит солнце. Сюда не долетают молитвы. Разлом, открывшийся при падении Клинка, ведёт в мир, где время застыло, а тишина говорит громче слов. Тысячу лет Аэлион сидел здесь на троне — и стал тем, чего не понять живым. Экспедиция вернулась не полностью: что-то осталось внизу. Что-то ждёт. Те, кто спускается слишком глубоко, слышат своё имя — произнесённое голосом, которого не может быть. Вход открыт. Подземелье дышит.', color: '#2bd7ff' },
+            { icon: '🌲', name: 'Изумрудный Круг',     lore: 'Древнейший лес Этерниса, зажатый между пиками орков и горнами дворфов. Эльфы не служат Тьме — они служат Лесу. И будут стоять против любого, кто придёт с огнём и сталью.', color: '#62f044', wide: true }
         ];
 
-        async function loadTerritoryControl() {
-            const urls = [
-                'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json',
-                'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json'
-            ];
-            let data;
-            for (const url of urls) {
-                try {
-                    const r = await fetch(url);
-                    if (r.ok) { data = await r.json(); break; }
-                } catch {}
-            }
+        function hexToRgba(hex, alpha) {
+            const h = hex.replace('#', '');
+            const r = parseInt(h.substring(0, 2), 16);
+            const g = parseInt(h.substring(2, 4), 16);
+            const b = parseInt(h.substring(4, 6), 16);
+            return `rgba(${r},${g},${b},${alpha})`;
+        }
 
-            const control = data?.territoryControl || {};
+        function renderTerritories() {
             const grid = document.getElementById('territoryGrid');
+            if (!grid) return;
             grid.innerHTML = '';
 
             territoryData.forEach(t => {
-                const rawOwner = control[t.jsonKey];
-                let owner = rawOwner === 'light' ? 'light' : (rawOwner === 'dark' ? 'dark' : t.defaultControl);
-                let badgeText = owner === 'light' ? 'Свет' : (owner === 'dark' ? 'Тьма' : 'Вольная');
-                let badgeIcon = owner === 'light' ? factionIcon('Свет', 18) : (owner === 'dark' ? factionIcon('Культ Тьмы', 18) : '🔵');
-
                 const card = document.createElement('div');
-                card.className = `territory-card ${owner}`;
+                card.className = `territory-card${t.wide ? ' wide' : ''}`;
+                card.style.setProperty('--territory-color', t.color);
+                card.style.setProperty('--territory-glow',    hexToRgba(t.color, 0.10));
+                card.style.setProperty('--territory-glow-lg', hexToRgba(t.color, 0.18));
+                card.style.setProperty('--territory-corner',  hexToRgba(t.color, 0.08));
                 card.innerHTML = `
                     <div class="territory-top">
-                        <span class="territory-name"><span class="territory-icon">${t.icon}</span>${t.name}</span>
-                        <span class="territory-badge ${owner}">${badgeIcon} ${badgeText}</span>
+                        <span class="territory-name">
+                            <span class="territory-icon">${t.icon}</span>${t.name}
+                        </span>
                     </div>
                     <div class="territory-lore">${t.lore}</div>
                 `;
@@ -910,7 +938,7 @@
         // === ЗАПУСК ===
         renderRaces();
         renderHeroes();
-        loadTerritoryControl();
+        renderTerritories();
         randomShard();
 
         // === SCROLL PROGRESS + SCROLL TOP ===
