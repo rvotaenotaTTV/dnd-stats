@@ -35,6 +35,8 @@
     .tab-btn.active { background: linear-gradient(135deg, var(--ice), var(--gold)); color: #000; font-weight: 700; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
+	
+	.tbl-icon {width: 28px; height: 28px;object-fit: contain;}
 
     .tables-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; position: relative; overflow: hidden; margin-bottom: 16px; animation: fadeSlideIn 0.4s ease; }
@@ -360,7 +362,7 @@
 				const barW=Math.min(100,parseFloat(wr));
 				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
 				const cell = icon 
-					? `<img src="${icon}" alt="${c.name}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'"> ${c.name}`
+					? `<img src="${icon}" alt="${c.name}" class="tbl-icon" style="vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'"> ${c.name}`
 					: `${emoji} ${c.name}`;
 				html+=`<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-shards="${avgShards}" data-streak="${c.best}" data-skill="${c.avgSkill}" data-champs="${c.champs}">
 					<td>${cell}</td>
@@ -418,7 +420,7 @@
 				const barW=Math.min(100,parseFloat(wr));
 				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
 				const cell = icon 
-					? `<img src="${icon}" alt="${r.name}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'"> ${r.name}`
+					? `<img src="${icon}" alt="${r.name}" class="tbl-icon" style="vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'"> ${r.name}`
 					: `${emoji} ${r.name}`;
 				html+=`<tr data-name="${r.name}" data-players="${r.players}" data-wins="${r.wins}" data-losses="${r.losses}" data-total="${r.total}" data-winrate="${wr}" data-shards="${avgShards}" data-champs="${r.champs}">
 					<td>${cell}</td>
@@ -498,7 +500,7 @@
 				const wr=(c.wins*100/c.total).toFixed(1);
 				const barW=Math.min(100,wr);
 				const barColor=wr>=55?'var(--gold)':wr>=45?'var(--green)':'var(--red)';
-				const heroIcon = getHeroIcon(c.name, (raceEmojis[parts[0]]||'')+(classEmojis[parts[1]]||''), 20);
+				const heroIcon = getHeroIcon(c.name, (raceEmojis[parts[0]]||'')+(classEmojis[parts[1]]||''), 24);
 				html+=`<tr data-name="${c.name}" data-players="${c.players}" data-wins="${c.wins}" data-losses="${c.losses}" data-total="${c.total}" data-winrate="${wr}" data-streak="${c.streak||0}" data-faction="${c.factionWins||0}">
 					<td>${heroIcon} ${c.name}</td>
 					<td class="number">${c.players}</td>
