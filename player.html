@@ -1656,7 +1656,7 @@ function renderHistory(history, limit = null) {
         const tourColor = h.tournamentWins > 0 ? 'var(--gold)' : 'var(--muted)';
         const tourIcon = h.tournamentWins >= 5 ? '🔥' : (h.tournamentWins > 0 ? '🏆' : '');
         const eraIcon = h.era === 'classic' ? ' 📜' : '';
-        const rowHeroIcon = getHeroIcon(h.name, h.emoji, 20);
+        const rowHeroIcon = getHeroIcon(h.name, h.emoji, 24);
         html += `<tr class="${h.isCurrent ? 'current' : ''}">
             <td class="season-num" data-label="Сезон">${rowHeroIcon} S${h.season}${h.isCurrent ? ' ⚡' : ''}${eraIcon}</td>
             <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
@@ -2398,7 +2398,7 @@ function renderFullHistory(history) {
 
             html += `<tr class="${seasonClass} ${rowClass}${isFirst ? ' season-first' : ''}${isLast ? ' season-last' : ''}">
                 ${seasonCell}
-                <td data-label="Герой" style="color:var(--sub);">${getHeroIcon(h.name, h.emoji, 20)} ${h.name || '—'}${deletedIcon}</td>
+                <td data-label="Герой" style="color:var(--sub);">${getHeroIcon(h.name, h.emoji, 24)} ${h.name || '—'}${deletedIcon}</td>
                 <td class="num" data-label="W/L">${h.wins}-${h.losses}</td>
                 <td class="num" data-label="WR" style="color:${wrColor(h.wr)};font-weight:700;">${(h.wr * 100).toFixed(1)}%</td>
                 <td class="num" data-label="Стрик" style="color:var(--green);font-weight:600;">${h.best || '—'}</td>
@@ -2489,7 +2489,7 @@ function renderArchiveBest(history) {
     top.forEach((h, i) => {
         const deletedIcon = h.isDeleted ? ' 🗑️' : '';
         html += `<div class="archive-hero" style="border-left-color:${i === 0 ? 'var(--gold)' : i === 1 ? 'var(--silver)' : i === 2 ? 'var(--bronze)' : 'var(--border)'};">
-            <div class="hero-info"><span>${medals[i]}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${getHeroIcon(h.name, h.emoji, 20)} ${h.name || ''}${deletedIcon}</span></div>
+            <div class="hero-info"><span>${medals[i]}</span> <span style="color:var(--purple);font-weight:800;">S${h.season}</span> <span style="color:var(--sub);font-size:0.8rem;">${getHeroIcon(h.name, h.emoji, 24)} ${h.name || ''}${deletedIcon}</span></div>
             <div><span style="color:${wrColor(h.wr)};font-weight:800;">${(h.wr * 100).toFixed(1)}%</span> <span style="color:var(--muted);font-size:0.72rem;">(${h.wins}-${h.losses})</span></div>
         </div>`;
     });
