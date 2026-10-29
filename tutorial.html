@@ -3,235 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Арена Этерниса — Обучение</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Арена Этерниса">
-    <meta property="og:title" content="Арена Этерниса — Обучение">
-    <meta property="og:description" content="Как начать играть: создание героя, первый бой, турниры.">
-    <meta property="og:url" content="https://rvotaenotaTTV.github.io/dnd-stats/tutorial.html">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Арена Этерниса — Обучение">
-    <meta name="twitter:description" content="Как начать играть: создание героя, первый бой, турниры.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
 <style>
-    body::before {
-        content: '';
-        position: fixed;
-        top: -20%; left: -10%;
-        width: 60%; height: 60%;
-        background: radial-gradient(circle, rgba(240,185,11,0.05) 0%, transparent 70%);
-        pointer-events: none;
-        z-index: 0;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: #0a0a0a;
+        color: #d4d4d4;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 32px 16px;
+        position: relative;
+        overflow-x: hidden;
     }
+
     body::after {
         content: '';
         position: fixed;
-        bottom: -20%; right: -10%;
-        width: 60%; height: 60%;
-        background: radial-gradient(circle, rgba(163,113,247,0.05) 0%, transparent 70%);
+        top: 0; left: 0; right: 0;
+        height: 120px;
+        background: linear-gradient(to bottom, transparent, rgba(240,185,11,0.03), transparent);
+        animation: scan 8s linear infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+    @keyframes scan {
+        0% { transform: translateY(-120px); }
+        100% { transform: translateY(100vh); }
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
         pointer-events: none;
         z-index: 0;
     }
 
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    .header {
+        margin-bottom: 32px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #262626;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .header-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.5px;
+        color: #f5f5f5;
+        position: relative;
+    }
+    .header-title .accent {
+        color: var(--gold);
+        text-shadow: 0 0 12px rgba(240,185,11,0.4);
+    }
+    .header-title .cursor {
+        display: inline-block;
+        width: 10px;
+        height: 1.2em;
+        background: var(--gold);
+        margin-left: 4px;
+        vertical-align: text-bottom;
+        animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+    .header-subtitle {
+        font-size: 0.8rem;
+        color: #737373;
+    }
+
     .tutorial-step {
         position: relative;
-        background: linear-gradient(160deg, var(--card), var(--bg));
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 40px 32px;
-        margin-bottom: 32px;
-        text-align: center;
+        background: #0f0f0f;
+        border: 1px solid #262626;
+        padding: 24px 22px;
+        margin-bottom: 16px;
+        transition: all 0.3s ease;
         overflow: hidden;
-        transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-        z-index: 1;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
     .tutorial-step:hover {
-        border-color: var(--gold);
-        box-shadow: 0 12px 40px rgba(240, 185, 11, 0.12);
-        transform: translateY(-5px);
+        border-color: rgba(240,185,11,0.3);
+        background: #121212;
+        box-shadow: 0 0 30px rgba(240,185,11,0.06), inset 0 0 20px rgba(240,185,11,0.02);
     }
     .tutorial-step::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
-        height: 3px;
+        height: 2px;
         background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.6;
-    }
-
-    .tutorial-step.faction-step {
-        background: linear-gradient(160deg, var(--card), rgba(163,113,247,0.03));
+        opacity: 0.5;
     }
     .tutorial-step.faction-step::before {
         background: linear-gradient(90deg, transparent, var(--purple), transparent);
     }
-    .tutorial-step.faction-step .step-icon {
-        border-color: var(--purple);
-        box-shadow: 0 0 24px rgba(163,113,247,0.25);
+
+    .step-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
     }
-    .tutorial-step.faction-step .step-title { color: var(--purple); }
 
     .step-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: var(--elevated);
-        border: 2px solid var(--gold);
-        font-size: 2.5rem;
-        margin-bottom: 20px;
-        box-shadow: 0 0 24px rgba(240, 185, 11, 0.15);
+        width: 44px;
+        height: 44px;
+        background: #171717;
+        border: 1px solid #333;
+        color: var(--gold);
+        flex-shrink: 0;
         transition: all 0.3s ease;
     }
     .tutorial-step:hover .step-icon {
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 0 32px rgba(240, 185, 11, 0.3);
+        transform: scale(1.05);
+        border-color: var(--gold);
+        box-shadow: 0 0 16px rgba(240,185,11,0.2);
+        color: #fff;
+    }
+    .faction-step .step-icon {
+        border-color: rgba(163,113,247,0.4);
+        box-shadow: 0 0 12px rgba(163,113,247,0.15);
+        color: var(--purple);
+    }
+    .faction-step:hover .step-icon {
+        border-color: var(--purple);
+        box-shadow: 0 0 16px rgba(163,113,247,0.3);
+        color: #fff;
+    }
+    .step-icon svg {
+        stroke: currentColor;
+        fill: none;
     }
 
-    .step-title {
-        font-family: 'Inter', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--gold);
-        margin-bottom: 12px;
+    .step-meta { flex: 1; min-width: 0; }
+    .step-num {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: #737373;
         text-transform: uppercase;
-        letter-spacing: 1.5px;
-        text-shadow: 0 0 12px rgba(240, 185, 11, 0.2);
-        line-height: 1.3;
+        letter-spacing: 1px;
+        margin-bottom: 2px;
+    }
+    .step-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #f5f5f5;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        display: inline-block;
+    }
+    .faction-step .step-title { color: var(--purple); }
+
+    .step-title::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 2px; top: 0;
+        color: rgba(240,185,11,0.3);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .tutorial-step:hover .step-title::after {
+        opacity: 1;
+        animation: glitch 0.3s linear;
+    }
+    @keyframes glitch {
+        0% { transform: translate(0); }
+        25% { transform: translate(-1px, 1px); }
+        50% { transform: translate(1px, -1px); }
+        75% { transform: translate(-1px, -1px); }
+        100% { transform: translate(0); }
     }
 
     .step-desc {
-        font-family: 'Inter', sans-serif;
-        color: var(--sub);
-        font-size: 0.95rem;
-        line-height: 1.7;
-        max-width: 560px;
-        margin: 0 auto 24px;
-        padding: 0 8px;
-        text-align: center;
+        color: #a3a3a3;
+        font-size: 0.85rem;
+        margin-bottom: 12px;
     }
-    .step-desc p {
-        margin-bottom: 10px;
-    }
-    .step-desc p:last-child {
-        margin-bottom: 0;
-    }
+    .step-desc p { margin-bottom: 6px; }
+    .step-desc p:last-child { margin-bottom: 0; }
+    .step-desc strong { color: var(--gold); font-weight: 700; }
+
+    .faction-light-text { color: var(--gold); font-weight: 700; text-shadow: 0 0 8px rgba(240,185,11,0.3); }
+    .faction-dark-text { color: var(--purple); font-weight: 700; text-shadow: 0 0 8px rgba(163,113,247,0.3); }
 
     .step-cmd {
         display: inline-block;
-        background: rgba(240, 185, 11, 0.12);
+        background: rgba(240,185,11,0.08);
         color: var(--gold);
-        font-family: 'SF Mono', Consolas, monospace;
-        font-size: 1.2rem;
-        font-weight: 800;
-        padding: 12px 28px;
-        border-radius: 12px;
-        border: 1px solid rgba(240, 185, 11, 0.35);
-        transition: all 0.25s ease;
-        cursor: default;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border: 1px solid rgba(240,185,11,0.3);
+        transition: all 0.2s;
     }
     .step-cmd:hover {
-        background: rgba(240, 185, 11, 0.2);
-        box-shadow: 0 0 24px rgba(240, 185, 11, 0.3);
-        transform: scale(1.05);
+        background: rgba(240,185,11,0.15);
+        box-shadow: 0 0 12px rgba(240,185,11,0.2);
     }
 
-    .step-hint {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.8rem;
-        color: var(--muted);
-        margin-top: 18px;
-        font-style: italic;
-    }
-
-    .guide-btn {
-        display: inline-flex;
+    .cmd-row {
+        display: flex;
         align-items: center;
         gap: 10px;
-        background: var(--elevated);
-        border: 1px solid var(--border);
-        color: var(--text);
-        padding: 12px 24px;
-        border-radius: var(--radius-sm);
-        text-decoration: none;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 700;
-        transition: all 0.25s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        padding: 8px 0;
+        border-bottom: 1px solid #1a1a1a;
+        font-size: 0.82rem;
+        transition: background 0.2s;
     }
-    .guide-btn:hover {
-        border-color: var(--gold);
-        background: rgba(240, 185, 11, 0.1);
+    .cmd-row:last-child { border-bottom: none; }
+    .cmd-row:hover { background: rgba(240,185,11,0.03); }
+
+    .cmd-row .cr-icon {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         color: var(--gold);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 24px rgba(240, 185, 11, 0.15);
+        transition: all 0.2s;
+    }
+    .cmd-row .cr-icon svg {
+        stroke: currentColor;
+        fill: none;
+    }
+    .cmd-row:hover .cr-icon {
+        color: #fff;
+        filter: drop-shadow(0 0 4px rgba(240,185,11,0.5));
     }
 
-	.cmd-row {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		background: var(--elevated);
-		padding: 10px 14px;
-		border-radius: 8px;
-		border: 1px solid var(--border);
-		max-width: 520px; /* было 420, стало шире */
-		margin: 0 auto 8px;
-		text-align: left;
-	}
+    .cmd-row .step-cmd { min-width: 100px; text-align: center; margin: 0; flex-shrink: 0; }
+    .cmd-row .cr-desc { color: #737373; font-size: 0.78rem; flex: 1; }
 
-	.cmd-row .step-cmd {
-		min-width: 90px; /* фиксируем ширину кнопки */
-		text-align: center;
-		font-size: 0.85rem;
-		padding: 4px 10px;
-		margin: 0;
-		flex-shrink: 0;
-	}
-
-	.cmd-row .cr-desc {
-		font-family: 'Inter', sans-serif;
-		font-size: 0.8rem; /* было 0.78, стало чуть больше */
-		color: var(--muted);
-		line-height: 1.4;
-		flex: 1; /* чтобы описание занимало всё оставшееся место */
-		white-space: nowrap; /* запрещаем перенос, если не влезает — будем уменьшать */
-	}
+    .footer-link {
+        margin-top: 32px;
+        padding-top: 16px;
+        border-top: 1px solid #262626;
+        text-align: center;
+    }
+    .footer-link a {
+        color: #737373;
+        text-decoration: underline;
+        font-size: 0.82rem;
+        transition: 0.2s;
+    }
+    .footer-link a:hover { color: var(--gold); }
 
     .reading-progress {
-        position: fixed; top: 0; left: 0; width: 100%; height: 3px;
-        background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red));
+        position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--purple), var(--gold));
         transform-origin: 0 50%; transform: scaleX(0); z-index: 1000;
     }
 
     .scroll-top {
-        position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px;
-        background: var(--card); border: 1px solid var(--gold); border-radius: 50%;
-        color: var(--gold); display: flex; align-items: center; justify-content: center;
+        position: fixed; bottom: 80px; right: 20px; width: 40px; height: 40px;
+        background: #0f0f0f; border: 1px solid #333;
+        color: #737373; display: flex; align-items: center; justify-content: center;
         cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease;
-        z-index: 98; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 98; font-size: 1rem;
     }
     .scroll-top.visible { opacity: 1; pointer-events: all; }
-    .scroll-top:hover { background: var(--gold); color: #000; transform: translateY(-3px); }
+    .scroll-top:hover { background: #171717; color: var(--gold); border-color: var(--gold); }
 
-    @media (max-width: 768px) {
-        .tutorial-step { padding: 28px 16px; }
-        .step-icon { width: 64px; height: 64px; font-size: 2rem; }
-        .step-title { font-size: 1.2rem; }
-        .step-desc { font-size: 0.88rem; line-height: 1.6; }
-        .step-cmd { font-size: 1rem; padding: 10px 22px; }
-        .guide-btn { padding: 10px 18px; font-size: 0.8rem; }
-        .cmd-row { max-width: 100%; padding: 10px 12px; }
-        .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
+    @media (max-width: 600px) {
+        body { padding: 24px 12px; }
+        body::after { display: none; }
+        .header-title { font-size: 1.2rem; }
+        .tutorial-step { padding: 20px 16px; }
+        .step-icon { width: 40px; height: 40px; }
+        .step-icon svg { width: 18px; height: 18px; }
+        .step-title { font-size: 0.9rem; }
+        .step-desc { font-size: 0.8rem; }
+        .cmd-row { flex-wrap: wrap; gap: 6px; }
+        .cmd-row .step-cmd { min-width: 80px; font-size: 0.75rem; padding: 3px 8px; }
+        .cmd-row .cr-desc { font-size: 0.72rem; width: 100%; margin-left: 26px; }
+        .scroll-top { bottom: 70px; right: 16px; width: 36px; height: 36px; font-size: 0.9rem; }
     }
 </style>
 </head>
@@ -241,43 +311,24 @@
 
 <div class="container">
     <header class="header">
-        <h1 class="header-title">ПЕРВЫЕ ШАГИ</h1>
-        <p class="header-subtitle">Как начать играть за 2 минуты</p>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">🌓</button>
+        <h1 class="header-title">Первые <span class="accent">шаги</span><span class="cursor"></span></h1>
+        <p class="header-subtitle">Как начать играть на Арене</p>
     </header>
-
-    <!-- Навигация -->
-    <div class="nav-wrapper">
-        <button class="nav-toggle" onclick="toggleNav()" aria-label="Меню">☰ Меню</button>
-        <nav class="nav-bar" id="pageNav">
-            <div class="nav-group">
-                <span class="nav-label" tabindex="0">⚔️ Арена ▾</span>
-                <div class="nav-dropdown">
-                    <a href="index.html" class="nav-link">📊 Статистика</a>
-                    <a href="league.html" class="nav-link">🏟 Лига</a>
-                    <a href="dungeon.html" class="nav-link">🏔 Данж</a>
-                    <a href="logs.html" class="nav-link">📜 Логи</a>
-                    <a href="player.html" class="nav-link">👤 Профиль</a>
-                </div>
-            </div>
-            <div class="nav-group">
-                <span class="nav-label" tabindex="0">📖 Инфо ▾</span>
-                <div class="nav-dropdown">
-                    <a href="balance.html" class="nav-link">⚖️ Баланс</a>
-                    <a href="guide.html" class="nav-link">⚔️ Гайд</a>
-                    <a href="tutorial.html" class="nav-link active">🎓 Обучение</a>
-                    <a href="lore.html" class="nav-link">📜 Лор</a>
-                    <a href="seasons.html" class="nav-link">📅 Сезоны</a>
-                    <a href="tavern.html" class="nav-link">🍺 Таверна</a>
-                </div>
-            </div>
-        </nav>
-    </div>
 
     <!-- Шаг 1 -->
     <div class="tutorial-step" id="step1">
-        <div class="step-icon">🩸</div>
-        <div class="step-title">Создай героя</div>
+        <div class="step-header">
+            <div class="step-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M2 12h20"/>
+                    <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>
+            <div class="step-meta">
+                <div class="step-num">01</div>
+                <div class="step-title" data-text="Создай героя">Создай героя</div>
+            </div>
+        </div>
         <div class="step-desc">
             <p>Купи награду за баллы канала.</p>
             <p>Затем напиши в чат <strong>!1</strong> – <strong>!5</strong> — бот предложит 5 героев (раса, класс, фракция). Выбери одного.</p>
@@ -286,8 +337,20 @@
 
     <!-- Шаг 2 -->
     <div class="tutorial-step" id="step2">
-        <div class="step-icon">⚔️</div>
-        <div class="step-title">Первый бой</div>
+        <div class="step-header">
+            <div class="step-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.5 17.5L3 6V3h3l11.5 11.5"/>
+                    <path d="M13 19l6-6"/>
+                    <path d="M16 16l4 4"/>
+                    <path d="M19 21l2-2"/>
+                </svg>
+            </div>
+            <div class="step-meta">
+                <div class="step-num">02</div>
+                <div class="step-title" data-text="Первый бой">Первый бой</div>
+            </div>
+        </div>
         <div class="step-desc">
             <p>Напиши <strong>!бой</strong> — бот найдёт соперника и проведёт дуэль.</p>
             <p>Победа даёт осколки и очки фракции. Поражение — тоже осколки, но меньше.</p>
@@ -296,72 +359,86 @@
 
     <!-- Шаг 3 -->
     <div class="tutorial-step" id="step3">
-        <div class="step-icon">📊</div>
-        <div class="step-title">Другие команды</div>
+        <div class="step-header">
+            <div class="step-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                </svg>
+            </div>
+            <div class="step-meta">
+                <div class="step-num">03</div>
+                <div class="step-title" data-text="Другие команды">Другие команды</div>
+            </div>
+        </div>
         <div class="step-desc">
             <p>Помимо дуэлей:</p>
         </div>
-		<div style="margin-top: 14px;">
-			<div class="cmd-row">
-				<span class="cr-icon">📊</span>
-				<span class="step-cmd">!инфо</span>
-				<span class="cr-desc">— статы героя</span>
-			</div>
-			<div class="cmd-row">
-				<span class="cr-icon">🐲</span>
-				<span class="step-cmd">!данж</span>
-				<span class="cr-desc">— подземелье (КД: 10 минут)</span>
-			</div>
-			<div class="cmd-row">
-				<span class="cr-icon">👑</span>
-				<span class="step-cmd">!рега</span>
-				<span class="cr-desc">— турнир (по расписанию: 12:00 и 14:00)</span>
-			</div>
-			<div class="cmd-row">
-				<span class="cr-icon">💀</span>
-				<span class="step-cmd">!харакири</span>
-				<span class="cr-desc">— удалить героя (КД: 30 минут, осколки сохранятся)</span>
-			</div>
-		</div>
+        <div style="margin-top: 8px;">
+            <div class="cmd-row">
+                <span class="cr-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+                    </svg>
+                </span>
+                <span class="step-cmd">!инфо</span>
+                <span class="cr-desc">— статы героя</span>
+            </div>
+            <div class="cmd-row">
+                <span class="cr-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </span>
+                <span class="step-cmd">!данж</span>
+                <span class="cr-desc">— подземелье (КД: 10 минут)</span>
+            </div>
+            <div class="cmd-row">
+                <span class="cr-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 20h20"/><path d="M5 20V8l7-6 7 6v12"/><path d="M9 20v-6h6v6"/>
+                    </svg>
+                </span>
+                <span class="step-cmd">!рега</span>
+                <span class="cr-desc">— турнир (по расписанию: 12:00 и 14:00)</span>
+            </div>
+            <div class="cmd-row">
+                <span class="cr-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><path d="M8 15h8"/><path d="M9 9h.01"/><path d="M15 9h.01"/>
+                    </svg>
+                </span>
+                <span class="step-cmd">!харакири</span>
+                <span class="cr-desc">— удалить героя (КД: 30 минут, осколки сохранятся)</span>
+            </div>
+        </div>
     </div>
 
     <!-- Шаг 4 -->
     <div class="tutorial-step faction-step" id="step4">
-        <div class="step-icon">🌝🌚</div>
-        <div class="step-title">Твоя цель</div>
-        <div class="step-desc">
-            <p>Сражайся за <strong>Орден Света</strong> или <strong>Культ Тьмы</strong>.</p>
-            <p>Захватывай земли, становись чемпионом турниров, собирай осколки и расти в уровне.</p>
+        <div class="step-header">
+            <div class="step-icon">🌝🌚</div>
+            <div class="step-meta">
+                <div class="step-num">04</div>
+                <div class="step-title" data-text="Твоя цель">Твоя цель</div>
+            </div>
         </div>
-        <div style="margin-top: 24px;">
-            <a href="guide.html" class="guide-btn">📖 Полный гайд (Путь героя)</a>
+        <div class="step-desc">
+            <p>Сражайся за <span class="faction-light-text">Орден Света</span> или <span class="faction-dark-text">Культ Тьмы</span>.</p>
+            <p>Захватывай земли, становись чемпионом турниров, собирай осколки и расти в уровне.</p>
         </div>
     </div>
 
+    <div class="footer-link">
+        <a href="guide.html">Полный гайд (Путь героя) →</a>
+    </div>
 </div>
 
 <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('eternis-theme', next);
-    }
-    const saved = localStorage.getItem('eternis-theme');
-    if (saved) document.documentElement.setAttribute('data-theme', saved);
-
-    function toggleNav() {
-        const nav = document.getElementById('pageNav');
-        nav.classList.toggle('show');
-        document.querySelector('.nav-toggle').textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
-    }
-    document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
-        document.getElementById('pageNav').classList.remove('show');
-        document.querySelector('.nav-toggle').textContent = '☰ Меню';
-    }));
-
     const progressBar = document.getElementById('readingProgress');
     const scrollTopBtn = document.getElementById('scrollTop');
     window.addEventListener('scroll', () => {
@@ -372,11 +449,12 @@
         scrollTopBtn.classList.toggle('visible', scrollTop > 300);
     }, { passive: true });
 </script>
+
 <!-- Пасхалка -->
-<div id="easterEgg" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:20px;">
+<div id="easterEgg" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:20px; font-family: ui-monospace, monospace;">
     <div style="font-size:6rem; animation: dinoJump 0.6s ease infinite alternate;">🦖</div>
-    <div style="font-size:1rem; color:var(--sub); margin-top:8px;">Я СОСАЛ!</div>
-    <button onclick="document.getElementById('easterEgg').style.display='none'" style="margin-top:24px; background:var(--gold); color:#000; border:none; padding:12px 28px; border-radius:8px; font-weight:700; cursor:pointer;">Хорошо</button>
+    <div style="font-size:0.9rem; color:#a3a3a3; margin-top:8px;">Я СОСАЛ!</div>
+    <button onclick="document.getElementById('easterEgg').style.display='none'" style="margin-top:24px; background:var(--gold); color:#0a0a0a; border:none; padding:8px 20px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.85rem;">Хорошо</button>
 </div>
 
 <style>
@@ -402,6 +480,6 @@ if (step2Card) {
     });
 }
 </script>
-</script>
+
 </body>
 </html>
