@@ -15,7 +15,7 @@
         font-size: 14px;
         line-height: 1.6;
         min-height: 100vh;
-        padding: 32px 16px;
+        padding: 0 16px; /* Ноль сверху/снизу */
         position: relative;
         overflow-x: hidden;
     }
@@ -49,11 +49,13 @@
         margin: 0 auto;
         position: relative;
         z-index: 2;
+        padding-top: 2px; /* Почти ноль */
+        padding-bottom: 2px; /* Почти ноль */
     }
 
     .header {
-        margin-bottom: 32px;
-        padding-bottom: 16px;
+        margin-bottom: 4px; /* Еще меньше */
+        padding-bottom: 2px; /* Еще меньше */
         border-bottom: 1px solid #262626;
         display: flex;
         align-items: baseline;
@@ -95,7 +97,7 @@
         background: #0f0f0f;
         border: 1px solid #262626;
         padding: 24px 22px;
-        margin-bottom: 16px;
+        margin-bottom: 6px; /* Было 8, стало 6 */
         transition: all 0.3s ease;
         overflow: hidden;
     }
@@ -120,7 +122,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
 
     .step-icon {
@@ -260,15 +262,15 @@
     .cmd-row .cr-desc { color: #737373; font-size: 0.78rem; flex: 1; }
 
     .footer-link {
-        margin-top: 32px;
-        padding-top: 16px;
+        margin-top: 4px; /* Еще меньше */
+        padding-top: 4px; /* Еще меньше */
         border-top: 1px solid #262626;
         text-align: center;
     }
     .footer-link a {
         color: #737373;
         text-decoration: underline;
-        font-size: 0.82rem;
+        font-size: 0.75rem; /* Чуть меньше */
         transition: 0.2s;
     }
     .footer-link a:hover { color: var(--gold); }
@@ -290,8 +292,9 @@
     .scroll-top:hover { background: #171717; color: var(--gold); border-color: var(--gold); }
 
     @media (max-width: 600px) {
-        body { padding: 24px 12px; }
+        body { padding: 0 12px; }
         body::after { display: none; }
+        .container { padding-top: 2px; padding-bottom: 2px; }
         .header-title { font-size: 1.2rem; }
         .tutorial-step { padding: 20px 16px; }
         .step-icon { width: 40px; height: 40px; }
