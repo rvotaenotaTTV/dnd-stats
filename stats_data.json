@@ -51,14 +51,14 @@
       "emoji": "🧑🛡️",
       "champion": false,
       "wins": 0,
-      "losses": 0,
+      "losses": 1,
       "streak": 0,
       "best": 0,
-      "loseStreak": 0,
-      "worst": 0,
+      "loseStreak": 1,
+      "worst": 1,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 15,
+      "shards": 16,
       "level": 1,
       "factionWins": 0,
       "tournamentWins": 0,
@@ -124,11 +124,11 @@
       "worst": 8,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 377,
-      "level": 37,
+      "shards": 380,
+      "level": 38,
       "factionWins": 8,
       "tournamentWins": 2,
-      "skill": 190,
+      "skill": 191,
       "achievements": [15,33,34,35,37,38,41,42,46,50,52,53,54,55,56,47,49,32,48,44,30,57],
       "title": "⚡ Живая легенда"
     },
@@ -586,7 +586,7 @@
       "worst": 2,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 325,
+      "shards": 327,
       "level": 32,
       "factionWins": 12,
       "tournamentWins": 0,
@@ -645,18 +645,18 @@
       "emoji": "😈👁️",
       "champion": false,
       "wins": 3,
-      "losses": 4,
-      "streak": 3,
+      "losses": 5,
+      "streak": 0,
       "best": 3,
-      "loseStreak": 0,
+      "loseStreak": 1,
       "worst": 4,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 235,
+      "shards": 236,
       "level": 23,
       "factionWins": 2,
       "tournamentWins": 0,
-      "skill": 85,
+      "skill": 83,
       "achievements": [57,32,34,35,37,38,41,42,44,46,53,54,56,55,50],
       "title": "🗡️ Мастер клинка"
     },
@@ -974,20 +974,20 @@
       "displayName": "Человек-Колдун",
       "emoji": "🧑👁️",
       "champion": false,
-      "wins": 8,
+      "wins": 9,
       "losses": 15,
-      "streak": 2,
+      "streak": 3,
       "best": 3,
       "loseStreak": 0,
       "worst": 7,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 63,
+      "shards": 69,
       "level": 6,
       "factionWins": 3,
       "tournamentWins": 0,
-      "skill": 59,
-      "achievements": [50,52,53,55,49],
+      "skill": 62,
+      "achievements": [50,52,53,55,49,57],
       "title": "🥊 Боец"
     },
     {
@@ -1788,19 +1788,19 @@
       "displayName": "Человек-Воин",
       "emoji": "🧑⚔️",
       "champion": false,
-      "wins": 67,
+      "wins": 68,
       "losses": 59,
-      "streak": 1,
+      "streak": 2,
       "best": 9,
       "loseStreak": 0,
       "worst": 5,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 426,
+      "shards": 429,
       "level": 42,
       "factionWins": 31,
       "tournamentWins": 0,
-      "skill": 296,
+      "skill": 299,
       "achievements": [18,35,38,45,46,47,48,49,50,53,54,55,56,37,39,32,30,31,28,52,24,29,57,27],
       "title": "🎯 Профессионал"
     },
@@ -2874,7 +2874,7 @@
       "worst": 12,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 1081,
+      "shards": 1082,
       "level": 108,
       "factionWins": 82,
       "tournamentWins": 4,
@@ -3033,8 +3033,8 @@
       "factionWins": 1,
       "tournamentWins": 0,
       "skill": 0,
-      "achievements": [57,54,56,53,55,46],
-      "title": "🏔 Покоритель глубин"
+      "achievements": [57,54,56,53,55,46,35],
+      "title": "🐉 Легенда Подземелья"
     },
     {
       "display": "diovem",
@@ -3089,8 +3089,8 @@
   },
   "tournaments": 50,
   "dungeonTrophies": {
-    "light": 5491,
-    "dark": 4857
+    "light": 5494,
+    "dark": 4870
   },
   "territoryControl": {
     "🌑 Эпицентр Раскола": "light",
@@ -3135,10 +3135,10 @@
         "hits": 537,
         "passive": "⚔️ Святая ярость",
         "familiar": "🐗 Кабан",
-        "totalRuns": 47,
-        "totalWaves": 913,
-        "trophies": 288,
-        "bosses": 139
+        "totalRuns": 48,
+        "totalWaves": 932,
+        "trophies": 295,
+        "bosses": 142
       },
       "catablepass": {
         "display": "catablepass",
@@ -3344,10 +3344,10 @@
         "hits": 702,
         "passive": "🧿 Амулет Раскола",
         "familiar": "🐺 Волк",
-        "totalRuns": 87,
-        "totalWaves": 1502,
-        "trophies": 445,
-        "bosses": 225
+        "totalRuns": 88,
+        "totalWaves": 1511,
+        "trophies": 448,
+        "bosses": 226
       },
       "b1adstone": {
         "display": "b1adstone",
@@ -3591,10 +3591,10 @@
         "hits": 476,
         "passive": "⚔️ Святая ярость",
         "familiar": "🦉 Сова",
-        "totalRuns": 80,
-        "totalWaves": 1398,
-        "trophies": 417,
-        "bosses": 217
+        "totalRuns": 81,
+        "totalWaves": 1412,
+        "trophies": 421,
+        "bosses": 219
       },
       "fentyr41": {
         "display": "fentyr41",
@@ -4000,26 +4000,23 @@
         "emoji": "🧝🌿",
         "name": "Эльф-Друид",
         "faction": "Культ Тьмы",
-        "record": 14,
-        "damage": 1628,
-        "crits": 11,
-        "misses": 7,
-        "blocks": 8,
-        "swings": 151,
-        "hits": 136,
-        "passive": "🎯 Метка Охотника",
-        "familiar": "🦀 Краб",
-        "totalRuns": 2,
-        "totalWaves": 23,
-        "trophies": 9,
-        "bosses": 3
+        "record": 17,
+        "damage": 2366,
+        "crits": 12,
+        "misses": 15,
+        "blocks": 57,
+        "swings": 232,
+        "hits": 160,
+        "passive": "💢 Накопленная ярость",
+        "familiar": "🐢 Черепаха",
+        "totalRuns": 3,
+        "totalWaves": 40,
+        "trophies": 13,
+        "bosses": 6
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "⚡🏆🧑⚔️ werewolfhuntern7 24:17 🐱🔮 voklets | 5:9 | 💥11:8 | 8:-"
-    },
     {
       "FullLog": "🐱✨ juckbluck 7:23 ⚡🏆🧑🎸 araxizs | 12:7 | 11:-"
     },
@@ -4046,6 +4043,9 @@
     },
     {
       "FullLog": "⚡🏆🧑⚔️ werewolfhuntern7 38:10 🧑🛡️ ded_evgenius | 5:🛡 | 8:💨 | 8:6 | 🛡:4 | 8:💨 | 5:💨 | 4:-"
+    },
+    {
+      "FullLog": "⚡😈👁️ k3nn3zy 12:25 🏆🧑👁️ razendx | 💨:11 | 12:7 | ❌:7"
     }
   ],
   "heroArchive": {
