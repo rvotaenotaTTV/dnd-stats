@@ -281,17 +281,42 @@ th,td{padding:6px 8px;white-space:nowrap;word-break:normal;overflow-wrap:normal;
 // ============ КЕШ АРХИВА ============
 async function getSeasonData(n) {
     const KEY = 'eternis-season-v2-' + n;
-    const TTL = 30 * 60 * 1000;
+    const TTL = 24 * 60 * 60 * 1000; // 24 часа для архивных сезонов
     try {
         const cached = JSON.parse(localStorage.getItem(KEY) || 'null');
         if (cached) return cached.data;
     } catch (e) {}
 
-    const r = await fetch(`https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_${n}.json`);
-    if (!r.ok) return null;
-    const data = await r.json();
-    try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
-    return data;
+    const fetchWithTimeout = async (url) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 секунды
+        try {
+            const r = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            return r;
+        } catch (e) {
+            clearTimeout(timeoutId);
+            throw e;
+        }
+    };
+
+    try {
+        let r;
+        try {
+            r = await fetchWithTimeout(`${ARCHIVE_BASE}${n}.json`);
+        } catch (e) {
+            r = await fetchWithTimeout(`${ARCHIVE_BASE_FALLBACK}${n}.json`);
+        }
+        
+        if (!r || !r.ok) return null;
+        
+        const data = await r.json();
+        try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        return data;
+    } catch (e) {
+        console.warn(`Сезон ${n} пропущен:`, e.message);
+        return null;
+    }
 }
 
 // ============ ТЕМА И НАВИГАЦИЯ ============
@@ -366,8 +391,8 @@ function getStatsData() {
             }
         } catch (e) {}
 
-        let r = await fetch(`${STATS_URL}?v=${Date.now()}`);
-        if (!r.ok) r = await fetch(`${STATS_URL_FALLBACK}?v=${Date.now()}`);
+        let r = await fetch(STATS_URL);
+        if (!r.ok) r = await fetch(STATS_URL_FALLBACK);
         const data = await r.json();
 
         try {
@@ -578,18 +603,20 @@ function renderSeason(data, seasonNum, isCurrent) {
 
 // ============ ЗАГРУЗКА СЕЗОНОВ ============
 async function detectSeasons() {
-    const foundSeasons = [];
-
     renderProgress(0, SEASON_SCAN_LIMIT + 2, 'Определяю сезоны...');
 
-    for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
-        try {
-            const r = await fetch(`${ARCHIVE_BASE}${n}.json`);
-            if (!r.ok) break;
-            foundSeasons.push(n);
-            renderProgress(n + 1, SEASON_SCAN_LIMIT + 2, `Загружаю сезон ${n}...`);
-        } catch (e) { break; }
-    }
+    // Параллельная проверка существующих сезонов через HEAD-запросы
+    const checks = await Promise.all(
+        Array.from({ length: SEASON_SCAN_LIMIT + 1 }, (_, n) => {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 1000);
+            return fetch(`${ARCHIVE_BASE}${n}.json`, { method: 'HEAD', signal: controller.signal })
+                .then(r => { clearTimeout(timeoutId); return r.ok ? n : -1; })
+                .catch(() => { clearTimeout(timeoutId); return -1; });
+        })
+    );
+    
+    const foundSeasons = checks.filter(n => n >= 0).sort((a, b) => a - b);
 
     currentSeasonNum = foundSeasons.length > 0
         ? foundSeasons[foundSeasons.length - 1] + 1

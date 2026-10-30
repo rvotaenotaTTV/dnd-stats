@@ -371,8 +371,8 @@ body{background-image:radial-gradient(ellipse at 20% 0%,rgba(163,113,247,0.10) 0
 /* ============================================================================
    СЕКЦИЯ 1. КОНСТАНТЫ
    ========================================================================= */
-const STATS_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
-const STATS_URL_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 const DATA_URL = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
 const DATA_URL_FALLBACK = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
 const SEASON_BASE = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_';
@@ -585,7 +585,7 @@ async function getSeasonData(n) {
 
     const fetchWithTimeout = async (url) => {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1500); // 1.5с
+        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 сек на файл
         try {
             const r = await fetch(url, { signal: controller.signal });
             clearTimeout(timeoutId);
@@ -610,8 +610,8 @@ async function getSeasonData(n) {
         try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
     } catch (e) {
-        console.warn(`Сезон ${n} не загружен:`, e.message);
-        return null; // Возвращаем null, чтобы Promise.all не упал
+        console.warn(`Сезон ${n} пропущен (ошибка):`, e.message);
+        return null; // Главное: возвращаем null, чтобы Promise.all не упал
     }
 }
 
@@ -621,34 +621,43 @@ async function getSeasonLimit() {
         cached = JSON.parse(localStorage.getItem(SEASON_LIMIT_KEY) || 'null');
     } catch (e) {}
 
+    // Если есть кэш, проверяем следующий сезон (вдруг появился новый)
     if (cached && (Date.now() - cached.ts < SEASON_LIMIT_TTL)) {
+        const nextSeason = cached.last + 1;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 сек
+        try {
+            const r = await fetch(`${SEASON_BASE}${nextSeason}.json`, { method: 'HEAD', signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (r.ok) {
+                try { localStorage.setItem(SEASON_LIMIT_KEY, JSON.stringify({ ts: Date.now(), last: nextSeason })); } catch (e) {}
+                return nextSeason;
+            }
+        } catch (e) {
+            clearTimeout(timeoutId);
+        }
         return cached.last;
     }
 
+    // Если кэша нет — сканируем с нуля
     let last = -1;
-    // Проверяем по одному, но с защитой от сброса соединения
     for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 сек
         try {
-            // Используем GET с таймаутом в 1.5 секунды
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 1500);
             const r = await fetch(`${SEASON_BASE}${n}.json`, { method: 'HEAD', signal: controller.signal });
             clearTimeout(timeoutId);
-            
             if (r.ok) {
                 last = n;
             } else {
-                break; // Если файла нет (404) — останавливаемся
+                break; // Файла нет — останавливаемся
             }
         } catch (e) {
-            // Если ERR_CONNECTION_RESET или таймаут — считаем, что сезона нет
-            break; 
+            clearTimeout(timeoutId);
+            break; // Ошибка сети/сброс соединения — останавливаемся
         }
     }
-    
-    // Если вообще ничего не нашли (ошибка сети), ставим дефолт 0 или берем из кэша
     if (last < 0) last = 0;
-    
     try {
         localStorage.setItem(SEASON_LIMIT_KEY, JSON.stringify({ ts: Date.now(), last }));
     } catch (e) {}
@@ -658,13 +667,15 @@ async function getSeasonLimit() {
 async function loadAllSeasons(onProgress) {
     if (onProgress) onProgress(1, 3, 'Загружаю текущий сезон...');
 
+    // Запускаем параллельно: текущий сезон и поиск границ архива
     const [currentData, lastArchive] = await Promise.all([
         getStatsData().catch(() => null),
         getSeasonLimit()
     ]);
 
-    if (onProgress) onProgress(2, 3, `Загружаю ${lastArchive + 1} архивных сезонов...`);
+    if (onProgress) onProgress(2, 3, `Загружаю архивные сезоны (${lastArchive + 1})...`);
 
+    // Загружаем архивные сезоны параллельно
     let loaded = 0;
     const total = lastArchive + 1;
     const results = await Promise.all(
@@ -681,6 +692,7 @@ async function loadAllSeasons(onProgress) {
 
     const seasons = results.filter(Boolean).sort((a, b) => a.num - b.num);
     const currentNum = lastArchive + 1;
+    
     return currentData
         ? [...seasons, { num: currentNum, data: currentData, isCurrent: true }]
         : seasons;
@@ -3202,10 +3214,12 @@ document.querySelectorAll('.nav-label').forEach(label => {
    СЕКЦИЯ 12. ПРЕДЗАГРУЗКА
    ========================================================================= */
 (async function preload() {
+    // 1. Запускаем загрузку картинок, лиги и эмодзи в фоне (не ждем их)
     load2x2().then(d => { data2x2 = d; });
-	loadLeagueChampions();
-	await loadEmojis();
+    loadLeagueChampions();
+    const emojisPromise = loadEmojis(); // Убрали await, теперь не ждем
 
+    // 2. Сразу начинаем грузить статистику
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name');
     const lastPlayer = localStorage.getItem(LAST_PLAYER_KEY);
@@ -3215,14 +3229,19 @@ document.querySelectorAll('.nav-label').forEach(label => {
         document.getElementById('playerSearch').value = targetName;
     }
 
-	const contentEl = document.getElementById('profileContent');
-	if (contentEl) {
-		contentEl.innerHTML = '<div id="progressBox"></div>';
-	}
+    const contentEl = document.getElementById('profileContent');
+    if (contentEl) {
+        contentEl.innerHTML = '<div id="progressBox"></div>';
+    }
 
-	allSeasonsCache = await loadAllSeasons((loaded, total, title) => {
-		renderProgress(loaded, total, null, title);
-	});
+    // 3. Грузим сезоны (это происходит сразу, не ждем эмодзи)
+    allSeasonsCache = await loadAllSeasons((loaded, total, title) => {
+        renderProgress(loaded, total, null, title);
+    });
+
+    // 4. Вот здесь дожидаемся эмодзи перед тем, как рисовать профиль
+    await emojisPromise;
+
     allPlayersCache = getAllPlayers(allSeasonsCache);
     try { localStorage.setItem(PLAYERS_CACHE_KEY, JSON.stringify(allPlayersCache)); } catch (e) {}
 
