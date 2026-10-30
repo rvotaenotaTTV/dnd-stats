@@ -2761,11 +2761,34 @@ function renderSkillTab(last) {
     const denominator = Math.sqrt(total / 75 + 1);
 
     const components = [
-        { icon: '⚔️', name: 'Победы × Винрейт', detail: `${last.wins} × ${(wr * 100).toFixed(1)}% × 7`, value: (last.wins || 0) * wr * 7, color: 'var(--gold)' },
-        { icon: '🔥', name: 'Лучший стрик', detail: `${last.best} × 10`, value: (last.best || 0) * 10, color: 'var(--red)' },
-        { icon: '📈', name: 'Уровень', detail: `${last.level} × 2`, value: (last.level || 0) * 2, color: 'var(--green)' },
-        { icon: '👑', name: 'Турнирные победы', detail: `${last.tournamentWins} × 25`, value: (last.tournamentWins || 0) * 25, color: 'var(--purple)' },
-        { icon: '🌍', name: 'Фракционные победы', detail: `${last.factionWins} × 2`, value: (last.factionWins || 0) * 2, color: 'var(--ice)' }
+        { 
+            icon: '⚔️', 
+            name: 'Победы × Винрейт', 
+            detail: `√${last.wins} × ${(wr * 100).toFixed(1)}% × 40`, 
+            value: Math.sqrt(last.wins || 0) * wr * 40, 
+            color: 'var(--gold)' 
+        },
+        { 
+            icon: '🔥', 
+            name: 'Лучший стрик', 
+            detail: `${last.best} × 10`, 
+            value: (last.best || 0) * 10, 
+            color: 'var(--red)' 
+        },
+        { 
+            icon: '📈', 
+            name: 'Уровень', 
+            detail: `${last.level} × 1`, 
+            value: (last.level || 0) * 1, 
+            color: 'var(--green)' 
+        },
+        { 
+            icon: '👑', 
+            name: 'Турнирные победы', 
+            detail: `${last.tournamentWins} × 25`, 
+            value: (last.tournamentWins || 0) * 25, 
+            color: 'var(--purple)' 
+        }
     ];
     const totalValue = components.reduce((sum, c) => sum + c.value, 0);
 
