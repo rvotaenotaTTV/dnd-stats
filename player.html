@@ -52,7 +52,7 @@ body{background-image:radial-gradient(ellipse at 20% 0%,rgba(163,113,247,0.10) 0
 .badge-dark{background:rgba(163,113,247,0.2);color:var(--purple)}
 .tabs-bar{display:flex;gap:4px;margin:0 auto 20px;padding:5px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);width:fit-content;max-width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;justify-content:center}
 .tabs-bar::-webkit-scrollbar{display:none}
-.tab-pill{flex:0 0 auto;padding:8px 12px;border:none;background:transparent;color:var(--sub);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;font-family:inherit;transition:0.2s;white-space:nowrap;text-align:center}
+.tab-pill{flex:0 0 auto;padding:8px 12px;border:none;background:transparent;color:var(--sub);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;font-family:inherit;transition:0.2s;white-space:nowrap;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px}
 .tab-pill:hover{background:var(--elevated);color:var(--text)}
 .tab-pill.active{background:linear-gradient(135deg,var(--purple),#8b5cf6);color:#fff;box-shadow:0 4px 12px rgba(163,113,247,0.3)}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
@@ -1619,15 +1619,15 @@ function renderPlayerInfo(player, ranks) {
 
 // --- 7.2 Единые табы ---
 const TABS_CONFIG = [
-    ['overview',      '👤 Обзор',     true],
-    ['analysis',      '📊 Анализ',    false],
-    ['achievements',  '🏅 Ачивки',    false],
-    ['meta-style',    '🎨 Стиль',     false],
-    ['dungeon',       '🏔 Данж',      false],
-    ['archive',       '📜 Архив',     false],
-    ['compare',       '⚔️ Сравнить',  false],
-    ['skill',         '📈 Skill',     false],
-    ['prophecy',      '🔮 Пророчества', false]
+    ['overview',      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Обзор',     true],
+    ['analysis',      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> Анализ',    false],
+    ['achievements',  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Ачивки',    false],
+    ['meta-style',    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 6v6l4 2"/></svg> Стиль',     false],
+    ['dungeon',       '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Данж',      false],
+    ['archive',       '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Архив',     false],
+    ['compare',       '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg> Сравнить',  false],
+    ['skill',         '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> Skill',     false],
+    ['prophecy',      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Пророчества', false]
 ];
 
 function renderTabs() {
