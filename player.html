@@ -7,8 +7,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Арена Этерниса — Профиль игрока</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
-    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Арена Этерниса">
     <meta property="og:title" content="Арена Этерниса — Профиль игрока">
@@ -453,9 +451,9 @@ function getStatsData() {
 
         let r;
         try {
-            r = await fetchWithTimeout(STATS_URL); // Сначала jsDelivr
+            r = await fetchWithTimeout(STATS_URL);
         } catch (e) {
-            r = await fetchWithTimeout(STATS_URL_FALLBACK); // Потом GitHub
+            r = await fetchWithTimeout(STATS_URL_FALLBACK);
         }
         
         if (!r.ok) throw new Error('Stats fetch failed');
@@ -624,7 +622,6 @@ async function loadAllSeasons(onProgress) {
 
     if (onProgress) onProgress(2, 4, 'Загружаю архивные сезоны...');
 
-    // Проверяем 0–10 параллельно с таймаутом 2 секунды
     const MAX_SEASONS = 10;
     const checks = await Promise.all(
         Array.from({ length: MAX_SEASONS + 1 }, (_, n) => {
@@ -643,7 +640,6 @@ async function loadAllSeasons(onProgress) {
 
     if (onProgress) onProgress(3, 4, `Загружаю ${lastArchived + 1} сезонов...`);
 
-    // Теперь качаем найденные сезоны параллельно
     const seasons = [];
     if (lastArchived >= 0) {
         const results = await Promise.all(
@@ -756,7 +752,7 @@ function getPlayerHistory(nickname, seasons) {
 			if (total === 0) return;
 			history.push({
 				season: s.num,
-				isCurrent: s.isCurrent,      // ← ЭТО МЕНЯЕМ
+				isCurrent: s.isCurrent,
 				era: s.num === 0 ? 'classic' : 'races',
 				display: nickname,
 				emoji: h.emoji || '⚔️',
@@ -2428,20 +2424,17 @@ function renderFullHistory(history) {
         const rows = bySeason.get(seasonNum);
         const seasonClass = seasonIdx % 2 === 0 ? 'season-even' : 'season-odd';
 
-        // Сортируем: сначала активные, потом удалённые
         const sortedRows = [
             ...rows.filter(h => !h.isDeleted),
             ...rows.filter(h => h.isDeleted)
         ];
 
-        // Определяем, есть ли активный герой в этом сезоне
         const hasCurrent = sortedRows.some(h => h.isCurrent && !h.isDeleted);
 
         sortedRows.forEach((h, rowIdx) => {
             const isFirst = rowIdx === 0;
             const isLast = rowIdx === sortedRows.length - 1 && rows.length === 1;
 
-            // Ячейка с сезоном — только в первой строке
             let seasonCell = '';
             if (isFirst) {
                 const eraIcon = h.era === 'classic' ? ' 📜' : '';
@@ -2452,7 +2445,6 @@ function renderFullHistory(history) {
                 seasonCell = `<td class="season-cell empty" data-label="Сезон"></td>`;
             }
 
-            // Иконка удаления — только у героя
             const deletedIcon = h.isDeleted ? ' <span style="font-size:0.65rem;">🗑️</span>' : '';
             const rowClass = h.isDeleted ? 'hero-deleted' : '';
 
@@ -2471,7 +2463,6 @@ function renderFullHistory(history) {
             </tr>`;
         });
 
-        // ИТОГО — если героев > 1
         if (rows.length > 1) {
             const sumWins = rows.reduce((s, h) => s + h.wins, 0);
             const sumLosses = rows.reduce((s, h) => s + h.losses, 0);
@@ -2990,7 +2981,6 @@ async function loadProfile() {
         localStorage.setItem(LAST_PLAYER_KEY, currentPlayerName);
         window._currentSeasonFilter = 'all';
 
-        // Все анализаторы
 		const mainHistory = history.filter(h => !h.isDeleted);
 		const activeHero = history.find(h => h.isCurrent && !h.isDeleted);
 		let last;
@@ -3018,7 +3008,6 @@ async function loadProfile() {
         const advice = generateAdvice(trend, heroAnalysis, leaguePlace, metaBySeason, mainHistory);
         const memes = generateMemeAnalysis(history, trend, heroAnalysis, metaBySeason, leaguePlace);
 
-        // Ранги
         const ranks = {
             season: getSeasonRank(last),
             wins: getRankByWins(last),
@@ -3028,7 +3017,6 @@ async function loadProfile() {
             dungeon: getRankByDungeon(last)
         };
 
-        // Сборка HTML
         let html = renderPlayerInfo(last, ranks);
         html += renderTabs();
         html += renderOverviewTab(mainHistory, last, ranks, narrative);
@@ -3190,12 +3178,10 @@ document.querySelectorAll('.nav-label').forEach(label => {
    СЕКЦИЯ 12. ПРЕДЗАГРУЗКА
    ========================================================================= */
 (async function preload() {
-    // 1. Запускаем загрузку картинок, лиги и эмодзи в фоне (не ждем их)
     load2x2().then(d => { data2x2 = d; });
     loadLeagueChampions();
-    const emojisPromise = loadEmojis(); // Убрали await, теперь не ждем
+    const emojisPromise = loadEmojis();
 
-    // 2. Сразу начинаем грузить статистику
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name');
     const lastPlayer = localStorage.getItem(LAST_PLAYER_KEY);
@@ -3210,12 +3196,10 @@ document.querySelectorAll('.nav-label').forEach(label => {
         contentEl.innerHTML = '<div id="progressBox"></div>';
     }
 
-    // 3. Грузим сезоны (это происходит сразу, не ждем эмодзи)
     allSeasonsCache = await loadAllSeasons((loaded, total, title) => {
         renderProgress(loaded, total, null, title);
     });
 
-    // 4. Вот здесь дожидаемся эмодзи перед тем, как рисовать профиль
     await emojisPromise;
 
     allPlayersCache = getAllPlayers(allSeasonsCache);

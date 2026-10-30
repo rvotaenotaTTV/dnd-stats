@@ -201,7 +201,7 @@
         const DATA_URL_RAW='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
         const JSON_URL_CDN='https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
         const DATA_URL_CDN='https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
-        function fetchWithTimeout(url,timeout=3000){return Promise.race([fetch(url).then(r=>{if(!r.ok)throw new Error('Status '+r.status);return r}),new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),timeout))]);}
+        function fetchWithTimeout(url,timeout=10000){return Promise.race([fetch(url).then(r=>{if(!r.ok)throw new Error('Status '+r.status);return r}),new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),timeout))]);}
 
         let classesData=[],racesData=[],classEmojis={},raceEmojis={},players=[],achievements=[];
 		
@@ -276,7 +276,50 @@
 			return `${emoji(raceEmojis[raceName] || '')}${spacer}${emoji(classEmojis[className] || '')}`;
 		}
 
-		fetchWithTimeout(DATA_URL_RAW).catch(()=>fetch(DATA_URL_CDN)).then(r=>r.json()).then(data=>{classesData=data.classes;racesData=data.races;achievements=data.achievements||[];classEmojis=Object.fromEntries(classesData.map(c=>[c.Name,c.Emoji]));raceEmojis=Object.fromEntries(racesData.map(r=>[r.Name,r.Emoji]));return fetchWithTimeout(JSON_URL_RAW).catch(()=>fetch(JSON_URL_CDN));}).then(r=>r.json()).then(data=>{players=data.players.filter(p=>p.name&&p.name!=='Unknown');if(data.dungeon?.players){window._dungeonPlayers={};Object.values(data.dungeon.players).forEach(dp=>{window._dungeonPlayers[dp.display]=dp;});}renderFullStats(data);}).catch(err=>{document.getElementById('content').innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--red);">❌ Ошибка загрузки данных<br>${err.message}</div>`;});
+		const dataPromise = fetchWithTimeout(DATA_URL_RAW)
+			.catch(() => fetchWithTimeout(DATA_URL_CDN))
+			.then(r => r.json())
+			.catch(() => null);
+
+		const statsPromise = fetchWithTimeout(JSON_URL_RAW)
+			.catch(() => fetchWithTimeout(JSON_URL_CDN))
+			.then(r => r.json())
+			.catch(() => null);
+			
+		document.getElementById('content').innerHTML = `
+			<div style="text-align:center; padding: 80px 20px; color: var(--sub);">
+				<div class="spinner" style="width: 48px; height: 48px; border-width: 4px; margin-bottom: 24px; border-top-color: var(--gold);"></div>
+				<div style="font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">Загрузка статистики...</div>
+				<div style="font-size: 0.8rem; color: var(--muted);">Арена Этерниса подключается к сети</div>
+			</div>
+		`;
+
+		Promise.all([dataPromise, statsPromise]).then(([data, stats]) => {
+			if (data) {
+				classesData = data.classes;
+				racesData = data.races;
+				achievements = data.achievements || [];
+				classEmojis = Object.fromEntries(classesData.map(c => [c.Name, c.Emoji]));
+				raceEmojis = Object.fromEntries(racesData.map(r => [r.Name, r.Emoji]));
+			}
+			
+			if (!stats) {
+				document.getElementById('content').innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--red);">❌ Не удалось загрузить статистику</div>';
+				return;
+			}
+			
+			players = (stats.players || []).filter(p => p.name && p.name !== 'Unknown');
+			globalData = stats;
+			if (stats.dungeon?.players) {
+				window._dungeonPlayers = {};
+				Object.values(stats.dungeon.players).forEach(dp => {
+					window._dungeonPlayers[dp.display] = dp;
+				});
+			}
+			renderFullStats(stats);
+		}).catch(err => {
+			document.getElementById('content').innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--red);">❌ Ошибка: ${err.message}</div>`;
+		});
 		
 		function renderFullStats(data){
 			const totalPlayers = players.length;

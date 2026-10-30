@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Арена Этерниса — Сезоны</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Арена Этерниса">
 <meta property="og:title" content="Арена Этерниса — Сезоны">
@@ -281,7 +280,7 @@ th,td{padding:6px 8px;white-space:nowrap;word-break:normal;overflow-wrap:normal;
 // ============ КЕШ АРХИВА ============
 async function getSeasonData(n) {
     const KEY = 'eternis-season-v2-' + n;
-    const TTL = 24 * 60 * 60 * 1000; // 24 часа для архивных сезонов
+    const TTL = 24 * 60 * 60 * 1000;
     try {
         const cached = JSON.parse(localStorage.getItem(KEY) || 'null');
         if (cached) return cached.data;
@@ -289,7 +288,7 @@ async function getSeasonData(n) {
 
     const fetchWithTimeout = async (url) => {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 секунды
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
         try {
             const r = await fetch(url, { signal: controller.signal });
             clearTimeout(timeoutId);
@@ -605,7 +604,6 @@ function renderSeason(data, seasonNum, isCurrent) {
 async function detectSeasons() {
     renderProgress(0, SEASON_SCAN_LIMIT + 2, 'Определяю сезоны...');
 
-    // Параллельная проверка существующих сезонов через HEAD-запросы
     const checks = await Promise.all(
         Array.from({ length: SEASON_SCAN_LIMIT + 1 }, (_, n) => {
             const controller = new AbortController();

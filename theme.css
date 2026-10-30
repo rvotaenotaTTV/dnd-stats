@@ -4,66 +4,73 @@
 
 /* === ПЕРЕМЕННЫЕ: ТЁМНАЯ ТЕМА (по умолчанию) === */
 :root {
-    --bg: #060a14; --card: #0a0f1e; --elevated: #0f1428;
-    --text: #dde4f0; --sub: #8a94a8; --muted: #5e6478;
-    --border: rgba(100,140,180,0.12);
-    --gold: #f0b90b; --red: #e85d3a; --purple: #a371f7; --green: #10b981;
-    --orange: #ff8c00; --blue: #4a90d9; --ice: #5bc0eb;
-    --silver: #c0c0c0; --bronze: #cd7f32;
-    --radius: 16px; --radius-sm: 10px;
-    --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px;
-    --bg-primary: #060a14; --bg-secondary: #0a0f1e; --bg-elevated: #0f1428; --bg-card: #0a0f1e;
-    --text-primary: #dde4f0; --text-secondary: #8a94a8; --text-muted: #5e6478;
-    --border-subtle: rgba(100,140,180,0.12); --border-strong: #2a3550;
-    --sudoku-fixed: #f0b90b;
-    --cell-selected-bg: rgba(240,185,11,0.3);
-    --cell-same-bg: rgba(240,185,11,0.1);
-    --cell-same-num-bg: rgba(240,185,11,0.2);
-    --shadow-lg: 0 20px 40px rgba(0,0,0,0.4);
-    --shadow-gold: 0 4px 12px rgba(255,69,0,0.5);
-    --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
-    --collection-height: 400px;
-    --abyss: #0a1a2e; --abyss-accent: #5bc0eb; --candle: #8fbc5e;
-    --header-gradient: linear-gradient(135deg, #ff4500 0%, var(--orange) 30%, var(--gold) 60%, #ff6347 100%);
-    --btn-primary-bg: linear-gradient(135deg, #ff4500, var(--orange));
-    --tab-active-bg: linear-gradient(135deg, #ff4500, var(--orange), var(--gold));
-    --beer-shadow: 0 4px 16px rgba(255,69,0,0.4);
-    --beer-shadow-hover: 0 6px 24px rgba(255,140,0,0.6);
-    --bg-pattern: radial-gradient(ellipse at 50% 0%, rgba(255,69,0,0.06) 0%, transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(255,140,0,0.04) 0%, transparent 50%);
-    --gold-gradient: linear-gradient(90deg, transparent, #ff4500, var(--orange), var(--gold), transparent);
-    --ice-gradient: linear-gradient(90deg, transparent, var(--orange), var(--gold), transparent);
-    --purple-gradient: linear-gradient(90deg, transparent, #ff4500, var(--orange), transparent);
-    --candle-gradient: linear-gradient(90deg, transparent, var(--candle), transparent);
+    /* Основные фоны */
+    --bg: #060a14;
+    --card: #0a0f1e;
+    --elevated: #0f1428;
+    
+    /* Текст */
+    --text: #dde4f0;
+    --sub: #8a94a8;
+    --muted: #5e6478;
+    --border: rgba(100, 140, 180, 0.12);
+
+    /* АКЦЕНТЫ (Новый сезонный стиль) */
+    --gold: #f0b90b;          /* Оставляем золото для наград */
+    --purple: #a371f7;        /* Фиолетовый (магия, тьма) */
+    --ice: #5bc0eb;           /* Ледяной (арена, свет) */
+    --red: #e85d3a;           /* Оставляем для опасностей */
+    --green: #10b981;         /* Оставляем для успеха */
+    --orange: #ff8c00;
+    --blue: #4a90d9;
+    
+    /* Градиенты для заголовков и кнопок */
+    --header-gradient: linear-gradient(135deg, #a371f7 0%, #5bc0eb 50%, #f0b90b 100%);
+    --btn-primary-bg: linear-gradient(135deg, #5bc0eb, #a371f7);
+    --tab-active-bg: linear-gradient(135deg, #5bc0eb, #a371f7);
+    
+    /* Рамки */
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
+    
+    /* Градиенты линий */
+    --gold-gradient: linear-gradient(90deg, transparent, #f0b90b, transparent);
+    --ice-gradient: linear-gradient(90deg, transparent, #5bc0eb, transparent);
+    --purple-gradient: linear-gradient(90deg, transparent, #a371f7, transparent);
+    
+    /* Тени */
+    --beer-shadow: 0 4px 16px rgba(91, 192, 235, 0.4);
+    --beer-shadow-hover: 0 6px 24px rgba(163, 113, 247, 0.6);
 }
 
 /* === ПЕРЕМЕННЫЕ: СВЕТЛАЯ ТЕМА === */
 [data-theme="light"] {
-    --bg: #f0f4fa; --card: #fafcfe; --elevated: #f5f8fd;
-    --text: #1a2a3a; --sub: #4a5a6e; --muted: #6a7a8e;
-    --border: rgba(80,120,180,0.12);
-    --gold: #b8860b; --red: #c0392b; --purple: #7b5ea7; --green: #27ae60;
-    --orange: #e67e22; --blue: #3a7db8; --ice: #3a90c0;
-    --silver: #8a8a8a; --bronze: #a0752a;
-    --bg-primary: #f0f4fa; --bg-secondary: #e8ecf4; --bg-elevated: #f5f8fd; --bg-card: #fafcfe;
-    --text-primary: #1a2a3a; --text-secondary: #4a5a6e; --text-muted: #6a7a8e;
-    --border-subtle: rgba(80,120,180,0.12); --border-strong: #8b9db5;
-    --sudoku-fixed: #3a90c0;
-    --cell-selected-bg: #c8ddf0;
-    --cell-same-bg: #dce6f2;
-    --cell-same-num-bg: #c0d8ec;
-    --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
-    --abyss: #0d2b4e; --abyss-accent: #3a90c0; --candle: #6b8e3a;
-    --header-gradient: linear-gradient(135deg, #e04500 0%, var(--orange) 30%, var(--gold) 60%, #e05530 100%);
-    --btn-primary-bg: linear-gradient(135deg, #e04500, var(--orange));
-    --tab-active-bg: linear-gradient(135deg, #e04500, var(--orange), var(--gold));
-    --beer-shadow: 0 4px 16px rgba(224,69,0,0.35);
-    --beer-shadow-hover: 0 6px 24px rgba(230,126,34,0.5);
-    --bg-pattern: radial-gradient(ellipse at 50% 0%, rgba(224,69,0,0.05) 0%, transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(230,126,34,0.03) 0%, transparent 50%);
-    --gold-gradient: linear-gradient(90deg, transparent, #e04500, var(--orange), var(--gold), transparent);
-    --ice-gradient: linear-gradient(90deg, transparent, var(--orange), var(--gold), transparent);
-    --purple-gradient: linear-gradient(90deg, transparent, #e04500, var(--orange), transparent);
-    --candle-gradient: linear-gradient(90deg, transparent, var(--candle), transparent);
-    --shadow-gold: 0 4px 12px rgba(224,69,0,0.4);
+    --bg: #f0f4fa;
+    --card: #fafcfe;
+    --elevated: #f5f8fd;
+    --text: #1a2a3a;
+    --sub: #4a5a6e;
+    --muted: #6a7a8e;
+    --border: rgba(80, 120, 180, 0.12);
+
+    --gold: #b8860b;
+    --purple: #7b5ea7;
+    --ice: #3a90c0;
+    --red: #c0392b;
+    --green: #27ae60;
+    --orange: #e67e22;
+    --blue: #3a7db8;
+
+    --header-gradient: linear-gradient(135deg, #7b5ea7 0%, #3a90c0 50%, #b8860b 100%);
+    --btn-primary-bg: linear-gradient(135deg, #3a90c0, #7b5ea7);
+    --tab-active-bg: linear-gradient(135deg, #3a90c0, #7b5ea7);
+    
+    --gold-gradient: linear-gradient(90deg, transparent, #b8860b, transparent);
+    --ice-gradient: linear-gradient(90deg, transparent, #3a90c0, transparent);
+    --purple-gradient: linear-gradient(90deg, transparent, #7b5ea7, transparent);
 }
 
 /* === БАЗА === */

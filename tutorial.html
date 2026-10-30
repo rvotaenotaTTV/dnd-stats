@@ -292,7 +292,6 @@
     .scroll-top.visible { opacity: 1; pointer-events: all; }
     .scroll-top:hover { background: #171717; color: var(--gold); border-color: var(--gold); }
 
-    /* === Термины с подсказками === */
     .term {
         color: var(--gold);
         border-bottom: 1px dashed rgba(240,185,11,0.5);
@@ -511,14 +510,12 @@
 
 <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
-<!-- Тултип для терминов -->
 <div class="term-tooltip" id="termTooltip" role="tooltip" aria-hidden="true">
     <span class="tt-title" id="ttTitle"></span>
     <span class="tt-body" id="ttBody"></span>
 </div>
 
 <script>
-	/* === Данные терминов === */
 	const TERMS = {
 		shards: {
 			title: 'Осколки',
@@ -558,7 +555,6 @@
 		}
 	};
 
-    /* === Логика тултипа === */
     const tooltip = document.getElementById('termTooltip');
     const ttTitle = document.getElementById('ttTitle');
     const ttBody = document.getElementById('ttBody');
@@ -578,13 +574,11 @@
         ttTitle.textContent = data.title;
         ttBody.innerHTML = data.body;
 
-        // Позиционируем
         const rect = termEl.getBoundingClientRect();
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         const margin = 8;
 
-        // Сначала показываем, чтобы узнать размеры
         tooltip.classList.add('visible');
         tooltip.setAttribute('aria-hidden', 'false');
         const tw = tooltip.offsetWidth;
@@ -593,11 +587,9 @@
         let left = rect.left + rect.width / 2 - tw / 2;
         let top = rect.bottom + margin;
 
-        // Не вылезаем за края
         if (left < margin) left = margin;
         if (left + tw > vw - margin) left = vw - tw - margin;
 
-        // Если снизу не помещается — показываем сверху
         if (top + th > vh - margin) {
             top = rect.top - th - margin;
         }
@@ -618,16 +610,13 @@
         }, 80);
     }
 
-    // Наведение / уход
     document.querySelectorAll('.term').forEach(el => {
         el.addEventListener('mouseenter', () => showTooltip(el));
         el.addEventListener('mouseleave', hideTooltip);
 
-        // Тап на мобильных
         el.addEventListener('click', (e) => {
             e.stopPropagation();
             if (activeTerm === el && tooltip.classList.contains('visible')) {
-                // Повторный тап — скрыть
                 tooltip.classList.remove('visible');
                 tooltip.setAttribute('aria-hidden', 'true');
                 el.classList.remove('active');
@@ -638,7 +627,6 @@
         });
     });
 
-    // Клик вне — скрыть
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.term') && !e.target.closest('.term-tooltip')) {
             tooltip.classList.remove('visible');
@@ -650,7 +638,6 @@
         }
     });
 
-    // При скролле/ресайзе — прячем (чтобы не висело не там)
     window.addEventListener('scroll', () => {
         if (tooltip.classList.contains('visible')) {
             tooltip.classList.remove('visible');
@@ -668,7 +655,6 @@
         }
     });
 
-    /* === Прогресс чтения и кнопка "наверх" === */
     const progressBar = document.getElementById('readingProgress');
     const scrollTopBtn = document.getElementById('scrollTop');
     window.addEventListener('scroll', () => {
@@ -679,7 +665,6 @@
         scrollTopBtn.classList.toggle('visible', scrollTop > 300);
     }, { passive: true });
 
-    /* === Пасхалка === */
     let eggClicks = 0;
     const step2Card = document.getElementById('step2');
     if (step2Card) {
@@ -698,7 +683,6 @@
     }
 </script>
 
-<!-- Пасхалка -->
 <div id="easterEgg" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:20px; font-family: ui-monospace, monospace;">
     <div style="font-size:6rem; animation: dinoJump 0.6s ease infinite alternate;">🦖</div>
     <div style="font-size:0.9rem; color:#a3a3a3; margin-top:8px;">Я СОСАЛ!</div>
