@@ -476,7 +476,7 @@ function getStatsData() {
 const LEAGUE_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/league.json';
 const LEAGUE_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/league.json';
 const LEAGUE_CACHE_KEY = 'eternis-league';
-const LEAGUE_CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
+const LEAGUE_CACHE_TTL = 12 * 60 * 60 * 1000;
 let leagueChampions = {};
 
 async function loadLeagueChampions() {
