@@ -373,7 +373,7 @@ const SEASON_SUBTITLES = [
     'Восход.',
     'Война.'
 ];
-const SEASON_SCAN_LIMIT = 10;
+const SEASON_SCAN_LIMIT = 15;
 
 // ============ КЕШ STATS_DATA ============
 const STATS_CACHE_KEY = 'eternis-stats';
@@ -609,8 +609,8 @@ async function detectSeasons() {
     const checks = await Promise.all(
         Array.from({ length: SEASON_SCAN_LIMIT + 1 }, (_, n) => {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 1000);
-            return fetch(`${ARCHIVE_BASE}${n}.json`, { method: 'HEAD', signal: controller.signal })
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            return fetch(`${ARCHIVE_BASE}${n}.json`, { signal: controller.signal })
                 .then(r => { clearTimeout(timeoutId); return r.ok ? n : -1; })
                 .catch(() => { clearTimeout(timeoutId); return -1; });
         })
