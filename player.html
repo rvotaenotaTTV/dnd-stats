@@ -435,13 +435,30 @@ function getStatsData() {
     statsPromise = (async () => {
         try {
             const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
-            if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) {
-                return cached.data;
-            }
+            if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) return cached.data;
         } catch (e) {}
 
-        let r = await fetch(STATS_URL_FALLBACK);
-        if (!r.ok) r = await fetch(STATS_URL);
+        const fetchWithTimeout = async (url) => {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+            try {
+                const r = await fetch(url, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                return r;
+            } catch (e) {
+                clearTimeout(timeoutId);
+                throw e;
+            }
+        };
+
+        let r;
+        try {
+            r = await fetchWithTimeout(STATS_URL); // Сначала jsDelivr
+        } catch (e) {
+            r = await fetchWithTimeout(STATS_URL_FALLBACK); // Потом GitHub
+        }
+        
+        if (!r.ok) throw new Error('Stats fetch failed');
         const data = await r.json();
 
         try {
@@ -563,15 +580,40 @@ async function getSeasonData(n) {
     const KEY = CACHE_KEY_PREFIX + n;
     try {
         const c = JSON.parse(localStorage.getItem(KEY) || 'null');
-        if (c) return c.data;
+        if (c && c.ts && (Date.now() - c.ts < CACHE_TTL)) return c.data;
     } catch (e) {}
 
-    let r = await fetch(`${SEASON_BASE_FALLBACK}${n}.json`);
-    if (!r.ok) r = await fetch(`${SEASON_BASE}${n}.json`);
-    if (!r.ok) return null;
-    const data = await r.json();
-    try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
-    return data;
+    // Таймаут 3 секунды, чтобы не висло по 40 секунд из-за блокировок
+    const fetchWithTimeout = async (url) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        try {
+            const r = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            return r;
+        } catch (e) {
+            clearTimeout(timeoutId);
+            throw e;
+        }
+    };
+
+    try {
+        let r;
+        // Сначала jsDelivr
+        try {
+            r = await fetchWithTimeout(`${SEASON_BASE}${n}.json`);
+        } catch (e) {
+            r = await fetchWithTimeout(`${SEASON_BASE_FALLBACK}${n}.json`);
+        }
+        
+        if (!r.ok) return null;
+        const data = await r.json();
+        try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        return data;
+    } catch (e) {
+        console.warn(`Сезон ${n} не загружен:`, e.message);
+        return null; // Возвращаем null, чтобы игра продолжила грузить остальные сезоны
+    }
 }
 
 async function getSeasonLimit() {
