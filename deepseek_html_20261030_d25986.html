@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Арена Этерниса — Обучение</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="theme.css">
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: #0a0a0a;
+        color: #d4d4d4;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 0 16px;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 120px;
+        background: linear-gradient(to bottom, transparent, rgba(240,185,11,0.03), transparent);
+        animation: scan 8s linear infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+    @keyframes scan {
+        0% { transform: translateY(-120px); }
+        100% { transform: translateY(100vh); }
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+    .header {
+        margin-bottom: 4px;
+        padding-bottom: 2px;
+        border-bottom: 1px solid #262626;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .header-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.5px;
+        color: #f5f5f5;
+        position: relative;
+    }
+    .header-title .accent {
+        color: var(--gold);
+        text-shadow: 0 0 12px rgba(240,185,11,0.4);
+    }
+    .header-title .cursor {
+        display: inline-block;
+        width: 10px;
+        height: 1.2em;
+        background: var(--gold);
+        margin-left: 4px;
+        vertical-align: text-bottom;
+        animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+    .header-subtitle {
+        font-size: 0.8rem;
+        color: #737373;
+    }
+
+    .tutorial-step {
+        position: relative;
+        background: #0f0f0f;
+        border: 1px solid #262626;
+        padding: 24px 22px;
+        margin-bottom: 6px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    .tutorial-step:hover {
+        border-color: rgba(240,185,11,0.3);
+        background: #121212;
+        box-shadow: 0 0 30px rgba(240,185,11,0.06), inset 0 0 20px rgba(240,185,11,0.02);
+    }
+    .tutorial-step::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        opacity: 0.5;
+    }
+    .tutorial-step.faction-step::before {
+        background: linear-gradient(90deg, transparent, var(--purple), transparent);
+    }
+
+    .step-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .step-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background: #171717;
+        border: 1px solid #333;
+        color: var(--gold);
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+    .tutorial-step:hover .step-icon {
+        transform: scale(1.05);
+        border-color: var(--gold);
+        box-shadow: 0 0 16px rgba(240,185,11,0.2);
+        color: #fff;
+    }
+    .faction-step .step-icon {
+        border-color: rgba(163,113,247,0.4);
+        box-shadow: 0 0 12px rgba(163,113,247,0.15);
+        color: var(--purple);
+    }
+    .faction-step:hover .step-icon {
+        border-color: var(--purple);
+        box-shadow: 0 0 16px rgba(163,113,247,0.3);
+        color: #fff;
+    }
+    .step-icon svg {
+        stroke: currentColor;
+        fill: none;
+    }
+
+    .step-meta { flex: 1; min-width: 0; }
+    .step-num {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: #737373;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 2px;
+    }
+    .step-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #f5f5f5;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        display: inline-block;
+    }
+    .faction-step .step-title { color: var(--purple); }
+
+    .step-title::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 2px; top: 0;
+        color: rgba(240,185,11,0.3);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .tutorial-step:hover .step-title::after {
+        opacity: 1;
+        animation: glitch 0.3s linear;
+    }
+    @keyframes glitch {
+        0% { transform: translate(0); }
+        25% { transform: translate(-1px, 1px); }
+        50% { transform: translate(1px, -1px); }
+        75% { transform: translate(-1px, -1px); }
+        100% { transform: translate(0); }
+    }
+
+    .step-desc {
+        color: #a3a3a3;
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+    }
+    .step-desc p { margin-bottom: 6px; }
+    .step-desc p:last-child { margin-bottom: 0; }
+    .step-desc strong { color: var(--gold); font-weight: 700; }
+
+    .faction-light-text { color: var(--gold); font-weight: 700; text-shadow: 0 0 8px rgba(240,185,11,0.3); }
+    .faction-dark-text { color: var(--purple); font-weight: 700; text-shadow: 0 0 8px rgba(163,113,247,0.3); }
+
+    .step-cmd {
+        display: inline-block;
+        background: rgba(240,185,11,0.08);
+        color: var(--gold);
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border: 1px solid rgba(240,185,11,0.3);
+        transition: all 0.2s;
+    }
+    .step-cmd:hover {
+        background: rgba(240,185,11,0.15);
+        box-shadow: 0 0 12px rgba(240,185,11,0.2);
+    }
+
+    .cmd-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #1a1a1a;
+        font-size: 0.82rem;
+        transition: background 0.2s;
+    }
+    .cmd-row:last-child { border-bottom: none; }
+    .cmd-row:hover { background: rgba(240,185,11,0.03); }
+
+    .cmd-row .cr-icon {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        transition: all 0.2s;
+    }
+    .cmd-row .cr-icon svg {
+        stroke: currentColor;
+        fill: none;
+    }
+    .cmd-row:hover .cr-icon {
+        color: #fff;
+        filter: drop-shadow(0 0 4px rgba(240,185,11,0.5));
+    }
+
+    .cmd-row .step-cmd { min-width: 100px; text-align: center; margin: 0; flex-shrink: 0; }
+    .cmd-row .cr-desc { color: #737373; font-size: 0.78rem; flex: 1; }
+
+    .footer-link {
+        margin-top: 4px;
+        padding-top: 4px;
+        border-top: 1px solid #262626;
+        text-align: center;
+    }
+    .footer-link a {
+        color: #737373;
+        text-decoration: underline;
+        font-size: 0.75rem;
+        transition: 0.2s;
+    }
+    .footer-link a:hover { color: var(--gold); }
+
+    .reading-progress {
+        position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--purple), var(--gold));
+        transform-origin: 0 50%; transform: scaleX(0); z-index: 1000;
+    }
+
+    .scroll-top {
+        position: fixed; bottom: 80px; right: 20px; width: 40px; height: 40px;
+        background: #0f0f0f; border: 1px solid #333;
+        color: #737373; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        z-index: 98; font-size: 1rem;
+    }
+    .scroll-top.visible { opacity: 1; pointer-events: all; }
+    .scroll-top:hover { background: #171717; color: var(--gold); border-color: var(--gold); }
+
+    /* === СЛОВАРЬ ТЕРМИНОВ === */
+    .glossary {
+        margin-top: 16px;
+        border: 1px solid #262626;
+        background: #0f0f0f;
+    }
+    .glossary summary {
+        padding: 14px 18px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--gold);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        user-select: none;
+        transition: background 0.2s;
+    }
+    .glossary summary::-webkit-details-marker { display: none; }
+    .glossary summary::before {
+        content: '▸';
+        transition: transform 0.2s;
+        font-size: 0.8rem;
+    }
+    .glossary[open] summary::before {
+        transform: rotate(90deg);
+    }
+    .glossary summary:hover {
+        background: #171717;
+    }
+    .glossary-content {
+        padding: 0 18px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .term-item {
+        border-bottom: 1px solid #1a1a1a;
+        padding-bottom: 12px;
+    }
+    .term-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    .term-name {
+        font-weight: 700;
+        color: #f5f5f5;
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+    .term-def {
+        color: #a3a3a3;
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+        body { padding: 0 12px; }
+        body::after { display: none; }
+        .container { padding-top: 2px; padding-bottom: 2px; }
+        .header-title { font-size: 1.2rem; }
+        .tutorial-step { padding: 20px 16px; }
+        .step-icon { width: 40px; height: 40px; }
+        .step-icon svg { width: 18px; height: 18px; }
+        .step-title { font-size: 0.9rem; }
+        .step-desc { font-size: 0.8rem; }
+        .cmd-row { flex-wrap: wrap; gap: 6px; }
+        .cmd-row .step-cmd { min-width: 80px; font-size: 0.75rem; padding: 3px 8px; }
+        .cmd-row .cr-desc { font-size: 0.72rem; width: 100%; margin-left: 26px; }
+        .scroll-top { bottom: 70px; right: 16px; width: 36px; height: 36px; font-size: 0.9rem; }
+        .glossary summary { padding: 12px 14px; font-size: 0.8rem; }
+        .glossary-content { padding: 0 14px 14px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<div class="container">
+    <header class="header">
+        <h1 class="header-title">Первые <span class="accent">шаги</span><span class="cursor"></span></h1>
+        <p class="header-subtitle">Как начать играть на Арене</p>
+    </header>
+
+    <!-- Шаг 1 -->
+    <div class="tutorial-step" id="step1">
+        <div class="step-header">
+            <div class="step-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M2 12h20"/>
+                    <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>
+            <div class="step-meta">
+                <div class="step-num">01</div>
+                <div class="step-title" data-text="Создай героя">Создай героя</div>
+            </div>
+        </div>
+		<div class="step-desc">
+			<p>Оплати награду баллами канала</p>
+			<p>Напиши <strong>!1</strong> – <strong>!5</strong> — Повествовательница призовёт 5 героев. Выбери своего бойца.</p>
+		</div>
+    </div>
+
+    <!-- Шаг 2 -->
+    <div class="tutorial-step" id="step2">
+        <div class="step-header">
+            <div class="step-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.5 17.5L3 6V3h3l11.5 11.5"/>
+                    <path d="M13 19l6-6"/>
+                    <path d="M16 16l4 4"/>
+                    <path d="M19 21l2-2"/>
+                </svg>
+            </div>
+            <div class="step-meta">
+                <div class="step-num">02</div>
+                <div class="step-title" data-text="Первый бой">Первый бой</div>
+            </div>
+        </div>
+        <div class="step-desc">
+            <p>Напиши <strong>!бой</strong> — Арена найдёт соперника и сведёт вас в дуэли (КД: 10 минут)</p>
+            <p>Победа приносит осколки и славу фракции. Поражение — тоже осколки, но меньше.</p>
+        </div>
+    </div>
+
+    <!-- Шаг 3 -->
+    <div class="tutorial-step" id="step3">
+        <div class="step-header">
+            <div class="step-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                </svg>
+            </div>
+            <div class="step-meta">
+                <div class="step-num">03</div>
+                <div class="step-title" data-text="Другие команды">Другие команды</div>
+            </div>
+        </div>
+        <div class="step-desc">
+            <p>Помимо дуэлей:</p>
+        </div>
+        <div style="margin-top: 8px;">
+			<div class="cmd-row">
+				<span class="cr-icon">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+					</svg>
+				</span>
+				<span class="step-cmd">!инфо</span>
+				<span class="cr-desc">— взглянуть на Хроники своего героя (КД: 30 минут)</span>
+			</div>
+			<div class="cmd-row">
+				<span class="cr-icon">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+					</svg>
+				</span>
+				<span class="step-cmd">!данж</span>
+				<span class="cr-desc">— спуститься в Бездну (КД: 10 минут)</span>
+			</div>
+			<div class="cmd-row">
+				<span class="cr-icon">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M2 20h20"/><path d="M5 20V8l7-6 7 6v12"/><path d="M9 20v-6h6v6"/>
+					</svg>
+				</span>
+				<span class="step-cmd">!рега</span>
+				<span class="cr-desc">— вступить в Турнир (12:00 и 14:00 по МСК)</span>
+			</div>
+			<div class="cmd-row">
+				<span class="cr-icon">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="10"/><path d="M8 15h8"/><path d="M9 9h.01"/><path d="M15 9h.01"/>
+					</svg>
+				</span>
+				<span class="step-cmd">!харакири</span>
+				<span class="cr-desc">— оборвать судьбу героя (КД: 30 минут, осколки останутся)</span>
+			</div>
+        </div>
+    </div>
+
+    <!-- Шаг 4 -->
+    <div class="tutorial-step faction-step" id="step4">
+        <div class="step-header">
+            <div class="step-icon">🌝🌚</div>
+            <div class="step-meta">
+                <div class="step-num">04</div>
+                <div class="step-title" data-text="Твоя цель">Твоя цель</div>
+            </div>
+        </div>
+        <div class="step-desc">
+            <p>Встань под знамёна <span class="faction-light-text">Ордена Света</span> или <span class="faction-dark-text">Культа Тьмы</span></p>
+            <p>Отвоёвывай земли, становись чемпионом турниров, собирай осколки и закаляй свою силу.</p>
+        </div>
+    </div>
+
+    <!-- СЛОВАРЬ ТЕРМИНОВ -->
+    <details class="glossary">
+        <summary>📖 Словарь терминов</summary>
+        <div class="glossary-content">
+            <div class="term-item">
+                <div class="term-name">Осколки 💎</div>
+                <div class="term-def">Валюта прогресса. Ты получаешь их за победы, поражения, турниры и спуски в Бездну. 10 осколков = 1 уровень героя. Чем выше уровень — тем сильнее твой герой (больше урона, здоровья и т.д.).</div>
+            </div>
+            <div class="term-item">
+                <div class="term-name">Уровень 📈</div>
+                <div class="term-def">Показатель силы героя. Растёт автоматически, когда ты накапливаешь 10 осколков. Влияет на статы в бою и на место в рейтинге.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-name">Фракция 🌝🌚</div>
+                <div class="term-def">Твой глобальный выбор: Орден Света или Культ Тьмы. Сражаясь за фракцию, ты приносишь ей очки и помогаешь захватывать территории на карте.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-name">Турнир 👑</div>
+                <div class="term-def">Соревнование 1v1 по расписанию (12:00 и 14:00). 16 участников, 4 круга, один победитель. Проиграл — вылетел, но осколки остаются.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-name">КД (Кулдаун) ⏳</div>
+                <div class="term-def">Время, которое нужно подождать перед повторным использованием команды. Например, после <strong>!бой</strong> нужно подождать 10 минут, прежде чем снова драться.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-name">Бездна / Данж 🐲</div>
+                <div class="term-def">PvE-подземелье с бесконечными волнами врагов. Каждая 5-я волна — босс. За прохождение волн дают осколки и артефакты.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-name">Стрик 🔥</div>
+                <div class="term-def">Серия побед подряд. Чем больше стрик — тем больше очков и славы. Обнуляется при первом поражении.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-name">Харакири 💀</div>
+                <div class="term-def">Команда для сброса героя (удаления). Осколки и уровень при этом сохраняются, так что ты можешь создать нового героя с теми же силами.</div>
+            </div>
+            <div class="term-item">
+                <div class="term-name">Хроники 📜</div>
+                <div class="term-def">Это твоя статистика: победы, поражения, винрейт, рекорды и титулы. Команда <strong>!инфо</strong> показывает их в чате, а на сайте — в разделе «Профиль».</div>
+            </div>
+        </div>
+    </details>
+
+    <div class="footer-link">
+        <a href="guide.html">Полный гайд (Путь героя) →</a>
+    </div>
+</div>
+
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+    const progressBar = document.getElementById('readingProgress');
+    const scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.transform = `scaleX(${progress / 100})`;
+        scrollTopBtn.classList.toggle('visible', scrollTop > 300);
+    }, { passive: true });
+</script>
+
+<!-- Пасхалка -->
+<div id="easterEgg" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:20px; font-family: ui-monospace, monospace;">
+    <div style="font-size:6rem; animation: dinoJump 0.6s ease infinite alternate;">🦖</div>
+    <div style="font-size:0.9rem; color:#a3a3a3; margin-top:8px;">Я СОСАЛ!</div>
+    <button onclick="document.getElementById('easterEgg').style.display='none'" style="margin-top:24px; background:var(--gold); color:#0a0a0a; border:none; padding:8px 20px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.85rem;">Хорошо</button>
+</div>
+
+<style>
+@keyframes dinoJump {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-20px) scale(1.1); }
+}
+</style>
+
+<script>
+let eggClicks = 0;
+const step2Card = document.getElementById('step2');
+if (step2Card) {
+    step2Card.style.cursor = 'pointer';
+    step2Card.addEventListener('click', () => {
+        eggClicks++;
+        if (eggClicks >= 3) {
+            document.getElementById('easterEgg').style.display = 'flex';
+            eggClicks = 0;
+        }
+        clearTimeout(window._eggTimeout);
+        window._eggTimeout = setTimeout(() => { eggClicks = 0; }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>
