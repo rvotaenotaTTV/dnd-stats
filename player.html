@@ -621,11 +621,10 @@ async function getSeasonLimit() {
         cached = JSON.parse(localStorage.getItem(SEASON_LIMIT_KEY) || 'null');
     } catch (e) {}
 
-    // Если есть кэш, проверяем следующий сезон (вдруг появился новый)
     if (cached && (Date.now() - cached.ts < SEASON_LIMIT_TTL)) {
         const nextSeason = cached.last + 1;
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 сек
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
         try {
             const r = await fetch(`${SEASON_BASE}${nextSeason}.json`, { method: 'HEAD', signal: controller.signal });
             clearTimeout(timeoutId);
@@ -639,29 +638,13 @@ async function getSeasonLimit() {
         return cached.last;
     }
 
-    // Если кэша нет — сканируем с нуля
-    let last = -1;
-    for (let n = 0; n <= SEASON_SCAN_LIMIT; n++) {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 сек
-        try {
-            const r = await fetch(`${SEASON_BASE}${n}.json`, { method: 'HEAD', signal: controller.signal });
-            clearTimeout(timeoutId);
-            if (r.ok) {
-                last = n;
-            } else {
-                break; // Файла нет — останавливаемся
-            }
-        } catch (e) {
-            clearTimeout(timeoutId);
-            break; // Ошибка сети/сброс соединения — останавливаемся
-        }
-    }
-    if (last < 0) last = 0;
+    // Нет кэша — возвращаем 7 (хардкод). 
+    // Когда добавишь season_7, поменяешь на 8. И так далее.
+    const HARDCODED_LIMIT = 7;
     try {
-        localStorage.setItem(SEASON_LIMIT_KEY, JSON.stringify({ ts: Date.now(), last }));
+        localStorage.setItem(SEASON_LIMIT_KEY, JSON.stringify({ ts: Date.now(), last: HARDCODED_LIMIT }));
     } catch (e) {}
-    return last;
+    return HARDCODED_LIMIT;
 }
 
 async function loadAllSeasons(onProgress) {
@@ -706,14 +689,24 @@ async function load2x2() {
         }
     } catch (e) {}
 
+    const fetchWithTimeout = (url) => {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), 3000);
+        return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(id));
+    };
+
     try {
-        let r = await fetch(TWOx2_URL_FALLBACK);
-        if (!r.ok) r = await fetch(TWOx2_URL);
-        if (!r.ok) return {};
+        let r;
+        try { r = await fetchWithTimeout(TWOx2_URL_FALLBACK); }
+        catch (e) { r = await fetchWithTimeout(TWOx2_URL); }
+        if (!r || !r.ok) return {};
         const data = await r.json();
         try { localStorage.setItem(TWOx2_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
-    } catch (e) { return {}; }
+    } catch (e) { 
+        console.warn('2x2 не загружен:', e.message);
+        return {}; 
+    }
 }
 
 let achievementsData = [];
