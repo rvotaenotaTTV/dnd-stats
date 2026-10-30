@@ -578,6 +578,7 @@ function getAllPlayers(seasons) {
    ========================================================================= */
 async function getSeasonData(n) {
     const KEY = CACHE_KEY_PREFIX + n;
+    
     try {
         const c = JSON.parse(localStorage.getItem(KEY) || 'null');
         if (c && c.ts && (Date.now() - c.ts < CACHE_TTL)) return c.data;
@@ -585,7 +586,7 @@ async function getSeasonData(n) {
 
     const fetchWithTimeout = async (url) => {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 сек на файл
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
         try {
             const r = await fetch(url, { signal: controller.signal });
             clearTimeout(timeoutId);
@@ -610,75 +611,38 @@ async function getSeasonData(n) {
         try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
     } catch (e) {
-        console.warn(`Сезон ${n} пропущен (ошибка):`, e.message);
-        return null; // Главное: возвращаем null, чтобы Promise.all не упал
+        console.warn(`Сезон ${n} пропущен:`, e.message);
+        return null;
     }
-}
-
-async function getSeasonLimit() {
-    let cached = null;
-    try {
-        cached = JSON.parse(localStorage.getItem(SEASON_LIMIT_KEY) || 'null');
-    } catch (e) {}
-
-    if (cached && (Date.now() - cached.ts < SEASON_LIMIT_TTL)) {
-        const nextSeason = cached.last + 1;
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000);
-        try {
-            const r = await fetch(`${SEASON_BASE}${nextSeason}.json`, { method: 'HEAD', signal: controller.signal });
-            clearTimeout(timeoutId);
-            if (r.ok) {
-                try { localStorage.setItem(SEASON_LIMIT_KEY, JSON.stringify({ ts: Date.now(), last: nextSeason })); } catch (e) {}
-                return nextSeason;
-            }
-        } catch (e) {
-            clearTimeout(timeoutId);
-        }
-        return cached.last;
-    }
-
-    // Нет кэша — возвращаем 7 (хардкод). 
-    // Когда добавишь season_7, поменяешь на 8. И так далее.
-    const HARDCODED_LIMIT = 7;
-    try {
-        localStorage.setItem(SEASON_LIMIT_KEY, JSON.stringify({ ts: Date.now(), last: HARDCODED_LIMIT }));
-    } catch (e) {}
-    return HARDCODED_LIMIT;
 }
 
 async function loadAllSeasons(onProgress) {
     if (onProgress) onProgress(1, 3, 'Загружаю текущий сезон...');
+    
+    let currentData = null;
+    try { currentData = await getStatsData(); } catch(e) {}
 
-    // Запускаем параллельно: текущий сезон и поиск границ архива
-    const [currentData, lastArchive] = await Promise.all([
-        getStatsData().catch(() => null),
-        getSeasonLimit()
-    ]);
-
-    if (onProgress) onProgress(2, 3, `Загружаю архивные сезоны (${lastArchive + 1})...`);
-
-    // Загружаем архивные сезоны параллельно
-    let loaded = 0;
-    const total = lastArchive + 1;
+    if (onProgress) onProgress(2, 3, 'Загружаю архивные сезоны...');
+    
+    const maxSeasons = 15; 
     const results = await Promise.all(
-        Array.from({ length: total }, (_, n) =>
-            getSeasonData(n).then(data => {
-                loaded++;
-                if (onProgress) onProgress(2, 3, `Загружено ${loaded}/${total}...`);
-                return data ? { num: n, data, isCurrent: false } : null;
-            })
-        )
+        Array.from({ length: maxSeasons + 1 }, (_, n) => getSeasonData(n))
     );
 
-    if (onProgress) onProgress(3, 3, 'Готово');
+    const seasons = [];
+    results.forEach((data, n) => {
+        if (data) seasons.push({ num: n, data: data, isCurrent: false });
+    });
 
-    const seasons = results.filter(Boolean).sort((a, b) => a.num - b.num);
-    const currentNum = lastArchive + 1;
+    if (onProgress) onProgress(3, 3, 'Готово');
     
-    return currentData
-        ? [...seasons, { num: currentNum, data: currentData, isCurrent: true }]
-        : seasons;
+    if (currentData) {
+        const lastArchivedNum = seasons.length > 0 ? Math.max(...seasons.map(s => s.num)) : -1;
+        const currentNum = lastArchivedNum + 1;
+        seasons.push({ num: currentNum, data: currentData, isCurrent: true });
+    }
+
+    return seasons;
 }
 
 async function load2x2() {
