@@ -624,7 +624,7 @@ async function loadAllSeasons(onProgress) {
 
     if (onProgress) onProgress(2, 3, 'Загружаю архивные сезоны...');
     
-    const maxSeasons = 15; 
+    const maxSeasons = 6; 
     const results = await Promise.all(
         Array.from({ length: maxSeasons + 1 }, (_, n) => getSeasonData(n))
     );
