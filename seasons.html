@@ -149,52 +149,170 @@ tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ===== МОБИЛЬНЫЕ СТИЛИ — ВСЁ ВНИЗУ ===== */
-@media (max-width:768px){
-  html,body{max-width:100%;overflow-x:hidden}
-  .container,.main-container,.content{width:100%;max-width:100%;padding:0 12px;box-sizing:border-box}
+@media (max-width:768px) {
+    /* 1. ГЛОБАЛЬНЫЙ ФИКС ОТ ГОРИЗОНТАЛЬНОГО СКРОЛЛА */
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
 
-  /* Меню */
-  .menu,.menu-container,.menu-bar,.navbar{
-    position:relative;top:auto;margin:12px 0;width:100%;box-sizing:border-box
-  }
+    /* 2. ШАПКА И МЕНЮ */
+    .nav-wrapper {
+        margin: 12px 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-  /* Карточки */
-  .panel,.stats-panel,.leaderboard-panel,.season-panel{
-    min-width:0;max-width:100%;padding:12px;box-sizing:border-box;margin-bottom:16px
-  }
-  .stats-grid,.stats-cards,.stats-container{
-    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px
-  }
-  .stat-card,.stats-card{min-width:0;padding:10px 4px;text-align:center}
-  .stat-value,.stats-value{font-size:clamp(18px,5vw,27px);line-height:1.15;overflow-wrap:anywhere}
-  .stat-label,.stats-label{font-size:12px;line-height:1.3}
+    /* 3. БЛОКИ И КАРТОЧКИ (Сезоны, Легенды) */
+    .season-frame {
+        min-width: 0;
+        max-width: 100%;
+        padding: 14px 10px; /* Чуть уменьшили отступы */
+        box-sizing: border-box;
+        margin-bottom: 16px;
+    }
 
-  /* Поиск */
-  input,select,.search-input,.search-box{max-width:100%;box-sizing:border-box}
-  .search-box,.search-container{width:100%;margin-bottom:10px}
+    /* 4. СТАТИСТИКА (цифры сверху) */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+    .stat-card {
+        min-width: 0;
+        padding: 10px 4px;
+        text-align: center;
+    }
+    .stat-value {
+        font-size: clamp(18px, 5vw, 27px); /* Цифры сами подстраиваются под экран */
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+    }
+    .stat-label {
+        font-size: 11px;
+        line-height: 1.3;
+    }
 
-  /* Таблицы */
-  .table-wrapper,.table-container,.table-scroll,.leaderboard-table-wrapper{
-    max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch
-  }
-  table{width:100%;min-width:520px}
-  th,td{padding:10px 8px;font-size:13px;white-space:nowrap}
-  .leaderboard table{min-width:420px}
+    /* 5. БЛОК С ОБЩЕЙ СТАТИСТИКОЙ В ЛЕГЕНДАХ */
+    #total-summary {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+    #total-summary > div {
+        padding: 8px 4px !important;
+        min-width: 0 !important;
+    }
+    #total-summary > div > div:first-child {
+        font-size: clamp(16px, 4vw, 22px) !important; /* Уменьшаем огромные цифры */
+        word-break: break-all;
+    }
+    #total-summary > div > div:last-child {
+        font-size: 0.55rem !important;
+    }
 
-  /* Табы */
-  .tabs,.tab-buttons,.leaderboard-tabs{
-    display:flex;flex-wrap:wrap;justify-content:center;gap:6px
-  }
-  .tabs button,.tab-buttons button,.leaderboard-tabs button{padding:9px 12px;font-size:13px}
+    /* 6. ПОИСК */
+    .search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-input {
+        max-width: 100%;
+    }
+    .search-clear {
+        width: 100%;
+        text-align: center;
+    }
 
-  /* Сезоны */
-  .season-grid,.season-cards,.cards-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
-  }
+    /* 7. ТАБЛИЦЫ (ГЛАВНЫЙ ФИКС) */
+    .table-container {
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* Убираем жесткую минималку, чтобы таблица сжималась */
+    #total-table {
+        width: 100% !important;
+        min-width: 100% !important;
+        font-size: 0.7rem;
+    }
+    /* Отключаем sticky-заголовок, который ломает мобилку */
+    #total-table thead th {
+        position: static;
+        font-size: 0.6rem;
+        padding: 8px 4px;
+        white-space: normal;
+    }
+    #total-table tbody td {
+        padding: 8px 4px;
+        font-size: 0.7rem;
+        white-space: normal;
+    }
+    
+    /* Общие правила для остальных таблиц (внутри сезонов) */
+    table {
+        font-size: 0.72rem;
+    }
+    th, td {
+        padding: 6px 8px;
+        white-space: nowrap;
+    }
 
-  /* Плавающие кнопки */
-  .back-to-top,.scroll-top,#backToTop{right:12px;bottom:82px;width:48px;height:48px}
-  .beer-button,.donate-button,.floating-button{right:12px;bottom:18px;width:52px;height:52px}
+    /* 8. ВКЛАДКИ */
+    .tabs {
+        gap: 6px;
+    }
+    .tab-btn {
+        padding: 9px 12px;
+        font-size: 0.75rem;
+        flex: 1;
+        text-align: center;
+    }
+    .table-tabs {
+        gap: 4px;
+    }
+    .table-tab {
+        padding: 6px 10px;
+        font-size: 0.68rem;
+    }
+
+    /* 9. ПЛАВАЮЩИЕ КНОПКИ */
+    .scroll-top {
+        right: 12px;
+        bottom: 82px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    .beer-btn {
+        right: 12px;
+        bottom: 18px;
+    }
+
+    /* 10. ЧЕМПИОНЫ И КОРОНА */
+    .champion-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .champion-section {
+        padding: 12px 10px;
+    }
+    .crown-bar-visual {
+        height: 32px;
+    }
+    .crown-light, .crown-dark {
+        font-size: 0.7rem;
+    }
+    .crown-icon-center {
+        font-size: 1.2rem;
+    }
 }
 </style>
 </head>
