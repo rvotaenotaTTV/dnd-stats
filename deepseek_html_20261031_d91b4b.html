@@ -19,8 +19,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
 /* --- КРУГОВАЯ ВЕРТУШКА --- */
-.season-carousel-wrap{position:relative;margin:0 -10px 24px;padding:10px 0}
-.season-carousel{display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding:10px 20px;scrollbar-width:none;-ms-overflow-style:none;align-items:center}
+.season-carousel-wrap{position:relative;margin:0 0 24px;padding:10px 0}
+.season-carousel{display:flex;gap:8px;overflow-x:auto;scroll-behavior:smooth;padding:10px 20px;scrollbar-width:none;-ms-overflow-style:none;align-items:center}
 .season-carousel::-webkit-scrollbar{display:none}
 .season-card{flex:0 0 auto;width:100px;height:120px;background:var(--card);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);opacity:.6;transform:scale(.9);position:relative;user-select:none}
 .season-card:hover{opacity:.9;transform:scale(.95);border-color:var(--purple)}
@@ -35,8 +35,8 @@
 .season-card .sc-badge.ended{background:var(--elevated);color:var(--muted);border:1px solid var(--border)}
 .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;background:var(--card);border:1px solid var(--border);border-radius:50%;color:var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;z-index:5;transition:all .2s;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .carousel-btn:hover{background:var(--gold);color:#000;transform:translateY(-50%) scale(1.1)}
-.carousel-btn.prev{left:4px}
-.carousel-btn.next{right:4px}
+.carousel-btn.prev{left:0px}
+.carousel-btn.next{right:0px}
 /* --- ТАБЫ ТАБЛИЦ --- */
 .table-tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}
 .table-tab{padding:7px 14px;border:1px solid var(--border);background:var(--elevated);color:var(--sub);border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:600;font-family:inherit;transition:.2s;white-space:nowrap}
@@ -151,6 +151,13 @@ th,td{padding:6px 8px;white-space:nowrap}
 .scroll-top{bottom:70px;right:16px;width:40px;height:40px;font-size:1rem}
 }
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.season-card.is-live { border-color: var(--gold); box-shadow: 0 0 15px rgba(240,185,11,0.2); }
+.season-card.is-live .sc-badge { animation: pulseLive 1.5s infinite alternate; }
+@keyframes pulseLive { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.1); opacity: 0.8; } }
+.table-panel table td { vertical-align: middle; }
+.table-panel table td:first-child { text-align: center; color: var(--muted); font-weight: 700; }
+.table-panel table td img { vertical-align: middle; margin-right: 6px; }
+.table-panel table td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -251,6 +258,28 @@ let activeSeason = -1;
 let totalPlayersData = [];
 let seasonCache = {};
 
+function getRaceIcon(name) {
+    const map = {'Человек':'human','Орк':'orc','Дворф':'dwarf','Эльф':'elf','Нежить':'undead','Табакси':'tabaxi','Тифлинг':'tiefling'};
+    return map[name] ? `icons/${map[name]}.png` : null;
+}
+function getClassIcon(name) {
+    const map = {'Воин':'warrior','Паладин':'paladin','Плут':'rogue','Монах':'monk','Следопыт':'ranger','Чародей':'sorcerer','Бард':'bard','Друид':'druid','Изобретатель':'artificer','Варвар':'barbarian','Волшебница':'wizard','Некромант':'necromancer','Жрец':'cleric','Колдун':'warlock','Алхимик':'alchemist'};
+    return map[name] ? `icons/${map[name]}.png` : null;
+}
+function getPlayerIcon(playerName, emojiFallback, size = 24) {
+    const imgStyle = `width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;margin-right:4px;display:inline-block;`;
+    const img = (src) => `<img src="${src}" style="${imgStyle}" onerror="this.style.display='none'">`;
+    const emoji = (char) => `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.8}px;vertical-align:middle;margin-right:4px;">${char}</span>`;
+    
+    if (!playerName || typeof playerName !== 'string' || !playerName.includes('-')) return emoji(emojiFallback);
+    const parts = playerName.split('-'), raceName = parts[0], className = parts[1];
+    const raceIcon = getRaceIcon(raceName), classIcon = getClassIcon(className);
+    if (raceIcon && classIcon) return `${img(raceIcon)}${img(classIcon)}`;
+    if (raceIcon) return `${img(raceIcon)}${emoji(emojiFallback || '')}`;
+    if (classIcon) return `${emoji(emojiFallback || '')}${img(classIcon)}`;
+    return emoji(emojiFallback || '');
+}
+
 // ============ ЗАГРУЗКА ============
 async function getSeasonData(n) {
     const KEY = 'eternis-season-v2-' + n;
@@ -313,10 +342,19 @@ document.querySelectorAll('.nav-link').forEach(l => {
 
 // ============ ВКЛАДКИ (Зал Славы / Легенды) ============
 function switchSeasonsTab(tab, e) {
-    document.querySelectorAll('.tabs .tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelector(`.tabs .tab-btn[data-tab="${tab}"]`).classList.add('active');
-    document.getElementById('seasons-tab-' + tab).classList.add('active');
+    // Снимаем активность только с кнопок главных вкладок
+    document.querySelectorAll('.tabs > .tab-btn').forEach(b => b.classList.remove('active'));
+    
+    // Скрываем только контейнеры главных вкладок
+    document.getElementById('seasons-tab-seasons').classList.remove('active');
+    document.getElementById('seasons-tab-alltime').classList.remove('active');
+
+    // Включаем нужные
+    const btn = document.querySelector(`.tabs > .tab-btn[data-tab="${tab}"]`);
+    if (btn) btn.classList.add('active');
+    const content = document.getElementById('seasons-tab-' + tab);
+    if (content) content.classList.add('active');
+    
     history.replaceState(null, null, '#' + tab);
 }
 window.switchSeasonsTab = switchSeasonsTab;
@@ -334,7 +372,8 @@ function renderCarousel() {
         const isActive = n === activeSeason;
         const isCurrent = n === currentSeasonNum;
         const badge = isCurrent ? '<div class="sc-badge">LIVE</div>' : '<div class="sc-badge ended">END</div>';
-        return `<div class="season-card ${isActive ? 'active' : ''}" data-num="${n}" onclick="switchSeason(${n})">
+        const liveClass = isCurrent ? 'is-live' : '';
+        return `<div class="season-card ${isActive ? 'active' : ''} ${liveClass}" data-num="${n}" onclick="switchSeason(${n})">
             ${badge}
             <div class="sc-icon">${SEASON_ICONS[n] || '📋'}</div>
             <div class="sc-num">${n}</div>
@@ -368,10 +407,16 @@ window.scrollCarousel = scrollCarousel;
 
 // ============ ТАБЫ ТАБЛИЦ ============
 function switchTableTab(tab, btn) {
-    document.querySelectorAll('.table-tab').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.table-panel').forEach(p => p.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    const panel = document.getElementById('tp-' + tab);
+    // Находим ближайший контейнер сезона
+    const container = btn.closest('.season-frame');
+    if (!container) return;
+    
+    // Ищем вкладки и панели только внутри ЭТОГО сезона
+    container.querySelectorAll('.table-tab').forEach(b => b.classList.remove('active'));
+    container.querySelectorAll('.table-panel').forEach(p => p.classList.remove('active'));
+    
+    btn.classList.add('active');
+    const panel = container.querySelector('.table-panel[data-panel="' + tab + '"]');
     if (panel) panel.classList.add('active');
 }
 window.switchTableTab = switchTableTab;
@@ -481,43 +526,61 @@ function renderSeason(data, seasonNum, isCurrent) {
             const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
             const wins = p.tournamentWins || 0;
             const crownsHtml = wins <= 5 ? '👑'.repeat(wins) : `👑 ×${wins}`;
-            html += `<div class="champion-card ${rankClass}"><div class="champ-avatar">${p.emoji || '⚔️'}</div><div class="champ-name">${p.display}</div><div class="champ-crowns">${crownsHtml}</div><div class="champ-wins-text">${wins} побед</div></div>`;
+            html += `<div class="champion-card ${rankClass}"><div class="champ-avatar" style="display:flex;align-items:center;justify-content:center;">${getPlayerIcon(p.name || p.display, p.emoji || '⚔️', 36)}</div><div class="champ-name">${p.display}</div><div class="champ-crowns">${crownsHtml}</div><div class="champ-wins-text">${wins} побед</div></div>`;
         });
         html += '</div></div>';
     } else if (!isCurrent) {
         html += '<div class="champion-section" style="opacity:0.5;text-align:center;padding:20px;color:var(--muted);font-style:italic;">Турниры не проводились — эпоха чистых дуэлей</div>';
     }
     // ===== ТАБЛИЦЫ ЛИДЕРОВ: 7 ВКЛАДОК =====
-    const skillRows = seasonTop.slice(0, 50).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td>${p.emoji || ''}</td><td class="number">${p.skill}</td><td class="number">${p.wins}</td></tr>`).join('');
-    const mostActive = [...allPlayers].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0))).slice(0, 50);
-    const activeRows = mostActive.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${(p.wins || 0) + (p.losses || 0)}</td></tr>`).join('');
-    const topShards = [...allPlayers].sort((a, b) => (b.shards || 0) - (a.shards || 0)).slice(0, 50);
-    const shardRows = topShards.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.shards || 0}</td></tr>`).join('');
-    const topStreaks = [...allPlayers].sort((a, b) => (b.best || 0) - (a.best || 0)).slice(0, 50);
-    const streakRows = topStreaks.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.best || 0}</td></tr>`).join('');
-    const wrRows = topWR.slice(0, 50).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display || p.name || ''}</td><td class="number">${((p.wins || 0) * 100 / ((p.wins || 0) + (p.losses || 0) || 1)).toFixed(1)}%</td><td class="number">${p.wins || 0}-${p.losses || 0}</td></tr>`).join('');
-    const dungeonRecordRows = topDungeon.slice(0, 50).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.record}</td></tr>`).join('');
-    const dungeonBossRows = [...topDungeon].sort((a, b) => (b.trophies || 0) - (a.trophies || 0)).slice(0, 50).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.trophies || 0}</td></tr>`).join('');
+    const skillRows = seasonTop.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${getPlayerIcon(p.name, p.emoji, 20)} ${p.display || '???'}</td><td class="number">${p.skill || 0}</td><td class="number">${p.wins || 0}</td></tr>`).join('');
+    
+    const mostActive = [...allPlayers].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0))).slice(0, 5);
+    const activeRows = mostActive.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${getPlayerIcon(p.name, p.emoji, 20)} ${p.display || '???'}</td><td class="number">${(p.wins || 0) + (p.losses || 0)}</td></tr>`).join('');
+    
+    const topShards = [...allPlayers].sort((a, b) => (b.shards || 0) - (a.shards || 0)).slice(0, 5);
+    const shardRows = topShards.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${getPlayerIcon(p.name, p.emoji, 20)} ${p.display || '???'}</td><td class="number">${p.shards || 0}</td></tr>`).join('');
+    
+    const topStreaks = [...allPlayers].sort((a, b) => (b.best || 0) - (a.best || 0)).slice(0, 5);
+    const streakRows = topStreaks.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${getPlayerIcon(p.name, p.emoji, 20)} ${p.display || '???'}</td><td class="number">${p.best || 0}</td></tr>`).join('');
+    
+    const wrRows = topWR.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${getPlayerIcon(p.name, p.emoji, 20)} ${p.display || p.name || '???'}</td><td class="number">${((p.wins || 0) * 100 / ((p.wins || 0) + (p.losses || 0) || 1)).toFixed(1)}%</td><td class="number">${p.wins || 0}-${p.losses || 0}</td></tr>`).join('');
+    
+    const dungeonRecordRows = topDungeon.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${getPlayerIcon(p.name, p.emoji, 20)} ${p.display || '???'}</td><td class="number">${p.record || 0}</td></tr>`).join('');
+    
+    const dungeonBossRows = [...topDungeon].sort((a, b) => (b.trophies || 0) - (a.trophies || 0)).slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${getPlayerIcon(p.name, p.emoji, 20)} ${p.display || '???'}</td><td class="number">${p.trophies || 0}</td></tr>`).join('');
 
     html += '<div class="section-subtitle">📊 Таблицы лидеров</div>';
     html += '<div class="table-tabs">';
-    html += '<button class="table-tab active" onclick="switchTableTab(\'skill\', this)">🏆 SKILL</button>';
-    html += '<button class="table-tab" onclick="switchTableTab(\'wr\', this)">📈 Винрейт</button>';
-    html += '<button class="table-tab" onclick="switchTableTab(\'shards\', this)">💎 Осколки</button>';
-    html += '<button class="table-tab" onclick="switchTableTab(\'streaks\', this)">🔥 Стрики</button>';
-    html += '<button class="table-tab" onclick="switchTableTab(\'dungeonRecord\', this)">🏔 Данж-волны</button>';
-    html += '<button class="table-tab" onclick="switchTableTab(\'dungeonBoss\', this)">🐉 Данж-боссы</button>';
-    html += '<button class="table-tab" onclick="switchTableTab(\'active\', this)">⚡ Активность</button>';
+    const tabBtn = (id, iconSvg, label, isActive) => `<button class="table-tab ${isActive ? 'active' : ''}" data-tab="${id}" onclick="switchTableTab('${id}', this)" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;">${iconSvg} <span>${label}</span></button>`;
+    html += tabBtn('skill', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>', 'SKILL', true);
+    html += tabBtn('wr', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>', 'Винрейт', false);
+    html += tabBtn('shards', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/></svg>', 'Осколки', false);
+    html += tabBtn('streaks', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>', 'Стрики', false);
+    html += tabBtn('dungeonRecord', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>', 'Данж-волны', false);
+    html += tabBtn('dungBoss', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>', 'Данж-боссы', false);
+    html += tabBtn('active', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', 'Активность', false);
     html += '</div>';
 
-    const panel = (id, active, head, rows) => `<div class="table-panel ${active ? 'active' : ''}" id="tp-${id}"><div class="table-container" style="overflow-x:auto;max-height:60vh;overflow-y:auto"><table style="min-width:520px"><thead><tr>${head}</tr></thead><tbody>${rows || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Нет данных</td></tr>'}</tbody></table></div></div>`;
-    html += panel('skill', true, '<th>#</th><th>Игрок</th><th>Класс</th><th>Skill</th><th>Победы</th>', skillRows);
-    html += panel('wr', false, '<th>#</th><th>Игрок</th><th>WR</th><th>W/L</th>', wrRows);
-    html += panel('shards', false, '<th>#</th><th>Игрок</th><th>Осколков</th>', shardRows);
-    html += panel('streaks', false, '<th>#</th><th>Игрок</th><th>Побед подряд</th>', streakRows);
-    html += panel('dungeonRecord', false, '<th>#</th><th>Игрок</th><th>Волн</th>', dungeonRecordRows);
-    html += panel('dungeonBoss', false, '<th>#</th><th>Игрок</th><th>Трофеев</th>', dungeonBossRows);
-    html += panel('active', false, '<th>#</th><th>Игрок</th><th>Боёв</th>', activeRows);
+    // Панели с таблицами
+    const makePanel = (id, active, head, rows) => `
+        <div class="table-panel ${active ? 'active' : ''}" data-panel="${id}">
+            <div class="table-container" style="overflow-x:auto;max-height:60vh;overflow-y:auto;margin-top:10px;">
+                <table style="min-width:500px">
+                    <thead><tr>${head}</tr></thead>
+                    <tbody>${rows || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Нет данных</td></tr>'}</tbody>
+                </table>
+            </div>
+        </div>`;
+
+    html += makePanel('skill', true, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Skill</th><th class="num">Победы</th>', skillRows);
+    html += makePanel('wr', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">WR</th><th class="num">W/L</th>', wrRows);
+    html += makePanel('shards', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Осколков</th>', shardRows);
+    html += makePanel('streaks', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Стрик</th>', streakRows);
+    html += makePanel('dungeonRecord', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Волн</th>', dungeonRecordRows);
+    html += makePanel('dungBoss', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Трофеев</th>', dungeonBossRows);
+    html += makePanel('active', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Боёв</th>', activeRows);
+
     html += '</div></div>';
     return html;
 }
@@ -659,8 +722,7 @@ window.filterTotalTable = filterTotalTable;
 function renderTotalTableFromSorted() {
     const tbody = document.getElementById('total-table-body');
     if (!tbody || !totalPlayersData.length) return;
-    const query = document.getElementById('totalSearch').value.toLowerCase
-	.trim();
+    const query = document.getElementById('totalSearch').value.toLowerCase().trim();
     const data = query ? totalPlayersData.filter(p => p.display.toLowerCase().includes(query)) : totalPlayersData;
     if (!data.length) { tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">🔍 Никого не найдено</td></tr>'; return; }
     renderRows(data);
