@@ -22,26 +22,26 @@
 .season-carousel-wrap {
     position: relative;
     margin: 0 0 24px;
-    padding: 0 40px; /* Освобождаем место по 40px по бокам для стрелок */
+    padding: 0 50px;
 }
 .season-carousel {
     display: flex;
     gap: 10px;
     overflow-x: auto;
     scroll-behavior: smooth;
-    padding: 10px 0; /* Убрали внутренние отступы, они теперь у родителя */
+    padding: 10px 10px;
     scrollbar-width: none;
     -ms-overflow-style: none;
     align-items: center;
-	overflow-anchor: none; /* Отключает автоматическую привязку скролла браузера */
+    overflow-anchor: none;
 }
 .season-carousel::-webkit-scrollbar {
     display: none;
 }
 .season-card {
     flex: 0 0 auto;
-    width: 100px;
-    height: 120px;
+    width: 90px;
+    height: 100px;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 16px;
@@ -63,14 +63,25 @@
 .season-card.active .sc-icon { filter: grayscale(0); transform: scale(1.1); }
 .season-card .sc-num { font-size: 1.2rem; font-weight: 900; color: var(--muted); }
 .season-card.active .sc-num, .season-card.is-live .sc-num { color: var(--gold); }
-.season-card .sc-sub { font-size: .6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; text-align: center; padding: 0 4px; line-height: 1.2; }
-.season-card.active .sc-sub { color: var(--sub); }
-.season-card .sc-badge { position: absolute; top: 6px; right: 6px; font-size: .5rem; padding: 2px 5px; border-radius: 8px; background: var(--gold); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; }
+.season-card .sc-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: .5rem;
+    padding: 2px 5px;
+    border-radius: 8px;
+    background: var(--gold);
+    color: #000;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    z-index: 3;
+}
 .season-card .sc-badge.ended { background: var(--elevated); color: var(--muted); border: 1px solid var(--border); }
 .season-card.is-live .sc-badge { animation: pulseLive 1.5s infinite alternate; box-shadow: 0 0 8px var(--gold); }
 @keyframes pulseLive { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.1); opacity: 0.8; } }
 
-/* СТРЕЛКИ (теперь они строго в этих 40px отступах) */
+/* СТРЕЛКИ */
 .carousel-btn {
     position: absolute;
     top: 50%;
@@ -216,7 +227,7 @@ tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
 .search-clear{width:100%;text-align:center}
 .table-tabs{gap:4px}
 .table-tab{padding:6px 10px;font-size:.68rem}
-.season-card{width:80px;height:100px}
+.season-card{width:70px;height:80px}
 .season-card .sc-icon{font-size:1.5rem}
 .season-card .sc-num{font-size:1rem}
 .season-card .sc-sub{font-size:.5rem}
@@ -228,7 +239,6 @@ th,td{padding:6px 8px;white-space:nowrap}
 }
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* ФИНАЛЬНЫЙ ФИКС ОТ МЫЛА */
 .table-panel table { transform: translateZ(0); -webkit-transform: translateZ(0); }
 .table-panel img, .player-cell img { image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 </style>
@@ -352,9 +362,8 @@ function getClassIcon(name) {
 }
 function getPlayerIcon(playerName, emojiFallback, size = 24) {
     const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;flex-shrink:0;margin-right:4px;" onerror="this.style.display='none'">`;
-    const emoji = (char) => `<span class="emoji-icon" style="margin-right:4px;">${char}</span>`;
+    const emoji = (char) => `<span class="emoji-icon" style="margin-right:4px; font-size:${size*0.8}px; line-height:1; vertical-align:middle;">${char}</span>`;
     
-    // Дефолтная SVG иконка (меч и щит), если вообще ничего не нашли
     const defaultIcon = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
 
     if (!playerName || typeof playerName !== 'string' || playerName === 'Unknown') {
@@ -368,13 +377,10 @@ function getPlayerIcon(playerName, emojiFallback, size = 24) {
         if (raceIcon) return `${img(raceIcon)}`;
         if (classIcon) return `${img(classIcon)}`;
     } else {
-        // 0 сезон: просто "Колдун" или "Следопыт"
         const classIcon = getClassIcon(playerName);
         if (classIcon) return `${img(classIcon)}`;
     }
     
-    // Если имя есть, но картинки нет (например, "Следопыт" без файла), 
-    // выводим эмодзи, разбивая его на части
     if (emojiFallback) {
         const chars = Array.from(emojiFallback);
         if (chars.length >= 2) return `${emoji(chars[0])}${emoji(chars[1])}`;
@@ -473,6 +479,7 @@ function renderCarousel() {
     const el = document.getElementById('seasonCarousel');
     if (!el) return;
     const sorted = [...seasonTabs].sort((a, b) => a - b);
+    
     const cardHTML = (n) => {
         const isActive = n === activeSeason;
         const isCurrent = n === currentSeasonNum;
@@ -482,18 +489,24 @@ function renderCarousel() {
             ${badge}
             <div class="sc-icon">${SEASON_ICONS[n] || '📋'}</div>
             <div class="sc-num">${n}</div>
-            <div class="sc-sub">${SEASON_SUBTITLES[n] || ''}</div>
         </div>`;
     };
-    // Убираем клоны, рисуем только реальные карточки
-    el.innerHTML = sorted.map(cardHTML).join('');
-    
-    // Центрируем активную карточку при первой загрузке
+
+    // Добавляем невидимую карточку-распорку в конец. 
+    // Она занимает место, чтобы 8-й сезон мог встать в центр.
+    const spacer = '<div style="flex: 0 0 50%; visibility: hidden;"></div>';
+    el.innerHTML = sorted.map(cardHTML).join('') + spacer;
+
+    // Центрируем активный сезон при загрузке
     setTimeout(() => {
         const active = el.querySelector('.season-card.active');
-        if (active) active.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
+        if (active) {
+            const scrollLeft = active.offsetLeft - (el.clientWidth / 2) + (active.clientWidth / 2);
+            el.scrollTo({ left: scrollLeft, behavior: 'auto' });
+        }
     }, 50);
 }
+
 function scrollCarousel(dir) {
     const idx = seasonTabs.indexOf(activeSeason);
     if (idx < 0) return;
@@ -510,32 +523,21 @@ function switchSeason(sn) {
     
     const el = document.getElementById('seasonCarousel');
     if (el) {
-        // Убираем активный класс у всех
         el.querySelectorAll('.season-card').forEach(c => c.classList.remove('active'));
-        
-        // Ищем карточку
         const targetCard = el.querySelector(`.season-card[data-num="${sn}"]`);
         
         if (targetCard) {
             targetCard.classList.add('active');
-            
-            // МАТЕМАТИЧЕСКИЙ СКРОЛЛ:
-            // Вычисляем, где карточка находится внутри ленты, и вычитаем половину ширины экрана.
-            // Это ставит её ровно по центру.
             const scrollLeft = targetCard.offsetLeft - (el.clientWidth / 2) + (targetCard.clientWidth / 2);
-            
-            el.scrollTo({
-                left: scrollLeft,
-                behavior: 'smooth'
-            });
+            el.scrollTo({ left: scrollLeft, behavior: 'smooth' });
         }
     }
     
-    // Переключаем контент внизу
     document.querySelectorAll('#seasons-tab-seasons .tab-content').forEach(t => t.classList.remove('active'));
     const contentEl = document.getElementById(`tab-s${sn}`);
     if (contentEl) contentEl.classList.add('active');
 }
+window.switchSeason = switchSeason;
 
 // ============ ТАБЫ ТАБЛИЦ ============
 function switchTableTab(tab, btn) {
@@ -618,6 +620,9 @@ function renderSeason(data, seasonNum, isCurrent) {
     let html = `<div class="season-frame ${isCurrent ? 'live' : 'ended'}">`;
     html += `<div class="season-title">${SEASON_ICONS[seasonNum] || '📋'} Сезон ${seasonNum} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'LIVE' : 'ЗАВЕРШЁН'}</span></div>`;
     
+    const subtitle = SEASON_SUBTITLES[seasonNum] || '';
+    if (subtitle) html += `<div class="season-quote">«${subtitle}»</div>`;
+    
     html += '<div class="section-subtitle">🏟 Арена</div><div class="stats-grid">';
     html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
     html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
@@ -681,7 +686,7 @@ function renderSeason(data, seasonNum, isCurrent) {
 
     const playerCell = (p) => {
         const name = getName(p);
-        return `<td><div class="player-cell">${getPlayerIcon(name, p.emoji, 24)}<span style="padding-left: 0;">${p.display || '???'}</span></div></td>`;
+        return `<td><div class="player-cell">${getPlayerIcon(name, p.emoji, 24)}<span style="padding-left: 0; white-space: nowrap;">${p.display || '???'}</span></div></td>`;
     };
 
     const skillRows = seasonTop.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.skill || 0}</td><td class="num">${p.wins || 0}</td></tr>`).join('');
