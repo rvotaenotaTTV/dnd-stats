@@ -7,31 +7,96 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Арена Этерниса — Сезоны</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Арена Этерниса">
+    <meta property="og:title" content="Арена Этерниса — Сезоны">
+    <meta property="og:description" content="История сезонов и легенды Арены.">
+    <meta property="og:url" content="https://rvotaenotaTTV.github.io/dnd-stats/seasons.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Арена Этерниса — Сезоны">
+    <meta name="twitter:description" content="История сезонов и легенды Арены.">
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
 /* --- ВЕРТУШКА --- */
-.season-carousel-wrap{position:relative;margin:0 0 24px;padding:10px 0}
-.season-carousel{display:flex;gap:8px;overflow-x:auto;scroll-behavior:smooth;padding:10px 20px;scrollbar-width:none;-ms-overflow-style:none;align-items:center}
-.season-carousel::-webkit-scrollbar{display:none}
-.season-card{flex:0 0 auto;width:100px;height:120px;background:var(--card);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);opacity:.6;transform:scale(.9);position:relative;user-select:none}
-.season-card:hover{opacity:.9;transform:scale(.95);border-color:var(--purple)}
-.season-card.active{opacity:1;transform:scale(1.1);border-color:var(--gold);box-shadow:0 0 24px rgba(240,185,11,.25);background:linear-gradient(160deg,var(--card),rgba(240,185,11,.06));z-index:2}
+.season-carousel-wrap {
+    position: relative;
+    margin: 0 0 24px;
+    padding: 0 40px; /* Освобождаем место по 40px по бокам для стрелок */
+}
+.season-carousel {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0; /* Убрали внутренние отступы, они теперь у родителя */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    align-items: center;
+	overflow-anchor: none; /* Отключает автоматическую привязку скролла браузера */
+}
+.season-carousel::-webkit-scrollbar {
+    display: none;
+}
+.season-card {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 120px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .3s cubic-bezier(.4,0,.2,1);
+    opacity: .6;
+    transform: scale(.9);
+    position: relative;
+    user-select: none;
+}
+.season-card:hover { opacity: .9; transform: scale(.95); border-color: var(--purple); }
+.season-card.active { opacity: 1; transform: scale(1.1); border-color: var(--gold); box-shadow: 0 0 24px rgba(240,185,11,.25); background: linear-gradient(160deg,var(--card),rgba(240,185,11,.06)); z-index: 2; }
 .season-card.is-live { border-color: var(--gold); box-shadow: 0 0 15px rgba(240,185,11,0.2); }
-.season-card .sc-icon{font-size:2rem;margin-bottom:4px;filter:grayscale(.5);transition:filter .3s}
-.season-card.active .sc-icon{filter:grayscale(0);transform:scale(1.1)}
-.season-card .sc-num{font-size:1.2rem;font-weight:900;color:var(--muted)}
-.season-card.active .sc-num, .season-card.is-live .sc-num{color:var(--gold)}
-.season-card .sc-sub{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px;text-align:center;padding:0 4px;line-height:1.2}
-.season-card.active .sc-sub{color:var(--sub)}
-.season-card .sc-badge{position:absolute;top:6px;right:6px;font-size:.5rem;padding:2px 5px;border-radius:8px;background:var(--gold);color:#000;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
-.season-card .sc-badge.ended{background:var(--elevated);color:var(--muted);border:1px solid var(--border)}
+.season-card .sc-icon { font-size: 2rem; margin-bottom: 4px; filter: grayscale(.5); transition: filter .3s; }
+.season-card.active .sc-icon { filter: grayscale(0); transform: scale(1.1); }
+.season-card .sc-num { font-size: 1.2rem; font-weight: 900; color: var(--muted); }
+.season-card.active .sc-num, .season-card.is-live .sc-num { color: var(--gold); }
+.season-card .sc-sub { font-size: .6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; text-align: center; padding: 0 4px; line-height: 1.2; }
+.season-card.active .sc-sub { color: var(--sub); }
+.season-card .sc-badge { position: absolute; top: 6px; right: 6px; font-size: .5rem; padding: 2px 5px; border-radius: 8px; background: var(--gold); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; }
+.season-card .sc-badge.ended { background: var(--elevated); color: var(--muted); border: 1px solid var(--border); }
 .season-card.is-live .sc-badge { animation: pulseLive 1.5s infinite alternate; box-shadow: 0 0 8px var(--gold); }
 @keyframes pulseLive { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.1); opacity: 0.8; } }
-.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;background:var(--card);border:1px solid var(--border);border-radius:50%;color:var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;z-index:5;transition:all .2s;box-shadow:0 4px 12px rgba(0,0,0,.3)}
-.carousel-btn:hover{background:var(--gold);color:#000;transform:translateY(-50%) scale(1.1)}
-.carousel-btn.prev{left:0px}
-.carousel-btn.next{right:0px}
+
+/* СТРЕЛКИ (теперь они строго в этих 40px отступах) */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    color: var(--gold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    z-index: 5;
+    transition: all .2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+}
+.carousel-btn:hover {
+    background: var(--gold);
+    color: #000;
+    transform: translateY(-50%) scale(1.1);
+}
+.carousel-btn.prev { left: 0px; }
+.carousel-btn.next { right: 0px; }
 
 /* --- ТАБЫ ТАБЛИЦ --- */
 .table-tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap;justify-content:center}
@@ -41,7 +106,7 @@
 .table-panel{display:none;animation:fadeSlideIn .2s ease}
 .table-panel.active{display:block}
 
-/* --- ТАБЛИЦЫ (ГЛАВНЫЙ ФИКС) --- */
+/* --- ТАБЛИЦЫ --- */
 .table-panel table { width: 100%; border-collapse: collapse; }
 .table-panel th { text-align: left; padding: 10px 8px; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
 .table-panel th:first-child { text-align: center; width: 40px; }
@@ -51,21 +116,9 @@
 .table-panel td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
 .table-panel tr:hover { background: rgba(163,113,247,0.04); }
 
-/* ЖЕСТКАЯ СЕТКА ДЛЯ ИКОНОК И НИКА (чтобы не было каши) */
-.player-cell {
-    display: flex;
-    align-items: center;
-    gap: 6px; /* Отступ между иконками и ником */
-    height: 100%;
-}
-.player-cell img, 
-.player-cell span {
-    width: 24px !important;
-    height: 24px !important;
-    object-fit: contain;
-    flex-shrink: 0;
-    display: inline-block;
-}
+/* ЖЕСТКАЯ СЕТКА ДЛЯ ИКОНОК И НИКА */
+.player-cell { display: flex; align-items: center; gap: 6px; height: 100%; }
+.player-cell img { width: 24px !important; height: 24px !important; object-fit: contain; flex-shrink: 0; display: inline-block; }
 
 /* --- ОБЩИЕ СТИЛИ --- */
 .season-frame{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;margin-bottom:20px;position:relative;overflow:hidden;animation:fadeSlideIn .4s ease}
@@ -176,18 +229,8 @@ th,td{padding:6px 8px;white-space:nowrap}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ФИНАЛЬНЫЙ ФИКС ОТ МЫЛА */
-.table-panel table {
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-}
-.table-panel img, 
-.player-cell img {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
+.table-panel table { transform: translateZ(0); -webkit-transform: translateZ(0); }
+.table-panel img, .player-cell img { image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 </style>
 </head>
 <body>
@@ -308,19 +351,37 @@ function getClassIcon(name) {
     return map[name] ? `icons/${map[name]}.png` : null;
 }
 function getPlayerIcon(playerName, emojiFallback, size = 24) {
-    const imgStyle = `width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;flex-shrink:0;`;
-    const img = (src) => `<img src="${src}" style="${imgStyle}" onerror="this.style.display='none'">`;
-    const emoji = (char) => `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.8}px;vertical-align:middle;flex-shrink:0;">${char}</span>`;
+    const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;flex-shrink:0;margin-right:4px;" onerror="this.style.display='none'">`;
+    const emoji = (char) => `<span class="emoji-icon" style="margin-right:4px;">${char}</span>`;
     
-    if (!playerName || typeof playerName !== 'string' || !playerName.includes('-')) return emoji(emojiFallback || '👤');
+    // Дефолтная SVG иконка (меч и щит), если вообще ничего не нашли
+    const defaultIcon = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+
+    if (!playerName || typeof playerName !== 'string' || playerName === 'Unknown') {
+        return defaultIcon;
+    }
     
-    const parts = playerName.split('-'), raceName = parts[0], className = parts[1];
-    const raceIcon = getRaceIcon(raceName), classIcon = getClassIcon(className);
+    if (playerName.includes('-')) {
+        const parts = playerName.split('-'), raceName = parts[0], className = parts[1];
+        const raceIcon = getRaceIcon(raceName), classIcon = getClassIcon(className);
+        if (raceIcon && classIcon) return `${img(raceIcon)}${img(classIcon)}`;
+        if (raceIcon) return `${img(raceIcon)}`;
+        if (classIcon) return `${img(classIcon)}`;
+    } else {
+        // 0 сезон: просто "Колдун" или "Следопыт"
+        const classIcon = getClassIcon(playerName);
+        if (classIcon) return `${img(classIcon)}`;
+    }
     
-    if (raceIcon && classIcon) return `${img(raceIcon)}${img(classIcon)}`;
-    if (raceIcon) return `${img(raceIcon)}${emoji(window.classEmojis?.[className] || '')}`;
-    if (classIcon) return `${emoji(window.raceEmojis?.[raceName] || '')}${img(classIcon)}`;
-    return `${emoji(window.raceEmojis?.[raceName] || '')}${emoji(window.classEmojis?.[className] || '')}`;
+    // Если имя есть, но картинки нет (например, "Следопыт" без файла), 
+    // выводим эмодзи, разбивая его на части
+    if (emojiFallback) {
+        const chars = Array.from(emojiFallback);
+        if (chars.length >= 2) return `${emoji(chars[0])}${emoji(chars[1])}`;
+        return emoji(chars[0]);
+    }
+    
+    return defaultIcon;
 }
 
 // ============ ЗАГРУЗКА ДАННЫХ ============
@@ -424,21 +485,14 @@ function renderCarousel() {
             <div class="sc-sub">${SEASON_SUBTITLES[n] || ''}</div>
         </div>`;
     };
-    const clonesBefore = sorted.slice(-3);
-    const clonesAfter = sorted.slice(0, 3);
-    el.innerHTML = clonesBefore.map(cardHTML).join('') + sorted.map(cardHTML).join('') + clonesAfter.map(cardHTML).join('');
+    // Убираем клоны, рисуем только реальные карточки
+    el.innerHTML = sorted.map(cardHTML).join('');
+    
+    // Центрируем активную карточку при первой загрузке
     setTimeout(() => {
         const active = el.querySelector('.season-card.active');
         if (active) active.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
     }, 50);
-    
-    let scrollLock = false;
-    el.onscroll = () => {
-        if (scrollLock) return;
-        const max = el.scrollWidth - el.clientWidth;
-        if (el.scrollLeft < 20) { scrollLock = true; el.scrollLeft = max / 2; setTimeout(() => scrollLock = false, 100); }
-        else if (el.scrollLeft > max - 20) { scrollLock = true; el.scrollLeft = max / 2; setTimeout(() => scrollLock = false, 100); }
-    };
 }
 function scrollCarousel(dir) {
     const idx = seasonTabs.indexOf(activeSeason);
@@ -453,12 +507,35 @@ window.scrollCarousel = scrollCarousel;
 function switchSeason(sn) {
     if (sn === activeSeason) return;
     activeSeason = sn;
-    renderCarousel();
+    
+    const el = document.getElementById('seasonCarousel');
+    if (el) {
+        // Убираем активный класс у всех
+        el.querySelectorAll('.season-card').forEach(c => c.classList.remove('active'));
+        
+        // Ищем карточку
+        const targetCard = el.querySelector(`.season-card[data-num="${sn}"]`);
+        
+        if (targetCard) {
+            targetCard.classList.add('active');
+            
+            // МАТЕМАТИЧЕСКИЙ СКРОЛЛ:
+            // Вычисляем, где карточка находится внутри ленты, и вычитаем половину ширины экрана.
+            // Это ставит её ровно по центру.
+            const scrollLeft = targetCard.offsetLeft - (el.clientWidth / 2) + (targetCard.clientWidth / 2);
+            
+            el.scrollTo({
+                left: scrollLeft,
+                behavior: 'smooth'
+            });
+        }
+    }
+    
+    // Переключаем контент внизу
     document.querySelectorAll('#seasons-tab-seasons .tab-content').forEach(t => t.classList.remove('active'));
-    const el = document.getElementById(`tab-s${sn}`);
-    if (el) el.classList.add('active');
+    const contentEl = document.getElementById(`tab-s${sn}`);
+    if (contentEl) contentEl.classList.add('active');
 }
-window.switchSeason = switchSeason;
 
 // ============ ТАБЫ ТАБЛИЦ ============
 function switchTableTab(tab, btn) {
@@ -596,7 +673,16 @@ function renderSeason(data, seasonNum, isCurrent) {
     }
 
     // ===== ТАБЛИЦЫ ЛИДЕРОВ (ТОП-5) =====
-    const playerCell = (p) => `<td><div class="player-cell">${getPlayerIcon(p.name, p.emoji, 24)}<span style="padding-left: 0;">${p.display || '???'}</span></div></td>`;
+    const getName = (p) => {
+        if (p.name && p.name !== 'Unknown') return p.name;
+        const original = players.find(x => x.display === p.display);
+        return original ? original.name : 'Unknown';
+    };
+
+    const playerCell = (p) => {
+        const name = getName(p);
+        return `<td><div class="player-cell">${getPlayerIcon(name, p.emoji, 24)}<span style="padding-left: 0;">${p.display || '???'}</span></div></td>`;
+    };
 
     const skillRows = seasonTop.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.skill || 0}</td><td class="num">${p.wins || 0}</td></tr>`).join('');
     const mostActive = [...allPlayers].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0))).slice(0, 5);
@@ -725,7 +811,7 @@ async function loadTotalStats() {
     if (!tbody) return;
     const aggregated = {};
     
-    function addPlayer(display, wins, losses, best, shards, tournaments, dp) {
+    function addPlayer( display, wins, losses, best, shards, tournaments, dp) {
         if (!display) return;
         if (!aggregated[display]) aggregated[display] = { display, wins: 0, losses: 0, best: 0, shards: 0, tournaments: 0, dungeonRecord: 0, dungeonWaves: 0, dungeonBosses: 0, fights: 0, winrate: 0 };
         const a = aggregated[display];
@@ -849,3 +935,5 @@ detectSeasons();
 </script>
 </body>
 </html>
+	
+	
