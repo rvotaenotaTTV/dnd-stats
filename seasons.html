@@ -38,8 +38,8 @@
 .carousel-btn.next{right:0}
 
 /* ===== ТАБЫ И ТАБЛИЦЫ ===== */
-.table-tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap;justify-content:center}
-.table-tab{padding:7px 14px;border:1px solid var(--border);background:var(--elevated);color:var(--sub);border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:600;font-family:inherit;transition:.2s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.table-tabs{display:flex;gap:4px;margin:14px 0;flex-wrap:wrap;justify-content:center}
+.table-tab{padding:6px 10px;border:1px solid var(--border);background:var(--elevated);color:var(--sub);border-radius:20px;cursor:pointer;font-size:.7rem;font-weight:600;font-family:inherit;transition:.2s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
 .table-tab:hover{border-color:var(--gold);color:var(--gold)}
 .table-tab.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:800}
 .table-panel{display:none;animation:fadeSlideIn .2s ease}
@@ -198,7 +198,7 @@ tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
     .tabs { gap: 6px; }
     .tab-btn { padding: 9px 12px; font-size: 0.75rem; flex: 1; text-align: center; }
     
-    /* СКРОЛЛ ДЛЯ 8 ВКЛАДОК (SKILL, Винрейт, ..., Активность) */
+    /* СКРОЛЛ ДЛЯ 8 ВКЛАДОК */
     .table-tabs {
         display: flex;
         flex-wrap: nowrap;
@@ -209,7 +209,7 @@ tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
         padding-bottom: 6px;
     }
     .table-tabs::-webkit-scrollbar { display: none; }
-    .table-tab { flex: 0 0 auto; padding: 8px 12px; font-size: 0.7rem; }
+    .table-tab { flex: 0 0 auto; padding: 6px 10px; font-size: 0.68rem; }
 
     /* 9. Плавающие кнопки */
     .scroll-top { right: 12px; bottom: 82px; width: 40px; height: 40px; font-size: 1rem; }
@@ -221,6 +221,14 @@ tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
     .crown-bar-visual { height: 32px; }
     .crown-light, .crown-dark { font-size: 0.7rem; }
     .crown-icon-center { font-size: 1.2rem; }
+	
+	/* Убираем значки сортировки в таблице Легенд на телефоне */
+    .sortable-header::after {
+        display: none !important;
+    }
+    .sortable-header {
+        padding-right: 4px !important; /* Убираем лишний отступ справа, который был под стрелочки */
+    }
 }
 </style>
 </head>
