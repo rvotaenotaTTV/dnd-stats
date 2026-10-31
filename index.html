@@ -55,6 +55,7 @@
     .tw-history { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; }
     .tw-history-title { font-size: 0.85rem; font-weight: 700; color: var(--gold); margin-bottom: 10px; }
     .tw-history-list { display: flex; flex-direction: column; gap: 6px; max-height: 250px; overflow-y: auto; scrollbar-width: thin; padding-right: 4px; }
+	.hidden { display: none !important; }
     .tw-history-item { display: grid; grid-template-columns: 32px 1fr auto auto auto; gap: 10px; align-items: center; padding: 6px 10px; border-radius: var(--radius-sm); background: var(--elevated); font-size: 0.72rem; border-left: 3px solid var(--border); }
     .tw-history-item.light { border-left-color: var(--gold); }
     .tw-history-item.dark { border-left-color: var(--purple); }
@@ -306,7 +307,7 @@
     <div class="modal-overlay" id="historyModal">
         <div class="modal-content" style="max-width:700px;">
             <div class="modal-header">
-                <div class="modal-title">📜 История захватов</div>
+                <div class="modal-title">📜 Хроника Войны</div>
                 <button class="modal-close" onclick="closeHistoryModal()">✕</button>
             </div>
             <div class="modal-body" id="historyModalBody"></div>
@@ -588,27 +589,28 @@
                 const lightW = totalScore > 0 ? (score.light / totalScore) * 100 : 0;
                 const darkW = totalScore > 0 ? (score.dark / totalScore) * 100 : 0;
 
-                html += `<div class="tw-active-card">
-                    <div class="tw-active-header">
-                        <div class="tw-active-name">Текущая битва: <span>${active.name}</span></div>
-                    </div>
-                    <div class="tw-labels">
-                        <span class="light">${icoBig.light} Орден Света ${score.light} / ${MAX_PTS}</span>
-                        <span class="dark">${score.dark} / ${MAX_PTS} Культ Тьмы ${icoBig.dark}</span>
-                    </div>
+				html += `<div class="tw-active-card">
+					<div class="tw-active-header">
+						<div class="tw-active-name">Текущая битва: <span>${active.name}</span></div>
+					</div>
+					<div class="tw-labels">
+						<span class="light">${icoBig.light} Орден Света ${score.light} / ${MAX_PTS}</span>
+						<span class="dark">${score.dark} / ${MAX_PTS} Культ Тьмы ${icoBig.dark}</span>
+					</div>
 					<div class="tw-bar" style="position: relative;">
-						<div class="tw-bar-light" style="width:${lightW}%; display: inline-block; height: 100%; float: left;"></div>
-						<div class="tw-bar-dark" style="width:${darkW}%; display: inline-block; height: 100%; float: left;"></div>
-						
-						<!-- Текст поверх полоски -->
-						<span style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; text-shadow: 0 1px 3px #000, 0 0 5px #000; font-size: 0.85rem; pointer-events: none; z-index: 10;">
+						<div class="tw-bar-light" style="width:${lightW}%; height:100%; box-sizing:border-box;"></div>
+						<div class="tw-bar-dark" style="width:${darkW}%; height:100%; box-sizing:border-box;"></div>
+
+						<!-- Текст поверх полоски с темной подложкой (чтобы не сливался с цветами) -->
+						<span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg); padding: 2px 10px; border-radius: 12px; color: #fff; font-weight: 900; font-size: 0.8rem; pointer-events: none; z-index: 10; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.5);">
 							${score.light} : ${score.dark}
 						</span>
 					</div>
-                    <div class="tw-actions">
-                        <button class="tw-btn hide-mobile" onclick="openMapModal()">🗺️ Карта</button>
-                    </div>
-                </div>`;
+					<div class="tw-actions">
+						<button class="tw-btn hide-mobile" onclick="openMapModal()">🗺️ Карта</button>
+						<button class="tw-btn" onclick="openHistoryModal()">📜 Хроника</button>
+					</div>
+				</div>`;
             } else {
                 const winnerCls = lightPts > darkPts ? 'light' : darkPts > lightPts ? 'dark' : 'draw';
                 const winnerText = lightPts > darkPts
@@ -630,10 +632,12 @@
 
             if (captured.length > 0) {
                 html += `<div class="tw-history">
-                    <div class="tw-history-title">
-                        📜 История захватов
+                    <div class="tw-history-title" style="cursor: pointer; display: flex; justify-content: space-between;" onclick="document.querySelector('.tw-history-list').classList.toggle('hidden')">
+                        <span>📜 История захватов</span>
+                        <span style="color: var(--muted); font-size: 0.8rem;">Показать/Скрыть ▼</span>
                     </div>
-                    <div class="tw-history-list">`;
+                    <div class="tw-history-list hidden">`;
+                
                 captured.forEach((c, i) => {
                     const ownerIco = c.owner === 'light' ? icoHist.light : icoHist.dark;
                     const ownerName = c.owner === 'light' ? 'Свет' : 'Тьма';
@@ -1221,27 +1225,130 @@
             if (t) t.classList.remove('visible');
         };
         window.openHistoryModal = function(){
-            const captured = (globalData.territoryWar && globalData.territoryWar.captured) ? globalData.territoryWar.captured : [];
-            const icoHist = factionPng(14);
+            const tw = (globalData && globalData.territoryWar) ? globalData.territoryWar : {};
+            const captured = tw.captured || [];
+            const activeIdx = tw.activeIndex || 0;
+            const score = tw.activeScore || { light: 0, dark: 0 };
+            const ico = factionPng(16);
+            const icoBig = factionPng(22);
+
+            // --- Аналитика ---
+            const lightCaptured = captured.filter(c => c.owner === 'light');
+            const darkCaptured = captured.filter(c => c.owner === 'dark');
+            const parsedScores = captured
+                .map(c => {
+                    if (!c.score) return null;
+                    const parts = c.score.split(':').map(x => parseInt(x.trim(), 10));
+                    if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) return null;
+                    return { light: parts[0], dark: parts[1], diff: Math.abs(parts[0] - parts[1]), total: parts[0] + parts[1] };
+                })
+                .filter(Boolean);
+
+            const avgLight = parsedScores.length ? Math.round(parsedScores.reduce((s, x) => s + x.light, 0) / parsedScores.length) : 0;
+            const avgDark  = parsedScores.length ? Math.round(parsedScores.reduce((s, x) => s + x.dark, 0) / parsedScores.length) : 0;
+
+            const mostTense = parsedScores.length
+                ? captured[parsedScores.reduce((bestIdx, x, i) => x.diff < parsedScores[bestIdx].diff ? i : bestIdx, 0)]
+                : null;
+            const mostDominant = parsedScores.length
+                ? captured[parsedScores.reduce((bestIdx, x, i) => x.diff > parsedScores[bestIdx].diff ? i : bestIdx, 0)]
+                : null;
+
+            // --- HTML ---
             let html = '';
-            if (captured.length) {
-                html += '<div class="history-list">';
-                captured.forEach((c, i) => {
-                    const oIco = c.owner === 'light' ? icoHist.light : icoHist.dark;
-                    const oName = c.owner === 'light' ? 'Свет' : 'Тьма';
-                    const cls = c.owner === 'light' ? 'light' : 'dark';
-                    html += `<div class="history-item ${cls}">
-                        <span class="hist-num">#${i+1}</span>
-                        <span>${c.name}</span>
-                        <span class="hist-owner">${oIco}${oName}</span>
-                        <span class="hist-score">${c.score}</span>
-                        <span class="hist-points">+${c.points}</span>
+
+            // Блок аналитики
+            html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px;">
+                <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;border-left:3px solid var(--gold);">
+                    <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Захвачено Светом</div>
+                    <div style="font-size:1.4rem;font-weight:800;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:6px;">${lightCaptured.length} ${ico.light}</div>
+                </div>
+                <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;border-left:3px solid var(--purple);">
+                    <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Захвачено Тьмой</div>
+                    <div style="font-size:1.4rem;font-weight:800;color:var(--purple);display:flex;align-items:center;justify-content:center;gap:6px;">${darkCaptured.length} ${ico.dark}</div>
+                </div>
+                <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+                    <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Средний счёт</div>
+                    <div style="font-size:1.1rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;">
+                        <span style="color:var(--gold);">${avgLight}</span>
+                        <span style="color:var(--muted);font-size:0.8rem;">:</span>
+                        <span style="color:var(--purple);">${avgDark}</span>
+                    </div>
+                </div>
+            </div>`;
+
+            // Переломные битвы
+            if (mostTense || mostDominant) {
+                html += `<div style="margin-bottom:18px;">
+                    <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">⚡ Переломные битвы</div>`;
+                if (mostTense) {
+                    html += `<div class="history-item" style="border-left-color:var(--red);margin-bottom:6px;">
+                        <span class="hist-num">🔥</span>
+                        <span style="font-weight:700;">${mostTense.name}</span>
+                        <span class="hist-owner" style="font-size:0.72rem;">Самая упорная</span>
+                        <span class="hist-score">${mostTense.score}</span>
+                        <span class="hist-points">+${mostTense.points}</span>
                     </div>`;
-                });
-                html += '</div>';
-            } else {
-                html = '<div style="text-align:center;color:var(--muted);padding:20px;">Пока никто ничего не захватил.</div>';
+                }
+                if (mostDominant) {
+                    html += `<div class="history-item" style="border-left-color:var(--gold);">
+                        <span class="hist-num">💥</span>
+                        <span style="font-weight:700;">${mostDominant.name}</span>
+                        <span class="hist-owner" style="font-size:0.72rem;">Самая быстрая</span>
+                        <span class="hist-score">${mostDominant.score}</span>
+                        <span class="hist-points">+${mostDominant.points}</span>
+                    </div>`;
+                }
+                html += `</div>`;
             }
+
+            // Все территории
+            const ownerById = {};
+            captured.forEach(c => { if (c.id) ownerById[c.id] = c; });
+
+            html += `<div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">🗺️ Все земли</div>`;
+            html += `<div class="history-list">`;
+
+            TERRITORIES.forEach((t, i) => {
+                const cap = ownerById[t.id];
+                const isActive = i === activeIdx && activeIdx < TERRITORIES.length;
+                const isFuture = i > activeIdx || activeIdx >= TERRITORIES.length;
+
+                let ownerCell = '';
+                let cls = '';
+
+                if (cap) {
+                    const oIco = cap.owner === 'light' ? ico.light : ico.dark;
+                    const oName = cap.owner === 'light' ? 'Свет' : 'Тьма';
+                    cls = cap.owner === 'light' ? 'light' : 'dark';
+                    ownerCell = `${oIco}${oName}`;
+                } else if (isActive) {
+                    ownerCell = `<span style="color:var(--gold);">⏳ Идёт</span>`;
+                    cls = 'light';
+                } else if (isFuture) {
+                    ownerCell = `<span style="color:var(--muted);">⌛ В ожидании</span>`;
+                    cls = '';
+                }
+
+                const scoreCell = cap && cap.score
+                    ? `<span class="hist-score">${cap.score.replace(':', ' : ')}</span>`
+                    : (isActive ? `<span class="hist-score" style="color:var(--gold);">${score.light} : ${score.dark}</span>` : '');
+
+                const pointsCell = cap
+                    ? `<span class="hist-points">+${cap.points}</span>`
+                    : `<span class="hist-points" style="color:var(--muted);">+${t.points}</span>`;
+
+                html += `<div class="history-item ${cls}" style="opacity:${isFuture && !isActive ? 0.55 : 1};">
+                    <span class="hist-num">#${i + 1}</span>
+                    <span style="font-weight:${isActive ? '700' : '500'};color:${isActive ? 'var(--gold)' : 'var(--text)'};">${t.name}</span>
+                    <span class="hist-owner" style="text-transform:none;font-weight:600;">${ownerCell}</span>
+                    ${scoreCell}
+                    ${pointsCell}
+                </div>`;
+            });
+
+            html += `</div>`;
+
             document.getElementById('historyModalBody').innerHTML = html;
             document.getElementById('historyModal').classList.add('visible');
         };
