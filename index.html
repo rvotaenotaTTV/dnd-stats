@@ -590,8 +590,9 @@
                 const darkW = totalScore > 0 ? (score.dark / totalScore) * 100 : 0;
 
 				html += `<div class="tw-active-card">
-					<div class="tw-active-header">
-						<div class="tw-active-name">Текущая битва: <span>${active.name}</span></div>
+					<div class="tw-active-header" style="flex-direction: column; gap: 4px; margin-bottom: 20px;">
+						<div style="font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 4px; font-weight: 600;">Текущая битва</div>
+						<div style="font-size: 1.2rem; font-weight: 900; color: var(--text); text-shadow: 0 2px 10px rgba(0,0,0,0.5);">${active.name}</div>
 					</div>
 					<div class="tw-labels">
 						<span class="light">${icoBig.light} Орден Света ${score.light} / ${MAX_PTS}</span>
@@ -700,41 +701,51 @@
             html+='<button class="tab-btn" onclick="switchTab(\'allplayers\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Игроки</button>';
             html+='</div>';
 
-            // ТОПЫ
-            html+='<div id="tab-tops" class="tab-content active"><div class="tables-grid">';
-            
-            const topWins=[...players].sort((a,b)=>b.wins-a.wins).slice(0,15);
-            html+='<div class="card"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg> Топ-15 по победам</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Победы</th></tr>';
-            topWins.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td>${p.name}</td><td class="number">${p.wins}</td></tr>`);
-            html+='</table></div></div>';
-            
-            const topWinrate=players.filter(p=>p.wins+p.losses>=30).map(p=>({...p,wr:p.wins*100/(p.wins+p.losses)})).sort((a,b)=>b.wr-a.wr).slice(0,15);
-            html+='<div class="card"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> Топ-15 по винрейту</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>W/L</th><th>Винрейт</th></tr>';
-            topWinrate.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.wins}-${p.losses}</td><td class="number">${p.wr.toFixed(1)}%</td></tr>`);
-            html+='</table></div></div>';
-            
-            const topFights=[...players].sort((a,b)=>(b.wins+b.losses)-(a.wins+a.losses)).slice(0,15);
-            html+='<div class="card"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Топ-15 по боям</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Боёв</th><th>W/L</th></tr>';
-            topFights.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.wins+p.losses}</td><td class="number">${p.wins}-${p.losses}</td></tr>`);
-            html+='</table></div></div>';
-            
-            const topStreak=[...players].sort((a,b)=>b.best-a.best).slice(0,15);
-            html+='<div class="card"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg> Топ-15 по стрику</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Стрик</th></tr>';
-            topStreak.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.best}</td></tr>`);
-            html+='</table></div></div>';
-            
-            html+='</div>';
-            html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px">';
-            const topLightFaction = [...players].filter(p => p.faction === 'Орден Света').sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0)).slice(0, 15);
-            html += `<div class="card"><div class="card-title">${factionImg('Орден Света', 20)} Топ-15 Света</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Побед</th></tr>`;
-            topLightFaction.forEach((p, i) => { html += `<tr><td>${i + 1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.factionWins || 0}</td></tr>`; });
-            html += '</table></div></div>';
-            const topDarkFaction = [...players].filter(p => p.faction === 'Культ Тьмы').sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0)).slice(0, 15);
-            html += `<div class="card"><div class="card-title">${factionImg('Культ Тьмы', 20)} Топ-15 Тьмы</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Побед</th></tr>`;
-            topDarkFaction.forEach((p, i) => { html += `<tr><td>${i + 1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.factionWins || 0}</td></tr>`; });
-            html += '</table></div></div>';
-            html+='</div>';
-            html+='</div>';
+			// ТОПЫ
+			html+='<div id="tab-tops" class="tab-content active"><div class="tables-grid">';
+
+			const topWins=[...players].sort((a,b)=>b.wins-a.wins).slice(0,15);
+			html+='<div class="card"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg> Топ-15 по победам</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Победы</th></tr>';
+			topWins.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td>${p.name}</td><td class="number">${p.wins}</td></tr>`);
+			html+='</table></div></div>';
+
+			const topWinrate=players.filter(p=>p.wins+p.losses>=30).map(p=>({...p,wr:p.wins*100/(p.wins+p.losses)})).sort((a,b)=>b.wr-a.wr).slice(0,15);
+			html+='<div class="card"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> Топ-15 по винрейту</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>W/L</th><th>Винрейт</th></tr>';
+			topWinrate.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.wins}-${p.losses}</td><td class="number">${p.wr.toFixed(1)}%</td></tr>`);
+			html+='</table></div></div>';
+
+			const topFights=[...players].sort((a,b)=>(b.wins+b.losses)-(a.wins+a.losses)).slice(0,15);
+			html+='<div class="card"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Топ-15 по боям</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Боёв</th><th>W/L</th></tr>';
+			topFights.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.wins+p.losses}</td><td class="number">${p.wins}-${p.losses}</td></tr>`);
+			html+='</table></div></div>';
+
+			const topStreak=[...players].sort((a,b)=>b.best-a.best).slice(0,15);
+			html+='<div class="card"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg> Топ-15 по стрику</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Стрик</th></tr>';
+			topStreak.forEach((p,i)=>html+=`<tr><td>${i+1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.best}</td></tr>`);
+			html+='</table></div></div>';
+
+			html+='</div>';
+			html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px">';
+
+			const svgLight = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:8px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+			const svgDark = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:8px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+			const topLightFaction = [...players].filter(p => p.faction === 'Орден Света').sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0)).slice(0, 15);
+			html += `<div class="card"><div class="card-title" style="display:flex; align-items:center;">${svgLight} Топ-15 Света</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Побед</th></tr>`;
+			topLightFaction.forEach((p, i) => { 
+				html += `<tr><td>${i + 1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.factionWins || 0}</td></tr>`; 
+			});
+			html += '</table></div></div>';
+
+			const topDarkFaction = [...players].filter(p => p.faction === 'Культ Тьмы').sort((a, b) => (b.factionWins || 0) - (a.factionWins || 0)).slice(0, 15);
+			html += `<div class="card"><div class="card-title" style="display:flex; align-items:center;">${svgDark} Топ-15 Тьмы</div><div class="table-container"><table><tr><th>#</th><th>Игрок</th><th>Побед</th></tr>`;
+			topDarkFaction.forEach((p, i) => { 
+				html += `<tr><td>${i + 1}</td><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.factionWins || 0}</td></tr>`; 
+			});
+			html += '</table></div></div>';
+
+			html+='</div>';
+			html+='</div>';
 
             // === КЛАССЫ ===
             html+='<div id="tab-classes" class="tab-content">';
@@ -1269,7 +1280,6 @@
                 ? captured[parsedScores.reduce((bestIdx, x, i) => x.diff > parsedScores[bestIdx].diff ? i : bestIdx, 0)]
                 : null;
 
-            // --- HTML ---
             let html = '';
 
             // Блок аналитики
