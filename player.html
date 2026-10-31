@@ -999,6 +999,7 @@ function analyzeDungeon(nickname, seasons) {
         bySeason.push({
             season: s.num, isCurrent: s.isCurrent,
             record: rec, waves, bosses, trophies, damage, runs, familiar,
+            hasRuns: runs > 0,
             crits: dp.crits || 0, misses: dp.misses || 0,
             blocks: dp.blocks || 0, swings: dp.swings || 0,
             hits: dp.hits || 0, passive: dp.passive || ''
@@ -1013,12 +1014,11 @@ function analyzeDungeon(nickname, seasons) {
         bestDamage: bySeason.reduce((m, h) => h.damage > (m.damage || 0) ? h : m, { damage: 0, season: null })
     };
 
-    const avgWaves = totalRuns > 0 ? Math.round(totalWaves / totalRuns) : 0;
     const favFamiliar = Object.entries(familiarCounts).sort((a, b) => b[1] - a[1])[0] || null;
 
     return {
         totalWaves, maxRecord, totalBosses, totalTrophies, totalDamage,
-        totalRuns, avgWaves,
+        totalRuns,
         favFamiliar: favFamiliar ? { name: favFamiliar[0], count: favFamiliar[1] } : null,
         seasonsWithDungeon, bySeason, records
     };
@@ -2361,44 +2361,38 @@ function renderDungeon(dungeon) {
         return '<div class="oracle-block ice"><div class="oracle-block-title">🏔 Бездна</div><div style="text-align:center;color:var(--muted);font-size:0.85rem;padding:20px 0;">Игрок ещё не спускался в Бездну</div></div>';
     }
 
-    // Считаем корректное среднее за забег (по последнему сезону, где есть totalRuns)
-    const seasonsWithRuns = dungeon.bySeason.filter(h => h.runs > 0);
+    const seasonsWithRuns = dungeon.bySeason.filter(h => h.hasRuns);
     const lastWithRuns = seasonsWithRuns.length > 0 ? seasonsWithRuns[seasonsWithRuns.length - 1] : null;
-    const avgWavesCorrect = lastWithRuns 
-        ? (lastWithRuns.waves / lastWithRuns.runs).toFixed(1) 
-        : (dungeon.totalWaves / (dungeon.totalRuns || 1)).toFixed(1);
+    const avgWavesCorrect = lastWithRuns
+        ? (lastWithRuns.waves / lastWithRuns.runs).toFixed(1)
+        : null;
 
     let html = '<div class="oracle-block ice"><div class="oracle-block-title">🏔 Бездна — итог за всё время</div>';
-    
-    // 8 карточек: 4 в ряд
+
     html += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
         <div class="pace-item"><div class="pace-icon">🌊</div><div class="pace-value">${dungeon.totalWaves}</div><div class="pace-label">Всего волн</div></div>
-        <div class="pace-item"><div class="pace-icon">🏃</div><div class="pace-value">${dungeon.totalRuns}</div><div class="pace-label">Всего забегов</div></div>
+        <div class="pace-item"><div class="pace-icon">🏃</div><div class="pace-value">${dungeon.totalRuns > 0 ? dungeon.totalRuns : '—'}</div><div class="pace-label">Всего забегов</div></div>
         <div class="pace-item"><div class="pace-icon">🏆</div><div class="pace-value">${dungeon.maxRecord}</div><div class="pace-label">Рекорд волн</div></div>
         <div class="pace-item"><div class="pace-icon">🐉</div><div class="pace-value">${dungeon.totalBosses}</div><div class="pace-label">Всего боссов</div></div>
         <div class="pace-item"><div class="pace-icon">👑</div><div class="pace-value">${dungeon.totalTrophies}</div><div class="pace-label">Всего трофеев</div></div>
         <div class="pace-item"><div class="pace-icon">⚔️</div><div class="pace-value">${formatNumber(dungeon.totalDamage)}</div><div class="pace-label">Урона</div></div>
         <div class="pace-item"><div class="pace-icon">📅</div><div class="pace-value">${dungeon.seasonsWithDungeon}</div><div class="pace-label">Сезонов в данже</div></div>
-        <div class="pace-item"><div class="pace-icon">📊</div><div class="pace-value">${avgWavesCorrect}</div><div class="pace-label">Ср. волн за забег</div></div>
+        <div class="pace-item"><div class="pace-icon">📊</div><div class="pace-value">${avgWavesCorrect ?? '—'}</div><div class="pace-label">Ср. волн за забег</div></div>
     </div>`;
 
-    // Плашка любимого фамильяра
     if (dungeon.favFamiliar) {
         const familiarName = dungeon.favFamiliar.name;
         const familiarIcon = familiarName.match(/[\u{1F300}-\u{1FAFF}]/u) ? '' : '🐾 ';
         const count = dungeon.favFamiliar.count;
         const word = count === 1 ? 'раз' : (count < 5 ? 'раза' : 'раз');
-        
         html += `<div style="margin-bottom:16px;padding:14px 18px;background:linear-gradient(90deg,rgba(240,185,11,0.1),rgba(240,185,11,0.02));border-radius:var(--radius-sm);border-left:3px solid var(--gold);display:flex;justify-content:space-between;align-items:center;">
             <div style="color:var(--gold);font-weight:700;font-size:0.85rem;">🐾 Любимый фамильяр</div>
             <div style="font-weight:700;font-size:1rem;">${familiarIcon}${familiarName} <span style="color:var(--muted);font-size:0.75rem;font-weight:400;">· ${count} ${word}</span></div>
         </div>`;
     }
 
-    // Таблица по сезонам
     if (dungeon.bySeason.length > 1) {
         html += `<div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:18px 0 8px;">📜 По сезонам</div>`;
-        
         html += `<div class="table-container"><table class="history-table" style="font-size:0.78rem;">
             <thead><tr>
                 <th>Сезон</th>
@@ -2408,11 +2402,9 @@ function renderDungeon(dungeon) {
                 <th class="num">🐉 Боссы<br><span style="font-size:0.55rem;color:var(--muted);text-transform:none;letter-spacing:0;">всего / ср.</span></th>
                 <th class="num">👑 Трофеи<br><span style="font-size:0.55rem;color:var(--muted);text-transform:none;letter-spacing:0;">всего / ср.</span></th>
             </tr></thead><tbody>`;
-            
+
         dungeon.bySeason.forEach(h => {
             const isMaxRecord = h.record === dungeon.records.bestRecord.record && h.record > 0;
-            
-            // Средние за забег в этом конкретном сезоне
             const runs = h.runs || 1;
             const avgW = (h.waves / runs).toFixed(1);
             const avgB = (h.bosses / runs).toFixed(1);
@@ -2423,32 +2415,30 @@ function renderDungeon(dungeon) {
                 <td class="num" style="color:${isMaxRecord ? 'var(--gold)' : 'var(--text)'};font-weight:${isMaxRecord ? '800' : '600'};">${h.record || '—'}${isMaxRecord ? ' 🔥' : ''}</td>
                 <td class="num">
                     <div style="color:var(--text);">${h.waves || '—'}</div>
-                    ${h.runs ? `<div style="font-size:0.65rem;color:var(--muted);">ср. ${avgW}</div>` : ''}
+                    ${h.hasRuns ? `<div style="font-size:0.65rem;color:var(--muted);">ср. ${avgW}</div>` : ''}
                 </td>
-                <td class="num">${h.runs || '—'}</td>
+                <td class="num">${h.hasRuns ? h.runs : '—'}</td>
                 <td class="num">
                     <div style="color:var(--text);">${h.bosses || '—'}</div>
-                    ${h.runs ? `<div style="font-size:0.65rem;color:var(--muted);">ср. ${avgB}</div>` : ''}
+                    ${h.hasRuns ? `<div style="font-size:0.65rem;color:var(--muted);">ср. ${avgB}</div>` : ''}
                 </td>
                 <td class="num">
                     <div style="color:var(--text);">${h.trophies || '—'}</div>
-                    ${h.runs ? `<div style="font-size:0.65rem;color:var(--muted);">ср. ${avgT}</div>` : ''}
+                    ${h.hasRuns ? `<div style="font-size:0.65rem;color:var(--muted);">ср. ${avgT}</div>` : ''}
                 </td>
             </tr>`;
         });
 
-        // Итоговая строка ВСЕГО (без средних)
         html += `<tr style="background:linear-gradient(90deg,rgba(163,113,247,0.12),rgba(163,113,247,0.04));font-weight:800;">
             <td class="season-num" style="color:var(--gold);">ВСЕГО</td>
             <td class="num" style="color:var(--gold);">${dungeon.maxRecord} 🔥</td>
             <td class="num" style="color:var(--text);">${dungeon.totalWaves}</td>
-            <td class="num" style="color:var(--text);">${dungeon.totalRuns}</td>
+            <td class="num" style="color:var(--text);">${dungeon.totalRuns > 0 ? dungeon.totalRuns : '—'}</td>
             <td class="num" style="color:var(--text);">${dungeon.totalBosses}</td>
             <td class="num" style="color:var(--text);">${dungeon.totalTrophies}</td>
         </tr></tbody></table></div>`;
     }
 
-    // Личные рекорды
     const r = dungeon.records;
     if (r.bestRecord.season !== null) {
         html += `<div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:18px 0 8px;">🏅 Личные рекорды</div>`;
@@ -2463,7 +2453,6 @@ function renderDungeon(dungeon) {
             html += `<div class="archive-hero" style="margin-bottom:6px;"><div class="hero-info"><span>${rec.icon}</span> ${rec.label}</div><div><strong style="color:${rec.color};">${rec.value}</strong> <span style="color:var(--muted);font-size:0.72rem;">S${rec.season}</span></div></div>`;
         });
     }
-    
     html += '</div>';
     return html;
 }
