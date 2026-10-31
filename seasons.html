@@ -181,24 +181,35 @@ tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
     .table-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
     
     /* Жестко сжимаем таблицу Легенд */
-    #total-table { width: 100% !important; min-width: 100% !important; font-size: 0.7rem; }
-    #total-table thead th { position: static; font-size: 0.6rem; padding: 8px 4px; white-space: normal; }
-    #total-table tbody td { padding: 8px 4px; font-size: 0.7rem; white-space: normal; }
+    #total-table { width: 100% !important; min-width: 100% !important; font-size: 0.7rem; table-layout: fixed; }
+    #total-table thead th { position: static; font-size: 0.6rem; padding: 6px 4px; white-space: normal; word-break: break-word; }
+    #total-table tbody td { padding: 6px 4px; font-size: 0.7rem; white-space: normal; word-break: break-word; }
     
     /* Фикс для таблиц внутри сезонов (SKILL, Винрейт и т.д.) */
     .table-panel table { width: 100% !important; min-width: 100% !important; table-layout: fixed; }
-    .table-panel th, .table-panel td { padding: 8px 4px !important; font-size: 0.7rem !important; white-space: normal !important; word-break: break-word; }
+    .table-panel th, .table-panel td { padding: 6px 4px !important; font-size: 0.7rem !important; white-space: normal !important; word-break: break-word; }
     .table-panel th:first-child, .table-panel td:first-child { width: 30px !important; }
     
     /* Общие правила для остальных таблиц */
     table { font-size: 0.72rem; }
     th, td { padding: 6px 8px; white-space: nowrap; }
 
-    /* 8. Вкладки */
+    /* 8. Вкладки (ТАБЫ) */
     .tabs { gap: 6px; }
     .tab-btn { padding: 9px 12px; font-size: 0.75rem; flex: 1; text-align: center; }
-    .table-tabs { gap: 4px; }
-    .table-tab { padding: 6px 10px; font-size: 0.68rem; }
+    
+    /* СКРОЛЛ ДЛЯ 8 ВКЛАДОК (SKILL, Винрейт, ..., Активность) */
+    .table-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 6px;
+        padding-bottom: 6px;
+    }
+    .table-tabs::-webkit-scrollbar { display: none; }
+    .table-tab { flex: 0 0 auto; padding: 8px 12px; font-size: 0.7rem; }
 
     /* 9. Плавающие кнопки */
     .scroll-top { right: 12px; bottom: 82px; width: 40px; height: 40px; font-size: 1rem; }
@@ -587,7 +598,15 @@ function renderSeason(data, seasonNum, isCurrent) {
     const maxSkill = seasonTop.length > 0 ? seasonTop[0].skill || '—' : '—';
     const maxDungeonRecord = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.record > m ? d.record : m; }, 0);
     const maxDungeonTrophies = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.trophies > m ? d.trophies : m; }, 0);
-    const topDungeon = players.map(p => { const d = dungeonPlayers[p.display]; return { ...p, record: d?.record || 0, trophies: d?.trophies || 0 }; }).filter(p => p.record > 0).sort((a, b) => b.record - a.record || b.trophies - a.trophies);
+    
+	const topDungeon = players.map(p => { 
+		const d = dungeonPlayers[p.display]; 
+		return { ...p, record: d?.record || 0, trophies: d?.trophies || 0, damage: d?.damage || 0 }; 
+	}).filter(p => p.record > 0).sort((a, b) => {
+		if (b.record !== a.record) return b.record - a.record;
+		if (b.damage !== a.damage) return b.damage - a.damage;
+		return b.trophies - a.trophies;
+	});
     
     const totalTerritory = (territory.light || 0) + (territory.dark || 0);
     const lightPct = totalTerritory > 0 ? (territory.light / totalTerritory) * 100 : 50;
@@ -673,8 +692,12 @@ function renderSeason(data, seasonNum, isCurrent) {
     const shardRows = topShards.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.shards || 0}</td></tr>`).join('');
     const topStreaks = [...allPlayers].sort((a, b) => (b.best || 0) - (a.best || 0)).slice(0, 5);
     const streakRows = topStreaks.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.best || 0}</td></tr>`).join('');
+    
+    const topLoseStreaks = [...allPlayers].sort((a, b) => (b.worst || 0) - (a.worst || 0)).slice(0, 5);
+    const loseStreakRows = topLoseStreaks.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.worst || 0}</td></tr>`).join('');
+
     const wrRows = topWR.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${((p.wins || 0) * 100 / ((p.wins || 0) + (p.losses || 0) || 1)).toFixed(1)}%</td><td class="num">${p.wins || 0}-${p.losses || 0}</td></tr>`).join('');
-    const dungeonRecordRows = topDungeon.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.record || 0}</td></tr>`).join('');
+    const dungeonRecordRows = topDungeon.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.record || 0}</td><td class="num">${p.damage.toLocaleString()}</td></tr>`).join('');
     const dungeonBossRows = [...topDungeon].sort((a, b) => (b.trophies || 0) - (a.trophies || 0)).slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.trophies || 0}</td></tr>`).join('');
 
     html += '<div class="section-subtitle">📊 Таблицы лидеров</div>';
@@ -684,6 +707,7 @@ function renderSeason(data, seasonNum, isCurrent) {
     html += tabBtn('wr', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>', 'Винрейт', false);
     html += tabBtn('shards', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/></svg>', 'Осколки', false);
     html += tabBtn('streaks', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>', 'Стрики', false);
+    html += tabBtn('loseStreaks', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>', 'Лузстрики', false);
     html += tabBtn('dungeonRecord', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>', 'Данж-волны', false);
     html += tabBtn('dungBoss', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>', 'Данж-боссы', false);
     html += tabBtn('active', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', 'Активность', false);
@@ -703,7 +727,8 @@ function renderSeason(data, seasonNum, isCurrent) {
     html += makePanel('wr', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">WR</th><th class="num">W/L</th>', wrRows);
     html += makePanel('shards', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Осколков</th>', shardRows);
     html += makePanel('streaks', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Стрик</th>', streakRows);
-    html += makePanel('dungeonRecord', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Волн</th>', dungeonRecordRows);
+    html += makePanel('loseStreaks', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Поражений подряд</th>', loseStreakRows);
+    html += makePanel('dungeonRecord', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Волн</th><th class="num">Урон</th>', dungeonRecordRows);
     html += makePanel('dungBoss', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Трофеев</th>', dungeonBossRows);
     html += makePanel('active', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Боёв</th>', activeRows);
 
