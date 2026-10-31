@@ -6,18 +6,57 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Арена Этерниса — Сезоны</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Арена Этерниса">
-<meta property="og:title" content="Арена Этерниса — Сезоны">
-<meta property="og:description" content="История сезонов и легенды Арены.">
-<meta property="og:url" content="https://rvotaenotaTTV.github.io/dnd-stats/seasons.html">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Арена Этерниса — Сезоны">
-<meta name="twitter:description" content="История сезонов и легенды Арены.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Арена Этерниса">
+    <meta property="og:title" content="Арена Этерниса — Сезоны">
+    <meta property="og:description" content="История сезонов и легенды Арены.">
+    <meta property="og:url" content="https://rvotaenotaTTV.github.io/dnd-stats/seasons.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Арена Этерниса — Сезоны">
+    <meta name="twitter:description" content="История сезонов и легенды Арены.">
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
+/* ===== СЕЗОННАЯ КАРУСЕЛЬ ===== */
+.season-carousel-wrap{position:relative;margin:0 0 24px;padding:0 44px}
+.season-carousel{--card-width:90px;display:flex;align-items:center;gap:12px;overflow-x:auto;overflow-y:hidden;padding:18px calc((100% - var(--card-width))/2);scrollbar-width:none;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.season-carousel::-webkit-scrollbar{display:none}
+.season-card{appearance:none;font:inherit;padding:0;position:relative;flex:0 0 var(--card-width);width:var(--card-width);height:100px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);border-radius:16px;color:var(--text);cursor:pointer;user-select:none;scroll-snap-align:center;opacity:.55;transform:scale(.88);transition:opacity .25s,transform .25s,border-color .25s,box-shadow .25s}
+.season-card:hover{opacity:.85;transform:scale(.95);border-color:var(--purple)}
+.season-card.active{opacity:1;transform:scale(1.08);border-color:var(--gold);background:linear-gradient(160deg,var(--card),rgba(240,185,11,.08));box-shadow:0 0 22px rgba(240,185,11,.2);z-index:2}
+.season-card.is-live{border-color:var(--gold)}
+.season-card .sc-icon{font-size:2rem;margin-bottom:5px;filter:grayscale(.4)}
+.season-card.active .sc-icon{filter:none}
+.season-card .sc-num{font-size:1.2rem;font-weight:900;color:var(--muted)}
+.season-card.active .sc-num,.season-card.is-live .sc-num{color:var(--gold)}
+.season-card .sc-badge{position:absolute;top:5px;right:5px;padding:2px 5px;border-radius:8px;font-size:.5rem;font-weight:800;letter-spacing:.4px;background:var(--gold);color:#000}
+.season-card .sc-badge.ended{background:var(--elevated);color:var(--muted);border:1px solid var(--border)}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);border-radius:50%;color:var(--gold);font-size:1.5rem;line-height:1;cursor:pointer;z-index:5;transition:background .2s,color .2s,transform .2s}
+.carousel-btn:hover{background:var(--gold);color:#000;transform:translateY(-50%) scale(1.08)}
+.carousel-btn.prev{left:0}
+.carousel-btn.next{right:0}
+
+/* ===== ТАБЫ И ТАБЛИЦЫ ===== */
+.table-tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap;justify-content:center}
+.table-tab{padding:7px 14px;border:1px solid var(--border);background:var(--elevated);color:var(--sub);border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:600;font-family:inherit;transition:.2s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.table-tab:hover{border-color:var(--gold);color:var(--gold)}
+.table-tab.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:800}
+.table-panel{display:none;animation:fadeSlideIn .2s ease}
+.table-panel.active{display:block}
+.table-panel table{width:100%;border-collapse:collapse;transform:translateZ(0);-webkit-transform:translateZ(0)}
+.table-panel th{text-align:left;padding:10px 8px;color:var(--muted);font-size:.75rem;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.table-panel th:first-child{ text-align:center;width:40px}
+.table-panel th.num{text-align:right}
+.table-panel td{padding:10px 8px;border-bottom:1px solid rgba(163,113,247,.08);font-size:.85rem;white-space:nowrap;vertical-align:middle!important}
+.table-panel td:first-child{text-align:center;color:var(--muted);font-weight:bold}
+.table-panel td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.table-panel tr:hover{background:rgba(163,113,247,.04)}
+.table-panel img,.player-cell img{image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.player-cell{display:flex;align-items:center;gap:6px;height:100%}
+.player-cell img{width:24px!important;height:24px!important;object-fit:contain;flex-shrink:0;display:inline-block}
+
+/* ===== СЕЗОННЫЕ БЛОКИ ===== */
 .season-frame{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;margin-bottom:20px;position:relative;overflow:hidden;animation:fadeSlideIn .4s ease}
 .season-frame::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:.6;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .season-frame.live{border-color:rgba(240,185,11,.4)}
@@ -26,20 +65,22 @@
 .season-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
 .season-badge.ended{background:var(--elevated);color:var(--muted)}
 .season-badge.live{background:var(--gold);color:#000;animation:softGlow 2s ease infinite}
-@keyframes softGlow{0%,100%{box-shadow:0 0 8px rgba(240,185,11,.3)}50%{box-shadow:0 0 16px rgba(240,185,11,.6)}}
 .season-quote{background:var(--elevated);border-left:3px solid var(--gold);padding:10px 16px;margin:12px 0 20px;color:var(--sub);font-size:.85rem;font-style:italic;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
 .section-subtitle{display:flex;align-items:center;gap:8px;color:var(--gold);font-size:.85rem;font-weight:700;margin:22px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:2px}
 .section-subtitle::before{content:'';display:inline-block;width:4px;height:16px;background:var(--gold);border-radius:2px}
+
+/* ===== СТАТИСТИКА И ЧЕМПИОНЫ ===== */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .stat-card{background:var(--elevated);border-radius:var(--radius-sm);padding:16px 12px;text-align:center;border:1px solid var(--border);transition:transform .2s,box-shadow .2s}
 .stat-card:hover{transform:translateY(-2px)}
 .stat-value{font-size:1.5rem;font-weight:800;color:var(--gold);margin-bottom:2px}
-.stat-label{color:var(--muted);font-size:0.65rem;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+.stat-label{color:var(--muted);font-size:.65rem;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
 .stat-sub{color:var(--sub);font-size:.65rem;margin-top:2px}
 .crown-section{margin-bottom:20px}
 .crown-bar-visual{display:flex;height:40px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);margin-bottom:8px;position:relative}
-.crown-light{background:linear-gradient(90deg,rgba(240,185,11,.7),rgba(240,185,11,.4));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#000;transition:flex .5s ease;min-width:40px}
-.crown-dark{background:linear-gradient(90deg,rgba(163,113,247,.4),rgba(163,113,247,.7));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;transition:flex .5s ease;min-width:40px}
+.crown-light,.crown-dark{display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;min-width:40px}
+.crown-light{background:linear-gradient(90deg,rgba(240,185,11,.7),rgba(240,185,11,.4));color:#000;transition:flex .5s ease}
+.crown-dark{background:linear-gradient(90deg,rgba(163,113,247,.4),rgba(163,113,247,.7));color:#fff;transition:flex .5s ease}
 .crown-icon-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;z-index:3;filter:drop-shadow(0 0 6px rgba(240,185,11,.8));transition:left .5s ease}
 .crown-owner{text-align:center;font-size:.8rem;color:var(--sub);font-weight:600}
 .champion-section{background:var(--elevated);border:1px solid rgba(240,185,11,.2);border-radius:var(--radius-sm);padding:20px;margin-bottom:20px;animation:fadeSlideIn .4s ease}
@@ -55,112 +96,93 @@
 .champ-name{color:var(--gold);font-weight:700;font-size:.85rem;word-break:break-word;margin-bottom:4px}
 .champ-crowns{display:flex;justify-content:center;align-items:center;gap:1px;font-size:.85rem;flex-wrap:wrap;max-width:100%}
 .champ-wins-text{color:var(--muted);font-size:.65rem;margin-top:2px}
-.tables-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.table-card{background:var(--elevated);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);animation:fadeSlideIn .3s ease}
-.table-card.full-width{grid-column:span 2}
-.table-card h3{color:var(--gold);font-size:.85rem;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.table-card h3 .table-icon{font-size:1rem}
 tr.row-gold td:first-child{border-left:3px solid var(--gold)}
 tr.row-silver td:first-child{border-left:3px solid var(--silver)}
 tr.row-bronze td:first-child{border-left:3px solid var(--bronze)}
-.timeline-nav{display:flex;justify-content:center;gap:0;margin-bottom:30px;padding:0 20px;position:relative;overflow-x:auto}
-.timeline-nav::before{content:'';position:absolute;top:50%;left:5%;right:5%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--purple),var(--ice),transparent);z-index:0}
-.tl-item{position:relative;z-index:1;padding:8px 16px;cursor:pointer;text-align:center;transition:.3s;flex-shrink:0;min-width:60px}
-.tl-item .tl-dot{width:38px;height:38px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;transition:.3s;background:var(--elevated);border:2px solid var(--border);color:var(--muted)}
-.tl-item.active .tl-dot{background:var(--gold);border-color:var(--gold);color:#000;box-shadow:0 0 20px rgba(240,185,11,.4);transform:scale(1.15)}
-.tl-item.passed .tl-dot{border-color:var(--gold);color:var(--gold);background:rgba(240,185,11,.08)}
-.tl-item .tl-label{font-size:.55rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;white-space:nowrap}
-.tl-item.active .tl-label{color:var(--gold);font-weight:700}
+
+/* ===== ВКЛАДКИ ===== */
 .tabs{display:flex;gap:14px;margin:20px 0;padding:4px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);justify-content:center}
-.tab-btn{padding:10px 16px;border:none;background:transparent;color:var(--sub);border-radius:14px;cursor:pointer;font-weight:600;font-size:0.75rem;font-family:inherit;transition:0.2s;white-space:nowrap}
+.tab-btn{padding:10px 16px;border:none;background:transparent;color:var(--sub);border-radius:14px;cursor:pointer;font-weight:600;font-size:.75rem;font-family:inherit;transition:.2s;white-space:nowrap}
 .tab-btn:hover{background:var(--elevated);color:var(--text)}
 .tab-btn.active{background:linear-gradient(135deg,var(--ice),var(--gold));color:#000;font-weight:700}
 .tab-content{display:none;animation:fadeSlideIn .3s ease}
 .tab-content.active{display:block}
 .sortable-header{cursor:pointer;user-select:none;position:relative;padding-right:18px;transition:color .2s}
 .sortable-header:hover{color:var(--gold)}
-.sortable-header::after{content:' ↕';position:absolute;right:4px;opacity:0.4;font-size:0.7rem}
+.sortable-header::after{content:' ↕';position:absolute;right:4px;opacity:.4;font-size:.7rem}
 .sortable-header.asc::after{content:' ↑';opacity:1;color:var(--gold)}
 .sortable-header.desc::after{content:' ↓';opacity:1;color:var(--gold)}
+
+/* ===== ПОИСК И ОБЩАЯ ТАБЛИЦА ===== */
 .search-row{display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
 .search-input{padding:10px 16px;background:var(--elevated);border:1px solid var(--border);border-radius:20px;color:var(--text);font-size:.85rem;font-family:inherit;transition:.2s;width:100%;max-width:340px}
-.search-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,185,11,0.1)}
+.search-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,185,11,.1)}
 .search-input::placeholder{color:var(--muted)}
 .search-clear{background:var(--elevated);border:1px solid var(--border);color:var(--sub);padding:8px 14px;border-radius:20px;cursor:pointer;font-size:.75rem;font-family:inherit;transition:.2s;white-space:nowrap}
 .search-clear:hover{border-color:var(--gold);color:var(--gold)}
 #total-table tbody tr{transition:background .2s}
 #total-table tbody tr:hover{background:var(--card)}
-#total-table tbody tr.row-gold{background:rgba(240,185,11,0.06)}
-#total-table tbody tr.row-gold:hover{background:rgba(240,185,11,0.12)}
-#total-table tbody tr.row-silver{background:rgba(192,192,192,0.04)}
-#total-table tbody tr.row-silver:hover{background:rgba(192,192,192,0.1)}
-#total-table tbody tr.row-bronze{background:rgba(205,127,50,0.04)}
-#total-table tbody tr.row-bronze:hover{background:rgba(205,127,50,0.1)}
-#total-table tbody td{padding:10px 12px;font-size:0.82rem}
-#total-table tbody td.number{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-#total-table thead th{position:sticky;top:0;background:var(--elevated);z-index:2;padding:10px 12px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px}
+#total-table tbody tr.row-gold{background:rgba(240,185,11,.06)}
+#total-table tbody tr.row-silver{background:rgba(192,192,192,.04)}
+#total-table tbody tr.row-bronze{background:rgba(205,127,50,.04)}
+#total-table tbody td{padding:10px 12px;font-size:.82rem}
+#total-table tbody td.number{font-variant-numeric:tabular-nums}
+#total-table thead th{position:sticky;top:0;background:var(--elevated);z-index:2;padding:10px 12px;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px}
 .player-link{color:var(--gold);text-decoration:none;font-weight:600;transition:color .2s}
 .player-link:hover{color:var(--text);text-decoration:underline}
+
+/* ===== ЗАГРУЗКА И ПРОКРУТКА ===== */
 @keyframes spin{to{transform:rotate(360deg)}}
-.load-percent{width:72px;height:72px;margin:40px auto 0;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--elevated);border:2px solid var(--purple);color:var(--gold);font-size:1.2rem;font-weight:800;font-variant-numeric:tabular-nums;position:relative}
+.load-percent{width:72px;height:72px;margin:40px auto 0;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--elevated);border:2px solid var(--purple);color:var(--gold);font-size:1.2rem;font-weight:800;position:relative}
 .load-percent::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid transparent;border-top-color:var(--gold);border-right-color:var(--purple);animation:spin 1s linear infinite}
 .load-bar{width:220px;height:6px;background:var(--bg);border-radius:3px;margin:14px auto 0;overflow:hidden;border:1px solid var(--border)}
-.load-bar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:3px;transition:width 0.3s ease}
-.load-info{text-align:center;color:var(--muted);font-size:0.75rem;margin-top:8px;font-variant-numeric:tabular-nums}
-.load-title{text-align:center;color:var(--sub);font-size:0.85rem;margin-top:4px}
+.load-bar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:3px;transition:width .3s ease}
+.load-info{text-align:center;color:var(--muted);font-size:.75rem;margin-top:8px}
+.load-title{text-align:center;color:var(--sub);font-size:.85rem;margin-top:4px}
 .reading-progress{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--ice),var(--red));transform-origin:0 50%;transform:scaleX(0);z-index:1000}
-.scroll-top{position:fixed;bottom:80px;right:20px;width:44px;height:44px;background:var(--card);border:1px solid var(--gold);border-radius:50%;color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:all 0.3s ease;z-index:98;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.scroll-top{position:fixed;bottom:80px;right:20px;width:44px;height:44px;background:var(--card);border:1px solid var(--gold);border-radius:50%;color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:all .3s ease;z-index:98;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,.2)}
 .scroll-top.visible{opacity:1;pointer-events:all}
 .scroll-top:hover{background:var(--gold);color:#000;transform:translateY(-3px)}
+
+/* ===== АНИМАЦИИ ===== */
+@keyframes softGlow{0%,100%{box-shadow:0 0 8px rgba(240,185,11,.3)}50%{box-shadow:0 0 16px rgba(240,185,11,.6)}}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== МОБИЛЬНЫЕ СТИЛИ — ВСЁ ВНИЗУ ===== */
 @media(max-width:768px){
-.stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-.stat-value{font-size:1.3rem}
-.stat-label{font-size:0.6rem}
-.stat-sub{font-size:0.6rem}
-.season-frame{padding:18px 14px}
-.season-title{font-size:1.05rem;flex-wrap:wrap;gap:6px}
-.season-badge{font-size:0.62rem;padding:2px 10px}
-.season-quote{padding:8px 12px;font-size:0.78rem;margin:10px 0 16px}
-.section-subtitle{font-size:0.78rem;letter-spacing:1px;margin:16px 0 10px}
-.champion-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-.champion-section{padding:14px 12px}
-.champion-section-title{font-size:0.8rem;letter-spacing:1px}
-.champion-card{padding:14px 8px}
-.champ-avatar{width:44px;height:44px;font-size:1.5rem}
-.champ-name{font-size:0.78rem}
-.champ-crowns{font-size:0.75rem}
-.champ-wins-text{font-size:0.6rem}
-.tables-grid{grid-template-columns:1fr}
-.table-card{padding:14px 12px}
-.table-card.full-width{grid-column:span 1}
-.table-card h3{font-size:0.8rem}
-.crown-bar-visual{height:32px}
-.crown-light,.crown-dark{font-size:0.7rem}
-.crown-icon-center{font-size:1.2rem}
-.crown-owner{font-size:0.72rem}
-.timeline-nav{justify-content:flex-start;padding:0 10px}
-.tl-item{padding:6px 10px;min-width:50px}
-.tl-item .tl-dot{width:30px;height:30px;font-size:.65rem}
-.tl-item .tl-label{font-size:.5rem}
-.tabs{gap:6px}
-.tab-btn{padding:9px 16px;font-size:0.78rem;flex:1;text-align:center}
-.search-row{flex-direction:column;align-items:stretch}
-.search-input{max-width:100%}
-.search-clear{width:100%;text-align:center}
-#total-table{min-width:auto !important;font-size:0.7rem}
-#total-table thead th{font-size:0.6rem;padding:8px 6px}
-#total-table tbody td{padding:8px 6px;font-size:0.7rem;white-space:nowrap;word-break:normal;overflow-wrap:normal;hyphens:none}
-.table-container{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{font-size:0.72rem}
-th,td{padding:6px 8px;white-space:nowrap;word-break:normal;overflow-wrap:normal;hyphens:none}
-.scroll-top{bottom:70px;right:16px;width:40px;height:40px;font-size:1rem}
+  .season-carousel-wrap{padding:0 34px}
+  .season-carousel{--card-width:70px;gap:8px;padding-top:14px;padding-bottom:14px}
+  .season-card{height:80px;border-radius:13px}
+  .season-card .sc-icon{font-size:1.5rem}
+  .season-card .sc-num{font-size:1rem}
+  .carousel-btn{width:28px;height:28px;font-size:1.2rem}
+
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .stat-value{font-size:1.3rem}
+  .season-frame{padding:18px 14px}
+  .season-title{font-size:1.05rem;flex-wrap:wrap;gap:6px}
+  .champion-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .champion-section{padding:14px 12px}
+  .crown-bar-visual{height:32px}
+  .crown-light,.crown-dark{font-size:.7rem}
+  .crown-icon-center{font-size:1.2rem}
+  .tabs{gap:6px}
+  .tab-btn{padding:9px 16px;font-size:.78rem;flex:1;text-align:center}
+  .search-row{flex-direction:column;align-items:stretch}
+  .search-input{max-width:100%}
+  .search-clear{width:100%;text-align:center}
+  .table-tabs{gap:4px}
+  .table-tab{padding:6px 10px;font-size:.68rem}
+  .table-container{overflow-x:auto}
+  table{font-size:.72rem}
+  th,td{padding:6px 8px;white-space:nowrap}
+  .scroll-top{bottom:70px;right:16px;width:40px;height:40px;font-size:1rem}
 }
 </style>
 </head>
 <body>
     <div class="reading-progress" id="readingProgress"></div>
 <div class="container">
-
         <header class="header">
             <h1 class="header-title">СЕЗОНЫ</h1>
             <p class="header-subtitle">История Этерниса</p>
@@ -171,67 +193,53 @@ th,td{padding:6px 8px;white-space:nowrap;word-break:normal;overflow-wrap:normal;
 			<button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
 			<nav class="nav-bar" id="pageNav">
 				<div class="nav-group">
-					<span class="nav-label">
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg> Арена ▾
-					</span>
+					<span class="nav-label">Арена ▾</span>
 					<div class="nav-dropdown">
-						<a href="index.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> Статистика
-						</a>
-						<a href="league.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg> Лига
-						</a>
-						<a href="dungeon.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Данж
-						</a>
-						<a href="logs.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Логи
-						</a>
-						<a href="player.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Профиль
-						</a>
+						<a href="index.html" class="nav-link">Статистика</a>
+						<a href="league.html" class="nav-link">Лига</a>
+						<a href="dungeon.html" class="nav-link">Данж</a>
+						<a href="logs.html" class="nav-link">Логи</a>
+						<a href="player.html" class="nav-link">Профиль</a>
 					</div>
 				</div>
 				<div class="nav-group">
-					<span class="nav-label">
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Инфо ▾
-					</span>
+					<span class="nav-label">Инфо ▾</span>
 					<div class="nav-dropdown">
-						<a href="balance.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M12 3v18"/><path d="M3 12h18"/><path d="M8 8l8 8"/></svg> Баланс
-						</a>
-						<a href="guide.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg> Гайд
-						</a>
-						<a href="lore.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Лор
-						</a>
-						<a href="seasons.html" class="nav-link active">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Сезоны
-						</a>
-						<a href="tavern.html" class="nav-link">
-							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> Таверна
-						</a>
+						<a href="balance.html" class="nav-link">Баланс</a>
+						<a href="guide.html" class="nav-link">Гайд</a>
+						<a href="lore.html" class="nav-link">Лор</a>
+						<a href="seasons.html" class="nav-link active">Сезоны</a>
+						<a href="tavern.html" class="nav-link">Таверна</a>
 					</div>
 				</div>
 			</nav>
 		</div>
 
-		<div class="tabs">
-			<button class="tab-btn active" data-tab="seasons" onclick="switchSeasonsTab('seasons', event)">
-				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg> Зал Славы
-			</button>
-			<button class="tab-btn" data-tab="alltime" onclick="switchSeasonsTab('alltime', event)">
-				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Легенды
-			</button>
+		<div class="tabs" id="mainTabs">
+			<button class="tab-btn active" data-tab="seasons" onclick="switchSeasonsTab('seasons')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg> Зал Славы
+            </button>
+			<button class="tab-btn" data-tab="alltime" onclick="switchSeasonsTab('alltime')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Легенды
+            </button>
 		</div>
 
 		<div id="seasons-tab-seasons" class="tab-content active">
-			<div class="timeline-nav" id="season-tabs"></div>
-			<div id="tab-content-container">
-			<div id="initial-loader" style="text-align:center;padding:60px 20px;color:var(--muted)">
-				<div id="progressBox"></div>
+			<div class="season-carousel-wrap">
+				<button class="carousel-btn prev"
+						onclick="scrollCarousel(-1)"
+						aria-label="Предыдущий сезон">‹</button>
+
+				<div class="season-carousel" id="seasonCarousel"></div>
+
+				<button class="carousel-btn next"
+						onclick="scrollCarousel(1)"
+						aria-label="Следующий сезон">›</button>
 			</div>
+			<div id="tab-content-container">
+                <div id="initial-loader" style="text-align:center;padding:60px 20px;color:var(--muted)">
+                    <div id="progressBox"></div>
+                </div>
 			</div>
 		</div>
 
@@ -242,7 +250,7 @@ th,td{padding:6px 8px;white-space:nowrap;word-break:normal;overflow-wrap:normal;
                     <input type="text" class="search-input" id="totalSearch" placeholder="🔍 Найти игрока..." oninput="filterTotalTable()">
                     <button class="search-clear" onclick="clearSearch()">✕</button>
                 </div>
-                <div class="table-container" style="overflow-x:auto;max-height:70vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-sm)">
+                <div class="table-container" style="overflow-x:auto;max-height:70vh;overflow-y:auto;border-radius:var(--radius-sm)">
                     <table id="total-table" style="min-width:750px">
                         <thead>
                             <tr>
@@ -260,65 +268,112 @@ th,td{padding:6px 8px;white-space:nowrap;word-break:normal;overflow-wrap:normal;
                             </tr>
                         </thead>
                         <tbody id="total-table-body">
-                            <tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">
-                                <div style="font-size:2rem;margin-bottom:8px">⏳</div>
-                                <div>Загрузка данных...</div>
-                            </td></tr>
+                            <tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">⏳ Загрузка...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </div>
 
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
+    <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+	<script>
+// ============ КОНСТАНТЫ ============
+const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
+const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
+const ARCHIVE_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
+const ARCHIVE_BASE_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_';
+const SEASON_ICONS = ['🌱','🏁','🔥','🩸','🕯️','⚡','💀','🌑','⚔️','🌟','🌊','🏔','👑','💎','🌌','🏆'];
+const SEASON_SUBTITLES = ['Пролог','Рождение','Эпоха Легенд','Кровь Бездны','Экспедиция','Раскол Ордена','Возвращение','Восход','Война','Рассвет','Прилив','Глубины','Корона','Осколки','Бездна','Финал'];
+const SEASON_SCAN_LIMIT = 15;
 
+let currentSeasonNum = -1;
+let seasonTabs = [];
+let activeSeason = -1;
+let totalPlayersData = [];
+let seasonCache = {};
 
-<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
-<script>
-// ============ КЕШ АРХИВА ============
+// ============ ИКОНКИ ============
+function getRaceIcon(name) {
+    const map = {'Человек':'human','Орк':'orc','Дворф':'dwarf','Эльф':'elf','Нежить':'undead','Табакси':'tabaxi','Тифлинг':'tiefling'};
+    return map[name] ? `icons/${map[name]}.png` : null;
+}
+function getClassIcon(name) {
+    const map = {'Воин':'warrior','Паладин':'paladin','Плут':'rogue','Монах':'monk','Следопыт':'ranger','Чародей':'sorcerer','Бард':'bard','Друид':'druid','Изобретатель':'artificer','Варвар':'barbarian','Волшебница':'wizard','Некромант':'necromancer','Жрец':'cleric','Колдун':'warlock','Алхимик':'alchemist'};
+    return map[name] ? `icons/${map[name]}.png` : null;
+}
+function getPlayerIcon(playerName, emojiFallback, size = 24) {
+    const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;flex-shrink:0;margin-right:4px;" onerror="this.style.display='none'">`;
+    const emoji = (char) => `<span class="emoji-icon" style="margin-right:4px; font-size:${size*0.8}px; line-height:1; vertical-align:middle;">${char}</span>`;
+    
+    const defaultIcon = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+
+    if (!playerName || typeof playerName !== 'string' || playerName === 'Unknown') {
+        return defaultIcon;
+    }
+    
+    if (playerName.includes('-')) {
+        const parts = playerName.split('-'), raceName = parts[0], className = parts[1];
+        const raceIcon = getRaceIcon(raceName), classIcon = getClassIcon(className);
+        if (raceIcon && classIcon) return `${img(raceIcon)}${img(classIcon)}`;
+        if (raceIcon) return `${img(raceIcon)}`;
+        if (classIcon) return `${img(classIcon)}`;
+    } else {
+        const classIcon = getClassIcon(playerName);
+        if (classIcon) return `${img(classIcon)}`;
+    }
+    
+    if (emojiFallback) {
+        const chars = Array.from(emojiFallback);
+        if (chars.length >= 2) return `${emoji(chars[0])}${emoji(chars[1])}`;
+        return emoji(chars[0]);
+    }
+    
+    return defaultIcon;
+}
+
+// ============ ЗАГРУЗКА ДАННЫХ ============
 async function getSeasonData(n) {
     const KEY = 'eternis-season-v2-' + n;
-    const TTL = 24 * 60 * 60 * 1000;
-    try {
-        const cached = JSON.parse(localStorage.getItem(KEY) || 'null');
-        if (cached) return cached.data;
-    } catch (e) {}
-
-    const fetchWithTimeout = async (url) => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000);
-        try {
-            const r = await fetch(url, { signal: controller.signal });
-            clearTimeout(timeoutId);
-            return r;
-        } catch (e) {
-            clearTimeout(timeoutId);
-            throw e;
-        }
+    try { const c = JSON.parse(localStorage.getItem(KEY) || 'null'); if (c) return c.data; } catch (e) {}
+    const fetchT = async (url) => {
+        const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 3000);
+        try { const r = await fetch(url, { signal: ctrl.signal }); clearTimeout(t); return r; } catch (e) { clearTimeout(t); throw e; }
     };
-
     try {
-        let r;
-        try {
-            r = await fetchWithTimeout(`${ARCHIVE_BASE}${n}.json`);
-        } catch (e) {
-            r = await fetchWithTimeout(`${ARCHIVE_BASE_FALLBACK}${n}.json`);
-        }
-        
+        let r; try { r = await fetchT(`${ARCHIVE_BASE}${n}.json`); } catch (e) { r = await fetchT(`${ARCHIVE_BASE_FALLBACK}${n}.json`); }
         if (!r || !r.ok) return null;
-        
         const data = await r.json();
         try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
-    } catch (e) {
-        console.warn(`Сезон ${n} пропущен:`, e.message);
-        return null;
-    }
+    } catch (e) { return null; }
 }
 
-// ============ ТЕМА И НАВИГАЦИЯ ============
+const STATS_CACHE_KEY = 'eternis-stats';
+const STATS_CACHE_TTL = 2 * 60 * 1000;
+let statsPromise = null;
+function getStatsData() {
+    if (statsPromise) return statsPromise;
+    statsPromise = (async () => {
+        try { const c = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null'); if (c && (Date.now() - c.ts < STATS_CACHE_TTL)) return c.data; } catch (e) {}
+        let r = await fetch(STATS_URL); if (!r.ok) r = await fetch(STATS_URL_FALLBACK);
+        const data = await r.json();
+        try { localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        return data;
+    })().catch(e => { statsPromise = null; throw e; });
+    return statsPromise;
+}
+
+function renderProgress(loaded, total, title) {
+    const rawPct = total > 0 ? Math.round((loaded / total) * 100) : 0;
+    const pct = loaded >= total ? 100 : Math.min(99, rawPct);
+    const el = document.getElementById('progressBox'); if (!el) return;
+    el.innerHTML = `<div class="load-percent">${pct}%</div><div class="load-bar"><div class="load-bar-fill" style="width:${pct}%"></div></div><div class="load-info">Загружено ${loaded} из ${total}</div>${title ? `<div class="load-title">${title}</div>` : ''}`;
+}
+function getRankClass(i) { return i === 0 ? 'row-gold' : i === 1 ? 'row-silver' : i === 2 ? 'row-bronze' : ''; }
+
+// ============ ТЕМА / НАВИГАЦИЯ ============
 function toggleTheme() {
     const h = document.documentElement;
     const c = h.getAttribute('data-theme');
@@ -326,10 +381,7 @@ function toggleTheme() {
     h.setAttribute('data-theme', n);
     localStorage.setItem('eternis-theme', n);
 }
-(function() {
-    const s = localStorage.getItem('eternis-theme');
-    if (s) document.documentElement.setAttribute('data-theme', s);
-})();
+(function() { const s = localStorage.getItem('eternis-theme'); if (s) document.documentElement.setAttribute('data-theme', s); })();
 function toggleNav() {
     const nav = document.getElementById('pageNav');
     const btn = document.querySelector('.nav-toggle');
@@ -342,111 +394,108 @@ document.querySelectorAll('.nav-link').forEach(l => {
         document.querySelector('.nav-toggle').textContent = '☰ Меню';
     });
 });
-document.querySelectorAll('.nav-label').forEach(label => {
-    label.addEventListener('click', function(e) {
-        if (window.innerWidth > 768) return;
-        e.preventDefault();
-        const dd = this.nextElementSibling;
-        if (dd && dd.classList.contains('nav-dropdown')) {
-            const isOpen = dd.style.display === 'block';
-            document.querySelectorAll('.nav-dropdown').forEach(d => d.style.display = 'none');
-            dd.style.display = isOpen ? 'none' : 'block';
-        }
-    });
-});
-
-// ============ КОНСТАНТЫ ============
-const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
-const ARCHIVE_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
-const ARCHIVE_BASE_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/seasons/season_';
-const SEASON_ICONS = ['🌱','🏁','🔥','🩸','🕯️','⚡','💀','🌑','⚔️'];
-const SEASON_SUBTITLES = [
-    'Пролог. Первые шаги.',
-    'Рождение Арены.',
-    'Эпоха Легенд.',
-    'Кровь Бездны.',
-    'Экспедиция.',
-    'Раскол Ордена.',
-    'Возвращение.',
-    'Восход.',
-    'Война.'
-];
-const SEASON_SCAN_LIMIT = 15;
-
-// ============ КЕШ STATS_DATA ============
-const STATS_CACHE_KEY = 'eternis-stats';
-const STATS_CACHE_TTL = 2 * 60 * 1000;
-let statsPromise = null;
-
-function getStatsData() {
-    if (statsPromise) return statsPromise;
-
-    statsPromise = (async () => {
-        try {
-            const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
-            if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) {
-                return cached.data;
-            }
-        } catch (e) {}
-
-        let r = await fetch(STATS_URL);
-        if (!r.ok) r = await fetch(STATS_URL_FALLBACK);
-        const data = await r.json();
-
-        try {
-            localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
-        } catch (e) {}
-
-        return data;
-    })().catch(e => {
-        statsPromise = null;
-        throw e;
-    });
-
-    return statsPromise;
-}
-
-let currentSeasonNum = -1;
-let seasonTabs = [];
-let activeSeason = -1;
-let totalPlayersData = [];
-
-function renderProgress(loaded, total, title) {
-    const rawPct = total > 0 ? Math.round((loaded / total) * 100) : 0;
-    const pct = loaded >= total ? 100 : Math.min(99, rawPct);
-    const el = document.getElementById('progressBox');
-    if (!el) return;
-    const titleHtml = title ? `<div class="load-title">${title}</div>` : '';
-    el.innerHTML = `
-        <div class="load-percent">${pct}%</div>
-        <div class="load-bar"><div class="load-bar-fill" style="width:${pct}%"></div></div>
-        <div class="load-info">Загружено ${loaded} из ${total}</div>
-        ${titleHtml}
-    `;
-}
-
-function getRankClass(index) {
-    if (index === 0) return 'row-gold';
-    if (index === 1) return 'row-silver';
-    if (index === 2) return 'row-bronze';
-    return '';
-}
 
 // ============ ВКЛАДКИ ============
-function switchSeasonsTab(tab, e) {
-    document.querySelectorAll('.tabs .tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelector(`.tabs .tab-btn[data-tab="${tab}"]`).classList.add('active');
-    document.getElementById('seasons-tab-' + tab).classList.add('active');
+function switchSeasonsTab(tab) {
+    document.querySelectorAll('#mainTabs .tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('seasons-tab-seasons').classList.remove('active');
+    document.getElementById('seasons-tab-alltime').classList.remove('active');
+
+    const btn = document.querySelector(`#mainTabs .tab-btn[data-tab="${tab}"]`);
+    if (btn) btn.classList.add('active');
+    const content = document.getElementById('seasons-tab-' + tab);
+    if (content) content.classList.add('active');
+    
     history.replaceState(null, null, '#' + tab);
+    if (tab === 'seasons' && typeof renderCarousel === 'function') renderCarousel();
 }
+window.switchSeasonsTab = switchSeasonsTab;
+
 function clearSearch() {
     document.getElementById('totalSearch').value = '';
     filterTotalTable();
 }
+window.clearSearch = clearSearch;
 
-// ============ СЕЗОН ============
+// Сезонная карусель
+function getSeasonCardHTML(n, cycle) {
+  const live = n === currentSeasonNum;
+  const active = n === activeSeason && cycle === 1;
+
+  return `<button class="season-card${active ? ' active' : ''}${live ? ' is-live' : ''}" data-num="${n}" data-cycle="${cycle}" aria-pressed="${active}" onclick="switchSeason(${n})">
+    <span class="sc-badge${live ? '' : ' ended'}">${live ? 'LIVE' : 'END'}</span>
+    <span class="sc-icon">${SEASON_ICONS[n] || '📋'}</span>
+    <span class="sc-num">${n}</span>
+  </button>`;
+}
+
+function renderCarousel() {
+  const el = document.getElementById('seasonCarousel');
+  if (!el || !seasonTabs.length) return;
+
+  const seasons = [...seasonTabs].sort((a, b) => a - b);
+  el.innerHTML = [0, 1, 2].map(c =>
+    seasons.map(n => getSeasonCardHTML(n, c)).join('')
+  ).join('');
+
+  requestAnimationFrame(() => centerSeasonCard(activeSeason, false));
+}
+
+function centerSeasonCard(n, smooth = true) {
+  const el = document.getElementById('seasonCarousel');
+  const card = el?.querySelector(`.season-card[data-num="${n}"][data-cycle="1"]`);
+  if (!el || !card) return;
+
+  el.scrollTo({
+    left: card.offsetLeft + card.offsetWidth / 2 - el.clientWidth / 2,
+    behavior: smooth ? 'smooth' : 'auto'
+  });
+}
+
+function scrollCarousel(dir) {
+  const i = seasonTabs.indexOf(activeSeason);
+  if (i < 0 || !seasonTabs.length) return;
+
+  const next = (i + dir + seasonTabs.length) % seasonTabs.length;
+  switchSeason(seasonTabs[next]);
+}
+
+function switchSeason(n) {
+  if (!seasonTabs.includes(n)) return;
+  activeSeason = n;
+
+  const el = document.getElementById('seasonCarousel');
+  el?.querySelectorAll('.season-card').forEach(card => {
+    const active = +card.dataset.num === n && +card.dataset.cycle === 1;
+    card.classList.toggle('active', active);
+    card.setAttribute('aria-pressed', String(active));
+  });
+
+  centerSeasonCard(n);
+
+  document.querySelectorAll('#tab-content-container .tab-content')
+    .forEach(tab => tab.classList.remove('active'));
+
+  document.getElementById(`tab-s${n}`)?.classList.add('active');
+}
+
+window.renderCarousel = renderCarousel;
+window.scrollCarousel = scrollCarousel;
+window.switchSeason = switchSeason;
+
+// ============ ТАБЫ ТАБЛИЦ ============
+function switchTableTab(tab, btn) {
+    const container = btn.closest('.season-frame');
+    if (!container) return;
+    container.querySelectorAll('.table-tab').forEach(b => b.classList.remove('active'));
+    container.querySelectorAll('.table-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = container.querySelector('.table-panel[data-panel="' + tab + '"]');
+    if (panel) panel.classList.add('active');
+}
+window.switchTableTab = switchTableTab;
+
+// ============ ОБЗОР СЕЗОНА ============
 function renderSeason(data, seasonNum, isCurrent) {
     const dungeonPlayers = (data.dungeon && data.dungeon.players) ? data.dungeon.players : {};
     const players = data.players || [];
@@ -454,74 +503,70 @@ function renderSeason(data, seasonNum, isCurrent) {
     const seasonTop = data.seasonTop && data.seasonTop.length > 0
         ? data.seasonTop
         : [...players].filter(p => (p.skill || 0) > 0).sort((a, b) => (b.skill || 0) - (a.skill || 0));
-    const factionScore = data.factionScore || {};
+    
     const territory = data.dungeonTrophies || data.territory || (data.dungeon && (data.dungeon.dungeonTrophies || data.dungeon.territory)) || { light: 0, dark: 0 };
     const totalPlayers = players.length;
+    
     let rawFights = players.reduce((s, p) => s + (p.wins || 0) + (p.losses || 0), 0);
     let maxStreak = players.reduce((m, p) => (p.best || 0) > m ? (p.best || 0) : m, 0);
     let maxShards = players.reduce((m, p) => (p.shards || 0) > m ? (p.shards || 0) : m, 0);
     let maxLevel = players.reduce((m, p) => (p.level || 0) > m ? (p.level || 0) : m, 0);
     let maxFactionWins = players.reduce((m, p) => (p.factionWins || 0) > m ? (p.factionWins || 0) : m, 0);
     let worstStreak = players.reduce((m, p) => (p.worst || 0) > m ? (p.worst || 0) : m, 0);
-	let allForWR = [...players];
-	const archivedPlayers = [];
-	Object.entries(heroArchive).forEach(([playerKey, heroes]) => {
-		heroes.forEach(h => {
-			rawFights += (h.wins || 0) + (h.losses || 0);
-			if ((h.best || 0) > maxStreak) maxStreak = h.best || 0;
-			if ((h.worst || 0) > worstStreak) worstStreak = h.worst || 0;
-			const archived = {
-				display: playerKey,
-				name: h.name || '',
-				emoji: h.emoji || '⚔️',
-				wins: h.wins || 0,
-				losses: h.losses || 0,
-				best: h.best || 0,
-				worst: h.worst || 0,
-				tournamentWins: h.tournamentWins || 0,
-				shards: 0,
-				level: 0,
-				factionWins: 0
-			};
-			archivedPlayers.push(archived);
-			allForWR.push({ wins: archived.wins, losses: archived.losses, display: archived.display, name: archived.name });
-		});
-	});
-	const totalFights = Math.floor(rawFights / 2);
-	const allPlayers = [...players, ...archivedPlayers];
+    
+    let allForWR = [...players];
+    const archivedPlayers = [];
+    Object.entries(heroArchive).forEach(([playerKey, heroes]) => {
+        heroes.forEach(h => {
+            rawFights += (h.wins || 0) + (h.losses || 0);
+            if ((h.best || 0) > maxStreak) maxStreak = h.best || 0;
+            if ((h.worst || 0) > worstStreak) worstStreak = h.worst || 0;
+            const archived = {
+                display: playerKey, name: h.name || '', emoji: h.emoji || '⚔️',
+                wins: h.wins || 0, losses: h.losses || 0, best: h.best || 0, worst: h.worst || 0,
+                tournamentWins: h.tournamentWins || 0, shards: 0, level: 0, factionWins: 0
+            };
+            archivedPlayers.push(archived);
+            allForWR.push({ wins: archived.wins, losses: archived.losses, display: archived.display, name: archived.name });
+        });
+    });
+    
+    const totalFights = Math.floor(rawFights / 2);
+    const allPlayers = [...players, ...archivedPlayers];
     const topWR = allForWR.filter(p => (p.wins || 0) + (p.losses || 0) >= 30).sort((a, b) => {
         const wa = (a.wins || 0) / ((a.wins || 0) + (a.losses || 0) || 1);
         const wb = (b.wins || 0) / ((b.wins || 0) + (b.losses || 0) || 1);
         return wb - wa;
     });
     const maxWinrate = topWR.length > 0 ? topWR[0] : null;
+    
     const champions = players.filter(p => (p.tournamentWins || 0) > 0).sort((a, b) => (b.tournamentWins || 0) - (a.tournamentWins || 0));
     Object.entries(heroArchive).forEach(([playerKey, heroes]) => {
         heroes.forEach(h => {
             if ((h.tournamentWins || 0) > 0) {
-                champions.push({ display: playerKey, emoji: h.emoji || '', name: h.name || '', tournamentWins: h.tournamentWins || 0, wins: h.wins || 0, losses: h.losses || 0, faction: '', champion: false });
+                champions.push({ display: playerKey, emoji: h.emoji || '', name: h.name || '', tournamentWins: h.tournamentWins || 0, wins: h.wins || 0, losses: h.losses || 0 });
             }
         });
     });
     champions.sort((a, b) => (b.tournamentWins || 0) - (a.tournamentWins || 0));
+    
     const maxDungeonBosses = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.bosses > m ? d.bosses : m; }, 0);
     const maxSkill = seasonTop.length > 0 ? seasonTop[0].skill || '—' : '—';
     const maxDungeonRecord = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.record > m ? d.record : m; }, 0);
     const maxDungeonTrophies = players.reduce((m, p) => { const d = dungeonPlayers[p.display]; return d && d.trophies > m ? d.trophies : m; }, 0);
     const topDungeon = players.map(p => { const d = dungeonPlayers[p.display]; return { ...p, record: d?.record || 0, trophies: d?.trophies || 0 }; }).filter(p => p.record > 0).sort((a, b) => b.record - a.record || b.trophies - a.trophies);
-    const duelLight = factionScore.duelLight || 0;
-    const duelDark = factionScore.duelDark || 0;
-    const battleLight = factionScore.battleLight || 0;
-    const battleDark = factionScore.battleDark || 0;
+    
     const totalTerritory = (territory.light || 0) + (territory.dark || 0);
     const lightPct = totalTerritory > 0 ? (territory.light / totalTerritory) * 100 : 50;
     const darkPct = totalTerritory > 0 ? (territory.dark / totalTerritory) * 100 : 50;
     const crownOwner = territory.light > territory.dark ? '🌝 Орден Света' : territory.dark > territory.light ? '🌚 Культ Тьмы' : '⚖️ Ничья';
-    const seasonName = `${SEASON_ICONS[seasonNum] || '📋'} Сезон ${seasonNum}`;
-    const subtitle = SEASON_SUBTITLES[seasonNum] || '';
+    
     let html = `<div class="season-frame ${isCurrent ? 'live' : 'ended'}">`;
-    html += `<div class="season-title">${seasonName} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'LIVE' : 'ЗАВЕРШЁН'}</span></div>`;
+    html += `<div class="season-title">${SEASON_ICONS[seasonNum] || '📋'} Сезон ${seasonNum} <span class="season-badge ${isCurrent ? 'live' : 'ended'}">${isCurrent ? 'LIVE' : 'ЗАВЕРШЁН'}</span></div>`;
+    
+    const subtitle = SEASON_SUBTITLES[seasonNum] || '';
     if (subtitle) html += `<div class="season-quote">«${subtitle}»</div>`;
+    
     html += '<div class="section-subtitle">🏟 Арена</div><div class="stats-grid">';
     html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">👥 Игроков</div></div>`;
     html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">⚔️ Боёв</div></div>`;
@@ -529,13 +574,21 @@ function renderSeason(data, seasonNum, isCurrent) {
     html += `<div class="stat-card"><div class="stat-value">${maxSkill}</div><div class="stat-label">⭐ Макс. SKILL</div></div>`;
     html += `<div class="stat-card"><div class="stat-value">${maxLevel}</div><div class="stat-label">📈 Макс. уровень</div></div>`;
     html += `<div class="stat-card"><div class="stat-value">${maxShards}</div><div class="stat-label">💎 Макс. осколков</div></div>`;
-    html += `<div class="stat-card"><div class="stat-value">${maxWinrate ? ((maxWinrate.wins || 0) * 100 / ((maxWinrate.wins || 0) + (maxWinrate.losses || 0) || 1)).toFixed(1) + '%' : '—'}</div><div class="stat-label">📈 Лучший винрейт</div><div class="stat-sub">${maxWinrate ? (maxWinrate.display || maxWinrate.name || '') : ''}</div></div>`;
+    html += `<div class="stat-card"><div class="stat-value">${maxWinrate ? ((maxWinrate.wins || 0) * 100 / ((maxWinrate.wins || 0) + (maxWinrate.losses || 0) || 1)).toFixed(1) + '%' : '—'}</div><div class="stat-label">📈 Лучший винрейт</div><div class="stat-sub">${maxWinrate ? (maxWinrate.display || '') : ''}</div></div>`;
     html += `<div class="stat-card"><div class="stat-value">${maxStreak}</div><div class="stat-label">🔥 Макс. стрик</div></div>`;
     if (worstStreak > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${worstStreak || '—'}</div><div class="stat-label">💔 Худший стрик</div></div>`;
     if (maxFactionWins > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${maxFactionWins || '—'}</div><div class="stat-label">⚔️ Побед за фракцию</div></div>`;
+    
+    const duelLight = (data.factionScore && data.factionScore.duelLight) || 0;
+    const duelDark = (data.factionScore && data.factionScore.duelDark) || 0;
+    const battleLight = (data.factionScore && data.factionScore.battleLight) || 0;
+    const battleDark = (data.factionScore && data.factionScore.battleDark) || 0;
+    
     if (duelLight + duelDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${duelLight} : ${duelDark}</div><div class="stat-label">⚔️ Дуэли Свет vs Тьма</div></div>`;
     if (battleLight + battleDark > 0 || isCurrent) html += `<div class="stat-card"><div class="stat-value">${battleLight} : ${battleDark}</div><div class="stat-label">🏆 Битвы Свет vs Тьма</div></div>`;
+    
     html += '</div>';
+    
     if (totalTerritory > 0) {
         html += '<div class="section-subtitle">👑 Корона Раскола</div><div class="crown-section">';
         html += '<div class="crown-bar-visual">';
@@ -543,67 +596,91 @@ function renderSeason(data, seasonNum, isCurrent) {
         html += `<div class="crown-dark" style="flex:${darkPct}">${territory.dark > 0 ? territory.dark : ''}</div>`;
         html += `<div class="crown-icon-center" style="left:${lightPct}%">👑</div>`;
         html += '</div>';
-        html += `<div class="crown-owner">Владелец: ${crownOwner}</div>`;
-        html += '</div>';
+        html += `<div class="crown-owner">Владелец: ${crownOwner}</div></div>`;
     }
-    const dungeonKeys = Object.keys(dungeonPlayers);
-    if (dungeonKeys.length > 0) {
+    
+    if (Object.keys(dungeonPlayers).length > 0) {
         html += '<div class="section-subtitle">🏔 Подземелье</div><div class="stats-grid">';
-        html += `<div class="stat-card"><div class="stat-value">${dungeonKeys.length}</div><div class="stat-label">👥 Игроков</div></div>`;
+        html += `<div class="stat-card"><div class="stat-value">${Object.keys(dungeonPlayers).length}</div><div class="stat-label">👥 Игроков</div></div>`;
         html += `<div class="stat-card"><div class="stat-value">${maxDungeonRecord || '—'}</div><div class="stat-label">🏆 Рекорд волн</div></div>`;
         html += `<div class="stat-card"><div class="stat-value">${maxDungeonBosses || '—'}</div><div class="stat-label">💀 Боссов убито</div></div>`;
         html += `<div class="stat-card"><div class="stat-value">${maxDungeonTrophies || '—'}</div><div class="stat-label">🐉 Трофеев</div></div>`;
         html += '</div>';
     }
+    
     if (champions.length > 0) {
         html += '<div class="champion-section"><div class="champion-section-title">👑 Чемпионы сезона</div><div class="champion-grid">';
         champions.slice(0, 4).forEach((p, i) => {
             const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
             const wins = p.tournamentWins || 0;
             const crownsHtml = wins <= 5 ? '👑'.repeat(wins) : `👑 ×${wins}`;
-            html += `<div class="champion-card ${rankClass}"><div class="champ-avatar">${p.emoji || '⚔️'}</div><div class="champ-name">${p.display}</div><div class="champ-crowns">${crownsHtml}</div><div class="champ-wins-text">${wins} побед</div></div>`;
+            html += `<div class="champion-card ${rankClass}"><div class="champ-avatar" style="display:flex;align-items:center;justify-content:center;">${getPlayerIcon(p.name || p.display, p.emoji || '⚔️', 36)}</div><div class="champ-name">${p.display}</div><div class="champ-crowns">${crownsHtml}</div><div class="champ-wins-text">${wins} побед</div></div>`;
         });
         html += '</div></div>';
     } else if (!isCurrent) {
         html += '<div class="champion-section" style="opacity:0.5;text-align:center;padding:20px;color:var(--muted);font-style:italic;">Турниры не проводились — эпоха чистых дуэлей</div>';
     }
-    html += '<div class="section-subtitle">📊 Таблицы лидеров</div><div class="tables-grid">';
-    if (seasonTop.length > 0) {
-        html += '<div class="table-card full-width"><h3><span class="table-icon">🏆</span> Сезонный рейтинг (SKILL)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Класс</th><th>Skill</th><th>Победы</th></tr></thead><tbody>';
-        seasonTop.slice(0, 5).forEach((p, i) => { html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td>${p.emoji || ''}</td><td class="number">${p.skill}</td><td class="number">${p.wins}</td></tr>`; });
-        html += '</tbody></table></div></div>';
-    }
+
+    // ===== ТАБЛИЦЫ ЛИДЕРОВ (ТОП-5) =====
+    const getName = (p) => {
+        if (p.name && p.name !== 'Unknown') return p.name;
+        const original = players.find(x => x.display === p.display);
+        return original ? original.name : 'Unknown';
+    };
+
+    const playerCell = (p) => {
+        const name = getName(p);
+        return `<td><div class="player-cell">${getPlayerIcon(name, p.emoji, 24)}<span style="padding-left: 0; white-space: nowrap;">${p.display || '???'}</span></div></td>`;
+    };
+
+    const skillRows = seasonTop.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.skill || 0}</td><td class="num">${p.wins || 0}</td></tr>`).join('');
     const mostActive = [...allPlayers].sort((a, b) => ((b.wins || 0) + (b.losses || 0)) - ((a.wins || 0) + (a.losses || 0))).slice(0, 5);
-    html += '<div class="table-card"><h3><span class="table-icon">🔥</span> Самые активные</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Боёв</th></tr></thead><tbody>';
-    mostActive.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${(p.wins || 0) + (p.losses || 0)}</td></tr>`);
-    html += '</tbody></table></div></div>';
+    const activeRows = mostActive.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${(p.wins || 0) + (p.losses || 0)}</td></tr>`).join('');
     const topShards = [...allPlayers].sort((a, b) => (b.shards || 0) - (a.shards || 0)).slice(0, 5);
-    html += '<div class="table-card"><h3><span class="table-icon">💎</span> Коллекционеры осколков</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Осколков</th></tr></thead><tbody>';
-    topShards.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.shards || 0}</td></tr>`);
-    html += '</tbody></table></div></div>';
+    const shardRows = topShards.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.shards || 0}</td></tr>`).join('');
     const topStreaks = [...allPlayers].sort((a, b) => (b.best || 0) - (a.best || 0)).slice(0, 5);
-    html += '<div class="table-card"><h3><span class="table-icon">🔥</span> Лучшие серии побед</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Побед</th></tr></thead><tbody>';
-    topStreaks.forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.best || 0}</td></tr>`);
-    html += '</tbody></table></div></div>';
-    html += '<div class="table-card"><h3><span class="table-icon">📈</span> Винрейт (30+ боёв)</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>WR</th><th>W/L</th></tr></thead><tbody>';
-    topWR.slice(0, 5).forEach((p, i) => { html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display || p.name || ''}</td><td class="number">${((p.wins || 0) * 100 / ((p.wins || 0) + (p.losses || 0) || 1)).toFixed(1)}%</td><td class="number">${p.wins || 0}-${p.losses || 0}</td></tr>`; });
-    html += '</tbody></table></div></div>';
-    if (topDungeon.length > 0) {
-        html += '<div class="table-card"><h3><span class="table-icon">🏔</span> Рекордсмены данжа</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Волн</th></tr></thead><tbody>';
-        topDungeon.slice(0, 5).forEach((p, i) => html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.record}</td></tr>`);
-        html += '</tbody></table></div></div>';
-        html += '<div class="table-card"><h3><span class="table-icon">🐉</span> Охотники на боссов</h3><div class="table-container"><table><thead><tr><th>#</th><th>Игрок</th><th>Трофеев</th></tr></thead><tbody>';
-        [...topDungeon].sort((a, b) => (b.trophies || 0) - (a.trophies || 0)).slice(0, 5).forEach((p, i) => { html += `<tr class="${getRankClass(i)}"><td>${i + 1}</td><td>${p.display}</td><td class="number">${p.trophies || 0}</td></tr>`; });
-        html += '</tbody></table></div></div>';
-    }
+    const streakRows = topStreaks.map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.best || 0}</td></tr>`).join('');
+    const wrRows = topWR.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${((p.wins || 0) * 100 / ((p.wins || 0) + (p.losses || 0) || 1)).toFixed(1)}%</td><td class="num">${p.wins || 0}-${p.losses || 0}</td></tr>`).join('');
+    const dungeonRecordRows = topDungeon.slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.record || 0}</td></tr>`).join('');
+    const dungeonBossRows = [...topDungeon].sort((a, b) => (b.trophies || 0) - (a.trophies || 0)).slice(0, 5).map((p, i) => `<tr class="${getRankClass(i)}"><td>${i + 1}</td>${playerCell(p)}<td class="num">${p.trophies || 0}</td></tr>`).join('');
+
+    html += '<div class="section-subtitle">📊 Таблицы лидеров</div>';
+    html += '<div class="table-tabs">';
+    const tabBtn = (id, iconSvg, label, isActive) => `<button class="table-tab ${isActive ? 'active' : ''}" data-tab="${id}" onclick="switchTableTab('${id}', this)">${iconSvg} <span>${label}</span></button>`;
+    html += tabBtn('skill', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>', 'SKILL', true);
+    html += tabBtn('wr', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>', 'Винрейт', false);
+    html += tabBtn('shards', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/></svg>', 'Осколки', false);
+    html += tabBtn('streaks', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>', 'Стрики', false);
+    html += tabBtn('dungeonRecord', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>', 'Данж-волны', false);
+    html += tabBtn('dungBoss', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>', 'Данж-боссы', false);
+    html += tabBtn('active', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', 'Активность', false);
+    html += '</div>';
+
+    const makePanel = (id, active, head, rows) => `
+        <div class="table-panel ${active ? 'active' : ''}" data-panel="${id}">
+            <div class="table-container" style="overflow-x:auto;max-height:60vh;overflow-y:auto;margin-top:10px;">
+                <table style="min-width:400px">
+                    <thead><tr>${head}</tr></thead>
+                    <tbody>${rows || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Нет данных</td></tr>'}</tbody>
+                </table>
+            </div>
+        </div>`;
+
+    html += makePanel('skill', true, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Skill</th><th class="num">Победы</th>', skillRows);
+    html += makePanel('wr', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">WR</th><th class="num">W/L</th>', wrRows);
+    html += makePanel('shards', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Осколков</th>', shardRows);
+    html += makePanel('streaks', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Стрик</th>', streakRows);
+    html += makePanel('dungeonRecord', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Волн</th>', dungeonRecordRows);
+    html += makePanel('dungBoss', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Трофеев</th>', dungeonBossRows);
+    html += makePanel('active', false, '<th style="width:40px;text-align:center;">#</th><th>Игрок</th><th class="num">Боёв</th>', activeRows);
+
     html += '</div></div>';
     return html;
 }
 
-// ============ ЗАГРУЗКА СЕЗОНОВ ============
+// ============ ИНИЦИАЛИЗАЦИЯ ============
 async function detectSeasons() {
     renderProgress(0, SEASON_SCAN_LIMIT + 2, 'Определяю сезоны...');
-
     const checks = await Promise.all(
         Array.from({ length: SEASON_SCAN_LIMIT + 1 }, (_, n) => {
             const controller = new AbortController();
@@ -613,31 +690,21 @@ async function detectSeasons() {
                 .catch(() => { clearTimeout(timeoutId); return -1; });
         })
     );
-    
     const foundSeasons = checks.filter(n => n >= 0).sort((a, b) => a - b);
-
-    currentSeasonNum = foundSeasons.length > 0
-        ? foundSeasons[foundSeasons.length - 1] + 1
-        : 0;
-
+    currentSeasonNum = foundSeasons.length > 0 ? foundSeasons[foundSeasons.length - 1] + 1 : 0;
     seasonTabs = [...foundSeasons, currentSeasonNum];
-
+    
     renderProgress(SEASON_SCAN_LIMIT + 1, SEASON_SCAN_LIMIT + 2, 'Готовлю отображение...');
-
     const contentContainer = document.getElementById('tab-content-container');
     contentContainer.innerHTML = '';
-
     const totalLoads = seasonTabs.length;
     let loadedCount = 0;
-
+    
     function onSeasonLoaded() {
         loadedCount++;
         renderProgress(loadedCount, totalLoads, `Загружено ${loadedCount} из ${totalLoads} сезонов`);
         if (loadedCount >= totalLoads) {
-            setTimeout(() => {
-                const loader = document.getElementById('initial-loader');
-                if (loader) loader.style.display = 'none';
-            }, 500);
+            setTimeout(() => { const loader = document.getElementById('initial-loader'); if (loader) loader.style.display = 'none'; }, 500);
         }
     }
 
@@ -648,34 +715,20 @@ async function detectSeasons() {
         const div = document.createElement('div');
         div.id = tabId;
         div.className = `tab-content${isLast ? ' active' : ''}`;
-        div.innerHTML = '<div class="status-message"><div class="spinner"></div><p>Загрузка...</p></div>';
+        div.innerHTML = '<div class="status-message" style="text-align:center;padding:40px;color:var(--muted)">Загрузка...</div>';
         contentContainer.appendChild(div);
-
+        
         const loader = isCurrent ? loadCurrentSeason(sn, tabId) : loadArchiveSeason(sn, tabId);
         if (loader && loader.then) loader.then(onSeasonLoaded);
         else onSeasonLoaded();
     });
+    
+	activeSeason = currentSeasonNum;
+	renderCarousel();
+	switchSeason(currentSeasonNum);
+	loadTotalStats();
+}
 
-    activeSeason = currentSeasonNum;
-    renderTimeline();
-    loadTotalStats();
-}
-function renderTimeline() {
-    const container = document.getElementById('season-tabs');
-    container.innerHTML = seasonTabs.map(sn => {
-        const isActive = sn === activeSeason;
-        const isPassed = sn < activeSeason;
-        return `<div class="tl-item${isActive ? ' active' : ''}${isPassed ? ' passed' : ''}" onclick="switchSeason(${sn})"><div class="tl-dot">${sn}</div><div class="tl-label">Сезон ${sn}</div></div>`;
-    }).join('');
-}
-function switchSeason(sn) {
-    if (sn === activeSeason) return;
-    activeSeason = sn;
-    renderTimeline();
-    document.querySelectorAll('#seasons-tab-seasons .tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(`tab-s${sn}`).classList.add('active');
-}
-window.switchSeason = switchSeason;
 async function loadCurrentSeason(sn, tabId) {
     const container = document.getElementById(tabId);
     try {
@@ -683,10 +736,11 @@ async function loadCurrentSeason(sn, tabId) {
         container.innerHTML = renderSeason(d, sn, true);
         return true;
     } catch {
-        container.innerHTML = `<div class="season-frame live"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Не удалось загрузить данные</div></div>`;
+        container.innerHTML = `<div class="season-frame live"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div style="text-align:center;padding:20px;color:var(--muted)">❌ Не удалось загрузить данные</div></div>`;
         return false;
     }
 }
+
 async function loadArchiveSeason(sn, tabId) {
     const container = document.getElementById(tabId);
     try {
@@ -695,32 +749,32 @@ async function loadArchiveSeason(sn, tabId) {
         container.innerHTML = renderSeason(d, sn, false);
         return true;
     } catch {
-        container.innerHTML = `<div class="season-frame ended"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div class="status-message">❌ Архив недоступен</div></div>`;
+        container.innerHTML = `<div class="season-frame ended"><div class="season-title">${SEASON_ICONS[sn] || '📋'} Сезон ${sn}</div><div style="text-align:center;padding:20px;color:var(--muted)">❌ Архив недоступен</div></div>`;
         return false;
     }
 }
 
-// ============ ЛЕГЕНДЫ ============
+// ============ ЛЕГЕНДЫ (ТАБЛИЦА ВСЕХ ВРЕМЁН) ============
 async function loadTotalStats() {
     const tbody = document.getElementById('total-table-body');
     const summary = document.getElementById('total-summary');
     if (!tbody) return;
     const aggregated = {};
-    function addPlayer(display, wins, losses, best, shards, tournaments, dp) {
+    
+    function addPlayer( display, wins, losses, best, shards, tournaments, dp) {
         if (!display) return;
-        if (!aggregated[display]) {
-            aggregated[display] = { display, wins: 0, losses: 0, best: 0, shards: 0, tournaments: 0, dungeonRecord: 0, dungeonWaves: 0, dungeonBosses: 0, fights: 0, winrate: 0 };
-        }
+        if (!aggregated[display]) aggregated[display] = { display, wins: 0, losses: 0, best: 0, shards: 0, tournaments: 0, dungeonRecord: 0, dungeonWaves: 0, dungeonBosses: 0, fights: 0, winrate: 0 };
         const a = aggregated[display];
         a.wins += wins || 0; a.losses += losses || 0; a.best = Math.max(a.best, best || 0); a.shards += shards || 0; a.tournaments += tournaments || 0;
         if (dp) { a.dungeonRecord = Math.max(a.dungeonRecord, dp.record || 0); a.dungeonWaves += dp.totalWaves || 0; a.dungeonBosses += dp.bosses || 0; }
     }
+    
     try {
         const d = await getStatsData();
         (d.players || []).forEach(p => { const dp = d.dungeon?.players?.[p.display]; addPlayer(p.display, p.wins, p.losses, p.best, p.shards, p.tournamentWins, dp); });
         if (d.heroArchive) { Object.entries(d.heroArchive).forEach(([playerName, heroes]) => { heroes.forEach(h => { addPlayer(playerName, h.wins, h.losses, h.best, 0, h.tournamentWins, null); }); }); }
     } catch (e) {}
-
+    
     for (let n = 0; n < currentSeasonNum; n++) {
         try {
             const d = await getSeasonData(n);
@@ -729,8 +783,10 @@ async function loadTotalStats() {
             if (d.heroArchive) { Object.entries(d.heroArchive).forEach(([playerName, heroes]) => { heroes.forEach(h => { addPlayer(playerName, h.wins, h.losses, h.best, 0, h.tournamentWins, null); }); }); }
         } catch (e) { break; }
     }
+    
     totalPlayersData = Object.values(aggregated).map(p => { p.fights = p.wins + p.losses; p.winrate = p.fights > 0 ? parseFloat((p.wins * 100 / p.fights).toFixed(1)) : 0; return p; });
     if (totalPlayersData.length === 0) { tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">Нет данных</td></tr>'; return; }
+    
     totalPlayersData.sort((a, b) => b.wins - a.wins);
     const totalWins = totalPlayersData.reduce((s, p) => s + p.wins, 0);
     const totalLosses = totalPlayersData.reduce((s, p) => s + p.losses, 0);
@@ -739,6 +795,7 @@ async function loadTotalStats() {
     const totalTournamentsAll = totalPlayersData.reduce((s, p) => s + p.tournaments, 0);
     const totalDungeonWavesAll = totalPlayersData.reduce((s, p) => s + p.dungeonWaves, 0);
     const totalDungeonBossesAll = totalPlayersData.reduce((s, p) => s + p.dungeonBosses, 0);
+    
     summary.innerHTML = `
         <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px"><div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalPlayersData.length}</div><div style="font-size:0.65rem;color:var(--muted);margin-top:2px">👥 Игроков</div></div>
         <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px"><div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalFightsAll.toLocaleString()}</div><div style="font-size:0.65rem;color:var(--muted);margin-top:2px">⚔️ Боёв</div></div>
@@ -747,9 +804,11 @@ async function loadTotalStats() {
         <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px"><div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalDungeonWavesAll.toLocaleString()}</div><div style="font-size:0.65rem;color:var(--muted);margin-top:2px">🌊 Волн данжа</div></div>
         <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;flex:1;min-width:100px"><div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${totalDungeonBossesAll.toLocaleString()}</div><div style="font-size:0.65rem;color:var(--muted);margin-top:2px">🐉 Боссов</div></div>
     `;
+    
     renderTotalTableFromSorted();
     initTotalSortable();
 }
+
 function filterTotalTable() {
     const query = document.getElementById('totalSearch').value.toLowerCase().trim();
     const tbody = document.getElementById('total-table-body');
@@ -760,6 +819,7 @@ function filterTotalTable() {
     renderRows(filtered);
 }
 window.filterTotalTable = filterTotalTable;
+
 function renderTotalTableFromSorted() {
     const tbody = document.getElementById('total-table-body');
     if (!tbody || !totalPlayersData.length) return;
@@ -768,6 +828,7 @@ function renderTotalTableFromSorted() {
     if (!data.length) { tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:40px">🔍 Никого не найдено</td></tr>'; return; }
     renderRows(data);
 }
+
 function renderRows(data) {
     const tbody = document.getElementById('total-table-body');
     tbody.innerHTML = data.map((p, i) => {
@@ -775,6 +836,7 @@ function renderRows(data) {
         return `<tr class="${i === 0 ? 'row-gold' : i === 1 ? 'row-silver' : i === 2 ? 'row-bronze' : ''}"><td><a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link">${p.display}</a></td><td class="number">${p.wins.toLocaleString()}</td><td class="number">${p.losses.toLocaleString()}</td><td class="number" style="color:${wrColor};font-weight:700">${p.winrate}%</td><td class="number">${p.fights.toLocaleString()}</td><td class="number">${p.best}</td><td class="number">${p.shards.toLocaleString()}</td><td class="number">${p.tournaments}</td><td class="number">${p.dungeonRecord || '—'}</td><td class="number">${p.dungeonWaves.toLocaleString() || '—'}</td><td class="number">${p.dungeonBosses.toLocaleString() || '—'}</td></tr>`;
     }).join('');
 }
+
 function initTotalSortable() {
     const table = document.getElementById('total-table');
     if (!table) return;
@@ -797,6 +859,8 @@ function initTotalSortable() {
     const defaultHeader = table.querySelector('[data-sort="wins"]');
     if (defaultHeader) defaultHeader.classList.add('desc');
 }
+
+// ============ СТАРТ ============
 const validSeasonTabs = ['seasons', 'alltime'];
 const initialHash = window.location.hash.substring(1);
 if (initialHash && validSeasonTabs.includes(initialHash)) {
@@ -818,7 +882,8 @@ detectSeasons();
         else scrollTopBtn.classList.remove('visible');
     });
 })();
-
 </script>
 </body>
 </html>
+	
+	
