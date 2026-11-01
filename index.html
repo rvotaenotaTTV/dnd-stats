@@ -236,7 +236,23 @@
 </head>
 <body>
     <div class="container">
-        <header class="header"><h1 class="header-title">СТАТИСТИКА</h1><p class="header-subtitle">8 сезон</p><button class="theme-toggle" onclick="toggleTheme()">🌓</button></header>
+		<header class="header">
+			<h1 class="header-title">СТАТИСТИКА</h1>
+			<p class="header-subtitle" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+				8 сезон 
+				<span style="color: var(--border); font-size: 1.2em; line-height: 1;">•</span> 
+				<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 400; color: var(--muted);">
+					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+						<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+						<line x1="16" y1="2" x2="16" y2="6"></line>
+						<line x1="8" y1="2" x2="8" y2="6"></line>
+						<line x1="3" y1="10" x2="21" y2="10"></line>
+					</svg>
+					<span id="update-time">Загрузка...</span>
+				</span>
+			</p>
+			<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+		</header>
 
 		<div class="nav-wrapper">
 			<button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
@@ -420,6 +436,31 @@
 		`;
 
 		Promise.all([dataPromise, statsPromise]).then(([data, stats]) => {
+            fetch('https://api.github.com/repos/rvotaenotaTTV/dnd-stats/commits?path=stats_data.json&per_page=1')
+                .then(r => r.json())
+                .then(commitData => {
+                    const timeEl = document.getElementById('update-time');
+                    if (commitData && commitData[0]) {
+                        const commitDate = new Date(commitData[0].commit.committer.date);
+                        const now = new Date();
+                        const isToday = commitDate.toDateString() === now.toDateString();
+                        
+                        let timeStr;
+                        if (isToday) {
+                            timeStr = 'сегодня ' + commitDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                        } else {
+                            timeStr = commitDate.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }) + ' ' + 
+                                      commitDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                        }
+                        timeEl.textContent = timeStr; // Убрали слово "обновлено", иконка теперь говорит сама за себя
+                    } else {
+                        timeEl.textContent = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                    }
+                })
+                .catch(e => {
+                    const timeEl = document.getElementById('update-time');
+                    if (timeEl) timeEl.textContent = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                });
 			if (data) {
 				classesData = data.classes;
 				racesData = data.races;
