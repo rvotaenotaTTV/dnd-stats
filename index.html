@@ -562,7 +562,7 @@
             const totalFights = Math.floor(players.reduce((s, p) => s + p.wins + p.losses, 0) / 2);
             const lightCount = players.filter(p => p.faction === 'Орден Света').length;
             const darkCount = players.filter(p => p.faction === 'Культ Тьмы').length;
-            const { duelLight = 0, duelDark = 0 } = data.factionScore || {};
+            const { duelLight = 0, duelDark = 0, battleLight = 0, battleDark = 0 } = data.factionScore || {};
 
             let html = '';
 
@@ -684,7 +684,7 @@
 			html += `<div class="stat-card"><div class="stat-value">${totalFights}</div><div class="stat-label">Всего боёв</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value" style="display:flex;align-items:center;justify-content:center;gap:6px;">${lightCount} ${lightF}</div><div class="stat-label">Орден Света</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value" style="display:flex;align-items:center;justify-content:center;gap:6px;">${darkCount} ${darkF}</div><div class="stat-label">Культ Тьмы</div></div>`;
-			html += `<div class="stat-card"><div class="stat-value" style="display:flex; justify-content:center; align-items:center; gap:4px;">${duelLight} <span style="color:var(--muted); font-size:0.8em;">:</span> ${duelDark}</div><div class="stat-label">Свет vs Тьма</div></div>`;
+			html += `<div class="stat-card"><div class="stat-value" style="display:flex; justify-content:center; align-items:center; gap:4px;">${battleLight} <span style="color:var(--muted); font-size:0.8em;">:</span> ${battleDark}</div><div class="stat-label">Свет vs Тьма</div></div>`;
 			html += `<div class="stat-card"><div class="stat-value">${data.tournaments || 0}</div><div class="stat-label">Турниров</div></div>`;
 			html += '</div>';
 
