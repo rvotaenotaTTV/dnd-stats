@@ -18,220 +18,209 @@
 	<link rel="stylesheet" href="theme.css">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
-    .section h3{color:var(--gold);font-size:.9rem;font-weight:700;margin:18px 0 8px}
-    .lore-block{background:var(--elevated);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;font-style:italic;line-height:1.7;color:var(--sub);font-size:.85rem;border-left:3px solid var(--border);transition:.2s}
-    .cta-block{text-align:center;padding:10px 0}
-    .cta-block p{font-size:.9rem;color:var(--sub)}
-    .cta-block .big-text{font-size:1.2rem;color:var(--gold);font-weight:700;margin-top:12px}
+/* ==========================================================================
+   1. ОБЩИЕ ЭЛЕМЕНТЫ И ТЕКСТ
+   ========================================================================== */
+.section h3 { color: var(--gold); font-size: .9rem; font-weight: 700; margin: 18px 0 8px; }
+.lore-block { background: var(--elevated); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 8px; font-style: italic; line-height: 1.7; color: var(--sub); font-size: .85rem; border-left: 3px solid var(--border); transition: .2s; }
+.cta-block { text-align: center; padding: 10px 0; }
+.cta-block p { font-size: .9rem; color: var(--sub); }
+.cta-block .big-text { font-size: 1.2rem; color: var(--gold); font-weight: 700; margin-top: 12px; }
 
-    .hero-lore{text-align:center;padding:60px 20px 40px;position:relative;overflow:hidden;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);margin-bottom:20px}
-    .hero-lore::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(240,185,11,0.04) 0%,transparent 40%),radial-gradient(circle at 70% 60%,rgba(163,113,247,0.04) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(91,192,235,0.03) 0%,transparent 50%);animation:heroFloat 20s ease-in-out infinite;z-index:0}
-    @keyframes heroFloat{0%,100%{transform:translate(0,0) rotate(0deg)}33%{transform:translate(1%,-1%) rotate(1deg)}66%{transform:translate(-1%,1%) rotate(-1deg)}}
-    .hero-lore>*{position:relative;z-index:1}
-    .path-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
-    .path-card{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px 16px;text-align:center;cursor:pointer;transition:all .25s ease;text-decoration:none;color:inherit;display:block}
-    .path-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 8px 24px rgba(240,185,11,0.1)}
-    .path-icon{font-size:2rem;margin-bottom:10px;display:block}
-    .path-title{font-weight:700;font-size:.9rem;color:var(--text);margin-bottom:4px}
-    .path-desc{font-size:.7rem;color:var(--muted);line-height:1.5}
+/* ==========================================================================
+   2. ГЕРОЙ-БЛОК (ГЛАВНЫЙ ЭКРАН С ЗАГОЛОВКОМ)
+   ========================================================================== */
+.hero-lore { text-align: center; padding: 60px 20px 40px; position: relative; overflow: hidden; border-radius: var(--radius); background: var(--card); border: 1px solid var(--border); margin-bottom: 20px; }
+.hero-lore::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 20%, rgba(240,185,11,0.04) 0%, transparent 40%), radial-gradient(circle at 70% 60%, rgba(163,113,247,0.04) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(91,192,235,0.03) 0%, transparent 50%); animation: heroFloat 20s ease-in-out infinite; z-index: 0; }
+@keyframes heroFloat { 0%,100%{transform:translate(0,0) rotate(0deg)} 33%{transform:translate(1%,-1%) rotate(1deg)} 66%{transform:translate(-1%,1%) rotate(-1deg)} }
+.hero-lore>* { position: relative; z-index: 1; }
 
-    .faction-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-    .faction-tab{flex:1;min-width:120px;padding:14px 18px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);cursor:pointer;text-align:center;transition:all .25s ease;font-family:inherit;font-size:.85rem;color:var(--sub);font-weight:600}
-    .faction-tab:hover{border-color:var(--gold);color:var(--text)}
-    .faction-tab.active{border-color:transparent;color:#000;font-weight:700}
-    .faction-tab.light.active{background:var(--gold);box-shadow:0 4px 16px rgba(240,185,11,0.3)}
-    .faction-tab.dark.active{background:var(--purple);box-shadow:0 4px 16px rgba(163,113,247,0.3)}
-    .faction-content{display:none;animation:fadeSlideIn .3s ease}
-    .faction-content.active{display:block}
-    @keyframes fadeSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .faction-motto{font-style:italic;font-size:1rem;padding:16px 20px;border-radius:var(--radius-sm);margin-bottom:16px;text-align:center;font-weight:600}
-    .faction-motto.light{background:rgba(240,185,11,0.08);color:var(--gold);border-left:4px solid var(--gold)}
-    .faction-motto.dark{background:rgba(163,113,247,0.08);color:var(--purple);border-left:4px solid var(--purple)}
-    .faction-detail{margin-bottom:10px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
-    .faction-detail summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.85rem;color:var(--text);background:var(--elevated);list-style:none;display:flex;align-items:center;gap:8px;transition:background .2s}
-    .faction-detail summary:hover{background:var(--card)}
-    .faction-detail summary::before{content:'▸';font-size:.7rem;transition:transform .2s;color:var(--gold)}
-    .faction-detail[open] summary::before{transform:rotate(90deg)}
-    .faction-detail .detail-content{padding:14px 16px;font-size:.8rem;color:var(--sub);line-height:1.7;border-top:1px solid var(--border)}
+/* ==========================================================================
+   3. КАРТОЧКИ ПУТЕЙ (ССЫЛКИ НА РАЗДЕЛЫ)
+   ========================================================================== */
+.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+.path-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 16px; text-align: center; cursor: pointer; transition: all .25s ease; text-decoration: none; color: inherit; display: block; }
+.path-card:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 8px 24px rgba(240,185,11,0.1); }
+.path-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+.path-title { font-weight: 700; font-size: .9rem; color: var(--text); margin-bottom: 4px; }
+.path-desc { font-size: .7rem; color: var(--muted); line-height: 1.5; }
 
-    .race-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
-    .race-card{background:var(--elevated);border-radius:var(--radius-sm);padding:20px;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .3s ease;cursor:default}
-    .race-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.2)}
-    .race-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;transition:all .3s ease}
-    .race-card.light::before{background:var(--gold)}
-    .race-card.dark::before{background:var(--purple)}
-    .race-card.neutral-tabaxi::before{background:var(--ice)}
-    .race-card.light:hover{box-shadow:0 8px 28px rgba(240,185,11,0.1);border-color:rgba(240,185,11,0.3)}
-    .race-card.dark:hover{box-shadow:0 8px 28px rgba(163,113,247,0.1);border-color:rgba(163,113,247,0.3)}
-    .race-card.neutral-tabaxi:hover{box-shadow:0 8px 28px rgba(91,192,235,0.08);border-color:rgba(91,192,235,0.25)}
-    .race-card .race-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .race-card .race-icon{font-size:1.8rem;flex-shrink:0}
-    .race-card .race-info{flex:1}
-    .race-card h4{font-size:.9rem;font-weight:700;margin:0 0 2px}
-    .race-card .race-affiliation{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-    .race-card .race-quote{font-style:italic;padding:10px 14px;border-radius:8px;margin-bottom:10px;font-size:.84rem;line-height:1.5;background:rgba(0,0,0,0.12)}
-    .race-card.light .race-quote{border-left:3px solid var(--gold);color:var(--gold)}
-    .race-card.dark .race-quote{border-left:3px solid var(--purple);color:var(--purple)}
-    .race-card.neutral-tabaxi .race-quote{border-left:3px solid var(--ice);color:var(--ice)}
-    .race-card p{font-size:.8rem;color:var(--sub);line-height:1.65;margin:0}
+/* ==========================================================================
+   4. ВКЛАДКИ ФРАКЦИЙ (СВЕТ / ТЬМА)
+   ========================================================================== */
+.faction-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.faction-tab { flex: 1; min-width: 120px; padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card); cursor: pointer; text-align: center; transition: all .25s ease; font-family: inherit; font-size: .85rem; color: var(--sub); font-weight: 600; }
+.faction-tab:hover { border-color: var(--gold); color: var(--text); }
+.faction-tab.active { border-color: transparent; color: #000; font-weight: 700; }
+.faction-tab.light.active { background: var(--gold); box-shadow: 0 4px 16px rgba(240,185,11,0.3); }
+.faction-tab.dark.active { background: var(--purple); box-shadow: 0 4px 16px rgba(163,113,247,0.3); }
+.faction-content { display: none; animation: fadeSlideIn .3s ease; }
+.faction-content.active { display: block; }
+@keyframes fadeSlideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.faction-motto { font-style: italic; font-size: 1rem; padding: 16px 20px; border-radius: var(--radius-sm); margin-bottom: 16px; text-align: center; font-weight: 600; }
+.faction-motto.light { background: rgba(240,185,11,0.08); color: var(--gold); border-left: 4px solid var(--gold); }
+.faction-motto.dark { background: rgba(163,113,247,0.08); color: var(--purple); border-left: 4px solid var(--purple); }
 
-    .territory-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+/* ==========================================================================
+   5. ДЕТАЛИ ФРАКЦИЙ (СПОЙЛЕРЫ)
+   ========================================================================== */
+.faction-detail { margin-bottom: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.faction-detail summary { padding: 12px 16px; cursor: pointer; font-weight: 600; font-size: .85rem; color: var(--text); background: var(--elevated); list-style: none; display: flex; align-items: center; gap: 8px; transition: background .2s; }
+.faction-detail summary:hover { background: var(--card); }
+.faction-detail summary::before { content: '▸'; font-size: .7rem; transition: transform .2s; color: var(--gold); }
+.faction-detail[open] summary::before { transform: rotate(90deg); }
+.faction-detail .detail-content { padding: 14px 16px; font-size: .8rem; color: var(--sub); line-height: 1.7; border-top: 1px solid var(--border); }
 
-    .territory-card{
-        --territory-color: var(--border);
-        --territory-glow: rgba(255,255,255,0.04);
-        --territory-glow-lg: rgba(255,255,255,0.08);
-        --territory-corner: rgba(255,255,255,0.04);
-        background: var(--elevated);
-        border: 2px solid var(--territory-color);
-        border-radius: var(--radius-sm);
-        padding: 16px;
-        padding-right: 42px; /* место под уголок */
-        transition: all .3s ease;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 0 20px var(--territory-glow);
-    }
+/* ==========================================================================
+   6. СЕТКА РАС
+   ========================================================================== */
+.race-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+.race-card { background: var(--elevated); border-radius: var(--radius-sm); padding: 20px; border: 1px solid var(--border); position: relative; overflow: hidden; transition: all .3s ease; cursor: default; }
+.race-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); }
+.race-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 4px 0 0 4px; transition: all .3s ease; }
+.race-card.light::before { background: var(--gold); }
+.race-card.dark::before { background: var(--purple); }
+.race-card.neutral-tabaxi::before { background: var(--ice); }
+.race-card.light:hover { box-shadow: 0 8px 28px rgba(240,185,11,0.1); border-color: rgba(240,185,11,0.3); }
+.race-card.dark:hover { box-shadow: 0 8px 28px rgba(163,113,247,0.1); border-color: rgba(163,113,247,0.3); }
+.race-card.neutral-tabaxi:hover { box-shadow: 0 8px 28px rgba(91,192,235,0.08); border-color: rgba(91,192,235,0.25); }
+.race-card .race-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.race-card .race-icon { font-size: 1.8rem; flex-shrink: 0; }
+.race-card .race-info { flex: 1; }
+.race-card h4 { font-size: .9rem; font-weight: 700; margin: 0 0 2px; }
+.race-card .race-affiliation { font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.race-card .race-quote { font-style: italic; padding: 10px 14px; border-radius: 8px; margin-bottom: 10px; font-size: .84rem; line-height: 1.5; background: rgba(0,0,0,0.12); }
+.race-card.light .race-quote { border-left: 3px solid var(--gold); color: var(--gold); }
+.race-card.dark .race-quote { border-left: 3px solid var(--purple); color: var(--purple); }
+.race-card.neutral-tabaxi .race-quote { border-left: 3px solid var(--ice); color: var(--ice); }
+.race-card p { font-size: .8rem; color: var(--sub); line-height: 1.65; margin: 0; }
 
-    .territory-card:hover{
-        transform: translateY(-2px);
-        box-shadow: 0 6px 24px var(--territory-glow-lg);
-    }
+/* ==========================================================================
+   7. СЕТКА ТЕРРИТОРИЙ
+   ========================================================================== */
+.territory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.territory-card { --territory-color: var(--border); --territory-glow: rgba(255,255,255,0.04); --territory-glow-lg: rgba(255,255,255,0.08); --territory-corner: rgba(255,255,255,0.04); background: var(--elevated); border: 2px solid var(--territory-color); border-radius: var(--radius-sm); padding: 16px; padding-right: 42px; transition: all .3s ease; position: relative; overflow: hidden; box-shadow: 0 0 20px var(--territory-glow); }
+.territory-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px var(--territory-glow-lg); }
+.territory-card::after { content: ''; position: absolute; top: 0; right: 0; width: 50px; height: 50px; border-radius: 0 0 0 50px; background: var(--territory-corner); transition: opacity .3s; pointer-events: none; }
+.territory-card .territory-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.territory-card .territory-name { font-size: .85rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.territory-card .territory-icon { font-size: 1.3rem; }
+.territory-card .territory-lore { font-size: .75rem; color: var(--muted); line-height: 1.6; font-style: italic; }
+.territory-card.wide { grid-column: 1 / -1; justify-self: center; width: calc(50% - 5px); max-width: 100%; }
 
-    .territory-card::after{
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 50px;
-        height: 50px;
-        border-radius: 0 0 0 50px;
-        background: var(--territory-corner);
-        transition: opacity .3s;
-        pointer-events: none;
-    }
+/* ==========================================================================
+   8. ХРОНИКА (ТАЙМЛАЙН СЕЗОНОВ)
+   ========================================================================== */
+.chronicle-container { max-width: 800px; margin: 0 auto; position: relative; padding-left: 30px; }
+.chronicle-container::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--gold), var(--purple), var(--ice)); opacity: 0.3; }
+.chronicle-season { margin-bottom: 40px; position: relative; animation: fadeInUp .5s ease forwards; opacity: 0; }
+.chronicle-season:nth-child(1) { animation-delay: .1s; }
+.chronicle-season:nth-child(2) { animation-delay: .2s; }
+.chronicle-season:nth-child(3) { animation-delay: .3s; }
+.chronicle-season:nth-child(4) { animation-delay: .4s; }
+.chronicle-season:nth-child(5) { animation-delay: .5s; }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.season-marker { position: absolute; left: -38px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--card); border: 2px solid var(--border); z-index: 2; }
+.season-marker.current { background: var(--ice); border-color: var(--ice); box-shadow: 0 0 15px rgba(91,192,235,0.6); }
+.chronicle-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all .3s ease; background: var(--elevated); }
+.chronicle-card:hover { border-color: var(--gold); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+.chronicle-card summary { cursor: pointer; list-style: none; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border-bottom: 1px solid transparent; transition: border-color .2s; }
+.chronicle-card summary::-webkit-details-marker { display: none; }
+.chronicle-card summary::after { content: '▸'; font-size: .8rem; color: var(--gold); transition: transform .3s; margin-left: 12px; flex-shrink: 0; }
+.chronicle-card[open] summary { border-bottom-color: var(--border); }
+.chronicle-card[open] summary::after { transform: rotate(90deg); }
+.chronicle-summary-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 12px; }
+.chronicle-title { font-weight: 800; font-size: 1.1rem; white-space: nowrap; }
+.chronicle-badge { padding: 4px 12px; border-radius: 20px; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; flex-shrink: 0; }
+.chronicle-badge.completed { background: rgba(240,185,11,0.1); color: var(--gold); }
+.chronicle-badge.ongoing { background: rgba(91,192,235,0.15); color: var(--ice); animation: pulseBadge 2s infinite; }
+.chronicle-badge.upcoming { background: rgba(163,113,247,0.1); color: var(--purple); }
+@keyframes pulseBadge { 0%,100%{opacity:1} 50%{opacity:0.6} }
+.chronicle-content { padding: 20px; }
+.chronicle-event { margin-bottom: 15px; }
+.chronicle-event h4 { font-size: .9rem; font-weight: 700; margin: 0 0 5px; display: flex; align-items: center; gap: 8px; }
+.chronicle-event p { font-size: .85rem; color: var(--sub); line-height: 1.6; margin: 0; }
+.chronicle-quote { margin: 15px 0; padding: 12px 15px; background: rgba(240,185,11,0.05); border-left: 3px solid var(--gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-style: italic; color: var(--text); font-size: .9rem; }
+.chronicle-quote span { display: block; margin-top: 5px; font-size: .75rem; color: var(--gold); font-weight: 600; font-style: normal; }
+.chronicle-aftermath { background: var(--card); padding: 12px 15px; border-radius: var(--radius-sm); font-size: .8rem; color: var(--muted); border: 1px dashed var(--border); }
+.chronicle-aftermath strong { color: var(--text); }
 
-    .territory-card .territory-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .territory-card .territory-name{font-size:.85rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
-    .territory-card .territory-icon{font-size:1.3rem}
-    .territory-card .territory-lore{font-size:.75rem;color:var(--muted);line-height:1.6;font-style:italic}
-
-    .territory-card.wide {
-        grid-column: 1 / -1;
-        justify-self: center;
-        width: calc(50% - 5px);
-        max-width: 100%;
-    }
-    @media (max-width: 768px) {
-        .territory-card.wide {
-            grid-column: auto;
-            width: 100%;
-        }
-    }
-
-    .shard-box{background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:28px 24px;min-height:180px;text-align:center;cursor:pointer;transition:.2s;user-select:none;max-width:520px;margin:0 auto}
-    .shard-box:hover{border-color:var(--gold)}
-
-    .chronicle-container{max-width:800px;margin:0 auto;position:relative;padding-left:30px}
-    .chronicle-container::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--purple),var(--ice));opacity:0.3}
-    .chronicle-season{margin-bottom:40px;position:relative;animation:fadeInUp .5s ease forwards;opacity:0}
-    .chronicle-season:nth-child(1){animation-delay:.1s}
-    .chronicle-season:nth-child(2){animation-delay:.2s}
-    .chronicle-season:nth-child(3){animation-delay:.3s}
-    .chronicle-season:nth-child(4){animation-delay:.4s}
-    .chronicle-season:nth-child(5){animation-delay:.5s}
-    @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .season-marker{position:absolute;left:-38px;top:5px;width:16px;height:16px;border-radius:50%;background:var(--card);border:2px solid var(--border);z-index:2}
-    .season-marker.current{background:var(--ice);border-color:var(--ice);box-shadow:0 0 15px rgba(91,192,235,0.6)}
-
-    .chronicle-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .3s ease;background:var(--elevated)}
-    .chronicle-card:hover{border-color:var(--gold);box-shadow:0 8px 20px rgba(0,0,0,0.2)}
-
-    .chronicle-card summary{cursor:pointer;list-style:none;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);border-bottom:1px solid transparent;transition:border-color .2s}
-    .chronicle-card summary::-webkit-details-marker{display:none}
-    .chronicle-card summary::after{content:'▸';font-size:.8rem;color:var(--gold);transition:transform .3s;margin-left:12px;flex-shrink:0}
-    .chronicle-card[open] summary{border-bottom-color:var(--border)}
-    .chronicle-card[open] summary::after{transform:rotate(90deg)}
-
-    .chronicle-summary-row{display:flex;justify-content:space-between;align-items:center;width:100%;gap:12px}
-    .chronicle-title{font-weight:800;font-size:1.1rem;white-space:nowrap}
-    .chronicle-badge{padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
-    .chronicle-badge.completed{background:rgba(240,185,11,0.1);color:var(--gold)}
-    .chronicle-badge.ongoing{background:rgba(91,192,235,0.15);color:var(--ice);animation:pulseBadge 2s infinite}
-    .chronicle-badge.upcoming{background:rgba(163,113,247,0.1);color:var(--purple)}
-    @keyframes pulseBadge{0%,100%{opacity:1}50%{opacity:0.6}}
-
-    .chronicle-content{padding:20px}
-    .chronicle-event{margin-bottom:15px}
-    .chronicle-event h4{font-size:.9rem;font-weight:700;margin:0 0 5px;display:flex;align-items:center;gap:8px}
-    .chronicle-event p{font-size:.85rem;color:var(--sub);line-height:1.6;margin:0}
-    .chronicle-quote{margin:15px 0;padding:12px 15px;background:rgba(240,185,11,0.05);border-left:3px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-style:italic;color:var(--text);font-size:.9rem}
-    .chronicle-quote span{display:block;margin-top:5px;font-size:.75rem;color:var(--gold);font-weight:600;font-style:normal}
-    .chronicle-aftermath{background:var(--card);padding:12px 15px;border-radius:var(--radius-sm);font-size:.8rem;color:var(--muted);border:1px dashed var(--border)}
-    .chronicle-aftermath strong{color:var(--text)}
-	
-    @media (max-width: 768px) {
-        .container { padding: 12px 14px 80px; }
-        .header { padding: 20px 0 8px; }
-        .header-title { font-size: 1.6rem; }
-        .header-subtitle { font-size: 0.8rem; }
-        .theme-toggle { position: static; transform: none; margin: 10px auto 0; display: block; width: fit-content; }
-        .hero-lore { padding: 32px 16px 24px; }
-        .hero-lore p { font-size: 0.78rem !important; }
-        .path-grid { grid-template-columns: 1fr; gap: 8px; }
-        .path-card { padding: 16px 12px; }
-        .path-icon { font-size: 1.6rem; margin-bottom: 6px; }
-        .path-title { font-size: 0.85rem; }
-        .path-desc { font-size: 0.68rem; }
-        .faction-tabs { flex-direction: column; gap: 6px; }
-        .faction-tab { padding: 10px 12px; font-size: 0.78rem; min-width: auto; }
-        .faction-motto { font-size: 0.85rem; padding: 12px 14px; }
-        .faction-detail summary { padding: 10px 14px; font-size: 0.8rem; }
-        .faction-detail .detail-content { padding: 12px 14px; font-size: 0.75rem; line-height: 1.6; }
-        .race-grid { grid-template-columns: 1fr; gap: 10px; }
-        .race-card { padding: 16px 14px; }
-        .race-card .race-icon { font-size: 1.6rem; }
-        .race-card h4 { font-size: 0.85rem; }
-        .race-card .race-quote { font-size: 0.78rem; padding: 8px 12px; }
-        .race-card p { font-size: 0.75rem; line-height: 1.6; }
-        .territory-grid { grid-template-columns: 1fr; gap: 8px; }
-        .territory-card { padding: 14px 12px; }
-        .territory-card .territory-name { font-size: 0.8rem; }
-        .territory-card .territory-icon { font-size: 1.1rem; }
-        .territory-card .territory-badge { font-size: 0.6rem; padding: 2px 8px; }
-        .territory-card .territory-lore { font-size: 0.7rem; line-height: 1.55; }
-        .section h3 { font-size: 0.85rem; }
-        .lore-block { padding: 12px 14px; font-size: 0.78rem; line-height: 1.65; }
-        .shard-box { padding: 20px 16px; min-height: 150px; font-size: 0.78rem; }
-        .chronicle-container { padding-left: 18px; }
-        .chronicle-container::before { left: 9px; }
-        .season-marker { left: -22px; width: 11px; height: 11px; top: 8px; }
-        .chronicle-season { margin-bottom: 24px; }
-        .chronicle-card summary { padding: 12px 14px; }
-        .chronicle-summary-row { flex-direction: row; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .chronicle-title { font-size: 0.82rem; white-space: normal; line-height: 1.3; }
-        .chronicle-badge { font-size: 0.58rem; padding: 2px 8px; }
-        .chronicle-content { padding: 14px 12px; }
-        .chronicle-event { margin-bottom: 12px; }
-        .chronicle-event h4 { font-size: 0.8rem; }
-        .chronicle-event p { font-size: 0.75rem; line-height: 1.55; }
-        .chronicle-quote { padding: 10px 12px; font-size: 0.78rem; margin: 12px 0; }
-        .chronicle-quote span { font-size: 0.68rem; }
-        .chronicle-aftermath { padding: 10px 12px; font-size: 0.72rem; line-height: 1.55; }
-        .cta-block p { font-size: 0.82rem; }
-        .cta-block .big-text { font-size: 1.05rem; }
-        .table-container { -webkit-overflow-scrolling: touch; overflow-x: auto; }
-        table { font-size: 0.72rem; }
-        th, td { padding: 7px 8px; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
-        .table-container table[style*="min-width"] { min-width: 480px !important; }
-    }
-
-/* === SCROLL PROGRESS + SCROLL TOP === */
+/* ==========================================================================
+   9. ИНТЕРФЕЙС (ПРОКРУТКА, КНОПКИ)
+   ========================================================================== */
 .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--ice), var(--red)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
 .scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .scroll-top.visible { opacity: 1; pointer-events: all; }
 .scroll-top:hover { background: var(--gold); color: #000; transform: translateY(-3px); }
+
+/* ==========================================================================
+   10. МОБИЛЬНАЯ АДАПТАЦИЯ
+   ========================================================================== */
 @media (max-width: 768px) {
+    .container { padding: 12px 14px 80px; }
+    .header { padding: 20px 0 8px; }
+    .header-title { font-size: 1.6rem; }
+    .header-subtitle { font-size: 0.8rem; }
+    .theme-toggle { position: static; transform: none; margin: 10px auto 0; display: block; width: fit-content; }
+    
+    .hero-lore { padding: 32px 16px 24px; }
+    .hero-lore p { font-size: 0.78rem !important; }
+    
+    .path-grid { grid-template-columns: 1fr; gap: 8px; }
+    .path-card { padding: 16px 12px; }
+    .path-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .path-title { font-size: 0.85rem; }
+    .path-desc { font-size: 0.68rem; }
+    
+    .faction-tabs { flex-direction: column; gap: 6px; }
+    .faction-tab { padding: 10px 12px; font-size: 0.78rem; min-width: auto; }
+    .faction-motto { font-size: 0.85rem; padding: 12px 14px; }
+    .faction-detail summary { padding: 10px 14px; font-size: 0.8rem; }
+    .faction-detail .detail-content { padding: 12px 14px; font-size: 0.75rem; line-height: 1.6; }
+    
+    .race-grid { grid-template-columns: 1fr; gap: 10px; }
+    .race-card { padding: 16px 14px; }
+    .race-card .race-icon { font-size: 1.6rem; }
+    .race-card h4 { font-size: 0.85rem; }
+    .race-card .race-quote { font-size: 0.78rem; padding: 8px 12px; }
+    .race-card p { font-size: 0.75rem; line-height: 1.6; }
+    
+    .territory-grid { grid-template-columns: 1fr; gap: 8px; }
+    .territory-card { padding: 14px 12px; }
+    .territory-card .territory-name { font-size: 0.8rem; }
+    .territory-card .territory-icon { font-size: 1.1rem; }
+    .territory-card .territory-badge { font-size: 0.6rem; padding: 2px 8px; }
+    .territory-card .territory-lore { font-size: 0.7rem; line-height: 1.55; }
+    .territory-card.wide { grid-column: auto; width: 100%; }
+    
+    .section h3 { font-size: 0.85rem; }
+    .lore-block { padding: 12px 14px; font-size: 0.78rem; line-height: 1.65; }
+    .shard-box { padding: 20px 16px; min-height: 150px; font-size: 0.78rem; }
+    
+    .chronicle-container { padding-left: 18px; }
+    .chronicle-container::before { left: 9px; }
+    .season-marker { left: -22px; width: 11px; height: 11px; top: 8px; }
+    .chronicle-season { margin-bottom: 24px; }
+    .chronicle-card summary { padding: 12px 14px; }
+    .chronicle-summary-row { flex-direction: row; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .chronicle-title { font-size: 0.82rem; white-space: normal; line-height: 1.3; }
+    .chronicle-badge { font-size: 0.58rem; padding: 2px 8px; }
+    .chronicle-content { padding: 14px 12px; }
+    .chronicle-event { margin-bottom: 12px; }
+    .chronicle-event h4 { font-size: 0.8rem; }
+    .chronicle-event p { font-size: 0.75rem; line-height: 1.55; }
+    .chronicle-quote { padding: 10px 12px; font-size: 0.78rem; margin: 12px 0; }
+    .chronicle-quote span { font-size: 0.68rem; }
+    .chronicle-aftermath { padding: 10px 12px; font-size: 0.72rem; line-height: 1.55; }
+    
+    .cta-block p { font-size: 0.82rem; }
+    .cta-block .big-text { font-size: 1.05rem; }
+    
+    .table-container { -webkit-overflow-scrolling: touch; overflow-x: auto; }
+    table { font-size: 0.72rem; }
+    th, td { padding: 7px 8px; white-space: nowrap; word-break: normal; overflow-wrap: normal; hyphens: none; }
+    .table-container table[style*="min-width"] { min-width: 480px !important; }
+    
     .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
 }
 </style>

@@ -7,374 +7,128 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="theme.css">
 <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-        background: #0a0a0a;
-        color: #d4d4d4;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        font-size: 14px;
-        line-height: 1.6;
-        min-height: 100vh;
-        padding: 0 16px;
-        position: relative;
-        overflow-x: hidden;
-    }
+/* ==========================================================================
+   1. СБРОС И БАЗОВЫЕ СТИЛИ
+   ========================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: #0a0a0a; color: #d4d4d4; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 14px; line-height: 1.6; min-height: 100vh; padding: 0 16px; position: relative; overflow-x: hidden;
+}
+/* Глобальные эффекты: скан-линия и шум */
+body::after {
+    content: ''; position: fixed; top: 0; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(240,185,11,0.03), transparent);
+    animation: scan 8s linear infinite; pointer-events: none; z-index: 1;
+}
+@keyframes scan { 0% { transform: translateY(-120px); } 100% { transform: translateY(100vh); } }
+body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+}
 
-    body::after {
-        content: '';
-        position: fixed;
-        top: 0; left: 0; right: 0;
-        height: 120px;
-        background: linear-gradient(to bottom, transparent, rgba(240,185,11,0.03), transparent);
-        animation: scan 8s linear infinite;
-        pointer-events: none;
-        z-index: 1;
-    }
-    @keyframes scan {
-        0% { transform: translateY(-120px); }
-        100% { transform: translateY(100vh); }
-    }
+/* ==========================================================================
+   2. КОНТЕЙНЕР И ШАПКА
+   ========================================================================== */
+.container { max-width: 800px; margin: 0 auto; position: relative; z-index: 2; padding-top: 2px; padding-bottom: 2px; }
+.header { margin-bottom: 4px; padding-bottom: 2px; border-bottom: 1px solid #262626; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.header-title { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: -0.5px; color: #f5f5f5; position: relative; }
+.header-title .accent { color: var(--gold); text-shadow: 0 0 12px rgba(240,185,11,0.4); }
+.header-title .cursor { display: inline-block; width: 10px; height: 1.2em; background: var(--gold); margin-left: 4px; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.header-subtitle { font-size: 0.8rem; color: #737373; }
 
-    body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-        pointer-events: none;
-        z-index: 0;
-    }
+/* ==========================================================================
+   3. КАРТОЧКИ (ШАГИ ТУТОРИАЛА)
+   ========================================================================== */
+.tutorial-step { position: relative; background: #0f0f0f; border: 1px solid #262626; padding: 24px 22px; margin-bottom: 6px; transition: all 0.3s ease; overflow: hidden; }
+.tutorial-step:hover { border-color: rgba(240,185,11,0.3); background: #121212; box-shadow: 0 0 30px rgba(240,185,11,0.06), inset 0 0 20px rgba(240,185,11,0.02); }
+.tutorial-step::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
+.tutorial-step.faction-step::before { background: linear-gradient(90deg, transparent, var(--purple), transparent); }
 
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 2;
-        padding-top: 2px;
-        padding-bottom: 2px;
-    }
+.step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.step-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: #171717; border: 1px solid #333; color: var(--gold); flex-shrink: 0; transition: all 0.3s ease; }
+.tutorial-step:hover .step-icon { transform: scale(1.05); border-color: var(--gold); box-shadow: 0 0 16px rgba(240,185,11,0.2); color: #fff; }
+.faction-step .step-icon { border-color: rgba(163,113,247,0.4); box-shadow: 0 0 12px rgba(163,113,247,0.15); color: var(--purple); font-size: 1.2rem; }
+.faction-step:hover .step-icon { border-color: var(--purple); box-shadow: 0 0 16px rgba(163,113,247,0.3); color: #fff; }
+.step-icon svg { stroke: currentColor; fill: none; }
 
-    .header {
-        margin-bottom: 4px;
-        padding-bottom: 2px;
-        border-bottom: 1px solid #262626;
-        display: flex;
-        align-items: baseline;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-    .header-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: -0.5px;
-        color: #f5f5f5;
-        position: relative;
-    }
-    .header-title .accent {
-        color: var(--gold);
-        text-shadow: 0 0 12px rgba(240,185,11,0.4);
-    }
-    .header-title .cursor {
-        display: inline-block;
-        width: 10px;
-        height: 1.2em;
-        background: var(--gold);
-        margin-left: 4px;
-        vertical-align: text-bottom;
-        animation: blink 1s step-end infinite;
-    }
-    @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0; }
-    }
-    .header-subtitle {
-        font-size: 0.8rem;
-        color: #737373;
-    }
+.step-meta { flex: 1; min-width: 0; }
+.step-num { font-size: 0.65rem; font-weight: 700; color: #737373; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+.step-title { font-size: 1rem; font-weight: 700; color: #f5f5f5; text-transform: uppercase; letter-spacing: 0.5px; position: relative; display: inline-block; }
+.faction-step .step-title { color: var(--purple); }
+.step-title::after { content: attr(data-text); position: absolute; left: 2px; top: 0; color: rgba(240,185,11,0.3); z-index: -1; opacity: 0; transition: opacity 0.2s; }
+.tutorial-step:hover .step-title::after { opacity: 1; animation: glitch 0.3s linear; }
+@keyframes glitch { 0%{transform:translate(0)} 25%{transform:translate(-1px,1px)} 50%{transform:translate(1px,-1px)} 75%{transform:translate(-1px,-1px)} 100%{transform:translate(0)} }
 
-    .tutorial-step {
-        position: relative;
-        background: #0f0f0f;
-        border: 1px solid #262626;
-        padding: 24px 22px;
-        margin-bottom: 6px;
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-    .tutorial-step:hover {
-        border-color: rgba(240,185,11,0.3);
-        background: #121212;
-        box-shadow: 0 0 30px rgba(240,185,11,0.06), inset 0 0 20px rgba(240,185,11,0.02);
-    }
-    .tutorial-step::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.5;
-    }
-    .tutorial-step.faction-step::before {
-        background: linear-gradient(90deg, transparent, var(--purple), transparent);
-    }
+.step-desc { color: #a3a3a3; font-size: 0.85rem; margin-bottom: 12px; }
+.step-desc p { margin-bottom: 6px; }
+.step-desc p:last-child { margin-bottom: 0; }
+.step-desc strong { color: var(--gold); font-weight: 700; }
 
-    .step-header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 10px;
-    }
+/* ==========================================================================
+   4. ТЕКСТОВЫЕ ВЫДЕЛЕНИЯ И КОМАНДЫ
+   ========================================================================== */
+.faction-light-text { color: var(--gold); font-weight: 700; text-shadow: 0 0 8px rgba(240,185,11,0.3); }
+.faction-dark-text { color: var(--purple); font-weight: 700; text-shadow: 0 0 8px rgba(163,113,247,0.3); }
 
-    .step-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-        background: #171717;
-        border: 1px solid #333;
-        color: var(--gold);
-        flex-shrink: 0;
-        transition: all 0.3s ease;
-    }
-    .tutorial-step:hover .step-icon {
-        transform: scale(1.05);
-        border-color: var(--gold);
-        box-shadow: 0 0 16px rgba(240,185,11,0.2);
-        color: #fff;
-    }
-    .faction-step .step-icon {
-        border-color: rgba(163,113,247,0.4);
-        box-shadow: 0 0 12px rgba(163,113,247,0.15);
-        color: var(--purple);
-        font-size: 1.2rem;
-    }
-    .faction-step:hover .step-icon {
-        border-color: var(--purple);
-        box-shadow: 0 0 16px rgba(163,113,247,0.3);
-        color: #fff;
-    }
-    .step-icon svg {
-        stroke: currentColor;
-        fill: none;
-    }
+.step-cmd { display: inline-block; background: rgba(240,185,11,0.08); color: var(--gold); font-family: inherit; font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border: 1px solid rgba(240,185,11,0.3); transition: all 0.2s; }
+.step-cmd:hover { background: rgba(240,185,11,0.15); box-shadow: 0 0 12px rgba(240,185,11,0.2); }
 
-    .step-meta { flex: 1; min-width: 0; }
-    .step-num {
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: #737373;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 2px;
-    }
-    .step-title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: #f5f5f5;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        position: relative;
-        display: inline-block;
-    }
-    .faction-step .step-title { color: var(--purple); }
+.cmd-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #1a1a1a; font-size: 0.82rem; transition: background 0.2s; }
+.cmd-row:last-child { border-bottom: none; }
+.cmd-row:hover { background: rgba(240,185,11,0.03); }
+.cmd-row .cr-icon { flex-shrink: 0; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; color: var(--gold); transition: all 0.2s; }
+.cmd-row .cr-icon svg { stroke: currentColor; fill: none; }
+.cmd-row:hover .cr-icon { color: #fff; filter: drop-shadow(0 0 4px rgba(240,185,11,0.5)); }
+.cmd-row .step-cmd { min-width: 100px; text-align: center; margin: 0; flex-shrink: 0; }
+.cmd-row .cr-desc { color: #737373; font-size: 0.78rem; flex: 1; }
 
-    .step-title::after {
-        content: attr(data-text);
-        position: absolute;
-        left: 2px; top: 0;
-        color: rgba(240,185,11,0.3);
-        z-index: -1;
-        opacity: 0;
-        transition: opacity 0.2s;
-    }
-    .tutorial-step:hover .step-title::after {
-        opacity: 1;
-        animation: glitch 0.3s linear;
-    }
-    @keyframes glitch {
-        0% { transform: translate(0); }
-        25% { transform: translate(-1px, 1px); }
-        50% { transform: translate(1px, -1px); }
-        75% { transform: translate(-1px, -1px); }
-        100% { transform: translate(0); }
-    }
+/* ==========================================================================
+   5. ТЕРМИНЫ И ТУЛТИПЫ
+   ========================================================================== */
+.term { color: var(--gold); border-bottom: 1px dashed rgba(240,185,11,0.5); cursor: help; position: relative; transition: color 0.2s, border-color 0.2s, text-shadow 0.2s; -webkit-tap-highlight-color: transparent; }
+.term:hover, .term.active { color: #fff; border-bottom-color: var(--gold); text-shadow: 0 0 10px rgba(240,185,11,0.5); }
 
-    .step-desc {
-        color: #a3a3a3;
-        font-size: 0.85rem;
-        margin-bottom: 12px;
-    }
-    .step-desc p { margin-bottom: 6px; }
-    .step-desc p:last-child { margin-bottom: 0; }
-    .step-desc strong { color: var(--gold); font-weight: 700; }
+.term-tooltip { position: fixed; z-index: 10000; max-width: 320px; min-width: 200px; background: #0f0f0f; border: 1px solid rgba(240,185,11,0.45); box-shadow: 0 0 30px rgba(240,185,11,0.15), inset 0 0 20px rgba(240,185,11,0.03); padding: 12px 14px; font-family: inherit; font-size: 0.78rem; line-height: 1.55; color: #d4d4d4; pointer-events: none; opacity: 0; transform: translateY(6px); transition: opacity 0.18s ease, transform 0.18s ease; }
+.term-tooltip.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.term-tooltip::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.7; }
+.term-tooltip .tt-title { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gold); margin-bottom: 6px; }
+.term-tooltip .tt-body { color: #a3a3a3; }
+.term-tooltip .tt-body strong { color: #f5f5f5; font-weight: 700; }
 
-    .faction-light-text { color: var(--gold); font-weight: 700; text-shadow: 0 0 8px rgba(240,185,11,0.3); }
-    .faction-dark-text { color: var(--purple); font-weight: 700; text-shadow: 0 0 8px rgba(163,113,247,0.3); }
+/* ==========================================================================
+   6. ИНТЕРФЕЙС (ПОДВАЛ, ПРОКРУТКА)
+   ========================================================================== */
+.footer-link { margin-top: 4px; padding-top: 4px; border-top: 1px solid #262626; text-align: center; }
+.footer-link a { color: #737373; text-decoration: underline; font-size: 0.75rem; transition: 0.2s; }
+.footer-link a:hover { color: var(--gold); }
 
-    .step-cmd {
-        display: inline-block;
-        background: rgba(240,185,11,0.08);
-        color: var(--gold);
-        font-family: inherit;
-        font-size: 0.8rem;
-        font-weight: 700;
-        padding: 3px 10px;
-        border: 1px solid rgba(240,185,11,0.3);
-        transition: all 0.2s;
-    }
-    .step-cmd:hover {
-        background: rgba(240,185,11,0.15);
-        box-shadow: 0 0 12px rgba(240,185,11,0.2);
-    }
+.reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, var(--gold), var(--purple), var(--gold)); transform-origin: 0 50%; transform: scaleX(0); z-index: 1000; }
+.scroll-top { position: fixed; bottom: 80px; right: 20px; width: 40px; height: 40px; background: #0f0f0f; border: 1px solid #333; color: #737373; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1rem; }
+.scroll-top.visible { opacity: 1; pointer-events: all; }
+.scroll-top:hover { background: #171717; color: var(--gold); border-color: var(--gold); }
 
-    .cmd-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 0;
-        border-bottom: 1px solid #1a1a1a;
-        font-size: 0.82rem;
-        transition: background 0.2s;
-    }
-    .cmd-row:last-child { border-bottom: none; }
-    .cmd-row:hover { background: rgba(240,185,11,0.03); }
-
-    .cmd-row .cr-icon {
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--gold);
-        transition: all 0.2s;
-    }
-    .cmd-row .cr-icon svg {
-        stroke: currentColor;
-        fill: none;
-    }
-    .cmd-row:hover .cr-icon {
-        color: #fff;
-        filter: drop-shadow(0 0 4px rgba(240,185,11,0.5));
-    }
-
-    .cmd-row .step-cmd { min-width: 100px; text-align: center; margin: 0; flex-shrink: 0; }
-    .cmd-row .cr-desc { color: #737373; font-size: 0.78rem; flex: 1; }
-
-    .footer-link {
-        margin-top: 4px;
-        padding-top: 4px;
-        border-top: 1px solid #262626;
-        text-align: center;
-    }
-    .footer-link a {
-        color: #737373;
-        text-decoration: underline;
-        font-size: 0.75rem;
-        transition: 0.2s;
-    }
-    .footer-link a:hover { color: var(--gold); }
-
-    .reading-progress {
-        position: fixed; top: 0; left: 0; width: 100%; height: 2px;
-        background: linear-gradient(90deg, var(--gold), var(--purple), var(--gold));
-        transform-origin: 0 50%; transform: scaleX(0); z-index: 1000;
-    }
-
-    .scroll-top {
-        position: fixed; bottom: 80px; right: 20px; width: 40px; height: 40px;
-        background: #0f0f0f; border: 1px solid #333;
-        color: #737373; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease;
-        z-index: 98; font-size: 1rem;
-    }
-    .scroll-top.visible { opacity: 1; pointer-events: all; }
-    .scroll-top:hover { background: #171717; color: var(--gold); border-color: var(--gold); }
-
-    .term {
-        color: var(--gold);
-        border-bottom: 1px dashed rgba(240,185,11,0.5);
-        cursor: help;
-        position: relative;
-        transition: color 0.2s, border-color 0.2s, text-shadow 0.2s;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .term:hover,
-    .term.active {
-        color: #fff;
-        border-bottom-color: var(--gold);
-        text-shadow: 0 0 10px rgba(240,185,11,0.5);
-    }
-
-    .term-tooltip {
-        position: fixed;
-        z-index: 10000;
-        max-width: 320px;
-        min-width: 200px;
-        background: #0f0f0f;
-        border: 1px solid rgba(240,185,11,0.45);
-        box-shadow: 0 0 30px rgba(240,185,11,0.15), inset 0 0 20px rgba(240,185,11,0.03);
-        padding: 12px 14px;
-        font-family: inherit;
-        font-size: 0.78rem;
-        line-height: 1.55;
-        color: #d4d4d4;
-        pointer-events: none;
-        opacity: 0;
-        transform: translateY(6px);
-        transition: opacity 0.18s ease, transform 0.18s ease;
-    }
-    .term-tooltip.visible {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-    }
-    .term-tooltip::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.7;
-    }
-    .term-tooltip .tt-title {
-        display: block;
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--gold);
-        margin-bottom: 6px;
-    }
-    .term-tooltip .tt-body {
-        color: #a3a3a3;
-    }
-    .term-tooltip .tt-body strong {
-        color: #f5f5f5;
-        font-weight: 700;
-    }
-
-    @media (max-width: 600px) {
-        body { padding: 0 12px; }
-        body::after { display: none; }
-        .container { padding-top: 2px; padding-bottom: 2px; }
-        .header-title { font-size: 1.2rem; }
-        .tutorial-step { padding: 20px 16px; }
-        .step-icon { width: 40px; height: 40px; }
-        .step-icon svg { width: 18px; height: 18px; }
-        .step-title { font-size: 0.9rem; }
-        .step-desc { font-size: 0.8rem; }
-        .cmd-row { flex-wrap: wrap; gap: 6px; }
-        .cmd-row .step-cmd { min-width: 80px; font-size: 0.75rem; padding: 3px 8px; }
-        .cmd-row .cr-desc { font-size: 0.72rem; width: 100%; margin-left: 26px; }
-        .scroll-top { bottom: 70px; right: 16px; width: 36px; height: 36px; font-size: 0.9rem; }
-        .term-tooltip {
-            max-width: calc(100vw - 24px);
-            font-size: 0.75rem;
-            padding: 10px 12px;
-        }
-    }
+/* ==========================================================================
+   7. МОБИЛЬНАЯ АДАПТАЦИЯ
+   ========================================================================== */
+@media (max-width: 600px) {
+    body { padding: 0 12px; }
+    body::after { display: none; }
+    .container { padding-top: 2px; padding-bottom: 2px; }
+    .header-title { font-size: 1.2rem; }
+    .tutorial-step { padding: 20px 16px; }
+    .step-icon { width: 40px; height: 40px; }
+    .step-icon svg { width: 18px; height: 18px; }
+    .step-title { font-size: 0.9rem; }
+    .step-desc { font-size: 0.8rem; }
+    .cmd-row { flex-wrap: wrap; gap: 6px; }
+    .cmd-row .step-cmd { min-width: 80px; font-size: 0.75rem; padding: 3px 8px; }
+    .cmd-row .cr-desc { font-size: 0.72rem; width: 100%; margin-left: 26px; }
+    .scroll-top { bottom: 70px; right: 16px; width: 36px; height: 36px; font-size: 0.9rem; }
+    .term-tooltip { max-width: calc(100vw - 24px); font-size: 0.75rem; padding: 10px 12px; }
+}
 </style>
 </head>
 <body>
