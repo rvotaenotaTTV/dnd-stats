@@ -14,8 +14,8 @@
       "worst": 1,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 49,
-      "level": 4,
+      "shards": 51,
+      "level": 5,
       "factionWins": 8,
       "tournamentWins": 0,
       "skill": 0,
@@ -58,8 +58,8 @@
       "worst": 0,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 9,
-      "level": 0,
+      "shards": 10,
+      "level": 1,
       "factionWins": 1,
       "tournamentWins": 0,
       "skill": 0,
@@ -146,13 +146,13 @@
       "worst": 0,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 1,
+      "shards": 3,
       "level": 0,
       "factionWins": 0,
       "tournamentWins": 0,
       "skill": 0,
-      "achievements": [57],
-      "title": ""
+      "achievements": [57,46,54,56],
+      "title": "🏔 Покоритель глубин"
     },
     {
       "display": "kepocunuxa",
@@ -271,14 +271,14 @@
       "emoji": "👹🧪",
       "champion": false,
       "wins": 0,
-      "losses": 1,
+      "losses": 2,
       "streak": 0,
       "best": 0,
-      "loseStreak": 1,
-      "worst": 1,
+      "loseStreak": 2,
+      "worst": 2,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 13,
+      "shards": 14,
       "level": 1,
       "factionWins": 0,
       "tournamentWins": 0,
@@ -696,13 +696,13 @@
       "worst": 1,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 15,
+      "shards": 18,
       "level": 1,
       "factionWins": 1,
       "tournamentWins": 0,
       "skill": 0,
-      "achievements": [57,53,55,46,54,56],
-      "title": "🏔 Покоритель глубин"
+      "achievements": [57,53,55,46,54,56,35],
+      "title": "🐉 Легенда Подземелья"
     },
     {
       "display": "viskarec",
@@ -2852,8 +2852,8 @@
       "worst": 5,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 49,
-      "level": 4,
+      "shards": 51,
+      "level": 5,
       "factionWins": 2,
       "tournamentWins": 0,
       "skill": 0,
@@ -2879,7 +2879,7 @@
       "factionWins": 1,
       "tournamentWins": 0,
       "skill": 0,
-      "achievements": [57,35,46,54,56,53,55],
+      "achievements": [57,35,46,54,56,53,55,42],
       "title": "🐉 Легенда Подземелья"
     },
     {
@@ -3064,25 +3064,25 @@
       "displayName": "Эльф-Варвар",
       "emoji": "🧝🪓",
       "champion": false,
-      "wins": 4,
+      "wins": 5,
       "losses": 6,
-      "streak": 2,
-      "best": 2,
+      "streak": 3,
+      "best": 3,
       "loseStreak": 0,
       "worst": 5,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 40,
+      "shards": 46,
       "level": 4,
-      "factionWins": 4,
+      "factionWins": 5,
       "tournamentWins": 0,
       "skill": 0,
-      "achievements": [57,35,46,53,54,55,56,52],
+      "achievements": [57,35,46,53,54,55,56,52,50],
       "title": "🐉 Легенда Подземелья"
     }
   ],
   "factionScore": {
-    "duelLight": 56,
+    "duelLight": 57,
     "duelDark": 44,
     "battleLight": 0,
     "battleDark": 0
@@ -3091,14 +3091,14 @@
   "territoryWar": {
     "activeIndex": 0,
     "activeScore": {
-      "light": 56,
+      "light": 57,
       "dark": 44
     },
     "captured": []
   },
   "dungeonTrophies": {
-    "light": 82,
-    "dark": 202
+    "light": 91,
+    "dark": 218
   },
   "dungeon": {
     "players": {
@@ -3173,10 +3173,10 @@
         "hits": 175,
         "passive": "💥 Жажда крови",
         "familiar": "🦉 Сова",
-        "totalRuns": 3,
-        "totalWaves": 44,
-        "trophies": 14,
-        "bosses": 7
+        "totalRuns": 4,
+        "totalWaves": 58,
+        "trophies": 18,
+        "bosses": 9
       },
       "milyvolk": {
         "display": "milyvolk",
@@ -3211,10 +3211,10 @@
         "hits": 139,
         "passive": "👻 Призрачный щит",
         "familiar": "🐱 Кот",
-        "totalRuns": 4,
-        "totalWaves": 40,
-        "trophies": 12,
-        "bosses": 6
+        "totalRuns": 5,
+        "totalWaves": 49,
+        "trophies": 14,
+        "bosses": 7
       },
       "b1adstone": {
         "display": "b1adstone",
@@ -3287,10 +3287,10 @@
         "hits": 587,
         "passive": "✨ Благословение",
         "familiar": "🦀 Краб",
-        "totalRuns": 3,
-        "totalWaves": 70,
-        "trophies": 26,
-        "bosses": 12
+        "totalRuns": 4,
+        "totalWaves": 84,
+        "trophies": 30,
+        "bosses": 14
       },
       "janesyao": {
         "display": "janesyao",
@@ -3354,19 +3354,19 @@
         "emoji": "💀✝️",
         "name": "Нежить-Жрец",
         "faction": "Орден Света",
-        "record": 14,
-        "damage": 1748,
-        "crits": 6,
-        "misses": 6,
-        "blocks": 4,
-        "swings": 115,
-        "hits": 105,
-        "passive": "🎯 Метка Охотника",
-        "familiar": "🐗 Кабан",
-        "totalRuns": 6,
-        "totalWaves": 72,
-        "trophies": 17,
-        "bosses": 10
+        "record": 19,
+        "damage": 2824,
+        "crits": 18,
+        "misses": 13,
+        "blocks": 19,
+        "swings": 311,
+        "hits": 279,
+        "passive": "✨ Благословение",
+        "familiar": "🐢 Черепаха",
+        "totalRuns": 7,
+        "totalWaves": 91,
+        "trophies": 22,
+        "bosses": 13
       },
       "stories_____": {
         "display": "stories_____",
@@ -3443,13 +3443,29 @@
         "totalWaves": 9,
         "trophies": 2,
         "bosses": 1
+      },
+      "phili4pok": {
+        "display": "phili4pok",
+        "emoji": "🐱🌿",
+        "name": "Табакси-Друид",
+        "faction": "Орден Света",
+        "record": 14,
+        "damage": 1521,
+        "crits": 12,
+        "misses": 10,
+        "blocks": 4,
+        "swings": 184,
+        "hits": 170,
+        "passive": "👻 Призрачный щит",
+        "familiar": "🦀 Краб",
+        "totalRuns": 1,
+        "totalWaves": 14,
+        "trophies": 4,
+        "bosses": 2
       }
     }
   },
   "fights": [
-    {
-      "FullLog": "⚡💀🔮 rvotaenota 10:24 🏆🐱📿 myvineshan | 10:8 | 💨:8 | 💨:8"
-    },
     {
       "FullLog": "⚡🧑🦴 yougirl 12:32 🏆👹⚙️ kpem1 | 8:💥16 | 💨:8 | 4:8"
     },
@@ -3476,6 +3492,9 @@
     },
     {
       "FullLog": "🏆🧝🪓 b1adstone 33:24 ⚡💀🦴 evil_reed | 12:💨 | 8:4 | 4:7 | ❌:8 | ❌:💥14"
+    },
+    {
+      "FullLog": "⚡🏆🧝🪓 b1adstone 25:13 👹🧪 kotshiroyama | 8:5 | 8:5 | 💨:3 | 9:-"
     }
   ],
   "heroArchive": {}
