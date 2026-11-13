@@ -129,7 +129,7 @@
       "factionWins": 0,
       "tournamentWins": 0,
       "skill": 0,
-      "achievements": [57,33,34,35,37,38,41,42,46,53,54,55,56,32],
+      "achievements": [57,33,34,35,37,38,41,42,46,53,54,55,56,32,44],
       "title": "🗡️ Мастер клинка"
     },
     {
@@ -168,7 +168,7 @@
       "worst": 2,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 156,
+      "shards": 158,
       "level": 15,
       "factionWins": 9,
       "tournamentWins": 1,
@@ -476,7 +476,7 @@
       "worst": 4,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 240,
+      "shards": 242,
       "level": 24,
       "factionWins": 10,
       "tournamentWins": 0,
@@ -542,8 +542,8 @@
       "worst": 6,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 267,
-      "level": 26,
+      "shards": 270,
+      "level": 27,
       "factionWins": 31,
       "tournamentWins": 1,
       "skill": 158,
@@ -586,7 +586,7 @@
       "worst": 5,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 252,
+      "shards": 257,
       "level": 25,
       "factionWins": 10,
       "tournamentWins": 0,
@@ -1634,20 +1634,20 @@
       "displayName": "Орк-Чародей",
       "emoji": "👹🔮",
       "champion": false,
-      "wins": 5,
+      "wins": 6,
       "losses": 11,
-      "streak": 2,
-      "best": 2,
+      "streak": 3,
+      "best": 3,
       "loseStreak": 0,
       "worst": 5,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 36,
-      "level": 3,
-      "factionWins": 5,
+      "shards": 42,
+      "level": 4,
+      "factionWins": 6,
       "tournamentWins": 0,
-      "skill": 46,
-      "achievements": [57,53,52,55,49],
+      "skill": 61,
+      "achievements": [57,53,52,55,49,50],
       "title": "🥊 Боец"
     },
     {
@@ -2405,18 +2405,18 @@
       "emoji": "🧑⚔️",
       "champion": true,
       "wins": 34,
-      "losses": 34,
+      "losses": 35,
       "streak": 0,
       "best": 4,
-      "loseStreak": 2,
+      "loseStreak": 3,
       "worst": 4,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 261,
+      "shards": 265,
       "level": 26,
       "factionWins": 26,
       "tournamentWins": 2,
-      "skill": 168,
+      "skill": 166,
       "achievements": [57,53,46,54,56,55,50,15,47,48,49,19,38,37,39,32,24],
       "title": "☯️ Инь-Янь"
     },
@@ -3094,7 +3094,7 @@
       "worst": 6,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 295,
+      "shards": 298,
       "level": 29,
       "factionWins": 22,
       "tournamentWins": 0,
@@ -3148,7 +3148,7 @@
     }
   ],
   "factionScore": {
-    "duelLight": 855,
+    "duelLight": 856,
     "duelDark": 787,
     "battleLight": 4,
     "battleDark": 1
@@ -3157,7 +3157,7 @@
   "territoryWar": {
     "activeIndex": 5,
     "activeScore": {
-      "light": 126,
+      "light": 127,
       "dark": 114
     },
     "captured": [
@@ -3200,7 +3200,7 @@
   },
   "dungeonTrophies": {
     "light": 1096,
-    "dark": 2207
+    "dark": 2226
   },
   "dungeon": {
     "players": {
@@ -3218,10 +3218,10 @@
         "hits": 546,
         "passive": "✨ Благословение",
         "familiar": "🐢 Черепаха",
-        "totalRuns": 57,
-        "totalWaves": 856,
-        "trophies": 272,
-        "bosses": 136
+        "totalRuns": 58,
+        "totalWaves": 883,
+        "trophies": 283,
+        "bosses": 141
       },
       "k3nn3zy": {
         "display": "k3nn3zy",
@@ -3522,10 +3522,10 @@
         "hits": 469,
         "passive": "⚔️ Святая ярость",
         "familiar": "🐱 Кот",
-        "totalRuns": 60,
-        "totalWaves": 781,
-        "trophies": 233,
-        "bosses": 118
+        "totalRuns": 61,
+        "totalWaves": 795,
+        "trophies": 237,
+        "bosses": 120
       },
       "werewolfhuntern7": {
         "display": "werewolfhuntern7",
@@ -3655,10 +3655,10 @@
         "hits": 259,
         "passive": "🧿 Амулет Раскола",
         "familiar": "🦊 Лиса",
-        "totalRuns": 22,
-        "totalWaves": 299,
-        "trophies": 91,
-        "bosses": 45
+        "totalRuns": 23,
+        "totalWaves": 313,
+        "trophies": 95,
+        "bosses": 47
       },
       "ami_kron": {
         "display": "ami_kron",
@@ -3693,10 +3693,10 @@
         "hits": 410,
         "passive": "🗡️ Казнь",
         "familiar": "🦝 Енот",
-        "totalRuns": 37,
-        "totalWaves": 589,
-        "trophies": 188,
-        "bosses": 94
+        "totalRuns": 38,
+        "totalWaves": 606,
+        "trophies": 196,
+        "bosses": 97
       },
       "aiko_wannaplay": {
         "display": "aiko_wannaplay",
@@ -3712,10 +3712,10 @@
         "hits": 431,
         "passive": "💚 Стойкость",
         "familiar": "🐻 Медведь",
-        "totalRuns": 3,
-        "totalWaves": 62,
-        "trophies": 22,
-        "bosses": 10
+        "totalRuns": 4,
+        "totalWaves": 81,
+        "trophies": 29,
+        "bosses": 13
       },
       "ded_evgeniusai": {
         "display": "ded_evgeniusai",
@@ -3949,9 +3949,6 @@
   },
   "fights": [
     {
-      "FullLog": "🏆💀🛡️ artem_jz 27:23 ⚡💀✝️ atem_11 | 🛡:7 | 9:10 | 8:💨 | 6:10"
-    },
-    {
       "FullLog": "🏆🧑⚔️ juckbluck 32:29 ⚡👹🌿 rei_goth | 7:💨 | 7:9 | 9:💥15 | 6:8"
     },
     {
@@ -3977,6 +3974,9 @@
     },
     {
       "FullLog": "👹🎸 longdayforcat 14:24 ⚡🏆👹🗡️ velitar_flame | 10:8 | 4:6 | 10:-"
+    },
+    {
+      "FullLog": "⚡🧑⚔️ juckbluck 17:37 🏆👹🔮 master0120 | 7:11 | 💨:7 | 3:10 | 7:9"
     }
   ],
   "heroArchive": {
