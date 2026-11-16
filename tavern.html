@@ -18,14 +18,63 @@
     <link rel="stylesheet" href="theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
+    /* ==========================================================================
+       БЛОК ТРАКТИРЩИКА
+       ========================================================================== */
     .innkeeper { display: flex; align-items: center; gap: 14px; background: var(--elevated); border-radius: var(--radius-sm); padding: 16px 18px; margin-bottom: 8px; border-left: 3px solid var(--gold); }
-    .innkeeper-avatar { font-size: 2.5rem; flex-shrink: 0; }
+    
+    .innkeeper-avatar { 
+        width: 90px; 
+        height: 90px; 
+        flex-shrink: 0; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+    }
+    
+    .innkeeper-avatar img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: contain; 
+    }
+    
+    .innkeeper-avatar .fallback-emoji { font-size: 2.2rem; line-height: 1; }
+
     .innkeeper-text { flex: 1; min-width: 0; }
     .innkeeper-name { color: var(--gold); font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
     .innkeeper-quote { color: var(--sub); font-style: italic; font-size: 0.85rem; line-height: 1.5; min-height: 2.5em; word-break: break-word; }
     .balance-badge { background: var(--elevated); border: 1px solid var(--gold); border-radius: 25px; padding: 6px 16px; color: var(--gold); font-weight: 700; font-size: 0.9rem; white-space: nowrap; flex-shrink: 0; }
+
+    /* Строка помощника */
     .helper-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; color: var(--muted); font-size: 0.7rem; }
-    .helper-avatar { font-size: 1.2rem; flex-shrink: 0; }
+    .helper-avatar { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; }
+    .helper-avatar img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); }
+    .helper-avatar .fallback-emoji { font-size: 1.2rem; line-height: 1; }
+
+    /* Кнопка "Назад" */
+    .back-btn {
+        display: none;
+        background: var(--elevated);
+        border: 1px solid var(--border);
+        color: var(--sub);
+        padding: 8px 16px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        transition: all 0.2s;
+        align-items: center;
+        gap: 6px;
+        width: fit-content;
+    }
+    .back-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .back-btn.visible { display: inline-flex; }
+
+    /* ==========================================================================
+       ИГРОВОЙ ИНТЕРФЕЙС
+       ========================================================================== */
     .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .game-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; }
     .game-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(240,185,11,0.1); }
@@ -73,7 +122,8 @@
         .theme-toggle { position: static; transform: none; margin: 10px auto 0; display: block; width: fit-content; }
 
         .innkeeper { padding: 12px 14px; gap: 10px; flex-wrap: wrap; }
-        .innkeeper-avatar { font-size: 2rem; }
+        .innkeeper-avatar { width: 60px; height: 60px; }
+        .innkeeper-avatar .fallback-emoji { font-size: 1.8rem; }
         .innkeeper-name { font-size: 0.85rem; }
         .innkeeper-quote { font-size: 0.75rem; min-height: 2em; }
         .balance-badge { padding: 4px 12px; font-size: 0.78rem; margin-left: auto; }
@@ -171,7 +221,10 @@
 
     <div class="section" id="tavernSection">
         <div class="innkeeper">
-            <div class="innkeeper-avatar" id="innkeeperAvatar">🐼🍺</div>
+            <div class="innkeeper-avatar" id="innkeeperAvatar">
+                <img src="icons/guang.png" alt="ГуангГуанг" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="fallback-emoji" style="display:none;">🐼🍺</span>
+            </div>
             <div class="innkeeper-text">
                 <div class="innkeeper-name" id="innkeeperName">Трактирщик ГуангГуанг</div>
                 <div class="innkeeper-quote" id="innkeeperQuote">Сыграем в очко, странник?</div>
@@ -180,7 +233,10 @@
         </div>
 
         <div class="helper-row" id="helperRow" style="display:none">
-            <span class="helper-avatar">🐼</span> Джийонг молча протирает кружки. Кружку хозяина не трогать.
+            <span class="helper-avatar">
+                <img src="icons/guang.png" alt="Джийонг" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="fallback-emoji" style="display:none;">🐼</span>
+            </span> Джийонг молча протирает кружки. Кружку хозяина не трогать.
         </div>
 
         <div id="gameContainer">
@@ -250,13 +306,24 @@ const quotesKaterina = [
 function getQuotes(){ return GG_IN_EXPEDITION ? quotesKaterina : quotesGG }
 function randomQuote(){ const q=getQuotes(); return q[Math.floor(Math.random()*q.length)] }
 function setQuote(t){ document.getElementById('innkeeperQuote').textContent = t }
+
 function updateInnkeeperUI(){
-    document.getElementById('innkeeperAvatar').textContent = GG_IN_EXPEDITION ? '🐱👑' : '🐼🍺'
-	document.getElementById('innkeeperName').textContent = GG_IN_EXPEDITION ? 'Кэтэрина' : 'Трактирщик ГуангГуанг'
-    document.getElementById('helperRow').style.display = GG_IN_EXPEDITION ? 'flex' : 'none'
-    setQuote(randomQuote())
+    const avatarContainer = document.getElementById('innkeeperAvatar');
+    const nameEl = document.getElementById('innkeeperName');
+    const helperRow = document.getElementById('helperRow');
+    
+    if (GG_IN_EXPEDITION) {
+        avatarContainer.innerHTML = '<span class="fallback-emoji" style="display:flex; font-size:2.2rem;">🐱👑</span>';
+        nameEl.textContent = 'Кэтэрина';
+        helperRow.style.display = 'flex';
+    } else {
+        avatarContainer.innerHTML = '<img src="icons/guang.png" alt="ГуангГуанг" style="width:100%; height:100%; object-fit:contain;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';"><span class="fallback-emoji" style="display:none;">🐼🍺</span>';
+        nameEl.textContent = 'Трактирщик ГуангГуанг';
+        helperRow.style.display = 'none';
+    }
+    setQuote(randomQuote());
 }
-updateInnkeeperUI()
+updateInnkeeperUI();
 
 // === БАЛАНС ===
 window.tavernBalance = parseInt(localStorage.getItem('tavernBalance')) || 100
@@ -298,6 +365,7 @@ const gameScripts = {}
 
 async function loadGame(name){
     if (currentGame && currentGame.destroy) currentGame.destroy()
+    
     document.getElementById('gameContainer').innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)"><div class="spinner"></div><p>Загрузка...</p></div>'
 
     if (!gameScripts[name]) {
@@ -329,9 +397,10 @@ async function loadGame(name){
     }
 }
 
-window.goMenu = function(){
+function goMenu(){
     if (currentGame && currentGame.destroy) currentGame.destroy()
     currentGame = null
+    
     document.getElementById('gameContainer').innerHTML = `
         <div class="game-grid">
             <div class="game-card" onclick="loadGame('ochko')"><div class="game-emoji">🃏</div><div class="game-name">Не лопни!</div><div class="game-cost">Ставка: 10 💎</div></div>
@@ -343,6 +412,18 @@ window.goMenu = function(){
         </div>`
     setQuote(randomQuote())
 }
+
+
+window.goMenu = goMenu;
+
+document.getElementById('gameContainer').addEventListener('click', function(e) {
+    const btn = e.target.closest('button, a, div');
+    if (btn && (btn.textContent.includes('В таверну') || btn.textContent.includes('Назад'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (window.goMenu) window.goMenu();
+    }
+});
 
 /* === SCROLL PROGRESS + SCROLL TOP === */
 (function() {
@@ -358,7 +439,6 @@ window.goMenu = function(){
         else scrollTopBtn.classList.remove('visible');
     });
 })();
-
 </script>
 </body>
 </html>
