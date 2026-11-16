@@ -632,6 +632,11 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
         }
       
         function renderFullStats(data){
+			const medalImages = [
+				`<img src="icons/medal_gold.png" alt="Золото" style="width:36px;height:36px;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"><span style="display:none;font-size:1.8rem;">🥇</span>`,
+				`<img src="icons/medal_silver.png" alt="Серебро" style="width:36px;height:36px;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"><span style="display:none;font-size:1.8rem;">🥈</span>`,
+				`<img src="icons/medal_bronze.png" alt="Бронза" style="width:36px;height:36px;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"><span style="display:none;font-size:1.8rem;">🥉</span>`
+			];
             const totalPlayers = players.length;
             const totalFights = Math.floor(players.reduce((s, p) => s + p.wins + p.losses, 0) / 2);
             const lightCount = players.filter(p => p.faction === 'Орден Света').length;
@@ -837,8 +842,8 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
                 const img = icon
                     ? `<img src="${icon}" alt="${c.name}" style="width:64px;height:64px;object-fit:contain;" onerror="this.style.display='none'">`
                     : `<div style="font-size:2rem;margin:4px 0;">${classEmojis[c.name]||'⚔️'}</div>`;
-                html+=`<div class="hunter-card">
-                    <div class="hunter-medal">${['🥇','🥈','🥉'][i]}</div>
+				html+=`<div class="hunter-card">
+					<div class="hunter-medal">${medalImages[i]}</div>
                     <div style="margin:4px 0;height:64px;display:flex;align-items:center;justify-content:center;">${img}</div>
                     <div class="hunter-name">${c.name}</div>
                     <div class="hunter-count">${wr}% WR · ${c.total} боёв · ${c.players} игроков</div>
@@ -895,8 +900,8 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
                 const img = icon
                     ? `<img src="${icon}" alt="${r.name}" style="width:64px;height:64px;object-fit:contain;" onerror="this.style.display='none'">`
                     : `<div style="font-size:2rem;margin:4px 0;">${raceEmojis[r.name]||'🌍'}</div>`;
-                html+=`<div class="hunter-card">
-                    <div class="hunter-medal">${['🥇','🥈','🥉'][i]}</div>
+				html+=`<div class="hunter-card">
+					<div class="hunter-medal">${medalImages[i]}</div>
                     <div style="margin:4px 0;height:64px;display:flex;align-items:center;justify-content:center;">${img}</div>
                     <div class="hunter-name">${r.name}</div>
                     <div class="hunter-count">${wr}% WR · ${r.total} боёв · ${r.players} игроков</div>
@@ -962,14 +967,13 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
                 .sort((a,b)=>(b.wins/b.total)-(a.wins/a.total));
 
             const top3=comboArray.filter(c=>c.total>=50).slice(0,3);
-            const medals=['🥇','🥈','🥉'];
-            html+='<div class="hunters-top">';
-            top3.forEach((c,i)=>{
+			html+='<div class="hunters-top">';
+			top3.forEach((c,i)=>{
                 const parts=c.name.split('-');
                 const wr=(c.wins*100/c.total).toFixed(1);
                 const heroIcon = getHeroIcon(c.name, (raceEmojis[parts[0]]||'')+(classEmojis[parts[1]]||''), 48);
-                html+=`<div class="hunter-card">
-                    <div class="hunter-medal">${medals[i]}</div>
+				html+=`<div class="hunter-card">
+						<div class="hunter-medal">${medalImages[i]}</div>
                     <div style="margin:4px 0;height:48px;display:flex;align-items:center;justify-content:center;">${heroIcon}</div>
                     <div class="hunter-name">${c.name}</div>
                     <div class="hunter-count">${wr}% винрейт · ${c.total} боёв · ${c.players} игроков</div>
@@ -1180,14 +1184,12 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
                     titles.forEach(t=>titleCounts[t]=(titleCounts[t]||0)+1);
                 }
             });
-            const topHunters=Object.entries(playerTitles).sort((a,b)=>b[1].length-a[1].length).slice(0,3);
-            html+='<div class="hunters-top">';
-            ['🥇','🥈','🥉'].forEach((medal,idx)=>{
-                if(!topHunters[idx])return;
-                const[name,titles]=topHunters[idx];
-                html+=`<div class="hunter-card"><div class="hunter-medal">${medal}</div><div class="hunter-name">${name}</div><div class="hunter-count">${titles.length} титулов</div></div>`;
-            });
-            html+='</div>';
+			const topHunters=Object.entries(playerTitles).sort((a,b)=>b[1].length-a[1].length).slice(0,3);
+			html+='<div class="hunters-top">';
+			topHunters.forEach(([name,titles],idx)=>{
+				html+=`<div class="hunter-card"><div class="hunter-medal">${medalImages[idx]}</div><div class="hunter-name">${name}</div><div class="hunter-count">${titles.length} титулов</div></div>`;
+			});
+			html+='</div>';
             
             html+='<div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Все титулы</div><div class="titles-gallery">';
             
@@ -1239,7 +1241,7 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
 					const total=p.wins+p.losses;
 					const wr=total>0?(p.wins*100/total).toFixed(1):'0.0';
 					const rank=i+1;
-					const medal=rank===1?'🥇':(rank===2?'🥈':(rank===3?'🥉':rank));
+					const medal = rank;
 					const heroIcon = getHeroIcon(player.name||p.name, p.emoji||'🏆', 24);
 					html+=`<tr data-rank="${rank}" data-name="${p.display}" data-class="${player.name||''}" data-skill="${p.skill}" data-level="${p.level||0}" data-tournaments="${p.tournamentWins||0}" data-wl="${total}" data-winrate="${wr}">`;
 					html+=`<td style="color:${rank<=3?'var(--gold)':'var(--muted)'};font-weight:${rank<=3?'700':'400'};">${medal}</td>`;
