@@ -178,8 +178,8 @@ body::before {
             </div>
         </div>
         <div class="step-desc">
-            <p>Напиши <strong>!бой</strong> — Арена найдёт соперника и сведёт вас в дуэли (<span class="term" data-term="kd">КД</span>: 10 минут)</p>
-            <p>Победа приносит <span class="term" data-term="shards">осколки</span> и славу <span class="term" data-term="faction">фракции</span>. Поражение — тоже осколки, но меньше.</p>
+            <p>Напиши <strong>!бой</strong> — Арена найдёт соперника и сведёт вас в дуэли (<span class="term" data-term="kd" tabindex="0" role="button" aria-haspopup="true" aria-describedby="termTooltip">КД</span>: 10 минут)</p>
+            <p>Победа приносит <span class="term" data-term="shards" tabindex="0" role="button" aria-haspopup="true" aria-describedby="termTooltip">осколки</span> и славу <span class="term" data-term="faction" tabindex="0" role="button" aria-haspopup="true" aria-describedby="termTooltip">фракции</span>. Поражение — тоже осколки, но меньше.</p>
         </div>
     </div>
 
@@ -210,7 +210,7 @@ body::before {
                     </svg>
                 </span>
                 <span class="step-cmd">!инфо</span>
-                <span class="cr-desc">— взглянуть на <span class="term" data-term="chronicles">Хроники</span> своего героя (КД: 30 минут)</span>
+                <span class="cr-desc">— взглянуть на <span class="term" data-term="chronicles" tabindex="0" role="button" aria-haspopup="true" aria-describedby="termTooltip">Хроники</span> своего героя (КД: 30 минут)</span>
             </div>
             <div class="cmd-row">
                 <span class="cr-icon">
@@ -219,7 +219,7 @@ body::before {
                     </svg>
                 </span>
                 <span class="step-cmd">!данж</span>
-                <span class="cr-desc">— спуститься в <span class="term" data-term="abyss">Бездну</span> (КД: 10 минут)</span>
+                <span class="cr-desc">— спуститься в <span class="term" data-term="abyss" tabindex="0" role="button" aria-haspopup="true" aria-describedby="termTooltip">Бездну</span> (КД: 10 минут)</span>
             </div>
             <div class="cmd-row">
                 <span class="cr-icon">
@@ -228,7 +228,7 @@ body::before {
                     </svg>
                 </span>
                 <span class="step-cmd">!рега</span>
-                <span class="cr-desc">— вступить в <span class="term" data-term="tournament">Турнир</span> (12:00 и 14:00 по МСК)</span>
+                <span class="cr-desc">— вступить в <span class="term" data-term="tournament" tabindex="0" role="button" aria-haspopup="true" aria-describedby="termTooltip">Турнир</span> (12:00 и 14:00 по МСК)</span>
             </div>
             <div class="cmd-row">
                 <span class="cr-icon">
@@ -262,7 +262,7 @@ body::before {
     </div>
 </div>
 
-<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+<button class="scroll-top" id="scrollTop" type="button" aria-label="Наверх">↑</button>
 
 <div class="term-tooltip" id="termTooltip" role="tooltip" aria-hidden="true">
     <span class="tt-title" id="ttTitle"></span>
@@ -270,177 +270,284 @@ body::before {
 </div>
 
 <script>
-	const TERMS = {
-		shards: {
-			title: 'Осколки',
-			body: 'Валюта за бои, турниры и данж. Победа +3💎, поражение +1💎, чемпион турнира +10💎. Каждые <strong>10 осколков</strong> дают 1 уровень, а уровень входит в <strong>SKILL</strong>. На боевые статы не влияют.'
-		},
-		level: {
-			title: 'Уровень',
-			body: 'Считается как <strong>осколки / 10</strong>. Входит в формулу <strong>SKILL</strong>, но не повышает HP/ATK/DEF/DEX/MIN/MAX. Сохраняется при <strong>!харакири</strong>, сбрасывается при <strong>!сезон</strong>.'
-		},
-		faction: {
-			title: 'Фракция',
-			body: 'Орден Света или Культ Тьмы. Победы над вражеской фракцией идут в счёт войны за <strong>9 территорий</strong>. Чтобы захватить текущую землю, фракция первой набирает <strong>150 побед</strong>. Сияющий Шпиль и Зал Повествователя дают <strong>×2 очка</strong>.'
-		},
-		tournament: {
-			title: 'Турнир',
-			body: '1v1 на 16 участников по расписанию. Победитель получает титул <strong>Хранитель Раскола</strong> и +10💎. Проиграл — вылетел, но осколки остаются. В турнире не работают ивенты, данж и рейтинговые ачивки.'
-		},
-		kd: {
-			title: 'КД (Кулдаун)',
-			body: 'Время, которое нужно подождать перед повторным использованием команды. Например, после <strong>!бой</strong> — 10 минут, после <strong>!харакири</strong> — 30 минут.'
-		},
-		abyss: {
-			title: 'Бездна / Данж',
-			body: 'PvE-подземелье с бесконечными волнами. Каждая 5-я волна — босс. За каждые 5 волн +1💎, за босса — 1–3 трофея фракции. Рекорд сохраняется в статистике.'
-		},
-		harakiri: {
-			title: 'Харакири',
-			body: 'Сброс героя <strong>в архив</strong>. Осколки, уровень, SeenDay и ивенты сохраняются. Стрик, SKILL, титул и ачивки теряются. Вернуть героя — <strong>!воскресить</strong>.'
-		},
-		chronicles: {
-			title: 'Хроники',
-			body: 'Статистика героя: победы, поражения, винрейт, стрики, рекорды и титулы. Команда <strong>!инфо</strong> показывает их в чате.'
-		},
-		streak: {
-			title: 'Стрик',
-			body: 'Серия побед подряд. Каждый стрик, кратный 3 (3, 6, 9…), даёт +Streak💎. Лучший стрик входит в <strong>SKILL</strong>. Обнуляется при поражении.'
-		}
-	};
+(() => {
+    "use strict";
 
-    const tooltip = document.getElementById('termTooltip');
-    const ttTitle = document.getElementById('ttTitle');
-    const ttBody = document.getElementById('ttBody');
-    let activeTerm = null;
-    let hideTimer = null;
-
-    function showTooltip(termEl) {
-        const key = termEl.dataset.term;
-        const data = TERMS[key];
-        if (!data) return;
-
-        clearTimeout(hideTimer);
-        if (activeTerm && activeTerm !== termEl) activeTerm.classList.remove('active');
-        activeTerm = termEl;
-        termEl.classList.add('active');
-
-        ttTitle.textContent = data.title;
-        ttBody.innerHTML = data.body;
-
-        const rect = termEl.getBoundingClientRect();
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const margin = 8;
-
-        tooltip.classList.add('visible');
-        tooltip.setAttribute('aria-hidden', 'false');
-        const tw = tooltip.offsetWidth;
-        const th = tooltip.offsetHeight;
-
-        let left = rect.left + rect.width / 2 - tw / 2;
-        let top = rect.bottom + margin;
-
-        if (left < margin) left = margin;
-        if (left + tw > vw - margin) left = vw - tw - margin;
-
-        if (top + th > vh - margin) {
-            top = rect.top - th - margin;
+    // ------------------------------------------------------------------
+    // Словарь терминов
+    // ------------------------------------------------------------------
+    const TERMS = Object.freeze({
+        shards: {
+            title: "Осколки",
+            body: "Валюта за бои, турниры и данж. Победа +3💎, поражение +1💎, чемпион турнира +10💎. Каждые <strong>10 осколков</strong> дают 1 уровень, а уровень входит в <strong>SKILL</strong>. На боевые статы не влияют."
+        },
+        level: {
+            title: "Уровень",
+            body: "Считается как <strong>осколки / 10</strong>. Входит в формулу <strong>SKILL</strong>, но не повышает HP/ATK/DEF/DEX/MIN/MAX. Сохраняется при <strong>!харакири</strong>, сбрасывается при <strong>!сезон</strong>."
+        },
+        faction: {
+            title: "Фракция",
+            body: "Орден Света или Культ Тьмы. Победы над вражеской фракцией идут в счёт войны за <strong>9 территорий</strong>. Чтобы захватить текущую землю, фракция первой набирает <strong>150 побед</strong>. Сияющий Шпиль и Зал Повествователя дают <strong>×2 очка</strong>."
+        },
+        tournament: {
+            title: "Турнир",
+            body: "1v1 на 16 участников по расписанию. Победитель получает титул <strong>Хранитель Раскола</strong> и +10💎. Проиграл — вылетел, но осколки остаются. В турнире не работают ивенты, данж и рейтинговые ачивки."
+        },
+        kd: {
+            title: "КД (Кулдаун)",
+            body: "Время, которое нужно подождать перед повторным использованием команды. Например, после <strong>!бой</strong> — 10 минут, после <strong>!харакири</strong> — 30 минут."
+        },
+        abyss: {
+            title: "Бездна / Данж",
+            body: "PvE-подземелье с бесконечными волнами. Каждая 5-я волна — босс. За каждые 5 волн +1💎, за босса — 1–3 трофея фракции. Рекорд сохраняется в статистике."
+        },
+        harakiri: {
+            title: "Харакири",
+            body: "Сброс героя <strong>в архив</strong>. Осколки, уровень, SeenDay и ивенты сохраняются. Стрик, SKILL, титул и ачивки теряются. Вернуть героя — <strong>!воскресить</strong>."
+        },
+        chronicles: {
+            title: "Хроники",
+            body: "Статистика героя: победы, поражения, винрейт, стрики, рекорды и титулы. Команда <strong>!инфо</strong> показывает их в чате."
+        },
+        streak: {
+            title: "Стрик",
+            body: "Серия побед подряд. Каждый стрик, кратный 3 (3, 6, 9…), даёт +Streak💎. Лучший стрик входит в <strong>SKILL</strong>. Обнуляется при поражении."
         }
-        if (top < margin) top = margin;
+    });
 
-        tooltip.style.left = left + 'px';
-        tooltip.style.top = top + 'px';
+    const SELECTORS = Object.freeze({
+        tooltip: "#termTooltip",
+        title: "#ttTitle",
+        body: "#ttBody",
+        progress: "#readingProgress",
+        scrollTop: "#scrollTop",
+        easterEgg: "#easterEgg",
+        easterEggClose: "[data-action='close-easter-egg']",
+        secretStep: "#step2",
+        term: ".term"
+    });
+
+    const $ = selector => document.querySelector(selector);
+
+    // ------------------------------------------------------------------
+    // Всплывающие определения
+    // ------------------------------------------------------------------
+    class Glossary {
+        constructor() {
+            this.tooltip = $(SELECTORS.tooltip);
+            this.title = $(SELECTORS.title);
+            this.body = $(SELECTORS.body);
+            this.activeTerm = null;
+            this.hideTimer = null;
+
+            if (!this.tooltip || !this.title || !this.body) return;
+            this.bindEvents();
+        }
+
+        bindEvents() {
+            document.addEventListener("mouseover", event => {
+                const term = event.target.closest(SELECTORS.term);
+                if (term && !term.contains(event.relatedTarget)) this.show(term);
+            });
+
+            document.addEventListener("mouseout", event => {
+                const term = event.target.closest(SELECTORS.term);
+                if (term && !term.contains(event.relatedTarget)) this.scheduleHide();
+            });
+
+            document.addEventListener("click", event => {
+                const term = event.target.closest(SELECTORS.term);
+                if (term) {
+                    event.stopPropagation();
+                    if (this.activeTerm === term && this.isVisible()) {
+                        this.hide();
+                    } else {
+                        this.show(term);
+                    }
+                    return;
+                }
+
+                if (!event.target.closest(SELECTORS.tooltip)) this.hide();
+            });
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape") {
+                    this.hide();
+                    return;
+                }
+
+                const term = event.target.closest?.(SELECTORS.term);
+                if (term && (event.key === "Enter" || event.key === " ")) {
+                    event.preventDefault();
+                    this.activeTerm === term && this.isVisible()
+                        ? this.hide()
+                        : this.show(term);
+                }
+            });
+
+            window.addEventListener("scroll", () => this.hide(), { passive: true });
+            window.addEventListener("resize", () => {
+                if (this.isVisible() && this.activeTerm) this.position(this.activeTerm);
+            }, { passive: true });
+        }
+
+        isVisible() {
+            return this.tooltip.classList.contains("visible");
+        }
+
+        show(term) {
+            const definition = TERMS[term.dataset.term];
+            if (!definition) return;
+
+            clearTimeout(this.hideTimer);
+            this.activeTerm?.classList.remove("active");
+            this.activeTerm = term;
+            term.classList.add("active");
+
+            this.title.textContent = definition.title;
+            this.body.innerHTML = definition.body;
+            this.tooltip.classList.add("visible");
+            this.tooltip.setAttribute("aria-hidden", "false");
+            this.position(term);
+        }
+
+        position(term) {
+            const rect = term.getBoundingClientRect();
+            const margin = 8;
+            const tooltipWidth = this.tooltip.offsetWidth;
+            const tooltipHeight = this.tooltip.offsetHeight;
+
+            let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+            left = Math.max(margin, Math.min(left, window.innerWidth - tooltipWidth - margin));
+
+            let top = rect.bottom + margin;
+            if (top + tooltipHeight > window.innerHeight - margin) {
+                top = rect.top - tooltipHeight - margin;
+            }
+            top = Math.max(margin, Math.min(top, window.innerHeight - tooltipHeight - margin));
+
+            this.tooltip.style.left = `${left}px`;
+            this.tooltip.style.top = `${top}px`;
+        }
+
+        scheduleHide() {
+            clearTimeout(this.hideTimer);
+            this.hideTimer = setTimeout(() => this.hide(), 100);
+        }
+
+        hide() {
+            clearTimeout(this.hideTimer);
+            this.tooltip.classList.remove("visible");
+            this.tooltip.setAttribute("aria-hidden", "true");
+            this.activeTerm?.classList.remove("active");
+            this.activeTerm = null;
+        }
     }
 
-    function hideTooltip() {
-        hideTimer = setTimeout(() => {
-            tooltip.classList.remove('visible');
-            tooltip.setAttribute('aria-hidden', 'true');
-            if (activeTerm) {
-                activeTerm.classList.remove('active');
-                activeTerm = null;
-            }
-        }, 80);
-    }
+    // ------------------------------------------------------------------
+    // Прогресс чтения и кнопка возврата наверх
+    // ------------------------------------------------------------------
+    function initScrollControls() {
+        const progress = $(SELECTORS.progress);
+        const scrollTopButton = $(SELECTORS.scrollTop);
+        if (!progress || !scrollTopButton) return;
 
-    document.querySelectorAll('.term').forEach(el => {
-        el.addEventListener('mouseenter', () => showTooltip(el));
-        el.addEventListener('mouseleave', hideTooltip);
-
-        el.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (activeTerm === el && tooltip.classList.contains('visible')) {
-                tooltip.classList.remove('visible');
-                tooltip.setAttribute('aria-hidden', 'true');
-                el.classList.remove('active');
-                activeTerm = null;
-            } else {
-                showTooltip(el);
-            }
+        scrollTopButton.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
         });
-    });
 
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.term') && !e.target.closest('.term-tooltip')) {
-            tooltip.classList.remove('visible');
-            tooltip.setAttribute('aria-hidden', 'true');
-            if (activeTerm) {
-                activeTerm.classList.remove('active');
-                activeTerm = null;
-            }
+        let framePending = false;
+
+        function update() {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const ratio = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+
+            progress.style.transform = `scaleX(${Math.max(0, Math.min(1, ratio))})`;
+            scrollTopButton.classList.toggle("visible", window.scrollY > 300);
+            framePending = false;
         }
-    });
 
-    window.addEventListener('scroll', () => {
-        if (tooltip.classList.contains('visible')) {
-            tooltip.classList.remove('visible');
-            tooltip.setAttribute('aria-hidden', 'true');
-            if (activeTerm) {
-                activeTerm.classList.remove('active');
-                activeTerm = null;
-            }
+        window.addEventListener("scroll", () => {
+            if (framePending) return;
+            framePending = true;
+            window.requestAnimationFrame(update);
+        }, { passive: true });
+
+        update();
+    }
+
+    // ------------------------------------------------------------------
+    // Пасхалка: три клика по карточке первого боя
+    // ------------------------------------------------------------------
+    function initEasterEgg() {
+        const trigger = $(SELECTORS.secretStep);
+        const overlay = $(SELECTORS.easterEgg);
+        const closeButton = $(SELECTORS.easterEggClose);
+        if (!trigger || !overlay) return;
+
+        let clicks = 0;
+        let resetTimer = null;
+
+        function resetClicks() {
+            clicks = 0;
+            clearTimeout(resetTimer);
+            resetTimer = null;
         }
-    }, { passive: true });
 
-    window.addEventListener('resize', () => {
-        if (tooltip.classList.contains('visible') && activeTerm) {
-            showTooltip(activeTerm);
+        function open() {
+            overlay.style.display = "flex";
+            overlay.setAttribute("aria-hidden", "false");
+            closeButton?.focus();
         }
-    });
 
-    const progressBar = document.getElementById('readingProgress');
-    const scrollTopBtn = document.getElementById('scrollTop');
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        progressBar.style.transform = `scaleX(${progress / 100})`;
-        scrollTopBtn.classList.toggle('visible', scrollTop > 300);
-    }, { passive: true });
+        function close() {
+            overlay.style.display = "none";
+            overlay.setAttribute("aria-hidden", "true");
+            trigger.focus();
+        }
 
-    let eggClicks = 0;
-    const step2Card = document.getElementById('step2');
-    if (step2Card) {
-        step2Card.style.cursor = 'pointer';
-        step2Card.addEventListener('click', (e) => {
-            // не считаем клики по терминам и ссылкам
-            if (e.target.closest('.term') || e.target.closest('a')) return;
-            eggClicks++;
-            if (eggClicks >= 3) {
-                document.getElementById('easterEgg').style.display = 'flex';
-                eggClicks = 0;
+        trigger.style.cursor = "pointer";
+        trigger.addEventListener("click", event => {
+            if (event.target.closest(".term, a, button")) return;
+
+            clicks += 1;
+            if (clicks >= 3) {
+                resetClicks();
+                open();
+                return;
             }
-            clearTimeout(window._eggTimeout);
-            window._eggTimeout = setTimeout(() => { eggClicks = 0; }, 2000);
+
+            clearTimeout(resetTimer);
+            resetTimer = setTimeout(resetClicks, 2000);
+        });
+
+        closeButton?.addEventListener("click", close);
+        overlay.addEventListener("click", event => {
+            if (event.target === overlay) close();
+        });
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && overlay.style.display === "flex") close();
         });
     }
+
+    function init() {
+        new Glossary();
+        initScrollControls();
+        initEasterEgg();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+        init();
+    }
+})();
 </script>
 
-<div id="easterEgg" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:20px; font-family: ui-monospace, monospace;">
+<div id="easterEgg" role="dialog" aria-modal="true" aria-label="Секретная пасхалка" aria-hidden="true" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:20px; font-family: ui-monospace, monospace;">
     <div style="font-size:6rem; animation: dinoJump 0.6s ease infinite alternate;">🦖</div>
     <div style="font-size:0.9rem; color:#a3a3a3; margin-top:8px;">Я СОСАЛ!</div>
-    <button onclick="document.getElementById('easterEgg').style.display='none'" style="margin-top:24px; background:var(--gold); color:#0a0a0a; border:none; padding:8px 20px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.85rem;">Хорошо</button>
+    <button type="button" data-action="close-easter-egg" style="margin-top:24px; background:var(--gold); color:#0a0a0a; border:none; padding:8px 20px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.85rem;">Хорошо</button>
 </div>
 
 <style>

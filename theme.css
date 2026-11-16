@@ -1,52 +1,39 @@
-/* ============================================================
-   АРЕНА ЭТЕРНИСА — ТЕМА
-   ============================================================ */
+/* Тема «Арена Этерниса» */
 
-/* === ПЕРЕМЕННЫЕ: ТЁМНАЯ ТЕМА (по умолчанию) === */
+/* Переменные тёмной темы */
 :root {
-    /* Основные фоны */
     --bg: #060a14;
     --card: #0a0f1e;
     --elevated: #0f1428;
-    
-    /* Текст */
     --text: #dde4f0;
     --sub: #8a94a8;
     --muted: #5e6478;
     --border: rgba(100, 140, 180, 0.12);
 
-    /* АКЦЕНТЫ (Новый сезонный стиль) */
-    --gold: #f0b90b;          /* Оставляем золото для наград */
-    --purple: #a371f7;        /* Фиолетовый (магия, тьма) */
-    --ice: #5bc0eb;           /* Ледяной (арена, свет) */
-    --red: #e85d3a;           /* Оставляем для опасностей */
-    --green: #10b981;         /* Оставляем для успеха */
+    /* Акцентные цвета */
+    --gold: #f0b90b;
+    --purple: #a371f7;
+    --ice: #5bc0eb;
+    --red: #e85d3a;
+    --green: #10b981;
     --orange: #ff8c00;
     --blue: #4a90d9;
-    
-    /* Градиенты для заголовков и кнопок */
     --header-gradient: linear-gradient(135deg, #a371f7 0%, #5bc0eb 50%, #f0b90b 100%);
     --btn-primary-bg: linear-gradient(135deg, #5bc0eb, #a371f7);
     --tab-active-bg: linear-gradient(135deg, #5bc0eb, #a371f7);
-    
-    /* Рамки */
     --radius: 16px;
     --radius-sm: 10px;
     --radius-md: 12px;
     --radius-lg: 20px;
     --radius-xl: 24px;
-    
-    /* Градиенты линий */
     --gold-gradient: linear-gradient(90deg, transparent, #f0b90b, transparent);
     --ice-gradient: linear-gradient(90deg, transparent, #5bc0eb, transparent);
     --purple-gradient: linear-gradient(90deg, transparent, #a371f7, transparent);
-    
-    /* Тени */
     --beer-shadow: 0 4px 16px rgba(91, 192, 235, 0.4);
     --beer-shadow-hover: 0 6px 24px rgba(163, 113, 247, 0.6);
 }
 
-/* === ПЕРЕМЕННЫЕ: СВЕТЛАЯ ТЕМА === */
+/* Переменные светлой темы */
 [data-theme="light"] {
     --bg: #f0f4fa;
     --card: #fafcfe;
@@ -67,13 +54,13 @@
     --header-gradient: linear-gradient(135deg, #7b5ea7 0%, #3a90c0 50%, #b8860b 100%);
     --btn-primary-bg: linear-gradient(135deg, #3a90c0, #7b5ea7);
     --tab-active-bg: linear-gradient(135deg, #3a90c0, #7b5ea7);
-    
+
     --gold-gradient: linear-gradient(90deg, transparent, #b8860b, transparent);
     --ice-gradient: linear-gradient(90deg, transparent, #3a90c0, transparent);
     --purple-gradient: linear-gradient(90deg, transparent, #7b5ea7, transparent);
 }
 
-/* === БАЗА === */
+/* Базовые стили */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -94,7 +81,7 @@ body {
     line-height: 1.5;
 }
 
-/* Плавные переходы для смены темы */
+/* Переходы между темами */
 html, body, .container, .section, .card, .stat-card, .rank-card, .summary-card,
 .header, .nav-bar, .nav-link, .season-frame, .champion-card, .crown-card,
 .table-card, .compare-bar, .chart-placeholder, .season-tab,
@@ -103,22 +90,39 @@ input, button, select, textarea, table, th, td, tr,
     transition: background 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* === СКРОЛЛБАР === */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #ffd700; }
-* { scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+/* Полоса прокрутки */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #ffd700;
+}
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) transparent;
+}
 
-/* === КОНТЕЙНЕР === */
+/* Контейнер и сетка */
 .container {
     max-width: 900px;
     margin: 0 auto;
     padding: 24px 20px 60px;
 }
 
-/* === ХЕДЕР === */
-.header { text-align: center; padding: 32px 0 8px; position: relative; }
+/* Шапка */
+.header {
+    text-align: center;
+    padding: 32px 0 8px;
+    position: relative;
+}
 .header-title {
     font-size: clamp(2.2rem, 6vw, 3.2rem);
     font-weight: 900;
@@ -133,7 +137,12 @@ input, button, select, textarea, table, th, td, tr,
     margin-bottom: 4px;
 }
 @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
-.header-subtitle { font-size: 0.9rem; color: var(--sub); font-weight: 500; letter-spacing: 0.04em; }
+.header-subtitle {
+    font-size: 0.9rem;
+    color: var(--sub);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
 .theme-toggle {
     position: absolute;
     right: 0;
@@ -148,10 +157,19 @@ input, button, select, textarea, table, th, td, tr,
     font-size: 0.85rem;
     font-family: inherit;
 }
-.theme-toggle:hover { background: var(--card); color: var(--ice); border-color: var(--ice); }
+.theme-toggle:hover {
+    background: var(--card);
+    color: var(--ice);
+    border-color: var(--ice);
+}
 
-/* === НАВИГАЦИЯ === */
-.nav-wrapper { margin-bottom: 28px; position: sticky; top: 12px; z-index: 100; }
+/* Навигация */
+.nav-wrapper {
+    margin-bottom: 28px;
+    position: sticky;
+    top: 12px;
+    z-index: 100;
+}
 .nav-toggle {
     display: none;
     width: 100%;
@@ -176,7 +194,9 @@ input, button, select, textarea, table, th, td, tr,
     border-radius: var(--radius);
     border: 1px solid var(--border);
 }
-.nav-group { position: relative; }
+.nav-group {
+    position: relative;
+}
 .nav-label {
     padding: 8px 14px;
     border-radius: 20px;
@@ -189,7 +209,10 @@ input, button, select, textarea, table, th, td, tr,
     display: block;
     text-decoration: none;
 }
-.nav-label:hover { color: var(--text); background: var(--elevated); }
+.nav-label:hover {
+    color: var(--text);
+    background: var(--elevated);
+}
 .nav-dropdown {
     display: none;
     position: absolute;
@@ -203,7 +226,9 @@ input, button, select, textarea, table, th, td, tr,
     min-width: 160px;
     z-index: 101;
 }
-.nav-group:hover .nav-dropdown { display: block; }
+.nav-group:hover .nav-dropdown {
+    display: block;
+}
 .nav-dropdown .nav-link {
     display: block;
     padding: 6px 12px;
@@ -213,10 +238,17 @@ input, button, select, textarea, table, th, td, tr,
     text-decoration: none;
     color: var(--sub);
 }
-.nav-dropdown .nav-link:hover { background: var(--elevated); color: var(--text); }
-.nav-dropdown .nav-link.active { background: var(--tab-active-bg); color: #000; font-weight: 600; }
+.nav-dropdown .nav-link:hover {
+    background: var(--elevated);
+    color: var(--text);
+}
+.nav-dropdown .nav-link.active {
+    background: var(--tab-active-bg);
+    color: #000;
+    font-weight: 600;
+}
 
-/* === СЕКЦИИ === */
+/* Секции */
 .section {
     background: var(--card);
     border: 1px solid var(--border);
@@ -226,22 +258,75 @@ input, button, select, textarea, table, th, td, tr,
     position: relative;
     overflow: hidden;
 }
-.section::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.6; }
-.section.gold::after { background: var(--gold-gradient); }
-.section.red::after, .section.ice::after { background: var(--ice-gradient); }
-.section.purple::after { background: var(--purple-gradient); }
-.section.candle::after { background: var(--candle-gradient); }
-.section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.section.gold .section-title { color: var(--gold); }
-.section.red .section-title, .section.ice .section-title { color: var(--ice); }
-.section.purple .section-title { color: var(--purple); }
-.section.candle .section-title { color: var(--candle); }
-.section p { color: var(--sub); font-size: 0.85rem; line-height: 1.65; margin-bottom: 8px; }
-code { background: var(--elevated); padding: 2px 8px; border-radius: 4px; color: var(--ice); font-weight: 600; font-size: 0.85rem; }
+.section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    opacity: 0.6;
+}
+.section.gold::after {
+    background: var(--gold-gradient);
+}
+.section.red::after, .section.ice::after {
+    background: var(--ice-gradient);
+}
+.section.purple::after {
+    background: var(--purple-gradient);
+}
+.section.candle::after {
+    background: var(--candle-gradient);
+}
+.section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section.gold .section-title {
+    color: var(--gold);
+}
+.section.red .section-title, .section.ice .section-title {
+    color: var(--ice);
+}
+.section.purple .section-title {
+    color: var(--purple);
+}
+.section.candle .section-title {
+    color: var(--candle);
+}
+.section p {
+    color: var(--sub);
+    font-size: 0.85rem;
+    line-height: 1.65;
+    margin-bottom: 8px;
+}
+code {
+    background: var(--elevated);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--ice);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
 
-/* === ТАБЛИЦЫ === */
-.table-container { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-top: 10px; -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+/* Таблицы */
+.table-container {
+    overflow-x: auto;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    margin-top: 10px;
+    -webkit-overflow-scrolling: touch;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
 th {
     background: var(--elevated);
     color: var(--gold);
@@ -253,23 +338,68 @@ th {
     letter-spacing: 0.04em;
     white-space: nowrap;
 }
-td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
-tr:hover td { background: rgba(255,255,255,0.02); }
-.sortable-header { cursor: pointer; user-select: none; position: relative; padding-right: 20px !important; }
-.sortable-header:hover { background: var(--elevated) !important; }
-.sortable-header::after { content: '⇅'; position: absolute; right: 5px; opacity: 0.4; font-size: 10px; }
-.sortable-header.asc::after { content: '↑'; opacity: 1; color: var(--gold); }
-.sortable-header.desc::after { content: '↓'; opacity: 1; color: var(--gold); }
-tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
+td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+tr:hover td {
+    background: rgba(255,255,255,0.02);
+}
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 20px !important;
+}
+.sortable-header:hover {
+    background: var(--elevated) !important;
+}
+.sortable-header::after {
+    content: '⇅';
+    position: absolute;
+    right: 5px;
+    opacity: 0.4;
+    font-size: 10px;
+}
+.sortable-header.asc::after {
+    content: '↑';
+    opacity: 1;
+    color: var(--gold);
+}
+.sortable-header.desc::after {
+    content: '↓';
+    opacity: 1;
+    color: var(--gold);
+}
+tbody tr {
+    animation: fadeInRow 0.3s ease forwards;
+    opacity: 0;
+}
 
-/* === ССЫЛКИ И РАНГИ === */
-.player-link { color: inherit; text-decoration: none; transition: color 0.2s; }
-.player-link:hover { color: var(--gold) !important; }
-.rank-1 { color: var(--gold) !important; font-weight: 700; }
-.rank-2 { color: var(--silver) !important; font-weight: 700; }
-.rank-3 { color: var(--bronze) !important; font-weight: 700; }
+/* Ссылки и ранги */
+.player-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.player-link:hover {
+    color: var(--gold) !important;
+}
+.rank-1 {
+    color: var(--gold) !important;
+    font-weight: 700;
+}
+.rank-2 {
+    color: var(--silver) !important;
+    font-weight: 700;
+}
+.rank-3 {
+    color: var(--bronze) !important;
+    font-weight: 700;
+}
 
-/* === КНОПКИ === */
+/* Кнопки */
 .btn {
     padding: 10px 20px;
     border-radius: 20px;
@@ -279,15 +409,40 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     font-size: 0.85rem;
     font-family: inherit;
 }
-.btn-primary { background: var(--btn-primary-bg); color: #000; }
-.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.btn-secondary { background: var(--elevated); border: 1px solid var(--border); color: var(--text); }
-.btn-secondary:hover { border-color: var(--gold); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-.back-btn { display: block; text-align: center; margin-top: 14px; color: var(--muted); cursor: pointer; font-size: 0.85rem; }
-.back-btn:hover { color: var(--gold); }
+.btn-primary {
+    background: var(--btn-primary-bg);
+    color: #000;
+}
+.btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+.btn-secondary {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+.btn-secondary:hover {
+    border-color: var(--gold);
+}
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.back-btn {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+.back-btn:hover {
+    color: var(--gold);
+}
 
-/* === ПЛАВАЮЩИЕ КНОПКИ === */
+/* Плавающие кнопки */
 .beer-btn {
     position: fixed;
     bottom: 20px;
@@ -306,7 +461,10 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     z-index: 99;
     animation: float 3s ease-in-out infinite;
 }
-.beer-btn:hover { transform: scale(1.1); box-shadow: var(--beer-shadow-hover); }
+.beer-btn:hover {
+    transform: scale(1.1);
+    box-shadow: var(--beer-shadow-hover);
+}
 .extension-btn {
     position: fixed;
     bottom: 76px;
@@ -326,9 +484,12 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     animation: float 3s ease-in-out infinite;
     animation-delay: 1.5s;
 }
-.extension-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(255,140,0,0.6); }
+.extension-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 24px rgba(255,140,0,0.6);
+}
 
-/* === СПИННЕР И СТАТУСЫ === */
+/* Загрузка и статусы */
 .spinner {
     display: inline-block;
     width: 32px;
@@ -339,15 +500,19 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     animation: spin 0.8s linear infinite;
     margin-bottom: 12px;
 }
-.status-message { text-align: center; padding: 48px 20px; color: var(--sub); }
+.status-message {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--sub);
+}
 
-/* === АНИМАЦИИ === */
+/* Анимации */
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeInRow { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
 
-/* === ВКЛАДКИ (общий стиль) === */
+/* Вкладки */
 .tabs {
     display: flex;
     gap: 6px;
@@ -372,13 +537,28 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     transition: 0.2s;
     white-space: nowrap;
 }
-.tab-btn:hover { background: var(--elevated); color: var(--text); }
-.tab-btn.active { background: var(--tab-active-bg); color: #000; font-weight: 700; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+.tab-btn:hover {
+    background: var(--elevated);
+    color: var(--text);
+}
+.tab-btn.active {
+    background: var(--tab-active-bg);
+    color: #000;
+    font-weight: 700;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
 
-/* === СТАТ-КАРТОЧКИ === */
-.stats-grid { display: grid; gap: 10px; margin-bottom: 20px; }
+/* Карточки характеристик */
+.stats-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 .stat-card {
     background: var(--elevated);
     border-radius: var(--radius-sm);
@@ -387,10 +567,20 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     border: 1px solid var(--border);
     animation: fadeSlideIn 0.3s ease;
 }
-.stat-value { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
-.stat-label { color: var(--muted); font-size: 0.65rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--gold);
+}
+.stat-label {
+    color: var(--muted);
+    font-size: 0.65rem;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-/* === ПОИСК === */
+/* Поиск */
 .search-input {
     padding: 10px 16px;
     background: var(--elevated);
@@ -401,22 +591,42 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
     font-family: inherit;
     transition: 0.2s;
 }
-.search-input:focus { outline: none; border-color: var(--gold); }
-.search-input::placeholder { color: var(--muted); }
+.search-input:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+.search-input::placeholder {
+    color: var(--muted);
+}
 
-/* === УТИЛИТЫ === */
-.number { text-align: right; font-variant-numeric: tabular-nums; }
+/* Вспомогательные классы */
+.number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
 
-/* ============================================================
-   МОБИЛЬНАЯ ВЕРСИЯ
-   ============================================================ */
+/* Адаптивная версия */
 @media (max-width: 768px) {
-    .container { padding: 12px 14px 80px; }
-    .header { padding: 20px 0 8px; }
-    .header-title { font-size: 1.8rem; }
-    .theme-toggle { position: static; transform: none; margin: 12px auto 0; display: block; width: fit-content; }
+    .container {
+        padding: 12px 14px 80px;
+    }
+    .header {
+        padding: 20px 0 8px;
+    }
+    .header-title {
+        font-size: 1.8rem;
+    }
+    .theme-toggle {
+        position: static;
+        transform: none;
+        margin: 12px auto 0;
+        display: block;
+        width: fit-content;
+    }
 
-    .nav-toggle { display: block; }
+    .nav-toggle {
+        display: block;
+    }
     .nav-bar {
         display: none;
         grid-template-columns: 1fr 1fr;
@@ -430,11 +640,19 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
-    .nav-bar.show { display: grid; }
-    .nav-label { display: none !important; }
-    .nav-group { display: contents; }
+    .nav-bar.show {
+        display: grid;
+    }
+    .nav-label {
+        display: none !important;
+    }
+    .nav-group {
+        display: contents;
+    }
     .nav-dropdown,
-    .nav-dropdown[style] { display: contents !important; }
+    .nav-dropdown[style] {
+        display: contents !important;
+    }
     .nav-dropdown .nav-link {
         display: block;
         padding: 10px 12px;
@@ -450,20 +668,46 @@ tbody tr { animation: fadeInRow 0.3s ease forwards; opacity: 0; }
         text-decoration: none;
         transition: background 0.15s ease, color 0.15s ease;
     }
-    .nav-dropdown .nav-link:active { background: var(--tab-active-bg); color: #000; }
-    .nav-dropdown .nav-link.active { background: var(--tab-active-bg); color: #000; font-weight: 700; }
+    .nav-dropdown .nav-link:active {
+        background: var(--tab-active-bg);
+        color: #000;
+    }
+    .nav-dropdown .nav-link.active {
+        background: var(--tab-active-bg);
+        color: #000;
+        font-weight: 700;
+    }
 
-    .section { padding: 18px 14px; }
-    .beer-btn { bottom: 16px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
-    .extension-btn { bottom: 66px; right: 16px; width: 42px; height: 42px; font-size: 1.1rem; }
+    .section {
+        padding: 18px 14px;
+    }
+    .beer-btn {
+        bottom: 16px;
+        right: 16px;
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+    .extension-btn {
+        bottom: 66px;
+        right: 16px;
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
 
-    .tabs { justify-content: flex-start; }
+    .tabs {
+        justify-content: flex-start;
+    }
 }
 
-/* ============================================================
-   ДОСТУПНОСТЬ: уважение к prefers-reduced-motion
-   ============================================================ */
+/* Уменьшение анимации */
 @media (prefers-reduced-motion: reduce) {
-    .header-title { animation: none; background-position: 0% center; }
-    .beer-btn, .extension-btn { animation: none; }
+    .header-title {
+        animation: none;
+        background-position: 0% center;
+    }
+    .beer-btn, .extension-btn {
+        animation: none;
+    }
 }

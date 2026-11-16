@@ -365,12 +365,12 @@ body { background-image: radial-gradient(ellipse at 20% 0%, rgba(163,113,247,0.1
         <header class="header">
             <h1 class="header-title">ПРОФИЛЬ ИГРОКА</h1>
             <p class="header-subtitle">ЭТЕРНИС ПОМНИТ ВСЁ</p>
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">🌓</button>
+            <button class="theme-toggle" data-action="toggle-theme" aria-label="Переключить тему">🌓</button>
         </header>
 
         <!-- НАВИГАЦИЯ -->
 		<div class="nav-wrapper">
-			<button class="nav-toggle" onclick="toggleNav()" aria-label="Меню">☰ Меню</button>
+			<button class="nav-toggle" data-action="toggle-nav" aria-label="Меню">☰ Меню</button>
 			<nav class="nav-bar" id="pageNav">
 				<div class="nav-group">
 					<span class="nav-label" tabindex="0">
@@ -425,7 +425,7 @@ body { background-image: radial-gradient(ellipse at 20% 0%, rgba(163,113,247,0.1
                 <input type="text" class="search-input profile-input" id="playerSearch"
                        placeholder="🔍 Введи имя героя..." autocomplete="off"
                        aria-label="Поиск игрока">
-                <button class="search-btn" onclick="loadProfile()">🔍 Найти</button>
+                <button class="search-btn" data-action="load-profile">🔍 Найти</button>
             </div>
             <div class="autocomplete-list" id="autocompleteList"></div>
         </div>
@@ -437,7 +437,7 @@ body { background-image: radial-gradient(ellipse at 20% 0%, rgba(163,113,247,0.1
     </div>
 
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺" aria-label="Донат">🍺</a>
-    <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Наверх">↑</div>
+    <div class="scroll-top" id="scrollTop" data-action="scroll-top" role="button" tabindex="0" aria-label="Наверх">↑</div>
 
 <script>
 /* ============================================================================
@@ -476,6 +476,26 @@ const STATS_CACHE_KEY = 'eternis-stats';
 const STATS_CACHE_TTL = 2 * 60 * 1000;
 let statsPromise = null;
 
+/* ============================================================================
+   STORAGE — безопасный доступ к localStorage
+   ========================================================================= */
+function safeStorageGet(key) {
+    try {
+        return window.localStorage.getItem(key);
+    } catch (error) {
+        return null;
+    }
+}
+
+function safeStorageSet(key, value) {
+    try {
+        window.localStorage.setItem(key, value);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 function getRaceIcon(name) {
     const map = {'Человек':'human','Орк':'orc','Дворф':'dwarf','Эльф':'elf','Нежить':'undead','Табакси':'tabaxi','Тифлинг':'tiefling'};
     return map[name] ? `icons/${map[name]}.png` : null;
@@ -490,7 +510,7 @@ function getFactionIcon(factionName) {
     return null;
 }
 function getHeroIcon(playerName, emojiFallback, size = 32) {
-    const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
+    const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" data-fallback="hide">`;
     const emoji = (char) => `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.8}px;vertical-align:middle;">${char}</span>`;
     const spacer = `<span style="display:inline-block;width:${Math.floor(size*0.2)}px;"></span>`;
     if (!playerName || typeof playerName !== 'string' || !playerName.includes('-')) return emoji(emojiFallback);
@@ -506,7 +526,7 @@ function getStatsData() {
     if (statsPromise) return statsPromise;
     statsPromise = (async () => {
         try {
-            const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
+            const cached = JSON.parse(safeStorageGet(STATS_CACHE_KEY) || 'null');
             if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) return cached.data;
         } catch (e) {}
 
@@ -534,7 +554,7 @@ function getStatsData() {
         const data = await r.json();
 
         try {
-            localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+            safeStorageSet(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
         } catch (e) {}
 
         return data;
@@ -553,7 +573,7 @@ let leagueChampions = {};
 
 async function loadLeagueChampions() {
     try {
-        const cached = JSON.parse(localStorage.getItem(LEAGUE_CACHE_KEY) || 'null');
+        const cached = JSON.parse(safeStorageGet(LEAGUE_CACHE_KEY) || 'null');
         if (cached && (Date.now() - cached.ts < LEAGUE_CACHE_TTL)) {
             leagueChampions = cached.data;
             return;
@@ -565,7 +585,7 @@ async function loadLeagueChampions() {
         if (r.ok) {
             leagueChampions = await r.json();
             try {
-                localStorage.setItem(LEAGUE_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: leagueChampions }));
+                safeStorageSet(LEAGUE_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: leagueChampions }));
             } catch (e) {}
         }
     } catch (e) {}
@@ -585,8 +605,13 @@ function wrColor(wr) {
     return wr >= WR_GOOD ? 'var(--gold)' : wr >= WR_BAD ? 'var(--green)' : 'var(--red)';
 }
 
-function escapeHtml(str) {
-    return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 function formatNumber(n) {
@@ -652,7 +677,7 @@ async function getSeasonData(n) {
     const KEY = CACHE_KEY_PREFIX + n;
     
     try {
-        const c = JSON.parse(localStorage.getItem(KEY) || 'null');
+        const c = JSON.parse(safeStorageGet(KEY) || 'null');
         if (c && c.ts && (Date.now() - c.ts < CACHE_TTL)) return c.data;
     } catch (e) {}
 
@@ -680,7 +705,7 @@ async function getSeasonData(n) {
         if (!r || !r.ok) return null;
         
         const data = await r.json();
-        try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        try { safeStorageSet(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
     } catch (e) {
         console.warn(`Сезон ${n} пропущен:`, e.message);
@@ -702,9 +727,12 @@ async function loadAllSeasons(onProgress) {
             try {
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), 5000);
-                const r = await fetch(`${base}${n}.json`, { signal: controller.signal });
-                clearTimeout(id);
-                if (r.ok) return n;
+                try {
+                    const r = await fetch(`${base}${n}.json`, { signal: controller.signal });
+                    if (r.ok) return n;
+                } finally {
+                    clearTimeout(id);
+                }
             } catch (e) { }
         }
         return -1;
@@ -740,7 +768,7 @@ async function loadAllSeasons(onProgress) {
 
 async function load2x2() {
     try {
-        const cached = JSON.parse(localStorage.getItem(TWOx2_CACHE_KEY) || 'null');
+        const cached = JSON.parse(safeStorageGet(TWOx2_CACHE_KEY) || 'null');
         if (cached && (Date.now() - cached.ts < 7 * 24 * 60 * 60 * 1000)) {
             return cached.data;
         }
@@ -758,7 +786,7 @@ async function load2x2() {
         catch (e) { r = await fetchWithTimeout(TWOx2_URL); }
         if (!r || !r.ok) return {};
         const data = await r.json();
-        try { localStorage.setItem(TWOx2_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        try { safeStorageSet(TWOx2_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
     } catch (e) { 
         console.warn('2x2 не загружен:', e.message);
@@ -1702,7 +1730,7 @@ function renderPlayerInfo(player, ranks) {
 			<div class="profile-name">${player.display}${player.isCurrent && player.champion ? ' 👑' : ''}</div>
 			<div class="profile-class">${player.name || ''}${player.isCurrent ? ` · SKILL ${player.skill || 0} · Ур. ${player.level || 0}` : ''}</div>
             <div class="profile-badges">${badges.join('')}</div>
-            <button class="btn btn-secondary" onclick="copyProfileLink()">🔗 Копировать ссылку</button>
+            <button class="btn btn-secondary" data-action="copy-profile-link">🔗 Копировать ссылку</button>
         </div>
     </section>`;
 }
@@ -1723,7 +1751,7 @@ const TABS_CONFIG = [
 function renderTabs() {
     return `<div class="tabs-bar">
         ${TABS_CONFIG.map(([id, label, active]) =>
-            `<button class="tab-pill ${active ? 'active' : ''}" data-tab="${id}" onclick="switchTab('${id}')">${label}</button>`
+            `<button class="tab-pill ${active ? 'active' : ''}" data-tab="${id}">${label}</button>`
         ).join('')}
     </div>`;
 }
@@ -1799,7 +1827,7 @@ function renderHistory(history, limit = null) {
     const titleText = limit 
     ? '📜 Последние ' + limit + ' активных сезонов' 
     : '📜 Активные сезоны';
-	let html = '<div class="oracle-block"><div class="oracle-block-title">' + titleText + ' <a href="#" onclick="switchTab(\'archive\');return false;" style="color:var(--gold);font-size:0.7rem;margin-left:auto;text-decoration:none;">вся летопись →</a></div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th></tr></thead><tbody>';
+	let html = '<div class="oracle-block"><div class="oracle-block-title">' + titleText + ' <a href="#" data-action="switch-archive-tab" style="color:var(--gold);font-size:0.7rem;margin-left:auto;text-decoration:none;">вся летопись →</a></div><div class="table-container"><table class="history-table"><thead><tr><th>Сезон</th><th class="num">W/L</th><th class="num">WR</th><th class="num">Ур.</th><th class="num">🏆</th></tr></thead><tbody>';
 
     list.forEach(h => {
         const wrC = wrColor(h.wr);
@@ -1867,7 +1895,7 @@ function renderAnalysisTab(history, trend, swings, pace, legendSeason, peakForm,
     html += `<div class="oracle-block">
         <div class="oracle-block-title">📈 Динамика винрейта</div>
         <div class="chart-placeholder" id="githubChartContainer">
-            <button class="btn btn-primary" onclick="drawWinrateChart('${escapeHtml(currentPlayerName)}')">📈 Загрузить историю с GitHub</button>
+            <button class="btn btn-primary" data-action="draw-winrate-chart" data-player="${escapeHtml(currentPlayerName)}">📈 Загрузить историю с GitHub</button>
             <div style="color:var(--muted);font-size:.7rem;margin-top:6px">Загружает коммиты stats_data.json</div>
         </div>
     </div>`;
@@ -1978,7 +2006,7 @@ window.drawWinrateChart = async (playerName) => {
 window.resetWinrateChart = (playerName) => {
     const container = document.getElementById('githubChartContainer');
     if (container) {
-        container.innerHTML = `<button class="btn btn-primary" onclick="drawWinrateChart('${escapeHtml(playerName)}')">📈 Загрузить историю с GitHub</button>
+        container.innerHTML = `<button class="btn btn-primary" data-action="draw-winrate-chart" data-player="${escapeHtml(playerName)}">📈 Загрузить историю с GitHub</button>
             <div style="color:var(--muted);font-size:.7rem;margin-top:6px">Загружает коммиты stats_data.json</div>`;
     }
 };
@@ -2267,7 +2295,7 @@ function renderMeta(metaBySeason, history) {
         const nameColor = isMine ? 'color:var(--gold);font-weight:800;' : 'color:var(--text);';
         
         const icon = getClassIcon(c.name);
-        const img = icon ? `<img src="${icon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" onerror="this.style.display='none'">` : (classEmojis[c.name] || '');
+        const img = icon ? `<img src="${icon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" data-fallback="hide">` : (classEmojis[c.name] || '');
         
         return `<div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:4px 0;${mineStyle}">
             <span><span class="meta-rank ${rankClass}">${rank}</span><span style="${nameColor}">${img} ${c.name}</span>${isMine ? ' <span style="color:var(--gold);font-size:0.7rem;">← твой</span>' : ''}</span>
@@ -2287,7 +2315,7 @@ function renderMeta(metaBySeason, history) {
         const rankColor = isInMetaNow ? 'var(--gold)' : 'var(--muted)';
         
         const icon = getClassIcon(myClass);
-        const img = icon ? `<img src="${icon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" onerror="this.style.display='none'">` : (classEmojis[myClass] || '');
+        const img = icon ? `<img src="${icon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" data-fallback="hide">` : (classEmojis[myClass] || '');
         
         return `<div style="display:grid;grid-template-columns:50px 1fr auto auto;gap:10px;align-items:center;padding:6px 10px;font-size:0.78rem;border-bottom:1px solid rgba(163,113,247,0.08);">
             <span style="color:var(--purple);font-weight:800;">S${m.season}</span>
@@ -2314,7 +2342,7 @@ function renderMeta(metaBySeason, history) {
         const statusText = myClass ? (myInMeta ? ' 🎯 в мете' : ' ⚔️ вне меты') : '';
         
         const myIcon = myClass ? getClassIcon(myClass) : null;
-        const myImg = myIcon ? `<img src="${myIcon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" onerror="this.style.display='none'">` : (myClass ? (classEmojis[myClass] || '') : '');
+        const myImg = myIcon ? `<img src="${myIcon}" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;" data-fallback="hide">` : (myClass ? (classEmojis[myClass] || '') : '');
 
         html += `<div style="margin-bottom:14px;padding:12px 14px;background:linear-gradient(90deg,rgba(163,113,247,0.1),rgba(163,113,247,0.02));border-radius:var(--radius-sm);border-left:3px solid ${myInMeta ? 'var(--gold)' : 'var(--purple)'};">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px;">
@@ -2376,7 +2404,7 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
         html += '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">⚔️ Классы</div>';
         classArr.slice(0, 3).forEach(c => {
             const icon = getClassIcon(c.name);
-            const img = icon ? `<img src="${icon}" style="width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">` : (ce[c.name] || '⚔️');
+            const img = icon ? `<img src="${icon}" style="width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:6px;" data-fallback="hide">` : (ce[c.name] || '⚔️');
             html += `<div class="style-row">
                 <div class="style-name">${img} ${c.name}</div>
                 <div class="style-val">${c.wins}-${c.losses} (${(c.wr * 100).toFixed(1)}%)</div>
@@ -2387,7 +2415,7 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
         html += '<div style="font-size:0.7rem;color:var(--muted);margin:18px 0 8px;text-transform:uppercase;letter-spacing:1px;">🌍 Расы</div>';
         raceArr.slice(0, 3).forEach(r => {
             const icon = getRaceIcon(r.name);
-            const img = icon ? `<img src="${icon}" style="width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">` : (re[r.name] || '🌍');
+            const img = icon ? `<img src="${icon}" style="width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:6px;" data-fallback="hide">` : (re[r.name] || '🌍');
             html += `<div class="style-row">
                 <div class="style-name">${img} ${r.name}</div>
                 <div class="style-val">${r.wins}-${r.losses} (${(r.wr * 100).toFixed(1)}%)</div>
@@ -2408,8 +2436,8 @@ function renderStyle(heroAnalysis, metaBySeason, history) {
 function renderFactions(factions) {
     if (!factions || (factions.light.count === 0 && factions.dark.count === 0)) return '';
     
-    const lightIcon = `<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">`;
-    const darkIcon = `<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">`;
+    const lightIcon = `<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" data-fallback="hide">`;
+    const darkIcon = `<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" data-fallback="hide">`;
     
     let html = `<div class="oracle-block"><div class="oracle-block-title">⚔️ Фракции</div>`;
     if (factions.light.count > 0) {
@@ -2694,8 +2722,8 @@ function renderFactionHistory(history) {
     const hasDark = history.some(h => h.faction === 'Культ Тьмы');
     if (!hasLight && !hasDark) return '';
 
-    const lightIcon = `<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">`;
-    const darkIcon = `<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" onerror="this.style.display='none'">`;
+    const lightIcon = `<img src="icons/faction_light.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" data-fallback="hide">`;
+    const darkIcon = `<img src="icons/faction_dark.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;" data-fallback="hide">`;
 
     let html = '<div class="oracle-block"><div class="oracle-block-title">⚔️ История фракций</div>';
     history.forEach(h => {
@@ -2809,7 +2837,7 @@ function renderCompareTab(playerName) {
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;padding:14px;background:var(--elevated);border-radius:var(--radius-sm);border:1px solid var(--border);flex-wrap:wrap;">
             <span style="color:var(--sub);font-size:0.85rem;">⚔️ Сравнить с:</span>
             <div style="flex:1;min-width:150px;position:relative;">
-                <input type="text" class="search-input" id="compareInput" placeholder="Введи ник..." oninput="filterCompareList()" onkeydown="if(event.key==='Enter'){const n=document.getElementById('compareInput').value.trim();if(n)compareWith(n)}" style="width:100%;">
+                <input type="text" class="search-input" id="compareInput" placeholder="Введи ник..." data-role="compare-input" style="width:100%;">
                 <div class="autocomplete-list" id="compareDropdown"></div>
             </div>
         </div>
@@ -2826,7 +2854,7 @@ window.filterCompareList = () => {
     const filtered = allPlayersCache.filter(p => p.display.toLowerCase().includes(value)).slice(0, 8);
     if (!filtered.length) { dropdown.classList.remove('show'); return; }
     dropdown.innerHTML = filtered.map(p =>
-        `<div class="autocomplete-item" onclick="selectCompare('${escapeHtml(p.display)}')">
+        `<div class="autocomplete-item" data-action="select-compare" data-player="${escapeHtml(p.display)}">
             <span class="ac-emoji">${p.emoji}</span>
             <span class="ac-name">${p.display}</span>
             <span class="ac-class">${p.name}</span>
@@ -3028,7 +3056,7 @@ window.toggleTheme = function() {
     const html = document.documentElement;
     const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('eternis-theme', newTheme);
+    safeStorageSet('eternis-theme', newTheme);
 };
 
 window.toggleNav = function() {
@@ -3141,7 +3169,7 @@ async function loadProfile() {
         }
 
         currentPlayerName = history[0].display;
-        localStorage.setItem(LAST_PLAYER_KEY, currentPlayerName);
+        safeStorageSet(LAST_PLAYER_KEY, currentPlayerName);
         window._currentSeasonFilter = 'all';
 
 		const mainHistory = history.filter(h => !h.isDeleted);
@@ -3249,7 +3277,7 @@ if (searchInput) {
                 const tag = p.isActive === false
                     ? `<span style="color:var(--muted);font-size:0.7rem;">S${p.lastSeason}</span>`
                     : '';
-                return `<div class="autocomplete-item" data-name="${p.display}">
+                return `<div class="autocomplete-item" data-name="${escapeHtml(p.display)}" data-player="${escapeHtml(p.display)}">
                     <span class="ac-emoji">${p.emoji}</span>
                     <span class="ac-name">${before}<strong>${match}</strong>${after}</span>
                     <span class="ac-class">${p.name}</span>
@@ -3258,13 +3286,6 @@ if (searchInput) {
             }).join('');
             autocompleteList.classList.add('show');
             autocompleteIndex = -1;
-            document.querySelectorAll('.autocomplete-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    searchInput.value = item.dataset.name;
-                    autocompleteList.classList.remove('show');
-                    loadProfile();
-                });
-            });
         }, 50);
     });
 
@@ -3294,23 +3315,31 @@ if (searchInput) {
     });
 }
 
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.search-row')) autocompleteList?.classList.remove('show');
-});
-
 /* ============================================================================
    СЕКЦИЯ 11. UI — прогресс, scroll-top, навигация
    ========================================================================= */
-(function() {
-    const pb = document.getElementById('readingProgress');
-    const st = document.getElementById('scrollTop');
-    if (!pb || !st) return;
+(function initScrollInterface() {
+    const progressBar = document.getElementById('readingProgress');
+    const scrollTopButton = document.getElementById('scrollTop');
+    if (!progressBar || !scrollTopButton) return;
+
+    let scrollFrame = 0;
+
+    const updateScrollInterface = () => {
+        const scrollPosition = window.scrollY;
+        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+        progressBar.style.transform = `scaleX(${scrollableHeight > 0 ? scrollPosition / scrollableHeight : 0})`;
+        scrollTopButton.classList.toggle('visible', scrollPosition > 300);
+        scrollFrame = 0;
+    };
+
     window.addEventListener('scroll', () => {
-        const s = window.scrollY;
-        const dh = document.documentElement.scrollHeight - window.innerHeight;
-        pb.style.transform = `scaleX(${dh > 0 ? s / dh : 0})`;
-        st.classList.toggle('visible', s > 300);
-    });
+        if (scrollFrame) return;
+        scrollFrame = window.requestAnimationFrame(updateScrollInterface);
+    }, { passive: true });
+
+    updateScrollInterface();
 })();
 
 document.querySelectorAll('.nav-link').forEach(l => {
@@ -3333,9 +3362,101 @@ document.querySelectorAll('.nav-label').forEach(label => {
 });
 
 (function() {
-    const saved = localStorage.getItem('eternis-theme');
+    const saved = safeStorageGet('eternis-theme');
     if (saved) document.documentElement.setAttribute('data-theme', saved);
 })();
+
+/* ============================================================================
+   UI EVENTS — делегирование событий для статической и динамической разметки
+   ========================================================================= */
+document.addEventListener('click', (event) => {
+    const actionElement = event.target.closest('[data-action]');
+    const tabElement = event.target.closest('.tab-pill[data-tab]');
+    const compareOption = event.target.closest('.autocomplete-item[data-player]');
+
+    if (tabElement) {
+        window.switchTab(tabElement.dataset.tab);
+        return;
+    }
+
+    if (compareOption) {
+        const playerName = compareOption.dataset.player;
+        if (compareOption.closest('#compareDropdown')) {
+            window.selectCompare(playerName);
+        } else if (compareOption.closest('#autocompleteList')) {
+            if (searchInput) searchInput.value = playerName;
+            autocompleteList?.classList.remove('show');
+            loadProfile();
+        }
+        return;
+    }
+
+    if (!actionElement) {
+        if (!event.target.closest('.search-row')) {
+            autocompleteList?.classList.remove('show');
+        }
+        return;
+    }
+
+    switch (actionElement.dataset.action) {
+        case 'toggle-theme':
+            window.toggleTheme();
+            break;
+        case 'toggle-nav':
+            window.toggleNav();
+            break;
+        case 'load-profile':
+            loadProfile();
+            break;
+        case 'copy-profile-link':
+            window.copyProfileLink();
+            break;
+        case 'scroll-top':
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            break;
+        case 'switch-archive-tab':
+            event.preventDefault();
+            window.switchTab('archive');
+            break;
+        case 'draw-winrate-chart':
+            window.drawWinrateChart(actionElement.dataset.player || currentPlayerName);
+            break;
+        case 'select-compare':
+            window.selectCompare(actionElement.dataset.player || '');
+            break;
+    }
+
+    if (actionElement.closest('.nav-link')) {
+        document.getElementById('pageNav')?.classList.remove('show');
+        const navButton = document.querySelector('.nav-toggle');
+        if (navButton) navButton.textContent = '☰ Меню';
+    }
+});
+
+document.addEventListener('input', (event) => {
+    if (event.target.matches('[data-role="compare-input"]')) {
+        window.filterCompareList();
+    }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.target.matches('[data-role="compare-input"]') && event.key === 'Enter') {
+        const playerName = event.target.value.trim();
+        if (playerName) window.compareWith(playerName);
+    }
+
+    if (event.target.matches('#scrollTop') && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+});
+
+document.addEventListener('error', (event) => {
+    const image = event.target;
+    if (image instanceof HTMLImageElement && image.dataset.fallback === 'hide') {
+        image.style.display = 'none';
+    }
+}, true);
 
 /* ============================================================================
    СЕКЦИЯ 12. ПРЕДЗАГРУЗКА
@@ -3347,7 +3468,7 @@ document.querySelectorAll('.nav-label').forEach(label => {
 
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name');
-    const lastPlayer = localStorage.getItem(LAST_PLAYER_KEY);
+    const lastPlayer = safeStorageGet(LAST_PLAYER_KEY);
     const targetName = name || lastPlayer;
 
     if (targetName) {
@@ -3366,7 +3487,7 @@ document.querySelectorAll('.nav-label').forEach(label => {
     await emojisPromise;
 
     allPlayersCache = getAllPlayers(allSeasonsCache);
-    try { localStorage.setItem(PLAYERS_CACHE_KEY, JSON.stringify(allPlayersCache)); } catch (e) {}
+    try { safeStorageSet(PLAYERS_CACHE_KEY, JSON.stringify(allPlayersCache)); } catch (e) {}
 
     if (targetName && allSeasonsCache) {
         await loadProfile();

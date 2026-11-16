@@ -101,6 +101,7 @@
 .scroll-top{position:fixed;bottom:80px;right:20px;width:44px;height:44px;background:var(--card);border:1px solid var(--gold);border-radius:50%;color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:all 0.3s ease;z-index:98;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
 .scroll-top.visible{opacity:1;pointer-events:all}
 .scroll-top:hover{background:var(--gold);color:#000;transform:translateY(-3px)}
+.scroll-top{font:inherit;padding:0}
 
 
 /* ==========================================================================
@@ -149,11 +150,11 @@
         <header class="header">
 			<h1 class="header-title">БЕЗДНА РАЗЛОМА</h1>
 			<p class="header-subtitle">Подземелье · Статистика</p>
-            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+            <button class="theme-toggle" type="button" data-action="toggle-theme" aria-label="Сменить тему">🌓</button>
         </header>
 
 		<div class="nav-wrapper">
-			<button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+			<button class="nav-toggle" type="button" data-action="toggle-nav" aria-expanded="false" aria-controls="pageNav">☰ Меню</button>
 			<nav class="nav-bar" id="pageNav">
 				<div class="nav-group">
 					<span class="nav-label">
@@ -212,260 +213,561 @@
 
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Поддержать 🕯️">🕯️</a>
 
-<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+<button class="scroll-top" id="scrollTop" type="button" aria-label="Наверх">↑</button>
 <script>
-        function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('eternis-theme',n);}
-        (function(){const s=localStorage.getItem('eternis-theme');if(s)document.documentElement.setAttribute('data-theme',s);})();
-        function toggleNav(){const n=document.getElementById('pageNav'),b=document.querySelector('.nav-toggle');n.classList.toggle('show');b.textContent=n.classList.contains('show')?'✕ Закрыть':'☰ Меню';}
-        document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('pageNav').classList.remove('show');document.querySelector('.nav-toggle').textContent='☰ Меню';}));
-        document.querySelectorAll('.nav-label').forEach(label=>{label.addEventListener('click',function(e){if(window.innerWidth>768)return;e.preventDefault();const dd=this.nextElementSibling;if(dd&&dd.classList.contains('nav-dropdown')){const isOpen=dd.style.display==='block';document.querySelectorAll('.nav-dropdown').forEach(d=>d.style.display='none');dd.style.display=isOpen?'none':'block';}});});
+(() => {
+    "use strict";
 
-        // === ИКОНКИ ===
-        function getRaceIcon(name) {
-            const map = {'Человек':'human','Орк':'orc','Дворф':'dwarf','Эльф':'elf','Нежить':'undead','Табакси':'tabaxi','Тифлинг':'tiefling'};
-            return map[name] ? `icons/${map[name]}.png` : null;
-        }
-
-        function getClassIcon(name) {
-            const map = {'Воин':'warrior','Паладин':'paladin','Плут':'rogue','Монах':'monk','Следопыт':'ranger','Чародей':'sorcerer','Бард':'bard','Друид':'druid','Изобретатель':'artificer','Варвар':'barbarian','Волшебница':'wizard','Некромант':'necromancer','Жрец':'cleric','Колдун':'warlock','Алхимик':'alchemist'};
-            return map[name] ? `icons/${map[name]}.png` : null;
-        }
-
-        function getFactionIcon(factionName) {
-            if (factionName === 'Орден Света') return 'icons/faction_light.png';
-            if (factionName === 'Культ Тьмы') return 'icons/faction_dark.png';
-            return null;
-        }
-
-        function factionIcon(factionName, size = 20) {
-            const src = getFactionIcon(factionName);
-            if (src) return `<img src="${src}" alt="${factionName}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`;
-            return `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.85}px;vertical-align:middle;">${factionName === 'Орден Света' ? '🌝' : factionName === 'Культ Тьмы' ? '🌚' : ''}</span>`;
-        }
-
-        function getHeroIcon(playerName, emojiFallback, size = 24) {
-            const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;margin:0 2px;padding:0;display:inline-block;" onerror="this.style.display='none'">`;
-            const emoji = (char) => `<span style="display:inline-block;width:${size}px;height:${size}px;text-align:center;line-height:${size}px;font-size:${size*0.8}px;vertical-align:middle;">${char}</span>`;
-            
-            if (!playerName || typeof playerName !== 'string' || !playerName.includes('-')) return emoji(emojiFallback);
-            
-            const parts = playerName.split('-'), raceName = parts[0], className = parts[1];
-            const raceIcon = getRaceIcon(raceName), classIcon = getClassIcon(className);
-            
-            if (raceIcon && classIcon) return `<span style="display:inline-flex; align-items:center; gap:2px; vertical-align:middle; line-height:0;">${img(raceIcon)}${img(classIcon)}</span>`;
-            if (raceIcon) return `${img(raceIcon)}`;
-            if (classIcon) return `${img(classIcon)}`;
-            return emoji(emojiFallback);
-        }
-
-        const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
-        const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
-        const STATS_CACHE_KEY = 'eternis-stats';
-        const STATS_CACHE_TTL = 2 * 60 * 1000; // 2 минуты
-        let statsPromise = null;
-
-        function getStatsData() {
-            if (statsPromise) return statsPromise;
-            statsPromise = (async () => {
-                try {
-                    const cached = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null');
-                    if (cached && (Date.now() - cached.ts < STATS_CACHE_TTL)) {
-                        return cached.data;
-                    }
-                } catch (e) {}
-
-                let r = await fetch(STATS_URL);
-                if (!r.ok) r = await fetch(STATS_URL_FALLBACK);
-                const data = await r.json();
-
-                try {
-                    localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
-                } catch (e) {}
-
-                return data;
-            })().catch(e => {
-                statsPromise = null;
-                throw e;
-            });
-            return statsPromise;
-        }
-
-        const container = document.getElementById('stats-container');
-        getStatsData()
-            .then(d => {
-                const dungeon = d.dungeon || {};
-                const players = Object.values(dungeon.players || {});
-                const territory = d.dungeonTrophies || d.territory || { light: 0, dark: 0 };
-                if (!players.length) { container.innerHTML = `<div class="section ice" style="text-align:center;padding:40px 20px;"><div class="section-title" style="justify-content:center;">Нет данных.</div></div>`; return; }
-                renderAll(players, territory);
-            })
-            .catch(e => { container.innerHTML = `<div class="section ice" style="text-align:center;padding:40px 20px;"><div class="section-title" style="justify-content:center;">🩸 Разлом Бездны</div><p style="color:var(--red);">❌ Ошибка загрузки</p></div>`; });
-			
-        function renderAll(players, territory) {
-            const sorted = [...players].sort((a, b) => b.record - a.record || b.damage - a.damage);
-            const totalTrophies = territory.light + territory.dark;
-            const lp = totalTrophies > 0 ? (territory.light * 100 / totalTrophies) : 50;
-            const ownerName = territory.light > territory.dark ? 'Орден Света' : territory.dark > territory.light ? 'Культ Тьмы' : null;
-			const owner = ownerName ? `${factionIcon(ownerName, 24)} ${ownerName}` : '⚖️ Ничья';
-            let html = '';
-
-            html += `<div class="section gold"><div class="crown-section"><span class="crown-icon">👑</span><div class="crown-title">КОРОНА РАСКОЛА</div><div class="crown-owner">${owner}</div><div class="score-row"><span class="score-light">${factionIcon('Орден Света', 20)} Свет: ${territory.light}</span><span class="score-dark">${territory.dark} :Тьма ${factionIcon('Культ Тьмы', 20)}</span></div><div class="progress-bar"><div class="progress-fill progress-light" style="width:${lp}%">${lp>10?Math.round(lp)+'%':''}</div><div class="progress-fill progress-dark" style="width:${100-lp}%">${(100-lp)>10?Math.round(100-lp)+'%':''}</div></div><div class="total-trophies">Всего трофеев: ${totalTrophies}</div></div></div>`;
-
-            const totalPlayers = players.length;
-            const totalWaves = players.reduce((s, p) => s + (p.totalWaves || 0), 0);
-            const totalBosses = players.reduce((s, p) => s + (p.bosses || 0), 0);
-            const maxRecord = sorted[0]?.record || 0;
-            const svgUsers = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
-            const svgWaves = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ice)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 7c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/></svg>`;
-            const svgBoss = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`;
-            const svgRecord = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>`;
-
-            html += '<div class="stats-grid">';
-            html += `<div class="stat-card"><div class="stat-value">${totalPlayers}</div><div class="stat-label">${svgUsers} Участников</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${totalWaves}</div><div class="stat-label">${svgWaves} Всего волн</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${totalBosses}</div><div class="stat-label">${svgBoss} Боссов убито</div></div>`;
-            html += `<div class="stat-card"><div class="stat-value">${maxRecord}</div><div class="stat-label">${svgRecord} Рекорд волн</div></div>`;
-            html += '</div>';
-
-            const top3 = sorted.slice(0, 3);
-            const medals = ['🥇', '🥈', '🥉'];
-            const styles = ['gold', 'silver', 'bronze'];
-            html += '<div class="podium">';
-            top3.forEach((p, i) => {
-                const icon = getHeroIcon(p.name, p.emoji, 28);
-                html += `<div class="podium-card ${styles[i]}"><div class="podium-medal">${medals[i]}</div><div class="podium-name">${icon} ${p.display||'???'}</div><div class="podium-record">${p.record}</div><div class="podium-detail">Урон: ${p.damage} · 💥${p.crits} · ❌${p.misses}  · 🛡${p.blocks}</div></div>`;
-            });
-            html += '</div>';
-
-            const br = sorted[0];
-            const bd = [...players].sort((a, b) => b.damage - a.damage)[0];
-            const bc = [...players].sort((a, b) => b.crits - a.crits)[0];
-            const bb = [...players].sort((a, b) => b.blocks - a.blocks)[0];
-            const bt = [...players].sort((a, b) => (b.trophies||0) - (a.trophies||0))[0];
-            const bw = [...players].sort((a, b) => (b.totalWaves||0) - (a.totalWaves||0))[0];
-            const ba = [...players].filter(p => p.swings > 0).sort((a, b) => (b.hits*100/b.swings) - (a.hits*100/a.swings))[0];
-            const bavg = [...players].filter(p => p.record > 0).sort((a, b) => (b.damage/b.record) - (a.damage/a.record))[0];
-            const bboss = [...players].sort((a, b) => (b.bosses||0) - (a.bosses||0))[0];
-            const bmiss = [...players].sort((a, b) => b.misses - a.misses)[0];
-
-            const svgTrophy = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>`;
-            const svgDamage = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>`;
-            const svgAccuracy = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ice)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`;
-            const svgCrown = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>`;
-            const svgSword = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>`;
-            const svgWave = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ice)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 7c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/></svg>`;
-			const svgCrit = `<svg width="20" height="20" viewBox="0 0 24 24" fill="var(--gold)" stroke="var(--gold)" stroke-width="1" stroke-linejoin="round"><path d="M12 1 L14 8 L21 3 L17 10 L23 12 L17 14 L21 21 L14 16 L12 23 L10 16 L3 21 L7 14 L1 12 L7 10 L3 3 L10 8 Z"/></svg>`;
-			const svgX = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-            const svgShield = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
-
-            const recs = [
-                [svgTrophy,   br.record,                              'Рекорд волн',   br, 'Максимальное количество пройденных волн'],
-                [svgWave,     bw?.totalWaves||0,                      'Всего волн',    bw, 'Суммарное количество пройденных волн'],
-                [svgDamage,   bd.damage,                              'Рекорд урона',  bd, 'Наибольший нанесённый урон'],
-                [svgSword,    bavg ? Math.round(bavg.damage/bavg.record) : '—', 'Урон/волна', bavg||{}, 'Средний урон за одну волну'],
-                [svgAccuracy, ba ? Math.round(ba.hits*100/ba.swings)+'%' : '—', 'Меткость', ba||{}, 'Процент успешных атак'],
-                [svgCrit,     bc.crits,                               'Рекорд критов', bc, 'Наибольшее количество критических ударов'],
-                [svgX,        bmiss?.misses||0,                       'Промахи',       bmiss, 'Наибольшее количество промахов'],
-                [svgShield,   bb.blocks,                              'Рекорд блоков', bb, 'Наибольшее количество заблокированных атак'],
-                [svgCrown,    bt?.trophies||0,                        'Рекорд трофеев', bt, 'Собрано трофеев'],
-                [svgBoss,     bboss?.bosses||0,                       'Боссов убито',  bboss, 'Наибольшее количество убитых боссов']
-            ];
-
-            html += '<div class="records-grid">';
-            recs.forEach(([icon, val, label, p, tooltip]) => {
-                const iconUrl = getHeroIcon(p?.name, p?.emoji || '👤', 28);
-                html += `<div class="record-item"><div class="record-icon" title="${tooltip}">${icon}</div><div class="record-value">${val}</div><div class="record-label">${label}</div><div class="record-player">${iconUrl} <span title="${p?.display||'???'}">${p?.display||'???'}</span></div></div>`;
-            });
-            html += '</div>';
-
-            // === ТОП-10 ЛИДЕРОВ ===
-            html += `<div class="section gold"><div class="section-title">📊 Топ-10 лидеров</div><div class="table-container"><table id="leaderboard-table"><thead><tr>
-                <th class="sortable-header" data-sort="record"><span title="Рекорд волн" style="cursor: help;">${svgTrophy}</span></th>
-                <th class="sortable-header" data-sort="display">Имя</th>
-                <th class="sortable-header" data-sort="class">Класс</th>
-                <th class="sortable-header" data-sort="passive"><span title="Пассивка" style="cursor: help;">${svgCrown}</span></th>
-                <th class="sortable-header" data-sort="damage"><span title="Урон" style="cursor: help;">${svgDamage}</span></th>
-                <th class="sortable-header" data-sort="accuracy"><span title="Меткость" style="cursor: help;">${svgAccuracy}</span></th>
-                <th class="sortable-header" data-sort="crits"><span title="Критические удары" style="cursor: help;">${svgCrit}</span></th>
-                <th class="sortable-header" data-sort="misses"><span title="Промахи" style="cursor: help;">${svgX}</span></th>
-                <th class="sortable-header" data-sort="blocks"><span title="Блоки" style="cursor: help;">${svgShield}</span></th>
-            </tr></thead><tbody>`;
-            
-            sorted.slice(0, 10).forEach(p => {
-                const pa = p.passive ? p.passive.split(' ')[0] : '';
-                const acc = p.swings > 0 ? Math.round(p.hits*100/p.swings) + '%' : '—';
-                const icon = getHeroIcon(p.name, p.emoji, 24);
-                
-                html += `<tr data-record="${p.record}" data-display="${p.display||''}" data-class="${p.name||''}" data-passive="${pa}" data-damage="${p.damage}" data-accuracy="${p.swings>0?Math.round(p.hits*100/p.swings):0}" data-crits="${p.crits}" data-misses="${p.misses}" data-blocks="${p.blocks}"><td class="highlight">${p.record}</td><td>${icon} <a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link" style="color:inherit;text-decoration:none;">${p.display||'???'}</a></td><td>${p.name||''}</td><td title="${p.passive||''}"><span>${pa}</span></td><td>${p.damage}</td><td>${acc}</td><td>${p.crits}</td><td>${p.misses}</td><td>${p.blocks}</td></tr>`;
-            });
-            
-            html += '</tbody></table></div></div>';
-
-            // === ВСЕ УЧАСТНИКИ ===
-            html += `<div class="section white"><div class="section-title">👥 Все участники</div><div class="table-container"><table id="all-table"><thead><tr>
-                <th class="sortable-header" data-sort="display">Имя</th>
-                <th class="sortable-header" data-sort="class">Класс</th>
-                <th class="sortable-header" data-sort="record"><span title="Рекорд волн" style="cursor: help;">${svgTrophy}</span></th>
-                <th class="sortable-header" data-sort="waves"><span title="Всего волн" style="cursor: help;">${svgWave}</span></th>
-                <th class="sortable-header" data-sort="avgwaves"><span title="Ср. волн" style="cursor: help;">${svgSword}</span></th>
-                <th class="sortable-header" data-sort="trophies"><span title="Трофеи" style="cursor: help;">${svgCrown}</span></th>
-                <th class="sortable-header" data-sort="bosses"><span title="Боссы" style="cursor: help;">${svgBoss}</span></th>
-                <th class="sortable-header" data-sort="accuracy"><span title="Меткость" style="cursor: help;">${svgAccuracy}</span></th>
-                <th class="sortable-header" data-sort="avgdamage"><span title="Ср. урон" style="cursor: help;">${svgDamage}</span></th>
-                <th class="sortable-header" data-sort="faction"><span title="Фракция" style="cursor: help;">${svgUsers}</span></th>
-            </tr></thead><tbody>`;
-            
-            players.forEach(p => {
-                const fi = p.faction ? factionIcon(p.faction, 18) : '';
-                const fiText = p.faction === 'Орден Света' ? 'light' : (p.faction === 'Культ Тьмы' ? 'dark' : '');
-                const acc = p.swings > 0 ? Math.round(p.hits*100/p.swings) + '%' : '—';
-                const avg = p.record > 0 ? Math.round(p.damage/p.record) : '—';
-                const icon = getHeroIcon(p.name, p.emoji, 24);
-                const avgWaves = p.totalRuns > 0 ? Math.round(p.totalWaves / p.totalRuns) : 0;
-
-                html += `<tr data-display="${p.display||''}" data-class="${p.name||''}" data-record="${p.record||0}" data-waves="${p.totalWaves||0}" data-avgwaves="${avgWaves}" data-trophies="${p.trophies||0}" data-bosses="${p.bosses||0}" data-accuracy="${p.swings>0?Math.round(p.hits*100/p.swings):0}" data-avgdamage="${p.record>0?Math.round(p.damage/p.record):0}" data-faction="${fiText}"><td>${icon} <a href="player.html?name=${encodeURIComponent(p.display)}" class="player-link" style="color:inherit;text-decoration:none;">${p.display||'???'}</a></td><td>${p.name||''}</td><td class="highlight">${p.record||0}</td><td>${p.totalWaves||0}</td><td>${avgWaves}</td><td>${p.trophies||0}</td><td>${p.bosses||0}</td><td>${acc}</td><td>${avg}</td><td>${fi}</td></tr>`;
-            });
-            
-            html += '</tbody></table></div></div>';
-
-            container.innerHTML = html;
-            setTimeout(() => { initSortable('leaderboard-table', 'record', 'desc'); initSortable('all-table', 'trophies', 'desc'); }, 150);
-        }
-
-        function initSortable(id, defSort, defDir) {
-            const t = document.getElementById(id); if (!t) return;
-            const b = t.querySelector('tbody'), h = t.querySelectorAll('.sortable-header');
-            let cs = defSort, cd = defDir;
-            function s(sb) {
-                const r = Array.from(b.querySelectorAll('tr'));
-                r.sort((a, b) => {
-                    let va = a.dataset[sb], vb = b.dataset[sb];
-                    if (sb === 'display' || sb === 'faction' || sb === 'class' || sb === 'passive') return cd === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
-                    va = parseFloat(va) || 0; vb = parseFloat(vb) || 0;
-                    return cd === 'asc' ? va - vb : vb - va;
-                });
-                r.forEach(row => b.appendChild(row));
-            }
-            h.forEach(th => { th.addEventListener('click', () => { const sb = th.dataset.sort; h.forEach(x => x.classList.remove('asc', 'desc')); if (cs === sb) cd = cd === 'asc' ? 'desc' : 'asc'; else { cs = sb; cd = 'desc'; } th.classList.add(cd); s(cs); }); });
-            const dh = t.querySelector(`[data-sort="${defSort}"]`);
-            if (dh) { dh.classList.add(defDir); s(defSort); }
-        }
-    
-/* === SCROLL PROGRESS + SCROLL TOP === */
-(function() {
-    const progressBar = document.getElementById('readingProgress');
-    const scrollTopBtn = document.getElementById('scrollTop');
-    if (!progressBar || !scrollTopBtn) return;
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        progressBar.style.transform = `scaleX(${progress / 100})`;
-        if (scrollTop > 300) scrollTopBtn.classList.add('visible');
-        else scrollTopBtn.classList.remove('visible');
+    // ---------------------------------------------------------------------
+    // Конфигурация
+    // ---------------------------------------------------------------------
+    const CONFIG = Object.freeze({
+        statsUrls: [
+            "https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json",
+            "https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json"
+        ],
+        cacheKey: "eternis-stats",
+        cacheTtl: 2 * 60 * 1000,
+        themeKey: "eternis-theme"
     });
-})();
 
+    const ICONS = Object.freeze({
+        races: {
+            "Человек": "human", "Орк": "orc", "Дворф": "dwarf",
+            "Эльф": "elf", "Нежить": "undead", "Табакси": "tabaxi",
+            "Тифлинг": "tiefling"
+        },
+        classes: {
+            "Воин": "warrior", "Паладин": "paladin", "Плут": "rogue",
+            "Монах": "monk", "Следопыт": "ranger", "Чародей": "sorcerer",
+            "Бард": "bard", "Друид": "druid", "Изобретатель": "artificer",
+            "Варвар": "barbarian", "Волшебница": "wizard",
+            "Некромант": "necromancer", "Жрец": "cleric",
+            "Колдун": "warlock", "Алхимик": "alchemist"
+        },
+        factions: {
+            "Орден Света": "icons/faction_light.png",
+            "Культ Тьмы": "icons/faction_dark.png"
+        }
+    });
+
+    const SVG = {
+        users: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+        waves: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ice)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 7c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/></svg>',
+        boss: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+        trophy: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>',
+        damage: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>',
+        accuracy: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ice)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+        crown: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>',
+        sword: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>',
+        crit: '<svg width="20" height="20" viewBox="0 0 24 24" fill="var(--gold)" stroke="var(--gold)" stroke-width="1" stroke-linejoin="round" aria-hidden="true"><path d="M12 1 L14 8 L21 3 L17 10 L23 12 L17 14 L21 21 L14 16 L12 23 L10 16 L3 21 L7 14 L1 12 L7 10 L3 3 L10 8 Z"/></svg>',
+        miss: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+        shield: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+    };
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const number = value => Number.isFinite(Number(value)) ? Number(value) : 0;
+    const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[char]);
+    const percent = (part, total) => total > 0 ? Math.round(part * 100 / total) : 0;
+
+    // ---------------------------------------------------------------------
+    // Иконки персонажей и фракций
+    // ---------------------------------------------------------------------
+    function imageTag(src, alt, size, extraClass = "") {
+        return `<img class="${extraClass}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" width="${size}" height="${size}" loading="lazy" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" onerror="this.hidden=true">`;
+    }
+
+    function factionIcon(name, size = 20) {
+        const src = ICONS.factions[name];
+        if (src) return imageTag(src, name, size);
+        const fallback = name === "Орден Света" ? "🌝" : name === "Культ Тьмы" ? "🌚" : "";
+        return `<span aria-hidden="true" style="display:inline-flex;width:${size}px;height:${size}px;align-items:center;justify-content:center;font-size:${size * .85}px">${fallback}</span>`;
+    }
+
+    function heroIcon(playerName, emojiFallback = "👤", size = 24) {
+        if (typeof playerName !== "string" || !playerName.includes("-")) {
+            return `<span aria-hidden="true" style="display:inline-block;width:${size}px;text-align:center;font-size:${size * .8}px">${escapeHtml(emojiFallback)}</span>`;
+        }
+
+        const [race, characterClass] = playerName.split("-");
+        const raceFile = ICONS.races[race];
+        const classFile = ICONS.classes[characterClass];
+        const icons = [];
+        if (raceFile) icons.push(imageTag(`icons/${raceFile}.png`, race, size));
+        if (classFile) icons.push(imageTag(`icons/${classFile}.png`, characterClass, size));
+        return icons.length
+            ? `<span style="display:inline-flex;align-items:center;gap:2px;vertical-align:middle;line-height:0">${icons.join("")}</span>`
+            : `<span aria-hidden="true">${escapeHtml(emojiFallback)}</span>`;
+    }
+
+    // ---------------------------------------------------------------------
+    // Загрузка данных и кэш
+    // ---------------------------------------------------------------------
+    function readCache() {
+        try {
+            const cached = JSON.parse(localStorage.getItem(CONFIG.cacheKey) || "null");
+            if (cached?.data && Date.now() - cached.timestamp < CONFIG.cacheTtl) {
+                return cached.data;
+            }
+        } catch (error) {
+            console.warn("Не удалось прочитать кэш статистики:", error);
+        }
+        return null;
+    }
+
+    async function fetchStats() {
+        let lastError;
+        for (const url of CONFIG.statsUrls) {
+            try {
+                const response = await fetch(url, { cache: "no-cache" });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                lastError = error;
+            }
+        }
+        throw lastError || new Error("Не удалось загрузить статистику");
+    }
+
+    let statsPromise;
+    function getStatsData() {
+        if (!statsPromise) {
+            statsPromise = (async () => {
+                const cached = readCache();
+                if (cached) return cached;
+
+                const data = await fetchStats();
+                try {
+                    localStorage.setItem(CONFIG.cacheKey, JSON.stringify({
+                        timestamp: Date.now(),
+                        data
+                    }));
+                } catch (error) {
+                    console.warn("Не удалось сохранить кэш статистики:", error);
+                }
+                return data;
+            })().catch(error => {
+                statsPromise = null;
+                throw error;
+            });
+        }
+        return statsPromise;
+    }
+
+    // ---------------------------------------------------------------------
+    // Подготовка статистики
+    // ---------------------------------------------------------------------
+    function getPlayerMetrics(players) {
+        const by = selector => [...players].sort((a, b) => selector(b) - selector(a))[0] || null;
+        const bestAccuracy = by(p => number(p.swings) > 0 ? number(p.hits) / number(p.swings) : -1);
+        const bestDamagePerWave = by(p => number(p.record) > 0 ? number(p.damage) / number(p.record) : -1);
+
+        return {
+            record: by(p => number(p.record)),
+            waves: by(p => number(p.totalWaves)),
+            damage: by(p => number(p.damage)),
+            damagePerWave: bestDamagePerWave?.record > 0 ? bestDamagePerWave : null,
+            accuracy: bestAccuracy?.swings > 0 ? bestAccuracy : null,
+            crits: by(p => number(p.crits)),
+            misses: by(p => number(p.misses)),
+            blocks: by(p => number(p.blocks)),
+            trophies: by(p => number(p.trophies)),
+            bosses: by(p => number(p.bosses))
+        };
+    }
+
+    function renderCrown(territory) {
+        const light = number(territory.light);
+        const dark = number(territory.dark);
+        const total = light + dark;
+        const lightPercent = total ? light * 100 / total : 50;
+        const owner = light > dark ? "Орден Света" : dark > light ? "Культ Тьмы" : null;
+        const ownerLabel = owner
+            ? `${factionIcon(owner, 24)} ${escapeHtml(owner)}`
+            : "⚖️ Ничья";
+
+        return `
+            <section class="section gold">
+                <div class="crown-section">
+                    <span class="crown-icon">👑</span>
+                    <div class="crown-title">КОРОНА РАСКОЛА</div>
+                    <div class="crown-owner">${ownerLabel}</div>
+                    <div class="score-row">
+                        <span class="score-light">${factionIcon("Орден Света", 20)} Свет: ${light}</span>
+                        <span class="score-dark">${dark} :Тьма ${factionIcon("Культ Тьмы", 20)}</span>
+                    </div>
+                    <div class="progress-bar" role="img" aria-label="Свет ${Math.round(lightPercent)}%, Тьма ${Math.round(100 - lightPercent)}%">
+                        <div class="progress-fill progress-light" style="width:${lightPercent}%">${lightPercent > 10 ? Math.round(lightPercent) + "%" : ""}</div>
+                        <div class="progress-fill progress-dark" style="width:${100 - lightPercent}%">${100 - lightPercent > 10 ? Math.round(100 - lightPercent) + "%" : ""}</div>
+                    </div>
+                    <div class="total-trophies">Всего трофеев: ${total}</div>
+                </div>
+            </section>`;
+    }
+
+    function renderSummary(players, sorted) {
+        const totalWaves = players.reduce((sum, player) => sum + number(player.totalWaves), 0);
+        const totalBosses = players.reduce((sum, player) => sum + number(player.bosses), 0);
+        const maxRecord = number(sorted[0]?.record);
+
+        const cards = [
+            [players.length, SVG.users, "Участников"],
+            [totalWaves, SVG.waves, "Всего волн"],
+            [totalBosses, SVG.boss, "Боссов убито"],
+            [maxRecord, SVG.trophy, "Рекорд волн"]
+        ];
+
+        return `<div class="stats-grid">${cards.map(([value, icon, label]) => `
+            <div class="stat-card">
+                <div class="stat-value">${value}</div>
+                <div class="stat-label">${icon} ${label}</div>
+            </div>`).join("")}</div>`;
+    }
+
+    function renderPodium(sorted) {
+        const medals = ["🥇", "🥈", "🥉"];
+        const styles = ["gold", "silver", "bronze"];
+
+        return `<div class="podium">${sorted.slice(0, 3).map((player, index) => `
+            <article class="podium-card ${styles[index]}">
+                <div class="podium-medal">${medals[index]}</div>
+                <div class="podium-name">${heroIcon(player.name, player.emoji, 28)} ${escapeHtml(player.display || "???")}</div>
+                <div class="podium-record">${number(player.record)}</div>
+                <div class="podium-detail">Урон: ${number(player.damage)} · 💥${number(player.crits)} · ❌${number(player.misses)} · 🛡${number(player.blocks)}</div>
+            </article>`).join("")}</div>`;
+    }
+
+    function renderRecords(players, metrics) {
+        const definitions = [
+            ["trophy", metrics.record?.record ?? 0, "Рекорд волн", metrics.record, "Максимальное количество пройденных волн"],
+            ["waves", metrics.waves?.totalWaves ?? 0, "Всего волн", metrics.waves, "Суммарное количество пройденных волн"],
+            ["damage", metrics.damage?.damage ?? 0, "Рекорд урона", metrics.damage, "Наибольший нанесённый урон"],
+            ["sword", metrics.damagePerWave ? Math.round(metrics.damagePerWave.damage / metrics.damagePerWave.record) : "—", "Урон/волна", metrics.damagePerWave, "Средний урон за одну волну"],
+            ["accuracy", metrics.accuracy ? percent(metrics.accuracy.hits, metrics.accuracy.swings) + "%" : "—", "Меткость", metrics.accuracy, "Процент успешных атак"],
+            ["crit", metrics.crits?.crits ?? 0, "Рекорд критов", metrics.crits, "Наибольшее количество критических ударов"],
+            ["miss", metrics.misses?.misses ?? 0, "Промахи", metrics.misses, "Наибольшее количество промахов"],
+            ["shield", metrics.blocks?.blocks ?? 0, "Рекорд блоков", metrics.blocks, "Наибольшее количество заблокированных атак"],
+            ["crown", metrics.trophies?.trophies ?? 0, "Рекорд трофеев", metrics.trophies, "Собрано трофеев"],
+            ["boss", metrics.bosses?.bosses ?? 0, "Боссов убито", metrics.bosses, "Наибольшее количество убитых боссов"]
+        ];
+
+        return `<div class="records-grid">${definitions.map(([icon, value, label, player, tooltip]) => `
+            <article class="record-item">
+                <div class="record-icon" title="${escapeHtml(tooltip)}">${SVG[icon]}</div>
+                <div class="record-value">${value}</div>
+                <div class="record-label">${label}</div>
+                <div class="record-player">
+                    ${heroIcon(player?.name, player?.emoji || "👤", 28)}
+                    <span title="${escapeHtml(player?.display || "???")}">${escapeHtml(player?.display || "???")}</span>
+                </div>
+            </article>`).join("")}</div>`;
+    }
+
+    function playerLink(player) {
+        const display = player.display || "???";
+        const href = `player.html?name=${encodeURIComponent(player.display || "")}`;
+        return `<a href="${href}" class="player-link" style="color:inherit;text-decoration:none">${escapeHtml(display)}</a>`;
+    }
+
+    function renderLeaderboard(players) {
+        const rows = [...players].sort((a, b) =>
+            number(b.record) - number(a.record) || number(b.damage) - number(a.damage)
+        );
+
+        return `
+            <section class="section gold">
+                <div class="section-title">📊 Топ-10 лидеров</div>
+                <div class="table-container">
+                    <table id="leaderboard-table">
+                        <thead><tr>
+                            <th class="sortable-header" data-sort="record"><span title="Рекорд волн">${SVG.trophy}</span></th>
+                            <th class="sortable-header" data-sort="display">Имя</th>
+                            <th class="sortable-header" data-sort="class">Класс</th>
+                            <th class="sortable-header" data-sort="passive"><span title="Пассивка">${SVG.crown}</span></th>
+                            <th class="sortable-header" data-sort="damage"><span title="Урон">${SVG.damage}</span></th>
+                            <th class="sortable-header" data-sort="accuracy"><span title="Меткость">${SVG.accuracy}</span></th>
+                            <th class="sortable-header" data-sort="crits"><span title="Критические удары">${SVG.crit}</span></th>
+                            <th class="sortable-header" data-sort="misses"><span title="Промахи">${SVG.miss}</span></th>
+                            <th class="sortable-header" data-sort="blocks"><span title="Блоки">${SVG.shield}</span></th>
+                        </tr></thead>
+                        <tbody>${rows.slice(0, 10).map(player => {
+                            const passive = player.passive ? String(player.passive).split(" ")[0] : "";
+                            const accuracy = number(player.swings) > 0 ? percent(player.hits, player.swings) : null;
+                            return `<tr
+                                data-record="${number(player.record)}"
+                                data-display="${escapeHtml(player.display || "")}"
+                                data-class="${escapeHtml(player.name || "")}"
+                                data-passive="${escapeHtml(passive)}"
+                                data-damage="${number(player.damage)}"
+                                data-accuracy="${accuracy ?? 0}"
+                                data-crits="${number(player.crits)}"
+                                data-misses="${number(player.misses)}"
+                                data-blocks="${number(player.blocks)}">
+                                <td class="highlight">${number(player.record)}</td>
+                                <td>${heroIcon(player.name, player.emoji, 24)} ${playerLink(player)}</td>
+                                <td>${escapeHtml(player.name || "")}</td>
+                                <td title="${escapeHtml(player.passive || "")}"><span>${escapeHtml(passive)}</span></td>
+                                <td>${number(player.damage)}</td>
+                                <td>${accuracy === null ? "—" : accuracy + "%"}</td>
+                                <td>${number(player.crits)}</td>
+                                <td>${number(player.misses)}</td>
+                                <td>${number(player.blocks)}</td>
+                            </tr>`;
+                        }).join("")}</tbody>
+                    </table>
+                </div>
+            </section>`;
+    }
+
+    function renderAllPlayers(players) {
+        return `
+            <section class="section white">
+                <div class="section-title">👥 Все участники</div>
+                <div class="table-container">
+                    <table id="all-table">
+                        <thead><tr>
+                            <th class="sortable-header" data-sort="display">Имя</th>
+                            <th class="sortable-header" data-sort="class">Класс</th>
+                            <th class="sortable-header" data-sort="record"><span title="Рекорд волн">${SVG.trophy}</span></th>
+                            <th class="sortable-header" data-sort="waves"><span title="Всего волн">${SVG.waves}</span></th>
+                            <th class="sortable-header" data-sort="avgwaves"><span title="Ср. волн">${SVG.sword}</span></th>
+                            <th class="sortable-header" data-sort="trophies"><span title="Трофеи">${SVG.crown}</span></th>
+                            <th class="sortable-header" data-sort="bosses"><span title="Боссы">${SVG.boss}</span></th>
+                            <th class="sortable-header" data-sort="accuracy"><span title="Меткость">${SVG.accuracy}</span></th>
+                            <th class="sortable-header" data-sort="avgdamage"><span title="Ср. урон">${SVG.damage}</span></th>
+                            <th class="sortable-header" data-sort="faction"><span title="Фракция">${SVG.users}</span></th>
+                        </tr></thead>
+                        <tbody>${players.map(player => {
+                            const accuracy = number(player.swings) > 0 ? percent(player.hits, player.swings) : null;
+                            const averageDamage = number(player.record) > 0
+                                ? Math.round(number(player.damage) / number(player.record)) : "—";
+                            const averageWaves = number(player.totalRuns) > 0
+                                ? Math.round(number(player.totalWaves) / number(player.totalRuns)) : 0;
+                            const factionKey = player.faction === "Орден Света" ? "light"
+                                : player.faction === "Культ Тьмы" ? "dark" : "";
+
+                            return `<tr
+                                data-display="${escapeHtml(player.display || "")}"
+                                data-class="${escapeHtml(player.name || "")}"
+                                data-record="${number(player.record)}"
+                                data-waves="${number(player.totalWaves)}"
+                                data-avgwaves="${averageWaves}"
+                                data-trophies="${number(player.trophies)}"
+                                data-bosses="${number(player.bosses)}"
+                                data-accuracy="${accuracy ?? 0}"
+                                data-avgdamage="${averageDamage === "—" ? 0 : averageDamage}"
+                                data-faction="${factionKey}">
+                                <td>${heroIcon(player.name, player.emoji, 24)} ${playerLink(player)}</td>
+                                <td>${escapeHtml(player.name || "")}</td>
+                                <td class="highlight">${number(player.record)}</td>
+                                <td>${number(player.totalWaves)}</td>
+                                <td>${averageWaves}</td>
+                                <td>${number(player.trophies)}</td>
+                                <td>${number(player.bosses)}</td>
+                                <td>${accuracy === null ? "—" : accuracy + "%"}</td>
+                                <td>${averageDamage}</td>
+                                <td>${player.faction ? factionIcon(player.faction, 18) : ""}</td>
+                            </tr>`;
+                        }).join("")}</tbody>
+                    </table>
+                </div>
+            </section>`;
+    }
+
+    // ---------------------------------------------------------------------
+    // Рендер страницы
+    // ---------------------------------------------------------------------
+    function renderAll(players, territory) {
+        const sorted = [...players].sort((a, b) =>
+            number(b.record) - number(a.record) || number(b.damage) - number(a.damage)
+        );
+        const metrics = getPlayerMetrics(players);
+        const container = $("#stats-container");
+
+        container.innerHTML = [
+            renderCrown(territory),
+            renderSummary(players, sorted),
+            renderPodium(sorted),
+            renderRecords(players, metrics),
+            renderLeaderboard(players),
+            renderAllPlayers(players)
+        ].join("");
+
+        initSortable("leaderboard-table", "record", "desc");
+        initSortable("all-table", "trophies", "desc");
+    }
+
+    function showMessage(title, message, isError = false) {
+        const container = $("#stats-container");
+        container.innerHTML = `
+            <section class="section ice" style="text-align:center;padding:40px 20px">
+                <div class="section-title" style="justify-content:center">${escapeHtml(title)}</div>
+                <p${isError ? ' style="color:var(--red)"' : ""}>${escapeHtml(message)}</p>
+            </section>`;
+    }
+
+    // ---------------------------------------------------------------------
+    // Сортировка таблиц
+    // ---------------------------------------------------------------------
+    function initSortable(tableId, defaultSort, defaultDirection) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+
+        const body = $("tbody", table);
+        const headers = $$(".sortable-header", table);
+        let currentSort = defaultSort;
+        let direction = defaultDirection;
+
+        function sortRows(sortBy) {
+            const isText = ["display", "faction", "class", "passive"].includes(sortBy);
+            const rows = [...body.rows];
+
+            rows.sort((rowA, rowB) => {
+                const a = rowA.dataset[sortBy] || "";
+                const b = rowB.dataset[sortBy] || "";
+                const result = isText
+                    ? a.localeCompare(b, "ru", { sensitivity: "base" })
+                    : number(a) - number(b);
+                return direction === "asc" ? result : -result;
+            });
+
+            rows.forEach(row => body.appendChild(row));
+        }
+
+        headers.forEach(header => {
+            header.addEventListener("click", () => {
+                const sortBy = header.dataset.sort;
+                direction = currentSort === sortBy && direction === "desc" ? "asc" : "desc";
+                currentSort = sortBy;
+
+                headers.forEach(item => item.classList.remove("asc", "desc"));
+                header.classList.add(direction);
+                sortRows(sortBy);
+            });
+        });
+
+        const defaultHeader = $(`[data-sort="${defaultSort}"]`, table);
+        if (defaultHeader) {
+            defaultHeader.classList.add(defaultDirection);
+            sortRows(defaultSort);
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Тема, навигация и прокрутка
+    // ---------------------------------------------------------------------
+    function initTheme() {
+        try {
+            const savedTheme = localStorage.getItem(CONFIG.themeKey);
+            if (savedTheme === "dark" || savedTheme === "light") {
+                document.documentElement.setAttribute("data-theme", savedTheme);
+            }
+        } catch (error) {
+            console.warn("Настройка темы недоступна:", error);
+        }
+    }
+
+    function toggleTheme() {
+        const root = document.documentElement;
+        const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", nextTheme);
+        try {
+            localStorage.setItem(CONFIG.themeKey, nextTheme);
+        } catch (error) {
+            console.warn("Не удалось сохранить тему:", error);
+        }
+    }
+
+    function toggleNav() {
+        const nav = $("#pageNav");
+        const button = $('[data-action="toggle-nav"]');
+        const isOpen = nav.classList.toggle("show");
+        button.textContent = isOpen ? "✕ Закрыть" : "☰ Меню";
+        button.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    function initNavigation() {
+        $('[data-action="toggle-theme"]')?.addEventListener("click", toggleTheme);
+        $('[data-action="toggle-nav"]')?.addEventListener("click", toggleNav);
+
+        $$(".nav-link").forEach(link => link.addEventListener("click", () => {
+            $("#pageNav").classList.remove("show");
+            const button = $('[data-action="toggle-nav"]');
+            button.textContent = "☰ Меню";
+            button.setAttribute("aria-expanded", "false");
+        }));
+
+        $$(".nav-label").forEach(label => {
+            label.addEventListener("click", event => {
+                if (window.innerWidth > 768) return;
+                event.preventDefault();
+
+                const dropdown = label.nextElementSibling;
+                if (!dropdown?.classList.contains("nav-dropdown")) return;
+
+                const shouldOpen = dropdown.style.display !== "block";
+                $$(".nav-dropdown").forEach(item => { item.style.display = "none"; });
+                dropdown.style.display = shouldOpen ? "block" : "none";
+            });
+        });
+    }
+
+    function initScrollControls() {
+        const progressBar = $("#readingProgress");
+        const scrollTopButton = $("#scrollTop");
+        if (!progressBar || !scrollTopButton) return;
+
+        scrollTopButton.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        let scheduled = false;
+        function updateScrollUI() {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+            progressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+            scrollTopButton.classList.toggle("visible", window.scrollY > 300);
+            scheduled = false;
+        }
+
+        window.addEventListener("scroll", () => {
+            if (scheduled) return;
+            scheduled = true;
+            requestAnimationFrame(updateScrollUI);
+        }, { passive: true });
+
+        updateScrollUI();
+    }
+
+    // ---------------------------------------------------------------------
+    // Запуск
+    // ---------------------------------------------------------------------
+    async function initStats() {
+        try {
+            const data = await getStatsData();
+            const dungeon = data?.dungeon || {};
+            const players = Object.values(dungeon.players || {});
+            const territory = data?.dungeonTrophies || data?.territory || { light: 0, dark: 0 };
+
+            if (!players.length) {
+                showMessage("Нет данных", "Похоже, в подземелье пока никто не спускался.");
+                return;
+            }
+            renderAll(players, territory);
+        } catch (error) {
+            console.error("Ошибка загрузки статистики подземелья:", error);
+            showMessage("🩸 Разлом Бездны", "Не удалось загрузить статистику. Попробуй обновить страницу.", true);
+        }
+    }
+
+    initTheme();
+    initNavigation();
+    initScrollControls();
+    initStats();
+})();
 </script>
 </body>
 </html>

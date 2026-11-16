@@ -217,11 +217,11 @@ tr.row-bronze td:first-child { border-left: 3px solid var(--bronze); }
         <header class="header">
             <h1 class="header-title">СЕЗОНЫ</h1>
             <p class="header-subtitle">История Этерниса</p>
-            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+            <button class="theme-toggle" data-action="toggle-theme">🌓</button>
         </header>
 
 		<div class="nav-wrapper">
-			<button class="nav-toggle" onclick="toggleNav()">☰ Меню</button>
+			<button class="nav-toggle" data-action="toggle-nav">☰ Меню</button>
 			<nav class="nav-bar" id="pageNav">
 				<div class="nav-group">
 					<span class="nav-label">Арена ▾</span>
@@ -247,10 +247,10 @@ tr.row-bronze td:first-child { border-left: 3px solid var(--bronze); }
 		</div>
 
 		<div class="tabs" id="mainTabs">
-			<button class="tab-btn active" data-tab="seasons" onclick="switchSeasonsTab('seasons')">
+			<button class="tab-btn active" data-tab="seasons" data-action="switch-main-tab">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg> Зал Славы
             </button>
-			<button class="tab-btn" data-tab="alltime" onclick="switchSeasonsTab('alltime')">
+			<button class="tab-btn" data-tab="alltime" data-action="switch-main-tab">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Легенды
             </button>
 		</div>
@@ -258,13 +258,13 @@ tr.row-bronze td:first-child { border-left: 3px solid var(--bronze); }
 		<div id="seasons-tab-seasons" class="tab-content active">
 			<div class="season-carousel-wrap">
 				<button class="carousel-btn prev"
-						onclick="scrollCarousel(-1)"
+						data-action="carousel-prev"
 						aria-label="Предыдущий сезон">‹</button>
 
 				<div class="season-carousel" id="seasonCarousel"></div>
 
 				<button class="carousel-btn next"
-						onclick="scrollCarousel(1)"
+						data-action="carousel-next"
 						aria-label="Следующий сезон">›</button>
 			</div>
 			<div id="tab-content-container">
@@ -278,8 +278,8 @@ tr.row-bronze td:first-child { border-left: 3px solid var(--bronze); }
             <div class="section gold" id="total-stats-section">
                 <div style="margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap" id="total-summary"></div>
                 <div class="search-row">
-                    <input type="text" class="search-input" id="totalSearch" placeholder="🔍 Найти игрока..." oninput="filterTotalTable()">
-                    <button class="search-clear" onclick="clearSearch()">✕</button>
+                    <input type="text" class="search-input" id="totalSearch" placeholder="🔍 Найти игрока..." data-action="filter-total-table">
+                    <button class="search-clear" data-action="clear-search">✕</button>
                 </div>
                 <div class="table-container" style="overflow-x:auto;max-height:70vh;overflow-y:auto;border-radius:var(--radius-sm)">
                     <table id="total-table" style="min-width:750px">
@@ -308,9 +308,28 @@ tr.row-bronze td:first-child { border-left: 3px solid var(--bronze); }
     </div>
 
     <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
-    <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+    <button class="scroll-top" id="scrollTop" data-action="scroll-top" aria-label="Наверх">↑</button>
 	<script>
 // ============ КОНСТАНТЫ ============
+function readStorage(key, fallback = null) {
+    try {
+        const value = localStorage.getItem(key);
+        return value === null ? fallback : value;
+    } catch (error) {
+        return fallback;
+    }
+}
+
+function writeStorage(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+
 const STATS_URL = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
 const STATS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
 const ARCHIVE_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
@@ -327,15 +346,41 @@ let seasonCache = {};
 
 // ============ ИКОНКИ ============
 function getRaceIcon(name) {
-    const map = {'Человек':'human','Орк':'orc','Дворф':'dwarf','Эльф':'elf','Нежить':'undead','Табакси':'tabaxi','Тифлинг':'tiefling'};
-    return map[name] ? `icons/${map[name]}.png` : null;
+    const icons = {
+        'Человек': 'human',
+        'Орк': 'orc',
+        'Дворф': 'dwarf',
+        'Эльф': 'elf',
+        'Нежить': 'undead',
+        'Табакси': 'tabaxi',
+        'Тифлинг': 'tiefling'
+    };
+
+    return icons[name] ? `icons/${icons[name]}.png` : null;
 }
 function getClassIcon(name) {
-    const map = {'Воин':'warrior','Паладин':'paladin','Плут':'rogue','Монах':'monk','Следопыт':'ranger','Чародей':'sorcerer','Бард':'bard','Друид':'druid','Изобретатель':'artificer','Варвар':'barbarian','Волшебница':'wizard','Некромант':'necromancer','Жрец':'cleric','Колдун':'warlock','Алхимик':'alchemist'};
-    return map[name] ? `icons/${map[name]}.png` : null;
+    const icons = {
+        'Воин': 'warrior',
+        'Паладин': 'paladin',
+        'Плут': 'rogue',
+        'Монах': 'monk',
+        'Следопыт': 'ranger',
+        'Чародей': 'sorcerer',
+        'Бард': 'bard',
+        'Друид': 'druid',
+        'Изобретатель': 'artificer',
+        'Варвар': 'barbarian',
+        'Волшебница': 'wizard',
+        'Некромант': 'necromancer',
+        'Жрец': 'cleric',
+        'Колдун': 'warlock',
+        'Алхимик': 'alchemist'
+    };
+
+    return icons[name] ? `icons/${icons[name]}.png` : null;
 }
 function getPlayerIcon(playerName, emojiFallback, size = 24) {
-    const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;flex-shrink:0;margin-right:4px;" onerror="this.style.display='none'">`;
+    const img = (src) => `<img src="${src}" style="width:${size}px;height:${size}px;object-fit:contain;flex-shrink:0;margin-right:4px;" data-fallback="hide">`;
     const emoji = (char) => `<span class="emoji-icon" style="margin-right:4px; font-size:${size*0.8}px; line-height:1; vertical-align:middle;">${char}</span>`;
     
     const defaultIcon = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
@@ -367,7 +412,7 @@ function getPlayerIcon(playerName, emojiFallback, size = 24) {
 // ============ ЗАГРУЗКА ДАННЫХ ============
 async function getSeasonData(n) {
     const KEY = 'eternis-season-v2-' + n;
-    try { const c = JSON.parse(localStorage.getItem(KEY) || 'null'); if (c) return c.data; } catch (e) {}
+    try { const c = JSON.parse(readStorage(KEY, 'null')); if (c) return c.data; } catch (e) {}
     const fetchT = async (url) => {
         const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 3000);
         try { const r = await fetch(url, { signal: ctrl.signal }); clearTimeout(t); return r; } catch (e) { clearTimeout(t); throw e; }
@@ -376,7 +421,7 @@ async function getSeasonData(n) {
         let r; try { r = await fetchT(`${ARCHIVE_BASE}${n}.json`); } catch (e) { r = await fetchT(`${ARCHIVE_BASE_FALLBACK}${n}.json`); }
         if (!r || !r.ok) return null;
         const data = await r.json();
-        try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        try { writeStorage(KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
     } catch (e) { return null; }
 }
@@ -387,44 +432,71 @@ let statsPromise = null;
 function getStatsData() {
     if (statsPromise) return statsPromise;
     statsPromise = (async () => {
-        try { const c = JSON.parse(localStorage.getItem(STATS_CACHE_KEY) || 'null'); if (c && (Date.now() - c.ts < STATS_CACHE_TTL)) return c.data; } catch (e) {}
+        try { const c = JSON.parse(readStorage(STATS_CACHE_KEY, 'null')); if (c && (Date.now() - c.ts < STATS_CACHE_TTL)) return c.data; } catch (e) {}
         let r = await fetch(STATS_URL); if (!r.ok) r = await fetch(STATS_URL_FALLBACK);
         const data = await r.json();
-        try { localStorage.setItem(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+        try { writeStorage(STATS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
         return data;
     })().catch(e => { statsPromise = null; throw e; });
     return statsPromise;
 }
 
 function renderProgress(loaded, total, title) {
-    const rawPct = total > 0 ? Math.round((loaded / total) * 100) : 0;
-    const pct = loaded >= total ? 100 : Math.min(99, rawPct);
-    const el = document.getElementById('progressBox'); if (!el) return;
-    el.innerHTML = `<div class="load-percent">${pct}%</div><div class="load-bar"><div class="load-bar-fill" style="width:${pct}%"></div></div><div class="load-info">Загружено ${loaded} из ${total}</div>${title ? `<div class="load-title">${title}</div>` : ''}`;
+    const rawPercent = total > 0
+        ? Math.round((loaded / total) * 100)
+        : 0;
+    const percent = loaded >= total ? 100 : Math.min(99, rawPercent);
+    const container = document.getElementById('progressBox');
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="load-percent">${percent}%</div>
+        <div class="load-bar">
+            <div class="load-bar-fill" style="width:${percent}%"></div>
+        </div>
+        <div class="load-info">Загружено ${loaded} из ${total}</div>
+        ${title ? `<div class="load-title">${title}</div>` : ''}
+    `;
 }
-function getRankClass(i) { return i === 0 ? 'row-gold' : i === 1 ? 'row-silver' : i === 2 ? 'row-bronze' : ''; }
+
+function getRankClass(index) {
+    if (index === 0) return 'row-gold';
+    if (index === 1) return 'row-silver';
+    if (index === 2) return 'row-bronze';
+    return '';
+}
 
 // ============ ТЕМА / НАВИГАЦИЯ ============
 function toggleTheme() {
-    const h = document.documentElement;
-    const c = h.getAttribute('data-theme');
-    const n = c === 'dark' ? 'light' : 'dark';
-    h.setAttribute('data-theme', n);
-    localStorage.setItem('eternis-theme', n);
+    const root = document.documentElement;
+    const currentTheme = root.getAttribute('data-theme');
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    root.setAttribute('data-theme', nextTheme);
+    writeStorage('eternis-theme', nextTheme);
 }
-(function() { const s = localStorage.getItem('eternis-theme'); if (s) document.documentElement.setAttribute('data-theme', s); })();
+
+function applySavedTheme() {
+    const savedTheme = readStorage('eternis-theme');
+
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+}
+
+applySavedTheme();
 function toggleNav() {
     const nav = document.getElementById('pageNav');
-    const btn = document.querySelector('.nav-toggle');
+    const button = document.querySelector('.nav-toggle');
+
     nav.classList.toggle('show');
-    btn.textContent = nav.classList.contains('show') ? '✕ Закрыть' : '☰ Меню';
+    button.textContent = nav.classList.contains('show')
+        ? '✕ Закрыть'
+        : '☰ Меню';
 }
-document.querySelectorAll('.nav-link').forEach(l => {
-    l.addEventListener('click', () => {
-        document.getElementById('pageNav').classList.remove('show');
-        document.querySelector('.nav-toggle').textContent = '☰ Меню';
-    });
-});
 
 // ============ ВКЛАДКИ ============
 function switchSeasonsTab(tab) {
@@ -453,7 +525,7 @@ function getSeasonCardHTML(n, cycle) {
   const live = n === currentSeasonNum;
   const active = n === activeSeason && cycle === 1;
 
-  return `<button class="season-card${active ? ' active' : ''}${live ? ' is-live' : ''}" data-num="${n}" data-cycle="${cycle}" aria-pressed="${active}" onclick="switchSeason(${n})">
+  return `<button class="season-card${active ? ' active' : ''}${live ? ' is-live' : ''}" data-num="${n}" data-cycle="${cycle}" aria-pressed="${active}" data-action="switch-season">
     <span class="sc-badge${live ? '' : ' ended'}">${live ? 'LIVE' : 'END'}</span>
     <span class="sc-icon">${SEASON_ICONS[n] || '📋'}</span>
     <span class="sc-num">${n}</span>
@@ -689,7 +761,7 @@ function renderSeason(data, seasonNum, isCurrent) {
 
     html += '<div class="section-subtitle">📊 Таблицы лидеров</div>';
     html += '<div class="table-tabs">';
-    const tabBtn = (id, iconSvg, label, isActive) => `<button class="table-tab ${isActive ? 'active' : ''}" data-tab="${id}" onclick="switchTableTab('${id}', this)">${iconSvg} <span>${label}</span></button>`;
+    const tabBtn = (id, iconSvg, label, isActive) => `<button class="table-tab ${isActive ? 'active' : ''}" data-tab="${id}" data-action="switch-table-tab">${iconSvg} <span>${label}</span></button>`;
     html += tabBtn('skill', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>', 'SKILL', true);
     html += tabBtn('wr', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>', 'Винрейт', false);
     html += tabBtn('shards', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/></svg>', 'Осколки', false);
@@ -904,6 +976,63 @@ function initTotalSortable() {
     const defaultHeader = table.querySelector('[data-sort="wins"]');
     if (defaultHeader) defaultHeader.classList.add('desc');
 }
+
+
+// ============ ЕДИНЫЕ ОБРАБОТЧИКИ СОБЫТИЙ ============
+
+document.addEventListener('click', (event) => {
+    const control = event.target.closest('[data-action]');
+
+    if (control) {
+        switch (control.dataset.action) {
+            case 'toggle-theme':
+                toggleTheme();
+                break;
+            case 'toggle-nav':
+                toggleNav();
+                break;
+            case 'switch-main-tab':
+                switchSeasonsTab(control.dataset.tab);
+                break;
+            case 'carousel-prev':
+                scrollCarousel(-1);
+                break;
+            case 'carousel-next':
+                scrollCarousel(1);
+                break;
+            case 'clear-search':
+                clearSearch();
+                break;
+            case 'scroll-top':
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                break;
+            case 'switch-season':
+                switchSeason(Number(control.dataset.num));
+                break;
+            case 'switch-table-tab':
+                switchTableTab(control.dataset.tab, control);
+                break;
+        }
+    }
+
+    if (event.target.closest('.nav-link')) {
+        document.getElementById('pageNav')?.classList.remove('show');
+        const navButton = document.querySelector('.nav-toggle');
+        if (navButton) navButton.textContent = '☰ Меню';
+    }
+});
+
+document.addEventListener('input', (event) => {
+    if (event.target.matches('[data-action="filter-total-table"]')) {
+        filterTotalTable();
+    }
+});
+
+document.addEventListener('error', (event) => {
+    if (event.target.matches('img[data-fallback="hide"]')) {
+        event.target.style.display = 'none';
+    }
+}, true);
 
 // ============ СТАРТ ============
 const validSeasonTabs = ['seasons', 'alltime'];
