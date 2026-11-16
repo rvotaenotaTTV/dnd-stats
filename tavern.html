@@ -32,12 +32,12 @@
     .helper-avatar .fallback-emoji { font-size: 1.2rem; line-height: 1; }
 
     .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .game-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; }
+    .game-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .game-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(240,185,11,0.1); }
-    .game-emoji { font-size: 2rem; margin-bottom: 6px; }
-    .game-icon-img { width: 56px; height: 56px; object-fit: contain; margin-bottom: 8px; display: inline-block; }
-    .game-name { color: var(--gold); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
-    .game-cost { color: var(--muted); font-size: 0.7rem; }
+    .game-emoji { font-size: 2.5rem; margin-bottom: 6px; }
+    .game-icon-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; display: inline-block; }
+    .game-name { color: var(--gold); font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .game-cost { color: var(--muted); font-size: 0.75rem; }
 
     .modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0,0,0,0.85) !important; z-index: 99999 !important; display: flex !important; align-items: center !important; justify-content: center !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); animation: fadeIn .2s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -54,19 +54,23 @@
     .poker-card .name { font-size: 8px; }
     .card-back { width: 88px; height: 124px; background: #444; border-radius: 10px; border: 3px solid #444; box-shadow: 0 4px 0 #333; display: inline-block; margin: 3px; }
 
-    .sudoku-grid { display: grid; grid-template-columns: repeat(9, 1fr); margin: 16px 0; gap: 1px; background: var(--border-strong); border: 3px solid var(--border-strong); border-radius: 12px; width: 100%; }
-    .sudoku-cell { aspect-ratio: 1; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all .1s; color: var(--text); user-select: none; border: 1px solid rgba(255,255,255,0.05); }
-    .sudoku-cell:nth-child(3n) { border-right: 4px solid var(--border-strong); }
-    .sudoku-cell:nth-child(9n+1) { border-left: 4px solid var(--border-strong); }
-    .sudoku-cell:nth-child(n+19):nth-child(-n+27), .sudoku-cell:nth-child(n+46):nth-child(-n+54), .sudoku-cell:nth-child(n+73):nth-child(-n+81) { border-bottom: 4px solid var(--border-strong); }
-    .sudoku-cell:nth-child(-n+9), .sudoku-cell:nth-child(n+28):nth-child(-n+36), .sudoku-cell:nth-child(n+55):nth-child(-n+63) { border-top: 4px solid var(--border-strong); }
-    .sudoku-cell:hover { background: var(--elevated); }
+    .sudoku-grid { 
+        display: grid; grid-template-columns: repeat(9, 1fr); gap: 0; width: 100%; margin: 16px 0; 
+        border: 3px solid var(--border-strong); border-radius: 12px; overflow: hidden; background: var(--card); 
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='33.33%25' y1='0' x2='33.33%25' y2='100%25' stroke='%23f0b90b' stroke-width='3'/%3E%3Cline x1='66.66%25' y1='0' x2='66.66%25' y2='100%25' stroke='%23f0b90b' stroke-width='3'/%3E%3Cline x1='0' y1='33.33%25' x2='100%25' y2='33.33%25' stroke='%23f0b90b' stroke-width='3'/%3E%3Cline x1='0' y1='66.66%25' x2='100%25' y2='66.66%25' stroke='%23f0b90b' stroke-width='3'/%3E%3C/svg%3E");
+        background-size: 100% 100%; background-repeat: no-repeat;
+    }
+    .sudoku-cell { aspect-ratio: 1; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .1s; color: var(--text); user-select: none; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); box-sizing: border-box; }
+    .sudoku-cell:nth-child(9n) { border-right: none; }
+    .sudoku-cell:nth-child(n+73) { border-bottom: none; }
+    .sudoku-cell:hover { background: rgba(255,255,255,0.05); }
     .sudoku-cell.fixed { color: var(--sudoku-fixed); font-weight: 800; }
     .sudoku-cell.selected { outline: 3px solid var(--gold); outline-offset: -2px; background: var(--cell-selected-bg); z-index: 2; position: relative; }
-    .sudoku-cell.same-row-col { background: var(--cell-same-bg); }
-    .sudoku-cell.same-number { background: var(--cell-same-num-bg); }
-    .sudoku-cell.error { color: var(--red); background: rgba(239,68,68,0.25); outline: 2px solid var(--red); animation: shake .3s; }
+    .sudoku-cell.same-row-col { background: rgba(255,255,255,0.03); }
+    .sudoku-cell.same-number { background: rgba(91,192,235,0.1); }
+    .sudoku-cell.error { color: var(--red); background: rgba(239,68,68,0.2); outline: 2px solid var(--red); animation: shake .3s; }
     @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+    
     .num-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin: 12px 0; }
     .num-btn { padding: 14px 8px; border-radius: 10px; border: 2px solid var(--border); background: var(--elevated); color: var(--text); font-size: 1rem; font-weight: 700; cursor: pointer; transition: .2s; font-family: inherit; }
     .num-btn:hover { border-color: var(--gold); background: var(--cell-selected-bg); }
@@ -89,10 +93,10 @@
         .helper-row { font-size: 0.65rem; }
         .game-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
         .game-card { padding: 14px 8px; }
-        .game-emoji { font-size: 1.6rem; margin-bottom: 4px; }
-        .game-icon-img { width: 44px; height: 44px; margin-bottom: 6px; }
-        .game-name { font-size: 0.8rem; }
-        .game-cost { font-size: 0.62rem; }
+        .game-emoji { font-size: 2rem; margin-bottom: 4px; }
+        .game-icon-img { width: 64px; height: 64px; margin-bottom: 8px; }
+        .game-name { font-size: 0.85rem; }
+        .game-cost { font-size: 0.65rem; }
         .modal-card { padding: 20px 16px; width: 92%; max-height: 88vh; }
         #gameContainer { min-height: 260px; }
         .table-felt { padding: 18px 12px; min-height: 130px; }
@@ -113,9 +117,7 @@
     .scroll-top { position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; background: var(--card); border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 98; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .scroll-top.visible { opacity: 1; pointer-events: all; }
     .scroll-top:hover { background: var(--gold); color: #000; transform: translateY(-3px); }
-    @media (max-width: 768px) {
-        .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
-    }
+    @media (max-width: 768px) { .scroll-top { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 1rem; } }
 </style>
 </head>
 <body>
@@ -193,6 +195,7 @@
             </span> Джийонг молча протирает кружки. Кружку хозяина не трогать.
         </div>
 
+        <div id="gameContainer">
             <div class="game-grid" id="gameGrid">
                 <div class="game-card" onclick="loadGame('ochko')">
                     <img src="icons/ochko.png" alt="Не лопни" class="game-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
@@ -225,6 +228,7 @@
                     <div class="game-name">Бамбуковый счёт</div><div class="game-cost">Ставка: 5 💎</div>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 <a href="https://www.donationalerts.com/r/rvotaenota" target="_blank" class="beer-btn" title="Угостить пивом 🍺">🍺</a>
@@ -409,14 +413,18 @@ function goMenu(){
 }
 
 window.goMenu = goMenu;
-document.getElementById('gameContainer').addEventListener('click', function(e) {
-    const btn = e.target.closest('button, a, div');
+
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('button, a, div, span');
     if (btn && (btn.textContent.includes('В таверну') || btn.textContent.includes('Назад'))) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (window.goMenu) window.goMenu();
+        const gameContainer = document.getElementById('gameContainer');
+        if (gameContainer && gameContainer.contains(btn)) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.goMenu();
+        }
     }
-});
+}, true);
 
 (function() {
     const progressBar = document.getElementById('readingProgress');
