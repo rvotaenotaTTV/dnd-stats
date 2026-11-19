@@ -415,7 +415,6 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
         const DATA_URL_RAW='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
         const JSON_URL_CDN='https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
         const DATA_URL_CDN='https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/data.json';
-        const MAP_IMG_CLEAN = 'map/territories_clean.png';
 
         /* =====================================================================
            2. ЗАГРУЗКА ДАННЫХ
@@ -504,11 +503,6 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
             if (raceIcon) return `${img(raceIcon, raceName)}${spacer}${emoji(classEmojis[className] || '')}`;
             if (classIcon) return `${emoji(raceEmojis[raceName] || '')}${spacer}${img(classIcon, className)}`;
             return `${emoji(raceEmojis[raceName] || '')}${spacer}${emoji(classEmojis[className] || '')}`;
-        }
-        function factionImg(factionName, size = 20) {
-            const src = getFactionIcon(factionName);
-            if (src) return `<img src="${src}" alt="${factionName}" style="width:${size}px;height:${size}px;object-fit:contain;vertical-align:middle;" data-image-fallback="hide">`;
-            return factionName === 'Орден Света' ? '🌝' : factionName === 'Культ Тьмы' ? '🌚' : '';
         }
         function factionPng(size = 16) {
             return {
