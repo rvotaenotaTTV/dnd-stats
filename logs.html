@@ -168,10 +168,40 @@
     const LOGS_URL_FALLBACK = 'https://cdn.jsdelivr.net/gh/rvotaenotaTTV/dnd-stats@main/stats_data.json';
     const STATS_CACHE_KEY = 'eternis-stats';
     const STATS_CACHE_TTL = 2 * 60 * 1000;
+    const MOBILE_QUERY = '(max-width: 768px)';
 
     let allFights = [];
     let statsPromise = null;
     let scrollTicking = false;
+
+    /* ---------- Общие утилиты ---------- */
+
+    function statusBlock(html, color = 'var(--sub)') {
+        return `<div style="text-align:center;padding:48px 20px;color:${color};">${html}</div>`;
+    }
+
+    function loadingBlock() {
+        return statusBlock('<div class="spinner"></div><p>Загрузка...</p>');
+    }
+
+    function plural(number, one, two, five) {
+        if (number % 10 === 1 && number % 100 !== 11) return one;
+        if (number % 10 >= 2 && number % 10 <= 4 &&
+            (number % 100 < 10 || number % 100 >= 20)) return two;
+        return five;
+    }
+
+    function isNarrowScreen() {
+        return window.matchMedia(MOBILE_QUERY).matches;
+    }
+
+    function breakPlayerName(name) {
+        const parts = name.split(' ');
+        const last = parts.pop();
+        return (parts.length ? parts.join(' ') + '<br>' : '') + last;
+    }
+
+    /* ---------- Тема ---------- */
 
     function toggleTheme() {
         const html = document.documentElement;
@@ -192,6 +222,8 @@
         }
     }
 
+    /* ---------- Меню ---------- */
+
     function toggleNav() {
         const nav = document.getElementById('pageNav');
         const button = document.querySelector('.nav-toggle');
@@ -202,24 +234,46 @@
         button.setAttribute('aria-expanded', String(isOpen));
     }
 
-    function plural(number, one, two, five) {
-        if (number % 10 === 1 && number % 100 !== 11) return one;
-        if (number % 10 >= 2 && number % 10 <= 4 &&
-            (number % 100 < 10 || number % 100 >= 20)) return two;
-        return five;
+    function closeNav() {
+        const nav = document.getElementById('pageNav');
+        const button = document.querySelector('.nav-toggle');
+
+        if (nav) nav.classList.remove('show');
+        if (button) {
+            button.textContent = '☰ Меню';
+            button.setAttribute('aria-expanded', 'false');
+        }
     }
+
+    function toggleMobileDropdown(label) {
+        const dropdown = label.nextElementSibling;
+        if (!dropdown || !dropdown.classList.contains('nav-dropdown')) return;
+
+        const isOpen = dropdown.style.display === 'block';
+        document.querySelectorAll('.nav-dropdown').forEach((item) => {
+            item.style.display = 'none';
+        });
+        dropdown.style.display = isOpen ? 'none' : 'block';
+    }
+
+    /* ---------- Отрисовка боя ---------- */
+
+    const HIT_MARKS = {
+        '🏆': 'cup',
+        '⚡': 'lightning',
+        '❌': 'miss',
+        '💨': 'miss',
+        '🛡': 'miss'
+    };
 
     function colorize(value) {
-        return value
-            .replace(/🏆/g, '<span class="cup">🏆</span>')
-            .replace(/⚡/g, '<span class="lightning">⚡</span>')
-            .replace(/💥\d+/g, match => `<span class="crit">${match}</span>`)
-            .replace(/❌/g, '<span class="miss">❌</span>')
-            .replace(/💨/g, '<span class="miss">💨</span>')
-            .replace(/🛡/g, '<span class="miss">🛡</span>');
+        return String(value ?? '').replace(/🏆|⚡|❌|💨|🛡|💥\d+/g, (match) => {
+            const className = match.startsWith('💥') ? 'crit' : HIT_MARKS[match];
+            return `<span class="${className}">${match}</span>`;
+        });
     }
 
-    function renderLog(fight, index, total) {
+    function renderLog(fight, index, total, narrow) {
         const parts = fight.FullLog.split(' | ');
         const header = parts[0];
         const rounds = parts.slice(1);
@@ -237,59 +291,61 @@
         }
 
         const hasLightningLeft = header.indexOf('⚡') < header.indexOf(':');
-        let roundsHtml = '';
 
-        rounds.forEach((round, roundIndex) => {
+        const roundsHtml = rounds.map((round, roundIndex) => {
             let [hit1, hit2] = round.split(':');
             if (!hasLightningLeft) [hit1, hit2] = [hit2, hit1];
 
-            roundsHtml += `<div class="round-row"><span class="round-num">R${roundIndex + 1}</span><span class="round-p1">${colorize(hit1)}</span><span class="round-vs">:</span><span class="round-p2">${colorize(hit2)}</span></div>`;
-        });
+            return `<div class="round-row"><span class="round-num">R${roundIndex + 1}</span><span class="round-p1">${colorize(hit1)}</span><span class="round-vs">:</span><span class="round-p2">${colorize(hit2)}</span></div>`;
+        }).join('');
 
-        if (window.matchMedia('(max-width: 768px)').matches) {
-            const leftParts = left.split(' ');
-            const leftName = leftParts.pop();
-            left = (leftParts.length ? leftParts.join(' ') + '<br>' : '') + leftName;
-
-            const rightParts = right.split(' ');
-            const rightName = rightParts.pop();
-            right = (rightParts.length ? rightParts.join(' ') + '<br>' : '') + rightName;
+        if (narrow) {
+            left = breakPlayerName(left);
+            right = breakPlayerName(right);
         }
 
         return `<div class="log-card"><div class="log-header"><span class="log-num">#${number}</span><span class="log-header-left">${colorize(left)}</span><span class="log-header-center">${center}</span><span class="log-header-right">${colorize(right)}</span></div><div class="rounds-table">${roundsHtml}</div></div>`;
     }
 
-    function filterLogs() {
-        const searchInput = document.getElementById('logSearch');
+    /* ---------- Список боёв ---------- */
+
+    function showFights(fights, prefix) {
         const content = document.getElementById('logs-content');
         const count = document.getElementById('logCount');
-        if (!searchInput || !content || !count || !allFights.length) return;
+        if (!content || !count) return;
 
-        const searchText = searchInput.value.toLowerCase().trim();
-
-        if (!searchText) {
-            const total = allFights.length;
-            content.innerHTML = [...allFights].reverse()
-                .map((fight, index) => renderLog(fight, index, total)).join('');
-            count.textContent = `Всего: ${total} ${plural(total, 'бой', 'боя', 'боёв')}`;
-            return;
-        }
-
-        const filtered = allFights.filter(fight =>
-            fight.FullLog.toLowerCase().includes(searchText)
-        );
-
-        if (!filtered.length) {
-            content.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--sub);">🔍 Ничего не найдено</div>';
+        if (!fights.length) {
+            content.innerHTML = statusBlock('🔍 Ничего не найдено');
             count.textContent = 'Найдено: 0 боёв';
             return;
         }
 
-        const total = filtered.length;
-        content.innerHTML = [...filtered].reverse()
-            .map((fight, index) => renderLog(fight, index, total)).join('');
-        count.textContent = `Найдено: ${total} ${plural(total, 'бой', 'боя', 'боёв')}`;
+        const total = fights.length;
+        const narrow = isNarrowScreen();
+
+        content.innerHTML = fights
+            .map((fight, index) => renderLog(fight, index, total, narrow))
+            .join('');
+
+        count.textContent = `${prefix}: ${total} ${plural(total, 'бой', 'боя', 'боёв')}`;
     }
+
+    function filterLogs() {
+        const searchInput = document.getElementById('logSearch');
+        if (!searchInput || !allFights.length) return;
+
+        const searchText = searchInput.value.toLowerCase().trim();
+
+        if (!searchText) {
+            showFights([...allFights].reverse(), 'Всего');
+            return;
+        }
+
+        const found = allFights.filter((fight) => fight.FullLog.toLowerCase().includes(searchText));
+        showFights([...found].reverse(), 'Найдено');
+    }
+
+    /* ---------- Данные ---------- */
 
     function getStatsData() {
         if (statsPromise) return statsPromise;
@@ -318,7 +374,7 @@
             }
 
             return data;
-        })().catch(error => {
+        })().catch((error) => {
             statsPromise = null;
             throw error;
         });
@@ -326,31 +382,34 @@
         return statsPromise;
     }
 
-    function loadLogs() {
+    async function loadLogs() {
         const content = document.getElementById('logs-content');
         if (!content) return;
 
-        content.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--sub);"><div class="spinner"></div><p>Загрузка...</p></div>';
+        content.innerHTML = loadingBlock();
 
-        getStatsData()
-            .then(data => {
-                const fights = data.fights || [];
-                if (!fights.length) {
-                    content.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--sub);">📜 Логов пока нет</div>';
-                    document.getElementById('logCount').textContent = '';
-                    return;
-                }
+        try {
+            const data = await getStatsData();
+            const fights = data.fights || [];
 
-                allFights = fights;
-                filterLogs();
-            })
-            .catch(() => {
-                content.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--red);">❌ Ошибка загрузки</div>';
-            });
+            if (!fights.length) {
+                content.innerHTML = statusBlock('📜 Логов пока нет');
+                document.getElementById('logCount').textContent = '';
+                return;
+            }
+
+            allFights = fights;
+            filterLogs();
+        } catch (error) {
+            content.innerHTML = statusBlock('❌ Ошибка загрузки', 'var(--red)');
+        }
     }
+
+    /* ---------- События ---------- */
 
     function handleDocumentClick(event) {
         const actionElement = event.target.closest('[data-action]');
+
         if (actionElement) {
             switch (actionElement.dataset.action) {
                 case 'toggle-theme':
@@ -368,27 +427,13 @@
             }
         }
 
-        const navLink = event.target.closest('.nav-link');
-        if (navLink) {
-            const nav = document.getElementById('pageNav');
-            const button = document.querySelector('.nav-toggle');
-            if (nav) nav.classList.remove('show');
-            if (button) {
-                button.textContent = '☰ Меню';
-                button.setAttribute('aria-expanded', 'false');
-            }
+        if (event.target.closest('.nav-link')) {
+            closeNav();
         }
 
         const navLabel = event.target.closest('.nav-label');
         if (navLabel && window.innerWidth <= 768) {
-            const dropdown = navLabel.nextElementSibling;
-            if (dropdown && dropdown.classList.contains('nav-dropdown')) {
-                const isOpen = dropdown.style.display === 'block';
-                document.querySelectorAll('.nav-dropdown').forEach(item => {
-                    item.style.display = 'none';
-                });
-                dropdown.style.display = isOpen ? 'none' : 'block';
-            }
+            toggleMobileDropdown(navLabel);
         }
     }
 
