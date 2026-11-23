@@ -768,20 +768,41 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
 					</div>
 				</div>`;
             } else {
-                const winnerCls = lightPts > darkPts ? 'light' : darkPts > lightPts ? 'dark' : 'draw';
-                const winnerText = lightPts > darkPts
-                    ? `${icoBig.light} ОРДЕН СВЕТА`
-                    : darkPts > lightPts
-                        ? `${icoBig.dark} КУЛЬТ ТЬМЫ`
-                        : '⚖️ НИЧЬЯ';
-                html += `<div class="tw-active-card">
-                    <div class="tw-active-header">
-                        <div class="tw-active-name">⚔️ СЕЗОН ЗАВЕРШЁН</div>
-                        <div class="tw-active-points">${lightPts} : ${darkPts}</div>
+                const isDraw = lightPts === darkPts;
+                const winLight = lightPts > darkPts;
+                const tone = isDraw ? 'var(--text)' : winLight ? 'var(--gold)' : 'var(--purple)';
+                const winnerName = isDraw ? 'НИЧЬЯ' : winLight ? 'ОРДЕН СВЕТА' : 'КУЛЬТ ТЬМЫ';
+                const winnerIco = isDraw ? '' : winLight ? icoBig.light : icoBig.dark;
+                const totalZones = lightPts + darkPts;
+
+                html += `<div class="tw-active-card" style="padding:22px 24px 18px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:12px;">⚔️ Сезон завершён</div>
+                        <div style="display:flex;justify-content:center;align-items:baseline;gap:14px;margin-bottom:10px;">
+                            <span style="font-size:2.6rem;font-weight:900;line-height:1;color:var(--gold);font-variant-numeric:tabular-nums;">${lightPts}</span>
+                            <span style="font-size:1rem;color:var(--muted);font-weight:600;">:</span>
+                            <span style="font-size:2.6rem;font-weight:900;line-height:1;color:var(--purple);font-variant-numeric:tabular-nums;">${darkPts}</span>
+                        </div>
+                        <div style="height:6px;border-radius:3px;overflow:hidden;display:flex;background:var(--bg);margin:0 auto 14px;max-width:420px;">
+                            <div style="width:${totalZones ? lightPts / totalZones * 100 : 50}%;background:linear-gradient(90deg,#c49600,var(--gold));"></div>
+                            <div style="width:${totalZones ? darkPts / totalZones * 100 : 50}%;background:linear-gradient(90deg,var(--purple),#3d1060);"></div>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--sub);display:inline-flex;align-items:center;gap:7px;">
+                            ${winnerIco}
+                            <span style="color:${tone};font-weight:800;letter-spacing:0.5px;">${winnerName}</span>
+                        </div>
                     </div>
-                    <div class="tw-finished-bar ${winnerCls}">${winnerText}</div>
-                    <div class="tw-actions" style="margin-top:12px;">
+                    <div class="tw-actions" style="margin-top:16px;">
                         <button class="tw-btn hide-mobile" data-action="open-map-modal">🗺️ Карта</button>
+                        <button class="tw-btn" data-action="open-history-modal">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                <line x1="10" y1="6" x2="16" y2="6"></line>
+                                <line x1="10" y1="10" x2="16" y2="10"></line>
+                            </svg>
+                            Хроника
+                        </button>
                     </div>
                 </div>`;
             }
