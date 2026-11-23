@@ -66,7 +66,7 @@
    ========================================================================== */
 .tw-history { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; }
 .tw-history-title { font-size: 0.85rem; font-weight: 700; color: var(--gold); margin-bottom: 10px; }
-.tw-history-list { display: flex; flex-direction: column; gap: 6px; max-height: 250px; overflow-y: auto; scrollbar-width: thin; padding-right: 4px; }
+.tw-history-list { display: flex; flex-direction: column; gap: 6px; padding-right: 4px; }
 .hidden { display: none !important; }
 .tw-history-item { display: grid; grid-template-columns: 32px 1fr auto auto auto; gap: 10px; align-items: center; padding: 6px 10px; border-radius: var(--radius-sm); background: var(--elevated); font-size: 0.72rem; border-left: 3px solid var(--border); }
 .tw-history-item.light { border-left-color: var(--gold); }
@@ -706,7 +706,7 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
 
             let html = '';
 
-            // === TERRITORY WAR ===
+            // TERRITORY WAR
             const tw = data.territoryWar || { captured: [], activeIndex: 0, activeScore: { light: 0, dark: 0 } };
             const captured = tw.captured || [];
             const activeIdx = tw.activeIndex || 0;
@@ -815,7 +815,7 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
                 html += `</div></div>`;
             }
 
-            // === КАРТОЧКИ ===
+            // КАРТОЧКИ
             const lightF = `<img src="icons/faction_light.png" style="width:48px;height:48px;object-fit:contain;vertical-align:middle;margin-left:6px;" data-image-fallback="hide">`;
             const darkF  = `<img src="icons/faction_dark.png"  style="width:48px;height:48px;object-fit:contain;vertical-align:middle;margin-left:6px;" data-image-fallback="hide">`;
 
@@ -887,7 +887,7 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
 			html+='</div>';
 			html+='</div>';
 
-            // === КЛАССЫ ===
+            // КЛАССЫ
             html+='<div id="tab-classes" class="tab-content">';
             const classStats={};const classChamps={};
             players.forEach(p=>{const cn=p.name.split('-')[1]||p.name;if(!classStats[cn]){classStats[cn]={wins:0,losses:0,players:0,shards:0,best:0,worst:0,skillTotal:0};classChamps[cn]=0;}classStats[cn].wins+=p.wins;classStats[cn].losses+=p.losses;classStats[cn].players++;classStats[cn].shards+=p.shards;classStats[cn].best=Math.max(classStats[cn].best,p.best);classStats[cn].worst=Math.max(classStats[cn].worst,p.worst||0);classStats[cn].skillTotal+=(p.skill||0);classChamps[cn]+=(p.tournamentWins||0);});
@@ -946,7 +946,7 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
             });
             html+='</tbody></table></div></div></div>';
 
-            // === РАСЫ ===
+            // РАСЫ
             html+='<div id="tab-races" class="tab-content">';
             const raceStats={};const raceChamps={};
             players.forEach(p=>{const rn=p.name.split('-')[0];if(!rn)return;if(!raceStats[rn]){raceStats[rn]={wins:0,losses:0,players:0,shards:0};raceChamps[rn]=0;}raceStats[rn].wins+=p.wins;raceStats[rn].losses+=p.losses;raceStats[rn].players++;raceStats[rn].shards+=p.shards;raceChamps[rn]+=(p.tournamentWins||0);});
@@ -1002,7 +1002,7 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
             });
             html+='</tbody></table></div></div></div>';
 
-            // === КОМБИНАЦИИ ===
+            // КОМБИНАЦИИ
             html+='<div id="tab-combos" class="tab-content">';
             const comboStats={};
             players.forEach(p=>{
@@ -1543,123 +1543,150 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
             const tw = (globalData && globalData.territoryWar) ? globalData.territoryWar : {};
             const captured = tw.captured || [];
             const activeIdx = tw.activeIndex || 0;
-            const score = tw.activeScore || { light: 0, dark: 0 };
-            const ico = factionPng(16);
-            const icoBig = factionPng(22);
+            const activeScore = tw.activeScore || { light: 0, dark: 0 };
+            const icoBig = factionPng(24);
+            const icoSm  = factionPng(14);
+            const GOAL = 150;
+            const total = TERRITORIES.length;
+            const isFinished = activeIdx >= total;
+            const active = TERRITORIES[activeIdx];
 
-            // --- Аналитика ---
-            const lightCaptured = captured.filter(c => c.owner === 'light');
-            const darkCaptured = captured.filter(c => c.owner === 'dark');
-            const parsedScores = captured
-                .map(c => {
-                    if (!c.score) return null;
-                    const parts = c.score.split(':').map(x => parseInt(x.trim(), 10));
-                    if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) return null;
-                    return { light: parts[0], dark: parts[1], diff: Math.abs(parts[0] - parts[1]), total: parts[0] + parts[1] };
-                })
-                .filter(Boolean);
+            const lightZones = captured.filter(c => c.owner === 'light').length;
+            const darkZones  = captured.filter(c => c.owner === 'dark').length;
+            const leftZones  = total - captured.length;
 
-            const avgLight = parsedScores.length ? Math.round(parsedScores.reduce((s, x) => s + x.light, 0) / parsedScores.length) : 0;
-            const avgDark  = parsedScores.length ? Math.round(parsedScores.reduce((s, x) => s + x.dark, 0) / parsedScores.length) : 0;
+            const rows = captured.map((c, i) => {
+                if (!c.score) return null;
+                const p = String(c.score).split(':').map(x => parseInt(x, 10));
+                if (p.length !== 2 || isNaN(p[0]) || isNaN(p[1])) return null;
+                const win = Math.max(p[0], p[1]);
+                const lose = Math.min(p[0], p[1]);
+                return {
+                    zone: c, order: i, win, lose, margin: win - lose,
+                    owner: c.owner === 'light' ? 'light' : 'dark'
+                };
+            }).filter(Boolean);
 
-            const mostTense = parsedScores.length
-                ? captured[parsedScores.reduce((bestIdx, x, i) => x.diff < parsedScores[bestIdx].diff ? i : bestIdx, 0)]
-                : null;
-            const mostDominant = parsedScores.length
-                ? captured[parsedScores.reduce((bestIdx, x, i) => x.diff > parsedScores[bestIdx].diff ? i : bestIdx, 0)]
-                : null;
+            const totalMargin = rows.reduce((s, r) => s + r.margin, 0);
+            const avgMargin = rows.length ? Math.round(totalMargin / rows.length) : 0;
+            const tight = rows.filter(r => r.margin <= 10).length;
+            const crush = rows.filter(r => r.margin >= 25).length;
+            const closest = rows.length ? rows.reduce((a, b) => b.margin < a.margin ? b : a) : null;
+            const widest  = rows.length ? rows.reduce((a, b) => b.margin > a.margin ? b : a) : null;
+
+            let runL = 0, runD = 0, best = null;
+            captured.forEach(c => {
+                if (c.owner === 'light') { runL++; runD = 0; } else { runD++; runL = 0; }
+                const len = Math.max(runL, runD);
+                if (!best || len > best.len) best = { who: c.owner, len };
+            });
+
+            const lead = lightZones > darkZones ? { who: 'light', by: lightZones - darkZones }
+                       : darkZones > lightZones ? { who: 'dark', by: darkZones - lightZones }
+                       : null;
+            const toneBy  = w => w === 'light' ? 'var(--gold)' : 'var(--purple)';
+            const shortBy = w => w === 'light' ? 'Свет' : 'Тьма';
+            const longBy  = w => w === 'light' ? 'Орден Света' : 'Культ Тьмы';
+            const plural  = n => n === 1 ? 'земля' : (n >= 2 && n <= 4) ? 'земли' : 'земель';
+
+            const stat = (label, value, sub, color) => `
+                <div style="flex:1;min-width:0;background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 13px;border-left:3px solid ${color};">
+                    <div style="font-size:0.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">${label}</div>
+                    <div style="font-size:1.15rem;font-weight:800;color:${color};line-height:1.15;font-variant-numeric:tabular-nums;">${value}</div>
+                    <div style="font-size:0.64rem;color:var(--sub);margin-top:4px;line-height:1.35;">${sub}</div>
+                </div>`;
+
+            const battle = (icon, title, r) => !r ? '' : `
+                <div style="display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:10px 13px;border-radius:var(--radius-sm);background:var(--elevated);border-left:3px solid ${toneBy(r.owner)};">
+                    <span style="font-size:0.95rem;">${icon}</span>
+                    <div style="min-width:0;">
+                        <div style="font-size:0.82rem;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.zone.name}</div>
+                        <div style="font-size:0.66rem;color:var(--sub);margin-top:2px;">${title} · <span style="color:${toneBy(r.owner)};font-weight:700;">${shortBy(r.owner)}</span> +${r.zone.points || 1}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:0.85rem;font-weight:800;color:${toneBy(r.owner)};font-variant-numeric:tabular-nums;">${r.win} : ${r.lose}</div>
+                        <div style="font-size:0.62rem;color:var(--muted);margin-top:2px;">разрыв ${r.margin}</div>
+                    </div>
+                </div>`;
 
             let html = '';
 
-            // Блок аналитики
-            html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px;">
-                <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;border-left:3px solid var(--gold);">
-                    <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Захвачено Светом</div>
-                    <div style="font-size:1.4rem;font-weight:800;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:6px;">${lightCaptured.length} ${ico.light}</div>
+            html += `<div style="text-align:center;padding:0 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
+                <div style="font-size:0.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;">${isFinished ? 'Война завершена' : 'Война за земли'}</div>
+                <div style="display:flex;justify-content:center;align-items:center;gap:14px;">
+                    <div style="display:flex;align-items:center;gap:5px;color:var(--gold);font-weight:900;font-size:1.8rem;line-height:1;">${icoBig.light}${lightZones}</div>
+                    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;${isFinished ? 'color:' + (lightZones > darkZones ? 'var(--gold)' : darkZones > lightZones ? 'var(--purple)' : 'var(--text)') + ';' : 'color:var(--muted);'}">${isFinished ? (lightZones > darkZones ? 'Сезон у Ордена Света' : darkZones > lightZones ? 'Сезон у Культа Тьмы' : 'Ничья') : (lead ? shortBy(lead.who) + ' +' + lead.by : 'поровну')}</div>
+                    <div style="display:flex;align-items:center;gap:5px;color:var(--purple);font-weight:900;font-size:1.8rem;line-height:1;">${darkZones}${icoBig.dark}</div>
                 </div>
-                <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;border-left:3px solid var(--purple);">
-                    <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Захвачено Тьмой</div>
-                    <div style="font-size:1.4rem;font-weight:800;color:var(--purple);display:flex;align-items:center;justify-content:center;gap:6px;">${darkCaptured.length} ${ico.dark}</div>
-                </div>
-                <div style="background:var(--elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;">
-                    <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Средний счёт</div>
-                    <div style="font-size:1.1rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;">
-                        <span style="color:var(--gold);">${avgLight}</span>
-                        <span style="color:var(--muted);font-size:0.8rem;">:</span>
-                        <span style="color:var(--purple);">${avgDark}</span>
-                    </div>
-                </div>
+                <div style="margin-top:7px;font-size:0.68rem;color:var(--muted);">${captured.length} из ${total}${leftZones ? ' · осталось ' + leftZones + ' ' + plural(leftZones) : ' · все земли разыграны'}</div>
             </div>`;
 
-            // Переломные битвы
-            if (mostTense || mostDominant) {
-                html += `<div style="margin-bottom:18px;">
-                    <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">⚡ Переломные битвы</div>`;
-                if (mostTense) {
-                    html += `<div class="history-item" style="border-left-color:var(--red);margin-bottom:6px;">
-                        <span class="hist-num">🔥</span>
-                        <span style="font-weight:700;">${mostTense.name}</span>
-                        <span class="hist-owner" style="font-size:0.72rem;">Самая упорная</span>
-                        <span class="hist-score">${mostTense.score}</span>
-                        <span class="hist-points">+${mostTense.points}</span>
-                    </div>`;
-                }
-                if (mostDominant) {
-                    html += `<div class="history-item" style="border-left-color:var(--gold);">
-                        <span class="hist-num">💥</span>
-                        <span style="font-weight:700;">${mostDominant.name}</span>
-                        <span class="hist-owner" style="font-size:0.72rem;">Самая быстрая</span>
-                        <span class="hist-score">${mostDominant.score}</span>
-                        <span class="hist-points">+${mostDominant.points}</span>
-                    </div>`;
+            html += `<div style="display:flex;gap:3px;margin-bottom:5px;">
+                ${TERRITORIES.map((t, i) => {
+                    const cap = captured.find(c => c.id === t.id);
+                    const isActive = i === activeIdx && !isFinished;
+                    const color = cap ? toneBy(cap.owner) : isActive ? 'rgba(240,185,11,0.35)' : 'var(--elevated)';
+                    const tip = cap ? `${t.name} — ${shortBy(cap.owner)} ${cap.score || ''}`
+                              : isActive ? `${t.name} — идёт сейчас` : `${t.name} — не разыграна`;
+                    return `<div title="${tip}" style="flex:${t.points || 1};height:10px;border-radius:3px;background:${color};${cap || isActive ? '' : 'border:1px solid var(--border);box-sizing:border-box;'}"></div>`;
+                }).join('')}
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--muted);margin-bottom:16px;">
+                <span>◀ начало войны</span>
+                <span>${isFinished ? 'финал' : 'сейчас: ' + (active ? active.name : '—')} ▶</span>
+            </div>`;
+
+            html += `<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">`;
+            html += stat('На волоске', `${tight}/${rows.length}`, 'разрыв ≤ 10', 'var(--red)');
+            html += stat('Разгромы', `${crush}/${rows.length}`, 'разрыв ≥ 25', 'var(--orange)');
+            if (!isFinished) {
+                html += stat('До взятия', `${Math.max(0, GOAL - activeScore.light)}/${Math.max(0, GOAL - activeScore.dark)}`, 'Свету / Тьме', 'var(--ice)');
+            } else {
+                html += stat('Средний разрыв', `${avgMargin}`, 'очков на битву', 'var(--ice)');
+            }
+            html += `</div>`;
+
+            if (closest || widest) {
+                html += `<div style="font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:7px;">Ключевые битвы</div>`;
+                html += `<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">`;
+                html += battle('🔥', 'упёрлись в последние очки', closest);
+                if (widest && (!closest || widest.zone.id !== closest.zone.id)) {
+                    html += battle('💥', 'снесли без шансов', widest);
                 }
                 html += `</div>`;
             }
 
-            // Все территории
-            const ownerById = {};
-            captured.forEach(c => { if (c.id) ownerById[c.id] = c; });
-
-            html += `<div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">🗺️ Все земли</div>`;
-            html += `<div class="history-list">`;
-
-            TERRITORIES.forEach((t, i) => {
-                const cap = ownerById[t.id];
-                const isActive = i === activeIdx && activeIdx < TERRITORIES.length;
-                const isFuture = i > activeIdx || activeIdx >= TERRITORIES.length;
-
-                let ownerCell = '';
-                let cls = '';
-
-                if (cap) {
-                    const oIco = cap.owner === 'light' ? ico.light : ico.dark;
-                    const oName = cap.owner === 'light' ? 'Свет' : 'Тьма';
-                    cls = cap.owner === 'light' ? 'light' : 'dark';
-                    ownerCell = `${oIco}${oName}`;
-                } else if (isActive) {
-                    ownerCell = `<span style="color:var(--gold);">⏳ Идёт</span>`;
-                    cls = 'light';
-                } else if (isFuture) {
-                    ownerCell = `<span style="color:var(--muted);">⌛ В ожидании</span>`;
-                    cls = '';
-                }
-
-                const scoreCell = cap && cap.score
-                    ? `<span class="hist-score">${cap.score.replace(':', ' : ')}</span>`
-                    : (isActive ? `<span class="hist-score" style="color:var(--gold);">${score.light} : ${score.dark}</span>` : '');
-
-                const pointsCell = cap
-                    ? `<span class="hist-points">+${cap.points}</span>`
-                    : `<span class="hist-points" style="color:var(--muted);">+${t.points}</span>`;
-
-                html += `<div class="history-item ${cls}" style="opacity:${isFuture && !isActive ? 0.55 : 1};">
-                    <span class="hist-num">#${i + 1}</span>
-                    <span style="font-weight:${isActive ? '700' : '500'};color:${isActive ? 'var(--gold)' : 'var(--text)'};">${t.name}</span>
-                    <span class="hist-owner" style="text-transform:none;font-weight:600;">${ownerCell}</span>
-                    ${scoreCell}
-                    ${pointsCell}
+            if (best && best.len >= 2) {
+                html += `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 13px;border-radius:var(--radius-sm);background:var(--elevated);border:1px solid var(--border);margin-bottom:14px;">
+                    <span style="font-size:0.68rem;color:var(--sub);text-transform:uppercase;letter-spacing:1px;">Лучшая серия</span>
+                    <span style="font-size:0.78rem;font-weight:800;color:${toneBy(best.who)};">${shortBy(best.who)} — ${best.len} ${plural(best.len)} подряд</span>
                 </div>`;
-            });
+            }
+
+            if (!isFinished && active) {
+                const diff = Math.abs(activeScore.light - activeScore.dark);
+                const ahead = activeScore.light > activeScore.dark ? 'Свет впереди на ' + diff
+                            : activeScore.dark > activeScore.light ? 'Тьма впереди на ' + diff
+                            : 'Идут ровно';
+                const share = activeScore.light + activeScore.dark;
+                const barL = share > 0 ? activeScore.light / share * 100 : 50;
+
+                html += `<div style="padding:11px 14px;border-radius:var(--radius-sm);background:var(--elevated);border:1px dashed rgba(240,185,11,0.4);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span style="font-size:0.6rem;color:var(--gold);font-weight:800;text-transform:uppercase;letter-spacing:1.4px;">Битва сейчас</span>
+                        <span style="font-size:0.7rem;color:var(--text);font-weight:700;">${active.name}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:0.78rem;font-weight:800;color:var(--gold);display:inline-flex;align-items:center;gap:4px;min-width:50px;">${icoSm.light}${activeScore.light}</span>
+                        <div style="flex:1;height:6px;border-radius:3px;overflow:hidden;display:flex;background:var(--bg);">
+                            <div style="width:${barL}%;background:var(--gold);"></div>
+                            <div style="width:${100 - barL}%;background:var(--purple);"></div>
+                        </div>
+                        <span style="font-size:0.78rem;font-weight:800;color:var(--purple);display:inline-flex;align-items:center;gap:4px;min-width:50px;justify-content:flex-end;">${activeScore.dark}${icoSm.dark}</span>
+                    </div>
+                    <div style="text-align:center;margin-top:6px;font-size:0.66rem;color:var(--muted);">${ahead}</div>
+                </div>`;
+            }
 
             html += `</div>`;
 
