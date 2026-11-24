@@ -272,7 +272,7 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
 		<header class="header">
 			<h1 class="header-title">СТАТИСТИКА</h1>
 			<p class="header-subtitle" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-				8 сезон 
+				<span id="season-label"></span>
 				<span style="color: var(--border); font-size: 1.2em; line-height: 1;">•</span> 
 				<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 400; color: var(--muted);">
 					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
@@ -410,6 +410,29 @@ tbody tr:nth-child(10) { animation-delay: 0.20s; }
         }
 
         restoreTheme();
+		
+		const SEASONS_BASE = 'https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/seasons/season_';
+        const SEASONS_SCAN_LIMIT = 15;
+
+        async function detectCurrentSeason() {
+            const label = document.getElementById('season-label');
+            try {
+                const checks = await Promise.all(
+                    Array.from({ length: SEASONS_SCAN_LIMIT + 1 }, function (_, n) {
+                        return fetch(SEASONS_BASE + n + '.json', { method: 'HEAD', cache: 'no-store' })
+                            .then(function (r) { return r.ok ? n : -1; })
+                            .catch(function () { return -1; });
+                    })
+                );
+                const found = checks.filter(function (n) { return n >= 0; });
+                const current = found.length ? Math.max.apply(null, found) + 1 : 0;
+                if (label) label.textContent = current + ' сезон';
+            } catch (error) {
+                if (label) label.textContent = '';
+            }
+        }
+
+        detectCurrentSeason();
 
         const JSON_URL_RAW='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/stats_data.json';
         const DATA_URL_RAW='https://raw.githubusercontent.com/rvotaenotaTTV/dnd-stats/main/data.json';
