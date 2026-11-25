@@ -2927,6 +2927,7 @@ function renderSkillTab(last) {
     const wr = total > 0 ? (last.wins / total) : 0;
     const skill = last.skill || 0;
     const denominator = Math.sqrt(total / 75 + 1);
+    const bestK = Math.min(1, total / 75);
 
     const components = [
         { 
@@ -2939,8 +2940,8 @@ function renderSkillTab(last) {
         { 
             icon: '🔥', 
             name: 'Лучший стрик', 
-            detail: `${last.best} × 10`, 
-            value: (last.best || 0) * 10, 
+            detail: bestK >= 1 ? `${last.best} × 10` : `${last.best} × 10 × ${(bestK * 100).toFixed(0)}%`, 
+            value: (last.best || 0) * 10 * bestK, 
             color: 'var(--red)' 
         },
         { 
