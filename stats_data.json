@@ -58,7 +58,7 @@
       "worst": 8,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 510,
+      "shards": 512,
       "level": 51,
       "factionWins": 15,
       "tournamentWins": 2,
@@ -116,19 +116,19 @@
       "displayName": "Дворф-Друид",
       "emoji": "🧔🌿",
       "champion": true,
-      "wins": 6,
+      "wins": 7,
       "losses": 8,
-      "streak": 0,
+      "streak": 1,
       "best": 3,
-      "loseStreak": 4,
+      "loseStreak": 0,
       "worst": 4,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 373,
+      "shards": 376,
       "level": 37,
       "factionWins": 1,
       "tournamentWins": 1,
-      "skill": 0,
+      "skill": 107,
       "achievements": [57,33,34,35,37,38,41,42,46,53,54,55,56,32,44,47,50,30,15],
       "title": "⚡ Живая легенда"
     },
@@ -227,14 +227,14 @@
       "emoji": "👹📿",
       "champion": false,
       "wins": 111,
-      "losses": 151,
+      "losses": 152,
       "streak": 0,
       "best": 6,
-      "loseStreak": 1,
+      "loseStreak": 2,
       "worst": 10,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 1303,
+      "shards": 1304,
       "level": 130,
       "factionWins": 89,
       "tournamentWins": 0,
@@ -569,8 +569,8 @@
       "factionWins": 49,
       "tournamentWins": 1,
       "skill": 211,
-      "achievements": [57,46,53,54,55,56,35,34,15,50,47,48,38,37,49,18,32,39,19,24,45,30,31,42,28,27,33],
-      "title": "🎯 Профессионал"
+      "achievements": [57,46,53,54,55,56,35,34,15,50,47,48,38,37,49,18,32,39,19,24,45,30,31,42,28,27,33,17],
+      "title": "🗡️ Теневой клинок"
     },
     {
       "display": "gotfat",
@@ -586,7 +586,7 @@
       "worst": 5,
       "faction": "Орден Света",
       "factionEmoji": "🌝",
-      "shards": 420,
+      "shards": 425,
       "level": 42,
       "factionWins": 14,
       "tournamentWins": 1,
@@ -2346,7 +2346,7 @@
       "worst": 7,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 935,
+      "shards": 936,
       "level": 93,
       "factionWins": 59,
       "tournamentWins": 2,
@@ -2852,7 +2852,7 @@
       "worst": 8,
       "faction": "Культ Тьмы",
       "factionEmoji": "🌚",
-      "shards": 1262,
+      "shards": 1266,
       "level": 126,
       "factionWins": 128,
       "tournamentWins": 5,
@@ -3303,7 +3303,7 @@
   ],
   "factionScore": {
     "duelLight": 1396,
-    "duelDark": 1306,
+    "duelDark": 1307,
     "battleLight": 6,
     "battleDark": 5
   },
@@ -3381,8 +3381,8 @@
     ]
   },
   "dungeonTrophies": {
-    "light": 1987,
-    "dark": 4413
+    "light": 1992,
+    "dark": 4426
   },
   "dungeon": {
     "players": {
@@ -3400,10 +3400,10 @@
         "hits": 515,
         "passive": "🗡️ Казнь",
         "familiar": "🦀 Краб",
-        "totalRuns": 94,
-        "totalWaves": 1438,
-        "trophies": 458,
-        "bosses": 229
+        "totalRuns": 96,
+        "totalWaves": 1471,
+        "trophies": 467,
+        "bosses": 234
       },
       "k3nn3zy": {
         "display": "k3nn3zy",
@@ -3476,10 +3476,10 @@
         "hits": 736,
         "passive": "✨ Благословение",
         "familiar": "🐺 Волк",
-        "totalRuns": 166,
-        "totalWaves": 2248,
-        "trophies": 673,
-        "bosses": 339
+        "totalRuns": 167,
+        "totalWaves": 2257,
+        "trophies": 675,
+        "bosses": 340
       },
       "ded_evgenius": {
         "display": "ded_evgenius",
@@ -3495,10 +3495,10 @@
         "hits": 669,
         "passive": "⚔️ Святая ярость",
         "familiar": "🐻 Медведь",
-        "totalRuns": 167,
-        "totalWaves": 1901,
-        "trophies": 533,
-        "bosses": 270
+        "totalRuns": 168,
+        "totalWaves": 1915,
+        "trophies": 539,
+        "bosses": 272
       },
       "b1adstone": {
         "display": "b1adstone",
@@ -3571,10 +3571,10 @@
         "hits": 587,
         "passive": "✨ Благословение",
         "familiar": "🦀 Краб",
-        "totalRuns": 67,
-        "totalWaves": 1058,
-        "trophies": 336,
-        "bosses": 168
+        "totalRuns": 69,
+        "totalWaves": 1086,
+        "trophies": 341,
+        "bosses": 172
       },
       "janesyao": {
         "display": "janesyao",
@@ -4321,12 +4321,6 @@
   },
   "fights": [
     {
-      "FullLog": "🧑🎸 radi0ant 22:35 ⚡🏆💀⚙️ ds_riasgremoo | 💥13:10 | 12:💥12 | 10:-"
-    },
-    {
-      "FullLog": "⚡🏆🧔⚙️ k3nn3zy 35:5 🐱✝️ steilblack | 11:💨 | 💥14:5 | 10:-"
-    },
-    {
       "FullLog": "⚡🏆👹📿 verdoga 28:22 😈📿 pitzagvar | 8:7 | 8:💥15 | 💨:💨 | 7:❌ | 5:-"
     },
     {
@@ -4349,6 +4343,12 @@
     },
     {
       "FullLog": "⚡👹📿 verdoga 17:24 🏆🐱🦴 vaizerd_ | 9:6 | ❌:9 | 8:9"
+    },
+    {
+      "FullLog": "👹📿 verdoga 25:27 ⚡🏆🧔🌿 yougirl | 5:4 | 4:💨 | 7:5 | 💨:💥12 | 5:❌ | 💨:4 | 6:-"
+    },
+    {
+      "FullLog": "⚡🏆😈🗡️ ami_kron 44:15 😈🛡️ pro100_br1an | 6:💨 | 5:💨 | 11:💨 | 5:6 | 5:9 | 12:-"
     }
   ],
   "heroArchive": {
